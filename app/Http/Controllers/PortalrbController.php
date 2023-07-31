@@ -8,8 +8,11 @@ class PortalrbController extends Controller
 {
     public function index()
     {
-        return view('Home', [
-            "title" => "Portal RB",
-        ]);
+        return view('Home');
+    }
+
+    public function dashboard()
+    {
+        return view('Dashboard');
     }
 }

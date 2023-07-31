@@ -112,7 +112,7 @@
                                             <a href="#">Ruang Belajar</a>
                                         </li>
                                         <li>
-                                            <a href="#">
+                                            <a href="{{ url('login') }}">
                                                 <span class="xbtn">
                                                     <i class="fas fa-arrow-right"></i> Login </span>
                                             </a>
