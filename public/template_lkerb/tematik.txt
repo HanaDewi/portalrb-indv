@@ -1,0 +1,101 @@
+{
+   "data": [
+      [
+         "1",
+         "Peningkatan Penggunaan Produk Dalam Negeri (P3DN)",
+         "Tingkat Implementasi Penyederhanaan Birokrasi",
+         "20%",
+         "Permasalahan bottleneck",
+         "Sasaran Tematik",
+         "indikator Tematik",
+         "20%",
+         "Rencana Aksi Tematik RB",
+         "%",
+         "Indikator",
+         "10%",
+         "20%",
+         "30%",
+         "40%",
+         "50%",
+         "Jenis Aksi Tematik RB",
+         "-",
+         "Biroumum Koordinator",
+         "Biroumum Pelaksana",
+         "50%",
+         "50%",
+         "50%",
+         "50%",
+         "100%",
+         "100",
+         "-"
+         
+      ],
+
+
+       [
+         "1",
+         "Peningkatan Penggunaan Produk Dalam Negeri (P3DN)",
+         "Indikator 2 Tingkat Implementasi Penyederhanaan Birokrasi",
+         "20%",
+         "Permasalahan bottleneck",
+         "Sasaran Tematik",
+         "indikator Tematik",
+         "20%",
+         "Rencana Aksi Tematik RB",
+         "%",
+         "Indikator",
+         "10%",
+         "20%",
+         "30%",
+         "40%",
+         "50%",
+         "Jenis Aksi Tematik RB",
+         "-",
+         "Biroumum Koordinator",
+         "Biroumum Pelaksana",
+         "50%",
+         "50%",
+         "50%",
+         "50%",
+         "100%",
+         "100",
+         "-"
+         
+      ],
+
+       [
+         "1",
+         "Peningkatan Penggunaan Produk Dalam Negeri (P3DN)",
+         "Indikator 2 Tingkat Implementasi Penyederhanaan Birokrasi",
+         "20%",
+         "Permasalahan bottleneck",
+         "Sasaran Tematik",
+         "indikator Tematik",
+         "20%",
+         "Rencana Aksi Tematik RB",
+         "%",
+         "Indikator",
+         "10%",
+         "20%",
+         "30%",
+         "40%",
+         "50%",
+         "Jenis Aksi Tematik RB",
+         "-",
+         "Biroumum Koordinator",
+         "Biroumum Pelaksana",
+         "50%",
+         "50%",
+         "50%",
+         "50%",
+         "100%",
+         "100",
+         "-"
+         
+      ]
+
+
+
+     
+   ]
+}
