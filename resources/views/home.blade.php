@@ -75,9 +75,9 @@
                     <div class="header-inner rel d-flex">
                         <div class="logo-outer align-self-center">
                             <div class="logo">
-                                <a href="index.html">
+                                <a href="{{ url('/') }}">
                                     <img src="{{ URL::to('/') }}/assets/images/logoportalreformasibirokrasinasional.png"
-                                        alt="Logo"> </img>
+                                        alt="Logo">
                                 </a>
                             </div>
                         </div>
@@ -85,9 +85,9 @@
                             <nav class="main-menu navbar-expand-lg">
                                 <div class="navbar-header py-10">
                                     <div class="mobile-logo">
-                                        <a href="index.html">
+                                        <a href="{{ url('/') }}">
                                             <img src="{{ URL::to('/') }}/assets/images/logoportalreformasibirokrasinasional.png"
-                                                alt="Logo"></img>
+                                                alt="Logo">
                                         </a>
                                     </div>
                                     <button type="button" class="navbar-toggle" data-bs-toggle="collapse"
@@ -134,12 +134,12 @@
                             <div class="row gap-80 align-items-center">
                                 <div class="col-lg-7 order-lg-2">
                                     <img class="one wow fadeInRight delay-0-2s"
-                                        src="{{ URL::to('/') }}/assets/images/slide1.png" alt="Hero"></img>
+                                        src="{{ URL::to('/') }}/assets/images/slide1.png" alt="Hero">
                                 </div>
                                 <div class="col-lg-5">
                                     <div class="hero-images">
                                         <img width="50%" class="one wow fadeInRight delay-0-2s"
-                                            src="{{ URL::to('/') }}/assets/images/presiden2.png" alt="Hero"></img>
+                                            src="{{ URL::to('/') }}/assets/images/presiden2.png" alt="Hero">
                                     </div>
                                 </div>
                             </div>
@@ -154,12 +154,12 @@
                                 <div class="col-lg-7">
                                     <img class="one wow fadeInRight delay-0-2s"
                                         src="{{ URL::to('/') }}/assets/images/slide2.png
-" alt="Hero"></img>
+" alt="Hero">
                                 </div>
                                 <div class="col-lg-5">
                                     <div class="hero-images">
                                         <img width="50%" class="one wow fadeInRight delay-0-2s"
-                                            src="{{ URL::to('/') }}/assets/images/menteri.png" alt="Hero"></img>
+                                            src="{{ URL::to('/') }}/assets/images/menteri.png" alt="Hero">
                                     </div>
                                 </div>
                             </div>
@@ -173,13 +173,13 @@
                             <div class="row gap-80 align-items-center">
                                 <div class="col-lg-7 order-lg-2">
                                     <img class="one wow fadeInRight delay-0-2s"
-                                        src="{{ URL::to('/') }}/assets/images/slide3.png" alt="Hero"></img>
+                                        src="{{ URL::to('/') }}/assets/images/slide3.png" alt="Hero">
                                 </div>
                                 <div class="col-lg-5">
                                     <div class="hero-images">
                                         <img width="50%" class="one wow fadeInRight delay-0-2s"
                                             src="{{ URL::to('/') }}/assets/images/presiden.png"
-                                            alt="Hero"></img>
+                                            alt="Hero">
                                     </div>
                                 </div>
                             </div>
@@ -193,7 +193,7 @@
                             <div class="row gap-80 align-items-center">
                                 <div class="col-lg-12 ">
                                     <img class="one wow fadeInRight delay-0-2s"
-                                        src="{{ URL::to('/') }}/assets/images/roadmap.png" alt="Hero"></img>
+                                        src="{{ URL::to('/') }}/assets/images/roadmap.png" alt="Hero">
                                 </div>
                             </div>
                         </div>
@@ -204,7 +204,7 @@
         <section class="donate-area rel z-1">
             <div class="container">
                 <div class="row no-gap">
-                    <img src="{{ URL::to('/') }}/assets/images/bg1.png"></img>
+                    <img src="{{ URL::to('/') }}/assets/images/bg1.png">
                 </div>
             </div>
         </section>
@@ -220,7 +220,7 @@
                         <div class="feature-item">
                             <div class="content">
                                 <div class="icon">
-                                    <img src="{{ URL::to('/') }}/assets/images/icon1.png" alt="Icon"></img>
+                                    <img src="{{ URL::to('/') }}/assets/images/icon1.png" alt="Icon">
                                 </div>
                                 <h5 class="redt">
                                     <a href="#">Dashboard</a>
@@ -234,7 +234,7 @@
                         <div class="feature-item">
                             <div class="content">
                                 <div class="icon">
-                                    <img src="{{ URL::to('/') }}/assets/images/icon2.png" alt="Icon"></img>
+                                    <img src="{{ URL::to('/') }}/assets/images/icon2.png" alt="Icon">
                                 </div>
                                 <h5 class="redt">
                                     <a href="#">Sistem Informasi Evaluasi</a>
@@ -247,7 +247,7 @@
                         <div class="feature-item">
                             <div class="content">
                                 <div class="icon">
-                                    <img src="{{ URL::to('/') }}/assets/images/icon3.png" alt="Icon"></img>
+                                    <img src="{{ URL::to('/') }}/assets/images/icon3.png" alt="Icon">
                                 </div>
                                 <h5 class="redt">
                                     <a href="#">Ruang Belajar</a>
@@ -270,7 +270,7 @@
                         <span class="line"></span>
                     </div>
                     <div class="col-lg-4 col-md-6">
-                        <img class="fulw" src="{{ URL::to('/') }}/assets/images/post1.jpg"></img>
+                        <img class="fulw" src="{{ URL::to('/') }}/assets/images/post1.jpg">
                         <div class="feature-item">
                             <div class="content">
                                 <h5 class="redt">
@@ -287,7 +287,7 @@
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-6">
-                        <img class="fulw" src="{{ URL::to('/') }}/assets/images/post2.jpg"></img>
+                        <img class="fulw" src="{{ URL::to('/') }}/assets/images/post2.jpg">
                         <div class="feature-item">
                             <div class="content">
                                 <h5 class="redt">
@@ -303,7 +303,7 @@
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-6">
-                        <img class="fulw" src="{{ URL::to('/') }}/assets/images/post3.jpg"></img>
+                        <img class="fulw" src="{{ URL::to('/') }}/assets/images/post3.jpg">
                         <div class="feature-item">
                             <div class="content">
                                 <h5 class="redt">
@@ -355,7 +355,7 @@
                         </a>
                     </div>
                     <div class="col-xl-5 col-lg-5 col-sm-5">
-                        <img src="{{ URL::to('/') }}/assets/images/grafik.png"></img>
+                        <img src="{{ URL::to('/') }}/assets/images/grafik.png">
                     </div>
                 </div>
             </div>
@@ -364,7 +364,7 @@
         <section class="donate-area rel z-1">
             <div class="container">
                 <div class="row no-gap">
-                    <img src="assets/images/gambar/bg1.png"></img>
+                    <img src="assets/images/gambar/bg1.png">
                 </div>
             </div>
         </section>
@@ -374,8 +374,8 @@
                     <div class="col-xl-4 col-sm-6">
                         <div class="footer-widget widget_about wow fadeInUp delay-0-3s">
                             <div class="footer-logo mb-25">
-                                <a href="index.html">
-                                    <img src="{{ URL::to('/') }}/assets/images/rbkunwas.jpg" alt="Logo"></img>
+                                <a href="{{ url('/') }}">
+                                    <img src="{{ URL::to('/') }}/assets/images/rbkunwas.jpg" alt="Logo">
                                 </a>
                             </div>
                             <p>
