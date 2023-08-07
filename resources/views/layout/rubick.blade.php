@@ -160,18 +160,156 @@
 
                 </div>
             </div>
-            <div class="grid grid-cols-12 gap-6 mt-5">
+            <div class="grid grid-cols-12 gap-6">
+
                 <div class="intro-y col-span-6 flex flex-wrap sm:flex-nowrap items-center mt-2">
+                    <h1 style="padding-left: 5px; padding-right: 5px;" class="mr-auto text-lg font-bold"
+                            style="font-weight: 600">Selamat datang, <a class="text-lg text-danger font-bold"> {{ auth()->user()->username }}</a>
+                        </h1>
                 </div>
                 <div class="intro-y col-span-6 float-right mt-2">
                     <div class="float-right">
-                        <h1 style="padding-left: 5px; padding-right: 5px;" class="mr-auto text-lg font-bold"
-                            style="font-weight: 600">Selamat datang, <a class="text-lg text-danger font-bold"> {{ auth()->user()->username }}</a>
-                        </h1>
+                        
                         <div class="text-slate-500 text-xs mt-0.3 float-right">{{ auth()->user()->nama }}</div>
                     </div>
                 </div>
 
+
+             <div class="intro-y col-span-12 md:col-span-12 lg:col-span-12 xl:col-span-12">
+                 <div class="box single-item">
+                      <div class="p-5">
+                         <div  class="rounded-md overflow-hidden"> <img alt="#" width="100%" src="/template_lkerb/dist/images/bannerpanrb.jpg" /> </div>
+                     </div>
+                 </div>
+             </div>
+
+
+              <div class="col-span-12 sm:col-span-6 2xl:col-span-3 intro-y">
+                <div class="box p-5 zoom-in">
+                  <a href="#">
+                    <div class="flex items-center">
+                      <div class="w-2/4 flex-none">
+                        <div class="text-lg font-bold truncate">Data Rencana Aksi</div>
+                        <div class="text-slate-500 mt-1">13 Data Rencana Aksi</div>
+                      </div>
+                      <div class="flex-none ml-auto relative">
+                        <div class="w-[90px] h-[90px]">
+                        </div>
+                        <div class="font-medium absolute w-full h-full flex items-center justify-center top-0 left-0">      
+                            <button class="btn btn-pending mr-1 mb-2">
+                              <i data-lucide="file-text" class="w-10 h-10"></i>
+                            </button></div>
+                      </div>
+                    </div>
+                  </a>
+                </div>
+              </div>
+              <div class="col-span-12 sm:col-span-6 2xl:col-span-3 intro-y">
+                <div class="box p-5 zoom-in">
+                  <a href="#">
+                    <div class="flex items-center">
+                      <div class="w-2/4 flex-none">
+                        <div class="text-lg font-bold truncate">Data Rencana Tematik</div>
+                        <div class="text-slate-500 mt-1">10 Data Rencana Tematik</div>
+                      </div>
+                      <div class="flex-none ml-auto relative">
+                        <div class="w-[90px] h-[90px]">
+                        </div>
+                        <div class="font-medium absolute w-full h-full flex items-center justify-center top-0 left-0">
+                              <button class="btn btn-danger mr-1 mb-2">
+                              <i data-lucide="archive" class="w-10 h-10"></i>
+                            </button></div>
+                      </div>
+                    </div>
+                  </a>
+                </div>
+              </div>
+              <div class="col-span-12 sm:col-span-6 2xl:col-span-3 intro-y">
+                <div class="box p-5 zoom-in">
+                  <a href="#">
+                    <div class="flex items-center">
+                      <div class="w-2/4 flex-none">
+                        <div class="text-lg font-bold truncate">Input Rencana Aksi</div>
+                        <div class="text-slate-500 mt-1">Masukan Rencana Aksi RB 2023</div>
+                      </div>
+                      <div class="flex-none ml-auto relative">
+                        <div class="w-[90px] h-[90px]"></div>
+                        <div class="font-medium absolute w-full h-full flex items-center justify-center top-0 left-0">
+                          <div class="font-medium absolute w-full h-full flex items-center justify-center top-0 left-0">
+                            <button class="btn btn-warning mr-1 mb-2">
+                              <i data-lucide="edit" class="w-10 h-10"></i>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </a>
+                </div>
+              </div>
+              <div class="col-span-12 sm:col-span-6 2xl:col-span-3 intro-y">
+                <div class="box p-5 zoom-in">
+                  <a href="#">
+                    <div class="flex items-center">
+                      <div class="w-2/4 flex-none">
+                        <div class="text-lg font-bold truncate">Input Rencana Tematik</div>
+                        <div class="text-slate-500 mt-1">Masukan Rencana Tematik RB 2023</div>
+                      </div>
+                      <div class="flex-none ml-auto relative">
+                        <div class="w-[90px] h-[90px]"></div>
+                        <div class="font-medium absolute w-full h-full flex items-center justify-center top-0 left-0">
+                          <div class="font-medium absolute w-full h-full flex items-center justify-center top-0 left-0">
+                            <button class="btn btn-pending mr-1 mb-2">
+                              <i data-lucide="file-text" class="w-10 h-10"></i>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </a>
+                </div>
+              </div>
+              <div class="col-span-12 sm:col-span-6 2xl:col-span-3 intro-y">
+                <div class="box p-5 zoom-in">
+                  <div class="flex items-center">
+                    <div class="w-2/4 flex-none">
+                      <div class="text-lg font-bold truncate">Pengaturan</div>
+                      <div class="text-slate-500 mt-1">Pengaturan Profil dan Akun</div>
+                    </div>
+                    <div class="flex-none ml-auto relative">
+                      <div class="w-[90px] h-[90px]"></div>
+                      <div class="font-medium absolute w-full h-full flex items-center justify-center top-0 left-0">
+                        <div class="font-medium absolute w-full h-full flex items-center justify-center top-0 left-0">
+                          <button class="btn btn-dark mr-1 mb-2">
+                            <i data-lucide="settings" class="w-10 h-10"></i>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-span-12 sm:col-span-6 2xl:col-span-3 intro-y">
+                <div class="box p-5 zoom-in">
+                  <a href="#">
+                    <div class="flex items-center">
+                      <div class="w-2/4 flex-none">
+                        <div class="text-lg font-bold truncate">Logout</div>
+                        <div class="text-slate-500 mt-1">Keluar Dari Sistem</div>
+                      </div>
+                      <div class="flex-none ml-auto relative">
+                        <div class="w-[90px] h-[90px]"></div>
+                        <div class="font-medium absolute w-full h-full flex items-center justify-center top-0 left-0">
+                          <div class="font-medium absolute w-full h-full flex items-center justify-center top-0 left-0">
+                            <button class="btn btn-danger mr-1 mb-2">
+                              <i data-lucide="log-out" class="w-10 h-10"></i>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </a>
+                </div>
+              </div>
 
                 <div class="intro-y col-span-12 lg:col-span-12">
                     @yield('content')
