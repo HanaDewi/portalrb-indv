@@ -2010,7 +2010,7 @@ select{
     border-color: rgb(var(--color-primary) / var(--tw-border-opacity));
     --tw-border-opacity: 0.1;
     --tw-bg-opacity: 1;
-    background-color: rgb(var(--color-primary) / var(--tw-bg-opacity));
+  
 }
 .form-check-input[type="checkbox"]:disabled:not(:checked){
     cursor: not-allowed;
