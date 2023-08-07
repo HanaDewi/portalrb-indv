@@ -131,6 +131,33 @@
                         role="button" aria-expanded="false" data-tw-toggle="dropdown">
                         <img alt="{{ auth()->user()->username }}" src="{{ auth()->user()->foto ? asset('storage/user/'.auth()->user()->foto) : asset('template_lkerb/dist/images/user1.png') }}">
                     </div>
+
+                    <div class="dropdown-menu w-56">
+                            <ul class="dropdown-content bg-primary text-white">
+                                <li class="p-2">
+                                    <div class="font-medium">{{ auth()->user()->username }}</div>
+                                    <div class="text-xs text-white/70 mt-0.5 dark:text-slate-500">{{ auth()->user()->nama }}</div>
+                                </li>
+                                <li>
+                                    <hr class="dropdown-divider border-white/[0.08]">
+                                </li>
+                                <li>
+                                    <a href="" class="dropdown-item hover:bg-white/5"> <i data-lucide="user" class="w-4 h-4 mr-2"></i> Profile </a>
+                                </li>
+                                <li>
+                                    <a href="" class="dropdown-item hover:bg-white/5"> <i data-lucide="edit" class="w-4 h-4 mr-2"></i> Pengaturan </a>
+                                </li>
+                            
+                                <li>
+                                    <hr class="dropdown-divider border-white/[0.08]">
+                                </li>
+                                <li>
+                                    <a href="" class="dropdown-item hover:bg-white/5"> <i data-lucide="toggle-right" class="w-4 h-4 mr-2"></i> Logout </a>
+                                </li>
+                            </ul>
+                        </div>
+
+
                 </div>
             </div>
             <div class="grid grid-cols-12 gap-6 mt-5">
@@ -144,6 +171,42 @@
                         <div class="text-slate-500 text-xs mt-0.3 float-right">{{ auth()->user()->nama }}</div>
                     </div>
                 </div>
+
+
+<div class="dropdown-menu w-56">
+                            <ul class="dropdown-content bg-primary text-white">
+                                <li class="p-2">
+                                    <div class="font-medium">Kevin Spacey</div>
+                                    <div class="text-xs text-white/70 mt-0.5 dark:text-slate-500">Software Engineer</div>
+                                </li>
+                                <li>
+                                    <hr class="dropdown-divider border-white/[0.08]">
+                                </li>
+                                <li>
+                                    <a href="" class="dropdown-item hover:bg-white/5"> <i data-lucide="user" class="w-4 h-4 mr-2"></i> Profile </a>
+                                </li>
+                                <li>
+                                    <a href="" class="dropdown-item hover:bg-white/5"> <i data-lucide="edit" class="w-4 h-4 mr-2"></i> Add Account </a>
+                                </li>
+                                <li>
+                                    <a href="" class="dropdown-item hover:bg-white/5"> <i data-lucide="lock" class="w-4 h-4 mr-2"></i> Reset Password </a>
+                                </li>
+                                <li>
+                                    <a href="" class="dropdown-item hover:bg-white/5"> <i data-lucide="help-circle" class="w-4 h-4 mr-2"></i> Help </a>
+                                </li>
+                                <li>
+                                    <hr class="dropdown-divider border-white/[0.08]">
+                                </li>
+                                <li>
+                                    <a href="" class="dropdown-item hover:bg-white/5"> <i data-lucide="toggle-right" class="w-4 h-4 mr-2"></i> Logout </a>
+                                </li>
+                            </ul>
+                        </div>
+
+
+
+
+
                 <div class="intro-y col-span-12 lg:col-span-12">
                     @yield('content')
                 </div>
