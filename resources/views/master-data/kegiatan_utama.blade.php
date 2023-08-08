@@ -156,12 +156,12 @@
 
     function edit(id) {
         clearForm();
+        alert(id);
         $('#kegiatan_utama_id').val(id);
         $('#title').html('Edit Kegiatan Utama');
         $('.saveButton').prop('disabled', true);
         modal_kegiatan_utama.show();
         $.getJSON("{{url('master-data/kegiatan_utama/getData')}}/"+id, function(data) {
-            $('#kegiatan_utama_id').val(data.kegiatan_utama_id);
             $('#nama').val(data.nama);
             $('.saveButton').prop('disabled', false);
         });

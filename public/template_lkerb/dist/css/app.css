@@ -3676,7 +3676,7 @@ select{
 }
 .bg-primary{
     --tw-bg-opacity: 1;
-    background-color: --color-primary;
+    background-color: rgb(var(--color-primary) / var(--tw-text-opacity));
 }
 .bg-slate-100{
     --tw-bg-opacity: 1;
