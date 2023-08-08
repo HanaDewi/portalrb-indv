@@ -10,109 +10,146 @@
       <title>KEMENPANRB - LKE RB</title>
       <link rel="stylesheet" href="dist/css/app.css" />
    </head>
-   <body class="py-5">
-      <div class="mobile-menu md:hidden">
-         <div class="mobile-menu-bar">
-            <a href="" class="flex mr-auto">
-               <img alt="LKE RB" class="w-6" src="dist/images/logo.jpg">
-            </a>
-            <a href="javascript:;" class="mobile-menu-toggler">
-               <i data-lucide="bar-chart-2" class="w-8 h-8 text-white transform -rotate-90"></i>
-            </a>
-         </div>
-         <div class="scrollable">
-            <a href="javascript:;" class="mobile-menu-toggler">
-               <i data-lucide="x-circle" class="w-8 h-8 text-white transform -rotate-90"></i>
-            </a>
-            <ul class="scrollable__content py-2">
-               <li>
-                  <a href="javascript:;.html" class="menu menu--active">
-                     <div class="menu__icon">
-                        <i data-lucide="home"></i>
-                     </div>
-                     <div class="menu__title"> Dashboard <i data-lucide="chevron-down" class="menu__sub-icon transform rotate-180"></i>
-                     </div>
-                  </a>
-               </li>
-            </ul>
-         </div>
+    <body class="py-5">
+    <div class="mobile-menu md:hidden">
+      <div class="mobile-menu-bar">
+        <a href="" class="flex mr-auto">
+          <img alt="LKE RB" class="w-6" src="dist/images/logo.jpg">
+        </a>
+        <a href="javascript:;" class="mobile-menu-toggler">
+          <i data-lucide="bar-chart-2" class="w-8 h-8 text-white transform -rotate-90"></i>
+        </a>
       </div>
-      <div class="flex mt-[4.7rem] md:mt-0">
-         <nav class="side-nav">
-            <a href="" class="intro-x flex items-center pl-2 pt-4">
-               <img alt="LKE RB" src="dist/images/logo.jpg">
+      <div class="scrollable">
+        <a href="javascript:;" class="mobile-menu-toggler">
+          <i data-lucide="x-circle" class="w-8 h-8 text-white transform -rotate-90"></i>
+        </a>
+        <ul class="scrollable__content py-2">
+          <li>
+            <a href="javascript:;.html" class="menu menu--active">
+              <div class="menu__icon">
+                <i data-lucide="home"></i>
+              </div>
+              <div class="menu__title"> Dashboard <i data-lucide="chevron-down" class="menu__sub-icon transform rotate-180"></i>
+              </div>
             </a>
-            <div class="side-nav__devider my-6"></div>
-            <ul>
-               <li>
-                  <a href="index.html" class="side-menu side-menu--active">
-                     <div class="side-menu__icon">
-                        <i data-lucide="home"></i>
-                     </div>
-                     <div class="side-menu__title"> Dashboard </div>
-                  </a>
-               </li>
-               <li>
-                  <a href="javascript:;" class="side-menu">
-                     <div class="side-menu__icon">
-                        <i data-lucide="file-text"></i>
-                     </div>
-                     <div class="side-menu__title"> LKE RB </div>
-                  </a>
-               </li>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="flex mt-[4.7rem] md:mt-0">
+      <nav class="side-nav">
+        <a href="" class="intro-x flex items-center pl-2 pt-4">
+          <img alt="LKE RB" src="dist/images/logo.jpg">
+        </a>
+        <div class="side-nav__devider my-6"></div>
+        <ul>
+          <li>
+            <a href="index.html" class="side-menu  side-menu--active">
+              <div class="side-menu__icon">
+                <i data-lucide="home"></i>
+              </div>
+              <div class="side-menu__title"> Dashboard </div>
+            </a>
+          </li>
+          <li>
+            <a href="javascript:;" class="side-menu">
+              <div class="side-menu__icon">
+                <i data-lucide="pie-chart"></i>
+              </div>
+              <div class="side-menu__title"> RB General <div class="side-menu__sub-icon ">
+                  <i data-lucide="chevron-down"></i>
+                </div>
+              </div>
+            </a>
+            <ul class="side-menu__sub-closed">
+              <li>
+                <a href="form_rb_general_rencana_aksi.html" class="side-menu">
+                  <div class="side-menu__icon">
+                    <i data-lucide="bar-chart"></i>
+                  </div>
+                  <div class="side-menu__title"> Perencanaan </div>
+                </a>
+              </li>
+              <li>
+                <a href="form_rb_general_monitoring_dan_evaluasi.html" class="side-menu">
+                  <div class="side-menu__icon">
+                    <i data-lucide="star"></i>
+                  </div>
+                  <div class="side-menu__title"> Monitoring dan Evaluasi </div>
+                </a>
+              </li>
                 <li>
-                  <a href="inputrencanaaksi.html" class="side-menu">
-                     <div class="side-menu__icon">
-                        <i data-lucide="pie-chart"></i>
-                     </div>
-                     <div class="side-menu__title"> Rencana Aksi <div class="side-menu__sub-icon ">
-                           <i data-lucide="chevron-down"></i>
-                        </div>
-                     </div>
-                  </a>
-                  <ul class="side-menu__sub-open">
-                     <li>
-                        <a href="rencanaaksiuser.html" class="side-menu">
-                           <div class="side-menu__icon">
-                              <i data-lucide="bar-chart"></i>
-                           </div>
-                           <div class="side-menu__title"> RB General </div>
-                        </a>
-                     </li>
-                     <li>
-                        <a href="tematik.html" class="side-menu">
-                           <div class="side-menu__icon">
-                              <i data-lucide="star"></i>
-                           </div>
-                           <div class="side-menu__title"> RB Tematik </div>
-                        </a>
-                     </li>
-                  </ul>
-               </li>
-             
-               <li class="side-nav__devider my-6"></li>
-              
-              
-               <li>
-                  <a href="index.html" class="side-menu">
-                     <div class="side-menu__icon">
-                        <i data-lucide="settings"></i>
-                     </div>
-                     <div class="side-menu__title"> Settings </div>
-                  </a>
-               </li>
-               <li>
-                  <a href="login.html" class="side-menu">
-                     <div class="side-menu__icon">
-                        <i data-lucide="log-out"></i>
-                     </div>
-                     <div class="side-menu__title"> Logout </div>
-                  </a>
-               </li>
+                <a href="data_rb_general.html" class="side-menu">
+                  <div class="side-menu__icon">
+                    <i data-lucide="clipboard"></i>
+                  </div>
+                  <div class="side-menu__title"> Data RB General </div>
+                </a>
+              </li>
             </ul>
-         </nav>
+          </li>
+
+          <li>
+            <a href="javascript:;" class="side-menu">
+              <div class="side-menu__icon">
+                <i data-lucide="pie-chart"></i>
+              </div>
+                   <div class="side-menu__title"> RB Tematik <div class="side-menu__sub-icon ">
+                  <i data-lucide="chevron-down"></i>
+                </div>
+              </div>
+            </a>
+            <ul class="side-menu__sub-closed">
+              <li>
+                <a href="form_rb_tematik_perencanaan.html" class="side-menu">
+                  <div class="side-menu__icon">
+                    <i data-lucide="bar-chart"></i>
+                  </div>
+                  <div class="side-menu__title"> Perencanaan </div>
+                </a>
+              </li>
+              <li>
+                <a href="form_rb_tematik_monitoring_dan_evaluasi.html" class="side-menu">
+                  <div class="side-menu__icon">
+                    <i data-lucide="star"></i>
+                  </div>
+                  <div class="side-menu__title"> Monitoring dan Evaluasi </div>
+                </a>
+              </li>
+               <li>
+                <a href="data_rb_tematik.html" class="side-menu">
+                  <div class="side-menu__icon">
+                    <i data-lucide="clipboard"></i>
+                  </div>
+                  <div class="side-menu__title"> Data RB Tematik </div>
+                </a>
+              </li>
+            </ul>
+          </li>
 
 
+
+          <li class="side-nav__devider my-6"></li>
+          <li>
+            <a href="index.html" class="side-menu">
+              <div class="side-menu__icon">
+                <i data-lucide="settings"></i>
+              </div>
+              <div class="side-menu__title"> Settings </div>
+            </a>
+          </li>
+          <li>
+            <a href="index.html" class="side-menu">
+              <div class="side-menu__icon">
+                <i data-lucide="log-out"></i>
+              </div>
+              <div class="side-menu__title"> Logout </div>
+            </a>
+          </li>
+        </ul>
+      </nav>
 
 
   <div class="content">
