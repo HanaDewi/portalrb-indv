@@ -4065,7 +4065,7 @@ select{
 }
 
 .dataTables_wrapper .dataTables_length select {
-  float: left;
+  width: 70px;
 }
 .text-5xl{
     font-size: 3rem;
@@ -10039,7 +10039,7 @@ html body{
         --tw-rotate: -4deg;
         transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
         border-radius: 100%;
-        background-color: rgb(var(--color-primary) / 0.2);
+        background-color: rgb(var(--color-primary) / 1);
     }
 .dark .login:before{
     --tw-bg-opacity: 1;
@@ -15240,14 +15240,15 @@ html body{
     display: none;
 }
 .side-nav > ul ul li a:not(.side-menu--active){
-    color: rgb(255 255 255 / 0.7);
+    color: rgb(255 255 255 / 0.5);
 }
 .dark .side-nav > ul ul li a:not(.side-menu--active){
     --tw-text-opacity: 1;
     color: rgb(var(--color-slate-400) / var(--tw-text-opacity));
 }
 .side-nav > ul ul li a.side-menu--active .side-menu__title{
-    font-weight: 500;
+    font-weight: 700;
+
 }
 .side-nav > ul ul ul{
     display: none;
