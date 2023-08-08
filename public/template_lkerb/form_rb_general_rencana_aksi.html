@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="light">
   <head>
+
     <meta charset="utf-8">
     <link href="dist/images/favicon.ico" rel="shortcut icon">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -200,7 +201,7 @@
         </div>
         <div class="grid grid-cols-12 gap-6 mt-5">
           <div class="intro-y col-span-6 flex flex-wrap sm:flex-nowrap items-center mt-2">
-            <a href="rencanaaksiuser.html">
+            <a href="data_rb_general.html">
               <button class="btn btn-danger shadow-md mr-2">
                 <i data-lucide="file-text"></i>Lihat Rencana Aksi </button>
             </a>
@@ -272,8 +273,59 @@
                             <tr>
                               <td class="font-bold w-30">Target Indikator</td>
                               <td colspan="5">
-                                <input type="text" name="target[0]" placeholder="Masukan Data Target" class="form-control" />
+                                <div class="w-full">
+
+
+                                                      <table class="table border">
+                                                    <thead>
+                                                        <tr>
+                                                            <th class="!pr-2 bg-slate-50 dark:bg-darkmode-800"><div class="textbaseline">Baseline / Target</div></th>
+                                                            <th class="!px-2 bg-slate-50 dark:bg-darkmode-800 text-slate-500 whitespace-nowrap">Tahun</th>
+                                                            <th class="!px-2 bg-slate-50 dark:bg-darkmode-800 text-slate-500 whitespace-nowrap">Target</th>
+                                                          
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody class="tambahtahun">
+                                                        <tr>
+                                                            <td> <div class="baseline"><input id="baseline" type="checkbox" class="form-check-input border mr-2"> </div></td>
+                                                            <td>
+                                                                <input type="text" class="form-control min-w-[6rem]"  value="2022" >
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" class="form-control min-w-[6rem]" placeholder="Target">
+                                                            </td>
+                                                        </tr>
+
+                                                         <tr>
+                                                            <td><div class="baseline"><input id="baseline" type="checkbox" class="form-check-input border mr-2"> </div></td>
+                                                            <td>
+                                                                <input type="text" class="form-control min-w-[6rem]" value="2023">
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" class="form-control min-w-[6rem]" placeholder="Target">
+                                                            </td>
+                                                        </tr>
+
+                                                           <tr>
+                                                            <td><div class="baseline"><input id="baseline" type="checkbox" class="form-check-input border mr-2"> </div></td>
+                                                            <td>
+                                                                <input type="text" class="form-control min-w-[6rem]" value="2024">
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" class="form-control min-w-[6rem]" placeholder="Target">
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+
+                                                    <div class="xl:ml-20 xl:pl-5 xl:pr-20 mt-5 first:mt-0">
+                                                        <button id="tambahtahun" class="btn btn-outline-primary border-dashed w-full"><i data-lucide="plus" class="w-4 h-4 mr-2"></i> Tambah Tahun </button>
+                                                    
+                                            </div>
+                                        </div>
                               </td>
+
+
                             </tr>
                             <tr>
                               <td class="font-bold w-30">Rencana Aksi</td>
@@ -329,10 +381,7 @@
                     </div>
                     <div class="form-inline items-start flex-col xl:flex-row  pt-5 first:mt-0 first:pt-0">
                       <button class="btn btn-outline-primary border-dashed w-full" id="dynamic-ar">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" icon-name="plus" data-lucide="plus" class="lucide lucide-plus w-4 h-4 mr-2">
-                          <line x1="12" y1="5" x2="12" y2="19"></line>
-                          <line x1="5" y1="12" x2="19" y2="12"></line>
-                        </svg> Tambah Rencana Aksi </button>
+                      <i data-lucide="plus" class="w-4 h-4 mr-2"></i> Tambah Rencana Aksi </button>
                     </div>
                   </div>
                   <div id="example-tab-4" class="tab-pane leading-relaxed" role="tabpanel" aria-labelledby="example-4-tab">
@@ -397,6 +446,15 @@
     $(document).on('click', '.remove-input-field', function () {
         $(this).parents('tr').remove();
     });
+
+var s = 0;
+    $("#tambahtahun").click(function () {
+        ++s;
+        $(".tambahtahun").append('<tr>   <td><div class="baseline"><input id="baseline" type="checkbox" class="form-check-input border mr-2"> </div></td> <td> <input type="text" class="form-control min-w-[6rem]"  placeholder="Input tahun" > </td> <td> <input type="text" class="form-control min-w-[6rem]" placeholder="Target"> </td> </tr>'
+            );
+    });
+
+
 </script>
 
   </body>
