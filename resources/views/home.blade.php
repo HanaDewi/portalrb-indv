@@ -106,9 +106,6 @@
                                             <a href="#">Evaluasi</a>
                                         </li>
                                         <li>
-                                            <a href="#">Survey</a>
-                                        </li>
-                                        <li>
                                             <a href="#">Ruang Belajar</a>
                                         </li>
                                         <li>
