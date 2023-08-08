@@ -12,7 +12,7 @@ class HomeController extends Controller
     public function profil()
     {
         $user = Auth::user();
-        return view('profile', compact('user'));
+        return view('profil', compact('user'));
     }
 
     public function profil_simpan(Request $request)

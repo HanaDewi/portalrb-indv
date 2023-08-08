@@ -5,7 +5,7 @@
 @include('common.status')
 <form action="{{ url('profil_simpan') }}" id="form-user" method="post">
     @csrf
-    <div class="grid grid-cols-12 gap-6 mt-5">
+    <div class="grid grid-cols-12 gap-6">
         <div class="intro-y col-span-12 lg:col-span-6">
             <!-- BEGIN: Input -->
             <div class="intro-y box">
