@@ -8,11 +8,12 @@
     <meta name="keywords" content="Lembar Kerja Evaluasi">
     <meta name="author" content="MENPANRB">
     <title>@yield('title') - LKE KEMENPANRB</title>
-    <link rel="stylesheet" href="{{ asset('ext') }}/datatables/datatables.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
     <!-- End plugin css for this page -->
     <link href="{{ asset('ext') }}/sweetalert2/sweetalert2.css" rel="stylesheet">
     @stack('css')
     <link rel="stylesheet" href="{{ asset('template_lkerb') }}/dist/css/app.css" />
+    <link rel="stylesheet" href="{{ asset('ext') }}/datatables/datatables.css" />
 </head>
 
 <body class="py-5">

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Indikator;
 use App\Models\KegiatanUtama;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class MasterDataController extends Controller
 {
@@ -55,7 +56,7 @@ class MasterDataController extends Controller
 
     public function indikator_getDatas()
     {
-        $datas = Indikator::latest()->get();
+        $datas = Indikator::orderBy('kegiatan_utama_id')->get();
         foreach ($datas as $data) {
             $data->nama_kegiatan_utama = $data->kegiatan_utama->nama;
         }
@@ -70,16 +71,29 @@ class MasterDataController extends Controller
 
     public function indikator_simpan(Request $request)
     {
-        $success = false;
-        $indikator = new Indikator();
-        if ($request->indikator_id) {
-            $indikator = Indikator::find($request->indikator_id);
+        $success = true;
+        DB::beginTransaction();
+        try {
+            foreach ($request->nama as $key => $nama) {
+                $indikator = new Indikator();
+                if (isset($request->indikator_id)) {
+                    $indikator = Indikator::find($request->indikator_id);
+                }
+                $indikator->kegiatan_utama_id = $request->kegiatan_utama_id;
+                $indikator->nama = $nama;
+                if (!$indikator->save()) {
+                    $success = false;
+                }
+            }
+        } catch (\Throwable $th) {
+            $success = false;
+            throw $th;
         }
-        $indikator->kegiatan_utama_id = $request->kegiatan_utama_id;
-        $indikator->nama = $request->nama;
-        if ($indikator->save()) {
-            $success = true;
-        };
+        if ($success) {
+            DB::commit();
+        } else {
+            DB::rollBack();
+        }
         return response()->json(['success' => $success]);
     }
 

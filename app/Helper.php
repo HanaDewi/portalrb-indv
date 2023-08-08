@@ -14,21 +14,21 @@ function menus()
         ],
         [
             'levels' => ['admin', 'evaluator', 'instansi'],
-            'title' => 'Rencana Aksi',
+            'title' => 'RB General',
             'icon' => 'pie-chart',
-            'url' => 'javascript:;',
+            'url' => 'rb_general',
             'items' => [
                 [
                     'levels' => ['admin', 'evaluator', 'instansi'],
-                    'title' => 'RB General',
+                    'title' => 'Perencanaan',
                     'icon' => 'bar-chart',
-                    'url' => 'rb_general',
+                    'url' => 'rb_general/perencanaan',
                 ],
                 [
                     'levels' => ['admin', 'evaluator', 'instansi'],
-                    'title' => 'RB Tematik',
-                    'icon' => 'star',
-                    'url' => 'rb_tematik',
+                    'title' => 'Rekap Data',
+                    'icon' => 'clipboard',
+                    'url' => 'rb_general/rekap_data',
                 ],
             ]
         ],

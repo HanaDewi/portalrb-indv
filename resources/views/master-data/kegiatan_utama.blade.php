@@ -170,7 +170,7 @@
     function hapus(id) {
         Swal.fire({
             title: "Yakin?",
-            text: "Hapus Suplier ini?",
+            text: "Hapus Kegiatan Utama ini?",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: "#DD6B55",
