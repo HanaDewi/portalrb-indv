@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\KegiatanUtama;
 use Carbon\Carbon;
 
 function menus()
@@ -10,9 +11,6 @@ function menus()
             'title' => 'Dashboard',
             'icon' => 'home',
             'url' => 'dashboard',
-        ],
-        [
-            'levels' => 'devider',
         ],
         [
             'levels' => ['admin', 'evaluator', 'instansi'],
@@ -35,10 +33,33 @@ function menus()
             ]
         ],
         [
-            'levels' => ['pt'],
-            'title' => 'Pencapaian IKU',
-            'icon' => 'fa fa-trophy',
-            'url' => 'pencapaian_pt',
+            'levels' => 'devider',
+        ],
+        [
+            'levels' => ['admin'],
+            'title' => 'Master Data',
+            'icon' => 'database',
+            'url' => 'master-data',
+            'items' => [
+                [
+                    'levels' => ['admin', 'evaluator', 'instansi'],
+                    'title' => 'Kegiatan Utama',
+                    'icon' => 'award',
+                    'url' => 'master-data/kegiatan_utama',
+                ],
+                [
+                    'levels' => ['admin', 'evaluator', 'instansi'],
+                    'title' => 'Indikator',
+                    'icon' => 'command',
+                    'url' => 'master-data/indikator',
+                ],
+            ]
+        ],
+        [
+            'levels' => ['admin', 'evaluator', 'instansi'],
+            'title' => 'Profil',
+            'icon' => 'user',
+            'url' => 'profil',
         ],
     ];
     return $menu;
@@ -79,4 +100,9 @@ function fdate($date, $time = false)
 function humanDate($date)
 {
     return Carbon::parse($date)->diffForHumans().' pada '.Carbon::parse($date)->isoFormat('dddd, D MMMM Y HH:mm:ss');
+}
+
+function kegiatanUtama()
+{
+    return KegiatanUtama::pluck('nama', 'id');
 }

@@ -3676,7 +3676,7 @@ select{
 }
 .bg-primary{
     --tw-bg-opacity: 1;
-    background-color: rgb(var(--color-primary) / var(--tw-bg-opacity));
+    background-color: --color-primary;
 }
 .bg-slate-100{
     --tw-bg-opacity: 1;
@@ -9959,7 +9959,7 @@ body.tabulator-print-fullscreen-hide > *:not(.tabulator-print-fullscreen) {
  */
 html{
     --tw-bg-opacity: 1;
-    background-color: #b3292d;
+    background-color: rgb(var(--color-primary) / var(--tw-bg-opacity));
 }
 html.dark{
     --tw-bg-opacity: 1;
@@ -10064,7 +10064,7 @@ html body{
         transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
         border-radius: 100%;
         --tw-bg-opacity: 1;
-        background-color: #b3292d;
+        background-color: --color-primary;
     }
 .dark .login:after{
     --tw-bg-opacity: 1;
@@ -15294,7 +15294,7 @@ html body{
                     }
 .side-nav > ul > li > .side-menu.side-menu--active .side-menu__icon{
     --tw-text-opacity: 1;
-    color: #b3292d;
+    color: --color-primary;
 }
 .dark .side-nav > ul > li > .side-menu.side-menu--active .side-menu__icon{
     --tw-text-opacity: 1;
@@ -15554,7 +15554,7 @@ html body{
     .mobile-menu .mobile-menu-bar{
         padding-left: 0.75rem;
         padding-right: 0.75rem;
-        background: #b3292d;
+        background: --color-primary;
     }
   }
 .mobile-menu .scrollable{
@@ -15775,6 +15775,10 @@ html body{
 }
 .error-page img {
     width: 450px;
+}
+.error {
+    --tw-border-opacity: 1;
+    color: rgb(var(--color-danger) / var(--tw-border-opacity));
 }
 .search-result {
     width: 450px;
