@@ -34,7 +34,7 @@
         <div class="modal-content">
             <!-- BEGIN: Modal Header -->
             <div class="modal-header">
-                <h2 class="fw-medium fs-base me-auto" id="title">Tambah Kegiatan Utama</h2>
+                <h2 class="fw-medium fs-base me-auto" id="title">Tambah Indikator</h2>
             </div> <!-- END: Modal Header -->
             <!-- BEGIN: Modal Body -->
             <form action="{{ url('master-data/indikator/simpan') }}" id="form-indikator" method="post">
@@ -46,10 +46,13 @@
                             <label for="kegiatan_utama_id" class="form-label mt-2">Kegiatan Utama <span class="text-danger">*</span></label>
                             {!! Form::select('kegiatan_utama_id', kegiatanUtama(), null, ['class' => 'w-full mt-2', 'id' => 'kegiatan_utama_id', 'data-placeholder' => 'Pilih Kegiatan Utama', 'required']) !!}
                         </div> <!-- END: Basic Select -->
-                        <div class="form-group">
-                            <label for="nama" class="form-label mt-2">Nama Indikator <span class="text-danger">*</span></label> 
-                            <textarea id="nama" name="nama" class="form-control" placeholder="Nama Indikator" required></textarea>
+                        <div id="indikator_input">
+                            <div class="form-group">
+                                <label for="nama" class="form-label mt-2">Nama Indikator <span class="text-danger">*</span></label> 
+                                <textarea id="nama0" name="nama[0]" class="form-control" placeholder="Nama Indikator" required></textarea>
+                            </div>
                         </div>
+                        <button class="btn btn-outline-primary border-dashed w-full tambahinput" onclick="tambahinput();"><i data-lucide="plus" class="w-4 h-4 mr-2"></i></button>
                     </div>
                 </div> <!-- END: Modal Body -->
                 <!-- BEGIN: Modal Footer -->
@@ -68,6 +71,7 @@
 <script src="{{ asset('ext/jquery-validation/localization/messages_id.min.js') }}"></script>
 <script src="{{ asset('ext') }}/jquery-inputmask/jquery.inputmask.bundle.js"></script>
 <script>
+    var idx = 0;
     $(document).ready(function() {
         getData();
         modal_indikator = tailwind.Modal.getInstance(document.querySelector("#modal-indikator"));
@@ -139,7 +143,7 @@
                 sortable: false, 
                 searchable: false,
                 render: function (data, type, row, meta) {
-                    return '<button onclick="edit('+row.id+');" class="btn btn-warning btn-sm w-10">Edit</button><button onclick="hapus('+row.id+');" class="btn btn-danger btn-sm w-10">Hapus</button>';
+                    return '<button onclick="edit('+row.kegiatan_utama_id+');" class="btn btn-warning btn-sm w-10">Edit</button><button onclick="hapus('+row.kegiatan_utama_id+');" class="btn btn-danger btn-sm w-10">Hapus</button>';
                 },
             },
         ],
@@ -154,29 +158,46 @@
         $('#indikator_id').val('');
     }
 
+    function indikator_input(idx) {
+        return '<div class="form-group">'+
+                    '<label for="nama'+idx+'" class="form-label mt-2">Nama Indikator <span class="text-danger">*</span></label> '+
+                    '<textarea id="nama'+idx+'" name="nama['+idx+']" class="form-control" placeholder="Nama Indikator" required></textarea>'+
+                '</div>';
+    }
+
     function tambah() {
         clearForm();
         $('.saveButton').prop('disabled', false);
+        $('.tambahinput').show();
+        idx = 0;
+        $('#indikator_input').html(indikator_input(idx));
         modal_indikator.show();
+    }
+
+    function tambahinput() {
+        idx++;
+        $('#indikator_input').append(indikator_input(idx));
     }
 
     function edit(id) {
         clearForm();
         $('#indikator_id').val(id);
-        $('#title').html('Edit Kegiatan Utama');
+        $('#title').html('Edit Indikator');
         $('.saveButton').prop('disabled', true);
-        modal_indikator.show();
         $.getJSON("{{url('master-data/indikator/getData')}}/"+id, function(data) {
+            $('#indikator_input').html(indikator_input(0));
             $('#kegiatan_utama_id').val(data.kegiatan_utama_id);
-            $('#nama').val(data.nama);
+            $('#nama0').val(data.nama);
+            $('.tambahinput').hide();
             $('.saveButton').prop('disabled', false);
+            modal_indikator.show();
         });
     }
 
     function hapus(id) {
         Swal.fire({
             title: "Yakin?",
-            text: "Hapus Suplier ini?",
+            text: "Hapus Indikator ini?",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: "#DD6B55",
@@ -190,9 +211,9 @@
                     dataType: "json",
                     success: function(terhapus) {
                         if (terhapus) {
-                            Swal.fire('Selamat!', 'Data Kegiatan Utama berhasil dihapus!', 'success');
+                            Swal.fire('Selamat!', 'Data Indikator berhasil dihapus!', 'success');
                         } else {
-                            Swal.fire('Aduh!', 'Data Kegiatan Utama gagal dihapus! Coba lagi nanti ya..', 'error');
+                            Swal.fire('Aduh!', 'Data Indikator gagal dihapus! Coba lagi nanti ya..', 'error');
                         }
                         getData();
                     },
