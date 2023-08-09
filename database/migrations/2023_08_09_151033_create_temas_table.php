@@ -11,13 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('indikator', function (Blueprint $table) {
+        Schema::create('tema', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('kegiatan_utama_id');
             $table->string('nama');
-            $table->smallInteger('kl');
-            $table->smallInteger('provinsi');
-            $table->smallInteger('kabupaten');
             $table->timestamps();
         });
     }
@@ -27,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('indikator');
+        Schema::dropIfExists('tema');
     }
 };

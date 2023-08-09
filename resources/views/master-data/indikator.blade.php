@@ -19,6 +19,7 @@
                         <th class="w-5">No.</th>
                         <th>Nama Kegiatan Utama</th>
                         <th>Indikator</th>
+                        <th class="w-10">Pengguna Indikator</th>
                         <th class="w-5">Aksi</th>
                     </tr>
                 </thead>
@@ -51,6 +52,21 @@
                                 <label for="nama" class="form-label mt-2">Nama Indikator <span class="text-danger">*</span></label> 
                                 <textarea id="nama0" name="nama[0]" class="form-control" placeholder="Nama Indikator" required></textarea>
                             </div>
+                            <div>
+                                <label>Pengguna Indikator</label>
+                                <div class="form-check mt-2">
+                                    <input id="kl0" class="form-check-input" type="checkbox" value="1">
+                                    <label class="form-check-label" for="kl0" name="kl[0]">Kementrian / Lembaga</label>
+                                </div>
+                                <div class="form-check mt-2">
+                                    <input id="provinsi0" class="form-check-input" type="checkbox" value="1">
+                                    <label class="form-check-label" for="provinsi0" name="provinsi[0]">Provinsi</label>
+                                </div>
+                                <div class="form-check mt-2">
+                                    <input id="kabupaten0" class="form-check-input" type="checkbox" value="1">
+                                    <label class="form-check-label" for="kabupaten0" name="kabupaten[0]">Kabupaten / Kota</label>
+                                </div>
+                            </div>
                         </div>
                         <button class="btn btn-outline-primary border-dashed w-full tambahinput" onclick="tambahinput();"><i data-lucide="plus" class="w-4 h-4 mr-2"></i></button>
                     </div>
@@ -70,6 +86,7 @@
 <script src="{{ asset('ext/jquery-validation/jquery.validate.min.js') }}"></script>
 <script src="{{ asset('ext/jquery-validation/localization/messages_id.min.js') }}"></script>
 <script src="{{ asset('ext') }}/jquery-inputmask/jquery.inputmask.bundle.js"></script>
+<script src="http://cdn.rawgit.com/ashl1/datatables-rowsgroup/v1.0.0/dataTables.rowsGroup.js"></script>
 <script>
     var idx = 0;
     $(document).ready(function() {
@@ -125,9 +142,11 @@
     var indikator = $('#indikator').DataTable( {
         responsive: true,
         processing: true,
+        ordering: false,
         ajax: {
             url: "{{url('emptyDT')}}",
         },
+        rowsGroup: [1],
         columns: [
             {
                 data: null,
@@ -139,11 +158,12 @@
             },
             { data: 'nama_kegiatan_utama' },
             { data: 'nama' },
+            { data: 'pengguna_indikator' },
             { 
                 sortable: false, 
                 searchable: false,
                 render: function (data, type, row, meta) {
-                    return '<button onclick="edit('+row.kegiatan_utama_id+');" class="btn btn-warning btn-sm w-10">Edit</button><button onclick="hapus('+row.kegiatan_utama_id+');" class="btn btn-danger btn-sm w-10">Hapus</button>';
+                    return '<button onclick="edit('+row.id+');" class="btn btn-warning btn-sm w-10">Edit</button><button onclick="hapus('+row.id+');" class="btn btn-danger btn-sm w-10">Hapus</button>';
                 },
             },
         ],
@@ -162,6 +182,21 @@
         return '<div class="form-group">'+
                     '<label for="nama'+idx+'" class="form-label mt-2">Nama Indikator <span class="text-danger">*</span></label> '+
                     '<textarea id="nama'+idx+'" name="nama['+idx+']" class="form-control" placeholder="Nama Indikator" required></textarea>'+
+                '</div>'+
+                '<div class="mt-5 mb-5"><hr class="mb-5">'+
+                    '<label>Pengguna Indikator</label>'+
+                    '<div class="form-check mt-2">'+
+                        '<input id="kl'+idx+'" class="form-check-input" type="checkbox" name="kl['+idx+']" value="1">'+
+                        '<label class="form-check-label" for="kl'+idx+'">Kementrian / Lembaga</label>'+
+                    '</div>'+
+                    '<div class="form-check mt-2">'+
+                        '<input id="provinsi'+idx+'" class="form-check-input" type="checkbox" name="provinsi['+idx+']" value="1">'+
+                        '<label class="form-check-label" for="provinsi'+idx+'">Provinsi</label>'+
+                    '</div>'+
+                    '<div class="form-check mt-2">'+
+                        '<input id="kabupaten'+idx+'" class="form-check-input" type="checkbox" name="kabupaten['+idx+']" value="1">'+
+                        '<label class="form-check-label" for="kabupaten'+idx+'">Kabupaten / Kota</label>'+
+                    '</div>'+
                 '</div>';
     }
 
@@ -185,9 +220,16 @@
         $('#title').html('Edit Indikator');
         $('.saveButton').prop('disabled', true);
         $.getJSON("{{url('master-data/indikator/getData')}}/"+id, function(data) {
+            console.log(data);
             $('#indikator_input').html(indikator_input(0));
             $('#kegiatan_utama_id').val(data.kegiatan_utama_id);
             $('#nama0').val(data.nama);
+            kl_checked = data.kl == 1 ? true : false;
+            provinsi_checked = data.provinsi == 1 ? true : false;
+            kabupaten_checked = data.kabupaten == 1 ? true : false;
+            $('#kl0').prop('checked', kl_checked);
+            $('#provinsi0').prop('checked', provinsi_checked);
+            $('#kabupaten0').prop('checked', kabupaten_checked);
             $('.tambahinput').hide();
             $('.saveButton').prop('disabled', false);
             modal_indikator.show();

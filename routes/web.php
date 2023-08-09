@@ -42,6 +42,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/master-data/indikator/getData/{id}', [MasterDataController::class, 'indikator_getData']);
     Route::post('/master-data/indikator/simpan', [MasterDataController::class, 'indikator_simpan']);
     Route::post('/master-data/indikator/hapus', [MasterDataController::class, 'indikator_hapus']);
+    // Tema
+    Route::get('/master-data/tema', [MasterDataController::class, 'tema'])->name('tema');
+    Route::get('/master-data/tema/getDatas', [MasterDataController::class, 'tema_getDatas']);
+    Route::get('/master-data/tema/getData/{id}', [MasterDataController::class, 'tema_getData']);
+    Route::post('/master-data/tema/simpan', [MasterDataController::class, 'tema_simpan']);
+    Route::post('/master-data/tema/hapus', [MasterDataController::class, 'tema_hapus']);
 });
 
 require __DIR__ . '/auth.php';

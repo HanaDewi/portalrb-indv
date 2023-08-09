@@ -1,23 +1,23 @@
 @extends('layout.rubick')
-@section('title', 'Kegiatan Utama')
+@section('title', 'Tema')
 
 @section('button')
-<button class="btn btn-danger shadow-md mr-2" onclick="tambah();" data-bs-toggle="modal" data-bs-target="#modal-kegiatan_utama">Tambah Kegiatan Utama</button>
+<button class="btn btn-danger shadow-md mr-2" onclick="tambah();" data-bs-toggle="modal" data-bs-target="#modal-tema">Tambah Tema</button>
 @endsection
 @section('content')
 @include('common.status')
 <div class="intro-y col-span-12 lg:col-span-12">
     <div class="intro-y box">
         <div class="flex flex-col sm:flex-row items-center p-5 border-b border-slate-200/60">
-            <h2 class="font-medium text-base mr-auto"> Kegiatan Utama</h2>
+            <h2 class="font-medium text-base mr-auto"> Tema</h2>
             <div class="form-check form-switch w-full sm:w-auto sm:ml-auto mt-3 sm:mt-0"></div>
         </div>
         <div class="lg:col-span-12 p-5 border-b border-slate-200/60">
-            <table id="kegiatan_utama" class="table table-bordered table-striped hover" cellspacing="0" width="100%">
+            <table id="tema" class="table table-bordered table-striped hover" cellspacing="0" width="100%">
                 <thead class="table-dark">
                     <tr>
                         <th class="w-5">No.</th>
-                        <th>Nama Kegiatan Utama</th>
+                        <th>Nama Tema</th>
                         <th class="w-5">Aksi</th>
                     </tr>
                 </thead>
@@ -28,22 +28,22 @@
     </div>
 </div>
 
-<div id="modal-kegiatan_utama" class="modal fade" tabindex="-1" aria-hidden="true">
+<div id="modal-tema" class="modal fade" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <!-- BEGIN: Modal Header -->
             <div class="modal-header">
-                <h2 class="fw-medium fs-base me-auto" id="title">Tambah Kegiatan Utama</h2>
+                <h2 class="fw-medium fs-base me-auto" id="title">Tambah Tema</h2>
             </div> <!-- END: Modal Header -->
             <!-- BEGIN: Modal Body -->
-            <form action="{{ url('master-data/kegiatan_utama/simpan') }}" id="form-kegiatan_utama" method="post">
+            <form action="{{ url('master-data/tema/simpan') }}" id="form-tema" method="post">
                 @csrf
-                <input type="hidden" name="kegiatan_utama_id" id="kegiatan_utama_id">
+                <input type="hidden" name="tema_id" id="tema_id">
                 <div class="modal-body grid columns-12 gap-4 gap-y-3">
                     <div class="g-col-12">
                         <div class="form-group">
-                            <label for="nama" class="form-label">Nama Kegiatan Utama  <span class="text-danger">*</span></label> 
-                            <textarea id="nama" name="nama" class="form-control" placeholder="Nama Kegiatan Utama" required></textarea>
+                            <label for="nama" class="form-label">Nama Tema  <span class="text-danger">*</span></label> 
+                            <textarea id="nama" name="nama" class="form-control" placeholder="Nama Tema" required></textarea>
                         </div> 
                     </div>
                 </div> <!-- END: Modal Body -->
@@ -65,9 +65,9 @@
 <script>
     $(document).ready(function() {
         getData();
-        modal_kegiatan_utama = tailwind.Modal.getInstance(document.querySelector("#modal-kegiatan_utama"));
+        modal_tema = tailwind.Modal.getInstance(document.querySelector("#modal-tema"));
         
-        $('#form-kegiatan_utama').validate({
+        $('#form-tema').validate({
             highlight: function (input) {
                 $(input).addClass('border-danger');
             },
@@ -96,11 +96,11 @@
                     success: function(data) {
                         $('.saveButton').prop('disabled', false);
                         if (data.success) {
-                            Swal.fire('Selamat!', 'Data Kegiatan Utama berhasil disimpan!', 'success');
-                            modal_kegiatan_utama.hide();
+                            Swal.fire('Selamat!', 'Data Tema berhasil disimpan!', 'success');
+                            modal_tema.hide();
                         } else {
-                            Swal.fire('Aduh!', 'Data Kegiatan Utama gagal disimpan! Coba lagi nanti ya..', 'error');
-                            modal_kegiatan_utama.hide();
+                            Swal.fire('Aduh!', 'Data Tema gagal disimpan! Coba lagi nanti ya..', 'error');
+                            modal_tema.hide();
                         }
                         getData();
                     },
@@ -113,7 +113,7 @@
         });
     });
 
-    var kegiatan_utama = $('#kegiatan_utama').DataTable( {
+    var tema = $('#tema').DataTable( {
         responsive: true,
         processing: true,
         ajax: {
@@ -140,27 +140,27 @@
     }); 
 
     function getData() {
-        kegiatan_utama.ajax.url("{{url('master-data/kegiatan_utama/getDatas')}}").load(null, false);
+        tema.ajax.url("{{url('master-data/tema/getDatas')}}").load(null, false);
     }
 
     function clearForm() {
-        $('#form-kegiatan_utama').trigger('reset');
-        $('#kegiatan_utama_id').val('');
+        $('#form-tema').trigger('reset');
+        $('#tema_id').val('');
     }
 
     function tambah() {
         clearForm();
         $('.saveButton').prop('disabled', false);
-        modal_kegiatan_utama.show();
+        modal_tema.show();
     }
 
     function edit(id) {
         clearForm();
-        $('#kegiatan_utama_id').val(id);
-        $('#title').html('Edit Kegiatan Utama');
+        $('#tema_id').val(id);
+        $('#title').html('Edit Tema');
         $('.saveButton').prop('disabled', true);
-        modal_kegiatan_utama.show();
-        $.getJSON("{{url('master-data/kegiatan_utama/getData')}}/"+id, function(data) {
+        modal_tema.show();
+        $.getJSON("{{url('master-data/tema/getData')}}/"+id, function(data) {
             $('#nama').val(data.nama);
             $('.saveButton').prop('disabled', false);
         });
@@ -169,7 +169,7 @@
     function hapus(id) {
         Swal.fire({
             title: "Yakin?",
-            text: "Hapus Kegiatan Utama ini?",
+            text: "Hapus Tema ini?",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: "#DD6B55",
@@ -177,16 +177,15 @@
         }).then((result) => {
             if (result.isConfirmed) {
                 $.ajax({
-                    url: "{{url('master-data/kegiatan_utama/hapus')}}",
+                    url: "{{url('master-data/tema/hapus')}}",
                     type: "post",
                     data: {_token: '{{csrf_token()}}', id: id},
                     dataType: "json",
                     success: function(terhapus) {
-                        console.log(terhapus);
-                        if (terhapus.success) {
-                            Swal.fire('Selamat!', 'Data Kegiatan Utama berhasil dihapus!', 'success');
+                        if (terhapus) {
+                            Swal.fire('Selamat!', 'Data Tema berhasil dihapus!', 'success');
                         } else {
-                            Swal.fire('Aduh!', 'Data Kegiatan Utama gagal dihapus! '+terhapus.pesan, 'error');
+                            Swal.fire('Aduh!', 'Data Tema gagal dihapus! Coba lagi nanti ya..', 'error');
                         }
                         getData();
                     },

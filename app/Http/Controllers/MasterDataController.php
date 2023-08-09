@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Indikator;
 use App\Models\KegiatanUtama;
+use App\Models\Tema;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -42,13 +43,22 @@ class MasterDataController extends Controller
 
     public function kegiatan_utama_hapus(Request $request)
     {
-        $aset = KegiatanUtama::find($request->id);
-        if ($aset->delete()) {
-            return true;
+        $pesan = '';
+        $success = true;
+        $kegiatan_utama = KegiatanUtama::find($request->id);
+        if ($kegiatan_utama->indikators) {
+            $pesan = 'Kegiatan Utama tidak bisa dihapus, silahkan hapus dulu Indikator yang menggunakan Kegiatan Utama ini!';
+            $success = false;
         } else {
-            return false;
+            if ($kegiatan_utama->delete()) {
+                $success = true;
+            } else {
+                $success = false;
+            }
         }
+        return response()->json(['success' => $success, 'pesan' => $pesan]);
     }
+
     public function indikator()
     {
         return view('master-data.indikator');
@@ -59,6 +69,21 @@ class MasterDataController extends Controller
         $datas = Indikator::orderBy('kegiatan_utama_id')->get();
         foreach ($datas as $data) {
             $data->nama_kegiatan_utama = $data->kegiatan_utama->nama;
+            $pengguna_indikator = [];
+            if ($data->kl == 1) {
+                $pengguna_indikator[] = 'Kementrian/Lembaga';
+            }
+            if ($data->provinsi == 1) {
+                $pengguna_indikator[] = 'Provinsi';
+            }
+            if ($data->kabupaten == 1) {
+                $pengguna_indikator[] = 'Kabupaten';
+            }
+            if (count($pengguna_indikator)) {
+                $data->pengguna_indikator = implode('<br>', $pengguna_indikator);
+            } else {
+                $data->pengguna_indikator = '';
+            }
         }
         return response()->json(['data' => $datas]);
     }
@@ -81,6 +106,9 @@ class MasterDataController extends Controller
                 }
                 $indikator->kegiatan_utama_id = $request->kegiatan_utama_id;
                 $indikator->nama = $nama;
+                $indikator->kl = isset($request->kl[$key]) ? 1 : 0;
+                $indikator->provinsi = isset($request->provinsi[$key]) ? 1 : 0;
+                $indikator->kabupaten = isset($request->kabupaten[$key]) ? 1 : 0;
                 if (!$indikator->save()) {
                     $success = false;
                 }
@@ -99,8 +127,48 @@ class MasterDataController extends Controller
 
     public function indikator_hapus(Request $request)
     {
-        $aset = Indikator::find($request->id);
-        if ($aset->delete()) {
+        $indikator = Indikator::find($request->id);
+        if ($indikator->delete()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    public function tema()
+    {
+        return view('master-data.tema');
+    }
+
+    public function tema_getDatas()
+    {
+        $datas = Tema::latest()->get();
+        return response()->json(['data' => $datas]);
+    }
+
+    public function tema_getData($id)
+    {
+        $data = Tema::find($id);
+        return $data;
+    }
+
+    public function tema_simpan(Request $request)
+    {
+        $success = false;
+        $tema = new Tema();
+        if ($request->tema_id) {
+            $tema = Tema::find($request->tema_id);
+        }
+        $tema->nama = $request->nama;
+        if ($tema->save()) {
+            $success = true;
+        };
+        return response()->json(['success' => $success]);
+    }
+
+    public function tema_hapus(Request $request)
+    {
+        $tema = Tema::find($request->id);
+        if ($tema->delete()) {
             return true;
         } else {
             return false;

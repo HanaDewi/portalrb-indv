@@ -7,25 +7,25 @@ function menus()
 {
     $menu = [
         [
-            'levels' => ['admin', 'evaluator', 'instansi'],
+            'levels' => ['admin', 'evaluator', 'provinsi', 'kabupaten', 'kl'],
             'title' => 'Dashboard',
             'icon' => 'home',
             'url' => 'dashboard',
         ],
         [
-            'levels' => ['admin', 'evaluator', 'instansi'],
+            'levels' => ['admin', 'evaluator', 'provinsi', 'kabupaten', 'kl'],
             'title' => 'RB General',
             'icon' => 'pie-chart',
             'url' => 'rb_general',
             'items' => [
                 [
-                    'levels' => ['admin', 'evaluator', 'instansi'],
+                    'levels' => ['provinsi', 'kabupaten', 'kl'],
                     'title' => 'Perencanaan',
                     'icon' => 'bar-chart',
                     'url' => 'rb_general/perencanaan',
                 ],
                 [
-                    'levels' => ['admin', 'evaluator', 'instansi'],
+                    'levels' => ['admin', 'evaluator', 'provinsi', 'kabupaten', 'kl'],
                     'title' => 'Rekap Data',
                     'icon' => 'clipboard',
                     'url' => 'rb_general/rekap_data',
@@ -42,21 +42,27 @@ function menus()
             'url' => 'master-data',
             'items' => [
                 [
-                    'levels' => ['admin', 'evaluator', 'instansi'],
+                    'levels' => ['admin', 'evaluator'],
                     'title' => 'Kegiatan Utama',
                     'icon' => 'award',
                     'url' => 'master-data/kegiatan_utama',
                 ],
                 [
-                    'levels' => ['admin', 'evaluator', 'instansi'],
+                    'levels' => ['admin', 'evaluator'],
                     'title' => 'Indikator',
                     'icon' => 'command',
                     'url' => 'master-data/indikator',
                 ],
+                [
+                    'levels' => ['admin', 'evaluator'],
+                    'title' => 'Tema',
+                    'icon' => 'bookmark',
+                    'url' => 'master-data/tema',
+                ],
             ]
         ],
         [
-            'levels' => ['admin', 'evaluator', 'instansi'],
+            'levels' => ['admin', 'evaluator', 'provinsi', 'kabupaten', 'kl'],
             'title' => 'Profil',
             'icon' => 'user',
             'url' => 'profil',
