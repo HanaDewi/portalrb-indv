@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="light">
   <head>
+
     <meta charset="utf-8">
     <link href="dist/images/favicon.ico" rel="shortcut icon">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -245,7 +246,7 @@
                       </div>
                       <div id="konten_tambah_aksi">
                         <div class="relative pl-5 pr-5 xl:pr-10 py-10  dark:border rounded-md">
-                          <table class="table table-bordered" id="dynamicAddRemove">
+                          <table class="table table-bordered">
                             <tr>
                               <td class="font-bold w-30">Instansi</td>
                               <td colspan="5">
@@ -289,8 +290,67 @@
                             </tr>
                             <tr>
                               <td class="font-bold w-30">Target Indikator</td>
-                              <td colspan="5">
-                                <input type="text" name="target[0]" placeholder="Masukan Data Target" class="form-control" />
+                             <td colspan="5">
+                                <div class="w-full">
+
+
+                                                      <table class="table border">
+                                                    <thead>
+                                                        <tr>
+                                                            <th class="!pr-2 bg-slate-50 dark:bg-darkmode-800"><div class="textbaseline">Baseline / Target</div></th>
+                                                            <th class="!px-2 bg-slate-50 dark:bg-darkmode-800 text-slate-500 whitespace-nowrap">Tahun</th>
+                                                            <th class="!px-2 bg-slate-50 dark:bg-darkmode-800 text-slate-500 whitespace-nowrap">Target</th>
+                                                               <th class="!px-2 bg-slate-50 dark:bg-darkmode-800 text-slate-500 whitespace-nowrap"></th>
+                                                          
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody class="tambahtahun">
+                                                        <tr id="remove-tahun">
+                                                            <td> <div class="baseline"><input id="baseline" type="checkbox" class="form-check-input border mr-2"> </div></td>
+                                                            <td>
+                                                                <input type="text" class="form-control min-w-[6rem]"  value="2022" >
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" class="form-control min-w-[6rem]" placeholder="Target">
+                                                            </td>
+                                                             <td class="!pl-4 text-slate-500">
+                                                                 <button type="button" class="btn btn-sm btn-secondary remove-tahun">x</button>
+                                                            </td>
+                                                        </tr>
+
+                                                         <tr id="remove-tahun">
+                                                            <td><div class="baseline"><input id="baseline" type="checkbox" class="form-check-input border mr-2"> </div></td>
+                                                            <td>
+                                                                <input type="text" class="form-control min-w-[6rem]" value="2023">
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" class="form-control min-w-[6rem]" placeholder="Target">
+                                                            </td>
+                                                             <td class="!pl-4 text-slate-500">
+                                                                <button type="button" class="btn btn-sm btn-secondary remove-tahun">x</button>
+                                                            </td>
+                                                        </tr>
+
+                                                          <tr id="remove-tahun">
+                                                            <td><div class="baseline"><input id="baseline" type="checkbox" class="form-check-input border mr-2"> </div></td>
+                                                            <td>
+                                                                <input type="text" class="form-control min-w-[6rem]" value="2024">
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" class="form-control min-w-[6rem]" placeholder="Target">
+                                                            </td>
+                                                             <td class="!pl-4 text-slate-500">
+                                                                  <button type="button" class="btn btn-sm btn-secondary remove-tahun">x</button>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+
+                                                    <div class="xl:ml-20 xl:pl-5 xl:pr-20 mt-5 first:mt-0">
+                                                        <button id="tambahtahun" class="btn btn-outline-primary border-dashed w-full"><i data-lucide="plus" class="w-4 h-4 mr-2"></i> Tambah Tahun </button>
+                                                    
+                                            </div>
+                                        </div>
                               </td>
                             </tr>
                              <tr>
@@ -377,6 +437,10 @@
                               </td>
                             </tr>
                           </table>
+
+                              <div id="dynamicAddRemove"></div>
+
+
                         </div>
                       </div>
                     </div>
@@ -473,12 +537,27 @@
     var i = 0;
     $("#dynamic-ar").click(function () {
         ++i;
-        $("#dynamicAddRemove").append('<tr><td colspan="6" class="font-bold bg-slate-200" align="center">Rancangan Aksi Baru</td></tr> <tr> <td class="font-bold w-30">Indikator Sasaran Tematik</td> <td colspan="5"> <select class="form-select mt-2 sm:mr-2 form-control" name="indikator[' + i +']"> <option>Kegiatan Utama Roadmap Pemda Trial</option> <option>Tingkat Implementasi Sistem kerja Baru dan Fleksibilitas Berkerja Pegawai</option> <option>Indeks SPBE</option> <option>Tingkat Implementasi Inisiatif Strategi Arsitektur SPBE*</option> </select> </td> </tr> <tr> <td class="font-bold w-30">Target Indikator</td> <td colspan="5"> <input type="text" name="target[' + i +']" placeholder="Masukan Data Target" class="form-control" /> </td> </tr> <tr> <td class="font-bold w-30">Permasalahan (Bottleneck)</td> <td colspan="5"> <textarea rows="4" name="permasalahan[' + i +']" placeholder="Penjelasan Permasalahan (Bottleneck) RB Tematik" class="form-control"></textarea> </td> </tr> <tr> <td class="font-bold w-30">Sasaran</td> <td colspan="5"> <textarea name="sasaran[' + i +']" placeholder="Sasaran" class="form-control"></textarea> </td> </tr> <tr> <td class="font-bold w-30">Indikator Permasalahan</td> <td colspan="5"> <textarea name="indikator2[' + i +']" placeholder="Penjelasan Indikator Permasalahan" class="form-control"></textarea> </td> </tr> <tr> <td class="font-bold w-30">Target Indikator Permasalahan</td> <td colspan="5"> <input type="text" name="target[' + i +']" placeholder="Masukan Data Target" class="form-control" /> </td> </tr> <tr> <td class="font-bold w-30">Rencana Aksi</td> <td colspan="5"> <textarea rows="4" name="rencanaaksi[' + i +']" placeholder="Penjelasan Rencana Aksi" class="form-control"></textarea> </td> </tr> <tr> <td class="font-bold w-30">Output</td> <td colspan="2"> <input type="text" name="satuan[' + i +']" placeholder="Satuan Output" class="form-control" /> </td> <td colspan="3"> <input type="text" name="indikator[' + i +']" placeholder="Indikator Output" class="form-control" /> </td> </tr> <tr> <td class="font-bold w-30">Target Output</td> <td> <input type="text" name="tw1[' + i +']" placeholder="Triwulan 1" class="form-control" /> </td> <td> <input type="text" name="tw2[' + i +']" placeholder="Triwulan 2" class="form-control" /> </td> <td> <input type="text" name="tw3[' + i +']" placeholder="Triwulan 3" class="form-control" /> </td> <td> <input type="text" name="tw4[' + i +']" placeholder="Triwulan 4" class="form-control" /> </td> <td> <input type="text" name="total[' + i +']" placeholder="Total" class="form-control" /> </td> </tr> <tr> <td class="font-bold w-30">Jenis Kegiatan Aksi</td> <td colspan="5"> <textarea name="indikator2[' + i +']" placeholder="Jenis Kegaitan Aksi" class="form-control"></textarea> </td> </tr> <tr> <td class="font-bold w-30">Anggaran</td> <td colspan="5"> <input type="text" name="angaran[' + i +']" placeholder="Masukan Data Anggaran" class="form-control" /> </td> </tr> <tr> <td class="font-bold w-30">Unit Kerja Pelaksana</td> <td colspan="2"> <input type="text" name="pelaksana[' + i +']" placeholder="Pelaksana" class="form-control" /> </td> <td colspan="3"> <input type="text" name="koordinator[' + i +']" placeholder="Koordinator" class="form-control" /> </td> </tr>'
+        $("#dynamicAddRemove").append('<table class="table table-bordered" id="remove"><tr><td colspan="6" class="font-bold bg-slate-200" align="center">Rancangan Aksi Baru  <button type="button" class="btn btn-sm btn-danger remove-input-field float-right">Delete</button></td></tr> <tr> <td class="font-bold w-30">Indikator Sasaran Tematik</td> <td colspan="5"> <select class="form-select mt-2 sm:mr-2 form-control" name="indikator[' + i +']"> <option>Kegiatan Utama Roadmap Pemda Trial</option> <option>Tingkat Implementasi Sistem kerja Baru dan Fleksibilitas Berkerja Pegawai</option> <option>Indeks SPBE</option> <option>Tingkat Implementasi Inisiatif Strategi Arsitektur SPBE*</option> </select> </td> </tr> <tr> <td class="font-bold w-30">Target Indikator</td> <td colspan="5"> <input type="text" name="target[' + i +']" placeholder="Masukan Data Target" class="form-control" /> </td> </tr> <tr> <td class="font-bold w-30">Permasalahan (Bottleneck)</td> <td colspan="5"> <textarea rows="4" name="permasalahan[' + i +']" placeholder="Penjelasan Permasalahan (Bottleneck) RB Tematik" class="form-control"></textarea> </td> </tr> <tr> <td class="font-bold w-30">Sasaran</td> <td colspan="5"> <textarea name="sasaran[' + i +']" placeholder="Sasaran" class="form-control"></textarea> </td> </tr> <tr> <td class="font-bold w-30">Indikator Permasalahan</td> <td colspan="5"> <textarea name="indikator2[' + i +']" placeholder="Penjelasan Indikator Permasalahan" class="form-control"></textarea> </td> </tr> <tr> <td class="font-bold w-30">Target Indikator Permasalahan</td> <td colspan="5"> <input type="text" name="target[' + i +']" placeholder="Masukan Data Target" class="form-control" /> </td> </tr> <tr> <td class="font-bold w-30">Rencana Aksi</td> <td colspan="5"> <textarea rows="4" name="rencanaaksi[' + i +']" placeholder="Penjelasan Rencana Aksi" class="form-control"></textarea> </td> </tr> <tr> <td class="font-bold w-30">Output</td> <td colspan="2"> <input type="text" name="satuan[' + i +']" placeholder="Satuan Output" class="form-control" /> </td> <td colspan="3"> <input type="text" name="indikator[' + i +']" placeholder="Indikator Output" class="form-control" /> </td> </tr> <tr> <td class="font-bold w-30">Target Output</td> <td> <input type="text" name="tw1[' + i +']" placeholder="Triwulan 1" class="form-control" /> </td> <td> <input type="text" name="tw2[' + i +']" placeholder="Triwulan 2" class="form-control" /> </td> <td> <input type="text" name="tw3[' + i +']" placeholder="Triwulan 3" class="form-control" /> </td> <td> <input type="text" name="tw4[' + i +']" placeholder="Triwulan 4" class="form-control" /> </td> <td> <input type="text" name="total[' + i +']" placeholder="Total" class="form-control" /> </td> </tr> <tr> <td class="font-bold w-30">Jenis Kegiatan Aksi</td> <td colspan="5"> <textarea name="indikator2[' + i +']" placeholder="Jenis Kegaitan Aksi" class="form-control"></textarea> </td> </tr> <tr> <td class="font-bold w-30">Anggaran</td> <td colspan="5"> <input type="text" name="angaran[' + i +']" placeholder="Masukan Data Anggaran" class="form-control" /> </td> </tr> <tr> <td class="font-bold w-30">Unit Kerja Pelaksana</td> <td colspan="2"> <input type="text" name="pelaksana[' + i +']" placeholder="Pelaksana" class="form-control" /> </td> <td colspan="3"> <input type="text" name="koordinator[' + i +']" placeholder="Koordinator" class="form-control" /> </td> </tr></table>'
             );
     });
     $(document).on('click', '.remove-input-field', function () {
-        $(this).parents('tr').remove();
+             $("#remove").remove();
     });
+
+
+    var s = 0;
+    $("#tambahtahun").click(function () {
+        ++s;
+        $(".tambahtahun").append('<tr id="remove-tahun">   <td><div class="baseline"><input id="baseline" type="checkbox" class="form-check-input border mr-2"> </div></td> <td> <input type="text" class="form-control min-w-[6rem]"  placeholder="Input tahun" > </td> <td> <input type="text" class="form-control min-w-[6rem]" placeholder="Target"> </td> <td> <button type="button" class="btn btn-sm btn-secondary remove-tahun">x</button> </td> </tr>'
+            );
+    });
+
+     $(document).on('click', '.remove-tahun', function () {
+       $("#remove-tahun").remove();
+    });
+
+
+
 </script>
 
   </body>
