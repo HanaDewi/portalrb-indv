@@ -242,7 +242,7 @@
                       </div>
                       <div id="konten_tambah_aksi">
                         <div class="relative pl-5 pr-5 xl:pr-10 py-10  dark:border rounded-md">
-                          <table class="table table-bordered" id="dynamicAddRemove">
+                          <table class="table table-bordered">
                             <tr>
                               <td class="font-bold w-30">Instansi</td>
                               <td colspan="5">
@@ -376,6 +376,8 @@
                               </td>
                             </tr>
                           </table>
+
+                          <div id="dynamicAddRemove"></div>
                         </div>
                       </div>
                     </div>
@@ -440,19 +442,25 @@
     var i = 0;
     $("#dynamic-ar").click(function () {
         ++i;
-        $("#dynamicAddRemove").append('<tr><td colspan="6" class="font-bold bg-slate-200" align="center">Rancangan Aksi Baru</td></tr> <tr> <td class="font-bold w-30">Indikator Kegiatan Utama</td> <td colspan="5"> <select class="form-select mt-2 sm:mr-2 form-control" name="indikator"> <option>Kegiatan Utama Roadmap Pemda Trial</option> <option>Tingkat Implementasi Sistem kerja Baru dan Fleksibilitas Berkerja Pegawai</option> <option>Indeks SPBE</option> <option>Tingkat Implementasi Inisiatif Strategi Arsitektur SPBE*</option> </select></td> </tr> <tr> <td class="font-bold w-30">Target Indikator</td> <td colspan="5"><input type="text" name="target[' + i +']" placeholder="Masukan Data Target" class="form-control" /></td> </tr> <tr> <td class="font-bold w-30">Rencana Aksi</td> <td colspan="5"><textarea name="rencanaaksi[' + i +']" placeholder="Penjelasan Rencana Aksi" class="form-control"></textarea></td> </tr> <tr> <td class="font-bold w-30">Output</td> <td colspan="2"><input type="text" name="satuan[0]" placeholder="Satuan Output" class="form-control" /></td> <td colspan="3"><input type="text" name="indikator[' + i +']" placeholder="Indikator Output" class="form-control" /></td> </tr> <tr> <td class="font-bold w-30">Target Output</td> <td ><input type="text" name="tw1[' + i +']" placeholder="Triwulan 1" class="form-control" /></td> <td ><input type="text" name="tw2[' + i +']" placeholder="Triwulan 2" class="form-control" /></td> <td ><input type="text" name="tw3[' + i +']" placeholder="Triwulan 3" class="form-control" /></td> <td ><input type="text" name="tw4[' + i +']" placeholder="Triwulan 4" class="form-control" /></td> <td ><input type="text" name="total[' + i +']" placeholder="Total" class="form-control" /></td> </tr> <tr> <td class="font-bold w-30">Anggaran</td> <td colspan="5"><input type="text" name="angaran[' + i +']" placeholder="Masukan Data Anggaran" class="form-control" /></td> </tr> <tr> <td class="font-bold w-30">Unit Kerja Pelaksana</td> <td colspan="2"><input type="text" name="pelaksana[' + i +']" placeholder="Pelaksana" class="form-control" /></td> <td colspan="3"><input type="text" name="koordinator[' + i +']" placeholder="Koordinator" class="form-control" /></td> </tr>'
+        $("#dynamicAddRemove").append('<table class="table table-bordered" id="remove"><tr><td colspan="6" class="font-bold bg-slate-200" align="center">Rancangan Aksi Baru <button type="button" class="btn btn-sm btn-danger remove-input-field float-right">Delete</button></td></tr> <tr> <td class="font-bold w-30">Indikator Kegiatan Utama</td> <td colspan="5"> <select class="form-select mt-2 sm:mr-2 form-control" name="indikator"> <option>Kegiatan Utama Roadmap Pemda Trial</option> <option>Tingkat Implementasi Sistem kerja Baru dan Fleksibilitas Berkerja Pegawai</option> <option>Indeks SPBE</option> <option>Tingkat Implementasi Inisiatif Strategi Arsitektur SPBE*</option> </select></td> </tr> <tr> <td class="font-bold w-30">Target Indikator</td> <td colspan="5"><input type="text" name="target[' + i +']" placeholder="Masukan Data Target" class="form-control" /></td> </tr> <tr> <td class="font-bold w-30">Rencana Aksi</td> <td colspan="5"><textarea name="rencanaaksi[' + i +']" placeholder="Penjelasan Rencana Aksi" class="form-control"></textarea></td> </tr> <tr> <td class="font-bold w-30">Output</td> <td colspan="2"><input type="text" name="satuan[0]" placeholder="Satuan Output" class="form-control" /></td> <td colspan="3"><input type="text" name="indikator[' + i +']" placeholder="Indikator Output" class="form-control" /></td> </tr> <tr> <td class="font-bold w-30">Target Output</td> <td ><input type="text" name="tw1[' + i +']" placeholder="Triwulan 1" class="form-control" /></td> <td ><input type="text" name="tw2[' + i +']" placeholder="Triwulan 2" class="form-control" /></td> <td ><input type="text" name="tw3[' + i +']" placeholder="Triwulan 3" class="form-control" /></td> <td ><input type="text" name="tw4[' + i +']" placeholder="Triwulan 4" class="form-control" /></td> <td ><input type="text" name="total[' + i +']" placeholder="Total" class="form-control" /></td> </tr> <tr> <td class="font-bold w-30">Anggaran</td> <td colspan="5"><input type="text" name="angaran[' + i +']" placeholder="Masukan Data Anggaran" class="form-control" /></td> </tr> <tr> <td class="font-bold w-30">Unit Kerja Pelaksana</td> <td colspan="2"><input type="text" name="pelaksana[' + i +']" placeholder="Pelaksana" class="form-control" /></td> <td colspan="3"><input type="text" name="koordinator[' + i +']" placeholder="Koordinator" class="form-control" /></td> </tr> </table>'
             );
     });
     $(document).on('click', '.remove-input-field', function () {
-        $(this).parents('tr').remove();
+       $("#remove").remove();
     });
 
 var s = 0;
     $("#tambahtahun").click(function () {
         ++s;
-        $(".tambahtahun").append('<tr>   <td><div class="baseline"><input id="baseline" type="checkbox" class="form-check-input border mr-2"> </div></td> <td> <input type="text" class="form-control min-w-[6rem]"  placeholder="Input tahun" > </td> <td> <input type="text" class="form-control min-w-[6rem]" placeholder="Target"> </td> </tr>'
+        $(".tambahtahun").append('<tr id="remove-tahun">   <td><div class="baseline"><input id="baseline" type="checkbox" class="form-check-input border mr-2"> </div></td> <td> <input type="text" class="form-control min-w-[6rem]"  placeholder="Input tahun" > </td> <td> <input type="text" class="form-control min-w-[6rem]" placeholder="Target"> </td> <td> <button type="button" class="btn btn-sm btn-danger remove-tahun float-right">Delete</button> </td> </tr>'
             );
     });
+
+     $(document).on('click', '.remove-tahun', function () {
+       $("#remove-tahun").remove();
+    });
+
+
 
 
 </script>
