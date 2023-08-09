@@ -282,11 +282,12 @@
                                                             <th class="!pr-2 bg-slate-50 dark:bg-darkmode-800"><div class="textbaseline">Baseline / Target</div></th>
                                                             <th class="!px-2 bg-slate-50 dark:bg-darkmode-800 text-slate-500 whitespace-nowrap">Tahun</th>
                                                             <th class="!px-2 bg-slate-50 dark:bg-darkmode-800 text-slate-500 whitespace-nowrap">Target</th>
+                                                               <th class="!px-2 bg-slate-50 dark:bg-darkmode-800 text-slate-500 whitespace-nowrap"></th>
                                                           
                                                         </tr>
                                                     </thead>
                                                     <tbody class="tambahtahun">
-                                                        <tr>
+                                                        <tr id="remove-tahun">
                                                             <td> <div class="baseline"><input id="baseline" type="checkbox" class="form-check-input border mr-2"> </div></td>
                                                             <td>
                                                                 <input type="text" class="form-control min-w-[6rem]"  value="2022" >
@@ -294,9 +295,12 @@
                                                             <td>
                                                                 <input type="text" class="form-control min-w-[6rem]" placeholder="Target">
                                                             </td>
+                                                             <td class="!pl-4 text-slate-500">
+                                                                 <button type="button" class="btn btn-sm btn-secondary remove-tahun">x</button>
+                                                            </td>
                                                         </tr>
 
-                                                         <tr>
+                                                         <tr id="remove-tahun">
                                                             <td><div class="baseline"><input id="baseline" type="checkbox" class="form-check-input border mr-2"> </div></td>
                                                             <td>
                                                                 <input type="text" class="form-control min-w-[6rem]" value="2023">
@@ -304,15 +308,21 @@
                                                             <td>
                                                                 <input type="text" class="form-control min-w-[6rem]" placeholder="Target">
                                                             </td>
+                                                             <td class="!pl-4 text-slate-500">
+                                                                <button type="button" class="btn btn-sm btn-secondary remove-tahun">x</button>
+                                                            </td>
                                                         </tr>
 
-                                                           <tr>
+                                                          <tr id="remove-tahun">
                                                             <td><div class="baseline"><input id="baseline" type="checkbox" class="form-check-input border mr-2"> </div></td>
                                                             <td>
                                                                 <input type="text" class="form-control min-w-[6rem]" value="2024">
                                                             </td>
                                                             <td>
                                                                 <input type="text" class="form-control min-w-[6rem]" placeholder="Target">
+                                                            </td>
+                                                             <td class="!pl-4 text-slate-500">
+                                                                  <button type="button" class="btn btn-sm btn-secondary remove-tahun">x</button>
                                                             </td>
                                                         </tr>
                                                     </tbody>
@@ -452,7 +462,7 @@
 var s = 0;
     $("#tambahtahun").click(function () {
         ++s;
-        $(".tambahtahun").append('<tr id="remove-tahun">   <td><div class="baseline"><input id="baseline" type="checkbox" class="form-check-input border mr-2"> </div></td> <td> <input type="text" class="form-control min-w-[6rem]"  placeholder="Input tahun" > </td> <td> <input type="text" class="form-control min-w-[6rem]" placeholder="Target"> </td> <td> <button type="button" class="btn btn-sm btn-danger remove-tahun float-right">Delete</button> </td> </tr>'
+        $(".tambahtahun").append('<tr id="remove-tahun">   <td><div class="baseline"><input id="baseline" type="checkbox" class="form-check-input border mr-2"> </div></td> <td> <input type="text" class="form-control min-w-[6rem]"  placeholder="Input tahun" > </td> <td> <input type="text" class="form-control min-w-[6rem]" placeholder="Target"> </td> <td> <button type="button" class="btn btn-sm btn-secondary remove-tahun">x</button> </td> </tr>'
             );
     });
 
