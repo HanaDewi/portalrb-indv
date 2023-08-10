@@ -8,7 +8,7 @@
     <meta name="keywords" content="Lembar Kerja Evaluasi">
     <meta name="author" content="MENPANRB">
     <title>@yield('title') - LKE KEMENPANRB</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+    <link  rel="stylesheet"  href='http://fonts.googleapis.com/css?family=Roboto:400,100,300,100italic,300italic,400italic,500italic,500,700,700italic,900,900italic' rel='stylesheet' type='text/css'>
     <!-- End plugin css for this page -->
     <link href="{{ asset('ext') }}/sweetalert2/sweetalert2.css" rel="stylesheet">
     @stack('css')
@@ -148,14 +148,12 @@
                     <h1 class="text-lg text-danger font-extrabold"> EVALUASI RB</h1>
                 </nav>
                 <div class="intro-x dropdown mr-auto sm:mr-6">
-                     <h1 style="padding-left: 5px; padding-right: 5px;" class="mr-auto text-lg font-bold"
-                            style="font-weight: 600">Selamat datang, <a class="text-lg text-danger font-bold">
-                                {{ auth()->user()->username }}</a>
-                        </h1>
-                        <div class="text-slate-500 text-xs mt-0.3 float-right">{{ auth()->user()->nama }}</div>
+                    <h1 style="padding-left: 5px; padding-right: 5px;" class="mr-auto text-lg font-bold" style="font-weight: 600">Selamat datang, <a class="text-lg text-danger font-bold">
+                        {{ auth()->user()->username }}</a>
+                    </h1>
+                    <div class="text-slate-500 text-xs mt-0.3 float-right">{{ auth()->user()->nama }}</div>
                 </div>
                 <div class="intro-x dropdown w-8 h-8">
-
                     <div class="dropdown-toggle w-8 h-8 rounded-full overflow-hidden shadow-lg image-fit zoom-in"
                         role="button" aria-expanded="false" data-tw-toggle="dropdown">
                         <img alt="{{ auth()->user()->username }}" src="{{ auth()->user()->foto ? asset('storage/user/' . auth()->user()->foto) : asset('template_lkerb/dist/images/favicon.png') }}">

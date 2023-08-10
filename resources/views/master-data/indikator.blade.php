@@ -1,16 +1,13 @@
 @extends('layout.rubick')
 @section('title', 'Indikator')
 
-@section('button')
-<button class="btn btn-danger shadow-md mr-2" onclick="tambah();" data-bs-toggle="modal" data-bs-target="#modal-indikator">Tambah Indikator</button>
-@endsection
 @section('content')
 @include('common.status')
 <div class="intro-y col-span-12 lg:col-span-12">
     <div class="intro-y box">
         <div class="flex flex-col sm:flex-row items-center p-5 border-b border-slate-200/60">
             <h2 class="font-medium text-base mr-auto"> Indikator</h2>
-            <div class="form-check form-switch w-full sm:w-auto sm:ml-auto mt-3 sm:mt-0"></div>
+            <button class="btn btn-danger shadow-md mr-2 float-right" onclick="tambah();" data-bs-toggle="modal" data-bs-target="#modal-indikator">Tambah Indikator</button>
         </div>
         <div class="lg:col-span-12 p-5 border-b border-slate-200/60">
             <table id="indikator" class="table table-bordered table-striped table-hover" cellspacing="0" width="100%">

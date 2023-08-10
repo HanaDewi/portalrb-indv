@@ -4054,47 +4054,47 @@ select{
 .text-xs{
     font-size: 0.75rem;
     line-height: 1rem;
-        font-family: Public Sans;
+       font-family: 'Roboto', sans-serif;
 }
 .text-lg{
     font-size: 1.125rem;
     line-height: 1.75rem;
-        font-family: Public Sans;
+       font-family: 'Roboto', sans-serif;
 }
 .text-base{
     font-size: 1rem;
     line-height: 1.5rem;
-        font-family: Public Sans;
+       font-family: 'Roboto', sans-serif;
 }
 .text-xl{
     font-size: 1.25rem;
     line-height: 1.75rem;
-        font-family: Public Sans;
+       font-family: 'Roboto', sans-serif;
 }
 .text-3xl{
     font-size: 1.875rem;
     line-height: 2.25rem;
-        font-family: Public Sans;
+       font-family: 'Roboto', sans-serif;
 }
 .text-2xl{
     font-size: 1.5rem;
     line-height: 2rem;
-        font-family: Public Sans;
+       font-family: 'Roboto', sans-serif;
 }
 .text-sm{
     font-size: 0.875rem;
     line-height: 1.25rem;
-        font-family: Public Sans;
+       font-family: 'Roboto', sans-serif;
 }
 .text-8xl{
     font-size: 6rem;
     line-height: 1;
-        font-family: Public Sans;
+       font-family: 'Roboto', sans-serif;
 }
 .text-4xl{
     font-size: 2.25rem;
     line-height: 2.5rem;
-        font-family: Public Sans;
+       font-family: 'Roboto', sans-serif;
 }
 
 .dataTables_wrapper .dataTables_length select {
@@ -4103,7 +4103,7 @@ select{
 .text-5xl{
     font-size: 3rem;
     line-height: 1;
-        font-family: Public Sans;
+       font-family: 'Roboto', sans-serif;
 }
 
 .table thead.table-dark tr th {
@@ -4117,23 +4117,28 @@ select{
 
 .font-medium{
     font-weight: 500;
-        font-family: Public Sans;
+       font-family: 'Roboto', sans-serif;
 }
+
+@import url(http://fonts.googleapis.com/css?family=Roboto:700,400,500,300);
+
 .font-normal{
     font-weight: 400;
-        font-family: Public Sans;
+       font-family: 'Roboto', sans-serif;
 }
 .font-semibold{
     font-weight: 600;
-        font-family: Public Sans;
+       font-family: 'Roboto', sans-serif;
 }
 .font-bold{
     font-weight: 700;
-    font-family: Public Sans;
+font-family: 'Roboto', sans-serif;
 }
+
+
 .font-extrabold{
     font-weight: 900;
-        font-family: Public Sans;
+       font-family: 'Roboto', sans-serif;
 }
 .uppercase{
     text-transform: uppercase;
