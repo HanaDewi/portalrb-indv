@@ -148,12 +148,14 @@
                     <h1 class="text-lg text-danger font-extrabold"> EVALUASI RB</h1>
                 </nav>
                 <div class="intro-x dropdown mr-auto sm:mr-6">
-                    <div class="dropdown-toggle notification notification--bullet cursor-pointer" role="button"
-                        aria-expanded="false" data-tw-toggle="dropdown">
-                        <i data-lucide="bell" class="notification__icon dark:text-slate-500"></i>
-                    </div>
+                     <h1 style="padding-left: 5px; padding-right: 5px;" class="mr-auto text-lg font-bold"
+                            style="font-weight: 600">Selamat datang, <a class="text-lg text-danger font-bold">
+                                {{ auth()->user()->username }}</a>
+                        </h1>
+                        <div class="text-slate-500 text-xs mt-0.3 float-right">{{ auth()->user()->nama }}</div>
                 </div>
                 <div class="intro-x dropdown w-8 h-8">
+
                     <div class="dropdown-toggle w-8 h-8 rounded-full overflow-hidden shadow-lg image-fit zoom-in"
                         role="button" aria-expanded="false" data-tw-toggle="dropdown">
                         <img alt="{{ auth()->user()->username }}" src="{{ auth()->user()->foto ? asset('storage/user/' . auth()->user()->foto) : asset('template_lkerb/dist/images/favicon.png') }}">
@@ -188,20 +190,7 @@
                     </div>
                 </div>
             </div>
-            <div class="grid grid-cols-12 gap-6 mt-5">
-                <div class="intro-y col-span-6 flex flex-wrap sm:flex-nowrap items-center mt-2">
-                    @yield('button')
-                </div>
-                <div class="intro-y col-span-6 float-right mt-2">
-                    <div class="float-right">
-                        <h1 style="padding-left: 5px; padding-right: 5px;" class="mr-auto text-lg font-bold"
-                            style="font-weight: 600">Selamat datang, <a class="text-lg text-danger font-bold">
-                                {{ auth()->user()->username }}</a>
-                        </h1>
-                        <div class="text-slate-500 text-xs mt-0.3 float-right">{{ auth()->user()->nama }}</div>
-                    </div>
-                </div>
-            </div>
+        
             <div class="col-span-12 grid grid-cols-12 gap-6">
                 <div class="intro-y col-span-12 md:col-span-12 lg:col-span-12 xl:col-span-12 pt-5">
                     @yield('content')
