@@ -6,19 +6,19 @@
 <div class="intro-y col-span-12 lg:col-span-12">
     <div class="intro-y box">
         <div class="flex flex-col sm:flex-row items-center p-5 border-b border-slate-200/60">
-            <h2 class="font-medium text-base mr-auto"> RB General - Perencanaan</h2>
+            <h2 class="font-bold text-base mr-auto"> Data RB General - Perencanaan</h2>
             <div class="form-check form-switch w-full sm:w-auto sm:ml-auto mt-3 sm:mt-0"></div>
         </div>
         <div class="lg:col-span-12 p-5 border-b border-slate-200/60">
-            <table id="perencanaan" class="table table-bordered table-striped hover" cellspacing="0" width="100%">
-                <thead class="table-dark">
+            <table id="perencanaan" class="table table-bordered table-striped hover mt-5" cellspacing="0" width="100%">
+                <thead class="table-dark font-bold">
                     <tr>
                         <th rowspan="2" class="w-5">No.</th>
-                        <th rowspan="2">Kegiatan Utama</th>
-                        <th rowspan="2">Indikator</th>
-                        <th colspan="3">Baseline</th>
-                        <th rowspan="2">Target</th>
-                        <th rowspan="2" class="w-5">Atur</th>
+                        <th class="w200" rowspan="2">Kegiatan Utama</th>
+                        <th class="w150" rowspan="2">Indikator</th>
+                        <th class="w200" colspan="3">Baseline</th>
+                        <th class="w150" rowspan="2">Target</th>
+                        <th  rowspan="2" class="w-5">Atur</th>
                     </tr>
                     <tr>
                         <th>Tahun</th>
@@ -32,28 +32,43 @@
                     @endphp
                     @foreach ($indikators as $indikator)
                     <tr>
-                        <td>{{ $no }}</td>
-                        <td id="kegiatan_utama{{ $indikator->id }}">{{ $indikator->kegiatan_utama->nama }}</td>
-                        <td id="indikator{{ $indikator->id }}">{{ $indikator->nama }}</td>
-                        <td>{{ $indikator->baseline_tahun }}</td>
-                        <td>{{ $indikator->baseline_target }}</td>
-                        <td>{{ $indikator->baseline_realisasi }}</td>
+                        <td class="font-bold w-2">{{ $no }}</td>
+                        <td class="font-bold w-10" id="kegiatan_utama{{ $indikator->id }}">{{ $indikator->kegiatan_utama->nama }}</td>
+                        <td class="w-5" id="indikator{{ $indikator->id }}">{{ $indikator->nama }}</td>
+                        <td class="w-5">{{ $indikator->baseline_tahun }}</td>
+                        <td class="w-5">{{ $indikator->baseline_target }}</td>
+                        <td class="w-5">{{ $indikator->baseline_realisasi }}</td>
                         <td class="w-5">
                         @if (count($indikator->target))
                             @foreach ($indikator->target as $key => $target)
-                            <mark class="p-1 btn-success">{{ $target->tahun }}: {{ $target->target }}</mark><br>
-                            <div class="inline-flex w-full" role="group">
-                                <button class="btn btn-primary btn-sm w-24">Renaksi</button>
-                                <button class="btn btn-warning btn-sm w-24">Monev</button>
+
+
+                            <div class="flex items-center"><i data-lucide="bar-chart" class="w-4 h-4 mr-2"></i><span class="font-bold"> {{ $target->tahun }}:</span> {{ $target->target }}</div>
+
+                                
+
+
+                            <div class="inline-flex w-full mb-5p" role="group">
+                                <button class="btn btn-primary btn-sm mr-2"><i data-lucide="edit" class="w-4 h-4 mr-1"></i> Renaksi</button>
+                                <button class="btn btn-dark btn-sm"><i data-lucide="edit" class="w-4 h-4 mr-1"></i> Monev</button>
                             </div>
+
+                          <hr> 
+
+              
+
                             @endforeach
                         @else
                         @endif
                         </td>
-                        <td>
-                            <button onclick="atur_baseline('{{ $indikator->kegiatan_utama_id }}', '{{ $indikator->id }}');" class="btn btn-secondary btn-sm w-full">Baseline</button>
-                            <button onclick="atur_target('{{ $indikator->kegiatan_utama_id }}', '{{ $indikator->id }}');" class="btn btn-success btn-sm w-full">Target</button>
+                        <td class="w-15">
+                           <button onclick="atur_baseline('{{ $indikator->kegiatan_utama_id }}', '{{ $indikator->id }}');" class="btn btn-primary btn-sm w-20 mb-5"><i data-lucide="edit" class="w-4 h-4 mr-1"></i>Baseline</button>
+
+                            <button onclick="atur_target('{{ $indikator->kegiatan_utama_id }}', '{{ $indikator->id }}');" class="btn btn-dark btn-sm w-20 mb-5"><i data-lucide="edit" class="w-4 h-4 mr-1"></i> Target</button>
+
                         </td>
+
+
                     </tr>
                     @php
                         $no++;
@@ -70,8 +85,8 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <!-- BEGIN: Modal Header -->
-            <div class="modal-header">
-                <h2 class="fw-medium fs-base me-auto" id="title">Data Baseline</h2>
+            <div class="darkbg modal-header">
+                <h2 class="font-bold fw-medium  fs-base me-auto" id="title">Data Baseline</h2>
             </div> <!-- END: Modal Header -->
             <!-- BEGIN: Modal Body -->
             <form action="{{ url('rb-general/perencanaan/simpanBaseline') }}" id="form-baseline" method="post">
@@ -92,7 +107,7 @@
                         </table>
                         <hr class="mt-5 mb-5">
                         <table class="table table-bordered table-striped hover">
-                            <thead>
+                            <thead class="table-dark">
                                 <tr>
                                     <th>Tahun</th>
                                     <th>Target</th>
@@ -118,7 +133,7 @@
                 <!-- BEGIN: Modal Footer -->
                 <div class="modal-footer text-end"> 
                     <button type="button" data-tw-dismiss="modal" class="btn btn-outline-secondary w-20 me-1">Cancel</button> 
-                    <button type="submit" class="btn btn-success w-20 saveButton">Simpan</button> 
+                    <button type="submit" class="btn btn-primary w-20 saveButton">Simpan</button> 
                 </div> <!-- END: Modal Footer -->
             </form>
         </div>
@@ -130,8 +145,8 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <!-- BEGIN: Modal Header -->
-            <div class="modal-header">
-                <h2 class="fw-medium fs-base me-auto" id="title">Data Target</h2>
+            <div class="darkbg modal-header">
+                <h2 class="font-bold fw-medium fs-base me-auto" id="title">Data Target</h2>
             </div> <!-- END: Modal Header -->
             <!-- BEGIN: Modal Body -->
             <form action="{{ url('rb-general/perencanaan/simpanTarget') }}" id="form-target" method="post">
@@ -167,7 +182,7 @@
                 <!-- BEGIN: Modal Footer -->
                 <div class="modal-footer text-end"> 
                     <button type="button" data-tw-dismiss="modal" class="btn btn-outline-secondary w-20 me-1">Cancel</button> 
-                    <button type="submit" class="btn btn-success w-20 saveButton">Simpan</button> 
+                    <button type="submit" class="btn btn-primary w-20 saveButton">Simpan</button> 
                 </div> <!-- END: Modal Footer -->
             </form>
         </div>
@@ -179,6 +194,7 @@
 <script src="{{ asset('ext/jquery-validation/jquery.validate.min.js') }}"></script>
 <script src="{{ asset('ext/jquery-validation/localization/messages_id.min.js') }}"></script>
 <script src="{{ asset('ext') }}/jquery-inputmask/jquery.inputmask.bundle.js"></script>
+
 <script>
     $(document).ready(function() {
         modal_baseline = tailwind.Modal.getInstance(document.querySelector("#modal-baseline"));
@@ -237,4 +253,19 @@
         $('#target-table tbody').append(input);
     }
 </script>
+
+
+      <script src="http://cdn.rawgit.com/ashl1/datatables-rowsgroup/v1.0.0/dataTables.rowsGroup.js"></script>
+      <script>
+         $(function() {
+            $("#perencanaan").DataTable({
+            'scrollX': true,
+            'orderFixed': [0, 'asc'],
+            'autoWidth': false,
+            'rowsGroup': [1],
+      });
+         });
+      </script>
+
+
 @endpush
