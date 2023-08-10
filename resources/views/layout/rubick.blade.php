@@ -8,7 +8,8 @@
     <meta name="keywords" content="Lembar Kerja Evaluasi">
     <meta name="author" content="MENPANRB">
     <title>@yield('title') - LKE KEMENPANRB</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+    <link  rel="stylesheet"  href='http://fonts.googleapis.com/css?family=Roboto:400,100,300,100italic,300italic,400italic,500italic,500,700,700italic,900,900italic' rel='stylesheet' type='text/css'>
+
     <!-- End plugin css for this page -->
     <link href="{{ asset('ext') }}/sweetalert2/sweetalert2.css" rel="stylesheet">
     @stack('css')

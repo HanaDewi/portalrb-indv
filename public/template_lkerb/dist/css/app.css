@@ -4119,6 +4119,9 @@ select{
     font-weight: 500;
         font-family: Public Sans;
 }
+
+@import url(http://fonts.googleapis.com/css?family=Roboto:700,400,500,300);
+
 .font-normal{
     font-weight: 400;
         font-family: Public Sans;
@@ -4129,8 +4132,10 @@ select{
 }
 .font-bold{
     font-weight: 700;
-    font-family: Public Sans;
+font-family: 'Roboto', sans-serif;
 }
+
+
 .font-extrabold{
     font-weight: 900;
         font-family: Public Sans;

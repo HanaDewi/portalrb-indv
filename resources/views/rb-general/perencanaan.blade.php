@@ -62,9 +62,9 @@
                         @endif
                         </td>
                         <td class="w-15">
-                           <button onclick="atur_baseline('{{ $indikator->kegiatan_utama_id }}', '{{ $indikator->id }}');" class="btn btn-primary btn-sm w-20 mb-5"><i data-lucide="edit" class="w-4 h-4 mr-1"></i>Baseline</button>
+                           <button onclick="atur_baseline('{{ $indikator->kegiatan_utama_id }}', '{{ $indikator->id }}');" class="btn btn-primary btn-sm w-full mb-5"><i data-lucide="edit" class="w-4 h-4 mr-1"></i>Baseline</button>
 
-                            <button onclick="atur_target('{{ $indikator->kegiatan_utama_id }}', '{{ $indikator->id }}');" class="btn btn-dark btn-sm w-20 mb-5"><i data-lucide="edit" class="w-4 h-4 mr-1"></i> Target</button>
+                            <button onclick="atur_target('{{ $indikator->kegiatan_utama_id }}', '{{ $indikator->id }}');" class="btn btn-dark btn-sm w-full mb-5"><i data-lucide="edit" class="w-4 h-4 mr-1"></i> Target</button>
 
                         </td>
 
