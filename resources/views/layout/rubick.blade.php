@@ -32,7 +32,7 @@
             </a>
             <ul class="scrollable__content py-2">
                 @foreach (menus() as $menu)
-                    @if ($menu['levels'] == 'devider')
+                    @if (in_array('devider', $menu['levels']))
                         <li class="menu__devider my-6"></li>
                     @elseif (in_array(auth()->user()->level, $menu['levels']))
                         @php
@@ -87,7 +87,7 @@
             <div class="side-nav__devider my-6"></div>
             <ul>
                 @foreach (menus() as $menu)
-                    @if ($menu['levels'] == 'devider')
+                    @if (in_array('devider', $menu['levels']))
                         <div class="side-nav__devider my-6"></div>
                     @elseif (in_array(auth()->user()->level, $menu['levels']))
                         @php
@@ -110,6 +110,7 @@
                                         @php
                                             $active = request()->is($item['url']) || request()->is($item['url'] . '/*') ? 'side-menu--active' : '';
                                         @endphp
+                                        @if (in_array(auth()->user()->level, $item['levels']))
                                         <li>
                                             <a href="{{ url($item['url']) }}" class="side-menu {{ $active }}">
                                                 <div class="side-menu__icon"> 
@@ -120,6 +121,7 @@
                                                 </div>
                                             </a>
                                         </li>
+                                        @endif
                                     @endforeach
                                 </ul>
                             @endisset

@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MasterDataController;
-use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RBGeneralController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -48,6 +48,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/master-data/tema/getData/{id}', [MasterDataController::class, 'tema_getData']);
     Route::post('/master-data/tema/simpan', [MasterDataController::class, 'tema_simpan']);
     Route::post('/master-data/tema/hapus', [MasterDataController::class, 'tema_hapus']);
+
+    // RB General Perencanaan
+    Route::get('/rb-general/perencanaan', [RBGeneralController::class, 'perencanaan'])->name('perencanaan');
+    Route::get('/rb-general/perencanaan/getData/{kegiatan_utama_id}/{indikator_id}', [RBGeneralController::class, 'perencanaan_getData']);
+    Route::post('/rb-general/perencanaan/simpanBaseline', [RBGeneralController::class, 'perencanaan_simpanBaseline']);
+    Route::get('/rb-general/perencanaan/getTarget/{kegiatan_utama_id}/{indikator_id}', [RBGeneralController::class, 'perencanaan_getTarget']);
+    Route::post('/rb-general/perencanaan/simpanTarget', [RBGeneralController::class, 'perencanaan_simpanTarget']);
 });
 
 require __DIR__ . '/auth.php';

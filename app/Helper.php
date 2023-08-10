@@ -16,24 +16,24 @@ function menus()
             'levels' => ['admin', 'evaluator', 'provinsi', 'kabupaten', 'kl'],
             'title' => 'RB General',
             'icon' => 'pie-chart',
-            'url' => 'rb_general',
+            'url' => 'rb-general',
             'items' => [
                 [
                     'levels' => ['provinsi', 'kabupaten', 'kl'],
                     'title' => 'Perencanaan',
                     'icon' => 'bar-chart',
-                    'url' => 'rb_general/perencanaan',
+                    'url' => 'rb-general/perencanaan',
                 ],
                 [
                     'levels' => ['admin', 'evaluator', 'provinsi', 'kabupaten', 'kl'],
                     'title' => 'Rekap Data',
                     'icon' => 'clipboard',
-                    'url' => 'rb_general/rekap_data',
+                    'url' => 'rb-general/rekap_data',
                 ],
             ]
         ],
         [
-            'levels' => 'devider',
+            'levels' => ['devider'],
         ],
         [
             'levels' => ['admin'],
@@ -73,14 +73,14 @@ function menus()
 
 function allowed_url()
 {
-    $role_id = session('level');
+    $level = auth()->user()->level;
     $allowed_url = [];
     $base_url = config('app.client_url') == 'localhost' ? url('/') . '/' : config('app.client_url');
     foreach (menus() as $menu) {
-        if (in_array($role_id, $menu['levels'])) {
+        if (in_array($level, $menu['levels'])) {
             if (isset($menu['items'])) {
                 foreach ($menu['items'] as $item) {
-                    if (in_array($role_id, $item['levels'])) {
+                    if (in_array($level, $item['levels'])) {
                         if (isset($item['url'])) {
                             array_push($allowed_url, str_replace($base_url, '', $item['url']) . '*');
                         }

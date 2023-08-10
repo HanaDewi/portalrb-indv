@@ -937,7 +937,7 @@ select{
     cursor: pointer;
     align-items: center;
     justify-content: center;
-    border-radius: 0.375rem;
+    /* border-radius: 0.375rem; */
     border-width: 1px;
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
@@ -4004,19 +4004,19 @@ select{
     padding-right: 4rem;
 }
 .text-left{
-    text-align: left;
+    text-align: left !important;
 }
 .text-center{
-    text-align: center;
+    text-align: center !important;
 }
 .text-right{
-    text-align: right;
+    text-align: right !important;
 }
 .text-justify{
-    text-align: justify;
+    text-align: justify !important;
 }
 .align-top{
-    vertical-align: top;
+    vertical-align: top !important;
 }
 .text-xs{
     font-size: 0.75rem;
@@ -7903,11 +7903,12 @@ select{
 }
 .table th{
     border-bottom-width: 2px;
-    padding-left: 1.25rem;
-    padding-right: 1.25rem;
-    padding-top: 0.75rem;
-    padding-bottom: 0.75rem;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
     font-weight: 500;
+    text-align: center;
 }
 .dark .table th{
     --tw-border-opacity: 1;
@@ -7915,10 +7916,10 @@ select{
 }
 .table td{
     border-bottom-width: 1px;
-    padding-left: 1.25rem;
-    padding-right: 1.25rem;
-    padding-top: 0.75rem;
-    padding-bottom: 0.75rem;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
 }
 .dark .table td{
     --tw-border-opacity: 1;
@@ -7950,7 +7951,7 @@ select{
     border-color: rgb(var(--color-darkmode-300) / var(--tw-border-opacity));
 }
 .table.table-bordered th, .table.table-bordered td{
-    font-size: 16px;
+    font-size: 14px;
     border-left-width: 0.5px;
     border-top-width: 0.5px;
 }

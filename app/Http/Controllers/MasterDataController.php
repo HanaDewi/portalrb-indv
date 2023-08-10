@@ -10,6 +10,18 @@ use Illuminate\Support\Facades\DB;
 
 class MasterDataController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(function ($request, $next) {
+            foreach (allowed_url() as $allowed) {
+                if ($request->is($allowed)) {
+                    return $next($request);
+                }
+            }
+            abort('403');
+        });
+    }
+
     public function kegiatan_utama()
     {
         return view('master-data.kegiatan_utama');

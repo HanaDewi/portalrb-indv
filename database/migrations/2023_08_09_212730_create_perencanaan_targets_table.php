@@ -11,14 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('instansi', function (Blueprint $table) {
+        Schema::create('general_perencanaan_target', function (Blueprint $table) {
             $table->id();
-            $table->string('kode');
-            $table->string('nama');
-            $table->string('province_id')->nullable();
-            $table->string('regency_id')->nullable();
-            $table->string('jenis_klpd');
-            $table->string('kelompok');
+            $table->foreignId('general_perencanaan_id');
+            $table->integer('tahun');
+            $table->string('target');
             $table->timestamps();
         });
     }
@@ -28,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('instansi');
+        Schema::dropIfExists('general_perencanaan_target');
     }
 };
