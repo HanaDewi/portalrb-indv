@@ -41,7 +41,7 @@
                         <td class="w-5">
                         @if (count($indikator->target))
                             @foreach ($indikator->target as $key => $target)
-                            <mark class="p-1 btn-secondary">{{ $target->tahun }}: {{ $target->target }}</mark><br>
+                            <mark class="p-1 btn-success">{{ $target->tahun }}: {{ $target->target }}</mark><br>
                             <div class="inline-flex w-full" role="group">
                                 <button class="btn btn-primary btn-sm w-24">Renaksi</button>
                                 <button class="btn btn-warning btn-sm w-24">Monev</button>
