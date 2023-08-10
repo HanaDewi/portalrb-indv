@@ -10,7 +10,7 @@
             <div class="form-check form-switch w-full sm:w-auto sm:ml-auto mt-3 sm:mt-0"></div>
         </div>
         <div class="lg:col-span-12 p-5 border-b border-slate-200/60">
-            <table id="perencanaan" class="table table-bordered table-striped hover" cellspacing="0" width="100%">
+            <table id="perencanaan" class="table table-bordered table-striped table-hover" cellspacing="0" width="100%">
                 <thead class="table-dark">
                     <tr>
                         <th rowspan="2" class="w-5">No.</th>
@@ -43,8 +43,8 @@
                             @foreach ($indikator->target as $key => $target)
                             <mark class="p-1 btn-success">{{ $target->tahun }}: {{ $target->target }}</mark><br>
                             <div class="inline-flex w-full" role="group">
-                                <button class="btn btn-primary btn-sm w-24">Renaksi</button>
-                                <button class="btn btn-warning btn-sm w-24">Monev</button>
+                                <a href="{{ url('rb-general/perencanaan/'.$indikator->perencanaan_id.'/'.$target->id.'/rencana_aksi') }}" class="btn btn-primary btn-sm w-24">Renaksi</a>
+                                <a class="btn btn-warning btn-sm w-24">Monev</a>
                             </div>
                             @endforeach
                         @else

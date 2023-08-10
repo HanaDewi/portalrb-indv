@@ -14,4 +14,14 @@ class GeneralPerencanaan extends Model
     {
         return $this->hasMany(GeneralPerencanaanTarget::class, 'general_perencanaan_id')->orderBy('tahun');
     }
+
+    public function kegiatan_utama()
+    {
+        return $this->belongsTo(KegiatanUtama::class, 'kegiatan_utama_id');
+    }
+
+    public function indikator()
+    {
+        return $this->belongsTo(Indikator::class, 'kegiatan_utama_id');
+    }
 }

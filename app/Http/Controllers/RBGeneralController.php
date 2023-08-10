@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\GeneralPerencanaan;
 use App\Models\GeneralPerencanaanTarget;
+use App\Models\GeneralRencanaAksi;
 use App\Models\Indikator;
 use App\Models\Perencanaan;
 use Illuminate\Http\Request;
@@ -32,6 +33,7 @@ class RBGeneralController extends Controller
             $perencanaan = GeneralPerencanaan::where('instansi_id', $user->instansi_id)->where('kegiatan_utama_id', $indikator->kegiatan_utama_id)->where('indikator_id', $indikator->id)->first();
             $indikator->target = [];
             if ($perencanaan) {
+                $indikator->perencanaan_id = $perencanaan->id;
                 $indikator->baseline_tahun = $perencanaan->baseline_tahun;
                 $indikator->baseline_target = $perencanaan->baseline_target;
                 $indikator->baseline_realisasi = $perencanaan->baseline_realisasi;
@@ -102,6 +104,7 @@ class RBGeneralController extends Controller
     {
         $user = Auth::User();
         $perencanaan = GeneralPerencanaan::where('instansi_id', $user->instansi_id)->where('kegiatan_utama_id', $request->kegiatan_utama_id)->where('indikator_id', $request->indikator_id)->first();
+        $pesan = '';
         if ($perencanaan) {
             $success = true;
             DB::beginTransaction();
@@ -117,6 +120,10 @@ class RBGeneralController extends Controller
                     if (!$target->save()) {
                         $success = false;
                     }
+                    if ($tahun <= $perencanaan->baseline_tahun) {
+                        $success = false;
+                        $pesan .= 'Tahun yang di-input tidak boleh sama atau kurang dari tahun baseline!';
+                    }
                 }
             } catch (\Throwable $th) {
                 throw $th;
@@ -126,11 +133,35 @@ class RBGeneralController extends Controller
                 session()->flash('success', 'Data Target Perencanaan General berhasil disimpan.');
             } else {
                 DB::rollBack();
-                session()->flash('success', 'Data Target Perencanaan General gagal disimpan! Silahkan dicoba kembali.');
+                session()->flash('success', 'Data Target Perencanaan General gagal disimpan! '.$pesan);
             }
         } else {
             session()->flash('success', 'Data Target Perencanaan General gagal disimpan! Data Baseline tidak ditemukan.');
         }
         return redirect('rb-general/perencanaan');
+    }
+
+    public function rencana_aksi($perencanaan_id, $target_id)
+    {
+        $user = Auth::User();
+        $target = GeneralPerencanaanTarget::where('id', $target_id)->where('general_perencanaan_id', $perencanaan_id)
+                    ->whereHas('perencanaan', function($q) use ($user) {
+                        $q->where('instansi_id', $user->instansi_id);
+                    })->first();
+        if (!$target) {
+            abort(404);
+        }
+        return view('rb-general.rencana_aksi', compact('target'));
+    }
+
+    public function rencana_aksi_getData($perencanaan_id, $target_id)
+    {
+        $user = Auth::User();
+        $target = GeneralPerencanaanTarget::where('id', $target_id)->where('general_perencanaan_id', $perencanaan_id)
+                    ->whereHas('perencanaan', function($q) use ($user) {
+                        $q->where('instansi_id', $user->instansi_id);
+                    })->first();
+        $rencana_aksi = GeneralRencanaAksi::where('general_perencanaan_target_id', $target->id)->get();
+        return response()->json(['data' => $rencana_aksi]);
     }
 }

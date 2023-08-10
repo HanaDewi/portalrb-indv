@@ -30,6 +30,7 @@ Route::middleware('auth')->group(function () {
     })->name('dashboard');
     Route::get('/profil', [HomeController::class, 'profil'])->name('profil');
     Route::post('/profil_simpan', [HomeController::class, 'profil_simpan']);
+    // MASTER DATA
     // Kegiatan Utama
     Route::get('/master-data/kegiatan_utama', [MasterDataController::class, 'kegiatan_utama'])->name('kegiatan_utama');
     Route::get('/master-data/kegiatan_utama/getDatas', [MasterDataController::class, 'kegiatan_utama_getDatas']);
@@ -55,6 +56,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/rb-general/perencanaan/simpanBaseline', [RBGeneralController::class, 'perencanaan_simpanBaseline']);
     Route::get('/rb-general/perencanaan/getTarget/{kegiatan_utama_id}/{indikator_id}', [RBGeneralController::class, 'perencanaan_getTarget']);
     Route::post('/rb-general/perencanaan/simpanTarget', [RBGeneralController::class, 'perencanaan_simpanTarget']);
+    // RB General Rencana Aksi
+    Route::get('/rb-general/perencanaan/{perencanaan_id}/{target_id}/rencana_aksi', [RBGeneralController::class, 'rencana_aksi'])->name('rencana_aksi');
+    Route::get('/rb-general/perencanaan/{perencanaan_id}/{target_id}/rencana_aksi/getData', [RBGeneralController::class, 'rencana_aksi_getData']);
 });
 
 require __DIR__ . '/auth.php';

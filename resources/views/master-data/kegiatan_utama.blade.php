@@ -13,7 +13,7 @@
             <div class="form-check form-switch w-full sm:w-auto sm:ml-auto mt-3 sm:mt-0"></div>
         </div>
         <div class="lg:col-span-12 p-5 border-b border-slate-200/60">
-            <table id="kegiatan_utama" class="table table-bordered table-striped hover" cellspacing="0" width="100%">
+            <table id="kegiatan_utama" class="table table-bordered table-striped table-hover" cellspacing="0" width="100%">
                 <thead class="table-dark">
                     <tr>
                         <th class="w-5">No.</th>
