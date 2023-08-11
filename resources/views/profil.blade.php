@@ -10,7 +10,7 @@
             <!-- BEGIN: Input -->
             <div class="intro-y box">
                 <div class="flex flex-col sm:flex-row items-center p-5 border-b border-slate-200/60 dark:border-darkmode-400">
-                    <h2 class="font-medium text-base mr-auto">
+                    <h2 class="font-bold text-base mr-auto">
                         Profil Pengguna
                     </h2>
                 </div>
@@ -37,7 +37,7 @@
             <!-- BEGIN: Input -->
             <div class="intro-y box">
                 <div class="flex flex-col sm:flex-row items-center p-5 border-b border-slate-200/60 dark:border-darkmode-400">
-                    <h2 class="font-medium text-base mr-auto">
+                    <h2 class="font-bold text-base mr-auto">
                         Ganti Password
                     </h2>
                 </div>
@@ -64,7 +64,7 @@
             <div class="intro-y box">
                 <div id="input" class="p-5">
                     <div class="preview text-right">
-                        <button class="btn btn-success w-24 mr-1 mb-2">Simpan</button>
+                        <button class="btn btn-primary w-24 mr-1 mb-2">Simpan</button>
                     </div>
                 </div>
             </div>

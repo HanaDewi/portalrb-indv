@@ -9,8 +9,9 @@
     <div class="intro-y box">
         <div class="flex flex-col sm:flex-row items-center p-5 border-b border-slate-200/60">
             <h2 class="font-bold text-base mr-auto flex items-center justify-center"> <i data-lucide="pie-chart" class="mr-1"></i> RB General - Rencana Aksi</h2>
-                       <button class="btn btn-danger shadow-md mr-2 float-right" onclick="tambah();" data-bs-toggle="modal" data-bs-target="#modal-kegiatan_utama"><i data-lucide="plus" class="mr-1"></i> Tambah Rencana Aksi</button>
-            <a href="{{ url('rb-general/perencanaan') }}" class="btn btn-warning shadow-md mr-2 float-right">Kembali</a>
+                         <a href="{{ url('rb-general/perencanaan') }}" class="btn btn-warning shadow-md float-right mr-2"><i data-lucide="chevron-left"></i> Kembali</a>     
+                         <button class="btn btn-danger shadow-md mr-2 float-right" onclick="tambah();" data-bs-toggle="modal" data-bs-target="#modal-kegiatan_utama"><i data-lucide="plus" class="mr-1"></i> Tambah Rencana Aksi</button>
+     
  
         </div>
         <div class="lg:col-span-12 p-5 border-b border-slate-200/60">

@@ -49,6 +49,10 @@ abbr:where([title]) {
   -webkit-text-decoration: underline dotted;
           text-decoration: underline dotted;
 }
+
+.radius10{
+  border-radius: 20px;
+}
 /*
 Remove the default font size and weight for headings.
 */
@@ -16250,6 +16254,9 @@ html body{
 .tns-outer .tns-controls button[data-controls="prev"]{
     left: 0px;
     margin-left: -1.5rem;
+
+
+
 }
 .tns-outer .tns-controls button[data-controls="prev"]:before {
                 content: "";
