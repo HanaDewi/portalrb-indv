@@ -8,18 +8,19 @@
 <div class="intro-y col-span-12 lg:col-span-12">
     <div class="intro-y box">
         <div class="flex flex-col sm:flex-row items-center p-5 border-b border-slate-200/60">
-            <h2 class="font-medium text-base mr-auto"> RB General - Rencana Aksi</h2>
+            <h2 class="font-bold text-base mr-auto flex items-center justify-center"> <i data-lucide="pie-chart" class="mr-1"></i> RB General - Rencana Aksi</h2>
+                       <button class="btn btn-danger shadow-md mr-2 float-right" onclick="tambah();" data-bs-toggle="modal" data-bs-target="#modal-kegiatan_utama"><i data-lucide="plus" class="mr-1"></i> Tambah Rencana Aksi</button>
             <a href="{{ url('rb-general/perencanaan') }}" class="btn btn-warning shadow-md mr-2 float-right">Kembali</a>
-            <button class="btn btn-danger shadow-md mr-2 float-right" onclick="tambah();" data-bs-toggle="modal" data-bs-target="#modal-kegiatan_utama">Tambah Rencana Aksi</button>
+ 
         </div>
         <div class="lg:col-span-12 p-5 border-b border-slate-200/60">
             <table class="table table-bordered table-striped table-hover">
                 <tr>
-                    <td class="font-bold align-top"">Kegiatan Utama</td>
+                    <td class="font-bold align-top">Kegiatan Utama</td>
                     <td>{{ $target->perencanaan->kegiatan_utama->nama }}</td>
                 </tr>
                 <tr>
-                    <td class="font-bold align-top"">Indikator</td>
+                    <td class="font-bold align-top">Indikator</td>
                     <td>{{ $target->perencanaan->indikator->nama }}</td>
                 </tr>
                 <tr>
@@ -42,17 +43,17 @@
                     </td>
                 </tr>
                 <tr>
-                    <td class="font-bold align-top"">Tahun</td>
+                    <td class="font-bold align-top">Tahun</td>
                     <td>{{ $target->tahun }}</td>
                 </tr>
                 <tr>
-                    <td class="font-bold align-top"">Target</td>
+                    <td class="font-bold align-top">Target</td>
                     <td>{{ $target->target }}</td>
                 </tr>
             </table>
         </div>
         <div class="flex flex-col sm:flex-row items-center p-5 border-b border-slate-200/60">
-            <h2 class="font-medium text-base mr-auto"> Data Rencana Aksi</h2>
+            <h2 class="font-bold text-base mr-auto flex items-center justify-center"><i data-lucide="file-text" class="mr-1"></i> Data Rencana Aksi</h2>
             <div class="form-check form-switch w-full sm:w-auto sm:ml-auto mt-3 sm:mt-0"></div>
         </div>
         <div class="lg:col-span-12 p-5 border-b border-slate-200/60">
@@ -87,8 +88,8 @@
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <!-- BEGIN: Modal Header -->
-            <div class="modal-header">
-                <h2 class="fw-medium fs-base me-auto" id="title">Tambah Rencana Aksi</h2>
+            <div class="darkbg modal-header">
+                <h2 class="font-bold fw-medium fs-base me-auto" id="title">Tambah Rencana Aksi</h2>
             </div> <!-- END: Modal Header -->
             <!-- BEGIN: Modal Body -->
             <form action="{{ url('rb-general/perencanaan/'.$target->perencanaan->id.'/'.$target->id.'/rencana_aksi/simpan') }}" id="form-rencana_aksi" method="post">
@@ -151,7 +152,7 @@
                 <!-- BEGIN: Modal Footer -->
                 <div class="modal-footer text-end"> 
                     <button type="button" data-tw-dismiss="modal" class="btn btn-outline-secondary w-20 me-1">Cancel</button> 
-                    <button type="submit" class="btn btn-success w-20 saveButton">Simpan</button> 
+                    <button type="submit" class="btn btn-primary w-20 saveButton">Simpan</button> 
                 </div> <!-- END: Modal Footer -->
             </form>
         </div>
@@ -262,7 +263,7 @@
                 sortable: false, 
                 searchable: false,
                 render: function (data, type, row, meta) {
-                    return '<button onclick="edit('+row.id+');" class="btn btn-warning btn-sm w-10">Edit</button><button onclick="hapus('+row.id+');" class="btn btn-danger btn-sm w-10">Hapus</button>';
+                    return '<button onclick="edit('+row.id+');" class="mb-3 btn btn-warning btn-sm w-10"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" icon-name="edit" data-lucide="edit" class="lucide lucide-edit block mx-auto"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button><button onclick="hapus('+row.id+');" class="btn btn-danger btn-sm w-10"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" icon-name="trash-2" data-lucide="trash-2" class="lucide lucide-trash-2 w-4 h-4 mr-1"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg></button>';
                 },
             },
         ],

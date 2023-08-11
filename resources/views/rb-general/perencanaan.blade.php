@@ -44,10 +44,10 @@
                                 $hr = $key > 0 ? '<hr class="mt-2 mb-2">' : '';
                             @endphp
                             {!! $hr !!}
-                            <div class="flex items-center"><i data-lucide="bar-chart" class="w-4 h-4 mr-2"></i><span class="font-bold"> {{ $target->tahun }}:</span> {{ $target->target }}</div>
+                            <div class="flex items-center"><i data-lucide="bar-chart" class="w-4 h-4 mr-1"></i><span class="font-bold mr-1"> {{ $target->tahun }}: </span> {{ $target->target }}</div>
                             <div class="inline-flex" role="group">
                                 <a href="{{ url('rb-general/perencanaan/'.$indikator->perencanaan_id.'/'.$target->id.'/rencana_aksi') }}" class="btn btn-primary btn-sm mr-2"><i data-lucide="edit" class="w-4 h-4 mr-1"></i> Renaksi</a>
-                                <a href="{{ url('rb-general/perencanaan/'.$indikator->perencanaan_id.'/'.$target->id.'/monev') }}" class="btn btn-dark btn-sm"><i data-lucide="edit" class="w-4 h-4 mr-1"></i> Monev</a>
+                                <a href="{{ url('rb-general/perencanaan/'.$indikator->perencanaan_id.'/'.$target->id.'/monev') }}" class="btn btn-warning btn-sm"><i data-lucide="edit" class="w-4 h-4 mr-1"></i> Monev</a>
                             </div>
                             @endforeach
                         @else
@@ -55,7 +55,7 @@
                         </td>
                         <td class="w-15">
                             <button onclick="atur_baseline('{{ $indikator->kegiatan_utama_id }}', '{{ $indikator->id }}');" class="btn btn-primary btn-sm w-full mb-2"><i data-lucide="edit" class="w-4 h-4 mr-1"></i>Baseline</button>
-                            <button onclick="atur_target('{{ $indikator->kegiatan_utama_id }}', '{{ $indikator->id }}');" class="btn btn-dark btn-sm w-full"><i data-lucide="edit" class="w-4 h-4 mr-1"></i> Target</button>
+                            <button onclick="atur_target('{{ $indikator->kegiatan_utama_id }}', '{{ $indikator->id }}');" class="btn btn-warning btn-sm w-full"><i data-lucide="edit" class="w-4 h-4 mr-1"></i> Target</button>
                         </td>
                     </tr>
                     @php
