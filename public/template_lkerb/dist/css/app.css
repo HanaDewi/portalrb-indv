@@ -7987,6 +7987,7 @@ font-family: 'Roboto', sans-serif;
 }
 .table.table-noborder th, .table.table-noborder td{
   border: none;
+  padding: 0px;
 }
 .table.table-bordered th, .table.table-bordered td{
     font-size: 14px;
