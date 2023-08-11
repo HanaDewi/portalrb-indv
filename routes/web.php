@@ -58,7 +58,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/rb-general/perencanaan/simpanTarget', [RBGeneralController::class, 'perencanaan_simpanTarget']);
     // RB General Rencana Aksi
     Route::get('/rb-general/perencanaan/{perencanaan_id}/{target_id}/rencana_aksi', [RBGeneralController::class, 'rencana_aksi'])->name('rencana_aksi');
-    Route::get('/rb-general/perencanaan/{perencanaan_id}/{target_id}/rencana_aksi/getData', [RBGeneralController::class, 'rencana_aksi_getData']);
+    Route::get('/rb-general/perencanaan/{perencanaan_id}/{target_id}/rencana_aksi/getDatas', [RBGeneralController::class, 'rencana_aksi_getDatas']);
+    Route::get('/rb-general/perencanaan/{perencanaan_id}/{target_id}/rencana_aksi/getData/{id}', [RBGeneralController::class, 'rencana_aksi_getData']);
+    Route::post('/rb-general/perencanaan/{perencanaan_id}/{target_id}/rencana_aksi/simpan', [RBGeneralController::class, 'rencana_aksi_simpan']);
 });
 
 require __DIR__ . '/auth.php';

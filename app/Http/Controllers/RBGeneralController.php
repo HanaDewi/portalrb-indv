@@ -154,7 +154,7 @@ class RBGeneralController extends Controller
         return view('rb-general.rencana_aksi', compact('target'));
     }
 
-    public function rencana_aksi_getData($perencanaan_id, $target_id)
+    public function rencana_aksi_getDatas($perencanaan_id, $target_id)
     {
         $user = Auth::User();
         $target = GeneralPerencanaanTarget::where('id', $target_id)->where('general_perencanaan_id', $perencanaan_id)
@@ -163,5 +163,49 @@ class RBGeneralController extends Controller
                     })->first();
         $rencana_aksi = GeneralRencanaAksi::where('general_perencanaan_target_id', $target->id)->get();
         return response()->json(['data' => $rencana_aksi]);
+    }
+
+    public function rencana_aksi_getData($perencanaan_id, $target_id, $id)
+    {
+        $user = Auth::User();
+        $target = GeneralPerencanaanTarget::where('id', $target_id)->where('general_perencanaan_id', $perencanaan_id)
+                    ->whereHas('perencanaan', function($q) use ($user) {
+                        $q->where('instansi_id', $user->instansi_id);
+                    })->first();
+        $rencana_aksi = GeneralRencanaAksi::where('general_perencanaan_target_id', $target->id)->where('id', $id)->first();
+        return response()->json($rencana_aksi);
+    }
+
+    public function rencana_aksi_simpan($perencanaan_id, $target_id, Request $request)
+    {
+        $user = Auth::User();
+        $target = GeneralPerencanaanTarget::where('id', $target_id)->where('general_perencanaan_id', $perencanaan_id)
+                    ->whereHas('perencanaan', function($q) use ($user) {
+                        $q->where('instansi_id', $user->instansi_id);
+                    })->first();
+        if (!$target) {
+            abort(403);
+        }
+        $success = false;
+        $rencana_aksi = new GeneralRencanaAksi();
+        $rencana_aksi->general_perencanaan_target_id = $target->id;
+        if ($request->rencana_aksi_id) {
+            $rencana_aksi = GeneralRencanaAksi::where('general_perencanaan_target_id', $target->id)->where('id', $request->rencana_aksi_id)->first();
+        }
+        $rencana_aksi->rencana_aksi = $request->rencana_aksi;
+        $rencana_aksi->satuan_output = $request->satuan_output;
+        $rencana_aksi->indikator_output = $request->indikator_output;
+        $rencana_aksi->target_tw1 = $request->target_tw1;
+        $rencana_aksi->target_tw2 = $request->target_tw2;
+        $rencana_aksi->target_tw3 = $request->target_tw3;
+        $rencana_aksi->target_tw4 = $request->target_tw4;
+        $rencana_aksi->target_total = $request->target_tw1 + $request->target_tw2 + $request->target_tw3 + $request->target_tw4;
+        $rencana_aksi->anggaran = str_replace('.', '', $request->anggaran);
+        $rencana_aksi->pelaksana = $request->pelaksana;
+        $rencana_aksi->koordinator = $request->koordinator;
+        if ($rencana_aksi->save()) {
+            $success = true;
+        }
+        return response()->json(['success' => $success]);
     }
 }

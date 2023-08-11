@@ -2,8 +2,6 @@
 @section('title', 'RB General - Rencana Aksi')
 
 @section('button')
-<button class="btn btn-danger shadow-md mr-2" onclick="tambah();" data-bs-toggle="modal" data-bs-target="#modal-kegiatan_utama">Tambah Rencana Aksi</button>
-<a href="{{ url('rb-general/perencanaan') }}" class="btn btn-warning shadow-md mr-2">Kembali</a>
 @endsection
 @section('content')
 @include('common.status')
@@ -11,7 +9,8 @@
     <div class="intro-y box">
         <div class="flex flex-col sm:flex-row items-center p-5 border-b border-slate-200/60">
             <h2 class="font-medium text-base mr-auto"> RB General - Rencana Aksi</h2>
-            <div class="form-check form-switch w-full sm:w-auto sm:ml-auto mt-3 sm:mt-0"></div>
+            <a href="{{ url('rb-general/perencanaan') }}" class="btn btn-warning shadow-md mr-2 float-right">Kembali</a>
+            <button class="btn btn-danger shadow-md mr-2 float-right" onclick="tambah();" data-bs-toggle="modal" data-bs-target="#modal-kegiatan_utama">Tambah Rencana Aksi</button>
         </div>
         <div class="lg:col-span-12 p-5 border-b border-slate-200/60">
             <table class="table table-bordered table-striped table-hover">
@@ -82,6 +81,82 @@
         </div>
     </div>
 </div>
+
+{{-- Modal Form Rencana Aksi --}}
+<div id="modal-rencana_aksi" class="modal fade" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <!-- BEGIN: Modal Header -->
+            <div class="modal-header">
+                <h2 class="fw-medium fs-base me-auto" id="title">Tambah Rencana Aksi</h2>
+            </div> <!-- END: Modal Header -->
+            <!-- BEGIN: Modal Body -->
+            <form action="{{ url('rb-general/perencanaan/'.$target->perencanaan->id.'/'.$target->id.'/rencana_aksi/simpan') }}" id="form-rencana_aksi" method="post">
+                @csrf
+                <input type="hidden" name="rencana_aksi_id" id="rencana_aksi_id">
+                <div class="modal-body grid columns-12 gap-4 gap-y-3">
+                    <div class="g-col-12">
+                        <table>
+                            <tr>
+                            <td class="font-bold w-30">Rencana Aksi <span class="text-danger">*</span></td>
+                                <td colspan="5">
+                                    <textarea rows="5" name="rencana_aksi" id="rencana_aksi" placeholder="Penjelasan Rencana Aksi" class="form-control" required></textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold w-30">Output <span class="text-danger">*</span></td>
+                                <td colspan="2">
+                                    <input type="text" name="satuan_output" id="satuan_output" placeholder="Satuan Output" class="form-control" required>
+                                </td>
+                                <td colspan="3">
+                                    <input type="text" name="indikator_output" id="indikator_output" placeholder="Indikator Output" class="form-control" required>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold w-30">Target Output <span class="text-danger">*</span></td>
+                                <td>
+                                    <input type="text" name="target_tw1" id="target_tw1" placeholder="Triwulan 1" class="form-control numeric" onkeyup="hitungTotal();" required>
+                                </td>
+                                <td>
+                                    <input type="text" name="target_tw2" id="target_tw2" placeholder="Triwulan 2" class="form-control numeric" onkeyup="hitungTotal();" required>
+                                </td>
+                                <td>
+                                    <input type="text" name="target_tw3" id="target_tw3" placeholder="Triwulan 3" class="form-control numeric" onkeyup="hitungTotal();" required>
+                                </td>
+                                <td>
+                                    <input type="text" name="target_tw4" id="target_tw4" placeholder="Triwulan 4" class="form-control numeric" onkeyup="hitungTotal();" required>
+                                </td>
+                                <td>
+                                    <input type="text" name="target_total" id="target_total" placeholder="Total" class="form-control numeric" readonly required>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold w-30">Anggaran <span class="text-danger">*</span></td>
+                                <td colspan="5">
+                                    <input type="text" name="anggaran" id="anggaran" placeholder="Masukan Data Anggaran" class="form-control digit" required>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold w-30">Unit Kerja Pelaksana <span class="text-danger">*</span></td>
+                                <td colspan="2">
+                                    <input type="text" name="pelaksana" id="pelaksana" placeholder="Pelaksana" class="form-control" required>
+                                </td>
+                                <td colspan="3">
+                                    <input type="text" name="koordinator" id="koordinator" placeholder="Koordinator" class="form-control" required>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div> <!-- END: Modal Body -->
+                <!-- BEGIN: Modal Footer -->
+                <div class="modal-footer text-end"> 
+                    <button type="button" data-tw-dismiss="modal" class="btn btn-outline-secondary w-20 me-1">Cancel</button> 
+                    <button type="submit" class="btn btn-success w-20 saveButton">Simpan</button> 
+                </div> <!-- END: Modal Footer -->
+            </form>
+        </div>
+    </div>
+</div> <!-- END: Modal Content -->
 @endsection
 
 @push('js')
@@ -91,6 +166,69 @@
 <script>
     $(document).ready(function() {
         getData();
+        modal_rencana_aksi = tailwind.Modal.getInstance(document.querySelector("#modal-rencana_aksi"));
+
+        $(".numeric").inputmask("decimal",{
+            groupSeparator: "",
+            digits: 0,
+            autoGroup: false,
+            rightAlign: false,
+            min: 0
+        });
+
+        $(".digit").inputmask("decimal",{
+            radixPoint:",",
+            groupSeparator: ".",
+            digits: 0,
+            autoGroup: true,
+            rightAlign: false,
+            min: 0,
+        });
+
+        $('#form-rencana_aksi').validate({
+            highlight: function (input) {
+                $(input).addClass('border-danger');
+            },
+            unhighlight: function (input) {
+                $(input).removeClass('border-danger');
+            },
+            errorPlacement: function( error, element ) {
+                var placement = element.closest('.form-group');
+                if (!placement.get(0)) {
+                    placement = element;
+                }
+                if (error.text() !== '') {
+                    placement.append(error);
+                }
+                console.log(error, placement);
+            },
+            submitHandler: function(form) {
+                $('.saveButton').prop('disabled', true);
+                $.ajax({
+                    url: form.action,
+                    type: form.method,
+                    data: new FormData(form),
+                    processData: false,
+                    contentType: false,
+                    dataType: "json",
+                    success: function(data) {
+                        $('.saveButton').prop('disabled', false);
+                        if (data.success) {
+                            Swal.fire('Selamat!', 'Data Rencana Aksi berhasil disimpan!', 'success');
+                            modal_rencana_aksi.hide();
+                        } else {
+                            Swal.fire('Aduh!', 'Data Rencana Aksi gagal disimpan! Coba lagi nanti ya..', 'error');
+                            modal_rencana_aksi.hide();
+                        }
+                        getData();
+                    },
+                    error: function(err) {
+                        Swal.fire('Error!', 'Terjadi kesalahan!', 'error');
+                        $('.saveButton').prop('disabled', false);
+                    }
+                });
+            }
+        });
     });
 
     var rencana_aksi = $('#rencana_aksi-table').DataTable( {
@@ -128,10 +266,105 @@
                 },
             },
         ],
+        columnDefs: [
+            {
+                targets: [9],
+                render: $.fn.dataTable.render.number('.', ',', 0, '')
+            }
+        ],
     }); 
 
     function getData() {
-        rencana_aksi.ajax.url("{{url('rb-general/perencanaan/'.$target->perencanaan->id.'/'.$target->id.'/rencana_aksi/getData')}}").load(null, false);
+        rencana_aksi.ajax.url("{{url('rb-general/perencanaan/'.$target->perencanaan->id.'/'.$target->id.'/rencana_aksi/getDatas')}}").load(null, false);
+    }
+
+    function clearForm() {
+        $('#form-rencana_aksi').trigger('reset');
+        $('#target_tw1').val('0');
+        $('#target_tw2').val('0');
+        $('#target_tw3').val('0');
+        $('#target_tw4').val('0');
+        $('#rencana_aksi_id').val('');
+    }
+
+    function tambah() {
+        clearForm();
+        $('.saveButton').prop('disabled', false);
+        modal_rencana_aksi.show();
+    }
+
+    function hitungTotal() {
+        if ($('#target_tw1').val() == '') {
+            $('#target_tw1').val(0);
+        }
+        if ($('#target_tw2').val() == '') {
+            $('#target_tw2').val(0);
+        }
+        if ($('#target_tw3').val() == '') {
+            $('#target_tw3').val(0);
+        }
+        if ($('#target_tw4').val() == '') {
+            $('#target_tw4').val(0);
+        }
+        tw1 = $('#target_tw1').val();
+        tw2 = $('#target_tw2').val();
+        tw3 = $('#target_tw3').val();
+        tw4 = $('#target_tw4').val();
+        total = parseFloat(tw1) + parseFloat(tw2) + parseFloat(tw3) + parseFloat(tw4);
+        $('#target_total').val(total);
+    }
+
+    function edit(id) {
+        clearForm();
+        $('#rencana_aksi_id').val(id);
+        $('#title').html('Edit Rencana Aksi');
+        $('.saveButton').prop('disabled', true);
+        modal_rencana_aksi.show();
+        $.getJSON("{{url('rb-general/perencanaan/'.$target->perencanaan->id.'/'.$target->id.'/rencana_aksi/getData')}}/"+id, function(data) {
+            $('#rencana_aksi').val(data.rencana_aksi);
+            $('#satuan_output').val(data.satuan_output);
+            $('#indikator_output').val(data.indikator_output);
+            $('#target_tw1').val(data.target_tw1);
+            $('#target_tw2').val(data.target_tw2);
+            $('#target_tw3').val(data.target_tw3);
+            $('#target_tw4').val(data.target_tw4);
+            $('#target_total').val(data.target_total);
+            $('#anggaran').val(data.anggaran);
+            $('#pelaksana').val(data.pelaksana);
+            $('#koordinator').val(data.koordinator);
+            $('.saveButton').prop('disabled', false);
+        });
+    }
+
+    function hapus(id) {
+        Swal.fire({
+            title: "Yakin?",
+            text: "Hapus Tema ini?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Ya, Hapus aja!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: "{{url('master-data/tema/hapus')}}",
+                    type: "post",
+                    data: {_token: '{{csrf_token()}}', id: id},
+                    dataType: "json",
+                    success: function(terhapus) {
+                        if (terhapus) {
+                            Swal.fire('Selamat!', 'Data Tema berhasil dihapus!', 'success');
+                        } else {
+                            Swal.fire('Aduh!', 'Data Tema gagal dihapus! Coba lagi nanti ya..', 'error');
+                        }
+                        getData();
+                    },
+                    error: function(err) {
+                        Swal.fire('Error!', 'Terjadi kesalahan!', 'error');
+                    }
+                });
+            }
+        });
     }
 </script>
 @endpush

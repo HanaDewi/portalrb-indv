@@ -39,7 +39,7 @@
                 <div class="modal-body grid columns-12 gap-4 gap-y-3">
                     <div class="g-col-12">
                         <div class="form-group">
-                            <label for="nama" class="form-label">Nama Tema  <span class="text-danger">*</span></label> 
+                            <label for="nama" class="form-label">Nama Tema <span class="text-danger">*</span></label> 
                             <textarea id="nama" name="nama" class="form-control" placeholder="Nama Tema" required></textarea>
                         </div> 
                     </div>
