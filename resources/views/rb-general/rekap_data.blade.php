@@ -13,6 +13,7 @@
                     <thead class="table-dark font-bold">
                         <tr>
                             <th class="w-5" rowspan="2">No.</th>
+                            <th class="w-5" rowspan="2">No.</th>
                             <th class="w-10" rowspan="2">Kegiatan Utama</th>
                             <th class="w-10" rowspan="2">Indikator</th>
                             <th class="w-10" rowspan="2">Realisasi Indikator</th>
@@ -43,12 +44,22 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @php
-                            $no = 1;
-                        @endphp
-                        @foreach ($datas as $data)
+                             @php $no = 1; $a = "nama"; $x = 1; @endphp
+                             @foreach ($datas as $data)
+                                @php $nama = $data['perencanaan']->kegiatan_utama->nama; @endphp
+                                @if ($no == 1)  
+                                    @php {$a = $nama;} @endphp
+                                @elseif ($no > 1 )
+                                    @if ($a == $nama)       
+                                        @php {$x+=0; $a = $nama;} @endphp
+                                    @else
+                                         @php {$x+=1; $a = $nama;} @endphp
+                                     @endif
+                                 @endif
+
                             <tr>
                                 <td class="font-bold">{{ $no }}</td>
+                                   <td class="font-bold">@php echo $x; @endphp</td>
                                 <td class="font-bold">{{ $data['perencanaan']->kegiatan_utama->nama }}</td>
                                 <td>{{ $data['perencanaan']->indikator->nama }}</td>
                                 <td>{{ $data['perencanaan']->realisasi_indikator }}</td>
@@ -134,13 +145,28 @@
 @push('js')
     <script src="http://cdn.rawgit.com/ashl1/datatables-rowsgroup/v1.0.0/dataTables.rowsGroup.js"></script>
     <script>
-        $(function() {
+       
+ $(function() {
             $("#perencanaan").DataTable({
                 'scrollX': true,
                 'orderFixed': [0, 'asc'],
                 'autoWidth': false,
-                'rowsGroup': [1, 2, 3, 4, 5, 6,7],
+                'rowsGroup': [2, 1, 3, 4, 5, 6,7],
+                
+                "columnDefs": [{ "visible": false, "targets": 0 }, 
+              ],
+
+       
+
+
             });
+
+
         });
+
+
     </script>
+
+
+
 @endpush

@@ -13,6 +13,8 @@
                 <thead class="table-dark font-bold">
                     <tr>
                         <th class="w-5">No.</th>
+                        <th class="w-5">No.</th>
+
                         <th class="w200">Kegiatan Utama</th>
                         <th class="w150">Indikator</th>
                         <th>Baseline</th>
@@ -24,12 +26,21 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @php
-                        $no = 1;
-                    @endphp
-                    @foreach ($indikators as $indikator)
+                     @php $no = 1; $a = "nama"; $x = 1; @endphp
+                     @foreach ($indikators as $indikator)
+                        @php $nama = $indikator->kegiatan_utama->nama; @endphp
+                        @if ($no == 1)  
+                            @php { $a = $nama;} @endphp
+                        @elseif ($no > 1 )
+                            @if ($a == $nama)       
+                                @php {$x+=0; $a = $nama;} @endphp
+                            @else
+                                 @php {$x+=1; $a = $nama;} @endphp
+                             @endif
+                         @endif
                     <tr>
                         <td class="font-bold">{{ $no }}</td>
+                            <td class="font-bold">@php echo $x; @endphp</td>
                         <td class="font-bold" id="kegiatan_utama{{ $indikator->id }}">{{ $indikator->kegiatan_utama->nama }}</td>
                         <td id="indikator{{ $indikator->id }}">{{ $indikator->nama }}</td>
                         <td>
@@ -398,7 +409,9 @@
             'scrollX': true,
             'orderFixed': [0, 'asc'],
             'autoWidth': false,
-            'rowsGroup': [1],
+            'rowsGroup': [2,1],
+            "columnDefs": [{ "visible": false, "targets": 0 } ],
+
         });
     });
 </script>
