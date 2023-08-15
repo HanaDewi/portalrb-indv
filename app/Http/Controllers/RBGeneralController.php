@@ -37,6 +37,9 @@ class RBGeneralController extends Controller
                 $indikator->baseline_tahun = $perencanaan->baseline_tahun;
                 $indikator->baseline_target = $perencanaan->baseline_target;
                 $indikator->baseline_realisasi = $perencanaan->baseline_realisasi;
+                $indikator->realisasi_indikator = $perencanaan->realisasi_indikator;
+                $indikator->capaian_indikator = $perencanaan->capaian_indikator;
+                $indikator->catatan = $perencanaan->catatan;
                 $target = GeneralPerencanaanTarget::where('general_perencanaan_id', $perencanaan->id)->get();
                 $indikator->target = $target ? $target : [];
             }
@@ -141,6 +144,27 @@ class RBGeneralController extends Controller
         return redirect('rb-general/perencanaan');
     }
 
+    public function perencanaan_simpanMonev(Request $request)
+    {
+        $user = Auth::User();
+        $perencanaan = GeneralPerencanaan::where('instansi_id', $user->instansi_id)->where('kegiatan_utama_id', $request->kegiatan_utama_id)->where('indikator_id', $request->indikator_id)->first();
+        if (!$perencanaan) {
+            $perencanaan = new GeneralPerencanaan();
+            $perencanaan->instansi_id = $user->instansi_id;
+            $perencanaan->kegiatan_utama_id = $request->kegiatan_utama_id;
+            $perencanaan->indikator_id = $request->indikator_id;
+        }
+        $perencanaan->realisasi_indikator = $request->realisasi_indikator;
+        $perencanaan->capaian_indikator = $request->capaian_indikator;
+        $perencanaan->catatan = $request->catatan;
+        if ($perencanaan->save()) {
+            session()->flash('success', 'Data Baseline Perencanaan General berhasil disimpan.');
+        } else {
+            session()->flash('success', 'Data Baseline Perencanaan General gagal disimpan! Silahkan dicoba kembali.');
+        }
+        return redirect('rb-general/perencanaan');
+    }
+
     public function rencana_aksi($perencanaan_id, $target_id)
     {
         $user = Auth::User();
@@ -207,5 +231,112 @@ class RBGeneralController extends Controller
             $success = true;
         }
         return response()->json(['success' => $success]);
+    }
+
+    public function rencana_aksi_hapus($perencanaan_id, $target_id, Request $request)
+    {
+        $user = Auth::User();
+        $target = GeneralPerencanaanTarget::where('id', $target_id)->where('general_perencanaan_id', $perencanaan_id)
+                    ->whereHas('perencanaan', function($q) use ($user) {
+                        $q->where('instansi_id', $user->instansi_id);
+                    })->first();
+        if (!$target) {
+            abort(403);
+        }
+        $success = false;
+        $rencana_aksi = GeneralRencanaAksi::where('general_perencanaan_target_id', $target->id)->where('id', $request->id)->first();
+        if ($rencana_aksi->delete()) {
+            $success = true;
+        }
+        return response()->json(['success' => $success]);
+    }
+
+    public function monev($perencanaan_id, $target_id)
+    {
+        $user = Auth::User();
+        $target = GeneralPerencanaanTarget::where('id', $target_id)->where('general_perencanaan_id', $perencanaan_id)
+                    ->whereHas('perencanaan', function($q) use ($user) {
+                        $q->where('instansi_id', $user->instansi_id);
+                    })->first();
+        if (!$target) {
+            abort(404);
+        }
+        return view('rb-general.monev', compact('target'));
+    }
+
+    public function monev_getDatas($perencanaan_id, $target_id)
+    {
+        $user = Auth::User();
+        $target = GeneralPerencanaanTarget::where('id', $target_id)->where('general_perencanaan_id', $perencanaan_id)
+                    ->whereHas('perencanaan', function($q) use ($user) {
+                        $q->where('instansi_id', $user->instansi_id);
+                    })->first();
+        $rencana_aksi = GeneralRencanaAksi::where('general_perencanaan_target_id', $target->id)->get();
+        return response()->json(['data' => $rencana_aksi]);
+    }
+
+    public function monev_getData($perencanaan_id, $target_id, $id)
+    {
+        $user = Auth::User();
+        $target = GeneralPerencanaanTarget::where('id', $target_id)->where('general_perencanaan_id', $perencanaan_id)
+                    ->whereHas('perencanaan', function($q) use ($user) {
+                        $q->where('instansi_id', $user->instansi_id);
+                    })->first();
+        $rencana_aksi = GeneralRencanaAksi::where('general_perencanaan_target_id', $target->id)->where('id', $id)->first();
+        return response()->json($rencana_aksi);
+    }
+
+    public function monev_simpan($perencanaan_id, $target_id, Request $request)
+    {
+        $user = Auth::User();
+        $target = GeneralPerencanaanTarget::where('id', $target_id)->where('general_perencanaan_id', $perencanaan_id)
+                    ->whereHas('perencanaan', function($q) use ($user) {
+                        $q->where('instansi_id', $user->instansi_id);
+                    })->first();
+        if (!$target) {
+            abort(403);
+        }
+        $success = false;
+        $rencana_aksi = GeneralRencanaAksi::where('general_perencanaan_target_id', $target->id)->where('id', $request->rencana_aksi_id)->first();
+        if (!$rencana_aksi) {
+            abort(404);
+        }
+        $rencana_aksi->realisasi_output = $request->realisasi_output;
+        $rencana_aksi->realisasi_anggaran = $request->realisasi_anggaran;
+        $rencana_aksi->capaian_anggaran = $request->capaian_anggaran;
+        if ($rencana_aksi->save()) {
+            $success = true;
+        }
+        return response()->json(['success' => $success]);
+    }
+
+    public function rekap_data()
+    {
+        $user = Auth::User();
+        $key = 0;
+        $datas = [];
+        $perencanaans = GeneralPerencanaan::where('instansi_id', $user->instansi_id)->orderBy('kegiatan_utama_id')->orderBy('indikator_id')->get();
+        foreach ($perencanaans as $perencanaan) {
+            if (count($perencanaan->target)) {
+                foreach ($perencanaan->target as $target) {
+                    if (count($target->rencana_aksi)) {
+                        foreach ($target->rencana_aksi as $rencana_aksi) {
+                            $datas[$key]['perencanaan'] = $perencanaan;
+                            $datas[$key]['target'] = $target;
+                            $datas[$key]['rencana_aksi'] = $rencana_aksi;
+                            $key++;
+                        }
+                    } else {
+                        $datas[$key]['perencanaan'] = $perencanaan;
+                        $datas[$key]['target'] = $perencanaan->target;
+                        $key++;
+                    }
+                }
+            } else {
+                $datas[$key]['perencanaan'] = $perencanaan;
+                $key++;
+            }
+        }
+        return view('rb-general.rekap_data', compact('datas'));
     }
 }

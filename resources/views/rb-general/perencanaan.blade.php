@@ -12,17 +12,15 @@
             <table id="perencanaan" class="table table-bordered table-striped mt-5" cellspacing="0" width="100%">
                 <thead class="table-dark font-bold">
                     <tr>
-                        <th rowspan="2" class="w-5">No.</th>
-                        <th class="w200" rowspan="2">Kegiatan Utama</th>
-                        <th class="w150" rowspan="2">Indikator</th>
-                        <th class="w200" colspan="3">Baseline</th>
-                        <th class="w150" rowspan="2">Target</th>
-                        <th  rowspan="2" class="w-5">Atur</th>
-                    </tr>
-                    <tr>
-                        <th>Tahun</th>
-                        <th>Target</th>
-                        <th>Realisasi</th>
+                        <th class="w-5">No.</th>
+                        <th class="w200">Kegiatan Utama</th>
+                        <th class="w150">Indikator</th>
+                        <th>Baseline</th>
+                        <th class="w-5">Target</th>
+                        <th class="w-5">Realisasi Indikator</th>
+                        <th class="w-5">Capaian Indikator</th>
+                        <th class="w-5">Catatan</th>
+                        <th class="w-5">Atur</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -31,13 +29,26 @@
                     @endphp
                     @foreach ($indikators as $indikator)
                     <tr>
-                        <td class="font-bold w-2">{{ $no }}</td>
-                        <td class="font-bold w-10" id="kegiatan_utama{{ $indikator->id }}">{{ $indikator->kegiatan_utama->nama }}</td>
-                        <td class="w-5" id="indikator{{ $indikator->id }}">{{ $indikator->nama }}</td>
-                        <td class="w-5">{{ $indikator->baseline_tahun }}</td>
-                        <td class="w-5">{{ $indikator->baseline_target }}</td>
-                        <td class="w-5">{{ $indikator->baseline_realisasi }}</td>
-                        <td class="w-5">
+                        <td class="font-bold">{{ $no }}</td>
+                        <td class="font-bold" id="kegiatan_utama{{ $indikator->id }}">{{ $indikator->kegiatan_utama->nama }}</td>
+                        <td id="indikator{{ $indikator->id }}">{{ $indikator->nama }}</td>
+                        <td>
+                            <table class="table table-noborder">
+                                <tr>
+                                    <td class="font-bold w-16">Tahun</td>
+                                    <td>: {{ $indikator->baseline_tahun }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="font-bold">Target</td>
+                                    <td>: {{ $indikator->baseline_target }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="font-bold">Realisasi</td>
+                                    <td>: {{ $indikator->baseline_realisasi }}</td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td>
                         @if (count($indikator->target))
                             @foreach ($indikator->target as $key => $target)
                             @php
@@ -45,17 +56,19 @@
                             @endphp
                             {!! $hr !!}
                             <div class="flex items-center"><i data-lucide="bar-chart" class="w-4 h-4 mr-1"></i><span class="font-bold mr-1"> {{ $target->tahun }}: </span> {{ $target->target }}</div>
-                            <div class="inline-flex" role="group">
-                                <a href="{{ url('rb-general/perencanaan/'.$indikator->perencanaan_id.'/'.$target->id.'/rencana_aksi') }}" class="btn btn-primary btn-sm mr-2"><i data-lucide="edit" class="w-4 h-4 mr-1"></i> Renaksi</a>
-                                <a href="{{ url('rb-general/perencanaan/'.$indikator->perencanaan_id.'/'.$target->id.'/monev') }}" class="btn btn-dark btn-sm"><i data-lucide="edit" class="w-4 h-4 mr-1"></i> Monev</a>
-                            </div>
+                            <a href="{{ url('rb-general/perencanaan/'.$indikator->perencanaan_id.'/'.$target->id.'/rencana_aksi') }}" class="btn btn-primary btn-sm w-full mb-2"><i data-lucide="edit" class="w-4 h-4 mr-1"></i>Renaksi</a><br>
+                            <a href="{{ url('rb-general/perencanaan/'.$indikator->perencanaan_id.'/'.$target->id.'/monev') }}" class="btn btn-dark btn-sm w-full"><i data-lucide="edit" class="w-4 h-4 mr-1"></i>Monev</a>
                             @endforeach
                         @else
                         @endif
                         </td>
-                        <td class="w-15">
-                            <button onclick="atur_baseline('{{ $indikator->kegiatan_utama_id }}', '{{ $indikator->id }}');" class="btn btn-primary btn-sm w-full mb-2"><i data-lucide="edit" class="w-4 h-4 mr-1"></i>Baseline</button>
-                            <button onclick="atur_target('{{ $indikator->kegiatan_utama_id }}', '{{ $indikator->id }}');" class="btn btn-dark btn-sm w-full"><i data-lucide="edit" class="w-4 h-4 mr-1"></i> Target</button>
+                        <td>{{ $indikator->realisasi_indikator }}</td>
+                        <td>{{ $indikator->capaian_indikator }}</td>
+                        <td>{{ $indikator->catatan }}</td>
+                        <td>
+                            <button onclick="atur_baseline('{{ $indikator->kegiatan_utama_id }}', '{{ $indikator->id }}');" class="btn btn-warning btn-sm w-full mb-2"><i data-lucide="edit" class="w-4 h-4 mr-1"></i>Baseline</button>
+                            <button onclick="atur_target('{{ $indikator->kegiatan_utama_id }}', '{{ $indikator->id }}');" class="btn btn-primary btn-sm w-full mb-2"><i data-lucide="edit" class="w-4 h-4 mr-1"></i>Target</button>
+                            <button onclick="atur_monev('{{ $indikator->kegiatan_utama_id }}', '{{ $indikator->id }}');" class="btn btn-dark btn-sm w-full mb-2"><i data-lucide="edit" class="w-4 h-4 mr-1"></i>Monev</button>
                         </td>
                     </tr>
                     @php
@@ -176,6 +189,53 @@
         </div>
     </div>
 </div> <!-- END: Modal Content -->
+
+{{-- Modal Form Monev --}}
+<div id="modal-monev" class="modal fade" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <!-- BEGIN: Modal Header -->
+            <div class="darkbg modal-header">
+                <h2 class="font-bold fw-medium fs-base me-auto" id="title-monev">Monitoring dan Evaluasi Perencanaan</h2>
+            </div> <!-- END: Modal Header -->
+            <!-- BEGIN: Modal Body -->
+            <form action="{{ url('rb-general/perencanaan/simpanMonev') }}" id="form-monev" method="post">
+                @csrf
+                <input type="hidden" name="kegiatan_utama_id" id="monev_kegiatan_utama_id">
+                <input type="hidden" name="indikator_id" id="monev_indikator_id">
+                <div class="modal-body grid columns-12 gap-4 gap-y-3">
+                    <div class="g-col-12">
+                        <table class="table">
+                            <tr>
+                                <td class="font-bold w-44">Realisasi Indikator <span class="text-danger">*</span></td>
+                                <td>
+                                    <input type="text" name="realisasi_indikator" id="realisasi_indikator" placeholder="Realisasi Indikator" class="form-control" required>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold w-44">Capaian Indikator <span class="text-danger">*</span></td>
+                                <td>
+                                    <input type="text" name="capaian_indikator" id="capaian_indikator" placeholder="Capaian Indikator" class="form-control" required>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold w-44 align-top">Catatan</td>
+                                <td>
+                                    <textarea rows="5" name="catatan" id="catatan" placeholder="Penjelasan Rencana Aksi" class="form-control"></textarea>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div> <!-- END: Modal Body -->
+                <!-- BEGIN: Modal Footer -->
+                <div class="modal-footer text-end"> 
+                    <button type="button" data-tw-dismiss="modal" class="btn btn-outline-secondary w-20 me-1">Cancel</button> 
+                    <button type="submit" class="btn btn-primary w-20 saveButton">Simpan</button> 
+                </div> <!-- END: Modal Footer -->
+            </form>
+        </div>
+    </div>
+</div> <!-- END: Modal Content -->
 @endsection
 
 @push('js')
@@ -187,7 +247,77 @@
     $(document).ready(function() {
         modal_baseline = tailwind.Modal.getInstance(document.querySelector("#modal-baseline"));
         modal_target = tailwind.Modal.getInstance(document.querySelector("#modal-target"));
+        modal_monev = tailwind.Modal.getInstance(document.querySelector("#modal-monev"));
         $(".tahun").inputmask('2099');
+
+        $('#form-baseline').validate({
+            highlight: function (input) {
+                $(input).addClass('border-danger');
+            },
+            unhighlight: function (input) {
+                $(input).removeClass('border-danger');
+            },
+            errorPlacement: function( error, element ) {
+                var placement = element.closest('td');
+                if (!placement.get(0)) {
+                    placement = element;
+                }
+                if (error.text() !== '') {
+                    placement.append(error);
+                }
+                console.log(error, placement);
+            },
+            submitHandler: function(form) {
+                $('.saveButton').prop('disabled', true);
+                form.submit();
+            }
+        });
+
+        $('#form-target').validate({
+            highlight: function (input) {
+                $(input).addClass('border-danger');
+            },
+            unhighlight: function (input) {
+                $(input).removeClass('border-danger');
+            },
+            errorPlacement: function( error, element ) {
+                var placement = element.closest('td');
+                if (!placement.get(0)) {
+                    placement = element;
+                }
+                if (error.text() !== '') {
+                    placement.append(error);
+                }
+                console.log(error, placement);
+            },
+            submitHandler: function(form) {
+                $('.saveButton').prop('disabled', true);
+                form.submit();
+            }
+        });
+
+        $('#form-monev').validate({
+            highlight: function (input) {
+                $(input).addClass('border-danger');
+            },
+            unhighlight: function (input) {
+                $(input).removeClass('border-danger');
+            },
+            errorPlacement: function( error, element ) {
+                var placement = element.closest('td');
+                if (!placement.get(0)) {
+                    placement = element;
+                }
+                if (error.text() !== '') {
+                    placement.append(error);
+                }
+                console.log(error, placement);
+            },
+            submitHandler: function(form) {
+                $('.saveButton').prop('disabled', true);
+                form.submit();
+            }
+        });
     });
 
     function atur_baseline(kegiatan_utama_id, indikator_id) {
@@ -226,6 +356,26 @@
                 modal_target.hide();
             }
             $('.saveButton').prop('disabled', false);
+        });
+    }
+
+    function atur_monev(kegiatan_utama_id, indikator_id) {
+        $('#monev_kegiatan_utama_id').val(kegiatan_utama_id);
+        $('#monev_indikator_id').val(indikator_id);
+        $('#realisasi_indikator').val('');
+        $('#capaian_indikator').val('');
+        $('.saveButton').prop('disabled', true);
+        modal_monev.show();
+        $.getJSON("{{url('rb-general/perencanaan/getData')}}/"+kegiatan_utama_id+"/"+indikator_id, function(data) {
+            if (data.baseline_tahun) {
+                $('#realisasi_indikator').val(data.realisasi_indikator);
+                $('#capaian_indikator').val(data.capaian_indikator);
+                $('#catatan').val(data.catatan);
+                $('.saveButton').prop('disabled', false);
+            } else {
+                Swal.fire('Aduh!', 'Data Monev belum bisa di-input, Data Baseline-nya belum ada! Input dulu Data Baseline-nya ya..', 'error');
+                modal_monev.hide();
+            }
         });
     }
 

@@ -4055,6 +4055,9 @@ select{
 .align-top{
     vertical-align: top !important;
 }
+.align-middle{
+    vertical-align: middle !important;
+}
 .text-xs{
     font-size: 0.75rem;
     line-height: 1rem;
@@ -7992,6 +7995,7 @@ font-family: 'Roboto', sans-serif;
 .table.table-noborder th, .table.table-noborder td{
   border: none;
   padding: 0px;
+  white-space: nowrap;
 }
 .table.table-bordered th, .table.table-bordered td{
     font-size: 14px;

@@ -8,7 +8,8 @@
 <div class="intro-y col-span-12 lg:col-span-12">
     <div class="intro-y box">
         <div class="flex sm:flex-row items-center p-5 border-b border-slate-200/60">
-            <h2 class="font-bold text-base mr-auto flex items-center justify-center"> <i data-lucide="pie-chart" class="mr-1"></i> RB General - Rencana Aksi</h2>
+            <h2 class="font-bold text-base mr-auto flex items-center justify-center"> <i data-lucide="pie-chart" class="mr-1"></i> RB General - Monitoring dan Evaluasi</h2>
+            <button class="btn btn-danger shadow-md float-right mr-2" onclick="monev();" data-bs-toggle="modal" data-bs-target="#modal-kegiatan_utama"><i data-lucide="edit" class="mr-1"></i> Evaluasi</button>
             <a href="{{ url('rb-general/perencanaan') }}" class="btn btn-warning shadow-md float-right"><i data-lucide="chevron-left"></i> Kembali</a>
         </div>
         <div class="lg:col-span-12 p-5 border-b border-slate-200/60">
@@ -48,39 +49,40 @@
                     <td class="font-bold align-top">Target</td>
                     <td>{{ $target->target }}</td>
                 </tr>
+                <tr>
+                    <td class="font-bold align-top">Realisasi Indikator</td>
+                    <td>{{ $target->perencanaan->realisasi_indikator }}</td>
+                </tr>
+                <tr>
+                    <td class="font-bold align-top">Capaian Indikator</td>
+                    <td>{{ $target->perencanaan->capaian_indikator }}</td>
+                </tr>
+                <tr>
+                    <td class="font-bold align-top">Catatan</td>
+                    <td>{{ $target->perencanaan->catatan }}</td>
+                </tr>
             </table>
         </div>
         <div class="flex sm:flex-row items-center p-5 border-b border-slate-200/60">
-            <h2 class="font-bold text-base mr-auto flex items-center justify-center">
-                <i data-lucide="file-text" class="mr-1"></i> Data Rencana Aksi
-            </h2>
-            <button class="btn btn-danger shadow-md" onclick="tambah();" data-bs-toggle="modal" data-bs-target="#modal-kegiatan_utama"><i data-lucide="plus" class="mr-1"></i> Tambah Rencana Aksi</button>
+            <h2 class="font-bold text-base mr-auto flex items-center justify-center"><i data-lucide="file-text" class="mr-1"></i> Data Evaluasi Rencana Aksi</h2>
         </div>
         <div class="lg:col-span-12 p-5 border-b border-slate-200/60">
-            <div class="table-responsive">
-                <table class="table table-bordered table-striped table-hover" id="rencana_aksi-table">
-                    <thead class="table-dark">
-                        <tr>
-                            <th rowspan="2">No.</th>
-                            <th rowspan="2">Rencana Aksi</th>
-                            <th rowspan="2">Satuan Output</th>
-                            <th rowspan="2">Indikator Output</th>
-                            <th colspan="5">Target</th>
-                            <th rowspan="2">Anggaran</th>
-                            <th rowspan="2">Pelaksana</th>
-                            <th rowspan="2">Koordinator</th>
-                            <th rowspan="2">Aksi</th>
-                        </tr>
-                        <tr>
-                            <th>TW1</th>
-                            <th>TW2</th>
-                            <th>TW3</th>
-                            <th>TW4</th>
-                            <th>Total</th>
-                        </tr>
-                    </thead>
-                </table>
-            </div>
+            <table class="table table-bordered table-striped table-hover" id="rencana_aksi-table">
+                <thead class="table-dark">
+                    <tr>
+                        <th>No.</th>
+                        <th>Rencana Aksi</th>
+                        <th>Satuan Output</th>
+                        <th>Indikator Output</th>
+                        <th>Target Total</th>
+                        <th>Anggaran</th>
+                        <th>Realisasi Output</th>
+                        <th>Realisasi Anggaran</th>
+                        <th>Capaian Anggaran</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+            </table>
         </div>
     </div>
 </div>
@@ -91,61 +93,79 @@
         <div class="modal-content">
             <!-- BEGIN: Modal Header -->
             <div class="darkbg modal-header">
-                <h2 class="font-bold fw-medium fs-base me-auto" id="title">Tambah Rencana Aksi</h2>
+                <h2 class="font-bold fw-medium fs-base me-auto" id="title">Tambah Monitoring dan Evaluasi Rencana Aksi</h2>
             </div> <!-- END: Modal Header -->
             <!-- BEGIN: Modal Body -->
-            <form action="{{ url('rb-general/perencanaan/'.$target->perencanaan->id.'/'.$target->id.'/rencana_aksi/simpan') }}" id="form-rencana_aksi" method="post">
+            <form action="{{ url('rb-general/perencanaan/'.$target->perencanaan->id.'/'.$target->id.'/monev/simpan') }}" id="form-rencana_aksi" method="post">
                 @csrf
                 <input type="hidden" name="rencana_aksi_id" id="rencana_aksi_id">
                 <div class="modal-body grid columns-12 gap-4 gap-y-3">
                     <div class="g-col-12">
                         <table>
                             <tr>
-                            <td class="font-bold w-44">Rencana Aksi <span class="text-danger">*</span></td>
+                                <td class="font-bold w-44">Rencana Aksi</td>
                                 <td colspan="5">
-                                    <textarea rows="5" name="rencana_aksi" id="rencana_aksi" placeholder="Penjelasan Rencana Aksi" class="form-control" required></textarea>
+                                    <textarea rows="5" name="rencana_aksi" id="rencana_aksi" placeholder="Penjelasan Rencana Aksi" class="form-control" readonly></textarea>
                                 </td>
                             </tr>
                             <tr>
-                                <td class="font-bold">Output <span class="text-danger">*</span></td>
+                                <td class="font-bold">Output</td>
                                 <td colspan="2">
-                                    <input type="text" name="satuan_output" id="satuan_output" placeholder="Satuan Output" class="form-control" required>
+                                    <input type="text" name="satuan_output" id="satuan_output" placeholder="Satuan Output" class="form-control" readonly>
                                 </td>
                                 <td colspan="3">
-                                    <input type="text" name="indikator_output" id="indikator_output" placeholder="Indikator Output" class="form-control" required>
+                                    <input type="text" name="indikator_output" id="indikator_output" placeholder="Indikator Output" class="form-control" readonly>
                                 </td>
                             </tr>
                             <tr>
-                                <td class="font-bold">Target Output <span class="text-danger">*</span></td>
+                                <td class="font-bold">Target Output</td>
                                 <td>
-                                    <input type="text" name="target_tw1" id="target_tw1" placeholder="Triwulan 1" class="form-control numeric" onkeyup="hitungTotal();" required>
+                                    <input type="text" name="target_tw1" id="target_tw1" placeholder="Triwulan 1" class="form-control numeric" onkeyup="hitungTotal();" readonly>
                                 </td>
                                 <td>
-                                    <input type="text" name="target_tw2" id="target_tw2" placeholder="Triwulan 2" class="form-control numeric" onkeyup="hitungTotal();" required>
+                                    <input type="text" name="target_tw2" id="target_tw2" placeholder="Triwulan 2" class="form-control numeric" onkeyup="hitungTotal();" readonly>
                                 </td>
                                 <td>
-                                    <input type="text" name="target_tw3" id="target_tw3" placeholder="Triwulan 3" class="form-control numeric" onkeyup="hitungTotal();" required>
+                                    <input type="text" name="target_tw3" id="target_tw3" placeholder="Triwulan 3" class="form-control numeric" onkeyup="hitungTotal();" readonly>
                                 </td>
                                 <td>
-                                    <input type="text" name="target_tw4" id="target_tw4" placeholder="Triwulan 4" class="form-control numeric" onkeyup="hitungTotal();" required>
+                                    <input type="text" name="target_tw4" id="target_tw4" placeholder="Triwulan 4" class="form-control numeric" onkeyup="hitungTotal();" readonly>
                                 </td>
                                 <td>
-                                    <input type="text" name="target_total" id="target_total" placeholder="Total" class="form-control numeric" readonly required>
+                                    <input type="text" name="target_total" id="target_total" placeholder="Total" class="form-control numeric" readonly>
                                 </td>
                             </tr>
                             <tr>
-                                <td class="font-bold">Anggaran <span class="text-danger">*</span></td>
+                                <td class="font-bold">Anggaran</td>
                                 <td colspan="5">
-                                    <input type="text" name="anggaran" id="anggaran" placeholder="Masukan Data Anggaran" class="form-control digit" required>
+                                    <input type="text" name="anggaran" id="anggaran" placeholder="Masukan Data Anggaran" class="form-control digit" readonly>
                                 </td>
                             </tr>
                             <tr>
-                                <td class="font-bold">Unit Kerja Pelaksana <span class="text-danger">*</span></td>
+                                <td class="font-bold">Unit Kerja Pelaksana</td>
                                 <td colspan="2">
-                                    <input type="text" name="pelaksana" id="pelaksana" placeholder="Pelaksana" class="form-control" required>
+                                    <input type="text" name="pelaksana" id="pelaksana" placeholder="Pelaksana" class="form-control" readonly>
                                 </td>
                                 <td colspan="3">
-                                    <input type="text" name="koordinator" id="koordinator" placeholder="Koordinator" class="form-control" required>
+                                    <input type="text" name="koordinator" id="koordinator" placeholder="Koordinator" class="form-control" readonly>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold">Realisasi Output <span class="text-danger">*</span></td>
+                                <td colspan="5">
+                                    <input type="text" name="realisasi_output" id="realisasi_output" placeholder="Realisasi Output" class="form-control">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold">Realisasi Anggaran <span class="text-danger">*</span></td>
+                                <td colspan="5">
+                                    <input type="text" name="realisasi_anggaran" id="realisasi_anggaran" placeholder="Realisasi Anggaran" class="form-control">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold">Capaian Anggaran <span class="text-danger">*</span></td>
+                                <td colspan="5">
+                                    <input type="text" name="capaian_anggaran" id="capaian_anggaran" placeholder="Capaian Anggaran" class="form-control">
                                 </td>
                             </tr>
                         </table>
@@ -253,19 +273,16 @@
             { data: 'rencana_aksi' },
             { data: 'satuan_output' },
             { data: 'indikator_output' },
-            { data: 'target_tw1' },
-            { data: 'target_tw2' },
-            { data: 'target_tw3' },
-            { data: 'target_tw4' },
             { data: 'target_total' },
             { data: 'anggaran' },
-            { data: 'pelaksana' },
-            { data: 'koordinator' },
+            { data: 'realisasi_output' },
+            { data: 'realisasi_anggaran' },
+            { data: 'capaian_anggaran' },
             { 
                 sortable: false, 
                 searchable: false,
                 render: function (data, type, row, meta) {
-                    return '<button onclick="edit('+row.id+');" class="mb-3 btn btn-warning btn-sm w-10"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" icon-name="edit" data-lucide="edit" class="lucide lucide-edit block mx-auto"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button><button onclick="hapus('+row.id+');" class="btn btn-danger btn-sm w-10"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" icon-name="trash-2" data-lucide="trash-2" class="lucide lucide-trash-2 w-4 h-4 mr-1"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg></button>';
+                    return '<button onclick="edit('+row.id+');" class="mb-3 btn btn-warning btn-sm w-10"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" icon-name="edit" data-lucide="edit" class="lucide lucide-edit block mx-auto"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button>';
                 },
             },
         ],
@@ -320,7 +337,7 @@
     function edit(id) {
         clearForm();
         $('#rencana_aksi_id').val(id);
-        $('#title').html('Edit Rencana Aksi');
+        $('#title').html('Edit Monitoring dan Evaluasi Rencana Aksi');
         $('.saveButton').prop('disabled', true);
         modal_rencana_aksi.show();
         $.getJSON("{{url('rb-general/perencanaan/'.$target->perencanaan->id.'/'.$target->id.'/rencana_aksi/getData')}}/"+id, function(data) {
@@ -335,38 +352,10 @@
             $('#anggaran').val(data.anggaran);
             $('#pelaksana').val(data.pelaksana);
             $('#koordinator').val(data.koordinator);
+            $('#realisasi_output').val(data.realisasi_output);
+            $('#realisasi_anggaran').val(data.realisasi_anggaran);
+            $('#capaian_anggaran').val(data.capaian_anggaran);
             $('.saveButton').prop('disabled', false);
-        });
-    }
-
-    function hapus(id) {
-        Swal.fire({
-            title: "Yakin?",
-            text: "Hapus Rencana Aksi ini?",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: "#DD6B55",
-            confirmButtonText: "Ya, Hapus aja!"
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $.ajax({
-                    url: "{{url('rb-general/perencanaan/'.$target->perencanaan->id.'/'.$target->id.'/rencana_aksi/hapus')}}",
-                    type: "post",
-                    data: {_token: '{{csrf_token()}}', id: id},
-                    dataType: "json",
-                    success: function(terhapus) {
-                        if (terhapus) {
-                            Swal.fire('Selamat!', 'Data Rencana Aksi berhasil dihapus!', 'success');
-                        } else {
-                            Swal.fire('Aduh!', 'Data Rencana Aksi gagal dihapus! Coba lagi nanti ya..', 'error');
-                        }
-                        getData();
-                    },
-                    error: function(err) {
-                        Swal.fire('Error!', 'Terjadi kesalahan!', 'error');
-                    }
-                });
-            }
         });
     }
 </script>
