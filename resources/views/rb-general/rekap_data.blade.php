@@ -71,7 +71,9 @@
                             </table>
                         </td>
                         <td>
+                            @if ($data['target']->target)
                             <div class="flex items-center"><i data-lucide="bar-chart" class="w-4 h-4 mr-1"></i><span class="font-bold mr-1"> {{ $data['target']->tahun }}: </span> {{ $data['target']->target }}</div>
+                            @endif
                         </td>
                         <td>
                             {{ $data['rencana_aksi']->rencana_aksi }}

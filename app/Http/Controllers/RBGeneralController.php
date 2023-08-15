@@ -329,11 +329,14 @@ class RBGeneralController extends Controller
                     } else {
                         $datas[$key]['perencanaan'] = $perencanaan;
                         $datas[$key]['target'] = $perencanaan->target;
+                        $datas[$key]['rencana_aksi'] = new GeneralRencanaAksi();
                         $key++;
                     }
                 }
             } else {
                 $datas[$key]['perencanaan'] = $perencanaan;
+                $datas[$key]['target'] = new GeneralPerencanaanTarget();
+                $datas[$key]['rencana_aksi'] = new GeneralRencanaAksi();
                 $key++;
             }
         }
