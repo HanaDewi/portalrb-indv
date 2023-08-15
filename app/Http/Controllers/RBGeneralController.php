@@ -65,14 +65,14 @@ class RBGeneralController extends Controller
                 $idx = 0;
                 foreach ($perencanaan->target as $target) {
                     $input .= '<tr>
-                                <td><input type="text" name="tahun['.$idx.']" id="target_tahun'.$idx.'" class="form-control w-full tahun" value="'.$target->tahun.'" required></td>
-                                <td><input type="text" name="target['.$idx.']" id="target_target'.$idx.'" class="form-control w-full" value="'.$target->target.'" required></td>
+                                <td><input type="text" name="tahun[' . $idx . ']" id="target_tahun' . $idx . '" class="form-control w-full tahun" value="' . $target->tahun . '" required></td>
+                                <td><input type="text" name="target[' . $idx . ']" id="target_target' . $idx . '" class="form-control w-full" value="' . $target->target . '" required></td>
                             </tr>';
                     $idx++;
                 }
             } else {
                 $input .= '<tr>
-                            <td><input type="text" name="tahun[0]" id="target_tahun0" class="form-control w-full tahun" value="'.date('Y').'" required></td>
+                            <td><input type="text" name="tahun[0]" id="target_tahun0" class="form-control w-full tahun" value="' . date('Y') . '" required></td>
                             <td><input type="text" name="target[0]" id="target_target0" class="form-control w-full" required></td>
                         </tr>';
             }
@@ -136,7 +136,7 @@ class RBGeneralController extends Controller
                 session()->flash('success', 'Data Target Perencanaan General berhasil disimpan.');
             } else {
                 DB::rollBack();
-                session()->flash('success', 'Data Target Perencanaan General gagal disimpan! '.$pesan);
+                session()->flash('success', 'Data Target Perencanaan General gagal disimpan! ' . $pesan);
             }
         } else {
             session()->flash('success', 'Data Target Perencanaan General gagal disimpan! Data Baseline tidak ditemukan.');
@@ -169,9 +169,9 @@ class RBGeneralController extends Controller
     {
         $user = Auth::User();
         $target = GeneralPerencanaanTarget::where('id', $target_id)->where('general_perencanaan_id', $perencanaan_id)
-                    ->whereHas('perencanaan', function($q) use ($user) {
-                        $q->where('instansi_id', $user->instansi_id);
-                    })->first();
+            ->whereHas('perencanaan', function ($q) use ($user) {
+                $q->where('instansi_id', $user->instansi_id);
+            })->first();
         if (!$target) {
             abort(404);
         }
@@ -182,9 +182,9 @@ class RBGeneralController extends Controller
     {
         $user = Auth::User();
         $target = GeneralPerencanaanTarget::where('id', $target_id)->where('general_perencanaan_id', $perencanaan_id)
-                    ->whereHas('perencanaan', function($q) use ($user) {
-                        $q->where('instansi_id', $user->instansi_id);
-                    })->first();
+            ->whereHas('perencanaan', function ($q) use ($user) {
+                $q->where('instansi_id', $user->instansi_id);
+            })->first();
         $rencana_aksi = GeneralRencanaAksi::where('general_perencanaan_target_id', $target->id)->get();
         return response()->json(['data' => $rencana_aksi]);
     }
@@ -193,9 +193,9 @@ class RBGeneralController extends Controller
     {
         $user = Auth::User();
         $target = GeneralPerencanaanTarget::where('id', $target_id)->where('general_perencanaan_id', $perencanaan_id)
-                    ->whereHas('perencanaan', function($q) use ($user) {
-                        $q->where('instansi_id', $user->instansi_id);
-                    })->first();
+            ->whereHas('perencanaan', function ($q) use ($user) {
+                $q->where('instansi_id', $user->instansi_id);
+            })->first();
         $rencana_aksi = GeneralRencanaAksi::where('general_perencanaan_target_id', $target->id)->where('id', $id)->first();
         return response()->json($rencana_aksi);
     }
@@ -204,9 +204,9 @@ class RBGeneralController extends Controller
     {
         $user = Auth::User();
         $target = GeneralPerencanaanTarget::where('id', $target_id)->where('general_perencanaan_id', $perencanaan_id)
-                    ->whereHas('perencanaan', function($q) use ($user) {
-                        $q->where('instansi_id', $user->instansi_id);
-                    })->first();
+            ->whereHas('perencanaan', function ($q) use ($user) {
+                $q->where('instansi_id', $user->instansi_id);
+            })->first();
         if (!$target) {
             abort(403);
         }
@@ -237,9 +237,9 @@ class RBGeneralController extends Controller
     {
         $user = Auth::User();
         $target = GeneralPerencanaanTarget::where('id', $target_id)->where('general_perencanaan_id', $perencanaan_id)
-                    ->whereHas('perencanaan', function($q) use ($user) {
-                        $q->where('instansi_id', $user->instansi_id);
-                    })->first();
+            ->whereHas('perencanaan', function ($q) use ($user) {
+                $q->where('instansi_id', $user->instansi_id);
+            })->first();
         if (!$target) {
             abort(403);
         }
@@ -255,9 +255,9 @@ class RBGeneralController extends Controller
     {
         $user = Auth::User();
         $target = GeneralPerencanaanTarget::where('id', $target_id)->where('general_perencanaan_id', $perencanaan_id)
-                    ->whereHas('perencanaan', function($q) use ($user) {
-                        $q->where('instansi_id', $user->instansi_id);
-                    })->first();
+            ->whereHas('perencanaan', function ($q) use ($user) {
+                $q->where('instansi_id', $user->instansi_id);
+            })->first();
         if (!$target) {
             abort(404);
         }
@@ -268,9 +268,9 @@ class RBGeneralController extends Controller
     {
         $user = Auth::User();
         $target = GeneralPerencanaanTarget::where('id', $target_id)->where('general_perencanaan_id', $perencanaan_id)
-                    ->whereHas('perencanaan', function($q) use ($user) {
-                        $q->where('instansi_id', $user->instansi_id);
-                    })->first();
+            ->whereHas('perencanaan', function ($q) use ($user) {
+                $q->where('instansi_id', $user->instansi_id);
+            })->first();
         $rencana_aksi = GeneralRencanaAksi::where('general_perencanaan_target_id', $target->id)->get();
         return response()->json(['data' => $rencana_aksi]);
     }
@@ -279,9 +279,9 @@ class RBGeneralController extends Controller
     {
         $user = Auth::User();
         $target = GeneralPerencanaanTarget::where('id', $target_id)->where('general_perencanaan_id', $perencanaan_id)
-                    ->whereHas('perencanaan', function($q) use ($user) {
-                        $q->where('instansi_id', $user->instansi_id);
-                    })->first();
+            ->whereHas('perencanaan', function ($q) use ($user) {
+                $q->where('instansi_id', $user->instansi_id);
+            })->first();
         $rencana_aksi = GeneralRencanaAksi::where('general_perencanaan_target_id', $target->id)->where('id', $id)->first();
         return response()->json($rencana_aksi);
     }
@@ -290,9 +290,9 @@ class RBGeneralController extends Controller
     {
         $user = Auth::User();
         $target = GeneralPerencanaanTarget::where('id', $target_id)->where('general_perencanaan_id', $perencanaan_id)
-                    ->whereHas('perencanaan', function($q) use ($user) {
-                        $q->where('instansi_id', $user->instansi_id);
-                    })->first();
+            ->whereHas('perencanaan', function ($q) use ($user) {
+                $q->where('instansi_id', $user->instansi_id);
+            })->first();
         if (!$target) {
             abort(403);
         }
@@ -340,6 +340,7 @@ class RBGeneralController extends Controller
                 $key++;
             }
         }
+        //dd(compact('datas'));
         return view('rb-general.rekap_data', compact('datas'));
     }
 }
