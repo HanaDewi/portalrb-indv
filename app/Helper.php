@@ -20,7 +20,7 @@ function menus()
             'items' => [
                 [
                     'levels' => ['provinsi', 'kabupaten', 'kl'],
-                    'title' => 'Perencanaan',
+                    'title' => 'Perencanaan dan Monev',
                     'icon' => 'bar-chart',
                     'url' => 'rb-general/perencanaan',
                 ],
@@ -105,7 +105,7 @@ function fdate($date, $time = false)
 
 function humanDate($date)
 {
-    return Carbon::parse($date)->diffForHumans().' pada '.Carbon::parse($date)->isoFormat('dddd, D MMMM Y HH:mm:ss');
+    return Carbon::parse($date)->diffForHumans() . ' pada ' . Carbon::parse($date)->isoFormat('dddd, D MMMM Y HH:mm:ss');
 }
 
 function kegiatanUtama()
