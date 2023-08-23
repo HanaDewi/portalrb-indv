@@ -114,19 +114,19 @@
                             <tr>
                                 <td class="font-bold">Target Output <span class="text-danger">*</span></td>
                                 <td>
-                                    <input type="text" name="target_output[0][target_tw1]" id="target_tw10" placeholder="Triwulan 1" class="form-control numeric" onkeyup="hitungTotal(0);" required>
+                                    <input type="text" name="target_output[0][target_tw1]" id="target_tw10" placeholder="Triwulan 1" class="form-control digit" onkeyup="hitungTotal(0);" required>
                                 </td>
                                 <td>
-                                    <input type="text" name="target_output[0][target_tw2]" id="target_tw20" placeholder="Triwulan 2" class="form-control numeric" onkeyup="hitungTotal(0);" required>
+                                    <input type="text" name="target_output[0][target_tw2]" id="target_tw20" placeholder="Triwulan 2" class="form-control digit" onkeyup="hitungTotal(0);" required>
                                 </td>
                                 <td>
-                                    <input type="text" name="target_output[0][target_tw3]" id="target_tw30" placeholder="Triwulan 3" class="form-control numeric" onkeyup="hitungTotal(0);" required>
+                                    <input type="text" name="target_output[0][target_tw3]" id="target_tw30" placeholder="Triwulan 3" class="form-control digit" onkeyup="hitungTotal(0);" required>
                                 </td>
                                 <td>
-                                    <input type="text" name="target_output[0][target_tw4]" id="target_tw40" placeholder="Triwulan 4" class="form-control numeric" onkeyup="hitungTotal(0);" required>
+                                    <input type="text" name="target_output[0][target_tw4]" id="target_tw40" placeholder="Triwulan 4" class="form-control digit" onkeyup="hitungTotal(0);" required>
                                 </td>
                                 <td>
-                                    <input type="text" name="target_output[0][target_total]" id="target_total0" placeholder="Total" class="form-control numeric" readonly required>
+                                    <input type="text" name="target_output[0][target_total]" id="target_total0" placeholder="Total" class="form-control digit" readonly required>
                                 </td>
                             </tr>
                             <tr>
@@ -253,19 +253,13 @@
             }
         });
     });
-    var nom = 0;
-    var nama = "";
+    
     var rencana_aksi = $('#rencana_aksi-table').DataTable( {
-
         processing: true,
         ordering: false,
         columns: [
             {
-                    data: 'rencana_aksi.rencana_aksi',
-                    render: function (data, type, row, meta) {
-                    if (nama!=data){nama=data,nom++}
-                    return nom;
-                }
+                data: 'no',
             },
             { data: 'rencana_aksi.rencana_aksi' },
             { data: 'satuan_output' },
@@ -302,13 +296,8 @@
                 },
             },
         ],
-                    rowsGroup: [1,0,2,3,6,7] }); 
-
-
-
-
-
-
+        rowsGroup: [0,1] 
+    }); 
 
     function getData() {
         rencana_aksi.ajax.url("{{url('rb-general/perencanaan/'.$target->perencanaan->id.'/'.$target->id.'/rencana_aksi/getDatas')}}").load(null, false);
@@ -343,10 +332,10 @@
         if ($('#target_tw4'+idx).val() == '') {
             $('#target_tw4'+idx).val(0);
         }
-        tw1 = $('#target_tw1'+idx).val();
-        tw2 = $('#target_tw2'+idx).val();
-        tw3 = $('#target_tw3'+idx).val();
-        tw4 = $('#target_tw4'+idx).val();
+        tw1 = $('#target_tw1'+idx).val().replaceAll('.', '');
+        tw2 = $('#target_tw2'+idx).val().replaceAll('.', '');
+        tw3 = $('#target_tw3'+idx).val().replaceAll('.', '');
+        tw4 = $('#target_tw4'+idx).val().replaceAll('.', '');
         total = parseFloat(tw1) + parseFloat(tw2) + parseFloat(tw3) + parseFloat(tw4);
         $('#target_total'+idx).val(total);
     }
@@ -364,11 +353,12 @@
         if ($('#anggaran_tw4'+idx).val() == '') {
             $('#anggaran_tw4'+idx).val(0);
         }
-        tw1 = $('#anggaran_tw1'+idx).val();
-        tw2 = $('#anggaran_tw2'+idx).val();
-        tw3 = $('#anggaran_tw3'+idx).val();
-        tw4 = $('#anggaran_tw4'+idx).val();
-        total = parseInt(tw1.replace('.', '')) + parseInt(tw2.replace('.', '')) + parseInt(tw3.replace('.', '')) + parseInt(tw4.replace('.', ''));
+        tw1 = $('#anggaran_tw1'+idx).val().replaceAll('.', '');
+        tw2 = $('#anggaran_tw2'+idx).val().replaceAll('.', '');
+        tw3 = $('#anggaran_tw3'+idx).val().replaceAll('.', '');
+        tw4 = $('#anggaran_tw4'+idx).val().replaceAll('.', '');
+        console.log(tw1, tw2, tw3, tw4);
+        total = parseInt(tw1) + parseInt(tw2) + parseInt(tw3) + parseInt(tw4);
         $('#anggaran_total'+idx).val(total);
     }
 
