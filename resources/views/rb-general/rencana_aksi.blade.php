@@ -253,13 +253,17 @@
             }
         });
     });
-    
+    var nom = 0;            
+    var nama = "";
     var rencana_aksi = $('#rencana_aksi-table').DataTable( {
         processing: true,
         ordering: false,
         columns: [
             {
-                data: 'no',
+                 data: 'rencana_aksi.rencana_aksi',  
+                    render: function (data, type, row, meta) {      
+                    if (nama!=data){nama=data,nom++}        
+                    return nom; }
             },
             { data: 'rencana_aksi.rencana_aksi' },
             { data: 'satuan_output' },
