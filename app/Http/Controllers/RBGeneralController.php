@@ -232,6 +232,7 @@ class RBGeneralController extends Controller
             $rencana_aksi->rencana_aksi = $request->rencana_aksi;
             if ($rencana_aksi->save()) {
                 foreach ($request->target_output as $target_output) {
+                    dd($target_output);
                     $rencana_aksi_output = new GeneralRencanaAksiOutput();
                     if (isset($target_output['rencana_aksi_output_id'])) {
                         $rencana_aksi_output = GeneralRencanaAksiOutput::find($target_output['rencana_aksi_output_id']);
@@ -239,16 +240,16 @@ class RBGeneralController extends Controller
                     $rencana_aksi_output->general_rencana_aksi_id = $rencana_aksi->id;
                     $rencana_aksi_output->satuan_output = $target_output['satuan_output'];
                     $rencana_aksi_output->indikator_output = $target_output['indikator_output'];
-                    $rencana_aksi_output->target_tw1 = $target_output['target_tw1'];
-                    $rencana_aksi_output->target_tw2 = $target_output['target_tw2'];
-                    $rencana_aksi_output->target_tw3 = $target_output['target_tw3'];
-                    $rencana_aksi_output->target_tw4 = $target_output['target_tw4'];
-                    $rencana_aksi_output->target_total = $target_output['target_tw1'] + $target_output['target_tw2'] + $target_output['target_tw3'] + $target_output['target_tw4'];
+                    $rencana_aksi_output->target_tw1 = str_replace('.', '', $target_output['target_tw1']);
+                    $rencana_aksi_output->target_tw2 = str_replace('.', '', $target_output['target_tw2']);
+                    $rencana_aksi_output->target_tw3 = str_replace('.', '', $target_output['target_tw3']);
+                    $rencana_aksi_output->target_tw4 = str_replace('.', '', $target_output['target_tw4']);
+                    $rencana_aksi_output->target_total = $rencana_aksi_output->target_tw1 + $rencana_aksi_output->target_tw2 + $rencana_aksi_output->target_tw3 + $rencana_aksi_output->target_tw4;
                     $rencana_aksi_output->anggaran_tw1 = str_replace('.', '', $target_output['anggaran_tw1']);
                     $rencana_aksi_output->anggaran_tw2 = str_replace('.', '', $target_output['anggaran_tw2']);
                     $rencana_aksi_output->anggaran_tw3 = str_replace('.', '', $target_output['anggaran_tw3']);
                     $rencana_aksi_output->anggaran_tw4 = str_replace('.', '', $target_output['anggaran_tw4']);
-                    $rencana_aksi_output->anggaran_total = $target_output['anggaran_tw1'] + $target_output['anggaran_tw2'] + $target_output['anggaran_tw3'] + $target_output['anggaran_tw4'];
+                    $rencana_aksi_output->anggaran_total = $rencana_aksi_output->anggaran_tw1 + $rencana_aksi_output->anggaran_tw2 + $rencana_aksi_output->anggaran_tw3 + $rencana_aksi_output->anggaran_tw4;
                     $rencana_aksi_output->pelaksana = $target_output['pelaksana'];
                     $rencana_aksi_output->koordinator = $target_output['koordinator'];
                     if (!$rencana_aksi_output->save()) {
