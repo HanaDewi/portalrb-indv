@@ -181,6 +181,10 @@
 <script src="{{ asset('ext/jquery-validation/localization/messages_id.min.js') }}"></script>
 <script src="{{ asset('ext') }}/jquery-inputmask/jquery.inputmask.bundle.js"></script>
 <script src="http://cdn.rawgit.com/ashl1/datatables-rowsgroup/v1.0.0/dataTables.rowsGroup.js"></script>
+
+
+
+
 <script>
     $(document).ready(function() {
         idx = 0;
@@ -249,23 +253,18 @@
             }
         });
     });
-
+    var nom = 0;
+    var nama = "";
     var rencana_aksi = $('#rencana_aksi-table').DataTable( {
-        responsive: true,
+
         processing: true,
         ordering: false,
-        ajax: {
-            url: "{{url('emptyDT')}}",
-        },
-        // rowsGroup: [0, 1],
         columns: [
-            // { data: 'no' },
             {
-                data: null,
-                sortable: false, 
-                searchable: false,
-                render: function (data, type, row, meta) {
-                    return meta.row + meta.settings._iDisplayStart + 1;
+                    data: 'rencana_aksi.rencana_aksi',
+                    render: function (data, type, row, meta) {
+                    if (nama!=data){nama=data,nom++}
+                    return nom;
                 }
             },
             { data: 'rencana_aksi.rencana_aksi' },
@@ -303,7 +302,13 @@
                 },
             },
         ],
-    }); 
+                    rowsGroup: [1,0,2,3,6,7] }); 
+
+
+
+
+
+
 
     function getData() {
         rencana_aksi.ajax.url("{{url('rb-general/perencanaan/'.$target->perencanaan->id.'/'.$target->id.'/rencana_aksi/getDatas')}}").load(null, false);
@@ -507,4 +512,9 @@
         });
     }
 </script>
+
+
+
+
+
 @endpush

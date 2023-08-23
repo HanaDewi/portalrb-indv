@@ -44,22 +44,24 @@
                         </tr>
                     </thead>
                     <tbody>
-                             @php $no = 1; $a = "nama"; $x = 1; @endphp
-                             @foreach ($datas as $data)
-                                @php $nama = $data['perencanaan']->kegiatan_utama->nama; @endphp
-                                @if ($no == 1)  
-                                    @php {$a = $nama;} @endphp
-                                @elseif ($no > 1 )
-                                    @if ($a == $nama)       
-                                        @php {$x+=0; $a = $nama;} @endphp
-                                    @else
-                                         @php {$x+=1; $a = $nama;} @endphp
-                                     @endif
-                                 @endif
+                         
+
+
+                                  @php 
+                        $no = 0; 
+                        $nama = '';
+                    @endphp
+                    @foreach ($datas as $data)
+                        @php 
+                            if ($nama != $data['perencanaan']->kegiatan_utama->nama) {
+                                $nama = $data['perencanaan']->kegiatan_utama->nama;
+                                $no++;
+                            }
+                        @endphp
 
                             <tr>
-                                <td class="font-bold">{{ $no }}</td>
-                                   <td class="font-bold">@php echo $x; @endphp</td>
+                                 <td class="font-bold">{{ $no }}</td>
+                                    <td class="font-bold">{{ $no }}</td>
                                 <td class="font-bold">{{ $data['perencanaan']->kegiatan_utama->nama }}</td>
                                 <td>{{ $data['perencanaan']->indikator->nama }}</td>
                                 <td>{{ $data['perencanaan']->realisasi_indikator }}</td>
@@ -131,9 +133,7 @@
                                     {{ $data['rencana_aksi']->capaian_anggaran }}
                                 </td>
                             </tr>
-                            @php
-                                $no++;
-                            @endphp
+                          
                         @endforeach
                     </tbody>
                 </table>
