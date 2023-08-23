@@ -14,4 +14,9 @@ class GeneralRencanaAksi extends Model
     {
         return $this->belongsTo(GeneralPerencanaanTarget::class, 'general_perencanaan_target_id');
     }
+
+    public function output()
+    {
+        return $this->hasMany(GeneralRencanaAksiOutput::class, 'general_rencana_aksi_id');
+    }
 }

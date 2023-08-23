@@ -13,8 +13,6 @@
                 <thead class="table-dark font-bold">
                     <tr>
                         <th class="w-5">No.</th>
-                        <th class="w-5">No.</th>
-
                         <th class="w200">Kegiatan Utama</th>
                         <th class="w150">Indikator</th>
                         <th>Baseline</th>
@@ -26,24 +24,23 @@
                     </tr>
                 </thead>
                 <tbody>
-                     @php $no = 1; $a = "nama"; $x = 1; @endphp
-                     @foreach ($indikators as $indikator)
-                        @php $nama = $indikator->kegiatan_utama->nama; @endphp
-                        @if ($no == 1)  
-                            @php { $a = $nama;} @endphp
-                        @elseif ($no > 1 )
-                            @if ($a == $nama)       
-                                @php {$x+=0; $a = $nama;} @endphp
-                            @else
-                                 @php {$x+=1; $a = $nama;} @endphp
-                             @endif
-                         @endif
+                    @php 
+                        $no = 0; 
+                        $nama = '';
+                    @endphp
+                    @foreach ($indikators as $indikator)
+                        @php 
+                            if ($nama != $indikator->kegiatan_utama->nama) {
+                                $nama = $indikator->kegiatan_utama->nama;
+                                $no++;
+                            }
+                        @endphp
                     <tr>
                         <td class="font-bold">{{ $no }}</td>
-                            <td class="font-bold">@php echo $x; @endphp</td>
-                        <td class="font-bold" id="kegiatan_utama{{ $indikator->id }}">{{ $indikator->kegiatan_utama->nama }}</td>
+                        <td class="font-bold" id="kegiatan_utama{{ $indikator->id }}">{{ $nama }}</td>
                         <td id="indikator{{ $indikator->id }}">{{ $indikator->nama }}</td>
                         <td>
+                            @if ($indikator->baseline_tahun)
                             <table class="table table-noborder">
                                 <tr>
                                     <td class="font-bold w-16">Tahun</td>
@@ -58,6 +55,7 @@
                                     <td>: {{ $indikator->baseline_realisasi }}</td>
                                 </tr>
                             </table>
+                            @endif
                         </td>
                         <td>
                         @if (count($indikator->target))
@@ -67,7 +65,12 @@
                             @endphp
                             {!! $hr !!}
                             <div class="flex items-center"><i data-lucide="bar-chart" class="w-4 h-4 mr-1"></i><span class="font-bold mr-1"> {{ $target->tahun }}: </span> {{ $target->target }}</div>
-                            <a href="{{ url('rb-general/perencanaan/'.$indikator->perencanaan_id.'/'.$target->id.'/rencana_aksi') }}" class="btn btn-primary btn-sm w-full mb-2"><i data-lucide="edit" class="w-4 h-4 mr-1"></i>Renaksi</a><br>
+                            <a href="{{ url('rb-general/perencanaan/'.$indikator->perencanaan_id.'/'.$target->id.'/rencana_aksi') }}" class="btn btn-primary btn-sm w-full mb-2">
+                                <i data-lucide="edit" class="w-4 h-4 mr-1"></i>
+                                Renaksi
+                                <span class="text-xs px-1 rounded-full bg-warning text-white badge">4</span>
+                            </a>
+                            <br>
                             <a href="{{ url('rb-general/perencanaan/'.$indikator->perencanaan_id.'/'.$target->id.'/monev') }}" class="btn btn-dark btn-sm w-full"><i data-lucide="edit" class="w-4 h-4 mr-1"></i>Monev</a>
                             @endforeach
                         @else
@@ -82,9 +85,6 @@
                             <button onclick="atur_monev('{{ $indikator->kegiatan_utama_id }}', '{{ $indikator->id }}');" class="btn btn-dark btn-sm w-full mb-2"><i data-lucide="edit" class="w-4 h-4 mr-1"></i>Monev</button>
                         </td>
                     </tr>
-                    @php
-                        $no++;
-                    @endphp
                     @endforeach
                 </tbody>
             </table>
@@ -407,11 +407,9 @@
     $(function() {
         $("#perencanaan").DataTable({
             'scrollX': true,
-            'orderFixed': [0, 'asc'],
+            // 'orderFixed': [0, 'asc'],
             'autoWidth': false,
-            'rowsGroup': [2,1],
-            "columnDefs": [{ "visible": false, "targets": 0 } ],
-
+            'rowsGroup': [0,1],
         });
     });
 </script>

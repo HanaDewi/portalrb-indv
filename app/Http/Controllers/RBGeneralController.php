@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\GeneralPerencanaan;
 use App\Models\GeneralPerencanaanTarget;
 use App\Models\GeneralRencanaAksi;
+use App\Models\GeneralRencanaAksiOutput;
 use App\Models\Indikator;
 use App\Models\Perencanaan;
 use Illuminate\Http\Request;
@@ -185,8 +186,18 @@ class RBGeneralController extends Controller
             ->whereHas('perencanaan', function ($q) use ($user) {
                 $q->where('instansi_id', $user->instansi_id);
             })->first();
-        $rencana_aksi = GeneralRencanaAksi::where('general_perencanaan_target_id', $target->id)->get();
-        return response()->json(['data' => $rencana_aksi]);
+        $rencana_aksis = GeneralRencanaAksi::where('general_perencanaan_target_id', $target->id)->get();
+        $outputs = [];
+        $no = 1;
+        foreach ($rencana_aksis as $rencana_aksi) {
+            foreach ($rencana_aksi->output as $output) {
+                $output->no = $no;
+                $output->nama_rencana_aksi = $output->rencana_aksi->rencana_aksi;
+                $outputs[] = $output;
+            }
+            $no++;
+        }
+        return response()->json(['data' => $outputs]);
     }
 
     public function rencana_aksi_getData($perencanaan_id, $target_id, $id)
@@ -210,25 +221,49 @@ class RBGeneralController extends Controller
         if (!$target) {
             abort(403);
         }
-        $success = false;
-        $rencana_aksi = new GeneralRencanaAksi();
-        $rencana_aksi->general_perencanaan_target_id = $target->id;
-        if ($request->rencana_aksi_id) {
-            $rencana_aksi = GeneralRencanaAksi::where('general_perencanaan_target_id', $target->id)->where('id', $request->rencana_aksi_id)->first();
+        $success = true;
+        DB::beginTransaction();
+        try {
+            $rencana_aksi = new GeneralRencanaAksi();
+            $rencana_aksi->general_perencanaan_target_id = $target->id;
+            if ($request->rencana_aksi_id) {
+                $rencana_aksi = GeneralRencanaAksi::where('general_perencanaan_target_id', $target->id)->where('id', $request->rencana_aksi_id)->first();
+            }
+            $rencana_aksi->rencana_aksi = $request->rencana_aksi;
+            if ($rencana_aksi->save()) {
+                foreach ($request->target_output as $target_output) {
+                    $rencana_aksi_output = new GeneralRencanaAksiOutput();
+                    if (isset($target_output['rencana_aksi_output_id'])) {
+                        $rencana_aksi_output = GeneralRencanaAksiOutput::find($target_output['rencana_aksi_output_id']);
+                    }
+                    $rencana_aksi_output->general_rencana_aksi_id = $rencana_aksi->id;
+                    $rencana_aksi_output->satuan_output = $target_output['satuan_output'];
+                    $rencana_aksi_output->indikator_output = $target_output['indikator_output'];
+                    $rencana_aksi_output->target_tw1 = $target_output['target_tw1'];
+                    $rencana_aksi_output->target_tw2 = $target_output['target_tw2'];
+                    $rencana_aksi_output->target_tw3 = $target_output['target_tw3'];
+                    $rencana_aksi_output->target_tw4 = $target_output['target_tw4'];
+                    $rencana_aksi_output->target_total = $target_output['target_tw1'] + $target_output['target_tw2'] + $target_output['target_tw3'] + $target_output['target_tw4'];
+                    $rencana_aksi_output->anggaran_tw1 = str_replace('.', '', $target_output['anggaran_tw1']);
+                    $rencana_aksi_output->anggaran_tw2 = str_replace('.', '', $target_output['anggaran_tw2']);
+                    $rencana_aksi_output->anggaran_tw3 = str_replace('.', '', $target_output['anggaran_tw3']);
+                    $rencana_aksi_output->anggaran_tw4 = str_replace('.', '', $target_output['anggaran_tw4']);
+                    $rencana_aksi_output->anggaran_total = $target_output['anggaran_tw1'] + $target_output['anggaran_tw2'] + $target_output['anggaran_tw3'] + $target_output['anggaran_tw4'];
+                    $rencana_aksi_output->pelaksana = $target_output['pelaksana'];
+                    $rencana_aksi_output->koordinator = $target_output['koordinator'];
+                    if (!$rencana_aksi_output->save()) {
+                        $success = false;
+                    }
+                }
+            }
+        } catch (\Throwable $th) {
+            $success = false;
+            throw $th;
         }
-        $rencana_aksi->rencana_aksi = $request->rencana_aksi;
-        $rencana_aksi->satuan_output = $request->satuan_output;
-        $rencana_aksi->indikator_output = $request->indikator_output;
-        $rencana_aksi->target_tw1 = $request->target_tw1;
-        $rencana_aksi->target_tw2 = $request->target_tw2;
-        $rencana_aksi->target_tw3 = $request->target_tw3;
-        $rencana_aksi->target_tw4 = $request->target_tw4;
-        $rencana_aksi->target_total = $request->target_tw1 + $request->target_tw2 + $request->target_tw3 + $request->target_tw4;
-        $rencana_aksi->anggaran = str_replace('.', '', $request->anggaran);
-        $rencana_aksi->pelaksana = $request->pelaksana;
-        $rencana_aksi->koordinator = $request->koordinator;
-        if ($rencana_aksi->save()) {
-            $success = true;
+        if ($success) {
+            DB::commit();
+        } else {
+            DB::rollBack();
         }
         return response()->json(['success' => $success]);
     }

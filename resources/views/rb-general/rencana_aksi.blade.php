@@ -61,22 +61,15 @@
                 <table class="table table-bordered table-striped table-hover" id="rencana_aksi-table">
                     <thead class="table-dark">
                         <tr>
-                            <th rowspan="2">No.</th>
-                            <th rowspan="2">Rencana Aksi</th>
-                            <th rowspan="2">Satuan Output</th>
-                            <th rowspan="2">Indikator Output</th>
-                            <th colspan="5">Target</th>
-                            <th rowspan="2">Anggaran</th>
-                            <th rowspan="2">Pelaksana</th>
-                            <th rowspan="2">Koordinator</th>
-                            <th rowspan="2">Aksi</th>
-                        </tr>
-                        <tr>
-                            <th>TW1</th>
-                            <th>TW2</th>
-                            <th>TW3</th>
-                            <th>TW4</th>
-                            <th>Total</th>
+                            <th>No.</th>
+                            <th>Rencana Aksi</th>
+                            <th>Satuan Output</th>
+                            <th>Indikator Output</th>
+                            <th>Target</th>
+                            <th>Anggaran</th>
+                            <th>Pelaksana</th>
+                            <th>Koordinator</th>
+                            <th>Aksi</th>
                         </tr>
                     </thead>
                 </table>
@@ -99,56 +92,77 @@
                 <input type="hidden" name="rencana_aksi_id" id="rencana_aksi_id">
                 <div class="modal-body grid columns-12 gap-4 gap-y-3">
                     <div class="g-col-12">
-                        <table>
+                        <table class="table table-noborder">
                             <tr>
-                            <td class="font-bold w-44">Rencana Aksi <span class="text-danger">*</span></td>
+                                <td class="font-bold w-44">Rencana Aksi <span class="text-danger">*</span></td>
                                 <td colspan="5">
                                     <textarea rows="5" name="rencana_aksi" id="rencana_aksi" placeholder="Penjelasan Rencana Aksi" class="form-control" required></textarea>
                                 </td>
                             </tr>
+                        </table>
+                        <hr class="my-4">
+                        <table class="table table-noborder">
                             <tr>
-                                <td class="font-bold">Output <span class="text-danger">*</span></td>
+                                <td class="font-bold w-44">Output <span class="text-danger">*</span></td>
                                 <td colspan="2">
-                                    <input type="text" name="satuan_output" id="satuan_output" placeholder="Satuan Output" class="form-control" required>
+                                    <input type="text" name="target_output[0][satuan_output]" id0="satuan_output" placeholder="Satuan Output" class="form-control" required>
                                 </td>
                                 <td colspan="3">
-                                    <input type="text" name="indikator_output" id="indikator_output" placeholder="Indikator Output" class="form-control" required>
+                                    <input type="text" name="target_output[0][indikator_output]" id="indikator_output0" placeholder="Indikator Output" class="form-control" required>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="font-bold">Target Output <span class="text-danger">*</span></td>
                                 <td>
-                                    <input type="text" name="target_tw1" id="target_tw1" placeholder="Triwulan 1" class="form-control numeric" onkeyup="hitungTotal();" required>
+                                    <input type="text" name="target_output[0][target_tw1]" id="target_tw10" placeholder="Triwulan 1" class="form-control numeric" onkeyup="hitungTotal(0);" required>
                                 </td>
                                 <td>
-                                    <input type="text" name="target_tw2" id="target_tw2" placeholder="Triwulan 2" class="form-control numeric" onkeyup="hitungTotal();" required>
+                                    <input type="text" name="target_output[0][target_tw2]" id="target_tw20" placeholder="Triwulan 2" class="form-control numeric" onkeyup="hitungTotal(0);" required>
                                 </td>
                                 <td>
-                                    <input type="text" name="target_tw3" id="target_tw3" placeholder="Triwulan 3" class="form-control numeric" onkeyup="hitungTotal();" required>
+                                    <input type="text" name="target_output[0][target_tw3]" id="target_tw30" placeholder="Triwulan 3" class="form-control numeric" onkeyup="hitungTotal(0);" required>
                                 </td>
                                 <td>
-                                    <input type="text" name="target_tw4" id="target_tw4" placeholder="Triwulan 4" class="form-control numeric" onkeyup="hitungTotal();" required>
+                                    <input type="text" name="target_output[0][target_tw4]" id="target_tw40" placeholder="Triwulan 4" class="form-control numeric" onkeyup="hitungTotal(0);" required>
                                 </td>
                                 <td>
-                                    <input type="text" name="target_total" id="target_total" placeholder="Total" class="form-control numeric" readonly required>
+                                    <input type="text" name="target_output[0][target_total]" id="target_total0" placeholder="Total" class="form-control numeric" readonly required>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="font-bold">Anggaran <span class="text-danger">*</span></td>
-                                <td colspan="5">
-                                    <input type="text" name="anggaran" id="anggaran" placeholder="Masukan Data Anggaran" class="form-control digit" required>
+                                <td>
+                                    <input type="text" name="target_output[0][anggaran_tw1]" id="anggaran_tw10" placeholder="Triwulan 1" class="form-control digit" onkeyup="hitungTotalAnggaran(0);" required>
+                                </td>
+                                <td>
+                                    <input type="text" name="target_output[0][anggaran_tw2]" id="anggaran_tw20" placeholder="Triwulan 2" class="form-control digit" onkeyup="hitungTotalAnggaran(0);" required>
+                                </td>
+                                <td>
+                                    <input type="text" name="target_output[0][anggaran_tw3]" id="anggaran_tw30" placeholder="Triwulan 3" class="form-control digit" onkeyup="hitungTotalAnggaran(0);" required>
+                                </td>
+                                <td>
+                                    <input type="text" name="target_output[0][anggaran_tw4]" id="anggaran_tw40" placeholder="Triwulan 4" class="form-control digit" onkeyup="hitungTotalAnggaran(0);" required>
+                                </td>
+                                <td>
+                                    <input type="text" name="target_output[0][anggaran_total]" id="anggaran_total0" placeholder="Total" class="form-control digit" readonly required>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="font-bold">Unit Kerja Pelaksana <span class="text-danger">*</span></td>
                                 <td colspan="2">
-                                    <input type="text" name="pelaksana" id="pelaksana" placeholder="Pelaksana" class="form-control" required>
+                                    <input type="text" name="target_output[0][pelaksana]" id="pelaksana0" placeholder="Pelaksana" class="form-control" required>
                                 </td>
                                 <td colspan="3">
-                                    <input type="text" name="koordinator" id="koordinator" placeholder="Koordinator" class="form-control" required>
+                                    <input type="text" name="target_output[0][koordinator]" id="koordinator0" placeholder="Koordinator" class="form-control" required>
                                 </td>
                             </tr>
+                            <tr>
+                                <td colspan="6">&nbsp;</td>
+                            </tr>
                         </table>
+                        <div id="target_output_ext">
+                        </div>
+                        <button type="button" class="btn btn-outline-primary border-dashed w-full mt-4" onclick="tambah_input();" id="tambah_input_button"><i data-lucide="plus" class="w-4 h-4 mr-2"></i></button>
                     </div>
                 </div> <!-- END: Modal Body -->
                 <!-- BEGIN: Modal Footer -->
@@ -166,8 +180,10 @@
 <script src="{{ asset('ext/jquery-validation/jquery.validate.min.js') }}"></script>
 <script src="{{ asset('ext/jquery-validation/localization/messages_id.min.js') }}"></script>
 <script src="{{ asset('ext') }}/jquery-inputmask/jquery.inputmask.bundle.js"></script>
+<script src="http://cdn.rawgit.com/ashl1/datatables-rowsgroup/v1.0.0/dataTables.rowsGroup.js"></script>
 <script>
     $(document).ready(function() {
+        idx = 0;
         getData();
         modal_rencana_aksi = tailwind.Modal.getInstance(document.querySelector("#modal-rencana_aksi"));
 
@@ -241,7 +257,9 @@
         ajax: {
             url: "{{url('emptyDT')}}",
         },
+        // rowsGroup: [0, 1],
         columns: [
+            // { data: 'no' },
             {
                 data: null,
                 sortable: false, 
@@ -250,15 +268,31 @@
                     return meta.row + meta.settings._iDisplayStart + 1;
                 }
             },
-            { data: 'rencana_aksi' },
+            { data: 'rencana_aksi.rencana_aksi' },
             { data: 'satuan_output' },
             { data: 'indikator_output' },
-            { data: 'target_tw1' },
-            { data: 'target_tw2' },
-            { data: 'target_tw3' },
-            { data: 'target_tw4' },
-            { data: 'target_total' },
-            { data: 'anggaran' },
+            { 
+                render: function (data, type, row, meta) {
+                    return '<table class="table table-noborder">'+
+                            '<tr><th>TW 1</th><td>: '+row.target_tw1+'</td></tr>'+
+                            '<tr><th>TW 1</th><td>: '+row.target_tw2+'</td></tr>'+
+                            '<tr><th>TW 1</th><td>: '+row.target_tw3+'</td></tr>'+
+                            '<tr><th class="border-bottom">TW 1</th><td>: '+row.target_tw4+'</td></tr>'+
+                            '<tr><th>Total</th><td>: '+row.target_total+'</td></tr>'+
+                        '</table>';
+                }
+            },
+            { 
+                render: function (data, type, row, meta) {
+                    return '<table class="table table-noborder">'+
+                            '<tr><th>TW 1</th><td>: '+row.anggaran_tw1+'</td></tr>'+
+                            '<tr><th>TW 1</th><td>: '+row.anggaran_tw2+'</td></tr>'+
+                            '<tr><th>TW 1</th><td>: '+row.anggaran_tw3+'</td></tr>'+
+                            '<tr><th>TW 1</th><td>: '+row.anggaran_tw4+'</td></tr>'+
+                            '<tr><th class="border-top">Total</th><td>: '+row.anggaran_total+'</td></tr>'+
+                        '</table>';
+                }
+            },
             { data: 'pelaksana' },
             { data: 'koordinator' },
             { 
@@ -268,12 +302,6 @@
                     return '<button onclick="edit('+row.id+');" class="mb-3 btn btn-warning btn-sm w-10"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" icon-name="edit" data-lucide="edit" class="lucide lucide-edit block mx-auto"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button><button onclick="hapus('+row.id+');" class="btn btn-danger btn-sm w-10"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" icon-name="trash-2" data-lucide="trash-2" class="lucide lucide-trash-2 w-4 h-4 mr-1"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg></button>';
                 },
             },
-        ],
-        columnDefs: [
-            {
-                targets: [9],
-                render: $.fn.dataTable.render.number('.', ',', 0, '')
-            }
         ],
     }); 
 
@@ -292,29 +320,138 @@
 
     function tambah() {
         clearForm();
+        $('#target_output_ext').html('');
         $('.saveButton').prop('disabled', false);
         modal_rencana_aksi.show();
     }
 
-    function hitungTotal() {
-        if ($('#target_tw1').val() == '') {
-            $('#target_tw1').val(0);
+    function hitungTotal(idx) {
+        if ($('#target_tw1'+idx).val() == '') {
+            $('#target_tw1'+idx).val(0);
         }
-        if ($('#target_tw2').val() == '') {
-            $('#target_tw2').val(0);
+        if ($('#target_tw2'+idx).val() == '') {
+            $('#target_tw2'+idx).val(0);
         }
-        if ($('#target_tw3').val() == '') {
-            $('#target_tw3').val(0);
+        if ($('#target_tw3'+idx).val() == '') {
+            $('#target_tw3'+idx).val(0);
         }
-        if ($('#target_tw4').val() == '') {
-            $('#target_tw4').val(0);
+        if ($('#target_tw4'+idx).val() == '') {
+            $('#target_tw4'+idx).val(0);
         }
-        tw1 = $('#target_tw1').val();
-        tw2 = $('#target_tw2').val();
-        tw3 = $('#target_tw3').val();
-        tw4 = $('#target_tw4').val();
+        tw1 = $('#target_tw1'+idx).val();
+        tw2 = $('#target_tw2'+idx).val();
+        tw3 = $('#target_tw3'+idx).val();
+        tw4 = $('#target_tw4'+idx).val();
         total = parseFloat(tw1) + parseFloat(tw2) + parseFloat(tw3) + parseFloat(tw4);
-        $('#target_total').val(total);
+        $('#target_total'+idx).val(total);
+    }
+
+    function hitungTotalAnggaran(idx) {
+        if ($('#anggaran_tw1'+idx).val() == '') {
+            $('#anggaran_tw1'+idx).val(0);
+        }
+        if ($('#anggaran_tw2'+idx).val() == '') {
+            $('#anggaran_tw2'+idx).val(0);
+        }
+        if ($('#anggaran_tw3'+idx).val() == '') {
+            $('#anggaran_tw3'+idx).val(0);
+        }
+        if ($('#anggaran_tw4'+idx).val() == '') {
+            $('#anggaran_tw4'+idx).val(0);
+        }
+        tw1 = $('#anggaran_tw1'+idx).val();
+        tw2 = $('#anggaran_tw2'+idx).val();
+        tw3 = $('#anggaran_tw3'+idx).val();
+        tw4 = $('#anggaran_tw4'+idx).val();
+        total = parseInt(tw1.replace('.', '')) + parseInt(tw2.replace('.', '')) + parseInt(tw3.replace('.', '')) + parseInt(tw4.replace('.', ''));
+        $('#anggaran_total'+idx).val(total);
+    }
+
+    function output_form() {
+        return '<table class="table table-noborder" id="output_form'+idx+'">'+
+                    '<tr>'+
+                        '<td class="font-bold w-44">Output <span class="text-danger">*</span></td>'+
+                        '<td colspan="2">'+
+                            '<input type="text" name="target_output['+idx+'][satuan_output]" id="satuan_output'+idx+'" placeholder="Satuan Output" class="form-control" required>'+
+                        '</td>'+
+                        '<td colspan="3">'+
+                            '<input type="text" name="target_output['+idx+'][indikator_output]" id="indikator_output'+idx+'" placeholder="Indikator Output" class="form-control" required>'+
+                        '</td>'+
+                    '</tr>'+
+                    '<tr>'+
+                        '<td class="font-bold">Target Output <span class="text-danger">*</span></td>'+
+                        '<td>'+
+                            '<input type="text" name="target_output['+idx+'][target_tw1]" id="target_tw1'+idx+'" placeholder="Triwulan 1" class="form-control numeric" onkeyup="hitungTotal('+idx+');" required>'+
+                        '</td>'+
+                        '<td>'+
+                            '<input type="text" name="target_output['+idx+'][target_tw2]" id="target_tw2'+idx+'" placeholder="Triwulan 2" class="form-control numeric" onkeyup="hitungTotal('+idx+');" required>'+
+                        '</td>'+
+                        '<td>'+
+                            '<input type="text" name="target_output['+idx+'][target_tw3]" id="target_tw3'+idx+'" placeholder="Triwulan 3" class="form-control numeric" onkeyup="hitungTotal('+idx+');" required>'+
+                        '</td>'+
+                        '<td>'+
+                            '<input type="text" name="target_output['+idx+'][target_tw4]" id="target_tw4'+idx+'" placeholder="Triwulan 4" class="form-control numeric" onkeyup="hitungTotal('+idx+');" required>'+
+                        '</td>'+
+                        '<td>'+
+                            '<input type="text" name="target_output['+idx+'][target_total]" id="target_total'+idx+'" placeholder="Total" class="form-control numeric" readonly required>'+
+                        '</td>'+
+                    '</tr>'+
+                    '<tr>'+
+                        '<td class="font-bold">Anggaran <span class="text-danger">*</span></td>'+
+                        '<td>'+
+                            '<input type="text" name="target_output['+idx+'][anggaran_tw1]" id="anggaran_tw1'+idx+'" placeholder="Triwulan 1" class="form-control digit" onkeyup="hitungTotalAnggaran('+idx+');" required>'+
+                        '</td>'+
+                        '<td>'+
+                            '<input type="text" name="target_output['+idx+'][anggaran_tw2]" id="anggaran_tw2'+idx+'" placeholder="Triwulan 2" class="form-control digit" onkeyup="hitungTotalAnggaran('+idx+');" required>'+
+                        '</td>'+
+                        '<td>'+
+                            '<input type="text" name="target_output['+idx+'][anggaran_tw3]" id="anggaran_tw3'+idx+'" placeholder="Triwulan 3" class="form-control digit" onkeyup="hitungTotalAnggaran('+idx+');" required>'+
+                        '</td>'+
+                        '<td>'+
+                            '<input type="text" name="target_output['+idx+'][anggaran_tw4]" id="anggaran_tw4'+idx+'" placeholder="Triwulan 4" class="form-control digit" onkeyup="hitungTotalAnggaran('+idx+');" required>'+
+                        '</td>'+
+                        '<td>'+
+                            '<input type="text" name="target_output['+idx+'][anggaran_total]" id="anggaran_total'+idx+'" placeholder="Total" class="form-control digit" readonly required>'+
+                        '</td>'+
+                    '</tr>'+
+                    '<tr>'+
+                        '<td class="font-bold">Unit Kerja Pelaksana <span class="text-danger">*</span></td>'+
+                        '<td colspan="2">'+
+                            '<input type="text" name="target_output['+idx+'][pelaksana]" id="pelaksana'+idx+'" placeholder="Pelaksana" class="form-control" required>'+
+                        '</td>'+
+                        '<td colspan="3">'+
+                            '<input type="text" name="target_output['+idx+'][koordinator]" id="koordinator'+idx+'" placeholder="Koordinator" class="form-control" required>'+
+                        '</td>'+
+                    '</tr>'+
+                    '<tr>'+
+                        '<td colspan="6"><button type="button" class="btn btn-outline-dark border-dashed w-full" onclick="hapus_input('+idx+');">hapus</button></td>'+
+                    '</tr>'+
+                '</table>';
+    }
+
+    function tambah_input() {
+        idx++;
+        $('#target_output_ext').append(output_form(idx));
+        $(".numeric").inputmask("decimal",{
+            groupSeparator: "",
+            digits: 0,
+            autoGroup: false,
+            rightAlign: false,
+            min: 0
+        });
+
+        $(".digit").inputmask("decimal",{
+            radixPoint:",",
+            groupSeparator: ".",
+            digits: 0,
+            autoGroup: true,
+            rightAlign: false,
+            min: 0,
+        });
+    }
+
+    function hapus_input(idx) {
+        $('#output_form'+idx).remove();
     }
 
     function edit(id) {
