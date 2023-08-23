@@ -267,22 +267,22 @@
             { 
                 render: function (data, type, row, meta) {
                     return '<table class="table table-noborder">'+
-                            '<tr><th>TW 1</th><td>: '+row.target_tw1+'</td></tr>'+
-                            '<tr><th>TW 1</th><td>: '+row.target_tw2+'</td></tr>'+
-                            '<tr><th>TW 1</th><td>: '+row.target_tw3+'</td></tr>'+
-                            '<tr><th class="border-bottom">TW 1</th><td>: '+row.target_tw4+'</td></tr>'+
-                            '<tr><th>Total</th><td>: '+row.target_total+'</td></tr>'+
+                            '<tr><th>TW 1</th><td>: '+formatNumber(row.target_tw1)+'</td></tr>'+
+                            '<tr><th>TW 2</th><td>: '+formatNumber(row.target_tw2)+'</td></tr>'+
+                            '<tr><th>TW 3</th><td>: '+formatNumber(row.target_tw3)+'</td></tr>'+
+                            '<tr><th>TW 4</th><td>: '+formatNumber(row.target_tw4)+'</td></tr>'+
+                            '<tr><th>Total</th><td>: '+formatNumber(row.target_total)+'</td></tr>'+
                         '</table>';
                 }
             },
             { 
                 render: function (data, type, row, meta) {
                     return '<table class="table table-noborder">'+
-                            '<tr><th>TW 1</th><td>: '+row.anggaran_tw1+'</td></tr>'+
-                            '<tr><th>TW 1</th><td>: '+row.anggaran_tw2+'</td></tr>'+
-                            '<tr><th>TW 1</th><td>: '+row.anggaran_tw3+'</td></tr>'+
-                            '<tr><th>TW 1</th><td>: '+row.anggaran_tw4+'</td></tr>'+
-                            '<tr><th class="border-top">Total</th><td>: '+row.anggaran_total+'</td></tr>'+
+                            '<tr><th>TW 1</th><td>: '+formatNumber(row.anggaran_tw1)+'</td></tr>'+
+                            '<tr><th>TW 2</th><td>: '+formatNumber(row.anggaran_tw2)+'</td></tr>'+
+                            '<tr><th>TW 3</th><td>: '+formatNumber(row.anggaran_tw3)+'</td></tr>'+
+                            '<tr><th>TW 4</th><td>: '+formatNumber(row.anggaran_tw4)+'</td></tr>'+
+                            '<tr><th class="border-top">Total</th><td>: '+formatNumber(row.anggaran_total)+'</td></tr>'+
                         '</table>';
                 }
             },
@@ -301,6 +301,10 @@
 
     function getData() {
         rencana_aksi.ajax.url("{{url('rb-general/perencanaan/'.$target->perencanaan->id.'/'.$target->id.'/rencana_aksi/getDatas')}}").load(null, false);
+    }
+
+    function formatNumber(num) {
+        return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
     }
 
     function clearForm() {

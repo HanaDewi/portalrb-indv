@@ -232,7 +232,6 @@ class RBGeneralController extends Controller
             $rencana_aksi->rencana_aksi = $request->rencana_aksi;
             if ($rencana_aksi->save()) {
                 foreach ($request->target_output as $target_output) {
-                    dd($target_output);
                     $rencana_aksi_output = new GeneralRencanaAksiOutput();
                     if (isset($target_output['rencana_aksi_output_id'])) {
                         $rencana_aksi_output = GeneralRencanaAksiOutput::find($target_output['rencana_aksi_output_id']);
