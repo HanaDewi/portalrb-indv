@@ -207,8 +207,9 @@ class RBGeneralController extends Controller
             ->whereHas('perencanaan', function ($q) use ($user) {
                 $q->where('instansi_id', $user->instansi_id);
             })->first();
-        $rencana_aksi = GeneralRencanaAksi::where('general_perencanaan_target_id', $target->id)->where('id', $id)->first();
-        return response()->json($rencana_aksi);
+        $output = GeneralRencanaAksiOutput::find($id);
+        $output->rencana_aksi = $output->rencana_aksi;
+        return response()->json($output);
     }
 
     public function rencana_aksi_simpan($perencanaan_id, $target_id, Request $request)
@@ -279,9 +280,26 @@ class RBGeneralController extends Controller
             abort(403);
         }
         $success = false;
-        $rencana_aksi = GeneralRencanaAksi::where('general_perencanaan_target_id', $target->id)->where('id', $request->id)->first();
-        if ($rencana_aksi->delete()) {
-            $success = true;
+        DB::beginTransaction();
+        try {
+            $output = GeneralRencanaAksiOutput::find($request->id);
+            $rencana_aksi = $output->rencana_aksi;
+            if ($output->delete()) {
+                $success = true;
+                if (count($rencana_aksi->output) == 0) {
+                    if (!$rencana_aksi->delete()) {
+                        $success = false;
+                    }
+                }
+            }
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            throw $th;
+        }
+        if ($success) {
+            DB::commit();
+        } else {
+            DB::rollBack();
         }
         return response()->json(['success' => $success]);
     }

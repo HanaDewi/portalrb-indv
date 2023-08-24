@@ -68,7 +68,7 @@
                             <a href="{{ url('rb-general/perencanaan/'.$indikator->perencanaan_id.'/'.$target->id.'/rencana_aksi') }}" class="btn btn-primary btn-sm w-full mb-2">
                                 <i data-lucide="edit" class="w-4 h-4 mr-1"></i>
                                 Renaksi
-                                <span class="text-xs px-1 rounded-full bg-warning text-white badge">4</span>
+                                <span class="text-xs px-1 rounded-full bg-warning text-white badge">{{ count($target->rencana_aksi) }}</span>
                             </a>
                             <br>
                             <a href="{{ url('rb-general/perencanaan/'.$indikator->perencanaan_id.'/'.$target->id.'/monev') }}" class="btn btn-dark btn-sm w-full"><i data-lucide="edit" class="w-4 h-4 mr-1"></i>Monev</a>

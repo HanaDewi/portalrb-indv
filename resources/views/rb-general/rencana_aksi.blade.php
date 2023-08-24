@@ -102,10 +102,11 @@
                         </table>
                         <hr class="my-4">
                         <table class="table table-noborder">
+                            <input type="hidden" name="target_output[0][rencana_aksi_output_id]" id="rencana_aksi_output_id">
                             <tr>
                                 <td class="font-bold w-44">Output <span class="text-danger">*</span></td>
                                 <td colspan="2">
-                                    <input type="text" name="target_output[0][satuan_output]" id0="satuan_output" placeholder="Satuan Output" class="form-control" required>
+                                    <input type="text" name="target_output[0][satuan_output]" id="satuan_output0" placeholder="Satuan Output" class="form-control" required>
                                 </td>
                                 <td colspan="3">
                                     <input type="text" name="target_output[0][indikator_output]" id="indikator_output0" placeholder="Indikator Output" class="form-control" required>
@@ -181,10 +182,6 @@
 <script src="{{ asset('ext/jquery-validation/localization/messages_id.min.js') }}"></script>
 <script src="{{ asset('ext') }}/jquery-inputmask/jquery.inputmask.bundle.js"></script>
 <script src="http://cdn.rawgit.com/ashl1/datatables-rowsgroup/v1.0.0/dataTables.rowsGroup.js"></script>
-
-
-
-
 <script>
     $(document).ready(function() {
         idx = 0;
@@ -260,10 +257,7 @@
         ordering: false,
         columns: [
             {
-                 data: 'rencana_aksi.rencana_aksi',  
-                    render: function (data, type, row, meta) {      
-                    if (nama!=data){nama=data,nom++}        
-                    return nom; }
+                data: 'no'
             },
             { data: 'rencana_aksi.rencana_aksi' },
             { data: 'satuan_output' },
@@ -313,11 +307,8 @@
 
     function clearForm() {
         $('#form-rencana_aksi').trigger('reset');
-        $('#target_tw1').val('0');
-        $('#target_tw2').val('0');
-        $('#target_tw3').val('0');
-        $('#target_tw4').val('0');
         $('#rencana_aksi_id').val('');
+        $('#rencana_aksi_output_id').val('');
     }
 
     function tambah() {
@@ -459,23 +450,28 @@
 
     function edit(id) {
         clearForm();
-        $('#rencana_aksi_id').val(id);
-        $('#title').html('Edit Rencana Aksi');
+        $('#rencana_aksi_output_id').val(id);
+        $('#title').html('Edit Rencana Aksi Output');
         $('.saveButton').prop('disabled', true);
-        modal_rencana_aksi.show();
         $.getJSON("{{url('rb-general/perencanaan/'.$target->perencanaan->id.'/'.$target->id.'/rencana_aksi/getData')}}/"+id, function(data) {
-            $('#rencana_aksi').val(data.rencana_aksi);
-            $('#satuan_output').val(data.satuan_output);
-            $('#indikator_output').val(data.indikator_output);
-            $('#target_tw1').val(data.target_tw1);
-            $('#target_tw2').val(data.target_tw2);
-            $('#target_tw3').val(data.target_tw3);
-            $('#target_tw4').val(data.target_tw4);
-            $('#target_total').val(data.target_total);
-            $('#anggaran').val(data.anggaran);
-            $('#pelaksana').val(data.pelaksana);
-            $('#koordinator').val(data.koordinator);
+            $('#rencana_aksi_id').val(data.general_rencana_aksi_id);
+            $('#rencana_aksi').val(data.rencana_aksi.rencana_aksi);
+            $('#satuan_output0').val(data.satuan_output);
+            $('#indikator_output0').val(data.indikator_output);
+            $('#target_tw10').val(data.target_tw1);
+            $('#target_tw20').val(data.target_tw2);
+            $('#target_tw30').val(data.target_tw3);
+            $('#target_tw40').val(data.target_tw4);
+            $('#target_total0').val(data.target_total);
+            $('#anggaran_tw10').val(data.anggaran_tw1);
+            $('#anggaran_tw20').val(data.anggaran_tw2);
+            $('#anggaran_tw30').val(data.anggaran_tw3);
+            $('#anggaran_tw40').val(data.anggaran_tw4);
+            $('#anggaran_total0').val(data.anggaran_total);
+            $('#pelaksana0').val(data.pelaksana);
+            $('#koordinator0').val(data.koordinator);
             $('.saveButton').prop('disabled', false);
+            modal_rencana_aksi.show();
         });
     }
 
@@ -510,9 +506,4 @@
         });
     }
 </script>
-
-
-
-
-
 @endpush
