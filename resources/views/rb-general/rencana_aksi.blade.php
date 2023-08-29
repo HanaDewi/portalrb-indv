@@ -202,7 +202,7 @@
                         </table>
                         <div id="target_output_ext">
                         </div>
-                        <button type="button" class="btn btn-outline-primary border-dashed w-full mt-4" onclick="tambah_input();" id="tambah_input_button"><i data-lucide="plus" class="w-4 h-4 mr-2"></i></button>
+                        <button type="button" class="btn btn-outline-primary border-dashed w-full mt-4" onclick="tambah_input();" id="tambah_input_button"><i data-lucide="plus" class="w-4 h-4 mr-2"></i> Tambah Form Rencana Aksi</button>
                     </div>
                 </div> <!-- END: Modal Body -->
                 <!-- BEGIN: Modal Footer -->
@@ -400,7 +400,8 @@
     }
 
     function output_form() {
-        return '<table class="table table-noborder" id="output_form'+idx+'">'+
+        return  '<hr class="my-4">'+
+                '<table class="table table-noborder" id="output_form'+idx+'">'+
                     '<tr>'+
                         '<td class="font-bold w-44">Satuan Output<span class="text-danger">*</span></td>'+
                         '<td colspan="5">'+
@@ -418,50 +419,53 @@
                     '<tr>'+
                         '<td class="font-bold">Target Output <span class="text-danger">*</span></td>'+
                         '<td>'+
-                            '<input type="text" name="target_output['+idx+'][target_tw1]" id="target_tw1'+idx+'" placeholder="Triwulan 1" class="form-control numeric" onkeyup="hitungTotal('+idx+');" required>'+
+                            '<div class="input-group mt-4 mr-2"><div class="input-group-text">TW1</div><input type="text" name="target_output['+idx+'][target_tw1]" id="target_tw1'+idx+'" placeholder="Triwulan 1" class="form-control numeric" onkeyup="hitungTotal('+idx+');" required></div>'+
                         '</td>'+
                         '<td>'+
-                            '<input type="text" name="target_output['+idx+'][target_tw2]" id="target_tw2'+idx+'" placeholder="Triwulan 2" class="form-control numeric" onkeyup="hitungTotal('+idx+');" required>'+
+                            '<div class="input-group mt-4 mr-2"><div class="input-group-text">TW2</div><input type="text" name="target_output['+idx+'][target_tw2]" id="target_tw2'+idx+'" placeholder="Triwulan 2" class="form-control numeric" onkeyup="hitungTotal('+idx+');" required></div>'+
                         '</td>'+
                         '<td>'+
-                            '<input type="text" name="target_output['+idx+'][target_tw3]" id="target_tw3'+idx+'" placeholder="Triwulan 3" class="form-control numeric" onkeyup="hitungTotal('+idx+');" required>'+
+                            '<div class="input-group mt-4 mr-2"><div class="input-group-text">TW3</div><input type="text" name="target_output['+idx+'][target_tw3]" id="target_tw3'+idx+'" placeholder="Triwulan 3" class="form-control numeric" onkeyup="hitungTotal('+idx+');" required></div>'+
                         '</td>'+
                         '<td>'+
-                            '<input type="text" name="target_output['+idx+'][target_tw4]" id="target_tw4'+idx+'" placeholder="Triwulan 4" class="form-control numeric" onkeyup="hitungTotal('+idx+');" required>'+
+                            '<div class="input-group mt-4 mr-2"><div class="input-group-text">TW4</div><input type="text" name="target_output['+idx+'][target_tw4]" id="target_tw4'+idx+'" placeholder="Triwulan 4" class="form-control numeric" onkeyup="hitungTotal('+idx+');" required></div>'+
                         '</td>'+
                         '<td>'+
-                            '<input type="text" name="target_output['+idx+'][target_total]" id="target_total'+idx+'" placeholder="Total" class="form-control numeric" readonly required>'+
+                            '<div class="input-group mt-4"><div class="input-group-text">Total</div><input type="text" name="target_output['+idx+'][target_total]" id="target_total'+idx+'" placeholder="Total" class="form-control numeric" readonly required></div>'+
                         '</td>'+
                     '</tr>'+
                     '<tr>'+
                         '<td class="font-bold">Anggaran <span class="text-danger">*</span></td>'+
                         '<td>'+
-                            '<input type="text" name="target_output['+idx+'][anggaran_tw1]" id="anggaran_tw1'+idx+'" placeholder="Triwulan 1" class="form-control digit" onkeyup="hitungTotalAnggaran('+idx+');" required>'+
+                            '<div class="input-group mt-4 mr-2"><div class="input-group-text">TW1</div><input type="text" name="target_output['+idx+'][anggaran_tw1]" id="anggaran_tw1'+idx+'" placeholder="Triwulan 1" class="form-control digit" onkeyup="hitungTotalAnggaran('+idx+');" required></div>'+
                         '</td>'+
                         '<td>'+
-                            '<input type="text" name="target_output['+idx+'][anggaran_tw2]" id="anggaran_tw2'+idx+'" placeholder="Triwulan 2" class="form-control digit" onkeyup="hitungTotalAnggaran('+idx+');" required>'+
+                            '<div class="input-group mt-4 mr-2"><div class="input-group-text">TW2</div><input type="text" name="target_output['+idx+'][anggaran_tw2]" id="anggaran_tw2'+idx+'" placeholder="Triwulan 2" class="form-control digit" onkeyup="hitungTotalAnggaran('+idx+');" required></div>'+
                         '</td>'+
                         '<td>'+
-                            '<input type="text" name="target_output['+idx+'][anggaran_tw3]" id="anggaran_tw3'+idx+'" placeholder="Triwulan 3" class="form-control digit" onkeyup="hitungTotalAnggaran('+idx+');" required>'+
+                            '<div class="input-group mt-4 mr-2"><div class="input-group-text">TW3</div><input type="text" name="target_output['+idx+'][anggaran_tw3]" id="anggaran_tw3'+idx+'" placeholder="Triwulan 3" class="form-control digit" onkeyup="hitungTotalAnggaran('+idx+');" required></div>'+
                         '</td>'+
                         '<td>'+
-                            '<input type="text" name="target_output['+idx+'][anggaran_tw4]" id="anggaran_tw4'+idx+'" placeholder="Triwulan 4" class="form-control digit" onkeyup="hitungTotalAnggaran('+idx+');" required>'+
+                            '<div class="input-group mt-4 mr-2"><div class="input-group-text">TW4</div><input type="text" name="target_output['+idx+'][anggaran_tw4]" id="anggaran_tw4'+idx+'" placeholder="Triwulan 4" class="form-control digit" onkeyup="hitungTotalAnggaran('+idx+');" required></div>'+
                         '</td>'+
                         '<td>'+
-                            '<input type="text" name="target_output['+idx+'][anggaran_total]" id="anggaran_total'+idx+'" placeholder="Total" class="form-control digit" readonly required>'+
+                            '<div class="input-group mt-4"><div class="input-group-text">Total</div><input type="text" name="target_output['+idx+'][anggaran_total]" id="anggaran_total'+idx+'" placeholder="Total" class="form-control digit" readonly required></div>'+
                         '</td>'+
                     '</tr>'+
                     '<tr>'+
                         '<td class="font-bold">Unit Kerja Pelaksana <span class="text-danger">*</span></td>'+
-                        '<td colspan="2">'+
-                            '<input type="text" name="target_output['+idx+'][pelaksana]" id="pelaksana'+idx+'" placeholder="Pelaksana" class="form-control" required>'+
-                        '</td>'+
-                        '<td colspan="3">'+
-                            '<input type="text" name="target_output['+idx+'][koordinator]" id="koordinator'+idx+'" placeholder="Koordinator" class="form-control" required>'+
+                        '<td colspan="5">'+
+                            '<input type="text" name="target_output['+idx+'][pelaksana]" id="pelaksana'+idx+'" placeholder="Pelaksana" class="form-control mt-4" required>'+
                         '</td>'+
                     '</tr>'+
                     '<tr>'+
-                        '<td colspan="6"><button type="button" class="btn btn-outline-dark border-dashed w-full" onclick="hapus_input('+idx+');">hapus</button></td>'+
+                        '<td class="font-bold">Koordinator Pelaksana <span class="text-danger">*</span></td>'+
+                        '<td colspan="5">'+
+                            '<input type="text" name="target_output['+idx+'][koordinator]" id="koordinator'+idx+'" placeholder="Koordinator" class="form-control mt-4" required>'+
+                        '</td>'+
+                    '</tr>'+
+                    '<tr>'+
+                        '<td colspan="6"><div class="mt-5"><button type="button" class="btn btn-outline-dark border-dashed w-full bg-slate-50 dark:bg-transparent dark:border" onclick="hapus_input('+idx+');"><svg class="mr-1" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" icon-name="trash-2" data-lucide="trash-2" class="lucide lucide-trash-2 w-4 h-4"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg> Hapus</button></div></td>'+
                     '</tr>'+
                 '</table>';
     }
