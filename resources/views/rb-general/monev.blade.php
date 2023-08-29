@@ -67,7 +67,7 @@
             <h2 class="font-bold text-base mr-auto flex items-center justify-center"><i data-lucide="file-text" class="mr-1"></i> Data Evaluasi Rencana Aksi</h2>
         </div>
         <div class="lg:col-span-12 p-5 border-b border-slate-200/60">
-            <table class="table table-bordered table-striped table-hover" id="rencana_aksi-table">
+            <table class="table table-bordered table-striped table-hover" id="monev-table">
                 <thead class="table-dark">
                     <tr>
                         <th>No.</th>
@@ -75,7 +75,7 @@
                         <th>Satuan Output</th>
                         <th>Indikator Output</th>
                         <th>Target Total</th>
-                        <th>Anggaran</th>
+                        <th>Anggaran Total</th>
                         <th>Realisasi Output</th>
                         <th>Realisasi Anggaran</th>
                         <th>Capaian Anggaran</th>
@@ -88,17 +88,17 @@
 </div>
 
 {{-- Modal Form Rencana Aksi --}}
-<div id="modal-rencana_aksi" class="modal fade" tabindex="-1" aria-hidden="true">
+<div id="modal-monev" class="modal fade" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <!-- BEGIN: Modal Header -->
             <div class="darkbg modal-header">
-                <h2 class="font-bold fw-medium fs-base me-auto" id="title">Tambah Monitoring dan Evaluasi Rencana Aksi</h2>
+                <h2 class="font-bold fw-medium fs-base me-auto" id="title">Monitoring dan Evaluasi Rencana Aksi</h2>
             </div> <!-- END: Modal Header -->
             <!-- BEGIN: Modal Body -->
-            <form action="{{ url('rb-general/perencanaan/'.$target->perencanaan->id.'/'.$target->id.'/monev/simpan') }}" id="form-rencana_aksi" method="post">
+            <form action="{{ url('rb-general/perencanaan/'.$target->perencanaan->id.'/'.$target->id.'/monev/simpan') }}" id="form-monev" method="post">
                 @csrf
-                <input type="hidden" name="rencana_aksi_id" id="rencana_aksi_id">
+                <input type="hidden" name="output_id" id="output_id">
                 <div class="modal-body grid columns-12 gap-4 gap-y-3">
                     <div class="g-col-12">
                         <table>
@@ -120,16 +120,16 @@
                             <tr>
                                 <td class="font-bold">Target Output</td>
                                 <td>
-                                    <input type="text" name="target_tw1" id="target_tw1" placeholder="Triwulan 1" class="form-control numeric" onkeyup="hitungTotal();" readonly>
+                                    <input type="text" name="target_tw1" id="target_tw1" placeholder="Triwulan 1" class="form-control numeric" readonly>
                                 </td>
                                 <td>
-                                    <input type="text" name="target_tw2" id="target_tw2" placeholder="Triwulan 2" class="form-control numeric" onkeyup="hitungTotal();" readonly>
+                                    <input type="text" name="target_tw2" id="target_tw2" placeholder="Triwulan 2" class="form-control numeric" readonly>
                                 </td>
                                 <td>
-                                    <input type="text" name="target_tw3" id="target_tw3" placeholder="Triwulan 3" class="form-control numeric" onkeyup="hitungTotal();" readonly>
+                                    <input type="text" name="target_tw3" id="target_tw3" placeholder="Triwulan 3" class="form-control numeric" readonly>
                                 </td>
                                 <td>
-                                    <input type="text" name="target_tw4" id="target_tw4" placeholder="Triwulan 4" class="form-control numeric" onkeyup="hitungTotal();" readonly>
+                                    <input type="text" name="target_tw4" id="target_tw4" placeholder="Triwulan 4" class="form-control numeric" readonly>
                                 </td>
                                 <td>
                                     <input type="text" name="target_total" id="target_total" placeholder="Total" class="form-control numeric" readonly>
@@ -137,8 +137,126 @@
                             </tr>
                             <tr>
                                 <td class="font-bold">Anggaran</td>
+                                <td>
+                                    <input type="text" name="anggaran_tw1" id="anggaran_tw1" placeholder="Triwulan 1" class="form-control numeric" readonly>
+                                </td>
+                                <td>
+                                    <input type="text" name="anggaran_tw2" id="anggaran_tw2" placeholder="Triwulan 2" class="form-control numeric" readonly>
+                                </td>
+                                <td>
+                                    <input type="text" name="anggaran_tw3" id="anggaran_tw3" placeholder="Triwulan 3" class="form-control numeric" readonly>
+                                </td>
+                                <td>
+                                    <input type="text" name="anggaran_tw4" id="anggaran_tw4" placeholder="Triwulan 4" class="form-control numeric" readonly>
+                                </td>
+                                <td>
+                                    <input type="text" name="anggaran_total" id="anggaran_total" placeholder="Total" class="form-control numeric" readonly>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold">Unit Kerja Pelaksana</td>
+                                <td colspan="2">
+                                    <input type="text" name="pelaksana" id="pelaksana" placeholder="Pelaksana" class="form-control" readonly>
+                                </td>
+                                <td colspan="3">
+                                    <input type="text" name="koordinator" id="koordinator" placeholder="Koordinator" class="form-control" readonly>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold">Realisasi Output <span class="text-danger">*</span></td>
                                 <td colspan="5">
-                                    <input type="text" name="anggaran" id="anggaran" placeholder="Masukan Data Anggaran" class="form-control digit" readonly>
+                                    <input type="text" name="realisasi_output" id="realisasi_output" placeholder="Realisasi Output" class="form-control">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold">Realisasi Anggaran <span class="text-danger">*</span></td>
+                                <td colspan="5">
+                                    <input type="text" name="realisasi_anggaran" id="realisasi_anggaran" placeholder="Realisasi Anggaran" class="form-control">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold">Capaian Anggaran <span class="text-danger">*</span></td>
+                                <td colspan="5">
+                                    <input type="text" name="capaian_anggaran" id="capaian_anggaran" placeholder="Capaian Anggaran" class="form-control">
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div> <!-- END: Modal Body -->
+                <!-- BEGIN: Modal Footer -->
+                <div class="modal-footer text-end"> 
+                    <button type="button" data-tw-dismiss="modal" class="btn btn-outline-secondary w-20 me-1">Cancel</button> 
+                    <button type="submit" class="btn btn-primary w-20 saveButton">Simpan</button> 
+                </div> <!-- END: Modal Footer -->
+            </form>
+        </div>
+    </div>
+</div> <!-- END: Modal Content -->
+
+{{-- Modal Form Monev Perencanaan --}}
+<div id="modal-monev_perencanaan" class="modal fade" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <!-- BEGIN: Modal Header -->
+            <div class="darkbg modal-header">
+                <h2 class="font-bold fw-medium fs-base me-auto" id="title">Tambah Monitoring dan Evaluasi Rencana Aksi</h2>
+            </div> <!-- END: Modal Header -->
+            <!-- BEGIN: Modal Body -->
+            <form action="{{ url('rb-general/perencanaan/'.$target->perencanaan->id.'/'.$target->id.'/monev/simpanPerencanaan') }}" id="form-monev" method="post">
+                @csrf
+                <input type="hidden" name="output_id" id="output_id">
+                <div class="modal-body grid columns-12 gap-4 gap-y-3">
+                    <div class="g-col-12">
+                        <table>
+                            <tr>
+                                <td class="font-bold w-44">Rencana Aksi</td>
+                                <td colspan="5">
+                                    <textarea rows="5" name="rencana_aksi" id="rencana_aksi" placeholder="Penjelasan Rencana Aksi" class="form-control" readonly></textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold">Output</td>
+                                <td colspan="2">
+                                    <input type="text" name="satuan_output" id="satuan_output" placeholder="Satuan Output" class="form-control" readonly>
+                                </td>
+                                <td colspan="3">
+                                    <input type="text" name="indikator_output" id="indikator_output" placeholder="Indikator Output" class="form-control" readonly>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold">Target Output</td>
+                                <td>
+                                    <input type="text" name="target_tw1" id="target_tw1" placeholder="Triwulan 1" class="form-control numeric" readonly>
+                                </td>
+                                <td>
+                                    <input type="text" name="target_tw2" id="target_tw2" placeholder="Triwulan 2" class="form-control numeric" readonly>
+                                </td>
+                                <td>
+                                    <input type="text" name="target_tw3" id="target_tw3" placeholder="Triwulan 3" class="form-control numeric" readonly>
+                                </td>
+                                <td>
+                                    <input type="text" name="target_tw4" id="target_tw4" placeholder="Triwulan 4" class="form-control numeric" readonly>
+                                </td>
+                                <td>
+                                    <input type="text" name="target_total" id="target_total" placeholder="Total" class="form-control numeric" readonly>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold">Anggaran</td>
+                                <td>
+                                    <input type="text" name="anggaran_tw1" id="anggaran_tw1" placeholder="Triwulan 1" class="form-control numeric" readonly>
+                                </td>
+                                <td>
+                                    <input type="text" name="anggaran_tw2" id="anggaran_tw2" placeholder="Triwulan 2" class="form-control numeric" readonly>
+                                </td>
+                                <td>
+                                    <input type="text" name="anggaran_tw3" id="anggaran_tw3" placeholder="Triwulan 3" class="form-control numeric" readonly>
+                                </td>
+                                <td>
+                                    <input type="text" name="anggaran_tw4" id="anggaran_tw4" placeholder="Triwulan 4" class="form-control numeric" readonly>
+                                </td>
+                                <td>
+                                    <input type="text" name="anggaran_total" id="anggaran_total" placeholder="Total" class="form-control numeric" readonly>
                                 </td>
                             </tr>
                             <tr>
@@ -186,10 +304,11 @@
 <script src="{{ asset('ext/jquery-validation/jquery.validate.min.js') }}"></script>
 <script src="{{ asset('ext/jquery-validation/localization/messages_id.min.js') }}"></script>
 <script src="{{ asset('ext') }}/jquery-inputmask/jquery.inputmask.bundle.js"></script>
+<script src="http://cdn.rawgit.com/ashl1/datatables-rowsgroup/v1.0.0/dataTables.rowsGroup.js"></script>
 <script>
     $(document).ready(function() {
         getData();
-        modal_rencana_aksi = tailwind.Modal.getInstance(document.querySelector("#modal-rencana_aksi"));
+        modal_monev = tailwind.Modal.getInstance(document.querySelector("#modal-monev"));
 
         $(".numeric").inputmask("decimal",{
             groupSeparator: "",
@@ -208,7 +327,7 @@
             min: 0,
         });
 
-        $('#form-rencana_aksi').validate({
+        $('#form-monev').validate({
             highlight: function (input) {
                 $(input).addClass('border-danger');
             },
@@ -238,10 +357,10 @@
                         $('.saveButton').prop('disabled', false);
                         if (data.success) {
                             Swal.fire('Selamat!', 'Data Rencana Aksi berhasil disimpan!', 'success');
-                            modal_rencana_aksi.hide();
+                            modal_monev.hide();
                         } else {
                             Swal.fire('Aduh!', 'Data Rencana Aksi gagal disimpan! Coba lagi nanti ya..', 'error');
-                            modal_rencana_aksi.hide();
+                            modal_monev.hide();
                         }
                         getData();
                     },
@@ -254,27 +373,19 @@
         });
     });
 
-    var rencana_aksi = $('#rencana_aksi-table').DataTable( {
+    var monev = $('#monev-table').DataTable( {
         responsive: true,
         processing: true,
         ordering: false,
-        ajax: {
-            url: "{{url('emptyDT')}}",
-        },
         columns: [
             {
-                data: null,
-                sortable: false, 
-                searchable: false,
-                render: function (data, type, row, meta) {
-                    return meta.row + meta.settings._iDisplayStart + 1;
-                }
+                data: 'no'
             },
-            { data: 'rencana_aksi' },
+            { data: 'nama_rencana_aksi' },
             { data: 'satuan_output' },
             { data: 'indikator_output' },
             { data: 'target_total' },
-            { data: 'anggaran' },
+            { data: 'anggaran_total' },
             { data: 'realisasi_output' },
             { data: 'realisasi_anggaran' },
             { data: 'capaian_anggaran' },
@@ -286,62 +397,32 @@
                 },
             },
         ],
-        columnDefs: [
-            {
-                targets: [9],
-                render: $.fn.dataTable.render.number('.', ',', 0, '')
-            }
-        ],
+        rowsGroup: [0,1] 
     }); 
 
     function getData() {
-        rencana_aksi.ajax.url("{{url('rb-general/perencanaan/'.$target->perencanaan->id.'/'.$target->id.'/rencana_aksi/getDatas')}}").load(null, false);
+        monev.ajax.url("{{url('rb-general/perencanaan/'.$target->perencanaan->id.'/'.$target->id.'/monev/getDatas')}}").load(null, false);
+    }
+
+    function monev() {
+        
+        $.getJSON("{{url('rb-general/perencanaan/'.$target->perencanaan->id.'/'.$target->id.')}}", function(data) {
+        });
     }
 
     function clearForm() {
-        $('#form-rencana_aksi').trigger('reset');
-        $('#target_tw1').val('0');
-        $('#target_tw2').val('0');
-        $('#target_tw3').val('0');
-        $('#target_tw4').val('0');
+        $('#form-monev').trigger('reset');
         $('#rencana_aksi_id').val('');
-    }
-
-    function tambah() {
-        clearForm();
-        $('.saveButton').prop('disabled', false);
-        modal_rencana_aksi.show();
-    }
-
-    function hitungTotal() {
-        if ($('#target_tw1').val() == '') {
-            $('#target_tw1').val(0);
-        }
-        if ($('#target_tw2').val() == '') {
-            $('#target_tw2').val(0);
-        }
-        if ($('#target_tw3').val() == '') {
-            $('#target_tw3').val(0);
-        }
-        if ($('#target_tw4').val() == '') {
-            $('#target_tw4').val(0);
-        }
-        tw1 = $('#target_tw1').val();
-        tw2 = $('#target_tw2').val();
-        tw3 = $('#target_tw3').val();
-        tw4 = $('#target_tw4').val();
-        total = parseFloat(tw1) + parseFloat(tw2) + parseFloat(tw3) + parseFloat(tw4);
-        $('#target_total').val(total);
     }
 
     function edit(id) {
         clearForm();
-        $('#rencana_aksi_id').val(id);
-        $('#title').html('Edit Monitoring dan Evaluasi Rencana Aksi');
+        $('#output_id').val(id);
+        $('#title').html('Monitoring dan Evaluasi Rencana Aksi');
         $('.saveButton').prop('disabled', true);
-        modal_rencana_aksi.show();
-        $.getJSON("{{url('rb-general/perencanaan/'.$target->perencanaan->id.'/'.$target->id.'/rencana_aksi/getData')}}/"+id, function(data) {
-            $('#rencana_aksi').val(data.rencana_aksi);
+        modal_monev.show();
+        $.getJSON("{{url('rb-general/perencanaan/'.$target->perencanaan->id.'/'.$target->id.'/monev/getData')}}/"+id, function(data) {
+            $('#rencana_aksi').val(data.rencana_aksi.rencana_aksi);
             $('#satuan_output').val(data.satuan_output);
             $('#indikator_output').val(data.indikator_output);
             $('#target_tw1').val(data.target_tw1);
@@ -349,7 +430,11 @@
             $('#target_tw3').val(data.target_tw3);
             $('#target_tw4').val(data.target_tw4);
             $('#target_total').val(data.target_total);
-            $('#anggaran').val(data.anggaran);
+            $('#anggaran_tw1').val(data.anggaran_tw1);
+            $('#anggaran_tw2').val(data.anggaran_tw2);
+            $('#anggaran_tw3').val(data.anggaran_tw3);
+            $('#anggaran_tw4').val(data.anggaran_tw4);
+            $('#anggaran_total').val(data.anggaran_total);
             $('#pelaksana').val(data.pelaksana);
             $('#koordinator').val(data.koordinator);
             $('#realisasi_output').val(data.realisasi_output);

@@ -7,7 +7,6 @@ use App\Models\GeneralPerencanaanTarget;
 use App\Models\GeneralRencanaAksi;
 use App\Models\GeneralRencanaAksiOutput;
 use App\Models\Indikator;
-use App\Models\Perencanaan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -193,6 +192,8 @@ class RBGeneralController extends Controller
             foreach ($rencana_aksi->output as $output) {
                 $output->no = $no;
                 $output->nama_rencana_aksi = $output->rencana_aksi->rencana_aksi;
+                $output->target_total = fnumber($output->target_total);
+                $output->anggaran_total = currency($output->anggaran_total);
                 $outputs[] = $output;
             }
             $no++;
@@ -317,28 +318,6 @@ class RBGeneralController extends Controller
         return view('rb-general.monev', compact('target'));
     }
 
-    public function monev_getDatas($perencanaan_id, $target_id)
-    {
-        $user = Auth::User();
-        $target = GeneralPerencanaanTarget::where('id', $target_id)->where('general_perencanaan_id', $perencanaan_id)
-            ->whereHas('perencanaan', function ($q) use ($user) {
-                $q->where('instansi_id', $user->instansi_id);
-            })->first();
-        $rencana_aksi = GeneralRencanaAksi::where('general_perencanaan_target_id', $target->id)->get();
-        return response()->json(['data' => $rencana_aksi]);
-    }
-
-    public function monev_getData($perencanaan_id, $target_id, $id)
-    {
-        $user = Auth::User();
-        $target = GeneralPerencanaanTarget::where('id', $target_id)->where('general_perencanaan_id', $perencanaan_id)
-            ->whereHas('perencanaan', function ($q) use ($user) {
-                $q->where('instansi_id', $user->instansi_id);
-            })->first();
-        $rencana_aksi = GeneralRencanaAksi::where('general_perencanaan_target_id', $target->id)->where('id', $id)->first();
-        return response()->json($rencana_aksi);
-    }
-
     public function monev_simpan($perencanaan_id, $target_id, Request $request)
     {
         $user = Auth::User();
@@ -350,14 +329,14 @@ class RBGeneralController extends Controller
             abort(403);
         }
         $success = false;
-        $rencana_aksi = GeneralRencanaAksi::where('general_perencanaan_target_id', $target->id)->where('id', $request->rencana_aksi_id)->first();
-        if (!$rencana_aksi) {
+        $output = GeneralRencanaAksiOutput::find($request->output_id);
+        if (!$output) {
             abort(404);
         }
-        $rencana_aksi->realisasi_output = $request->realisasi_output;
-        $rencana_aksi->realisasi_anggaran = $request->realisasi_anggaran;
-        $rencana_aksi->capaian_anggaran = $request->capaian_anggaran;
-        if ($rencana_aksi->save()) {
+        $output->realisasi_output = $request->realisasi_output;
+        $output->realisasi_anggaran = $request->realisasi_anggaran;
+        $output->capaian_anggaran = $request->capaian_anggaran;
+        if ($output->save()) {
             $success = true;
         }
         return response()->json(['success' => $success]);
@@ -406,7 +385,6 @@ class RBGeneralController extends Controller
                 $key++;
             }
         }
-        //dd(compact('datas'));
         return view('rb-general.rekap_data', compact('datas'));
     }
 }

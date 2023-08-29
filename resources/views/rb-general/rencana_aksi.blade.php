@@ -253,6 +253,7 @@
     var nom = 0;            
     var nama = "";
     var rencana_aksi = $('#rencana_aksi-table').DataTable( {
+        responsive: true,
         processing: true,
         ordering: false,
         columns: [
