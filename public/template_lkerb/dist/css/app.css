@@ -2355,7 +2355,7 @@ select{
       }
 @media (min-width: 1024px) {
         .modal .modal-dialog.modal-xl {
-          width: 900px;
+          width: 1000px;
         }
       }
 .modal .modal-dialog .modal-content{
