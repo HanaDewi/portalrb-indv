@@ -374,15 +374,27 @@ class RBGeneralController extends Controller
                 foreach ($perencanaan->target as $target) {
                     if (count($target->rencana_aksi)) {
                         foreach ($target->rencana_aksi as $rencana_aksi) {
-                            $datas[$key]['perencanaan'] = $perencanaan;
-                            $datas[$key]['target'] = $target;
-                            $datas[$key]['rencana_aksi'] = $rencana_aksi;
-                            $key++;
+                            if (count($rencana_aksi->output)) {
+                                foreach ($rencana_aksi->output as $output) {
+                                    $datas[$key]['perencanaan'] = $perencanaan;
+                                    $datas[$key]['target'] = $target;
+                                    $datas[$key]['rencana_aksi'] = $rencana_aksi;
+                                    $datas[$key]['output'] = $output;
+                                    $key++;
+                                }
+                            } else {
+                                $datas[$key]['perencanaan'] = $perencanaan;
+                                $datas[$key]['target'] = $target;
+                                $datas[$key]['rencana_aksi'] = $rencana_aksi;
+                                $datas[$key]['output'] = new GeneralRencanaAksiOutput();
+                                $key++;
+                            }
                         }
                     } else {
                         $datas[$key]['perencanaan'] = $perencanaan;
                         $datas[$key]['target'] = $target;
                         $datas[$key]['rencana_aksi'] = new GeneralRencanaAksi();
+                        $datas[$key]['output'] = new GeneralRencanaAksiOutput();
                         $key++;
                     }
                 }
@@ -390,6 +402,7 @@ class RBGeneralController extends Controller
                 $datas[$key]['perencanaan'] = $perencanaan;
                 $datas[$key]['target'] = new GeneralPerencanaanTarget();
                 $datas[$key]['rencana_aksi'] = new GeneralRencanaAksi();
+                $datas[$key]['output'] = new GeneralRencanaAksiOutput();
                 $key++;
             }
         }

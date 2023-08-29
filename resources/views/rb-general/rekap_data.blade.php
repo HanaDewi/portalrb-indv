@@ -13,7 +13,6 @@
                     <thead class="table-dark font-bold">
                         <tr>
                             <th class="w-5" rowspan="2">No.</th>
-                            <th class="w-5" rowspan="2">No.</th>
                             <th class="w-10" rowspan="2">Kegiatan Utama</th>
                             <th class="w-10" rowspan="2">Indikator</th>
                             <th class="w-10" rowspan="2">Realisasi Indikator</th>
@@ -24,7 +23,7 @@
                             <th class="w-15" rowspan="2">Rencana Aksi</th>
                             <th class="w-5" colspan="2" style="text-align: center;">Output</th>
                             <th class="w-5" colspan="5" style="text-align: center;">Target</th>
-                            <th class="w-5" rowspan="2">Anggaran</th>
+                            <th class="w-5" colspan="5" style="text-align: center;">Anggaran</th>
                             <th class="w-5" colspan="2" style="text-align: center;">Unit Satuan Kerja Pelaksana</th>
                             <th class="w-5" colspan="2" style="text-align: center;">Realisasi</th>
                             <th class="w-5" rowspan="2">Capaian Anggaran</th>
@@ -37,6 +36,11 @@
                             <th>TW3</th>
                             <th>TW4</th>
                             <th>Total</th>
+                            <th>TW1</th>
+                            <th>TW2</th>
+                            <th>TW3</th>
+                            <th>TW4</th>
+                            <th>Total</th>
                             <th>Koordinator</th>
                             <th>Pelaksana</th>
                             <th>Output</th>
@@ -44,10 +48,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                         
-
-
-                                  @php 
+                    @php 
                         $no = 0; 
                         $nama = '';
                     @endphp
@@ -58,10 +59,8 @@
                                 $no++;
                             }
                         @endphp
-
                             <tr>
-                                 <td class="font-bold">{{ $no }}</td>
-                                    <td class="font-bold">{{ $no }}</td>
+                                <td class="font-bold">{{ $no }}</td>
                                 <td class="font-bold">{{ $data['perencanaan']->kegiatan_utama->nama }}</td>
                                 <td>{{ $data['perencanaan']->indikator->nama }}</td>
                                 <td>{{ $data['perencanaan']->realisasi_indikator }}</td>
@@ -94,46 +93,57 @@
                                     {{ $data['rencana_aksi']->rencana_aksi }}
                                 </td>
                                 <td>
-                                    {{ $data['rencana_aksi']->satuan_output }}
+                                    {{ $data['output']->satuan_output }}
                                 </td>
                                 <td>
-                                    {{ $data['rencana_aksi']->indikator_output }}
+                                    {{ $data['output']->indikator_output }}
                                 </td>
                                 <td>
-                                    {{ $data['rencana_aksi']->target_tw1 }}
+                                    {{ fnumber($data['output']->target_tw1) }}
                                 </td>
                                 <td>
-                                    {{ $data['rencana_aksi']->target_tw2 }}
+                                    {{ fnumber($data['output']->target_tw2) }}
                                 </td>
                                 <td>
-                                    {{ $data['rencana_aksi']->target_tw3 }}
+                                    {{ fnumber($data['output']->target_tw3) }}
                                 </td>
                                 <td>
-                                    {{ $data['rencana_aksi']->target_tw4 }}
+                                    {{ fnumber($data['output']->target_tw4) }}
                                 </td>
                                 <td>
-                                    {{ $data['rencana_aksi']->target_total }}
+                                    {{ fnumber($data['output']->target_total) }}
                                 </td>
                                 <td>
-                                    {{ $data['rencana_aksi']->anggaran }}
+                                    {{ currency($data['output']->anggaran_tw1) }}
                                 </td>
                                 <td>
-                                    {{ $data['rencana_aksi']->koordinator }}
+                                    {{ currency($data['output']->anggaran_tw2) }}
                                 </td>
                                 <td>
-                                    {{ $data['rencana_aksi']->pelaksana }}
+                                    {{ currency($data['output']->anggaran_tw3) }}
                                 </td>
                                 <td>
-                                    {{ $data['rencana_aksi']->realisasi_output }}
+                                    {{ currency($data['output']->anggaran_tw4) }}
                                 </td>
                                 <td>
-                                    {{ $data['rencana_aksi']->realisasi_anggaran }}
+                                    {{ currency($data['output']->anggaran_total) }}
                                 </td>
                                 <td>
-                                    {{ $data['rencana_aksi']->capaian_anggaran }}
+                                    {{ $data['output']->koordinator }}
+                                </td>
+                                <td>
+                                    {{ $data['output']->pelaksana }}
+                                </td>
+                                <td>
+                                    {{ $data['output']->realisasi_output }}
+                                </td>
+                                <td>
+                                    {{ $data['output']->realisasi_anggaran }}
+                                </td>
+                                <td>
+                                    {{ $data['output']->capaian_anggaran }}
                                 </td>
                             </tr>
-                          
                         @endforeach
                     </tbody>
                 </table>
@@ -145,28 +155,13 @@
 @push('js')
     <script src="http://cdn.rawgit.com/ashl1/datatables-rowsgroup/v1.0.0/dataTables.rowsGroup.js"></script>
     <script>
-       
- $(function() {
+        $(function() {
             $("#perencanaan").DataTable({
                 'scrollX': true,
                 'orderFixed': [0, 'asc'],
                 'autoWidth': false,
-                'rowsGroup': [2, 1, 3, 4, 5, 6,7],
-                
-                "columnDefs": [{ "visible": false, "targets": 0 }, 
-              ],
-
-       
-
-
+                'rowsGroup': [0, 1, 2, 3, 4, 5, 6, 7, 8],
             });
-
-
         });
-
-
     </script>
-
-
-
 @endpush

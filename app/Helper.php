@@ -112,3 +112,13 @@ function kegiatanUtama()
 {
     return KegiatanUtama::pluck('nama', 'id');
 }
+
+function currency($number)
+{
+    return $number > 0 ? 'Rp. '.number_format($number, 0, ',', '.') : '';
+}
+
+function fnumber($number, $digit = 0)
+{
+    return number_format($number, $digit, ',', '.');
+}
