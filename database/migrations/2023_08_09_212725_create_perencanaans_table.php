@@ -19,9 +19,6 @@ return new class extends Migration
             $table->integer('baseline_tahun');
             $table->string('baseline_target');
             $table->string('baseline_realisasi');
-            $table->string('realisasi_indikator')->nullable();
-            $table->string('capaian_indikator')->nullable();
-            $table->string('catatan')->nullable();
             $table->timestamps();
         });
     }

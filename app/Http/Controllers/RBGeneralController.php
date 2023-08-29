@@ -318,6 +318,39 @@ class RBGeneralController extends Controller
         return view('rb-general.monev', compact('target'));
     }
 
+    public function monev_getTarget($perencanaan_id, $target_id)
+    {
+        $user = Auth::User();
+        $target = GeneralPerencanaanTarget::where('id', $target_id)->where('general_perencanaan_id', $perencanaan_id)
+            ->whereHas('perencanaan', function ($q) use ($user) {
+                $q->where('instansi_id', $user->instansi_id);
+            })->first();
+        if (!$target) {
+            abort(404);
+        }
+        return response()->json($target);
+    }
+
+    public function monev_simpanTarget($perencanaan_id, $target_id, Request $request)
+    {
+        $user = Auth::User();
+        $target = GeneralPerencanaanTarget::where('id', $target_id)->where('general_perencanaan_id', $perencanaan_id)
+            ->whereHas('perencanaan', function ($q) use ($user) {
+                $q->where('instansi_id', $user->instansi_id);
+            })->first();
+        if (!$target) {
+            abort(403);
+        }
+        $success = false;
+        $target->realisasi_indikator = $request->realisasi_indikator;
+        $target->capaian_indikator = $request->capaian_indikator;
+        $target->catatan = $request->catatan;
+        if ($target->save()) {
+            $success = true;
+        }
+        return response()->json(compact('success', 'target'));
+    }
+
     public function monev_simpan($perencanaan_id, $target_id, Request $request)
     {
         $user = Auth::User();

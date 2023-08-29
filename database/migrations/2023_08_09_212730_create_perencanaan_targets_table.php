@@ -16,6 +16,9 @@ return new class extends Migration
             $table->foreignId('general_perencanaan_id');
             $table->integer('tahun');
             $table->string('target');
+            $table->string('realisasi_indikator')->nullable();
+            $table->string('capaian_indikator')->nullable();
+            $table->string('catatan')->nullable();
             $table->timestamps();
         });
     }
