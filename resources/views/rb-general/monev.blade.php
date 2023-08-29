@@ -109,75 +109,111 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="font-bold">Output</td>
-                                <td colspan="2">
-                                    <input type="text" name="satuan_output" id="satuan_output" placeholder="Satuan Output" class="form-control" readonly>
+                                <td class="font-bold">Satuan Output</td>
+                                <td colspan="5">
+                                    <input type="text" name="satuan_output" id="satuan_output" placeholder="Satuan Output" class="form-control mt-4" readonly>
                                 </td>
-                                <td colspan="3">
-                                    <input type="text" name="indikator_output" id="indikator_output" placeholder="Indikator Output" class="form-control" readonly>
+                            </tr>
+                            <tr>
+                                <td class="font-bold">Indikator Output</td>
+                                <td colspan="5">
+                                    <input type="text" name="indikator_output" id="indikator_output" placeholder="Indikator Output" class="form-control mt-4" readonly>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="font-bold">Target Output</td>
                                 <td>
-                                    <input type="text" name="target_tw1" id="target_tw1" placeholder="Triwulan 1" class="form-control numeric" readonly>
+                                    <div class="input-group mt-4 mr-2">
+                                        <div class="input-group-text">TW1</div>
+                                        <input type="text" name="target_tw1" id="target_tw1" placeholder="Triwulan 1" class="form-control numeric" readonly>
+                                    </div>    
                                 </td>
                                 <td>
-                                    <input type="text" name="target_tw2" id="target_tw2" placeholder="Triwulan 2" class="form-control numeric" readonly>
+                                    <div class="input-group mt-4 mr-2">
+                                        <div class="input-group-text">TW2</div>
+                                        <input type="text" name="target_tw2" id="target_tw2" placeholder="Triwulan 2" class="form-control numeric" readonly>
+                                    </div>
                                 </td>
                                 <td>
-                                    <input type="text" name="target_tw3" id="target_tw3" placeholder="Triwulan 3" class="form-control numeric" readonly>
+                                    <div class="input-group mt-4 mr-2">
+                                        <div class="input-group-text">TW3</div>
+                                        <input type="text" name="target_tw3" id="target_tw3" placeholder="Triwulan 3" class="form-control numeric" readonly>
+                                    </div>
                                 </td>
                                 <td>
-                                    <input type="text" name="target_tw4" id="target_tw4" placeholder="Triwulan 4" class="form-control numeric" readonly>
+                                    <div class="input-group mt-4 mr-2">
+                                        <div class="input-group-text">TW4</div>
+                                        <input type="text" name="target_tw4" id="target_tw4" placeholder="Triwulan 4" class="form-control numeric" readonly>
+                                    </div>
                                 </td>
                                 <td>
-                                    <input type="text" name="target_total" id="target_total" placeholder="Total" class="form-control numeric" readonly>
+                                    <div class="input-group mt-4">
+                                        <div class="input-group-text">Total</div>
+                                        <input type="text" name="target_total" id="target_total" placeholder="Total" class="form-control numeric" readonly>
+                                    </div>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="font-bold">Anggaran</td>
                                 <td>
-                                    <input type="text" name="anggaran_tw1" id="anggaran_tw1" placeholder="Triwulan 1" class="form-control numeric" readonly>
+                                    <div class="input-group mt-4 mr-2">
+                                        <div class="input-group-text">TW1</div>
+                                        <input type="text" name="anggaran_tw1" id="anggaran_tw1" placeholder="Triwulan 1" class="form-control numeric" readonly>
+                                    </div>
                                 </td>
                                 <td>
-                                    <input type="text" name="anggaran_tw2" id="anggaran_tw2" placeholder="Triwulan 2" class="form-control numeric" readonly>
+                                    <div class="input-group mt-4 mr-2">
+                                        <div class="input-group-text">TW2</div>
+                                        <input type="text" name="anggaran_tw2" id="anggaran_tw2" placeholder="Triwulan 2" class="form-control numeric" readonly>
+                                    </div>
                                 </td>
                                 <td>
-                                    <input type="text" name="anggaran_tw3" id="anggaran_tw3" placeholder="Triwulan 3" class="form-control numeric" readonly>
+                                    <div class="input-group mt-4 mr-2">
+                                        <div class="input-group-text">TW3</div>
+                                        <input type="text" name="anggaran_tw3" id="anggaran_tw3" placeholder="Triwulan 3" class="form-control numeric" readonly>
+                                    </div>
                                 </td>
                                 <td>
-                                    <input type="text" name="anggaran_tw4" id="anggaran_tw4" placeholder="Triwulan 4" class="form-control numeric" readonly>
+                                    <div class="input-group mt-4 mr-2">
+                                        <div class="input-group-text">TW4</div>
+                                        <input type="text" name="anggaran_tw4" id="anggaran_tw4" placeholder="Triwulan 4" class="form-control numeric" readonly>
+                                    </div>
                                 </td>
                                 <td>
-                                    <input type="text" name="anggaran_total" id="anggaran_total" placeholder="Total" class="form-control numeric" readonly>
+                                    <div class="input-group mt-4 mr-2">
+                                        <div class="input-group-text">Total</div>
+                                        <input type="text" name="anggaran_total" id="anggaran_total" placeholder="Total" class="form-control numeric" readonly>
+                                    </div>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="font-bold">Unit Kerja Pelaksana</td>
-                                <td colspan="2">
-                                    <input type="text" name="pelaksana" id="pelaksana" placeholder="Pelaksana" class="form-control" readonly>
+                                <td colspan="5">
+                                    <input type="text" name="pelaksana" id="pelaksana" placeholder="Pelaksana" class="form-control mt-4" readonly>
                                 </td>
-                                <td colspan="3">
-                                    <input type="text" name="koordinator" id="koordinator" placeholder="Koordinator" class="form-control" readonly>
+                            </tr>
+                            <tr>
+                                <td class="font-bold">Koordinator Pelaksana</td>
+                                <td colspan="5">
+                                    <input type="text" name="koordinator" id="koordinator" placeholder="Koordinator" class="form-control mt-4" readonly>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="font-bold">Realisasi Output <span class="text-danger">*</span></td>
                                 <td colspan="5">
-                                    <input type="text" name="realisasi_output" id="realisasi_output" placeholder="Realisasi Output" class="form-control">
+                                    <input type="text" name="realisasi_output" id="realisasi_output" placeholder="Realisasi Output" class="form-control mt-4">
                                 </td>
                             </tr>
                             <tr>
                                 <td class="font-bold">Realisasi Anggaran <span class="text-danger">*</span></td>
                                 <td colspan="5">
-                                    <input type="text" name="realisasi_anggaran" id="realisasi_anggaran" placeholder="Realisasi Anggaran" class="form-control">
+                                    <input type="text" name="realisasi_anggaran" id="realisasi_anggaran" placeholder="Realisasi Anggaran" class="form-control mt-4">
                                 </td>
                             </tr>
                             <tr>
                                 <td class="font-bold">Capaian Anggaran <span class="text-danger">*</span></td>
                                 <td colspan="5">
-                                    <input type="text" name="capaian_anggaran" id="capaian_anggaran" placeholder="Capaian Anggaran" class="form-control">
+                                    <input type="text" name="capaian_anggaran" id="capaian_anggaran" placeholder="Capaian Anggaran" class="form-control mt-4">
                                 </td>
                             </tr>
                         </table>
