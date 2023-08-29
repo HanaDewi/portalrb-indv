@@ -104,59 +104,114 @@
                         <table class="table table-noborder">
                             <input type="hidden" name="target_output[0][rencana_aksi_output_id]" id="rencana_aksi_output_id">
                             <tr>
-                                <td class="font-bold w-44">Output <span class="text-danger">*</span></td>
-                                <td colspan="2">
+                                <td class="font-bold w-44">Satuan Output<span class="text-danger">*</span></td>
+                                <td colspan="5">
                                     <input type="text" name="target_output[0][satuan_output]" id="satuan_output0" placeholder="Satuan Output" class="form-control" required>
                                 </td>
-                                <td colspan="3">
+                                
+                            </tr>
+
+                              <tr>
+                                <td class="font-bold w-44">Indikator Output <span class="text-danger">*</span></td>
+                                
+                                <td colspan="5">
+                                	<div class="mt-4">
                                     <input type="text" name="target_output[0][indikator_output]" id="indikator_output0" placeholder="Indikator Output" class="form-control" required>
+                                    </div>
                                 </td>
                             </tr>
+
+
+
                             <tr>
                                 <td class="font-bold">Target Output <span class="text-danger">*</span></td>
                                 <td>
+																
+                                	<div class="input-group mt-4 mr-2">
+                                       <div class="input-group-text">TW1</div>
                                     <input type="text" name="target_output[0][target_tw1]" id="target_tw10" placeholder="Triwulan 1" class="form-control digit" onkeyup="hitungTotal(0);" required>
+                                     </div>
                                 </td>
                                 <td>
+                                		<div class="input-group mt-4 mr-2">
+                                       <div class="input-group-text">TW2</div>
                                     <input type="text" name="target_output[0][target_tw2]" id="target_tw20" placeholder="Triwulan 2" class="form-control digit" onkeyup="hitungTotal(0);" required>
+                                </div>
                                 </td>
                                 <td>
+                                		<div class="input-group mt-4 mr-2">
+                                       <div class="input-group-text">TW3</div>
                                     <input type="text" name="target_output[0][target_tw3]" id="target_tw30" placeholder="Triwulan 3" class="form-control digit" onkeyup="hitungTotal(0);" required>
+                                </div>
                                 </td>
                                 <td>
+                                		<div class="input-group mt-4 mr-2">
+                                       <div class="input-group-text">TW4</div>
                                     <input type="text" name="target_output[0][target_tw4]" id="target_tw40" placeholder="Triwulan 4" class="form-control digit" onkeyup="hitungTotal(0);" required>
+                                </div>
                                 </td>
                                 <td>
+                                	<div class="input-group mt-4">
+                                       <div class="input-group-text">Total</div>
                                     <input type="text" name="target_output[0][target_total]" id="target_total0" placeholder="Total" class="form-control digit" readonly required>
+                                </div>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="font-bold">Anggaran <span class="text-danger">*</span></td>
                                 <td>
+                                	  	<div class="input-group mt-4 mr-2">
+                                       <div class="input-group-text">TW1</div>
                                     <input type="text" name="target_output[0][anggaran_tw1]" id="anggaran_tw10" placeholder="Triwulan 1" class="form-control digit" onkeyup="hitungTotalAnggaran(0);" required>
+                                </div>
                                 </td>
                                 <td>
+                                	  	<div class="input-group mt-4 mr-2">
+                                       <div class="input-group-text">TW2</div>
                                     <input type="text" name="target_output[0][anggaran_tw2]" id="anggaran_tw20" placeholder="Triwulan 2" class="form-control digit" onkeyup="hitungTotalAnggaran(0);" required>
+                                </div>
                                 </td>
                                 <td>
+                                	  	<div class="input-group mt-4 mr-2">
+                                       <div class="input-group-text">TW3</div>
                                     <input type="text" name="target_output[0][anggaran_tw3]" id="anggaran_tw30" placeholder="Triwulan 3" class="form-control digit" onkeyup="hitungTotalAnggaran(0);" required>
+                                </div>
                                 </td>
                                 <td>
+                                	  	<div class="input-group mt-4 mr-2">
+                                       <div class="input-group-text">TW4</div>
                                     <input type="text" name="target_output[0][anggaran_tw4]" id="anggaran_tw40" placeholder="Triwulan 4" class="form-control digit" onkeyup="hitungTotalAnggaran(0);" required>
+                                </div>
                                 </td>
                                 <td>
+                                	<div class="input-group mt-4">
+                                       <div class="input-group-text">Total</div>
                                     <input type="text" name="target_output[0][anggaran_total]" id="anggaran_total0" placeholder="Total" class="form-control digit" readonly required>
+                                </div>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="font-bold">Unit Kerja Pelaksana <span class="text-danger">*</span></td>
-                                <td colspan="2">
-                                    <input type="text" name="target_output[0][pelaksana]" id="pelaksana0" placeholder="Pelaksana" class="form-control" required>
+                                <td colspan="5">
+                               
+                                    <input type="text" name="target_output[0][pelaksana]" id="pelaksana0" placeholder="Pelaksana" class="form-control mt-4" required>
+                               
                                 </td>
-                                <td colspan="3">
-                                    <input type="text" name="target_output[0][koordinator]" id="koordinator0" placeholder="Koordinator" class="form-control" required>
+                                
+                            </tr>
+
+
+                             <tr>
+                                <td class="font-bold">Koordinator Pelaksana <span class="text-danger">*</span></td>
+                               
+                                <td colspan="5">
+                                    <input type="text" name="target_output[0][koordinator]" id="koordinator0" placeholder="Koordinator" class="form-control mt-4" required>
                                 </td>
                             </tr>
+
+
+
+
                             <tr>
                                 <td colspan="6">&nbsp;</td>
                             </tr>
@@ -258,7 +313,10 @@
         ordering: false,
         columns: [
             {
-                data: 'no'
+               data: 'rencana_aksi.rencana_aksi',  
+                    render: function (data, type, row, meta) {      
+                    if (nama!=data){nama=data,nom++}        
+                    return nom; }
             },
             { data: 'rencana_aksi.rencana_aksi' },
             { data: 'satuan_output' },
