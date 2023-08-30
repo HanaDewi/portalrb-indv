@@ -456,6 +456,8 @@
             // 'orderFixed': [0, 'asc'],
             'autoWidth': false,
             'rowsGroup': [0, 1, 2, 3],
+            paging: false,
+            bInfo: false,
         });
     });
 </script>

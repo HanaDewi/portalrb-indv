@@ -9,17 +9,26 @@
                 <h2 class="font-bold text-base mr-auto"> Data RB General - Rekap Data</h2>
             </div>
             <div class="lg:col-span-12 p-5 border-b border-slate-200/60">
-                <table id="perencanaan" class="table table-bordered table-striped mt-5" cellspacing="0" width="100%">
+                @if (in_array(auth()->user()->level, ['admin', 'evaluator']))
+                <div class="p-5">
+                    <form>
+                        <label for="kegiatan_utama_id" class="form-label mt-2">Instansi</label>
+                        {!! Form::select('instansi_id', instansis(), $instansi_id, ['class' => 'mt-2', 'id' => 'instansi_id', 'data-placeholder' => 'Pilih Kegiatan Utama', 'required']) !!}
+                        <button type="submit" class="btn btn-success saveButton">Lihat Data</button>
+                    </form>
+                </div>
+                @endif
+                <table id="perencanaan" class="table table-bordered table-striped" cellspacing="0" width="100%">
                     <thead class="table-dark font-bold">
                         <tr>
                             <th class="w-5" rowspan="2">No.</th>
                             <th class="w-10" rowspan="2">Kegiatan Utama</th>
                             <th class="w-10" rowspan="2">Indikator</th>
+                            <th rowspan="2">Baseline</th>
+                            <th class="w-5" rowspan="2">Tahun Target</th>
                             <th class="w-10" rowspan="2">Realisasi Indikator</th>
                             <th class="w-10" rowspan="2">Capaian Indikator</th>
                             <th class="w-10" rowspan="2">Catatan</th>
-                            <th rowspan="2">Baseline</th>
-                            <th class="w-5" rowspan="2">Tahun Target</th>
                             <th class="w-15" rowspan="2">Rencana Aksi</th>
                             <th class="w-5" colspan="2" style="text-align: center;">Output</th>
                             <th class="w-5" colspan="5" style="text-align: center;">Target</th>
@@ -63,9 +72,6 @@
                                 <td class="font-bold">{{ $no }}</td>
                                 <td class="font-bold">{{ $data['perencanaan']->kegiatan_utama->nama }}</td>
                                 <td>{{ $data['perencanaan']->indikator->nama }}</td>
-                                <td>{{ $data['perencanaan']->realisasi_indikator }}</td>
-                                <td>{{ $data['perencanaan']->capaian_indikator }}</td>
-                                <td>{{ $data['perencanaan']->catatan }}</td>
                                 <td>
                                     <table class="table table-noborder w-full">
                                         <tr>
@@ -89,6 +95,9 @@
                                                 {{ $data['target']->tahun }}: </span> {{ $data['target']->target }}</div>
                                     @endif
                                 </td>
+                                <td>{{ $data['target']->realisasi_indikator }}</td>
+                                <td>{{ $data['target']->capaian_indikator }}</td>
+                                <td>{{ $data['target']->catatan }}</td>
                                 <td>
                                     {{ $data['rencana_aksi']->rencana_aksi }}
                                 </td>

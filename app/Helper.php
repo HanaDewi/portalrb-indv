@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Instansi;
 use App\Models\KegiatanUtama;
 use Carbon\Carbon;
 
@@ -121,4 +122,9 @@ function currency($number)
 function fnumber($number, $digit = 0)
 {
     return number_format($number, $digit, ',', '.');
+}
+
+function instansis()
+{
+    return Instansi::pluck('nama', 'id');
 }

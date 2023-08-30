@@ -375,12 +375,20 @@ class RBGeneralController extends Controller
         return response()->json(['success' => $success]);
     }
 
-    public function rekap_data()
+    public function rekap_data(Request $request)
     {
         $user = Auth::User();
+        if ($request->instansi_id && in_array($user->level, ['admin', 'evaluator'])) {
+            $instansi_id = $request->instansi_id;
+            $perencanaans = GeneralPerencanaan::where('instansi_id', $instansi_id)->orderBy('kegiatan_utama_id')->orderBy('indikator_id')->get();
+        } else if ($user->instansi_id) {
+            $instansi_id = $user->instansi_id;
+            $perencanaans = GeneralPerencanaan::where('instansi_id', $instansi_id)->orderBy('kegiatan_utama_id')->orderBy('indikator_id')->get();
+        } else {
+            $perencanaans = [];
+        }
         $key = 0;
         $datas = [];
-        $perencanaans = GeneralPerencanaan::where('instansi_id', $user->instansi_id)->orderBy('kegiatan_utama_id')->orderBy('indikator_id')->get();
         foreach ($perencanaans as $perencanaan) {
             if (count($perencanaan->target)) {
                 foreach ($perencanaan->target as $target) {
@@ -418,6 +426,6 @@ class RBGeneralController extends Controller
                 $key++;
             }
         }
-        return view('rb-general.rekap_data', compact('datas'));
+        return view('rb-general.rekap_data', compact('datas', 'instansi_id'));
     }
 }
