@@ -431,7 +431,7 @@
     function edit_monev() {
         $.getJSON("{{url('rb-general/perencanaan/'.$target->perencanaan->id.'/'.$target->id.'/monev/getTarget')}}", function(data) {
             $('#realisasi_indikator').val(data.realisasi_indikator);
-            $('#realisasi_capaian').val(data.realisasi_capaian);
+            $('#capaian_indikator').val(data.capaian_indikator);
             $('#catatan').val(data.catatan);
             modal_monev_perencanaan.show();
         });

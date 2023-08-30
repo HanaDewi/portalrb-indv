@@ -29,12 +29,14 @@
                         $nama = '';
                     @endphp
                     @foreach ($indikators as $indikator)
-                        @php 
-                            if ($nama != $indikator->kegiatan_utama->nama) {
-                                $nama = $indikator->kegiatan_utama->nama;
-                                $no++;
-                            }
-                        @endphp
+                    @php 
+                        if ($nama != $indikator->kegiatan_utama->nama) {
+                            $nama = $indikator->kegiatan_utama->nama;
+                            $no++;
+                        }
+                    @endphp
+                    @if (count($indikator->target))
+                    @foreach ($indikator->target as $target)
                     <tr>
                         <td class="font-bold">{{ $no }}</td>
                         <td class="font-bold" id="kegiatan_utama{{ $indikator->id }}">{{ $nama }}</td>
@@ -56,9 +58,61 @@
                                 </tr>
                             </table>
                             @endif
+                            <button onclick="atur_baseline('{{ $indikator->kegiatan_utama_id }}', '{{ $indikator->id }}');" class="btn btn-warning btn-sm w-full mb-2"><i data-lucide="edit" class="w-4 h-4 mr-1"></i>Baseline</button>
+                            <button onclick="atur_target('{{ $indikator->kegiatan_utama_id }}', '{{ $indikator->id }}');" class="btn btn-primary btn-sm w-full mb-2"><i data-lucide="edit" class="w-4 h-4 mr-1"></i>Target</button>
+                        </td>
+                        <td>
+                            <div class="flex items-center"><i data-lucide="bar-chart" class="w-4 h-4 mr-1"></i><span class="font-bold mr-1"> {{ $target->tahun }}: </span> {{ $target->target }}</div>
+                        </td>
+                        <td>{{ $target->realisasi_indikator }}</td>
+                        <td>{{ $target->capaian_indikator }}</td>
+                        <td>{{ $target->catatan }}</td>
+                        <td>
+                            <a href="{{ url('rb-general/perencanaan/'.$indikator->perencanaan_id.'/'.$target->id.'/rencana_aksi') }}" class="btn btn-primary btn-sm w-full mb-2">
+                                <i data-lucide="edit" class="w-4 h-4 mr-1"></i>
+                                Renaksi
+                                <span class="text-xs px-1 rounded-full bg-warning text-white badge">{{ count($target->rencana_aksi) }}</span>
+                            </a>
+                            <br>
+                            <a href="{{ url('rb-general/perencanaan/'.$indikator->perencanaan_id.'/'.$target->id.'/monev') }}" class="btn btn-dark btn-sm w-full"><i data-lucide="edit" class="w-4 h-4 mr-1"></i>Monev</a>
+                            {{-- <button onclick="atur_monev('{{ $indikator->kegiatan_utama_id }}', '{{ $indikator->id }}');" class="btn btn-dark btn-sm w-full mb-2"><i data-lucide="edit" class="w-4 h-4 mr-1"></i>Monev</button> --}}
+                        </td>
+                    </tr>
+                    @endforeach
+                    @else
+                    <tr>
+                        <td class="font-bold">{{ $no }}</td>
+                        <td class="font-bold" id="kegiatan_utama{{ $indikator->id }}">{{ $nama }}</td>
+                        <td id="indikator{{ $indikator->id }}">{{ $indikator->nama }}</td>
+                        <td>
+                            @if ($indikator->baseline_tahun)
+                            <table class="table table-noborder">
+                                <tr>
+                                    <td class="font-bold w-16">Tahun</td>
+                                    <td>: {{ $indikator->baseline_tahun }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="font-bold">Target</td>
+                                    <td>: {{ $indikator->baseline_target }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="font-bold">Realisasi</td>
+                                    <td>: {{ $indikator->baseline_realisasi }}</td>
+                                </tr>
+                            </table>
+                            @endif
+                            <button onclick="atur_baseline('{{ $indikator->kegiatan_utama_id }}', '{{ $indikator->id }}');" class="btn btn-warning btn-sm w-full mb-2"><i data-lucide="edit" class="w-4 h-4 mr-1"></i>Baseline</button>
                         </td>
                         <td>
                         @if (count($indikator->target))
+                            <button onclick="atur_target('{{ $indikator->kegiatan_utama_id }}', '{{ $indikator->id }}');" class="btn btn-primary btn-sm w-full mb-2"><i data-lucide="edit" class="w-4 h-4 mr-1"></i>Target</button>
+                        @else
+                        @endif
+                        </td>
+                        <td>{{ $indikator->realisasi_indikator }}</td>
+                        <td>{{ $indikator->capaian_indikator }}</td>
+                        <td>{{ $indikator->catatan }}</td>
+                        <td>
                             @foreach ($indikator->target as $key => $target)
                             @php
                                 $hr = $key > 0 ? '<hr class="mt-2 mb-2">' : '';
@@ -73,18 +127,10 @@
                             <br>
                             <a href="{{ url('rb-general/perencanaan/'.$indikator->perencanaan_id.'/'.$target->id.'/monev') }}" class="btn btn-dark btn-sm w-full"><i data-lucide="edit" class="w-4 h-4 mr-1"></i>Monev</a>
                             @endforeach
-                        @else
-                        @endif
-                        </td>
-                        <td>{{ $indikator->realisasi_indikator }}</td>
-                        <td>{{ $indikator->capaian_indikator }}</td>
-                        <td>{{ $indikator->catatan }}</td>
-                        <td>
-                            <button onclick="atur_baseline('{{ $indikator->kegiatan_utama_id }}', '{{ $indikator->id }}');" class="btn btn-warning btn-sm w-full mb-2"><i data-lucide="edit" class="w-4 h-4 mr-1"></i>Baseline</button>
-                            <button onclick="atur_target('{{ $indikator->kegiatan_utama_id }}', '{{ $indikator->id }}');" class="btn btn-primary btn-sm w-full mb-2"><i data-lucide="edit" class="w-4 h-4 mr-1"></i>Target</button>
-                            <button onclick="atur_monev('{{ $indikator->kegiatan_utama_id }}', '{{ $indikator->id }}');" class="btn btn-dark btn-sm w-full mb-2"><i data-lucide="edit" class="w-4 h-4 mr-1"></i>Monev</button>
+                            {{-- <button onclick="atur_monev('{{ $indikator->kegiatan_utama_id }}', '{{ $indikator->id }}');" class="btn btn-dark btn-sm w-full mb-2"><i data-lucide="edit" class="w-4 h-4 mr-1"></i>Monev</button> --}}
                         </td>
                     </tr>
+                    @endif
                     @endforeach
                 </tbody>
             </table>
@@ -409,7 +455,7 @@
             'scrollX': true,
             // 'orderFixed': [0, 'asc'],
             'autoWidth': false,
-            'rowsGroup': [0,1],
+            'rowsGroup': [0, 1, 2, 3],
         });
     });
 </script>
