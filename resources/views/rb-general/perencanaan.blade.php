@@ -118,8 +118,7 @@
                                             onclick="atur_baseline('{{ $indikator->kegiatan_utama_id }}', '{{ $indikator->id }}');"
                                             class="btn btn-warning btn-sm w-full mb-2"><i data-lucide="edit"
                                                 class="w-4 h-4 mr-1"></i>Baseline</button>
-                                    </td>
-                                    <td>
+
                                         @if (isset($indikator->baseline_tahun))
                                             <button
                                                 onclick="atur_target('{{ $indikator->kegiatan_utama_id }}', '{{ $indikator->id }}');"
@@ -127,6 +126,9 @@
                                                     class="w-4 h-4 mr-1"></i>Target</button>
                                         @else
                                         @endif
+                                    </td>
+                                    <td>
+
                                     </td>
                                     <td>{{ $indikator->realisasi_indikator }}</td>
                                     <td>{{ $indikator->capaian_indikator }}</td>
