@@ -126,5 +126,5 @@ function fnumber($number, $digit = 0)
 
 function instansis()
 {
-    return Instansi::pluck('nama', 'id');
+    return Instansi::orderBy('id')->pluck('nama', 'id');
 }

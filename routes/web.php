@@ -72,6 +72,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/rb-general/perencanaan/{perencanaan_id}/{target_id}/monev/simpanTarget', [RBGeneralController::class, 'monev_simpanTarget']);
     // RB General Rekap Data
     Route::get('/rb-general/rekap_data', [RBGeneralController::class, 'rekap_data']);
+    Route::get('/rb-general/rekap_data/getPerencanaan/{id}', [RBGeneralController::class, 'rekap_data_getPerencanaan']);
+    Route::post('/rb-general/rekap_data/simpanCatatanEvaluator', [RBGeneralController::class, 'rekap_data_simpanCatatanEvaluator']);
 });
 
 require __DIR__ . '/auth.php';

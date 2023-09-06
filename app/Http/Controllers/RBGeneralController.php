@@ -7,6 +7,7 @@ use App\Models\GeneralPerencanaanTarget;
 use App\Models\GeneralRencanaAksi;
 use App\Models\GeneralRencanaAksiOutput;
 use App\Models\Indikator;
+use App\Models\Instansi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -366,8 +367,16 @@ class RBGeneralController extends Controller
         if (!$output) {
             abort(404);
         }
-        $output->realisasi_output = $request->realisasi_output;
-        $output->realisasi_anggaran = $request->realisasi_anggaran;
+        $output->realisasi_output_tw1 = $request->realisasi_output_tw1;
+        $output->realisasi_output_tw2 = $request->realisasi_output_tw2;
+        $output->realisasi_output_tw3 = $request->realisasi_output_tw3;
+        $output->realisasi_output_tw4 = $request->realisasi_output_tw4;
+        $output->realisasi_output_total = $request->realisasi_output_total;
+        $output->realisasi_anggaran_tw1 = $request->realisasi_anggaran_tw1;
+        $output->realisasi_anggaran_tw2 = $request->realisasi_anggaran_tw2;
+        $output->realisasi_anggaran_tw3 = $request->realisasi_anggaran_tw3;
+        $output->realisasi_anggaran_tw4 = $request->realisasi_anggaran_tw4;
+        $output->realisasi_anggaran_total = $request->realisasi_anggaran_total;
         $output->capaian_anggaran = $request->capaian_anggaran;
         if ($output->save()) {
             $success = true;
@@ -380,13 +389,12 @@ class RBGeneralController extends Controller
         $user = Auth::User();
         if ($request->instansi_id && in_array($user->level, ['admin', 'evaluator'])) {
             $instansi_id = $request->instansi_id;
-            $perencanaans = GeneralPerencanaan::where('instansi_id', $instansi_id)->orderBy('kegiatan_utama_id')->orderBy('indikator_id')->get();
         } else if ($user->instansi_id) {
             $instansi_id = $user->instansi_id;
-            $perencanaans = GeneralPerencanaan::where('instansi_id', $instansi_id)->orderBy('kegiatan_utama_id')->orderBy('indikator_id')->get();
         } else {
-            $perencanaans = [];
+            $instansi_id = Instansi::orderBy('id')->first()->id;
         }
+        $perencanaans = GeneralPerencanaan::where('instansi_id', $instansi_id)->orderBy('kegiatan_utama_id')->orderBy('indikator_id')->get();
         $key = 0;
         $datas = [];
         foreach ($perencanaans as $perencanaan) {
@@ -427,5 +435,19 @@ class RBGeneralController extends Controller
             }
         }
         return view('rb-general.rekap_data', compact('datas', 'instansi_id'));
+    }
+
+    public function rekap_data_getPerencanaan($id)
+    {
+        $perencanaan = GeneralPerencanaan::find($id);
+        return response()->json($perencanaan);
+    }
+
+    public function rekap_data_simpanCatatanEvaluator(Request $request)
+    {
+        $perencanaan = GeneralPerencanaan::find($request->perencanaan_id);
+        $perencanaan->catatan = $request->catatan;
+        $perencanaan->save();
+        return redirect()->back();
     }
 }

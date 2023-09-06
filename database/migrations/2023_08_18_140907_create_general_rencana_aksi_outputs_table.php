@@ -28,8 +28,16 @@ return new class extends Migration
             $table->integer('anggaran_total');
             $table->string('pelaksana');
             $table->string('koordinator');
-            $table->string('realisasi_output')->nullable();
-            $table->string('realisasi_anggaran')->nullable();
+            $table->string('realisasi_output_tw1')->nullable();
+            $table->string('realisasi_output_tw2')->nullable();
+            $table->string('realisasi_output_tw3')->nullable();
+            $table->string('realisasi_output_tw4')->nullable();
+            $table->string('realisasi_output_total')->nullable();
+            $table->string('realisasi_anggaran_tw1')->nullable();
+            $table->string('realisasi_anggaran_tw2')->nullable();
+            $table->string('realisasi_anggaran_tw3')->nullable();
+            $table->string('realisasi_anggaran_tw4')->nullable();
+            $table->string('realisasi_anggaran_total')->nullable();
             $table->string('capaian_anggaran')->nullable();
             $table->timestamps();
         });

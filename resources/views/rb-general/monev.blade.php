@@ -74,8 +74,8 @@
                         <th>Rencana Aksi</th>
                         <th>Satuan Output</th>
                         <th>Indikator Output</th>
-                        <th>Target Total</th>
-                        <th>Anggaran Total</th>
+                        <th>Target</th>
+                        <th>Anggaran</th>
                         <th>Realisasi Output</th>
                         <th>Realisasi Anggaran</th>
                         <th>Capaian Anggaran</th>
@@ -200,14 +200,68 @@
                             </tr>
                             <tr>
                                 <td class="font-bold">Realisasi Output <span class="text-danger">*</span></td>
-                                <td colspan="5">
-                                    <input type="text" name="realisasi_output" id="realisasi_output" placeholder="Realisasi Output" class="form-control mt-4">
+                                <td>
+                                    <div class="input-group mt-4 mr-2">
+                                        <div class="input-group-text">TW1</div>
+                                        <input type="text" name="realisasi_output_tw1" id="realisasi_output_tw1" placeholder="Triwulan 1" class="form-control digit" onkeyup="hitungTotal();" required>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="input-group mt-4 mr-2">
+                                        <div class="input-group-text">TW2</div>
+                                        <input type="text" name="realisasi_output_tw2" id="realisasi_output_tw2" placeholder="Triwulan 2" class="form-control digit" onkeyup="hitungTotal();" required>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="input-group mt-4 mr-2">
+                                        <div class="input-group-text">TW3</div>
+                                        <input type="text" name="realisasi_output_tw3" id="realisasi_output_tw3" placeholder="Triwulan 3" class="form-control digit" onkeyup="hitungTotal();" required>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="input-group mt-4 mr-2">
+                                        <div class="input-group-text">TW4</div>
+                                        <input type="text" name="realisasi_output_tw4" id="realisasi_output_tw4" placeholder="Triwulan 4" class="form-control digit" onkeyup="hitungTotal();" required>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="input-group mt-4">
+                                        <div class="input-group-text">Total</div>
+                                        <input type="text" name="realisasi_output_total" id="realisasi_output_total" placeholder="Total" class="form-control digit" readonly required>
+                                    </div>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="font-bold">Realisasi Anggaran <span class="text-danger">*</span></td>
-                                <td colspan="5">
-                                    <input type="text" name="realisasi_anggaran" id="realisasi_anggaran" placeholder="Realisasi Anggaran" class="form-control mt-4">
+                                <td>
+                                    <div class="input-group mt-4 mr-2">
+                                        <div class="input-group-text">TW1</div>
+                                        <input type="text" name="realisasi_anggaran_tw1" id="realisasi_anggaran_tw1" placeholder="Triwulan 1" class="form-control digit" onkeyup="hitungTotalAnggaran();" required>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="input-group mt-4 mr-2">
+                                        <div class="input-group-text">TW2</div>
+                                        <input type="text" name="realisasi_anggaran_tw2" id="realisasi_anggaran_tw2" placeholder="Triwulan 2" class="form-control digit" onkeyup="hitungTotalAnggaran();" required>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="input-group mt-4 mr-2">
+                                        <div class="input-group-text">TW3</div>
+                                        <input type="text" name="realisasi_anggaran_tw3" id="realisasi_anggaran_tw3" placeholder="Triwulan 3" class="form-control digit" onkeyup="hitungTotalAnggaran();" required>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="input-group mt-4 mr-2">
+                                        <div class="input-group-text">TW4</div>
+                                        <input type="text" name="realisasi_anggaran_tw4" id="realisasi_anggaran_tw4" placeholder="Triwulan 4" class="form-control digit" onkeyup="hitungTotalAnggaran();" required>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="input-group mt-4">
+                                        <div class="input-group-text">Total</div>
+                                        <input type="text" name="realisasi_anggaran_total" id="realisasi_anggaran_total" placeholder="Total" class="form-control digit" readonly required>
+                                    </div>
                                 </td>
                             </tr>
                             <tr>
@@ -235,7 +289,7 @@
         <div class="modal-content">
             <!-- BEGIN: Modal Header -->
             <div class="darkbg modal-header">
-                <h2 class="font-bold fw-medium fs-base me-auto" id="title">Tambah Monitoring dan Evaluasi Rencana Aksi</h2>
+                <h2 class="font-bold fw-medium fs-base me-auto" id="title">Monitoring dan Evaluasi Perencanaan</h2>
             </div> <!-- END: Modal Header -->
             <!-- BEGIN: Modal Body -->
             <form action="{{ url('rb-general/perencanaan/'.$target->perencanaan->id.'/'.$target->id.'/monev/simpanTarget') }}" id="form-monev_perencanaan" method="post">
@@ -408,10 +462,50 @@
             { data: 'nama_rencana_aksi' },
             { data: 'satuan_output' },
             { data: 'indikator_output' },
-            { data: 'target_total' },
-            { data: 'anggaran_total' },
-            { data: 'realisasi_output' },
-            { data: 'realisasi_anggaran' },
+            { 
+                render: function (data, type, row, meta) {
+                    return '<table class="table table-noborder">'+
+                            '<tr><th>TW 1</th><td>: '+formatNumber(row.target_tw1)+'</td></tr>'+
+                            '<tr><th>TW 2</th><td>: '+formatNumber(row.target_tw2)+'</td></tr>'+
+                            '<tr><th>TW 3</th><td>: '+formatNumber(row.target_tw3)+'</td></tr>'+
+                            '<tr><th>TW 4</th><td>: '+formatNumber(row.target_tw4)+'</td></tr>'+
+                            '<tr><th>Total</th><td>: '+formatNumber(row.target_total)+'</td></tr>'+
+                        '</table>';
+                }
+            },
+            { 
+                render: function (data, type, row, meta) {
+                    return '<table class="table table-noborder">'+
+                            '<tr><th>TW 1</th><td>: '+formatNumber(row.anggaran_tw1)+'</td></tr>'+
+                            '<tr><th>TW 2</th><td>: '+formatNumber(row.anggaran_tw2)+'</td></tr>'+
+                            '<tr><th>TW 3</th><td>: '+formatNumber(row.anggaran_tw3)+'</td></tr>'+
+                            '<tr><th>TW 4</th><td>: '+formatNumber(row.anggaran_tw4)+'</td></tr>'+
+                            '<tr><th class="border-top">Total</th><td>: '+formatNumber(row.anggaran_total)+'</td></tr>'+
+                        '</table>';
+                }
+            },
+            { 
+                render: function (data, type, row, meta) {
+                    return row.realisasi_output_total ? '<table class="table table-noborder">'+
+                            '<tr><th>TW 1</th><td>: '+formatNumber(row.realisasi_output_tw1)+'</td></tr>'+
+                            '<tr><th>TW 2</th><td>: '+formatNumber(row.realisasi_output_tw2)+'</td></tr>'+
+                            '<tr><th>TW 3</th><td>: '+formatNumber(row.realisasi_output_tw3)+'</td></tr>'+
+                            '<tr><th>TW 4</th><td>: '+formatNumber(row.realisasi_output_tw4)+'</td></tr>'+
+                            '<tr><th>Total</th><td>: '+formatNumber(row.realisasi_output_total)+'</td></tr>'+
+                        '</table>' : '';
+                }
+            },
+            { 
+                render: function (data, type, row, meta) {
+                    return row.realisasi_anggaran_total ? '<table class="table table-noborder">'+
+                            '<tr><th>TW 1</th><td>: '+formatNumber(row.realisasi_anggaran_tw1)+'</td></tr>'+
+                            '<tr><th>TW 2</th><td>: '+formatNumber(row.realisasi_anggaran_tw2)+'</td></tr>'+
+                            '<tr><th>TW 3</th><td>: '+formatNumber(row.realisasi_anggaran_tw3)+'</td></tr>'+
+                            '<tr><th>TW 4</th><td>: '+formatNumber(row.realisasi_anggaran_tw4)+'</td></tr>'+
+                            '<tr><th class="border-top">Total</th><td>: '+formatNumber(row.realisasi_anggaran_total)+'</td></tr>'+
+                        '</table>' : '';
+                }
+            },
             { data: 'capaian_anggaran' },
             { 
                 sortable: false, 
@@ -426,6 +520,53 @@
 
     function getData() {
         monev.ajax.url("{{url('rb-general/perencanaan/'.$target->perencanaan->id.'/'.$target->id.'/monev/getDatas')}}").load(null, false);
+    }
+
+    function formatNumber(num) {
+        return num ? num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.') : '';
+    }
+
+    function hitungTotal() {
+        if ($('#realisasi_output_tw1').val() == '') {
+            $('#realisasi_output_tw1').val(0);
+        }
+        if ($('#realisasi_output_tw2').val() == '') {
+            $('#realisasi_output_tw2').val(0);
+        }
+        if ($('#realisasi_output_tw3').val() == '') {
+            $('#realisasi_output_tw3').val(0);
+        }
+        if ($('#realisasi_output_tw4').val() == '') {
+            $('#realisasi_output_tw4').val(0);
+        }
+        tw1 = $('#realisasi_output_tw1').val().replaceAll('.', '');
+        tw2 = $('#realisasi_output_tw2').val().replaceAll('.', '');
+        tw3 = $('#realisasi_output_tw3').val().replaceAll('.', '');
+        tw4 = $('#realisasi_output_tw4').val().replaceAll('.', '');
+        total = parseFloat(tw1) + parseFloat(tw2) + parseFloat(tw3) + parseFloat(tw4);
+        $('#realisasi_output_total').val(total);
+    }
+
+    function hitungTotalAnggaran() {
+        if ($('#realisasi_anggaran_tw1').val() == '') {
+            $('#realisasi_anggaran_tw1').val(0);
+        }
+        if ($('#realisasi_anggaran_tw2').val() == '') {
+            $('#realisasi_anggaran_tw2').val(0);
+        }
+        if ($('#realisasi_anggaran_tw3').val() == '') {
+            $('#realisasi_anggaran_tw3').val(0);
+        }
+        if ($('#realisasi_anggaran_tw4').val() == '') {
+            $('#realisasi_anggaran_tw4').val(0);
+        }
+        tw1 = $('#realisasi_anggaran_tw1').val().replaceAll('.', '');
+        tw2 = $('#realisasi_anggaran_tw2').val().replaceAll('.', '');
+        tw3 = $('#realisasi_anggaran_tw3').val().replaceAll('.', '');
+        tw4 = $('#realisasi_anggaran_tw4').val().replaceAll('.', '');
+        console.log(tw1, tw2, tw3, tw4);
+        total = parseInt(tw1) + parseInt(tw2) + parseInt(tw3) + parseInt(tw4);
+        $('#realisasi_anggaran_total').val(total);
     }
 
     function edit_monev() {
