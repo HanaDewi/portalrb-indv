@@ -437,16 +437,16 @@ class RBGeneralController extends Controller
         return view('rb-general.rekap_data', compact('datas', 'instansi_id'));
     }
 
-    public function rekap_data_getPerencanaan($id)
+    public function rekap_data_getTarget($id)
     {
-        $perencanaan = GeneralPerencanaan::find($id);
+        $perencanaan = GeneralPerencanaanTarget::find($id);
         return response()->json($perencanaan);
     }
 
     public function rekap_data_simpanCatatanEvaluator(Request $request)
     {
-        $perencanaan = GeneralPerencanaan::find($request->perencanaan_id);
-        $perencanaan->catatan = $request->catatan;
+        $perencanaan = GeneralPerencanaanTarget::find($request->target_id);
+        $perencanaan->catatan_evaluator = $request->catatan_evaluator;
         $perencanaan->save();
         return redirect()->back();
     }

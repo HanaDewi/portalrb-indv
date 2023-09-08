@@ -19,7 +19,6 @@ return new class extends Migration
             $table->integer('baseline_tahun');
             $table->string('baseline_target');
             $table->string('baseline_realisasi');
-            $table->text('catatan')->nullable();
             $table->timestamps();
         });
     }

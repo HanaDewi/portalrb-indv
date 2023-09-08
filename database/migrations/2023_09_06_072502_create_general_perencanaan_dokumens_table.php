@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('general_perencanaan_dokumen', function (Blueprint $table) {
+        Schema::create('general_perencanaan_target_dokumen', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('general_perencanaan_id');
+            $table->foreignId('general_perencanaan_target_id');
             $table->string('dokumen');
             $table->string('filename');
             $table->timestamps();
