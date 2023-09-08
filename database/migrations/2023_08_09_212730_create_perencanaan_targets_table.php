@@ -18,7 +18,8 @@ return new class extends Migration
             $table->string('target');
             $table->string('realisasi_indikator')->nullable();
             $table->string('capaian_indikator')->nullable();
-            $table->string('catatan')->nullable();
+            $table->text('catatan')->nullable();
+            $table->text('catatan_evaluator')->nullable();
             $table->timestamps();
         });
     }

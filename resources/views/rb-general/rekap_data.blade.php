@@ -24,12 +24,13 @@
                         <th class="w-5" rowspan="2">No.</th>
                         <th class="w-10" rowspan="2">Kegiatan Utama</th>
                         <th class="w-10" rowspan="2">Indikator</th>
-                        <th class="w-10" rowspan="2">Catatan Evalator</th>
                         <th rowspan="2">Baseline</th>
                         <th class="w-5" rowspan="2">Tahun Target</th>
                         <th class="w-10" rowspan="2">Realisasi Indikator</th>
                         <th class="w-10" rowspan="2">Capaian Indikator</th>
+                        <th class="w-10" rowspan="2">Dokumen Pendukung</th>
                         <th class="w-10" rowspan="2">Catatan</th>
+                        <th class="w-10" rowspan="2">Catatan Evalator</th>
                         <th class="w-15" rowspan="2">Rencana Aksi</th>
                         <th class="w-5" colspan="2" style="text-align: center;">Output</th>
                         <th class="w-5" rowspan="2" style="text-align: center;">Target</th>
@@ -64,11 +65,6 @@
                             <td class="font-bold">{{ $data['perencanaan']->kegiatan_utama->nama }}</td>
                             <td>{{ $data['perencanaan']->indikator->nama }}</td>
                             <td>
-                                @if (auth()->user()->level == 'evaluator')
-                                <button onclick="catatan({{ $data['perencanaan']->id }});" class="mb-3 btn btn-warning btn-sm w-10"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" icon-name="edit" data-lucide="edit" class="lucide lucide-edit block mx-auto"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button><br>
-                                @endif
-                                {{ $data['perencanaan']->catatan }}</td>
-                            <td>
                                 <table class="table table-noborder w-full">
                                     <tr>
                                         <td class="font-bold w-16">Tahun</td>
@@ -93,7 +89,14 @@
                             </td>
                             <td>{{ $data['target']->realisasi_indikator }}</td>
                             <td>{{ $data['target']->capaian_indikator }}</td>
+                            <td></td>
                             <td>{{ $data['target']->catatan }}</td>
+                            <td>
+                                @if (auth()->user()->level == 'evaluator')
+                                <button onclick="catatan_evaluator({{ $data['target']->id }});" class="mb-3 btn btn-warning btn-sm w-10"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" icon-name="edit" data-lucide="edit" class="lucide lucide-edit block mx-auto"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button><br>
+                                @endif
+                                {{ $data['target']->catatan_evaluator }}
+                            </td>
                             <td>
                                 {{ $data['rencana_aksi']->rencana_aksi }}
                             </td>
@@ -176,14 +179,14 @@
             <!-- BEGIN: Modal Body -->
             <form action="{{ url('rb-general/rekap_data/simpanCatatanEvaluator') }}" id="form-catatan_evaluator" method="post">
                 @csrf
-                <input type="hidden" id="perencanaan_id" name="perencanaan_id">
+                <input type="hidden" id="target_id" name="target_id">
                 <div class="modal-body grid columns-12 gap-4 gap-y-3">
                     <div class="g-col-12">
                         <table class="table table-noborder">
                             <tr>
-                                <td class="font-bold">Catatan</td>
+                                <td class="font-bold">Catatan Evaluator</td>
                                 <td>
-                                    <textarea name="catatan" id="catatan" cols="30" rows="10" placeholder="Catatan" class="form-control mt-4"></textarea>
+                                    <textarea name="catatan_evaluator" id="catatan_evaluator" cols="30" rows="10" placeholder="Catatan" class="form-control mt-4"></textarea>
                                 </td>
                             </tr>
                         </table>
@@ -216,10 +219,10 @@
     });
 
     @if (auth()->user()->level == 'evaluator')
-    function catatan(id) {
-        $('#perencanaan_id').val(id);
-        $.getJSON("{{url('rb-general/rekap_data/getPerencanaan')}}/"+id, function(data) {
-            $('#catatan').val(data.catatan);
+    function catatan_evaluator(id) {
+        $('#target_id').val(id);
+        $.getJSON("{{url('rb-general/rekap_data/getTarget')}}/"+id, function(data) {
+            $('#catatan_evaluator').val(data.catatan_evaluator);
             modal_catatan.show();
         });
     }

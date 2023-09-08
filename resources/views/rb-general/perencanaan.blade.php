@@ -17,9 +17,8 @@
                             <th class="w150">Indikator</th>
                             <th>Baseline</th>
                             <th class="w-5">Target</th>
-                            <th class="w-5">Realisasi Indikator</th>
-                            <th class="w-5">Capaian Indikator</th>
-                            <th class="w-5">Catatan</th>
+                            <th class="w-5">Dokumen</th>
+                            <th class="w150">Keterangan</th>
                             <th class="w-5">Atur</th>
                         </tr>
                     </thead>
@@ -59,30 +58,27 @@
                                                     </tr>
                                                 </table>
                                             @endif
-                                            <button
-                                                onclick="atur_baseline('{{ $indikator->kegiatan_utama_id }}', '{{ $indikator->id }}');"
-                                                class="btn btn-warning btn-sm w-full mb-2"><i data-lucide="edit"
-                                                    class="w-4 h-4 mr-1"></i>Baseline</button>
-                                            <button
-                                                onclick="atur_target('{{ $indikator->kegiatan_utama_id }}', '{{ $indikator->id }}');"
-                                                class="btn btn-primary btn-sm w-full mb-2"><i data-lucide="edit"
-                                                    class="w-4 h-4 mr-1"></i>Target</button>
+                                            <button onclick="atur_baseline('{{ $indikator->kegiatan_utama_id }}', '{{ $indikator->id }}');" class="btn btn-warning btn-sm w-full mb-2"><i data-lucide="edit" class="w-4 h-4 mr-1"></i>Baseline</button>
+                                            <button onclick="atur_target('{{ $indikator->kegiatan_utama_id }}', '{{ $indikator->id }}');" class="btn btn-primary btn-sm w-full mb-2"><i data-lucide="edit" class="w-4 h-4 mr-1"></i>Target</button>
                                         </td>
                                         <td>
-                                            <div class="flex items-center"><i data-lucide="bar-chart"
-                                                    class="w-4 h-4 mr-1"></i><span class="font-bold mr-1">
-                                                    {{ $target->tahun }}: </span> {{ $target->target }}</div>
+                                            <div class="flex items-center">
+                                                <i data-lucide="bar-chart" class="w-4 h-4 mr-1"></i>
+                                                <span class="font-bold mr-1">{{ $target->tahun }}: </span> {{ $target->target }}
+                                            </div>
                                         </td>
-                                        <td>{{ $target->realisasi_indikator }}</td>
-                                        <td>{{ $target->capaian_indikator }}</td>
-                                        <td>{{ $target->catatan }}</td>
                                         <td>
-                                            <a href="{{ url('rb-general/perencanaan/' . $indikator->perencanaan_id . '/' . $target->id . '/rencana_aksi') }}"
-                                                class="btn btn-primary btn-sm w-full mb-2">
-                                                <i data-lucide="edit" class="w-4 h-4 mr-1"></i>
-                                                Renaksi
-                                                <span
-                                                    class="text-xs px-1 rounded-full bg-warning text-white badge">{{ count($target->rencana_aksi) }}</span>
+                                            <button onclick="tambah_dokumen('{{ $target->id }}');" class="btn btn-primary btn-sm w-full mb-2"><i data-lucide="plus" class="w-4 h-4 mr-1"></i>Dokumen</button>
+                                        </td>
+                                        <td>
+                                            <span class="font-bold mr-1">Realisasi Indikator: </span>{{ $target->realiasasi_indikator ? $target->realiasasi_indikator : '-' }}<br>
+                                            <span class="font-bold mr-1">Capaian Indikator: </span>{{ $target->capaian_indikator ? $target->capaian_indikator : '-' }}<br>
+                                            <span class="font-bold mr-1">Catatan: </span>{{ $target->catatan ? $target->catatan : '-' }}<br>
+                                        </td>
+                                        <td>
+                                            <a href="{{ url('rb-general/perencanaan/' . $indikator->perencanaan_id . '/' . $target->id . '/rencana_aksi') }}" class="btn btn-primary btn-sm w-full mb-2">
+                                                <i data-lucide="edit" class="w-4 h-4 mr-1"></i> Renaksi
+                                                <span class="text-xs px-1 rounded-full bg-warning text-white badge">{{ count($target->rencana_aksi) }}</span>
                                             </a>
                                             <br>
                                             <a href="{{ url('rb-general/perencanaan/' . $indikator->perencanaan_id . '/' . $target->id . '/monev') }}"
@@ -127,12 +123,9 @@
                                         @else
                                         @endif
                                     </td>
-                                    <td>
-
-                                    </td>
-                                    <td>{{ $indikator->realisasi_indikator }}</td>
-                                    <td>{{ $indikator->capaian_indikator }}</td>
-                                    <td>{{ $indikator->catatan }}</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
                                     <td>
                                         @foreach ($indikator->target as $key => $target)
                                             @php
@@ -499,12 +492,13 @@
     <script>
         $(function() {
             $("#perencanaan").DataTable({
-                'scrollX': true,
+                scrollX: true,
                 // 'orderFixed': [0, 'asc'],
-                'autoWidth': false,
-                'rowsGroup': [0, 1, 2, 3],
+                autoWidth: false,
+                rowsGroup: [0, 1, 2, 3],
                 paging: false,
                 bInfo: false,
+                ordering: false,
             });
         });
     </script>
