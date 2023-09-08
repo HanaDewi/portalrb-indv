@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('tematik_sasaran_roadmap', function (Blueprint $table) {
             $table->id();
             $table->foreignId('tema_id');
+            $table->foreignId('instansi_id');
             $table->string('nama');
             $table->timestamps();
         });

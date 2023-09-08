@@ -12,6 +12,16 @@ class TematikSasaranRoadmap extends Model
 
     public function tema()
     {
-        return $this->belongsTo(Tema::class, 'kegiatan_utama_id');
+        return $this->belongsTo(Tema::class, 'id');
+    }
+
+    public function indikator_roadmap()
+    {
+        return $this->hasMany(TematikIndikatorRoadmap::class, 'general_perencanaan_id')->orderBy('tahun');
+    }
+
+    public function permasalahan()
+    {
+        return $this->hasManyThrough(Cek_syarat_unit::class, Unit::class, "id_instansi", "id_unit", "id", "id");
     }
 }

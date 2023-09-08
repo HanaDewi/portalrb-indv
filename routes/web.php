@@ -1,9 +1,10 @@
 <?php
 
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\MasterDataController;
-use App\Http\Controllers\RBGeneralController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\RBGeneralController;
+use App\Http\Controllers\RBTematikController;
+use App\Http\Controllers\MasterDataController;
 
 /*
 |--------------------------------------------------------------------------
@@ -74,6 +75,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/rb-general/rekap_data', [RBGeneralController::class, 'rekap_data']);
     Route::get('/rb-general/rekap_data/getPerencanaan/{id}', [RBGeneralController::class, 'rekap_data_getPerencanaan']);
     Route::post('/rb-general/rekap_data/simpanCatatanEvaluator', [RBGeneralController::class, 'rekap_data_simpanCatatanEvaluator']);
+    // RB Tematik Rekap Data
+    Route::get('/rb-tematik/rekap_data', [RBTematikController::class, 'rekap_data']);
+    Route::get('/rb-tematik/rekap_data/getPerencanaan/{id}', [RBTematikController::class, 'rekap_data_getPerencanaan']);
+    Route::post('/rb-tematik/rekap_data/simpanCatatanEvaluator', [RBTematikController::class, 'rekap_data_simpanCatatanEvaluator']);
 });
 
 require __DIR__ . '/auth.php';
