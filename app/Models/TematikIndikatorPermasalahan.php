@@ -8,4 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class TematikIndikatorPermasalahan extends Model
 {
     use HasFactory;
+    protected $table = 'tematik_indikator_permasalahan';
 }

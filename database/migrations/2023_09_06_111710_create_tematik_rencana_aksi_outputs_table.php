@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('tematik_rencana_aksi_output', function (Blueprint $table) {
             $table->id();
             $table->foreignId('indikator_rencana_aksi_id');
-            $table->string('nama');
+            $table->text('nama');
             $table->timestamps();
         });
     }

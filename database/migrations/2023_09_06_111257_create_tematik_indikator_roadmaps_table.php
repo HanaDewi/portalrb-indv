@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('tematik_indikator_roadmap', function (Blueprint $table) {
             $table->id();
             $table->foreignId('tematik_sasaran_roadmap_id');
-            $table->string('nama');
+            $table->text('nama');
+            $table->text('target');
             $table->timestamps();
         });
     }

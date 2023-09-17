@@ -12,16 +12,34 @@ class TematikSasaranRoadmap extends Model
 
     public function tema()
     {
-        return $this->belongsTo(Tema::class, 'id');
+        return $this->belongsTo(Tema::class, 'tema_id');
     }
 
     public function indikator_roadmap()
     {
-        return $this->hasMany(TematikIndikatorRoadmap::class, 'general_perencanaan_id')->orderBy('tahun');
+        return $this->hasMany(TematikIndikatorRoadmap::class, 'tematik_sasaran_roadmap_id')->orderBy('tematik_sasaran_roadmap_id');
     }
 
     public function permasalahan()
     {
-        return $this->hasManyThrough(Cek_syarat_unit::class, Unit::class, "id_instansi", "id_unit", "id", "id");
+        return $this->hasManyThrough(
+            TematikPermasalahan::class,
+            TematikIndikatorRoadmap::class,
+            "tematik_sasaran_roadmap_id", //foreign key TematikIndikatorRoadmap untuk sasaran roadmap
+            "tematik_indikator_roadmap_id", //foreign key TematikPermasalah untuk TematikIndikatorRoadmap
+            "id", //primary key  sasaranroadmap
+            "id" //primary key TematikIndikatorRoadmap
+        );
+    }
+
+    public function indikatorForPermasalahanOnIndikatorRoadmap()
+    {
+        return TematikIndikatorPermasalahan::whereIn('id', function ($query) {
+            $query->select('tematik_indikator_permasalahan.id')
+                ->from('tematik_indikator_permasalahan')
+                ->join('tematik_permasalahan', 'tematik_indikator_permasalahan.tematik_permasalahan_id', '=', 'tematik_permasalahan.id')
+                ->join('tematik_indikator_roadmap', 'tematik_permasalahan.tematik_indikator_roadmap_id', '=', 'tematik_indikator_roadmap.id')
+                ->where('tematik_indikator_roadmap.tematik_sasaran_roadmap_id', $this->id);
+        })->get();
     }
 }

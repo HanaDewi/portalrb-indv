@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('tema_id');
             $table->foreignId('instansi_id');
-            $table->string('nama');
+            $table->text('nama');
             $table->timestamps();
         });
     }

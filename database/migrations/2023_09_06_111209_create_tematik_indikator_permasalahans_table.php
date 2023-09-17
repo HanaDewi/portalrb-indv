@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('tematik_indikator_permasalahan', function (Blueprint $table) {
             $table->id();
             $table->foreignId('tematik_permasalahan_id');
-            $table->string('nama');
+            $table->text('nama');
+            $table->text('target');
             $table->timestamps();
         });
     }

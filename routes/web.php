@@ -75,6 +75,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/rb-general/rekap_data', [RBGeneralController::class, 'rekap_data']);
     Route::get('/rb-general/rekap_data/getTarget/{id}', [RBGeneralController::class, 'rekap_data_getTarget']);
     Route::post('/rb-general/rekap_data/simpanCatatanEvaluator', [RBGeneralController::class, 'rekap_data_simpanCatatanEvaluator']);
+    // RB Tematik Sasaran Road Map
+    Route::get('/rb-tematik/perencanaan', [RBTematikController::class, 'perencanaan'])->name('perencanaan');
+    Route::get('/rb-tematik/perencanaan/getData/{kegiatan_utama_id}/{indikator_id}', [RBTematikController::class, 'perencanaan_getData']);
+    Route::post('/rb-tematik/perencanaan/simpan-sasaran-roadmap', [RBTematikController::class, 'simpanSasaranRoadmap']);
+    Route::post('/rb-tematik/perencanaan/simpan-indikator-roadmap', [RBTematikController::class, 'simpanIndikatorRoadmap']);
+    Route::post('/rb-tematik/perencanaan/simpan-permasalahan', [RBTematikController::class, 'simpanPermasalahan']);
+    Route::post('/rb-tematik/perencanaan/simpan-indikator-permasalahan', [RBTematikController::class, 'simpanIndikatorPermasalahan']);
+    Route::post('/rb-tematik/perencanaan/simpanMonev', [RBTematikController::class, 'perencanaan_simpanMonev']);
     // RB Tematik Rekap Data
     Route::get('/rb-tematik/rekap_data', [RBTematikController::class, 'rekap_data']);
     Route::get('/rb-tematik/rekap_data/getPerencanaan/{id}', [RBTematikController::class, 'rekap_data_getPerencanaan']);

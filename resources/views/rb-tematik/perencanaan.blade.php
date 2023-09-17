@@ -1,26 +1,46 @@
 @extends('layout.rubick')
-@section('title', 'RB General - Perencanaan')
+@section('title', 'RB Tematik - Perencanaan')
 
 @section('content')
     @include('common.status')
     <div class="intro-y col-span-12 lg:col-span-12">
         <div class="intro-y box">
             <div class="flex flex-col sm:flex-row items-center p-5 border-b border-slate-200/60">
-                <h2 class="font-bold text-base mr-auto"> Data RB General - Perencanaan</h2>
+                <h2 class="font-bold text-base mr-auto"> Perencanaan Aksi RB
+                    Tematik</h2>
             </div>
+
+            <div id="tab1" class="tab-pane leading-relaxed active">
+
+                <div class="form-inline items-start flex-col xl:flex-row  pt-5 first:mt-0 first:pt-0">
+                    <button class="btn btn-outline-primary border-dashed w-full" id="dynamic-ar"
+                        onclick="tambah_sasaran_roadmap();">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round" icon-name="plus" data-lucide="plus"
+                            class="lucide lucide-plus w-4 h-4 mr-2">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg> Tambah Sasaran Tematik Roadmap </button>
+                </div>
+            </div>
+
+
+
+
             <div class="lg:col-span-12 p-5 border-b border-slate-200/60">
                 <table id="perencanaan" class="table table-bordered table-striped mt-5" cellspacing="0" width="100%">
                     <thead class="table-dark font-bold">
                         <tr>
                             <th class="w-5">No.</th>
-                            <th class="w200">Kegiatan Utama</th>
-                            <th class="w150">Indikator</th>
-                            <th>Baseline</th>
+                            <th class="w200">Tema</th>
+                            <th class="w150">Sasaran Tematik Roadmap</th>
+                            <th>Indikator</th>
                             <th class="w-5">Target</th>
-                            <th class="w-5">Realisasi Indikator</th>
-                            <th class="w-5">Capaian Indikator</th>
-                            <th class="w-5">Catatan</th>
-                            <th class="w-5">Atur</th>
+                            <th class="w-5">Permasalahan (bottleneck)</th>
+                            <th class="w-5">Sasaran</th>
+                            <th class="w-5">Indikator</th>
+                            <th class="w-5">Target</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -28,136 +48,64 @@
                             $no = 0;
                             $nama = '';
                         @endphp
-                        @foreach ($indikators as $indikator)
+
+                        @foreach ($tematikDatas as $tematikData)
                             @php
-                                if ($nama != $indikator->kegiatan_utama->nama) {
-                                    $nama = $indikator->kegiatan_utama->nama;
+                                if ($nama != $tematikData['tema_nama']) {
+                                    $nama = $tematikData['tema_nama'];
                                     $no++;
                                 }
                             @endphp
-                            @if (count($indikator->target))
-                                @foreach ($indikator->target as $target)
-                                    <tr>
-                                        <td class="font-bold">{{ $no }}</td>
-                                        <td class="font-bold" id="kegiatan_utama{{ $indikator->id }}">{{ $nama }}
-                                        </td>
-                                        <td id="indikator{{ $indikator->id }}">{{ $indikator->nama }}</td>
-                                        <td>
-                                            @if ($indikator->baseline_tahun)
-                                                <table class="table table-noborder">
-                                                    <tr>
-                                                        <td class="font-bold w-16">Tahun</td>
-                                                        <td>: {{ $indikator->baseline_tahun }}</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="font-bold">Target</td>
-                                                        <td>: {{ $indikator->baseline_target }}</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="font-bold">Realisasi</td>
-                                                        <td>: {{ $indikator->baseline_realisasi }}</td>
-                                                    </tr>
-                                                </table>
-                                            @endif
-                                            <button
-                                                onclick="atur_baseline('{{ $indikator->kegiatan_utama_id }}', '{{ $indikator->id }}');"
-                                                class="btn btn-warning btn-sm w-full mb-2"><i data-lucide="edit"
-                                                    class="w-4 h-4 mr-1"></i>Baseline</button>
-                                            <button
-                                                onclick="atur_target('{{ $indikator->kegiatan_utama_id }}', '{{ $indikator->id }}');"
-                                                class="btn btn-primary btn-sm w-full mb-2"><i data-lucide="edit"
-                                                    class="w-4 h-4 mr-1"></i>Target</button>
-                                        </td>
-                                        <td>
-                                            <div class="flex items-center"><i data-lucide="bar-chart"
-                                                    class="w-4 h-4 mr-1"></i><span class="font-bold mr-1">
-                                                    {{ $target->tahun }}: </span> {{ $target->target }}</div>
-                                        </td>
-                                        <td>{{ $target->realisasi_indikator }}</td>
-                                        <td>{{ $target->capaian_indikator }}</td>
-                                        <td>{{ $target->catatan }}</td>
-                                        <td>
-                                            <a href="{{ url('rb-general/perencanaan/' . $indikator->perencanaan_id . '/' . $target->id . '/rencana_aksi') }}"
-                                                class="btn btn-primary btn-sm w-full mb-2">
-                                                <i data-lucide="edit" class="w-4 h-4 mr-1"></i>
-                                                Renaksi
-                                                <span
-                                                    class="text-xs px-1 rounded-full bg-warning text-white badge">{{ count($target->rencana_aksi) }}</span>
-                                            </a>
-                                            <br>
-                                            <a href="{{ url('rb-general/perencanaan/' . $indikator->perencanaan_id . '/' . $target->id . '/monev') }}"
-                                                class="btn btn-dark btn-sm w-full"><i data-lucide="edit"
-                                                    class="w-4 h-4 mr-1"></i>Monev</a>
-                                            {{-- <button onclick="atur_monev('{{ $indikator->kegiatan_utama_id }}', '{{ $indikator->id }}');" class="btn btn-dark btn-sm w-full mb-2"><i data-lucide="edit" class="w-4 h-4 mr-1"></i>Monev</button> --}}
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            @else
-                                <tr>
-                                    <td class="font-bold">{{ $no }}</td>
-                                    <td class="font-bold" id="kegiatan_utama{{ $indikator->id }}">{{ $nama }}</td>
-                                    <td id="indikator{{ $indikator->id }}">{{ $indikator->nama }}</td>
-                                    <td>
-                                        @if ($indikator->baseline_tahun)
-                                            <table class="table table-noborder">
-                                                <tr>
-                                                    <td class="font-bold w-16">Tahun</td>
-                                                    <td>: {{ $indikator->baseline_tahun }}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="font-bold">Target</td>
-                                                    <td>: {{ $indikator->baseline_target }}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="font-bold">Realisasi</td>
-                                                    <td>: {{ $indikator->baseline_realisasi }}</td>
-                                                </tr>
-                                            </table>
-                                        @endif
+                            <tr>
+                                <td class="font-bold">{{ $no }}</td>
+                                <td class="font-bold" id="tema{{ $tematikData['tema_id'] }}">
+                                    {{ $tematikData['tema_nama'] }}
+
+                                </td>
+                                <td id="sasaranRoadmap{{ $tematikData['sasaran_id'] }}">
+                                    {{ $tematikData['sasaran_nama'] }}
+                                    @if ($tematikData['sasaran_nama'])
                                         <button
-                                            onclick="atur_baseline('{{ $indikator->kegiatan_utama_id }}', '{{ $indikator->id }}');"
+                                            onclick="tambah_indikator_roadmap('{{ $tematikData['tema_nama'] }}','{{ $tematikData['sasaran_nama'] }}', '{{ $tematikData['sasaran_id'] }}');"
                                             class="btn btn-warning btn-sm w-full mb-2"><i data-lucide="edit"
-                                                class="w-4 h-4 mr-1"></i>Baseline</button>
-
-                                        @if (isset($indikator->baseline_tahun))
-                                            <button
-                                                onclick="atur_target('{{ $indikator->kegiatan_utama_id }}', '{{ $indikator->id }}');"
-                                                class="btn btn-primary btn-sm w-full mb-2"><i data-lucide="edit"
-                                                    class="w-4 h-4 mr-1"></i>Target</button>
-                                        @else
-                                        @endif
-                                    </td>
-                                    <td>
-
-                                    </td>
-                                    <td>{{ $indikator->realisasi_indikator }}</td>
-                                    <td>{{ $indikator->capaian_indikator }}</td>
-                                    <td>{{ $indikator->catatan }}</td>
-                                    <td>
-                                        @foreach ($indikator->target as $key => $target)
-                                            @php
-                                                $hr = $key > 0 ? '<hr class="mt-2 mb-2">' : '';
-                                            @endphp
-                                            {!! $hr !!}
-                                            <div class="flex items-center"><i data-lucide="bar-chart"
-                                                    class="w-4 h-4 mr-1"></i><span class="font-bold mr-1">
-                                                    {{ $target->tahun }}: </span> {{ $target->target }}</div>
-                                            <a href="{{ url('rb-general/perencanaan/' . $indikator->perencanaan_id . '/' . $target->id . '/rencana_aksi') }}"
-                                                class="btn btn-primary btn-sm w-full mb-2">
-                                                <i data-lucide="edit" class="w-4 h-4 mr-1"></i>
-                                                Renaksi
-                                                <span
-                                                    class="text-xs px-1 rounded-full bg-warning text-white badge">{{ count($target->rencana_aksi) }}</span>
-                                            </a>
-                                            <br>
-                                            <a href="{{ url('rb-general/perencanaan/' . $indikator->perencanaan_id . '/' . $target->id . '/monev') }}"
-                                                class="btn btn-dark btn-sm w-full"><i data-lucide="edit"
-                                                    class="w-4 h-4 mr-1"></i>Monev</a>
-                                        @endforeach
-                                        {{-- <button onclick="atur_monev('{{ $indikator->kegiatan_utama_id }}', '{{ $indikator->id }}');" class="btn btn-dark btn-sm w-full mb-2"><i data-lucide="edit" class="w-4 h-4 mr-1"></i>Monev</button> --}}
-                                    </td>
-                                </tr>
-                            @endif
+                                                class="w-4 h-4 mr-1"></i>Indikator</button>
+                                    @endif
+                                </td>
+                                <td>
+                                    {{ $tematikData['indikator_nama'] }}
+                                </td>
+                                <td>
+                                    {{ $tematikData['indikator_target'] }}
+                                    @if ($tematikData['indikator_nama'])
+                                        <button
+                                            onclick="tambah_permasalahan('{{ $tematikData['indikator_nama'] }}','{{ $tematikData['indikator_target'] }}', '{{ $tematikData['indikator_id'] }}');"
+                                            class="btn btn-danger btn-sm w-full mb-2"><i data-lucide="edit"
+                                                class="w-4 h-4 mr-1"></i>Permasalahan</button>
+                                    @endif
+                                </td>
+                                <td>
+                                    {{ $tematikData['permasalahan_nama'] }}
+                                </td>
+                                <td>
+                                    {{ $tematikData['permasalahan_sasaran'] }}
+                                    @if ($tematikData['permasalahan_nama'])
+                                        <button
+                                            onclick="tambah_indikator_permasalahan('{{ $tematikData['permasalahan_nama'] }}','{{ $tematikData['permasalahan_sasaran'] }}', '{{ $tematikData['permasalahan_id'] }}');"
+                                            class="btn btn-success btn-sm w-full mb-2"><i data-lucide="edit"
+                                                class="w-4 h-4 mr-1"></i>Indikator</button>
+                                    @endif
+                                </td>
+                                <td>
+                                    {{ $tematikData['indikator_permasalahan_nama'] }}
+                                </td>
+                                <td>
+                                    {{ $tematikData['indikator_permasalahan_target'] }}
+                                    @if ($tematikData['indikator_permasalahan_nama'])
+                                        <button onclick="" class="btn btn-primary btn-sm w-full mb-2"><i
+                                                data-lucide="edit" class="w-4 h-4 mr-1"></i>Rencana Aksi</button>
+                                    @endif
+                                </td>
+                            </tr>
                         @endforeach
                     </tbody>
                 </table>
@@ -165,57 +113,51 @@
         </div>
     </div>
 
-    {{-- Modal Form Baseline --}}
-    <div id="modal-baseline" class="modal fade" tabindex="-1" aria-hidden="true">
+
+    {{-- Modal Form Sasaran Roadmap --}}
+    <div id="modal-sasaran-roadmap" class="modal fade" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <!-- BEGIN: Modal Header -->
                 <div class="darkbg modal-header">
-                    <h2 class="font-bold fw-medium  fs-base me-auto" id="title">Data Baseline</h2>
+                    <h2 class="font-bold fw-medium  fs-base me-auto" id="title">Sasaran Roadmaps</h2>
                 </div> <!-- END: Modal Header -->
                 <!-- BEGIN: Modal Body -->
-                <form action="{{ url('rb-general/perencanaan/simpanBaseline') }}" id="form-baseline" method="post">
+                <form action="{{ url('rb-tematik/perencanaan/simpan-sasaran-roadmap') }}" id="form-sasaran-roadmap"
+                    method="post">
                     @csrf
-                    <input type="hidden" name="kegiatan_utama_id" id="baseline_kegiatan_utama_id">
-                    <input type="hidden" name="indikator_id" id="baseline_indikator_id">
-                    <div class="modal-body grid columns-12 gap-4 gap-y-3">
+                    <input type="hidden" name="tema_id" id="tema_id">
+                    <div class="modal-body grid columns-12 ">
                         <div class="g-col-12">
-                            <table class="table table-bordered hover">
-                                <tr>
-                                    <td class="font-bold">Kegiatan Utama</td>
-                                    <td id="baseline_kegiatan_utama"></td>
-                                </tr>
-                                <tr>
-                                    <td class="font-bold">Indikator</td>
-                                    <td id="baseline_indikator"></td>
-                                </tr>
-                            </table>
-                            <hr class="mt-5 mb-5">
-                            <table class="table table-bordered table-striped hover">
-                                <thead class="table-dark">
-                                    <tr>
-                                        <th>Tahun</th>
-                                        <th>Target</th>
-                                        <th>Realisasi</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>
-                                            <input type="text" name="baseline_tahun" id="baseline_tahun"
-                                                class="form-control w-full tahun" value="{{ date('Y') - 1 }}" required>
-                                        </td>
-                                        <td>
-                                            <input type="text" name="baseline_target" id="baseline_target"
-                                                class="form-control w-full" required>
-                                        </td>
-                                        <td>
-                                            <input type="text" name="baseline_realisasi" id="baseline_realisasi"
-                                                class="form-control w-full" required>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <div class="border  rounded-md ">
+                                <div id="konten_tambah_aksi">
+                                    <div class="relative   dark:border rounded-md">
+                                        <table class="table table-bordered">
+                                            <tr>
+                                                <td class="font-bold w-30">Tema </td>
+                                                <td colspan="5">
+                                                    <select class="form-select mt-2 sm:mr-2 form-control" name="tema_id">
+                                                        @foreach ($temas as $tema)
+                                                            <option value="{{ $tema->id }}">{{ $tema->nama }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="font-bold w-30">Sasaran Tematik Roadmap</td>
+                                                <td colspan="5">
+                                                    <input type="text" name="nama"
+                                                        placeholder="Masukan Sasaran Roadmap" class="form-control" />
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        <div id="dynamicAddRemove"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+
                         </div>
                     </div> <!-- END: Modal Body -->
                     <!-- BEGIN: Modal Footer -->
@@ -229,45 +171,60 @@
         </div>
     </div> <!-- END: Modal Content -->
 
-    {{-- Modal Form Target --}}
-    <div id="modal-target" class="modal fade" tabindex="-1" aria-hidden="true">
+    {{-- Modal Form Indikator Roadmap --}}
+    <div id="modal-indikator-roadmap" class="modal fade" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <!-- BEGIN: Modal Header -->
                 <div class="darkbg modal-header">
-                    <h2 class="font-bold fw-medium fs-base me-auto" id="title">Data Target</h2>
+                    <h2 class="font-bold fw-medium  fs-base me-auto" id="title">Indikator Roadmap</h2>
                 </div> <!-- END: Modal Header -->
                 <!-- BEGIN: Modal Body -->
-                <form action="{{ url('rb-general/perencanaan/simpanTarget') }}" id="form-target" method="post">
+                <form action="{{ url('rb-tematik/perencanaan/simpan-indikator-roadmap') }}" id="form-indikator-roadmap"
+                    method="post">
                     @csrf
-                    <input type="hidden" name="kegiatan_utama_id" id="target_kegiatan_utama_id">
-                    <input type="hidden" name="indikator_id" id="target_indikator_id">
-                    <div class="modal-body grid columns-12 gap-4 gap-y-3">
+                    <input type="hidden" name="sasaran_id" id="sasaran-id">
+                    <div class="modal-body grid columns-12 ">
                         <div class="g-col-12">
-                            <table class="table table-bordered hover">
-                                <tr>
-                                    <td class="font-bold">Kegiatan Utama</td>
-                                    <td id="target_kegiatan_utama"></td>
-                                </tr>
-                                <tr>
-                                    <td class="font-bold">Indikator</td>
-                                    <td id="target_indikator"></td>
-                                </tr>
-                            </table>
-                            <hr class="mt-5 mb-5">
-                            <table class="table table-bordered table-striped hover" id="target-table">
-                                <thead class="table-dark">
-                                    <tr>
-                                        <th>Tahun</th>
-                                        <th>Target</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
-                            <button type="button" onclick="tambah_tahun();"
-                                class="btn btn-outline-primary border-dashed w-full"><i data-lucide="plus"
-                                    class="w-4 h-4 mr-2"></i></button>
+                            <div class="border  rounded-md ">
+                                <div id="konten_tambah_aksi">
+                                    <div class="relative   dark:border rounded-md">
+                                        <table class="table table-bordered">
+                                            <tr>
+                                                <td class="font-bold w-30">Tema </td>
+                                                <td colspan="5">
+                                                    <input type="text" id="tema-indikator" name="tema_indikator"
+                                                        class="form-control" disabled />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="font-bold w-30">Sasaran Roadmap </td>
+                                                <td colspan="5">
+                                                    <input type="text" id="sasaran-roadmap" name="sasaran_roadmap"
+                                                        class="form-control" disabled />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="font-bold w-30">Indikator Roadmap</td>
+                                                <td colspan="5">
+                                                    <input type="text" id="indikator-roadmap" name="indikator_roadmap"
+                                                        placeholder="Masukan Indikator Roadmap" class="form-control" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="font-bold w-30">Target</td>
+                                                <td colspan="5">
+                                                    <input type="text" id="target-roadmap" name="target_roadmap"
+                                                        placeholder="Masukan Target Roadmap" class="form-control" />
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        <div id="dynamicAddRemove"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+
                         </div>
                     </div> <!-- END: Modal Body -->
                     <!-- BEGIN: Modal Footer -->
@@ -281,44 +238,61 @@
         </div>
     </div> <!-- END: Modal Content -->
 
-    {{-- Modal Form Monev --}}
-    <div id="modal-monev" class="modal fade" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-xl">
+    {{-- Modal Form Permasalahan --}}
+    <div id="modal-permasalahan" class="modal fade" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
             <div class="modal-content">
                 <!-- BEGIN: Modal Header -->
                 <div class="darkbg modal-header">
-                    <h2 class="font-bold fw-medium fs-base me-auto" id="title-monev">Monitoring dan Evaluasi Perencanaan
-                    </h2>
+                    <h2 class="font-bold fw-medium  fs-base me-auto" id="title">Permasalahan</h2>
                 </div> <!-- END: Modal Header -->
                 <!-- BEGIN: Modal Body -->
-                <form action="{{ url('rb-general/perencanaan/simpanMonev') }}" id="form-monev" method="post">
+                <form action="{{ url('rb-tematik/perencanaan/simpan-permasalahan') }}" id="form-permasalahan"
+                    method="post">
                     @csrf
-                    <input type="hidden" name="kegiatan_utama_id" id="monev_kegiatan_utama_id">
-                    <input type="hidden" name="indikator_id" id="monev_indikator_id">
-                    <div class="modal-body grid columns-12 gap-4 gap-y-3">
+                    <input type="hidden" name="tematik_indikator_roadmap_id" id="indikator-roadmap-id-onPermasalahan">
+                    <div class="modal-body grid columns-12 ">
                         <div class="g-col-12">
-                            <table class="table">
-                                <tr>
-                                    <td class="font-bold w-44">Realisasi Indikator <span class="text-danger">*</span></td>
-                                    <td>
-                                        <input type="text" name="realisasi_indikator" id="realisasi_indikator"
-                                            placeholder="Realisasi Indikator" class="form-control" required>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="font-bold w-44">Capaian Indikator <span class="text-danger">*</span></td>
-                                    <td>
-                                        <input type="text" name="capaian_indikator" id="capaian_indikator"
-                                            placeholder="Capaian Indikator" class="form-control" required>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="font-bold w-44 align-top">Catatan</td>
-                                    <td>
-                                        <textarea rows="5" name="catatan" id="catatan" placeholder="Penjelasan Rencana Aksi" class="form-control"></textarea>
-                                    </td>
-                                </tr>
-                            </table>
+                            <div class="border  rounded-md ">
+                                <div id="konten_tambah_aksi">
+                                    <div class="relative   dark:border rounded-md">
+                                        <table class="table table-bordered">
+                                            <tr>
+                                                <td class="font-bold w-30">Indikator Sasaran </td>
+                                                <td colspan="5">
+                                                    <input type="text" id="indikator-roadmap-onPermasalahan"
+                                                        name="indikator_roadmap" class="form-control" disabled />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="font-bold w-30">Target Indikator </td>
+                                                <td colspan="5">
+                                                    <input type="text" id="target-roadmap-onPermasalahan"
+                                                        name="target_roadmap" class="form-control" disabled />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="font-bold w-30">Permasalahan</td>
+                                                <td colspan="5">
+                                                    <input type="text" id="permasalahan" name="permasalahan"
+                                                        placeholder="Masukan Permasalahan" class="form-control" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="font-bold w-30">Sasaran Permasalahan</td>
+                                                <td colspan="5">
+                                                    <input type="text" id="sasaran-permasalahan"
+                                                        name="sasaran_permasalahan"
+                                                        placeholder="Masukan Sasaran Permasalahan" class="form-control" />
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        <div id="dynamicAddRemove"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+
                         </div>
                     </div> <!-- END: Modal Body -->
                     <!-- BEGIN: Modal Footer -->
@@ -331,6 +305,83 @@
             </div>
         </div>
     </div> <!-- END: Modal Content -->
+
+    {{-- Modal Form Indikator Permasalahan --}}
+    <div id="modal-indikator-permasalahan" class="modal fade" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <!-- BEGIN: Modal Header -->
+                <div class="darkbg modal-header">
+                    <h2 class="font-bold fw-medium  fs-base me-auto" id="title">Indikator Permasalahan</h2>
+                </div> <!-- END: Modal Header -->
+                <!-- BEGIN: Modal Body -->
+                <form action="{{ url('rb-tematik/perencanaan/simpan-indikator-permasalahan') }}" id="form-permasalahan"
+                    method="post">
+                    @csrf
+                    <input type="hidden" name="tematik_permasalahan_id_onIndikatorPermasalahan"
+                        id="tematik-permasalahan-id-onIndikatorPermasalahan">
+                    <div class="modal-body grid columns-12 ">
+                        <div class="g-col-12">
+                            <div class="border  rounded-md ">
+                                <div id="konten_tambah_aksi">
+                                    <div class="relative   dark:border rounded-md">
+                                        <table class="table table-bordered">
+                                            <tr>
+                                                <td class="font-bold w-30">Permasalahan </td>
+                                                <td colspan="5">
+                                                    <input type="text" id="permasalahan-onIndikatorPermasalahan"
+                                                        name="permasalahan" class="form-control" disabled />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="font-bold w-30">Sasaran</td>
+                                                <td colspan="5">
+                                                    <input type="text"
+                                                        id="sasaran-permasalahan-onIndikatorPermasalahan"
+                                                        name="permasalahan_sasaran" class="form-control" disabled />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="font-bold w-30">Indikator </td>
+                                                <td colspan="5">
+                                                    <input type="text" id="indikator-permasalahan"
+                                                        name="indikator_permasalahan" placeholder="Masukan Indikator"
+                                                        class="form-control" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="font-bold w-30">Target</td>
+                                                <td colspan="5">
+                                                    <input type="text" id="target-permasalahan"
+                                                        name="target_permasalahan" placeholder="Masukan Target"
+                                                        class="form-control" />
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        <div id="dynamicAddRemove"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div> <!-- END: Modal Body -->
+                    <!-- BEGIN: Modal Footer -->
+                    <div class="modal-footer text-end">
+                        <button type="button" data-tw-dismiss="modal"
+                            class="btn btn-outline-secondary w-20 me-1">Cancel</button>
+                        <button type="submit" class="btn btn-primary w-20 saveButton">Simpan</button>
+                    </div> <!-- END: Modal Footer -->
+                </form>
+            </div>
+        </div>
+    </div> <!-- END: Modal Content -->
+
+
+
+
+
+
 @endsection
 
 @push('js')
@@ -340,159 +391,39 @@
 
     <script>
         $(document).ready(function() {
-            modal_baseline = tailwind.Modal.getInstance(document.querySelector("#modal-baseline"));
-            modal_target = tailwind.Modal.getInstance(document.querySelector("#modal-target"));
-            modal_monev = tailwind.Modal.getInstance(document.querySelector("#modal-monev"));
-            $(".tahun").inputmask('2099');
-
-            $('#form-baseline').validate({
-                highlight: function(input) {
-                    $(input).addClass('border-danger');
-                },
-                unhighlight: function(input) {
-                    $(input).removeClass('border-danger');
-                },
-                errorPlacement: function(error, element) {
-                    var placement = element.closest('td');
-                    if (!placement.get(0)) {
-                        placement = element;
-                    }
-                    if (error.text() !== '') {
-                        placement.append(error);
-                    }
-                    console.log(error, placement);
-                },
-                submitHandler: function(form) {
-                    $('.saveButton').prop('disabled', true);
-                    form.submit();
-                }
-            });
-
-            $('#form-target').validate({
-                highlight: function(input) {
-                    $(input).addClass('border-danger');
-                },
-                unhighlight: function(input) {
-                    $(input).removeClass('border-danger');
-                },
-                errorPlacement: function(error, element) {
-                    var placement = element.closest('td');
-                    if (!placement.get(0)) {
-                        placement = element;
-                    }
-                    if (error.text() !== '') {
-                        placement.append(error);
-                    }
-                    console.log(error, placement);
-                },
-                submitHandler: function(form) {
-                    $('.saveButton').prop('disabled', true);
-                    form.submit();
-                }
-            });
-
-            $('#form-monev').validate({
-                highlight: function(input) {
-                    $(input).addClass('border-danger');
-                },
-                unhighlight: function(input) {
-                    $(input).removeClass('border-danger');
-                },
-                errorPlacement: function(error, element) {
-                    var placement = element.closest('td');
-                    if (!placement.get(0)) {
-                        placement = element;
-                    }
-                    if (error.text() !== '') {
-                        placement.append(error);
-                    }
-                    console.log(error, placement);
-                },
-                submitHandler: function(form) {
-                    $('.saveButton').prop('disabled', true);
-                    form.submit();
-                }
-            });
+            modal_sasaran_roadmap = tailwind.Modal.getInstance(document.querySelector("#modal-sasaran-roadmap"));
+            modal_indikator_roadmap = tailwind.Modal.getInstance(document.querySelector(
+                "#modal-indikator-roadmap"));
+            modal_permasalahan = tailwind.Modal.getInstance(document.querySelector(
+                "#modal-permasalahan"));
+            modal_indikator_permasalahan = tailwind.Modal.getInstance(document.querySelector(
+                "#modal-indikator-permasalahan"));
         });
 
-        function atur_baseline(kegiatan_utama_id, indikator_id) {
-            $('#baseline_kegiatan_utama_id').val(kegiatan_utama_id);
-            $('#baseline_indikator_id').val(indikator_id);
-            kegiatan_utama = $('#kegiatan_utama' + indikator_id).html();
-            indikator = $('#indikator' + indikator_id).html();
-            $('#baseline_kegiatan_utama').html(kegiatan_utama);
-            $('#baseline_indikator').html(indikator);
-            $('.saveButton').prop('disabled', true);
-            modal_baseline.show();
-            $.getJSON("{{ url('rb-general/perencanaan/getData') }}/" + kegiatan_utama_id + "/" + indikator_id, function(
-                data) {
-                tahun = data.baseline_tahun ? data.baseline_tahun : 2022;
-                $('#baseline_tahun').val(tahun);
-                $('#baseline_target').val(data.baseline_target);
-                $('#baseline_realisasi').val(data.baseline_realisasi);
-                $('.saveButton').prop('disabled', false);
-            });
+        function tambah_sasaran_roadmap() {
+            modal_sasaran_roadmap.show();
         }
 
-        function atur_target(kegiatan_utama_id, indikator_id) {
-            $('#target-table tbody').html('');
-            $('#target_kegiatan_utama_id').val(kegiatan_utama_id);
-            $('#target_indikator_id').val(indikator_id);
-            kegiatan_utama = $('#kegiatan_utama' + indikator_id).html();
-            indikator = $('#indikator' + indikator_id).html();
-            $('#target_kegiatan_utama').html(kegiatan_utama);
-            $('#target_indikator').html(indikator);
-            $('.saveButton').prop('disabled', true);
-            modal_target.show();
-            $.getJSON("{{ url('rb-general/perencanaan/getTarget') }}/" + kegiatan_utama_id + "/" + indikator_id, function(
-                data) {
-                if (data.success) {
-                    $('#target-table tbody').append(data.input);
-                } else {
-                    Swal.fire('Aduh!',
-                        'Data Target belum bisa di-input, Data Baseline-nya belum ada! Input dulu Data Baseline-nya ya..',
-                        'error');
-                    modal_target.hide();
-                }
-                $('.saveButton').prop('disabled', false);
-            });
+        function tambah_indikator_roadmap(tema, sasaran_roadmap, sasaran_id) {
+            $('#sasaran-id').val(sasaran_id);
+            $('#tema-indikator').val(tema);
+            $('#sasaran-roadmap').val(sasaran_roadmap);
+            modal_indikator_roadmap.show();
         }
 
-        function atur_monev(kegiatan_utama_id, indikator_id) {
-            $('#monev_kegiatan_utama_id').val(kegiatan_utama_id);
-            $('#monev_indikator_id').val(indikator_id);
-            $('#realisasi_indikator').val('');
-            $('#capaian_indikator').val('');
-            $('.saveButton').prop('disabled', true);
-            modal_monev.show();
-            $.getJSON("{{ url('rb-general/perencanaan/getData') }}/" + kegiatan_utama_id + "/" + indikator_id, function(
-                data) {
-                if (data.baseline_tahun) {
-                    $('#realisasi_indikator').val(data.realisasi_indikator);
-                    $('#capaian_indikator').val(data.capaian_indikator);
-                    $('#catatan').val(data.catatan);
-                    $('.saveButton').prop('disabled', false);
-                } else {
-                    Swal.fire('Aduh!',
-                        'Data Monev belum bisa di-input, Data Baseline-nya belum ada! Input dulu Data Baseline-nya ya..',
-                        'error');
-                    modal_monev.hide();
-                }
-            });
+        function tambah_permasalahan(indikator_roadmap, target_roadmap, indikator_roadmap_id) {
+            $('#indikator-roadmap-id-onPermasalahan').val(indikator_roadmap_id);
+            $('#indikator-roadmap-onPermasalahan').val(indikator_roadmap);
+            $('#target-roadmap-onPermasalahan').val(target_roadmap);
+            modal_permasalahan.show();
         }
 
-        function tambah_tahun() {
-            idx = $('#target-table tbody tr').length;
-            last_idx = idx - 1;
-            last_tahun = $('#target_tahun' + last_idx).val();
-            tahun = parseInt(last_tahun) + 1;
-            input = '<tr>' +
-                '<td><input type="text" name="tahun[' + idx + ']" id="target_tahun' + idx +
-                '" class="form-control w-full tahun" value="' + tahun + '" required></td>' +
-                '<td><input type="text" name="target[' + idx + ']" id="target_target' + idx +
-                '" class="form-control w-full" required></td>' +
-                '</tr>';
-            $('#target-table tbody').append(input);
+        function tambah_indikator_permasalahan(permasalahan, sasaran, permasalahan_id) {
+
+            $('#tematik-permasalahan-id-onIndikatorPermasalahan').val(permasalahan_id);
+            $('#permasalahan-onIndikatorPermasalahan').val(permasalahan);
+            $('#sasaran-permasalahan-onIndikatorPermasalahan').val(sasaran);
+            modal_indikator_permasalahan.show();
         }
     </script>
     <script src="http://cdn.rawgit.com/ashl1/datatables-rowsgroup/v1.0.0/dataTables.rowsGroup.js"></script>
