@@ -34,6 +34,26 @@ function menus()
             ]
         ],
         [
+            'levels' => ['admin', 'evaluator', 'provinsi', 'kabupaten', 'kl'],
+            'title' => 'RB Tematik',
+            'icon' => 'bookmark',
+            'url' => 'rb-tematik',
+            'items' => [
+                [
+                    'levels' => ['provinsi', 'kabupaten', 'kl'],
+                    'title' => 'Perencanaan dan Monev',
+                    'icon' => 'bar-chart',
+                    'url' => 'rb-tematik/perencanaan',
+                ],
+                [
+                    'levels' => ['admin', 'evaluator', 'provinsi', 'kabupaten', 'kl'],
+                    'title' => 'Rekap Data',
+                    'icon' => 'clipboard',
+                    'url' => 'rb-tematik/rekap_data',
+                ],
+            ]
+        ],
+        [
             'levels' => ['devider'],
         ],
         [
@@ -116,7 +136,7 @@ function kegiatanUtama()
 
 function currency($number)
 {
-    return $number > 0 ? 'Rp. '.number_format($number, 0, ',', '.') : '';
+    return $number > 0 ? 'Rp. ' . number_format($number, 0, ',', '.') : '';
 }
 
 function fnumber($number, $digit = 0)
@@ -126,5 +146,5 @@ function fnumber($number, $digit = 0)
 
 function instansis()
 {
-    return Instansi::pluck('nama', 'id');
+    return Instansi::orderBy('id')->pluck('nama', 'id');
 }

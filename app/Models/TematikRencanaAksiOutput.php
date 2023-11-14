@@ -1,0 +1,12 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class TematikRencanaAksiOutput extends Model
+{
+    use HasFactory;
+    protected $table = 'tematik_rencana_aksi_output';
+}

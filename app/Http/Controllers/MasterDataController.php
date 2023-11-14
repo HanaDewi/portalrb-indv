@@ -157,6 +157,8 @@ class MasterDataController extends Controller
         return response()->json(['data' => $datas]);
     }
 
+
+
     public function tema_getData($id)
     {
         $data = Tema::find($id);

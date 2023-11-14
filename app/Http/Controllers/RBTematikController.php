@@ -2,17 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\GeneralPerencanaan;
-use App\Models\GeneralPerencanaanTarget;
-use App\Models\GeneralRencanaAksi;
-use App\Models\GeneralRencanaAksiOutput;
-use App\Models\Indikator;
 use App\Models\Instansi;
+use App\Models\Indikator;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use App\Models\GeneralPerencanaan;
+use App\Models\Tema;
+use App\Models\TematikSasaranRoadmap;
+use App\Models\TematikIndikatorRoadmap;
+use App\Models\TematikIndikatorPermasalahan;
+use App\Models\GeneralPerencanaanTarget;
+use App\Models\GeneralRencanaAksiOutput;
+use App\Models\GeneralRencanaAksi;
+use App\Models\TematikPermasalahan;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
-class RBGeneralController extends Controller
+class RBTematikController extends Controller
 {
     public function __construct()
     {
@@ -28,24 +33,89 @@ class RBGeneralController extends Controller
 
     public function perencanaan()
     {
-        $user = Auth::User();
-        $indikators = Indikator::where($user->level, '1')->orderBy('kegiatan_utama_id')->get();
-        foreach ($indikators as $indikator) {
-            $perencanaan = GeneralPerencanaan::where('instansi_id', $user->instansi_id)->where('kegiatan_utama_id', $indikator->kegiatan_utama_id)->where('indikator_id', $indikator->id)->first();
-            $indikator->target = [];
-            if ($perencanaan) {
-                $indikator->perencanaan_id = $perencanaan->id;
-                $indikator->baseline_tahun = $perencanaan->baseline_tahun;
-                $indikator->baseline_target = $perencanaan->baseline_target;
-                $indikator->baseline_realisasi = $perencanaan->baseline_realisasi;
-                $indikator->realisasi_indikator = $perencanaan->realisasi_indikator;
-                $indikator->capaian_indikator = $perencanaan->capaian_indikator;
-                $indikator->catatan = $perencanaan->catatan;
-                $target = GeneralPerencanaanTarget::where('general_perencanaan_id', $perencanaan->id)->get();
-                $indikator->target = $target ? $target : [];
+        $temas = Tema::get();
+        $sasaranRoadmaps = TematikSasaranRoadmap::orderBy('tema_id')->get();
+        $tematikDatas = [];
+        $jumlahBaris = 0;
+        foreach ($sasaranRoadmaps as $sasaran) {
+            if (count($sasaran->indikator_roadmap)) {
+                foreach ($sasaran->indikator_roadmap as $indikator) {
+                    if (count($indikator->permasalahan)) {
+                        foreach ($indikator->permasalahan as $permasalahan) {
+
+                            if (count($permasalahan->indikator_permasalahan)) {
+                                foreach ($permasalahan->indikator_permasalahan as $indikator_permasalahan) {
+                                    $tematikDatas[$jumlahBaris]["indikator_permasalahan_id"] = $indikator_permasalahan->id;
+                                    $tematikDatas[$jumlahBaris]["indikator_permasalahan_nama"] = $indikator_permasalahan->nama;
+                                    $tematikDatas[$jumlahBaris]["indikator_permasalahan_target"] = $indikator_permasalahan->target;
+                                    $tematikDatas[$jumlahBaris]["permasalahan_id"] = $permasalahan->id;
+                                    $tematikDatas[$jumlahBaris]["permasalahan_nama"] = $permasalahan->nama;
+                                    $tematikDatas[$jumlahBaris]["permasalahan_sasaran"] = $permasalahan->sasaran_permasalahan;
+                                    $tematikDatas[$jumlahBaris]["indikator_id"] = $indikator->id;
+                                    $tematikDatas[$jumlahBaris]["indikator_nama"] = $indikator->nama;
+                                    $tematikDatas[$jumlahBaris]["indikator_target"] = $indikator->target;
+                                    $tematikDatas[$jumlahBaris]["sasaran_id"] = $sasaran->id;
+                                    $tematikDatas[$jumlahBaris]["sasaran_nama"] = $sasaran->nama;
+                                    $tematikDatas[$jumlahBaris]["tema_id"] = $sasaran->tema->id;
+                                    $tematikDatas[$jumlahBaris]["tema_nama"] = $sasaran->tema->nama;
+                                    $jumlahBaris++;
+                                }
+                            } else {
+                                $tematikDatas[$jumlahBaris]["indikator_permasalahan_id"] = null;
+                                $tematikDatas[$jumlahBaris]["indikator_permasalahan_nama"] = null;
+                                $tematikDatas[$jumlahBaris]["indikator_permasalahan_target"] = null;
+                                $tematikDatas[$jumlahBaris]["permasalahan_id"] = $permasalahan->id;
+                                $tematikDatas[$jumlahBaris]["permasalahan_nama"] = $permasalahan->nama;
+                                $tematikDatas[$jumlahBaris]["permasalahan_sasaran"] = $permasalahan->sasaran_permasalahan;
+                                $tematikDatas[$jumlahBaris]["indikator_id"] = $indikator->id;
+                                $tematikDatas[$jumlahBaris]["indikator_nama"] = $indikator->nama;
+                                $tematikDatas[$jumlahBaris]["indikator_target"] = $indikator->target;
+                                $tematikDatas[$jumlahBaris]["sasaran_id"] = $sasaran->id;
+                                $tematikDatas[$jumlahBaris]["sasaran_nama"] = $sasaran->nama;
+                                $tematikDatas[$jumlahBaris]["tema_id"] = $sasaran->tema->id;
+                                $tematikDatas[$jumlahBaris]["tema_nama"] = $sasaran->tema->nama;
+                                $jumlahBaris++;
+                            }
+                        }
+                    } else {
+                        $tematikDatas[$jumlahBaris]["indikator_permasalahan_id"] = null;
+                        $tematikDatas[$jumlahBaris]["indikator_permasalahan_nama"] = null;
+                        $tematikDatas[$jumlahBaris]["indikator_permasalahan_target"] = null;
+                        $tematikDatas[$jumlahBaris]["permasalahan_id"] = null;
+                        $tematikDatas[$jumlahBaris]["permasalahan_nama"] = null;
+                        $tematikDatas[$jumlahBaris]["permasalahan_sasaran"] = null;
+                        $tematikDatas[$jumlahBaris]["indikator_id"] = $indikator->id;
+                        $tematikDatas[$jumlahBaris]["indikator_nama"] = $indikator->nama;
+                        $tematikDatas[$jumlahBaris]["indikator_target"] = $indikator->target;
+                        $tematikDatas[$jumlahBaris]["sasaran_id"] = $sasaran->id;
+                        $tematikDatas[$jumlahBaris]["sasaran_nama"] = $sasaran->nama;
+                        $tematikDatas[$jumlahBaris]["tema_id"] = $sasaran->tema->id;
+                        $tematikDatas[$jumlahBaris]["tema_nama"] = $sasaran->tema->nama;
+                        $jumlahBaris++;
+                    }
+                }
+            } else {
+                $tematikDatas[$jumlahBaris]["indikator_permasalahan_id"] = null;
+                $tematikDatas[$jumlahBaris]["indikator_permasalahan_nama"] = null;
+                $tematikDatas[$jumlahBaris]["indikator_permasalahan_target"] = null;
+                $tematikDatas[$jumlahBaris]["permasalahan_id"] = null;
+                $tematikDatas[$jumlahBaris]["permasalahan_nama"] = null;
+                $tematikDatas[$jumlahBaris]["permasalahan_sasaran"] = null;
+                $tematikDatas[$jumlahBaris]["indikator_id"] = null;
+                $tematikDatas[$jumlahBaris]["indikator_nama"] = null;
+                $tematikDatas[$jumlahBaris]["indikator_target"] = null;
+                $tematikDatas[$jumlahBaris]["sasaran_id"] = $sasaran->id;
+                $tematikDatas[$jumlahBaris]["sasaran_nama"] = $sasaran->nama;
+                $tematikDatas[$jumlahBaris]["tema_id"] = $sasaran->tema->id;
+                $tematikDatas[$jumlahBaris]["tema_nama"] = $sasaran->tema->nama;
+                $jumlahBaris++;
             }
         }
-        return view('rb-general.perencanaan', compact('indikators'));
+        return view('rb-tematik.perencanaan', [
+            "temas" => $temas,
+            "sasaranRoadmaps" => $sasaranRoadmaps,
+            "tematikDatas" => $tematikDatas
+        ]);
     }
 
     public function perencanaan_getData($kegiatan_utama_id, $indikator_id)
@@ -83,25 +153,75 @@ class RBGeneralController extends Controller
         return response()->json(['success' => $success, 'input' => $input]);
     }
 
-    public function perencanaan_simpanBaseline(Request $request)
+    public function simpanSasaranRoadmap(Request $request)
     {
         $user = Auth::User();
-        $perencanaan = GeneralPerencanaan::where('instansi_id', $user->instansi_id)->where('kegiatan_utama_id', $request->kegiatan_utama_id)->where('indikator_id', $request->indikator_id)->first();
-        if (!$perencanaan) {
-            $perencanaan = new GeneralPerencanaan();
-            $perencanaan->instansi_id = $user->instansi_id;
-            $perencanaan->kegiatan_utama_id = $request->kegiatan_utama_id;
-            $perencanaan->indikator_id = $request->indikator_id;
+        $sasaranRoadmap = TematikSasaranRoadmap::where('instansi_id', $user->instansi_id)->where('tema_id', $request->tema_id)->where('nama', $request->nama)->first();
+        if (!$sasaranRoadmap) {
+            $sasaranRoadmap = new TematikSasaranRoadmap();
+            $sasaranRoadmap->instansi_id = $user->instansi_id;
+            $sasaranRoadmap->tema_id = $request->tema_id;
+            $sasaranRoadmap->nama = $request->nama;
         }
-        $perencanaan->baseline_tahun = $request->baseline_tahun;
-        $perencanaan->baseline_target = $request->baseline_target;
-        $perencanaan->baseline_realisasi = $request->baseline_realisasi;
-        if ($perencanaan->save()) {
-            session()->flash('success', 'Data Baseline Perencanaan General berhasil disimpan.');
+        if ($sasaranRoadmap->save()) {
+            session()->flash('success', 'Data Sasaran Roadmap Tematik berhasil disimpan.');
         } else {
-            session()->flash('success', 'Data Baseline Perencanaan General gagal disimpan! Silahkan dicoba kembali.');
+            session()->flash('success', 'Data Sasaran Roadmap Tematik gagal disimpan! Silahkan dicoba kembali.');
         }
-        return redirect('rb-general/perencanaan');
+        return redirect('rb-tematik/perencanaan');
+    }
+
+    public function simpanIndikatorRoadmap(Request $request)
+    {
+        $user = Auth::User();
+        $indikatorRoadmap = TematikIndikatorRoadmap::where('tematik_sasaran_roadmap_id',)->where('nama', $request->indikator_roadmap)->first();
+        if (!$indikatorRoadmap) {
+            $indikatorRoadmap = new TematikIndikatorRoadmap();
+            $indikatorRoadmap->tematik_sasaran_roadmap_id = $request->sasaran_id;
+            $indikatorRoadmap->nama = $request->indikator_roadmap;
+            $indikatorRoadmap->target = $request->target_roadmap;
+        }
+        if ($indikatorRoadmap->save()) {
+            session()->flash('success', 'Data Indikator Roadmap Tematik berhasil disimpan.');
+        } else {
+            session()->flash('success', 'Data Indikator Roadmap Tematik gagal disimpan! Silahkan dicoba kembali.');
+        }
+        return redirect('rb-tematik/perencanaan');
+    }
+
+    public function simpanPermasalahan(Request $request)
+    {
+        $user = Auth::User();
+        $permasalahan = TematikPermasalahan::where('tematik_indikator_roadmap_id',)->where('nama', $request->indikator_roadmap)->first();
+        if (!$permasalahan) {
+            $permasalahan = new TematikPermasalahan();
+            $permasalahan->tematik_indikator_roadmap_id = $request->tematik_indikator_roadmap_id;
+            $permasalahan->nama = $request->permasalahan;
+            $permasalahan->sasaran_permasalahan = $request->sasaran_permasalahan;
+        }
+        if ($permasalahan->save()) {
+            session()->flash('success', 'Data Indikator Roadmap Tematik berhasil disimpan.');
+        } else {
+            session()->flash('success', 'Data Indikator Roadmap Tematik gagal disimpan! Silahkan dicoba kembali.');
+        }
+        return redirect('rb-tematik/perencanaan');
+    }
+
+    public function simpanIndikatorPermasalahan(Request $request)
+    {
+        $indikatorPermasalahan = TematikIndikatorPermasalahan::where('tematik_permasalahan_id',)->where('nama', $request->permasalahan)->first();
+        if (!$indikatorPermasalahan) {
+            $indikatorPermasalahan = new TematikIndikatorPermasalahan();
+            $indikatorPermasalahan->tematik_permasalahan_id = $request->tematik_permasalahan_id_onIndikatorPermasalahan;
+            $indikatorPermasalahan->nama = $request->indikator_permasalahan;
+            $indikatorPermasalahan->target = $request->target_permasalahan;
+        }
+        if ($indikatorPermasalahan->save()) {
+            session()->flash('success', 'Data Indikator Roadmap Tematik berhasil disimpan.');
+        } else {
+            session()->flash('success', 'Data Indikator Roadmap Tematik gagal disimpan! Silahkan dicoba kembali.');
+        }
+        return redirect('rb-tematik/perencanaan');
     }
 
     public function perencanaan_simpanTarget(Request $request)
@@ -142,7 +262,7 @@ class RBGeneralController extends Controller
         } else {
             session()->flash('success', 'Data Target Perencanaan General gagal disimpan! Data Baseline tidak ditemukan.');
         }
-        return redirect('rb-general/perencanaan');
+        return redirect('rb-tematik/perencanaan');
     }
 
     public function perencanaan_simpanMonev(Request $request)
@@ -163,7 +283,7 @@ class RBGeneralController extends Controller
         } else {
             session()->flash('success', 'Data Baseline Perencanaan General gagal disimpan! Silahkan dicoba kembali.');
         }
-        return redirect('rb-general/perencanaan');
+        return redirect('rb-tematik/perencanaan');
     }
 
     public function rencana_aksi($perencanaan_id, $target_id)
@@ -176,7 +296,7 @@ class RBGeneralController extends Controller
         if (!$target) {
             abort(404);
         }
-        return view('rb-general.rencana_aksi', compact('target'));
+        return view('rb-tematik.rencana_aksi', compact('target'));
     }
 
     public function rencana_aksi_getDatas($perencanaan_id, $target_id)
@@ -316,7 +436,7 @@ class RBGeneralController extends Controller
         if (!$target) {
             abort(404);
         }
-        return view('rb-general.monev', compact('target'));
+        return view('rb-tematik.monev', compact('target'));
     }
 
     public function monev_getTarget($perencanaan_id, $target_id)
@@ -394,13 +514,13 @@ class RBGeneralController extends Controller
         } else {
             $instansi_id = Instansi::orderBy('id')->first()->id;
         }
-        $perencanaans = GeneralPerencanaan::where('instansi_id', $instansi_id)->orderBy('kegiatan_utama_id')->orderBy('indikator_id')->get();
+        $sasarans = TematikSasaranRoadmap::where('instansi_id', $instansi_id)->orderBy('tema_id')->get();
         $key = 0;
         $datas = [];
-        foreach ($perencanaans as $perencanaan) {
-            if (count($perencanaan->target)) {
-                foreach ($perencanaan->target as $target) {
-                    if (count($target->rencana_aksi)) {
+        foreach ($sasarans as $sasaran) {
+            if (count($sasaran)) {
+                foreach ($perencanaan->indikator_roadmap as $indikator_roadmaps) {
+                    if (count($indikator_roadmaps->permasalahan)) {
                         foreach ($target->rencana_aksi as $rencana_aksi) {
                             if (count($rencana_aksi->output)) {
                                 foreach ($rencana_aksi->output as $output) {
@@ -434,19 +554,19 @@ class RBGeneralController extends Controller
                 $key++;
             }
         }
-        return view('rb-general.rekap_data', compact('datas', 'instansi_id'));
+        return view('rb-tematik.rekap_data', compact('datas', 'instansi_id'));
     }
 
-    public function rekap_data_getTarget($id)
+    public function rekap_data_getPerencanaan($id)
     {
-        $perencanaan = GeneralPerencanaanTarget::find($id);
+        $perencanaan = GeneralPerencanaan::find($id);
         return response()->json($perencanaan);
     }
 
     public function rekap_data_simpanCatatanEvaluator(Request $request)
     {
-        $perencanaan = GeneralPerencanaanTarget::find($request->target_id);
-        $perencanaan->catatan_evaluator = $request->catatan_evaluator;
+        $perencanaan = GeneralPerencanaan::find($request->perencanaan_id);
+        $perencanaan->catatan = $request->catatan;
         $perencanaan->save();
         return redirect()->back();
     }

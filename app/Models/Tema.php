@@ -9,4 +9,9 @@ class Tema extends Model
 {
     use HasFactory;
     protected $table = 'tema';
+
+    public function sasarans()
+    {
+        return $this->hasMany(TematikSasaranRoadmap::class, 'tema_id');
+    }
 }
