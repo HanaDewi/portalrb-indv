@@ -88,6 +88,13 @@ function menus()
             'icon' => 'user',
             'url' => 'profil',
         ],
+
+        [
+            'levels' => ['admin', 'evaluator', 'provinsi', 'kabupaten', 'kl'],
+            'title' => 'Hasil',
+            'icon' => 'database',
+            'url' => 'hasil-seluruh',
+        ],
     ];
     return $menu;
 }

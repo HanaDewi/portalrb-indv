@@ -5,6 +5,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RBGeneralController;
 use App\Http\Controllers\RBTematikController;
 use App\Http\Controllers\MasterDataController;
+use App\Http\Controllers\HasilController;
 
 /*
 |--------------------------------------------------------------------------
@@ -87,6 +88,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/rb-tematik/rekap_data', [RBTematikController::class, 'rekap_data']);
     Route::get('/rb-tematik/rekap_data/getPerencanaan/{id}', [RBTematikController::class, 'rekap_data_getPerencanaan']);
     Route::post('/rb-tematik/rekap_data/simpanCatatanEvaluator', [RBTematikController::class, 'rekap_data_simpanCatatanEvaluator']);
+    // Hasil
+    Route::get('/hasil-seluruh', [HasilController::class, 'hasil_seluruh'])->name('hasil_seluruh');
+    Route::get('/hasil/{KlpdInstansi}', [HasilController::class, 'hasil'])->name('hasil');
 });
 
 require __DIR__ . '/auth.php';
