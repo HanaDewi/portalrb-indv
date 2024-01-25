@@ -47,4 +47,9 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Instansi::class, 'instansi_id');
     }
+
+    public function user_rel()
+    {
+        return $this->hasMany(KlpdUserRel::class, 'user_id');
+    }
 }

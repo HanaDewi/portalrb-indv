@@ -16,8 +16,6 @@
                             <th class="w100">KLPD</th>
                             <th class="w200">Kegiatan </th>
                             <th class="w200">Index RB </th>
-
-
                         </tr>
                     </thead>
                     <tbody>

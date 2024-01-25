@@ -10,6 +10,7 @@ class LkeTestTp extends Model
 {
     use HasFactory;
     protected $table = 'lke_test_tp';
+    public $timestamps = false;
 
     public function klpd_instansi(): BelongsTo
     {

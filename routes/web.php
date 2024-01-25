@@ -89,8 +89,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/rb-tematik/rekap_data/getPerencanaan/{id}', [RBTematikController::class, 'rekap_data_getPerencanaan']);
     Route::post('/rb-tematik/rekap_data/simpanCatatanEvaluator', [RBTematikController::class, 'rekap_data_simpanCatatanEvaluator']);
     // Hasil
-    Route::get('/hasil-seluruh', [HasilController::class, 'hasil_seluruh'])->name('hasil_seluruh');
+    Route::get('/hasil', [HasilController::class, 'hasil_seluruh'])->name('hasil_seluruh');
     Route::get('/hasil/{KlpdInstansi}', [HasilController::class, 'hasil'])->name('hasil');
+    Route::get('/hasil/get_test_tp_line/{id}', [HasilController::class, 'get_test_tp_line']);
+    Route::post('/hasil/simpan_test_tp_line', [HasilController::class, 'simpan_test_tp_line']);
 });
 
 require __DIR__ . '/auth.php';

@@ -99,7 +99,7 @@ class RBGeneralController extends Controller
         if ($perencanaan->save()) {
             session()->flash('success', 'Data Baseline Perencanaan General berhasil disimpan.');
         } else {
-            session()->flash('success', 'Data Baseline Perencanaan General gagal disimpan! Silahkan dicoba kembali.');
+            session()->flash('error', 'Data Baseline Perencanaan General gagal disimpan! Silahkan dicoba kembali.');
         }
         return redirect('rb-general/perencanaan');
     }
@@ -137,10 +137,10 @@ class RBGeneralController extends Controller
                 session()->flash('success', 'Data Target Perencanaan General berhasil disimpan.');
             } else {
                 DB::rollBack();
-                session()->flash('success', 'Data Target Perencanaan General gagal disimpan! ' . $pesan);
+                session()->flash('error', 'Data Target Perencanaan General gagal disimpan! ' . $pesan);
             }
         } else {
-            session()->flash('success', 'Data Target Perencanaan General gagal disimpan! Data Baseline tidak ditemukan.');
+            session()->flash('error', 'Data Target Perencanaan General gagal disimpan! Data Baseline tidak ditemukan.');
         }
         return redirect('rb-general/perencanaan');
     }
@@ -161,7 +161,7 @@ class RBGeneralController extends Controller
         if ($perencanaan->save()) {
             session()->flash('success', 'Data Baseline Perencanaan General berhasil disimpan.');
         } else {
-            session()->flash('success', 'Data Baseline Perencanaan General gagal disimpan! Silahkan dicoba kembali.');
+            session()->flash('error', 'Data Baseline Perencanaan General gagal disimpan! Silahkan dicoba kembali.');
         }
         return redirect('rb-general/perencanaan');
     }

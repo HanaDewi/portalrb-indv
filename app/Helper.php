@@ -8,92 +8,92 @@ function menus()
 {
     $menu = [
         [
-            'levels' => ['admin', 'evaluator', 'provinsi', 'kabupaten', 'kl'],
+            'levels' => ['admin', 'evaluator', 'provinsi', 'kabupaten', 'kl', 'tpn', 'tpm'],
             'title' => 'Dashboard',
             'icon' => 'home',
             'url' => 'dashboard',
         ],
-        [
-            'levels' => ['admin', 'evaluator', 'provinsi', 'kabupaten', 'kl'],
-            'title' => 'RB General',
-            'icon' => 'pie-chart',
-            'url' => 'rb-general',
-            'items' => [
-                [
-                    'levels' => ['provinsi', 'kabupaten', 'kl'],
-                    'title' => 'Perencanaan dan Monev',
-                    'icon' => 'bar-chart',
-                    'url' => 'rb-general/perencanaan',
-                ],
-                [
-                    'levels' => ['admin', 'evaluator', 'provinsi', 'kabupaten', 'kl'],
-                    'title' => 'Rekap Data',
-                    'icon' => 'clipboard',
-                    'url' => 'rb-general/rekap_data',
-                ],
-            ]
-        ],
-        [
-            'levels' => ['admin', 'evaluator', 'provinsi', 'kabupaten', 'kl'],
-            'title' => 'RB Tematik',
-            'icon' => 'bookmark',
-            'url' => 'rb-tematik',
-            'items' => [
-                [
-                    'levels' => ['provinsi', 'kabupaten', 'kl'],
-                    'title' => 'Perencanaan dan Monev',
-                    'icon' => 'bar-chart',
-                    'url' => 'rb-tematik/perencanaan',
-                ],
-                [
-                    'levels' => ['admin', 'evaluator', 'provinsi', 'kabupaten', 'kl'],
-                    'title' => 'Rekap Data',
-                    'icon' => 'clipboard',
-                    'url' => 'rb-tematik/rekap_data',
-                ],
-            ]
-        ],
-        [
-            'levels' => ['devider'],
-        ],
-        [
-            'levels' => ['admin'],
-            'title' => 'Master Data',
-            'icon' => 'database',
-            'url' => 'master-data',
-            'items' => [
-                [
-                    'levels' => ['admin', 'evaluator'],
-                    'title' => 'Kegiatan Utama',
-                    'icon' => 'award',
-                    'url' => 'master-data/kegiatan_utama',
-                ],
-                [
-                    'levels' => ['admin', 'evaluator'],
-                    'title' => 'Indikator',
-                    'icon' => 'command',
-                    'url' => 'master-data/indikator',
-                ],
-                [
-                    'levels' => ['admin', 'evaluator'],
-                    'title' => 'Tema',
-                    'icon' => 'bookmark',
-                    'url' => 'master-data/tema',
-                ],
-            ]
-        ],
-        [
-            'levels' => ['admin', 'evaluator', 'provinsi', 'kabupaten', 'kl'],
-            'title' => 'Profil',
-            'icon' => 'user',
-            'url' => 'profil',
-        ],
+        // [
+        //     'levels' => ['admin', 'evaluator', 'provinsi', 'kabupaten', 'kl'],
+        //     'title' => 'RB General',
+        //     'icon' => 'pie-chart',
+        //     'url' => 'rb-general',
+        //     'items' => [
+        //         [
+        //             'levels' => ['provinsi', 'kabupaten', 'kl'],
+        //             'title' => 'Perencanaan dan Monev',
+        //             'icon' => 'bar-chart',
+        //             'url' => 'rb-general/perencanaan',
+        //         ],
+        //         [
+        //             'levels' => ['admin', 'evaluator', 'provinsi', 'kabupaten', 'kl'],
+        //             'title' => 'Rekap Data',
+        //             'icon' => 'clipboard',
+        //             'url' => 'rb-general/rekap_data',
+        //         ],
+        //     ]
+        // ],
+        // [
+        //     'levels' => ['admin', 'evaluator', 'provinsi', 'kabupaten', 'kl'],
+        //     'title' => 'RB Tematik',
+        //     'icon' => 'bookmark',
+        //     'url' => 'rb-tematik',
+        //     'items' => [
+        //         [
+        //             'levels' => ['provinsi', 'kabupaten', 'kl'],
+        //             'title' => 'Perencanaan dan Monev',
+        //             'icon' => 'bar-chart',
+        //             'url' => 'rb-tematik/perencanaan',
+        //         ],
+        //         [
+        //             'levels' => ['admin', 'evaluator', 'provinsi', 'kabupaten', 'kl'],
+        //             'title' => 'Rekap Data',
+        //             'icon' => 'clipboard',
+        //             'url' => 'rb-tematik/rekap_data',
+        //         ],
+        //     ]
+        // ],
+        // [
+        //     'levels' => ['devider'],
+        // ],
+        // [
+        //     'levels' => ['admin'],
+        //     'title' => 'Master Data',
+        //     'icon' => 'database',
+        //     'url' => 'master-data',
+        //     'items' => [
+        //         [
+        //             'levels' => ['admin', 'evaluator'],
+        //             'title' => 'Kegiatan Utama',
+        //             'icon' => 'award',
+        //             'url' => 'master-data/kegiatan_utama',
+        //         ],
+        //         [
+        //             'levels' => ['admin', 'evaluator'],
+        //             'title' => 'Indikator',
+        //             'icon' => 'command',
+        //             'url' => 'master-data/indikator',
+        //         ],
+        //         [
+        //             'levels' => ['admin', 'evaluator'],
+        //             'title' => 'Tema',
+        //             'icon' => 'bookmark',
+        //             'url' => 'master-data/tema',
+        //         ],
+        //     ]
+        // ],
+        // [
+        //     'levels' => ['admin', 'evaluator', 'provinsi', 'kabupaten', 'kl'],
+        //     'title' => 'Profil',
+        //     'icon' => 'user',
+        //     'url' => 'profil',
+        // ],
 
         [
-            'levels' => ['admin', 'evaluator', 'provinsi', 'kabupaten', 'kl'],
+            'levels' => ['admin', 'evaluator', 'provinsi', 'kabupaten', 'kl', 'tpn', 'tpm'],
             'title' => 'Hasil',
             'icon' => 'database',
-            'url' => 'hasil-seluruh',
+            'url' => 'hasil',
         ],
     ];
     return $menu;
