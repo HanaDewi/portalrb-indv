@@ -170,18 +170,39 @@
             });
         }
     </script>
-    <script src="http://cdn.rawgit.com/ashl1/datatables-rowsgroup/v1.0.0/dataTables.rowsGroup.js"></script>
+        <script src="http://cdn.rawgit.com/ashl1/datatables-rowsgroup/v1.0.0/dataTables.rowsGroup.js"></script>
+    <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+   <script src="https://cdn.datatables.net/buttons/2.2.3/js/dataTables.buttons.min.js"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+   <script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.html5.min.js"></script>
     <script>
-        $(function() {
-            $("#perencanaan").DataTable({
-                scrollX: true,
-                // 'orderFixed': [0, 'asc'],
-                autoWidth: false,
-                rowsGroup: [0, 1, 2, 3],
-                paging: false,
-                bInfo: false,
-                ordering: false,
-            });
+        $(document).ready(function(){
+        var empDataTable = $('#perencanaan').DataTable({
+            dom: 'Blfrtip',
+            buttons: [
+            {  
+                extend: 'copy'
+            },
+            {
+                extend: 'pdf',
+                exportOptions: {
+                    columns: [0,1,2,3,4,5,6,7,8,9] // Column index which needs to export
+                }
+            },
+            {
+                extend: 'csv',
+            },
+            {
+                extend: 'excel',
+            } 
+            ] 
+
         });
+
+        });
+
+
     </script>
 @endpush
