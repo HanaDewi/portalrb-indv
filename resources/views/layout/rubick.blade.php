@@ -14,8 +14,9 @@
     @stack('css')
     <link rel="stylesheet" href="{{ asset('template_lkerb') }}/dist/css/app.css" />
     <link rel="stylesheet" href="{{ asset('ext') }}/datatables/datatables.css" />
+    <link rel="stylesheet" href="{{ asset('ext') }}/datatables/buttons.dataTables.min.css" />
     <link href='https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css' rel='stylesheet' type='text/css'>
-   <link href='https://cdn.datatables.net/buttons/2.2.3/css/buttons.dataTables.min.css' rel='stylesheet' type='text/css'>
+   
 </head>
 
 <body class="py-5">
