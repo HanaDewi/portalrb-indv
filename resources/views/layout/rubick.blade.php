@@ -144,7 +144,7 @@
         <div class="content">
             <div class="top-bar">
                 <nav aria-label="breadcrumb" class="-intro-x mr-auto hidden sm:flex">
-                    <i data-loading-icon="circles" class="w-8 h-8"></i>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" icon-name="globe" data-lucide="globe" class="lucide lucide-globe block mx-auto"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"></path></svg>
                     <h1 style="padding-left: 5px; padding-right: 5px;" class="mr-auto text-lg font-extrabold"
                         style="font-weight: 600">SISTEM INFORMASI LEMBAR KERJA </h1>
                     <h1 class="text-lg text-danger font-extrabold"> EVALUASI RB</h1>
