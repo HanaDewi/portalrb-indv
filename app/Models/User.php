@@ -50,6 +50,6 @@ class User extends Authenticatable
 
     public function user_rel()
     {
-        return $this->hasMany(KlpdUserRel::class, 'user_id');
+        return $this->hasOne(KlpdUserRel::class, 'user_id');
     }
 }
