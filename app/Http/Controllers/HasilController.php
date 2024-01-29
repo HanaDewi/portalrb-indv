@@ -53,6 +53,8 @@ class HasilController extends Controller
     public function get_test_tp_line($id)
     {
         $tp_line = LkeTestTpLine::find($id);
+        $tp_line->min = $tp_line->pertanyaan->min_value;
+        $tp_line->max = $tp_line->pertanyaan->max_value;
         return response()->json($tp_line);
     }
 
@@ -71,6 +73,12 @@ class HasilController extends Controller
             $tp_line->score = $request->score;
             $tp_line->note = $request->note;
             $tp_line->todo = $request->todo;
+            $score_index = ($tp_line->score/$tp_line->pertanyaan->max_value) * $tp_line->pertanyaan->weight;
+            if ($tp_line->pertanyaan->indikator_pengali_id) {
+                $tp_line_pengali = LkeTestTpLine::where('test_tp_id', $tp_line->test_tp_id)->where('test_line', $tp_line->pertanyaan->indikator_pengali_id)->first();
+                $score_index = $score_index * ($tp_line_pengali->score_index/$tp_line_pengali->pertanyaan->weight);
+            }
+            $tp_line->score_index = round($score_index, 2);
             if ($tp_line->save()) {
                 $success = $this->hitung_score_index($tp_line->test_tp_id);
             }

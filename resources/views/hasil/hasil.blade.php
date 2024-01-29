@@ -118,7 +118,8 @@
                             <tr>
                                 <td class="font-bold w-44">Skor <span class="text-danger">*</span></td>
                                 <td>
-                                    <input type="text" name="score" id="score" placeholder="Skor" class="form-control digit" required>
+                                    <input type="text" name="score" id="score" placeholder="Skor" class="form-control" required>
+                                    <span><b>Min: </b></span><span id="min"></span>, <span><b>Max: </b></span><span id="max"></span>
                                 </td>
                             </tr>
                             <tr>
@@ -196,15 +197,6 @@
         modal_score = tailwind.Modal.getInstance(document.querySelector("#modal-score"));
         modal_penyesuaian = tailwind.Modal.getInstance(document.querySelector("#modal-penyesuaian"));
 
-        $(".digit").inputmask("decimal",{
-            radixPoint:".",
-            digits: 2,
-            autoGroup: true,
-            rightAlign: false,
-            min: 0,
-            max: 10,
-        });
-
         $(".numeric").inputmask("decimal",{
             radixPoint:".",
             digits: 0,
@@ -266,7 +258,17 @@
         $('.saveButton').prop('disabled', true);
         modal_score.show();
         $.getJSON("{{ url('hasil/get_test_tp_line') }}/" + id, function(data) {
+            $("#score").inputmask("decimal",{
+                radixPoint:".",
+                digits: 2,
+                autoGroup: true,
+                rightAlign: false,
+                min: data.min,
+                max: data.max,
+            });
             $('#score').val(data.score);
+            $('#min').html(data.min);
+            $('#max').html(data.max);
             $('#note').val(data.note);
             $('#todo').val(data.todo);
             $('.saveButton').prop('disabled', false);
