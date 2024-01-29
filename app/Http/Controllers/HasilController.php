@@ -68,7 +68,7 @@ class HasilController extends Controller
         $success = false;
         try {
             $tp_line = LkeTestTpLine::find($request->test_tp_line_id);
-            $tp_line->score_index = $request->score_index;
+            $tp_line->score = $request->score;
             $tp_line->note = $request->note;
             $tp_line->todo = $request->todo;
             if ($tp_line->save()) {
@@ -113,8 +113,8 @@ class HasilController extends Controller
     protected function hitung_score_index($test_tp_id)
     {
         $tp = LkeTestTp::find($test_tp_id);
-        $rb_general = LkeTestTpLine::where('test_tp_id', $test_tp_id)->whereIn('lke_param_l0', [2126, 2217, 2353])->sum('score_index');
-        $rb_tematik = LkeTestTpLine::where('test_tp_id', $test_tp_id)->whereIn('lke_param_l0', [2124, 2213, 2352])->sum('score_index');
+        $rb_general = LkeTestTpLine::where('test_tp_id', $test_tp_id)->whereIn('lke_param_l0', [2124, 2213, 2352])->sum('score_index');
+        $rb_tematik = LkeTestTpLine::where('test_tp_id', $test_tp_id)->whereIn('lke_param_l0', [2126, 2217, 2353])->sum('score_index');
         $index_rb = LkeTestTpLine::where('test_tp_id', $test_tp_id)->sum('score_index');
         $rb_general_penyesuaian = $rb_general/$tp->bobot_rb_general_penyesuaian * 100;
         $tp->rb_general = $rb_general;
