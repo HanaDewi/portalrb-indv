@@ -47,7 +47,7 @@
                                 {{ isset($instansi->lke_test_tp) ? round($instansi->lke_test_tp->index_rb, 2) : '' }}
                             </td>
                             <td>
-                                {{ isset($instansi->lke_test_tp) ? $instansi->lke_test_tp->bobot_rb_general_penyesuaian.'%' : '' }}
+                                {{ isset($instansi->lke_test_tp) ? $instansi->lke_test_tp->bobot_rb_general_penyesuaian : '' }}
                             </td>
                             <td>
                                 {{ isset($instansi->lke_test_tp) ? round($instansi->lke_test_tp->rb_general_penyesuaian, 2) : '' }}
