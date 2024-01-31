@@ -33,11 +33,11 @@
                 </tr>
                 <tr>
                     <td class="font-bold">Total Bobot RB General</td>
-                    <td>100%</td>
+                    <td>100</td>
                 </tr>
                 <tr>
                     <td class="font-bold">Bobot RB General Penyesuaian</td>
-                    <td>{{ round($instansi->lke_test_tp->bobot_rb_general_penyesuaian) }}%</td>
+                    <td>{{ round($instansi->lke_test_tp->bobot_rb_general_penyesuaian) }}</td>
                 </tr>
                 @if (in_array(auth()->user()->level, ['admin', 'tpn']))
                 <tr>
@@ -167,10 +167,7 @@
                             <tr>
                                 <td class="font-bold w-44">Bobot RB General Penyesuaian <span class="text-danger">*</span></td>
                                 <td>
-                                    <div class="input-group mt-2">
-                                        <input type="text" name="bobot_rb_general_penyesuaian" id="bobot_rb_general_penyesuaian" placeholder="Bobot RB General Penyesuaian" class="form-control numeric" min="0" max="100" required>
-                                        <div class="input-group-text">%</div>
-                                    </div>
+                                    <input type="text" name="bobot_rb_general_penyesuaian" id="bobot_rb_general_penyesuaian" placeholder="Bobot RB General Penyesuaian" class="form-control numeric" min="0" max="100" required>
                                 </td>
                             </tr>
                         </table>
@@ -199,7 +196,7 @@
 
         $(".numeric").inputmask("decimal",{
             radixPoint:".",
-            digits: 0,
+            digits: 2,
             autoGroup: true,
             rightAlign: false,
             min: 0,
