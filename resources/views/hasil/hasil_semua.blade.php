@@ -18,6 +18,7 @@
                         <th class="w-5">RB General</th>
                         <th class="w-5">RB Tematik</th>
                         <th class="w-5">Index RB</th>
+                        <th class="w-5">Bobot RB General</th>
                         <th class="w-5">Bobot RB General Penyesuaian</th>
                         <th class="w-5">RB General Penyesuaian</th>
                         <th class="w-5">Index RB Penyesuaian</th>
@@ -45,6 +46,9 @@
                             </td>
                             <td>
                                 {{ isset($instansi->lke_test_tp) ? round($instansi->lke_test_tp->index_rb, 2) : '' }}
+                            </td>
+                            <td>
+                                100
                             </td>
                             <td>
                                 {{ isset($instansi->lke_test_tp) ? $instansi->lke_test_tp->bobot_rb_general_penyesuaian : '' }}

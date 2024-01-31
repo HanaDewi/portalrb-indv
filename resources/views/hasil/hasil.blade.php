@@ -37,7 +37,7 @@
                 </tr>
                 <tr>
                     <td class="font-bold">Bobot RB General Penyesuaian</td>
-                    <td>{{ round($instansi->lke_test_tp->bobot_rb_general_penyesuaian) }}</td>
+                    <td>{{ $instansi->lke_test_tp->bobot_rb_general_penyesuaian }}</td>
                 </tr>
                 @if (in_array(auth()->user()->level, ['admin', 'tpn']))
                 <tr>
