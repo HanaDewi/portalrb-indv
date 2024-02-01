@@ -17,11 +17,11 @@
                         <th class="w200">Kegiatan</th>
                         <th class="w-5">RB General</th>
                         <th class="w-5">RB Tematik</th>
-                        <th class="w-5">Index RB</th>
+                        <th class="w-5">Total Nilai</th>
                         <th class="w-5">Bobot RB General</th>
                         <th class="w-5">Bobot RB General Penyesuaian</th>
                         <th class="w-5">RB General Penyesuaian</th>
-                        <th class="w-5">Index RB Penyesuaian</th>
+                        <th class="w-5">Index RB</th>
                     </tr>
                 </thead>
                 <tbody>

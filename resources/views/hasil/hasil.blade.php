@@ -20,7 +20,7 @@
                     <td>{{ round($instansi->lke_test_tp->rb_tematik, 2) }}</td>
                 </tr>
                 <tr>
-                    <td class="font-bold">Index RB</td>
+                    <td class="font-bold">Total Nilai</td>
                     <td>{{ round($instansi->lke_test_tp->index_rb, 2) }}</td>
                 </tr>
                 <tr>
@@ -28,7 +28,7 @@
                     <td>{{ round($instansi->lke_test_tp->rb_general_penyesuaian, 2) }}</td>
                 </tr>
                 <tr>
-                    <td class="font-bold">Index RB Penyesuaian</td>
+                    <td class="font-bold">Index RB</td>
                     <td>{{ round($instansi->lke_test_tp->index_rb_penyesuaian, 2) }}</td>
                 </tr>
                 <tr>
