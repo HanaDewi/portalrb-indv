@@ -24,20 +24,20 @@
                     <td>{{ round($instansi->lke_test_tp->index_rb, 2) }}</td>
                 </tr>
                 <tr>
-                    <td class="font-bold">RB General Penyesuaian</td>
-                    <td>{{ round($instansi->lke_test_tp->rb_general_penyesuaian, 2) }}</td>
-                </tr>
-                <tr>
-                    <td class="font-bold">Index RB</td>
-                    <td>{{ round($instansi->lke_test_tp->index_rb_penyesuaian, 2) }}</td>
-                </tr>
-                <tr>
                     <td class="font-bold">Total Bobot RB General</td>
                     <td>100</td>
                 </tr>
                 <tr>
                     <td class="font-bold">Bobot RB General Penyesuaian</td>
                     <td>{{ $instansi->lke_test_tp->bobot_rb_general_penyesuaian }}</td>
+                </tr>
+                <tr>
+                    <td class="font-bold">RB General Penyesuaian</td>
+                    <td>{{ round($instansi->lke_test_tp->rb_general_penyesuaian, 2) }}</td>
+                </tr>
+                <tr>
+                    <td class="font-bold">Index RB</td>
+                    <td>{{ round($instansi->lke_test_tp->index_rb_penyesuaian, 2) }}</td>
                 </tr>
                 @if (in_array(auth()->user()->level, ['admin', 'tpn']))
                 <tr>
