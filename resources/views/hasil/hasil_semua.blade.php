@@ -160,7 +160,8 @@
     $(document).ready(function(){
         var empDataTable = $('#perencanaan').DataTable({
             dom: 'Blfrtip',
-            pageLength: '50',
+            pageLength: 50,
+            lengthMenu: [50, 100, 150, 'All'],
             buttons: [
                 {
                     extend: 'pdf',
