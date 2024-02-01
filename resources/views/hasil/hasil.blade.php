@@ -118,7 +118,7 @@
                             <tr>
                                 <td class="font-bold w-44">Skor <span class="text-danger">*</span></td>
                                 <td>
-                                    <input type="text" name="score" id="score" placeholder="Skor" class="form-control" required>
+                                    <input type="text" name="score" id="score" placeholder="Skor" class="form-control">
                                     <span><b>Min: </b></span><span id="min"></span>, <span><b>Max: </b></span><span id="max"></span>
                                 </td>
                             </tr>
@@ -199,7 +199,7 @@
             digits: 2,
             autoGroup: true,
             rightAlign: false,
-            min: 0,
+            min: 1,
             max: 100,
         });
 
