@@ -39,6 +39,9 @@
                     <td class="font-bold">Index RB</td>
                     <td>{{ round($instansi->lke_test_tp->index_rb_penyesuaian, 2) }}</td>
                 </tr>
+                @php
+                $idx = 0;
+                @endphp
                 @if (auth()->user()->level != 'tpm')
                 <tr>
                     <td class="font-bold">File Berkas</td>

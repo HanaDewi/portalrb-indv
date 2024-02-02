@@ -50,7 +50,7 @@ class HasilController extends Controller
             $access = OpenAccessSetting::where('user_level', $user->level)->first();
             if ($access) {
                 $today = date('Y-m-d');
-                if ($access->waktu_awal > $today && $access->waktu_akhir < $today) {
+                if ($access->waktu_awal > $today || $access->waktu_akhir < $today) {
                     return view('belumbuka');
                 }
             }
