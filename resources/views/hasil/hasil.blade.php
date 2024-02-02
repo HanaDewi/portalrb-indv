@@ -413,6 +413,7 @@
 <script>
     $(document).ready(function(){
         var empDataTable = $('#perencanaan').DataTable({
+            scrollX: true,
             dom: 'Blfrtip',
             buttons: [
                 {
