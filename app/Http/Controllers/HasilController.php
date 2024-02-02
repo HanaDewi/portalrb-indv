@@ -14,10 +14,23 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Models\GeneralPerencanaanTarget;
 use App\Models\GeneralRencanaAksiOutput;
+use App\Models\LkeTestTpFile;
+use App\Models\OpenAccessSetting;
+use Illuminate\Support\Facades\Storage;
 
 class HasilController extends Controller
 {
-
+    public function __construct()
+    {
+        $this->middleware(function ($request, $next) {
+            foreach (allowed_url() as $allowed) {
+                if ($request->is($allowed)) {
+                    return $next($request);
+                }
+            }
+            abort('403');
+        });
+    }
 
     public function hasil_seluruh()
     {
@@ -33,6 +46,15 @@ class HasilController extends Controller
     public function hasil($instansi_id)
     {
         $user = Auth::User();
+        if (in_array($user->level, ['kabupaten', 'provinsi', 'kl'])) {
+            $access = OpenAccessSetting::where('user_level', $user->level)->first();
+            if ($access) {
+                $today = date('Y-m-d');
+                if ($access->waktu_awal > $today && $access->waktu_akhir < $today) {
+                    return view('belumbuka');
+                }
+            }
+        }
         if (!in_array($user->level, ['admin', 'tpn', 'tpm'])) {
             if ($user->user_rel->instansi_id != $instansi_id) {
                 abort(403);
@@ -61,6 +83,23 @@ class HasilController extends Controller
     public function get_test_tp($id)
     {
         $tp = LkeTestTp::find($id);
+        $tp->berkas_list = '';
+        foreach ($tp->files as $berkas) {
+            $ext = pathinfo($berkas->file, PATHINFO_EXTENSION);
+            $src = exts(strtolower($ext));
+            $tp->berkas_list .= '<div class="col-span-12 lg:col-span-4" id="berkasdiv'.$berkas->id.'" style="position:relative;">
+                <div style="height: 100px;">
+                    <img class="img-fluid card-img-top" src="'.asset('images').'/'.$src.'" alt="Berkas'.$berkas->id.'" style="max-height: 100px; max-width:100%; padding: 5px 0;">
+                </div>
+                <div class="form-group mb-0">
+                    <input type="text" name="deskripsi_existing['.$berkas->id.']" class="form-control" id="deskripsi'.$berkas->id.'" placeholder="Deskripsi" value="'.$berkas->deskripsi.'">
+                    <input type="hidden" name="berkas_existing['.$berkas->id.']" value="'.$berkas->file.'">
+                </div>
+                <a href="javascript:void(0);" onclick="removeBerkas('.$berkas->id.')" class="remove-button text-danger">
+                    <div class="tooltip w-5 h-5 flex items-center justify-center absolute rounded-full text-white bg-danger right-0 top-0 -mr-2 -mt-2"> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" icon-name="x" data-lucide="x" class="lucide lucide-x w-4 h-4"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg> </div>
+                </a>
+            </div>';
+        }
         return response()->json($tp);
     }
 
@@ -95,7 +134,7 @@ class HasilController extends Controller
         return redirect('hasil/'.$tp_line->lke_test_tp->lke_instansi_id);
     }
 
-    public function simpan_bobot_rb_general_penyesuaian(Request $request)
+    public function simpan_test_tp(Request $request)
     {
         DB::beginTransaction();
         $success = false;
@@ -104,16 +143,41 @@ class HasilController extends Controller
             $tp->bobot_rb_general_penyesuaian = $request->bobot_rb_general_penyesuaian;
             if ($tp->save()) {
                 $success = $this->hitung_score_index($tp->id);
+                foreach ($tp->files as $berkas) {
+                    if (!isset($request->berkas_existing[$berkas->id])) {
+                        Storage::disk('public')->delete('berkas/' . $berkas->file);
+                        $berkas->delete();
+                    } else {
+                        $berkas->deskripsi = $request->deskripsi_existing[$berkas->id];
+                        $berkas->save();
+                    }
+                }
+                if ($request->hasFile('berkas')) {
+                    foreach ($request->file('berkas') as $key => $file_berkas) {
+                        $berkas = new LkeTestTpFile();
+                        $berkas->test_tp_id = $tp->id;
+                        $berkas->deskripsi = $request->deskripsi[$key];
+                        $time = time();
+                        $filename = $berkas->deskripsi."_$time." . $file_berkas->extension();
+                        $file_berkas->storeAs('berkas', $filename, 'public');
+                        $berkas->file = $filename;
+                        if ($berkas->save()) {
+                            $success = true;
+                        } else {
+                            $success = false;
+                        }
+                    }
+                }
             }
         } catch (\Throwable $th) {
             throw $th;
         }
         if ($success) {
             DB::commit();
-            session()->flash('success', 'Data Bobot RB General Penyesuaian berhasil disimpan.');
+            session()->flash('success', 'Data Test TP berhasil disimpan.');
         } else {
             DB::rollBack();
-            session()->flash('error', 'Data Bobot RB General Penyesuaian gagal disimpan! Silahkan dicoba kembali.');
+            session()->flash('error', 'Data Test TP gagal disimpan! Silahkan dicoba kembali.');
         }
         return redirect('hasil/'.$tp->lke_instansi_id);
     }
@@ -135,5 +199,28 @@ class HasilController extends Controller
         } else {
             return false;
         }
+    }
+
+    public function access()
+    {
+        $access = OpenAccessSetting::all();
+        return view('access', compact('access'));
+    }
+
+    public function access_simpan(Request $request)
+    {
+        $access = OpenAccessSetting::where('user_level', $request->user_level)->first();
+        if (!$access) {
+            $access = new OpenAccessSetting();
+        }
+        $access->user_level = $request->user_level;
+        $access->waktu_awal = $request->waktu_awal;
+        $access->waktu_akhir = $request->waktu_akhir;
+        if ($access->save()) {
+            session()->flash('success', 'Data Akses berhasil diperbaharui.');
+        } else {
+            session()->flash('error', 'Data Akses gagal diperbaharui.');
+        }
+        return redirect('access');
     }
 }

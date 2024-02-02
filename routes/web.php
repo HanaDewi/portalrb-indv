@@ -94,7 +94,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/hasil/get_test_tp_line/{id}', [HasilController::class, 'get_test_tp_line']);
     Route::get('/hasil/get_test_tp/{id}', [HasilController::class, 'get_test_tp']);
     Route::post('/hasil/simpan_test_tp_line', [HasilController::class, 'simpan_test_tp_line']);
-    Route::post('/hasil/simpan_bobot_rb_general_penyesuaian', [HasilController::class, 'simpan_bobot_rb_general_penyesuaian']);
+    Route::post('/hasil/simpan_test_tp', [HasilController::class, 'simpan_test_tp']);
+    // Access
+    Route::get('/access', [HasilController::class, 'access'])->name('access');
+    Route::post('/access/simpan', [HasilController::class, 'access_simpan']);
 });
 
 require __DIR__ . '/auth.php';

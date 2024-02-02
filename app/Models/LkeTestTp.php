@@ -26,4 +26,9 @@ class LkeTestTp extends Model
     {
         return $this->belongsTo(LkeKegiatan::class, "kegiatan_id");
     }
+
+    public function files()
+    {
+        return $this->hasMany(LkeTestTpFile::class, "test_tp_id");
+    }
 }

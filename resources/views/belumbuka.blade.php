@@ -1,0 +1,21 @@
+@extends('layout.rubick')
+@section('title', 'Buka Akses')
+
+@section('content')
+@include('common.status')
+<div class="grid grid-cols-12 gap-6">
+    <div class="intro-y col-span-12 lg:col-span-12">
+        <!-- BEGIN: Input -->
+        <div class="intro-y box">
+            <div class="grid grid-cols-12 gap-6 p-5">
+                <div class="intro-y col-span-12 lg:col-span-12">
+                    <p>
+                        Mohon Maaf! Halaman Belum Bisa Diakses!
+                    </p>
+                </div>
+            </div>
+        </div>
+        <!-- END: Input -->
+    </div>
+</div>
+@endsection

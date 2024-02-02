@@ -39,11 +39,31 @@
                     <td class="font-bold">Index RB</td>
                     <td>{{ round($instansi->lke_test_tp->index_rb_penyesuaian, 2) }}</td>
                 </tr>
+                @if (auth()->user()->level != 'tpm')
+                <tr>
+                    <td class="font-bold">File Berkas</td>
+                    <td>
+                        @php
+                        $test_tp = $instansi->lke_test_tp;
+                        $idx = $test_tp->files ? $test_tp->files->max('id') + 1 : 0;
+                        $berkas_list = '';
+                        if ($test_tp->files) {
+                            foreach ($test_tp->files as $berkas) {
+                                $ext = pathinfo($berkas->file, PATHINFO_EXTENSION);
+                                $src = asset('storage/berkas/' . $berkas->file);
+                                $berkas_list .= '<a href="' . $src . '" target="_blank" title="' . $berkas->deskripsi . '" class="inline-block"><img src="' . asset('images') . '/'.exts($ext).'" style="width: 50px; margin-right: 5px; margin-top: 5px;"></a>';
+                            }
+                        }
+                        @endphp
+                        {!! $berkas_list !!}
+                    </td>
+                </tr>
+                @endif
                 @if (in_array(auth()->user()->level, ['admin', 'tpn']))
                 <tr>
                     <td class="font-bold">Aksi</td>
                     <td>
-                        <button onclick="edit_bobot_rb_general_penyesuaian({{ $instansi->lke_test_tp->id }});" class="btn btn-warning btn-sm"><i data-lucide="edit" class="w-4 h-4 mr-1"></i> Edit Bobot RB Penyesuaian</button>
+                        <button onclick="edit_test_tp({{ $instansi->lke_test_tp->id }});" class="btn btn-warning btn-sm"><i data-lucide="edit" class="w-4 h-4 mr-1"></i> Perbaharui Data TP</button>
                     </td>
                 </tr>
                 @endif
@@ -154,20 +174,28 @@
         <div class="modal-content">
             <!-- BEGIN: Modal Header -->
             <div class="darkbg modal-header">
-                <h2 class="font-bold fw-medium fs-base me-auto" id="title-penyesuaian">Perbaharui RB General Penyesuaian
+                <h2 class="font-bold fw-medium fs-base me-auto" id="title-penyesuaian">Perbaharui Data TP
                 </h2>
             </div> <!-- END: Modal Header -->
             <!-- BEGIN: Modal Body -->
-            <form action="{{ url('hasil/simpan_bobot_rb_general_penyesuaian') }}" id="form-penyesuaian" method="post">
+            <form action="{{ url('hasil/simpan_test_tp') }}" id="form-penyesuaian" method="post" enctype="multipart/form-data">
                 @csrf
                 <input type="hidden" name="test_tp_id" id="test_tp_id">
                 <div class="modal-body grid columns-12 gap-4 gap-y-3">
                     <div class="g-col-12">
                         <table class="table">
                             <tr>
-                                <td class="font-bold w-44">Bobot RB General Penyesuaian <span class="text-danger">*</span></td>
+                                <td class="font-bold" width="230">Bobot RB General Penyesuaian <span class="text-danger">*</span></td>
                                 <td>
                                     <input type="text" name="bobot_rb_general_penyesuaian" id="bobot_rb_general_penyesuaian" placeholder="Bobot RB General Penyesuaian" class="form-control numeric" min="0" max="100" required>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold w-44">Berkas <span class="text-danger">*</span></td>
+                                <td>
+                                    <button type="button" class="btn btn-info btn-sm" onclick="pilih_berkas();"><i class="fa fa-plus"></i> Tambah Berkas</button>
+                                    <input type="file" id="berkas" style="display: none;">
+                                    <div id="berkas_list" class="intro-y grid grid-cols-12 gap-6 mt-5"></div>
                                 </td>
                             </tr>
                         </table>
@@ -185,11 +213,24 @@
 </div> <!-- END: Modal Content -->
 @endsection
 
+@push('css')
+<style>
+    .remove-button {
+        position: absolute;
+        top: 0px;
+        right: 10px;
+        background-color: white;
+        padding: 5px;
+    }
+</style>
+@endpush
+
 @push('js')
 <script src="{{ asset('ext/jquery-validation/jquery.validate.min.js') }}"></script>
 <script src="{{ asset('ext/jquery-validation/localization/messages_id.min.js') }}"></script>
 <script src="{{ asset('ext') }}/jquery-inputmask/jquery.inputmask.bundle.js"></script>
 <script>
+    var idx = {{ $idx }};
     $(document).ready(function() {
         modal_score = tailwind.Modal.getInstance(document.querySelector("#modal-score"));
         modal_penyesuaian = tailwind.Modal.getInstance(document.querySelector("#modal-penyesuaian"));
@@ -248,6 +289,10 @@
                 form.submit();
             }
         });
+
+        $('#berkas').change(function() {
+            cek_berkas(this);
+        })
     });
 
     function edit_score(id) {
@@ -272,13 +317,86 @@
         });
     }
 
-    function edit_bobot_rb_general_penyesuaian(id) {
+    function edit_test_tp(id) {
         $('#test_tp_id').val(id);
         $('.saveButton').prop('disabled', true);
         modal_penyesuaian.show();
         $.getJSON("{{ url('hasil/get_test_tp') }}/" + id, function(data) {
             $('#bobot_rb_general_penyesuaian').val(data.bobot_rb_general_penyesuaian);
+            $('#berkas_list').html(data.berkas_list);
             $('.saveButton').prop('disabled', false);
+        });
+    }
+    
+    function pilih_berkas() {
+        $('#berkas').trigger('click');
+    }
+
+    function isAllowed(ext) {
+        switch (ext.toLowerCase()) {
+            case 'xlsx':
+            case 'xls':
+            case 'docx':
+            case 'doc':
+            case 'pptx':
+            case 'ppt':
+            case 'pdf':
+            return true;
+        }
+        return false;
+    }
+
+    function cek_berkas(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                filename = $('#berkas').val();
+                newVal = $('#berkas').next().val();
+                var parts = filename.split('.');
+                var ext = parts[parts.length - 1];
+                var desc = filename.replace("C:\\fakepath\\", "");
+                var desc = desc.replace("."+ext, "");
+                if (!isAllowed(ext)) {
+                    Swal.fire("Perhatian", "File yang di input tidak sesuai ketentuan (pdf, word, excel, power point).", "error");
+                } else {
+                    src = ext.toLowerCase() == 'pdf' ? "{{asset('images/pdf.png')}}" : (ext.toLowerCase() == 'xls' || ext.toLowerCase() == 'xlsx' ? "{{asset('images/excel.png')}}" : (ext.toLowerCase() == 'doc' || ext.toLowerCase() == 'docx' ? "{{asset('images/word.png')}}" : (ext.toLowerCase() == 'ppt' || ext.toLowerCase() == 'pptx' ? "{{asset('images/ppt.png')}}" : e.target.result)));
+                    console.log(src, ext.toLowerCase());
+                    berkas = $('#berkas').clone();
+                    berkas.attr('name', 'berkas['+idx+']');
+                    berkas.attr('id', 'berkas'+idx);
+                    berkas_div = '<div class="col-span-12 lg:col-span-4" id="berkasdiv'+idx+'" style="position:relative;">'+
+                            '<div style="height: 100px;">'+
+                                '<img class="img-fluid card-img-top" src="'+src+'" alt="Berkas'+idx+'" style="max-height: 100px; max-width:100%; padding: 5px 0;">'+
+                            '</div>'+
+                            '<div class="form-group mb-0">'+
+                                '<input type="text" name="deskripsi['+idx+']" class="form-control" id="deskripsi'+idx+'" placeholder="Deskripsi" value="'+desc+'" required>'+
+                            '</div>'+
+                            '<a href="javascript:void(0);" onclick="removeBerkas('+idx+')" class="remove-button text-danger">'+
+                                '<div class="tooltip w-5 h-5 flex items-center justify-center absolute rounded-full text-white bg-danger right-0 top-0 -mr-2 -mt-2"> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" icon-name="x" data-lucide="x" class="lucide lucide-x w-4 h-4"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg> </div>'
+                            '</a>'+
+                    '</div>';
+                    $('#berkas_list').append(berkas_div);
+                    $('#berkas_list').append(berkas);
+                    idx++;
+                }
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    function removeBerkas(id) {
+        Swal.fire({
+            title: "Yakin?",
+            text: "berkas-nya mau di hapus?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Ya, hapus aja!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $('#berkasdiv'+id).remove();
+                $('#berkas'+id).remove();
+            }
         });
     }
 </script>

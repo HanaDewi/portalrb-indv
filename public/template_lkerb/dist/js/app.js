@@ -24994,7 +24994,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       numberOfColumns: 2,
       numberOfMonths: 2,
       showWeekNumbers: true,
-      format: "D MMM, YYYY",
+      format: "YYYY-MM-DD",
       dropdowns: {
         minYear: 1990,
         maxYear: null,

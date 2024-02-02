@@ -95,6 +95,12 @@ function menus()
             'icon' => 'database',
             'url' => 'hasil',
         ],
+        [
+            'levels' => ['admin'],
+            'title' => 'Buka Akses',
+            'icon' => 'eye-off',
+            'url' => 'access',
+        ],
     ];
     return $menu;
 }
@@ -154,4 +160,18 @@ function fnumber($number, $digit = 0)
 function instansis()
 {
     return Instansi::orderBy('id')->pluck('nama', 'id');
+}
+
+function exts($ext)
+{
+    $exts = [
+        'pdf' => 'pdf.png',
+        'xlsx' => 'excel.png',
+        'xls' => 'excel.png',
+        'docx' => 'word.png',
+        'doc' => 'word.png',
+        'pptx' => 'ppt.png',
+        'ppt' => 'ppt.png',
+    ];
+    return $exts[$ext];
 }
