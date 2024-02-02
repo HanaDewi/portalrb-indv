@@ -199,7 +199,7 @@
             </div>
         </div>
     </div>
-    <script src="{{ asset('template_lkerb') }}/dist/js/app.js"></script>
+    <script src="{{ asset('template_lkerb') }}/dist/js/app.js?{{ date('YmdHis') }}"></script>
     <script src="{{ asset('ext') }}/jquery/jquery.js"></script>
     {{-- Sweetalert2 --}}
     <script src="{{ asset('ext') }}/sweetalert2/sweetalert2.js"></script>
