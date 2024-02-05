@@ -103,7 +103,7 @@
                                 <td>{{ round($testTPLine->pertanyaan->weight, 2) }} </td>
                                 <td>
                                     {{ $testTPLine->score }}
-                                    @if (auth()->user()->level == 'admin' || auth()->user()->penilai_id == $testTPLine->penilai_id)
+                                    @if (in_array(auth()->user()->level, ['admin', 'tpn']) || auth()->user()->penilai_id == $testTPLine->penilai_id)
                                     <button onclick="edit_score({{ $testTPLine->id }});" class="btn btn-warning btn-sm"><i data-lucide="edit" class="w-4 h-4 mr-1"></i></button>
                                     @endif
                                 </td>
@@ -233,6 +233,7 @@
 <script src="{{ asset('ext/jquery-validation/localization/messages_id.min.js') }}"></script>
 <script src="{{ asset('ext') }}/jquery-inputmask/jquery.inputmask.bundle.js"></script>
 <script>
+    @if (in_array(auth()->user()->level, ['admin', 'tpn']))
     var idx = {{ $idx }};
     $(document).ready(function() {
         modal_score = tailwind.Modal.getInstance(document.querySelector("#modal-score"));
@@ -297,28 +298,6 @@
             cek_berkas(this);
         })
     });
-
-    function edit_score(id) {
-        $('#test_tp_line_id').val(id);
-        $('.saveButton').prop('disabled', true);
-        modal_score.show();
-        $.getJSON("{{ url('hasil/get_test_tp_line') }}/" + id, function(data) {
-            $("#score").inputmask("decimal",{
-                radixPoint:".",
-                digits: 2,
-                autoGroup: true,
-                rightAlign: false,
-                min: data.min,
-                max: data.max,
-            });
-            $('#score').val(data.score);
-            $('#min').html(data.min);
-            $('#max').html(data.max);
-            $('#note').val(data.note);
-            $('#todo').val(data.todo);
-            $('.saveButton').prop('disabled', false);
-        });
-    }
 
     function edit_test_tp(id) {
         $('#test_tp_id').val(id);
@@ -402,6 +381,31 @@
             }
         });
     }
+    @endif
+
+    @if (in_array(auth()->user()->level, ['admin', 'tpn']) || auth()->user()->penilai_id == $testTPLine->penilai_id)
+    function edit_score(id) {
+        $('#test_tp_line_id').val(id);
+        $('.saveButton').prop('disabled', true);
+        modal_score.show();
+        $.getJSON("{{ url('hasil/get_test_tp_line') }}/" + id, function(data) {
+            $("#score").inputmask("decimal",{
+                radixPoint:".",
+                digits: 2,
+                autoGroup: true,
+                rightAlign: false,
+                min: data.min,
+                max: data.max,
+            });
+            $('#score').val(data.score);
+            $('#min').html(data.min);
+            $('#max').html(data.max);
+            $('#note').val(data.note);
+            $('#todo').val(data.todo);
+            $('.saveButton').prop('disabled', false);
+        });
+    }
+    @endif
 </script>
 <script src="http://cdn.rawgit.com/ashl1/datatables-rowsgroup/v1.0.0/dataTables.rowsGroup.js"></script>
 <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
