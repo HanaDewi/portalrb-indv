@@ -109,7 +109,9 @@ class HasilController extends Controller
         $success = false;
         try {
             $tp_line = LkeTestTpLine::find($request->test_tp_line_id);
-            $tp_line->score = $request->score;
+            if ($request->score) {
+                $tp_line->score = $request->score;
+            }
             $tp_line->note = $request->note;
             $tp_line->todo = $request->todo;
             $score_index = ($tp_line->score/$tp_line->pertanyaan->max_value) * $tp_line->pertanyaan->weight;
