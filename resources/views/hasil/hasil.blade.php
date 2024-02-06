@@ -87,6 +87,7 @@
                         <th class="w200">Catatan </th>
                         <th class="w200">Rekomendasi </th>
                         <th class="w200">Tim Penilai</th>
+                        <th class="w-5">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -103,9 +104,6 @@
                                 <td>{{ round($testTPLine->pertanyaan->weight, 2) }} </td>
                                 <td>
                                     {{ $testTPLine->score }}
-                                    @if (in_array(auth()->user()->level, ['admin', 'tpn']) || auth()->user()->penilai_id == $testTPLine->penilai_id)
-                                    <button onclick="edit_score({{ $testTPLine->id }});" class="btn btn-warning btn-sm"><i data-lucide="edit" class="w-4 h-4 mr-1"></i></button>
-                                    @endif
                                 </td>
                                 <td>
                                     {{ $testTPLine->score_index }}
@@ -113,6 +111,11 @@
                                 <td>{{ $testTPLine->note }}</td>
                                 <td>{{ $testTPLine->todo }}</td>
                                 <td>{{ $testTPLine->tim_penilai->name }}</td>
+                                <td>
+                                    @if (in_array(auth()->user()->level, ['admin', 'tpn']) || auth()->user()->penilai_id == $testTPLine->penilai_id)
+                                    <button onclick="edit_score({{ $testTPLine->id }});" class="btn btn-warning btn-sm"><i data-lucide="edit" class="w-4 h-4 mr-1"></i></button>
+                                    @endif
+                                </td>
                             </tr>
                         @endforeach 
                     @endif
