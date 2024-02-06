@@ -138,6 +138,7 @@
                 <div class="modal-body grid columns-12 gap-4 gap-y-3">
                     <div class="g-col-12">
                         <table class="table">
+                            @if (auth()->user()->level == 'admin')
                             <tr>
                                 <td class="font-bold w-44">Skor <span class="text-danger">*</span></td>
                                 <td>
@@ -145,6 +146,13 @@
                                     <span><b>Min: </b></span><span id="min"></span>, <span><b>Max: </b></span><span id="max"></span>
                                 </td>
                             </tr>
+                            @else
+                            <tr>
+                                <td class="font-bold w-44">Skor <span class="text-danger">*</span></td>
+                                <td id="score_td">
+                                </td>
+                            </tr>
+                            @endif
                             <tr>
                                 <td class="font-bold w-44 align-top">Catatan</td>
                                 <td>
@@ -398,6 +406,7 @@
                 max: data.max,
             });
             $('#score').val(data.score);
+            $('#score_td').html(data.score);
             $('#min').html(data.min);
             $('#max').html(data.max);
             $('#note').val(data.note);
