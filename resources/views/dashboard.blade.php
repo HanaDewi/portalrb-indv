@@ -12,7 +12,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-span-12 sm:col-span-6 2xl:col-span-3 intro-y">
+        {{-- <div class="col-span-12 sm:col-span-6 2xl:col-span-3 intro-y">
             <div class="box p-5 zoom-in">
                 <a href="rencanaaksiuser.html">
                     <div class="flex items-center">
@@ -92,24 +92,26 @@
                     </div>
                 </a>
             </div>
-        </div>
+        </div> --}}
         <div class="col-span-12 sm:col-span-6 2xl:col-span-3 intro-y">
             <div class="box p-5 zoom-in">
-                <div class="flex items-center">
-                    <div class="w-2/4 flex-none">
-                        <div class="text-lg font-bold truncate">Pengaturan</div>
-                        <div class="text-slate-500 mt-1">Pengaturan Profil dan Akun</div>
-                    </div>
-                    <div class="flex-none ml-auto relative">
-                        <div class="w-[90px] h-[90px]">
+                <a href="{{ route('profil') }}">
+                    <div class="flex items-center">
+                        <div class="w-2/4 flex-none">
+                            <div class="text-lg font-bold truncate">Pengaturan</div>
+                            <div class="text-slate-500 mt-1">Pengaturan Profil dan Akun</div>
                         </div>
-                        <div class="font-medium absolute w-full h-full flex items-center justify-center top-0 left-0">
-                            <div class="font-medium absolute w-full h-full flex items-center justify-center top-0 left-0 radius10">
-                                <button class="btn btn-dark mr-1 mb-2" style="border-radius: 15px;"> <i data-lucide="settings" class="w-10 h-10"></i></button>
+                        <div class="flex-none ml-auto relative">
+                            <div class="w-[90px] h-[90px]">
+                            </div>
+                            <div class="font-medium absolute w-full h-full flex items-center justify-center top-0 left-0">
+                                <div class="font-medium absolute w-full h-full flex items-center justify-center top-0 left-0 radius10">
+                                    <button class="btn btn-dark mr-1 mb-2" style="border-radius: 15px;"> <i data-lucide="settings" class="w-10 h-10"></i></button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                </a>
             </div>
         </div>
         <div class="col-span-12 sm:col-span-6 2xl:col-span-3 intro-y">
