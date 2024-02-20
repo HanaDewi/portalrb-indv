@@ -6,10 +6,13 @@ use App\Models\LkeTestTp;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\LogOptions;
 
 class LkeTestTpLine extends Model
 {
-    use HasFactory;
+    use LogsActivity,
+        HasFactory;
     protected $table = 'lke_test_tp_line';
     public $timestamps = false;
 
@@ -46,5 +49,12 @@ class LkeTestTpLine extends Model
     public function tim_penilai(): BelongsTo
     {
         return $this->belongsTo(LkeTP::class, "penilai_id");
+    }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+        ->logOnly(['score', 'score_index', 'note', 'todo']);
+        // Chain fluent methods for configuration options
     }
 }
