@@ -54,7 +54,7 @@ class LkeTestTpLine extends Model
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-        ->logOnly(['score', 'score_index', 'note', 'todo']);
+        ->logOnly(['id', 'test_tp_id', 'test_line', 'score', 'score_index', 'note', 'todo']);
         // Chain fluent methods for configuration options
     }
 }
