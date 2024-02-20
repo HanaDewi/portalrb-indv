@@ -21,7 +21,7 @@ class LkeTestTpFile extends Model
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-        ->logOnly(['file', 'deskripsi']);
+        ->logOnly(['test_tp_id', 'file', 'deskripsi']);
         // Chain fluent methods for configuration options
     }
 }

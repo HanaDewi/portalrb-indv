@@ -38,7 +38,7 @@ class LkeTestTp extends Model
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-        ->logOnly(['rb_general', 'rb_tematik', 'bobot_rb_general_penyesuaian', 'rb_general_penyesuaian', 'index_rb_penyesuaian']);
+        ->logOnly(['id', 'kegiatan_id', 'lke_instansi_id', 'rb_general', 'rb_tematik', 'bobot_rb_general_penyesuaian', 'rb_general_penyesuaian', 'index_rb_penyesuaian']);
         // Chain fluent methods for configuration options
     }
 }
