@@ -23,6 +23,7 @@
                                     <th>Pelaku</th>
                                     <th>Model</th>
                                     <th>Even</th>
+                                    <th>Instansi</th>
                                     <th>Propertis</th>
                                     <th>Pada</th>
                                 </tr>
@@ -62,6 +63,7 @@
             { data: 'pelaku' },
             { data: 'subject_type' },
             { data: 'event' },
+            { data: 'instansi' },
             { data: 'pretty' },
             { data: 'pada' },
         ],

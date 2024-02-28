@@ -240,6 +240,11 @@ class HasilController extends Controller
             $activity->pretty = '<pre>'.json_encode(json_decode($activity->properties), JSON_PRETTY_PRINT).'</pre>';
             $activity->pelaku = ($activity->causer)->nama;
             $activity->pada = Carbon::parse($activity->created_at)->diffForHumans().' pada '.Carbon::parse($activity->created_at)->isoFormat('dddd, D MMMM Y HH:mm');
+            if ($activity->subject_type == 'App\Models\LkeTestTp') {
+                $activity->instansi = $activity->subject->klpd_instansi->name;
+            } else if (in_array($activity->subject_type, ['App\Models\LkeTestTpFile', 'App\Models\LkeTestTpLine'])) {
+                $activity->instansi = $activity->subject->lke_test_tp->klpd_instansi->name;
+            }
         }
         return response()->json(['data' => $activities]);
     }
