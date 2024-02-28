@@ -243,7 +243,14 @@ class HasilController extends Controller
             if ($activity->subject_type == 'App\Models\LkeTestTp') {
                 $activity->instansi = $activity->subject->klpd_instansi->name;
             } else if (in_array($activity->subject_type, ['App\Models\LkeTestTpFile', 'App\Models\LkeTestTpLine'])) {
-                $activity->instansi = $activity->subject->lke_test_tp ? $activity->subject->lke_test_tp->klpd_instansi->name : '';
+                if ($activity->event == 'deleted') {
+                    $activitynya = json_decode($activity->properties);
+                    $test_tp_id = $activitynya['old']['test_tp_id'];
+                    $test_tp = LkeTestTp::find($test_tp_id);
+                    $activity->instansi = $test_tp->klpd_instansi->name;
+                } else {
+                    $activity->instansi = $activity->subject->lke_test_tp->klpd_instansi->name;
+                }
             }
         }
         return response()->json(['data' => $activities]);
