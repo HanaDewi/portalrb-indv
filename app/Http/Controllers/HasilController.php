@@ -242,15 +242,17 @@ class HasilController extends Controller
             $activity->pada = Carbon::parse($activity->created_at)->diffForHumans().' pada '.Carbon::parse($activity->created_at)->isoFormat('dddd, D MMMM Y HH:mm');
             if ($activity->subject_type == 'App\Models\LkeTestTp') {
                 $activity->instansi = $activity->subject->klpd_instansi->name;
-            } else if (in_array($activity->subject_type, ['App\Models\LkeTestTpFile', 'App\Models\LkeTestTpLine'])) {
+            } else if ($activity->subject_type == 'App\Models\LkeTestTpFile') {
+                $activitynya = json_decode($activity->properties);
                 if ($activity->event == 'deleted') {
-                    $activitynya = json_decode($activity->properties);
-                    $test_tp_id = $activitynya['old']['test_tp_id'];
-                    $test_tp = LkeTestTp::find($test_tp_id);
-                    $activity->instansi = $test_tp->klpd_instansi->name;
+                    $test_tp_id = $activitynya->old->test_tp_id;
                 } else {
-                    $activity->instansi = $activity->subject->lke_test_tp->klpd_instansi->name;
+                    $test_tp_id = $activitynya->attributes->test_tp_id;
                 }
+                $test_tp = LkeTestTp::find($test_tp_id);
+                $activity->instansi = $test_tp->klpd_instansi->name;
+            } else {
+                $activity->instansi = $activity->subject->lke_test_tp->klpd_instansi->name;
             }
         }
         return response()->json(['data' => $activities]);
