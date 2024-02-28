@@ -238,7 +238,7 @@ class HasilController extends Controller
         $activities = Activity::latest()->get();
         foreach ($activities as $activity) {
             $activity->pretty = '<pre>'.json_encode(json_decode($activity->properties), JSON_PRETTY_PRINT).'</pre>';
-            $activity->pelaku = ($activity->causer)->nama;
+            $activity->pelaku = ($activity->causer)->nama.' ('.($activity->causer)->level.')';
             $activity->pada = Carbon::parse($activity->created_at)->diffForHumans().' pada '.Carbon::parse($activity->created_at)->isoFormat('dddd, D MMMM Y HH:mm');
             if ($activity->subject_type == 'App\Models\LkeTestTp') {
                 $activity->instansi = $activity->subject->klpd_instansi->name;
