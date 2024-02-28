@@ -101,6 +101,12 @@ function menus()
             'icon' => 'eye-off',
             'url' => 'access',
         ],
+        [
+            'levels' => ['admin'],
+            'title' => 'Activity Log',
+            'icon' => 'at-sign',
+            'url' => 'activitylog',
+        ],
     ];
     return $menu;
 }

@@ -16,7 +16,9 @@ use App\Models\GeneralPerencanaanTarget;
 use App\Models\GeneralRencanaAksiOutput;
 use App\Models\LkeTestTpFile;
 use App\Models\OpenAccessSetting;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
+use Spatie\Activitylog\Models\Activity;
 
 class HasilController extends Controller
 {
@@ -224,5 +226,21 @@ class HasilController extends Controller
             session()->flash('error', 'Data Akses gagal diperbaharui.');
         }
         return redirect('access');
+    }
+
+    public function activitylog()
+    {
+        return view('activitylog');
+    }
+
+    public function activitylog_getData()
+    {
+        $activities = Activity::latest()->get();
+        foreach ($activities as $activity) {
+            $activity->pretty = '<pre>'.json_encode(json_decode($activity->properties), JSON_PRETTY_PRINT).'</pre>';
+            $activity->pelaku = ($activity->causer)->nama;
+            $activity->pada = Carbon::parse($activity->created_at)->diffForHumans().' pada '.Carbon::parse($activity->created_at)->isoFormat('dddd, D MMMM Y HH:mm');
+        }
+        return response()->json(['data' => $activities]);
     }
 }
