@@ -125,7 +125,7 @@
                                 <td>
                                     <div class="input-group mt-4 mr-2">
                                         <div class="input-group-text">TW1</div>
-                                        <input type="text" name="target_tw1" id="target_tw1" placeholder="Triwulan 1"  class="form-control numeric" readonly>
+                                        <input type="text" name="target_tw1" id="target_tw1" placeholder="Triwulan 1" class="form-control numeric" readonly>
                                     </div>    
                                 </td>
                                 <td>
@@ -265,79 +265,9 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="font-bold">Capaian Output <span class="text-danger">*</span></td>
-                                <td>
-                                    <div class="input-group mt-4 mr-2">
-                                        <div class="input-group-text">TW1</div>
-                                        <input type="text" name="capaian_output_tw1" id="capaian_output_tw1" placeholder="Triwulan 1" class="form-control digit" onkeyup="hitungTotal();" readonly required>
-                                        <div class="input-group-text">%</div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="input-group mt-4 mr-2">
-                                        <div class="input-group-text">TW2</div>
-                                        <input type="text" name="capaian_output_tw2" id="capaian_output_tw2" placeholder="Triwulan 2" class="form-control digit" onkeyup="hitungTotal();" readonly required>
-                                        <div class="input-group-text">%</div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="input-group mt-4 mr-2">
-                                        <div class="input-group-text">TW3</div>
-                                        <input type="text" name="capaian_output_tw3" id="capaian_output_tw3" placeholder="Triwulan 3" class="form-control digit" onkeyup="hitungTotal();" readonly required>
-                                        <div class="input-group-text">%</div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="input-group mt-4 mr-2">
-                                        <div class="input-group-text">TW4</div>
-                                        <input type="text" name="capaian_output_tw4" id="capaian_output_tw4" placeholder="Triwulan 4" class="form-control digit" onkeyup="hitungTotal();" readonly required>
-                                        <div class="input-group-text">%</div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="input-group mt-4">
-                                        <div class="input-group-text">Total</div>
-                                        <input type="text" name="capaian_output_total" id="capaian_output_total" placeholder="Total" class="form-control digit" readonly required>
-                                        <div class="input-group-text">%</div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
                                 <td class="font-bold">Capaian Anggaran <span class="text-danger">*</span></td>
-                                <td>
-                                    <div class="input-group mt-4 mr-2">
-                                        <div class="input-group-text">TW1</div>
-                                        <input type="text" name="capaian_anggaran_tw1" id="capaian_anggaran_tw1" placeholder="Triwulan 1" class="form-control digit" onkeyup="hitungTotalAnggaran();" readonly required>
-                                        <div class="input-group-text">%</div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="input-group mt-4 mr-2">
-                                        <div class="input-group-text">TW2</div>
-                                        <input type="text" name="capaian_anggaran_tw2" id="capaian_anggaran_tw2" placeholder="Triwulan 2" class="form-control digit" onkeyup="hitungTotalAnggaran();" readonly required>
-                                        <div class="input-group-text">%</div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="input-group mt-4 mr-2">
-                                        <div class="input-group-text">TW3</div>
-                                        <input type="text" name="capaian_anggaran_tw3" id="capaian_anggaran_tw3" placeholder="Triwulan 3" class="form-control digit" onkeyup="hitungTotalAnggaran();" readonly required>
-                                        <div class="input-group-text">%</div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="input-group mt-4 mr-2">
-                                        <div class="input-group-text">TW4</div>
-                                        <input type="text" name="capaian_anggaran_tw4" id="capaian_anggaran_tw4" placeholder="Triwulan 4" class="form-control digit" onkeyup="hitungTotalAnggaran();" readonly required>
-                                        <div class="input-group-text">%</div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="input-group mt-4">
-                                        <div class="input-group-text">Total</div>
-                                        <input type="text" name="capaian_anggaran_total" id="capaian_anggaran_total" placeholder="Total" class="form-control digit" readonly required>
-                                        <div class="input-group-text">%</div>
-                                    </div>
+                                <td colspan="5">
+                                    <input type="text" name="capaian_anggaran" id="capaian_anggaran" placeholder="Capaian Anggaran" class="form-control mt-4">
                                 </td>
                             </tr>
                         </table>
@@ -370,13 +300,13 @@
                             <tr>
                                 <td class="font-bold w-44">Realisasi Indikator</td>
                                 <td>
-                                    <input type="text" name="realisasi_indikator" id="realisasi_indikator" placeholder="Realisasi Indikator" class="form-control">
+                                    <input type="text" name="realisasi_indikator" id="realisasi_indikator" placeholder="Realisasi Indikator" class="form-control numeric" onchange="hitungCapaian();">
                                 </td>
                             </tr>
                             <tr>
                                 <td class="font-bold">Capaian Indikator</td>
                                 <td>
-                                    <input type="text" name="capaian_indikator" id="capaian_indikator" placeholder="Capaian Indikator" class="form-control mt-4">
+                                    <input type="text" name="capaian_indikator" id="capaian_indikator" placeholder="Capaian Indikator" class="form-control mt-4" readonly>
                                 </td>
                             </tr>
                             <tr>
@@ -521,6 +451,14 @@
         });
     });
 
+    function hitungCapaian() {
+        target = $('#target_indikator').val();
+        realisasi = $('#realisasi_indikator').val();
+        capaian = (realisasi / target) * 100;
+        console.log(target, realisasi, capaian);
+        $('#capaian_indikator').val(capaian);
+    }
+
     var monev = $('#monev-table').DataTable( {
         responsive: true,
         processing: true,
@@ -581,7 +519,7 @@
                 sortable: false, 
                 searchable: false,
                 render: function (data, type, row, meta) {
-                    return '<button onclick="edit('+row.id+');" class="mb-3 btn btn-warning btn-sm w-10"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" icon-name="edit" data-lucide="edit" class="lucide lucide-edit block mx-auto"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button>    <button onclick="hapus('+row.id+');" class="mb-3 btn btn-danger btn-sm w-10"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash-2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg></button>';
+                    return '<button onclick="edit('+row.id+');" class="mb-3 btn btn-warning btn-sm w-10"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" icon-name="edit" data-lucide="edit" class="lucide lucide-edit block mx-auto"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button>';
                 },
             },
         ],
@@ -615,16 +553,6 @@
         tw4 = $('#realisasi_output_tw4').val().replaceAll('.', '');
         total = parseFloat(tw1) + parseFloat(tw2) + parseFloat(tw3) + parseFloat(tw4);
         $('#realisasi_output_total').val(total);
-        ctw1 = (tw1 / ct1) * 100;
-        ctw2 = (tw2 / ct2) * 100;
-        ctw3 = (tw3 / ct3) * 100;
-        ctw4 = (tw4 / ct4) * 100;
-        $('#capaian_output_tw1').val(ctw1);
-        $('#capaian_output_tw2').val(ctw2);
-        $('#capaian_output_tw3').val(ctw3);
-        $('#capaian_output_tw4').val(ctw4);
-        capaiantotal = (parseFloat(ctw1) + parseFloat(ctw2) + parseFloat(ctw3) + parseFloat(ctw4))/4;
-        $('#capaian_output_total').val(capaiantotal);
     }
 
     function hitungTotalAnggaran() {
@@ -647,17 +575,6 @@
         console.log(tw1, tw2, tw3, tw4);
         total = parseInt(tw1) + parseInt(tw2) + parseInt(tw3) + parseInt(tw4);
         $('#realisasi_anggaran_total').val(total);
-        ctw1 = (tw1 / ca1) * 100;
-        ctw2 = (tw2 / ca2) * 100;
-        ctw3 = (tw3 / ca3) * 100;
-        ctw4 = (tw4 / ca4) * 100;
-        $('#capaian_anggaran_tw1').val(ctw1);
-        $('#capaian_anggaran_tw2').val(ctw2);
-        $('#capaian_anggaran_tw3').val(ctw3);
-        $('#capaian_anggaran_tw4').val(ctw4);
-        capaiantotal = (parseFloat(ctw1) + parseFloat(ctw2) + parseFloat(ctw3) + parseFloat(ctw4))/4;
-        $('#capaian_anggaran_total').val(capaiantotal);
-
     }
 
     function edit_monev() {
@@ -685,14 +602,6 @@
             $('#satuan_output').val(data.satuan_output);
             $('#indikator_output').val(data.indikator_output);
             $('#target_tw1').val(data.target_tw1);
-            ct1 = data.target_tw1;
-            ct2 = data.target_tw2;
-            ct3 = data.target_tw3;
-            ct4 = data.target_tw4;
-            ca1 = data.anggaran_tw1;
-            ca2 = data.anggaran_tw2;
-            ca3 = data.anggaran_tw3;
-            ca4 = data.anggaran_tw4;
             $('#target_tw2').val(data.target_tw2);
             $('#target_tw3').val(data.target_tw3);
             $('#target_tw4').val(data.target_tw4);
