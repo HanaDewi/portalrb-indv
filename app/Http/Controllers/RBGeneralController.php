@@ -209,6 +209,9 @@ class RBGeneralController extends Controller
             ->whereHas('perencanaan', function ($q) use ($user) {
                 $q->where('instansi_id', $user->user_rel->instansi_id);
             })->first();
+        if (!$target) {
+            abort(404);
+        }
         $output = GeneralRencanaAksiOutput::find($id);
         $output->rencana_aksi = $output->rencana_aksi;
         return response()->json($output);
@@ -377,7 +380,16 @@ class RBGeneralController extends Controller
         $output->realisasi_anggaran_tw3 = $request->realisasi_anggaran_tw3;
         $output->realisasi_anggaran_tw4 = $request->realisasi_anggaran_tw4;
         $output->realisasi_anggaran_total = $request->realisasi_anggaran_total;
-        $output->capaian_anggaran = $request->capaian_anggaran;
+        $output->capaian_output_tw1 = $request->capaian_output_tw1;
+        $output->capaian_output_tw2 = $request->capaian_output_tw2;
+        $output->capaian_output_tw3 = $request->capaian_output_tw3;
+        $output->capaian_output_tw4 = $request->capaian_output_tw4;
+        $output->capaian_output_total = $request->capaian_output_total;
+        $output->capaian_anggaran_tw1 = $request->capaian_anggaran_tw1;
+        $output->capaian_anggaran_tw2 = $request->capaian_anggaran_tw2;
+        $output->capaian_anggaran_tw3 = $request->capaian_anggaran_tw3;
+        $output->capaian_anggaran_tw4 = $request->capaian_anggaran_tw4;
+        $output->capaian_anggaran_total = $request->capaian_anggaran_total;
         if ($output->save()) {
             $success = true;
         }
