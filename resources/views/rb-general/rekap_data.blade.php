@@ -1,12 +1,12 @@
 @extends('layout.rubick')
-@section('title', 'RB General - Rekap Data')
+@section('title', 'Rekap Data RB General - ' .auth()->user()->nama)
 
 @section('content')
 @include('common.status')
 <div class="intro-y col-span-12 lg:col-span-12">
     <div class="intro-y box">
         <div class="flex flex-col sm:flex-row items-center p-5 border-b border-slate-200/60">
-            <h2 class="font-bold text-base mr-auto"> Data RB General - Rekap Data</h2>
+            <h2 class="font-bold text-base mr-auto"> Rekap Data RB General - {{ auth()->user()->nama }}</h2>
         </div>
         <div class="lg:col-span-12 p-5 border-b border-slate-200/60">
             @if (in_array(auth()->user()->level, ['admin', 'evaluator']))
@@ -32,21 +32,19 @@
                         <th class="w-10" rowspan="2">Catatan</th>
                         <th class="w-10" rowspan="2">Catatan Evalator</th>
                         <th class="w-15" rowspan="2">Rencana Aksi</th>
-                        <th class="w-5" colspan="2" style="text-align: center;">Output</th>
+                        <th class="w-5" rowspan="2" style="text-align: center;">Satuan Output</th>
+                        <th class="w-5" rowspan="2" style="text-align: center;">Indikator Output</th>
                         <th class="w-5" rowspan="2" style="text-align: center;">Target</th>
                         <th class="w-5" rowspan="2" style="text-align: center;">Anggaran</th>
                         <th class="w-5" colspan="2" style="text-align: center;">Unit Satuan Kerja Pelaksana</th>
-                        <th class="w-5" colspan="2" style="text-align: center;">Realisasi</th>
+                        <th class="w-5" rowspan="2" style="text-align: center;">Realisasi Output</th>
+                        <th class="w-5" rowspan="2" style="text-align: center;">Realisasi Anggaran</th>
                         <th class="w-5" rowspan="2">Capaian Anggaran</th>
                         <th class="w-5" rowspan="2">Atur</th>
                     </tr>
                     <tr>
-                        <th>Satuan</th>
-                        <th>Indikator</th>
                         <th>Koordinator</th>
                         <th>Pelaksana</th>
-                        <th>Output</th>
-                        <th>Anggaran</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -68,16 +66,13 @@
                             <td>
                                 <table class="table table-noborder w-full">
                                     <tr>
-                                        <td class="font-bold w-16">Tahun</td>
-                                        <td>: {{ $data['perencanaan']->baseline_tahun }}</td>
+                                        <td>Tahun: {{ $data['perencanaan']->baseline_tahun }}</td>
                                     </tr>
                                     <tr>
-                                        <td class="font-bold">Target</td>
-                                        <td>: {{ $data['perencanaan']->baseline_target }}</td>
+                                        <td>Target: {{ $data['perencanaan']->baseline_target }}</td>
                                     </tr>
                                     <tr>
-                                        <td class="font-bold">Realisasi</td>
-                                        <td>: {{ $data['perencanaan']->baseline_realisasi }}</td>
+                                        <td>Realisasi: {{ $data['perencanaan']->baseline_realisasi }}</td>
                                     </tr>
                                 </table>
                             </td>
@@ -226,10 +221,14 @@
             {
                 extend: 'pdf',
                 exportOptions: {
-                    columns: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19]
+                    columns: [0,1,2,3,4,5,6,8,9,10,11,12,13,14,15,16,17,18,19]
                 },
                 orientation: 'landscape',
-                pageSize: 'A4',
+                pageSize: 'Legal',
+                customize: function(doc) {
+                doc.defaultStyle.fontSize = 8; 
+                doc.styles.tableHeader.fontSize = 7.5;
+                doc.content[1].table.widths = [ '1.7%', '7%', '4.5%', '4.5%', '4.5%', '4.5%', '6%', '4.5%', '4.5%', '7%', '4.5%', '4.5%', '6%','6%', '5.5%', '5%', '6%', '6%', '6%' ]; },
                 text: '<button class="btn btn-danger w-32 mr-2 mb-2"><svg fill="#ffffff" height="18px" width="18px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 482.14 482.14" xml:space="preserve" stroke="#ffffff"> <g id="SVGRepo_bgCarrier" stroke-width="0"/> <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"/> <g id="SVGRepo_iconCarrier"> <g> <path d="M142.024,310.194c0-8.007-5.556-12.782-15.359-12.782c-4.003,0-6.714,0.395-8.132,0.773v25.69 c1.679,0.378,3.743,0.504,6.588,0.504C135.57,324.379,142.024,319.1,142.024,310.194z"/> <path d="M202.709,297.681c-4.39,0-7.227,0.379-8.905,0.772v56.896c1.679,0.394,4.39,0.394,6.841,0.394 c17.809,0.126,29.424-9.677,29.424-30.449C230.195,307.231,219.611,297.681,202.709,297.681z"/> <path d="M315.458,0H121.811c-28.29,0-51.315,23.041-51.315,51.315v189.754h-5.012c-11.418,0-20.678,9.251-20.678,20.679v125.404 c0,11.427,9.259,20.677,20.678,20.677h5.012v22.995c0,28.305,23.025,51.315,51.315,51.315h264.223 c28.272,0,51.3-23.011,51.3-51.315V121.449L315.458,0z M99.053,284.379c6.06-1.024,14.578-1.796,26.579-1.796 c12.128,0,20.772,2.315,26.58,6.965c5.548,4.382,9.292,11.615,9.292,20.127c0,8.51-2.837,15.745-7.999,20.646 c-6.714,6.32-16.643,9.157-28.258,9.157c-2.585,0-4.902-0.128-6.714-0.379v31.096H99.053V284.379z M386.034,450.713H121.811 c-10.954,0-19.874-8.92-19.874-19.889v-22.995h246.31c11.42,0,20.679-9.25,20.679-20.677V261.748 c0-11.428-9.259-20.679-20.679-20.679h-246.31V51.315c0-10.938,8.921-19.858,19.874-19.858l181.89-0.19v67.233 c0,19.638,15.934,35.587,35.587,35.587l65.862-0.189l0.741,296.925C405.891,441.793,396.987,450.713,386.034,450.713z M174.065,369.801v-85.422c7.225-1.15,16.642-1.796,26.58-1.796c16.516,0,27.226,2.963,35.618,9.282 c9.031,6.714,14.704,17.416,14.704,32.781c0,16.643-6.06,28.133-14.453,35.224c-9.157,7.612-23.096,11.222-40.125,11.222 C186.191,371.092,178.966,370.446,174.065,369.801z M314.892,319.226v15.996h-31.23v34.973h-19.74v-86.966h53.16v16.122h-33.42 v19.875H314.892z"/> </g> </g> </svg> &nbsp;PDF </button>',
                         titleAttr: 'Download PDF'
             },
