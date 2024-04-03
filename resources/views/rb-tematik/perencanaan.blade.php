@@ -36,6 +36,7 @@
                             <th class="w200">Tema</th>
                             <th class="w150">Sasaran Tematik Roadmap</th>
                             <th>Indikator</th>
+                            <th class="w-5">Satuan Target</th>
                             <th class="w-5">Target</th>
                             <th class="w-5">Permasalahan (bottleneck)</th>
                             <th class="w-5">Sasaran</th>
@@ -75,6 +76,8 @@
                                     {{ $tematikData['indikator_nama'] }}
                                 </td>
                                 <td>
+                                </td>
+                                <td>
                                     {{ $tematikData['indikator_target'] }}
                                     @if ($tematikData['indikator_nama'])
                                         <button
@@ -101,8 +104,13 @@
                                 <td>
                                     {{ $tematikData['indikator_permasalahan_target'] }}
                                     @if ($tematikData['indikator_permasalahan_nama'])
-                                        <button onclick="" class="btn btn-primary btn-sm w-full mb-2"><i
-                                                data-lucide="edit" class="w-4 h-4 mr-1"></i>Rencana Aksi</button>
+                                        <a href="#" class="btn btn-primary btn-sm w-full mb-2">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" icon-name="edit" data-lucide="edit" class="lucide lucide-edit w-4 h-4 mr-1"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg> Renaksi
+                                            </a>
+                                        <a href="#" class="btn btn-dark btn-sm w-full mb-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" icon-name="edit" data-lucide="edit" class="lucide lucide-edit w-4 h-4 mr-1"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>Monev</a>
+                                        <a href="#" class="btn btn-primary btn-sm w-full">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" icon-name="trash-2" data-lucide="trash-2" class="lucide lucide-trash-2 w-4 h-4 mr-1"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg> Hapus
+                                            </a>
                                     @endif
                                 </td>
                             </tr>
@@ -152,12 +160,13 @@
                                                 </td>
                                             </tr>
                                         </table>
+                                        
                                         <div id="dynamicAddRemove"></div>
+                                        <div id="target_output_ext"></div>
                                     </div>
                                 </div>
                             </div>
-
-
+                        <button type="button" class="btn btn-outline-primary border-dashed w-full mt-4" onclick="tambah_input();" id="tambah_input_button"><i data-lucide="plus" class="w-4 h-4 mr-2"></i> Tambah Sasaran Tematik Roadmap</button>
                         </div>
                     </div> <!-- END: Modal Body -->
                     <!-- BEGIN: Modal Footer -->
@@ -212,10 +221,17 @@
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td class="font-bold w-30">Target</td>
+                                                <td class="font-bold w-30">Satuan Target</td>
                                                 <td colspan="5">
                                                     <input type="text" id="target-roadmap" name="target_roadmap"
-                                                        placeholder="Masukan Target Roadmap" class="form-control" />
+                                                        placeholder="Masukan Satuan Target" class="form-control" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="font-bold w-30">Target</td>
+                                                <td colspan="5">
+                                                    <input type="text" class="form-control numeric" id="target-roadmap" name="target_roadmap"
+                                                        placeholder="Masukan Jumlah Target" class="form-control" />
                                                 </td>
                                             </tr>
                                         </table>
@@ -391,6 +407,25 @@
 
     <script>
         $(document).ready(function() {
+        idx = 0;
+
+        $(".numeric").inputmask("decimal",{
+            groupSeparator: "",
+            digits: 0,
+            autoGroup: false,
+            rightAlign: false,
+            min: 0
+        });
+
+        $(".digit").inputmask("decimal",{
+            radixPoint:",",
+            groupSeparator: ".",
+            digits: 0,
+            autoGroup: true,
+            rightAlign: false,
+            min: 0,
+        });
+
             modal_sasaran_roadmap = tailwind.Modal.getInstance(document.querySelector("#modal-sasaran-roadmap"));
             modal_indikator_roadmap = tailwind.Modal.getInstance(document.querySelector(
                 "#modal-indikator-roadmap"));
@@ -399,6 +434,39 @@
             modal_indikator_permasalahan = tailwind.Modal.getInstance(document.querySelector(
                 "#modal-indikator-permasalahan"));
         });
+
+    function output_form() {
+        return  '<hr class="my-4"> <table class="table table-bordered" id="output_form'+idx+'">'+
+                    '<tr>'+
+                        '<td class="font-bold w-30">Tema </td>'+
+                            '<td colspan="5">'+
+                            '<select class="form-select mt-2 sm:mr-2 form-control" name="tema_id">'+
+                            // @foreach ($temas as $tema)
+                        '<option value=""></option>'+
+                        // @endforeach
+                        '</select>'+
+                        '</td>'+
+                        '</tr>'+
+                        '<tr>'+
+                    '<td class="font-bold w-30">Sasaran Tematik Roadmap</td>'+
+                    '<td colspan="5">'+
+                    '<input type="text" name="nama['+idx+']" placeholder="Masukan Sasaran Roadmap" class="form-control" />'+
+                    '</td>'+
+                    '</tr>'+
+                    '<tr>'+
+                        '<td colspan="6"><div class="mt-5"><button type="button" class="btn btn-outline-dark border-dashed w-full bg-slate-50 dark:bg-transparent dark:border" onclick="hapus_input('+idx+');"><svg class="mr-1" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" icon-name="trash-2" data-lucide="trash-2" class="lucide lucide-trash-2 w-4 h-4"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg> Hapus</button></div></td>'+
+                    '</tr>'+
+                '</table>';
+    }
+
+    function tambah_input() {
+        idx++;
+        $('#target_output_ext').append(output_form(idx));
+    }
+
+    function hapus_input(idx) {
+        $('#output_form'+idx).remove();
+    }
 
         function tambah_sasaran_roadmap() {
             modal_sasaran_roadmap.show();
