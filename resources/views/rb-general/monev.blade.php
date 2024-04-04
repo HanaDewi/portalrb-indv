@@ -9,8 +9,8 @@
     <div class="intro-y box">
         <div class="flex sm:flex-row items-center p-5 border-b border-slate-200/60">
             <h2 class="font-bold text-base mr-auto flex items-center justify-center"> <i data-lucide="pie-chart" class="mr-1"></i> RB General - Monitoring dan Evaluasi</h2>
-            <button class="btn btn-danger btn-sm shadow-md float-right mr-2" onclick="edit_monev();" data-bs-toggle="modal" data-bs-target="#modal-kegiatan_utama"><i data-lucide="edit" class="mr-1"></i> Evaluasi</button>
-            <a href="{{ url('rb-general/perencanaan') }}" class="btn btn-warning btn-sm shadow-md float-right"><i data-lucide="chevron-left"></i> Kembali</a>
+            <button class="btn btn-danger btn-sm shadow-md float-right mr-2" onclick="edit_monev();" data-bs-toggle="modal" data-bs-target="#modal-kegiatan_utama"><i data-lucide="edit" class="mr-1" width="18px" height="18px"></i> Evaluasi</button>
+            <a href="{{ url('rb-general/perencanaan') }}" class="btn btn-warning btn-sm shadow-md float-right"><i data-lucide="chevron-left" width="18px" height="18px"></i> Kembali</a>
         </div>
         <div class="lg:col-span-12 p-5 border-b border-slate-200/60">
             <table class="table table-bordered table-striped table-hover">
@@ -612,7 +612,7 @@
                 sortable: false, 
                 searchable: false,
                 render: function (data, type, row, meta) {
-                    return '<button onclick="edit('+row.id+');" class="mb-3 btn btn-warning btn-sm w-10"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" icon-name="edit" data-lucide="edit" class="lucide lucide-edit block mx-auto"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button>';
+                    return '<button onclick="edit('+row.id+');" class="mb-3 btn btn-warning btn-sm w-10"><svg xmlns="http://www.w3.org/2000/svg" width="18px" height="18px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" icon-name="edit" data-lucide="edit" class="lucide lucide-edit block mx-auto"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button>';
                 },
             },
         ],

@@ -9,7 +9,7 @@
     <div class="intro-y box">
         <div class="flex sm:flex-row items-center p-5 border-b border-slate-200/60">
             <h2 class="font-bold text-base mr-auto flex items-center justify-center"> <i data-lucide="pie-chart" class="mr-1"></i> RB General - Rencana Aksi</h2>
-            <a href="{{ url('rb-general/perencanaan') }}" class="btn btn-warning shadow-md float-right"><i data-lucide="chevron-left"></i> Kembali</a>
+            <a href="{{ url('rb-general/perencanaan') }}" class="btn btn-warning shadow-md float-right"><i data-lucide="chevron-left" width="18px" height="18px"></i> Kembali</a>
         </div>
         <div class="lg:col-span-12 p-5 border-b border-slate-200/60">
             <table class="table table-bordered table-striped table-hover">
@@ -54,7 +54,7 @@
             <h2 class="font-bold text-base mr-auto flex items-center justify-center">
                 <i data-lucide="file-text" class="mr-1"></i> Data Rencana Aksi
             </h2>
-            <button class="btn btn-danger shadow-md" onclick="tambah();" data-bs-toggle="modal" data-bs-target="#modal-kegiatan_utama"><i data-lucide="plus" class="mr-1"></i> Tambah Rencana Aksi</button>
+            <button class="btn btn-danger shadow-md" onclick="tambah();" data-bs-toggle="modal" data-bs-target="#modal-kegiatan_utama"><i data-lucide="plus" class="mr-1" width="18px" height="18px"></i> Tambah Rencana Aksi</button>
         </div>
         <div class="lg:col-span-12 p-5 border-b border-slate-200/60">
             <div class="table-responsive">

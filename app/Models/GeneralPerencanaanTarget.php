@@ -19,4 +19,9 @@ class GeneralPerencanaanTarget extends Model
     {
         return $this->hasMany(GeneralRencanaAksi::class, 'general_perencanaan_target_id');
     }
+
+    public function dokumens()
+    {
+        return $this->hasMany(GeneralPerencanaanTargetDokumen::class, 'general_perencanaan_target_id');
+    }
 }

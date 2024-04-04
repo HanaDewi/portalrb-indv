@@ -160,7 +160,7 @@ class HasilController extends Controller
                         $berkas->test_tp_id = $tp->id;
                         $berkas->deskripsi = $request->deskripsi[$key];
                         $time = time();
-                        $filename = $berkas->deskripsi."_$time." . $file_berkas->extension();
+                        $filename = $berkas->deskripsi."_$time." . $file_berkas->getClientOriginalExtension();
                         $file_berkas->storeAs('berkas', $filename, 'public');
                         $berkas->file = $filename;
                         if ($berkas->save()) {
