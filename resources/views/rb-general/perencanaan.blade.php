@@ -3,6 +3,9 @@
 
 @section('content')
 @include('common.status')
+@php
+$idx = 0;
+@endphp
 <div class="intro-y col-span-12 lg:col-span-12">
     <div class="intro-y box">
         <div class="flex flex-col sm:flex-row items-center p-5 border-b border-slate-200/60">
@@ -67,9 +70,6 @@
                                             <span class="font-bold mr-1">{{ $target->tahun }}: </span> {{ $target->target }}
                                         </div>
                                     </td>
-                                    @php
-                                    $idx = 0;
-                                    @endphp
                                     <td>
                                         <button onclick="tambah_dokumen('{{ $target->id }}');" class="btn btn-primary btn-sm w-full mb-2"><i data-lucide="plus" class="w-4 h-4 mr-1"></i>Dokumen</button>
                                         @php
