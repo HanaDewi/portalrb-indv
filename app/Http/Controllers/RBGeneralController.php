@@ -464,14 +464,24 @@ class RBGeneralController extends Controller
     public function rekap_data(Request $request)
     {
         $user = Auth::User();
-        if ($request->instansi_id && in_array($user->level, ['admin', 'evaluator'])) {
+        if ($request->instansi_id && in_array($user->level, ['admin', 'tpn'])) {
             $instansi_id = $request->instansi_id;
-        } else if ($user->user_rel->instansi_id) {
+        } else if ($user->user_rel) {
             $instansi_id = $user->user_rel->instansi_id;
         } else {
             $instansi_id = Instansi::orderBy('id')->first()->id;
         }
-        $perencanaans = GeneralPerencanaan::where('instansi_id', $instansi_id)->orderBy('kegiatan_utama_id')->orderBy('indikator_id')->get();
+        $nama_instansi = Instansi::find($instansi_id)->nama;
+        if ($request->indikator_id) {
+            $indikator_id = $request->indikator_id;
+        } else {
+            $indikator_id = [];
+        }
+        $model = GeneralPerencanaan::where('instansi_id', $instansi_id)->orderBy('kegiatan_utama_id')->orderBy('indikator_id');
+        if (count($indikator_id)) {
+            $model = $model->whereIn('indikator_id', $indikator_id);
+        }
+        $perencanaans = $model->get();
         $key = 0;
         $datas = [];
         foreach ($perencanaans as $perencanaan) {
@@ -511,7 +521,7 @@ class RBGeneralController extends Controller
                 $key++;
             }
         }
-        return view('rb-general.rekap_data', compact('datas', 'instansi_id'));
+        return view('rb-general.rekap_data', compact('datas', 'instansi_id', 'indikator_id', 'nama_instansi'));
     }
 
     public function rekap_data_getTarget($id)

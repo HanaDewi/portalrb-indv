@@ -166,7 +166,7 @@
                             <li class="p-2">
                                 <div class="font-medium">{{ auth()->user()->username }}</div>
                                 <div class="text-xs text-white/70 mt-0.5 dark:text-slate-200">
-                                    {{ auth()->user()->nama }}</div>
+                                    {{ auth()->user()->nama }} - {{ auth()->user()->level }}</div>
                             </li>
                             <li>
                                 <hr class="dropdown-divider border-white/[0.08]">
