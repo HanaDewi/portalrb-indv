@@ -3,6 +3,7 @@
 use App\Models\Indikator;
 use App\Models\Instansi;
 use App\Models\KegiatanUtama;
+use App\Models\KlpdInstansi;
 use Carbon\Carbon;
 
 function menus()
@@ -171,7 +172,7 @@ function fnumber($number, $digit = 0)
 
 function instansis()
 {
-    return Instansi::orderBy('id')->pluck('nama', 'id');
+    return KlpdInstansi::orderBy('id')->pluck('name', 'id');
 }
 
 function exts($ext)

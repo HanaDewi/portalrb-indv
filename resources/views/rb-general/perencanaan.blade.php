@@ -12,6 +12,16 @@ $idx = 0;
             <h2 class="font-bold text-base mr-auto"> Data RB General - Perencanaan dan Monev</h2>
         </div>
         <div class="lg:col-span-12 p-5 border-b border-slate-200/60">
+            <form>
+                <div>
+                    <label for="indikator_id" class="form-label font-bold">Indikator</label>
+                    {!! Form::select('indikator_id[]', indikators(), $indikator_id, ['class' => 'w-full', 'id' => 'indikator_id', 'data-placeholder' => 'Pilih Indikator', 'multiple' => 'multiple']) !!}
+                    <div class="mt-5 pb-10">
+                        <button type="submit" class="btn btn-success saveButton float-right">Lihat Data</button>
+                    </div>
+                </div>
+            </form>
+            <div class="separator mt-5"></div>
             <table id="perencanaan" class="table table-bordered table-striped mt-5" cellspacing="0" width="100%">
                 <thead class="table-dark font-bold">
                     <tr>
@@ -371,7 +381,12 @@ $idx = 0;
 </div> <!-- END: Modal Content -->
 @endsection
 
+@push('css')
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+@endpush
+
 @push('js')
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script src="{{ asset('ext/jquery-validation/jquery.validate.min.js') }}"></script>
 <script src="{{ asset('ext/jquery-validation/localization/messages_id.min.js') }}"></script>
 <script src="{{ asset('ext') }}/jquery-inputmask/jquery.inputmask.bundle.js"></script>
@@ -379,6 +394,7 @@ $idx = 0;
 <script>
     var idx = {{ $idx }};
     $(document).ready(function() {
+        $('#indikator_id').select2();
         modal_baseline = tailwind.Modal.getInstance(document.querySelector("#modal-baseline"));
         modal_target = tailwind.Modal.getInstance(document.querySelector("#modal-target"));
         modal_monev = tailwind.Modal.getInstance(document.querySelector("#modal-monev"));

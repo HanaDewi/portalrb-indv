@@ -22,6 +22,6 @@ class GeneralPerencanaan extends Model
 
     public function indikator()
     {
-        return $this->belongsTo(Indikator::class, 'kegiatan_utama_id');
+        return $this->belongsTo(Indikator::class, 'indikator_id');
     }
 }

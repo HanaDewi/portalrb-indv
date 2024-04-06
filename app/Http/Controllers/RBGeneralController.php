@@ -9,6 +9,7 @@ use App\Models\GeneralRencanaAksi;
 use App\Models\GeneralRencanaAksiOutput;
 use App\Models\Indikator;
 use App\Models\Instansi;
+use App\Models\KlpdInstansi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -28,10 +29,19 @@ class RBGeneralController extends Controller
         });
     }
 
-    public function perencanaan()
+    public function perencanaan(Request $request)
     {
         $user = Auth::User();
-        $indikators = Indikator::where($user->level, '1')->orderBy('kegiatan_utama_id')->get();
+        if ($request->indikator_id) {
+            $indikator_id = $request->indikator_id;
+        } else {
+            $indikator_id = [];
+        }
+        $model = Indikator::where($user->level, '1')->orderBy('kegiatan_utama_id');
+        if (count($indikator_id)) {
+            $model = $model->whereIn('id', $indikator_id);
+        }
+        $indikators = $model->get();
         foreach ($indikators as $indikator) {
             $perencanaan = GeneralPerencanaan::where('instansi_id', $user->user_rel->instansi_id)->where('kegiatan_utama_id', $indikator->kegiatan_utama_id)->where('indikator_id', $indikator->id)->first();
             $indikator->target = [];
@@ -47,7 +57,7 @@ class RBGeneralController extends Controller
                 $indikator->target = $target ? $target : [];
             }
         }
-        return view('rb-general.perencanaan', compact('indikators'));
+        return view('rb-general.perencanaan', compact('indikators', 'indikator_id'));
     }
 
     public function perencanaan_getData($kegiatan_utama_id, $indikator_id)
@@ -466,12 +476,12 @@ class RBGeneralController extends Controller
         $user = Auth::User();
         if ($request->instansi_id && in_array($user->level, ['admin', 'tpn'])) {
             $instansi_id = $request->instansi_id;
-        } else if ($user->user_rel) {
+        } else if ($user->user_rel->instansi_id) {
             $instansi_id = $user->user_rel->instansi_id;
         } else {
-            $instansi_id = Instansi::orderBy('id')->first()->id;
+            $instansi_id = KlpdInstansi::orderBy('id')->first()->id;
         }
-        $nama_instansi = Instansi::find($instansi_id)->nama;
+        $nama_instansi = KlpdInstansi::find($instansi_id)->name;
         if ($request->indikator_id) {
             $indikator_id = $request->indikator_id;
         } else {
