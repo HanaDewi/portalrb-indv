@@ -73,10 +73,10 @@
                 <li>
                     <a href="{{ route('logout') }}" onclick="event.preventDefault(); $('#logout').submit();"
                         class="side-menu">
-                        <div class="menu__icon">
+                        <div class="side-menu__icon">
                             <i data-lucide="log-out"></i>
                         </div>
-                        <div class="menu__title"> Logout </div>
+                        <div class="side-menu__title"> Logout </div>
                     </a>
                 </li>
             </ul>

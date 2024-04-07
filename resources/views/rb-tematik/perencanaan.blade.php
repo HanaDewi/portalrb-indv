@@ -25,9 +25,6 @@
                 </div>
             </div>
 
-
-
-
             <div class="lg:col-span-12 p-5 border-b border-slate-200/60">
                 <table id="perencanaan" class="table table-bordered table-striped mt-5" cellspacing="0" width="100%">
                     <thead class="table-dark font-bold">
@@ -46,16 +43,16 @@
                     </thead>
                     <tbody>
                         @php
-                            $no = 0;
-                            $nama = '';
+                        $no = 0;
+                        $nama = '';
                         @endphp
 
                         @foreach ($tematikDatas as $tematikData)
                             @php
-                                if ($nama != $tematikData['tema_nama']) {
-                                    $nama = $tematikData['tema_nama'];
-                                    $no++;
-                                }
+                            if ($nama != $tematikData['tema_nama']) {
+                                $nama = $tematikData['tema_nama'];
+                                $no++;
+                            }
                             @endphp
                             <tr>
                                 <td class="font-bold">{{ $no }}</td>
@@ -392,12 +389,6 @@
             </div>
         </div>
     </div> <!-- END: Modal Content -->
-
-
-
-
-
-
 @endsection
 
 @push('js')
@@ -407,24 +398,24 @@
 
     <script>
         $(document).ready(function() {
-        idx = 0;
+            idx = 0;
 
-        $(".numeric").inputmask("decimal",{
-            groupSeparator: "",
-            digits: 0,
-            autoGroup: false,
-            rightAlign: false,
-            min: 0
-        });
+            $(".numeric").inputmask("decimal",{
+                groupSeparator: "",
+                digits: 0,
+                autoGroup: false,
+                rightAlign: false,
+                min: 0
+            });
 
-        $(".digit").inputmask("decimal",{
-            radixPoint:",",
-            groupSeparator: ".",
-            digits: 0,
-            autoGroup: true,
-            rightAlign: false,
-            min: 0,
-        });
+            $(".digit").inputmask("decimal",{
+                radixPoint:",",
+                groupSeparator: ".",
+                digits: 0,
+                autoGroup: true,
+                rightAlign: false,
+                min: 0,
+            });
 
             modal_sasaran_roadmap = tailwind.Modal.getInstance(document.querySelector("#modal-sasaran-roadmap"));
             modal_indikator_roadmap = tailwind.Modal.getInstance(document.querySelector(
@@ -435,8 +426,8 @@
                 "#modal-indikator-permasalahan"));
         });
 
-    function output_form() {
-        return  '<hr class="my-4"> <table class="table table-bordered" id="output_form'+idx+'">'+
+        function output_form() {
+            return  '<hr class="my-4"> <table class="table table-bordered" id="output_form'+idx+'">'+
                     '<tr>'+
                         '<td class="font-bold w-30">Tema </td>'+
                             '<td colspan="5">'+
@@ -457,16 +448,16 @@
                         '<td colspan="6"><div class="mt-5"><button type="button" class="btn btn-outline-dark border-dashed w-full bg-slate-50 dark:bg-transparent dark:border" onclick="hapus_input('+idx+');"><svg class="mr-1" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" icon-name="trash-2" data-lucide="trash-2" class="lucide lucide-trash-2 w-4 h-4"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg> Hapus</button></div></td>'+
                     '</tr>'+
                 '</table>';
-    }
+        }
 
-    function tambah_input() {
-        idx++;
-        $('#target_output_ext').append(output_form(idx));
-    }
+        function tambah_input() {
+            idx++;
+            $('#target_output_ext').append(output_form(idx));
+        }
 
-    function hapus_input(idx) {
-        $('#output_form'+idx).remove();
-    }
+        function hapus_input(idx) {
+            $('#output_form'+idx).remove();
+        }
 
         function tambah_sasaran_roadmap() {
             modal_sasaran_roadmap.show();
@@ -487,7 +478,6 @@
         }
 
         function tambah_indikator_permasalahan(permasalahan, sasaran, permasalahan_id) {
-
             $('#tematik-permasalahan-id-onIndikatorPermasalahan').val(permasalahan_id);
             $('#permasalahan-onIndikatorPermasalahan').val(permasalahan);
             $('#sasaran-permasalahan-onIndikatorPermasalahan').val(sasaran);
