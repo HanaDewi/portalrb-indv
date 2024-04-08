@@ -10,8 +10,8 @@ class Tag extends Model
     use HasFactory;
     protected $table = 'bljr_tags';
 
-    public function news()
+    public function article()
     {
-        return $this->belongsToMany(Article::class, 'news_tags');
+        return $this->belongsToMany(Article::class, 'bljr_article_tags');
     }
 }

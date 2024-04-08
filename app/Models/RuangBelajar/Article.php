@@ -36,7 +36,7 @@ class Article extends Model
 
     public function tags()
     {
-        return $this->belongsToMany(Tag::class, 'bljr_news_tags');
+        return $this->belongsToMany(Tag::class, 'bljr_article_tags');
     }
 
     public function author()
