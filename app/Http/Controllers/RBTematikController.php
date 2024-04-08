@@ -158,15 +158,18 @@ class RBTematikController extends Controller
         $user = Auth::User();
         $sasaranRoadmap = TematikSasaranRoadmap::where('instansi_id', $user->instansi_id)->where('tema_id', $request->tema_id)->where('nama', $request->nama)->first();
         if (!$sasaranRoadmap) {
-            $sasaranRoadmap = new TematikSasaranRoadmap();
-            $sasaranRoadmap->instansi_id = $user->instansi_id;
-            $sasaranRoadmap->tema_id = $request->tema_id;
-            $sasaranRoadmap->nama = $request->nama;
-        }
-        if ($sasaranRoadmap->save()) {
-            session()->flash('success', 'Data Sasaran Roadmap Tematik berhasil disimpan.');
-        } else {
-            session()->flash('success', 'Data Sasaran Roadmap Tematik gagal disimpan! Silahkan dicoba kembali.');
+            foreach ($request->tema_id as $idx=>$tema_id) {
+                $sasaranRoadmap = new TematikSasaranRoadmap();
+                $sasaranRoadmap->instansi_id = $user->user_rel->instansi_id;
+                $sasaranRoadmap->tema_id = $tema_id;
+                $sasaranRoadmap->nama = $request->nama[$idx];
+                if ($sasaranRoadmap->save()) {
+                    session()->flash('success', 'Data Sasaran Roadmap Tematik berhasil disimpan.');
+                } else {
+                    session()->flash('success', 'Data Sasaran Roadmap Tematik gagal disimpan! Silahkan dicoba kembali.');
+                    return redirect('rb-tematik/perencanaan');
+                }
+            }
         }
         return redirect('rb-tematik/perencanaan');
     }
