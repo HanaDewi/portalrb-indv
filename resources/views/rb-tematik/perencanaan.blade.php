@@ -231,7 +231,7 @@
                                             <tr>
                                                 <td class="font-bold w-30">Target</td>
                                                 <td colspan="5">
-                                                    <input type="text" class="form-control numeric" id="target-roadmap" name="target_roadmap"
+                                                    <input type="text" class="form-control" id="target-roadmap" name="target_roadmap"
                                                         placeholder="Masukan Jumlah Target" class="form-control" />
                                                 </td>
                                             </tr>
@@ -481,7 +481,7 @@
             $("#perencanaan").DataTable({
                 scrollX: true,
                 autoWidth: true,
-                rowsGroup: [0, 1],
+                rowsGroup: [0, 1, 2, 3],
                 paging: true,
                 bInfo: true
             });
