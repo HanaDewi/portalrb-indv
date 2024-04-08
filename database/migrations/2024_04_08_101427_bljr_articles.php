@@ -24,7 +24,7 @@ return new class extends Migration
             $table->string('meta-description');
             $table->boolean('is_breaking_news');
             $table->boolean('show_at_slider');
-            $table->boolean('show_at_populer');
+            $table->boolean('show_at_popular');
             $table->boolean('status');
             $table->boolean('is_approved');
             $table->integer('views');
