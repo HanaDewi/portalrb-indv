@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string('article_id');
             $table->string('tag_id');
-            $table->boolean('status');
             $table->timestamps();
         });
     }
