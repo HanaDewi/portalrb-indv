@@ -8,7 +8,7 @@
     <meta name="keywords" content="Lembar Kerja Evaluasi">
     <meta name="author" content="MENPANRB">
     <title>@yield('title') - LKE KEMENPANRB</title>
-    <link  rel="stylesheet"  href='http://fonts.googleapis.com/css?family=Roboto:400,100,300,100italic,300italic,400italic,500italic,500,700,700italic,900,900italic' rel='stylesheet' type='text/css'>
+    <link  rel="stylesheet"  href='https://fonts.googleapis.com/css?family=Roboto:400,100,300,100italic,300italic,400italic,500italic,500,700,700italic,900,900italic' rel='stylesheet' type='text/css'>
     <!-- End plugin css for this page -->
     <link href="{{ asset('ext') }}/sweetalert2/sweetalert2.css" rel="stylesheet">
     @stack('css')
@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="{{ asset('ext') }}/datatables/datatables.css" />
     <link rel="stylesheet" href="{{ asset('ext') }}/datatables/buttons.dataTables.min.css" />
     <link href='https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css' rel='stylesheet' type='text/css'>
-   
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css" integrity="sha512-10/jx2EXwxxWqCLX/hHth/vu2KY3jCF70dCQB8TSgNjbCVAC/8vai53GfMDrO2Emgwccf2pJqxct9ehpzG+MTw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 
 <body class="py-5">
@@ -73,10 +73,10 @@
                 <li>
                     <a href="{{ route('logout') }}" onclick="event.preventDefault(); $('#logout').submit();"
                         class="side-menu">
-                        <div class="menu__icon">
+                        <div class="side-menu__icon">
                             <i data-lucide="log-out"></i>
                         </div>
-                        <div class="menu__title"> Logout </div>
+                        <div class="side-menu__title"> Logout </div>
                     </a>
                 </li>
             </ul>
@@ -166,7 +166,7 @@
                             <li class="p-2">
                                 <div class="font-medium">{{ auth()->user()->username }}</div>
                                 <div class="text-xs text-white/70 mt-0.5 dark:text-slate-200">
-                                    {{ auth()->user()->nama }}</div>
+                                    {{ auth()->user()->nama }} - {{ auth()->user()->level }}</div>
                             </li>
                             <li>
                                 <hr class="dropdown-divider border-white/[0.08]">

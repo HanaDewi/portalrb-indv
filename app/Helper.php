@@ -1,20 +1,22 @@
 <?php
 
+use App\Models\Indikator;
 use App\Models\Instansi;
 use App\Models\KegiatanUtama;
+use App\Models\KlpdInstansi;
 use Carbon\Carbon;
 
 function menus()
 {
     $menu = [
         [
-            'levels' => ['admin', 'evaluator', 'provinsi', 'kabupaten', 'kl', 'tpn', 'tpm'],
+            'levels' => ['admin', 'provinsi', 'kabupaten', 'kl', 'tpn', 'tpm'],
             'title' => 'Dashboard',
             'icon' => 'home',
             'url' => 'dashboard',
         ],
         [
-            'levels' => ['admin', 'evaluator', 'provinsi', 'kabupaten', 'kl'],
+            'levels' => ['admin', 'provinsi', 'kabupaten', 'kl', 'tpn'],
             'title' => 'RB General',
             'icon' => 'pie-chart',
             'url' => 'rb-general',
@@ -26,7 +28,7 @@ function menus()
                     'url' => 'rb-general/perencanaan',
                 ],
                 [
-                    'levels' => ['admin', 'evaluator', 'provinsi', 'kabupaten', 'kl'],
+                    'levels' => ['admin', 'provinsi', 'kabupaten', 'kl', 'tpn'],
                     'title' => 'Rekap Data',
                     'icon' => 'clipboard',
                     'url' => 'rb-general/rekap_data',
@@ -34,7 +36,7 @@ function menus()
             ]
         ],
         [
-            'levels' => ['admin', 'evaluator', 'provinsi', 'kabupaten', 'kl'],
+            'levels' => ['admin', 'provinsi', 'kabupaten', 'kl', 'tpn'],
             'title' => 'RB Tematik',
             'icon' => 'bookmark',
             'url' => 'rb-tematik',
@@ -46,7 +48,7 @@ function menus()
                     'url' => 'rb-tematik/perencanaan',
                 ],
                 [
-                    'levels' => ['admin', 'evaluator', 'provinsi', 'kabupaten', 'kl'],
+                    'levels' => ['admin', 'provinsi', 'kabupaten', 'kl', 'tpn'],
                     'title' => 'Rekap Data',
                     'icon' => 'clipboard',
                     'url' => 'rb-tematik/rekap_data',
@@ -63,19 +65,19 @@ function menus()
             'url' => 'master-data',
             'items' => [
                 [
-                    'levels' => ['admin', 'evaluator'],
+                    'levels' => ['admin'],
                     'title' => 'Kegiatan Utama',
                     'icon' => 'award',
                     'url' => 'master-data/kegiatan_utama',
                 ],
                 [
-                    'levels' => ['admin', 'evaluator'],
+                    'levels' => ['admin'],
                     'title' => 'Indikator',
                     'icon' => 'command',
                     'url' => 'master-data/indikator',
                 ],
                 [
-                    'levels' => ['admin', 'evaluator'],
+                    'levels' => ['admin'],
                     'title' => 'Tema',
                     'icon' => 'bookmark',
                     'url' => 'master-data/tema',
@@ -83,13 +85,13 @@ function menus()
             ]
         ],
         [
-            'levels' => ['admin', 'evaluator', 'provinsi', 'kabupaten', 'kl'],
+            'levels' => ['admin', 'provinsi', 'kabupaten', 'kl'],
             'title' => 'Profil',
             'icon' => 'user',
             'url' => 'profil',
         ],
         [
-            'levels' => ['admin', 'evaluator', 'provinsi', 'kabupaten', 'kl', 'tpn', 'tpm'],
+            'levels' => ['admin', 'provinsi', 'kabupaten', 'kl', 'tpn', 'tpm'],
             'title' => 'Hasil',
             'icon' => 'database',
             'url' => 'hasil',
@@ -143,7 +145,19 @@ function humanDate($date)
 
 function kegiatanUtama()
 {
-    return KegiatanUtama::pluck('nama', 'id');
+    return KegiatanUtama::pluck('nama', 'id')->toArray();
+}
+
+function indikators()
+{
+    $indikators = [];
+    $kegiatans = KegiatanUtama::all();
+    foreach ($kegiatans as $kegiatan) {
+        foreach ($kegiatan->indikators as $indikator) {
+            $indikators[$indikator->id] = '['.$kegiatan->nama.'] '.$indikator->nama;
+        }
+    }
+    return $indikators;
 }
 
 function currency($number)
@@ -158,7 +172,7 @@ function fnumber($number, $digit = 0)
 
 function instansis()
 {
-    return Instansi::orderBy('id')->pluck('nama', 'id');
+    return KlpdInstansi::orderBy('id')->pluck('name', 'id');
 }
 
 function exts($ext)

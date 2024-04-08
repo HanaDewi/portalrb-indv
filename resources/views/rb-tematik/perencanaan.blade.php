@@ -15,7 +15,7 @@
                 <div class="form-inline items-start flex-col xl:flex-row  pt-5 first:mt-0 first:pt-0">
                     <button class="btn btn-outline-primary border-dashed w-full" id="dynamic-ar"
                         onclick="tambah_sasaran_roadmap();">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        <svg xmlns="https://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                             stroke-linejoin="round" icon-name="plus" data-lucide="plus"
                             class="lucide lucide-plus w-4 h-4 mr-2">
@@ -24,9 +24,6 @@
                         </svg> Tambah Sasaran Tematik Roadmap </button>
                 </div>
             </div>
-
-
-
 
             <div class="lg:col-span-12 p-5 border-b border-slate-200/60">
                 <table id="perencanaan" class="table table-bordered table-striped mt-5" cellspacing="0" width="100%">
@@ -46,16 +43,16 @@
                     </thead>
                     <tbody>
                         @php
-                            $no = 0;
-                            $nama = '';
+                        $no = 0;
+                        $nama = '';
                         @endphp
 
                         @foreach ($tematikDatas as $tematikData)
                             @php
-                                if ($nama != $tematikData['tema_nama']) {
-                                    $nama = $tematikData['tema_nama'];
-                                    $no++;
-                                }
+                            if ($nama != $tematikData['tema_nama']) {
+                                $nama = $tematikData['tema_nama'];
+                                $no++;
+                            }
                             @endphp
                             <tr>
                                 <td class="font-bold">{{ $no }}</td>
@@ -121,7 +118,6 @@
         </div>
     </div>
 
-
     {{-- Modal Form Sasaran Roadmap --}}
     <div id="modal-sasaran-roadmap" class="modal fade" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
@@ -140,30 +136,34 @@
                             <div class="border  rounded-md ">
                                 <div id="konten_tambah_aksi">
                                     <div class="relative   dark:border rounded-md">
-                                        <table class="table table-bordered">
+                                        <table class="table table-bordered" id="inputform-sasaran-roadmap">
                                             <tr>
                                                 <td class="font-bold w-30">Tema </td>
                                                 <td colspan="5">
-                                                    <select class="form-select mt-2 sm:mr-2 form-control" name="tema_id">
+                                                    <select class="form-select mt-2 sm:mr-2 form-control" name="tema_id[]">
                                                         @foreach ($temas as $tema)
                                                             <option value="{{ $tema->id }}">{{ $tema->nama }}
                                                             </option>
                                                         @endforeach
                                                     </select>
                                                 </td>
+                                                <td class="font-bold w-30" rowspan="2">
+                                                    <button class="btn btn-xs btn-danger" onclick="hapus_input(this)">
+                                                        <i class="fa fa-trash" aria-hidden="true"></i>
+                                                    </button>
+                                                </td>
                                             </tr>
                                             <tr>
                                                 <td class="font-bold w-30">Sasaran Tematik Roadmap</td>
                                                 <td colspan="5">
-                                                    <input type="text" name="nama"
+                                                    <input type="text" name="nama[]"
                                                         placeholder="Masukan Sasaran Roadmap" class="form-control" />
                                                 </td>
                                             </tr>
                                         </table>
-                                        
-                                        <div id="dynamicAddRemove"></div>
-                                        <div id="target_output_ext"></div>
                                     </div>
+                                    <div id="dynamicAddRemove"></div>
+                                    <div id="target_output_ext"></div>
                                 </div>
                             </div>
                         <button type="button" class="btn btn-outline-primary border-dashed w-full mt-4" onclick="tambah_input();" id="tambah_input_button"><i data-lucide="plus" class="w-4 h-4 mr-2"></i> Tambah Sasaran Tematik Roadmap</button>
@@ -392,12 +392,6 @@
             </div>
         </div>
     </div> <!-- END: Modal Content -->
-
-
-
-
-
-
 @endsection
 
 @push('js')
@@ -407,24 +401,21 @@
 
     <script>
         $(document).ready(function() {
-        idx = 0;
-
-        $(".numeric").inputmask("decimal",{
-            groupSeparator: "",
-            digits: 0,
-            autoGroup: false,
-            rightAlign: false,
-            min: 0
-        });
-
-        $(".digit").inputmask("decimal",{
-            radixPoint:",",
-            groupSeparator: ".",
-            digits: 0,
-            autoGroup: true,
-            rightAlign: false,
-            min: 0,
-        });
+            $(".numeric").inputmask("decimal",{
+                groupSeparator: "",
+                digits: 0,
+                autoGroup: false,
+                rightAlign: false,
+                min: 0
+            });
+            $(".digit").inputmask("decimal",{
+                radixPoint:",",
+                groupSeparator: ".",
+                digits: 0,
+                autoGroup: true,
+                rightAlign: false,
+                min: 0,
+            });
 
             modal_sasaran_roadmap = tailwind.Modal.getInstance(document.querySelector("#modal-sasaran-roadmap"));
             modal_indikator_roadmap = tailwind.Modal.getInstance(document.querySelector(
@@ -435,38 +426,20 @@
                 "#modal-indikator-permasalahan"));
         });
 
-    function output_form() {
-        return  '<hr class="my-4"> <table class="table table-bordered" id="output_form'+idx+'">'+
-                    '<tr>'+
-                        '<td class="font-bold w-30">Tema </td>'+
-                            '<td colspan="5">'+
-                            '<select class="form-select mt-2 sm:mr-2 form-control" name="tema_id">'+
-                            // @foreach ($temas as $tema)
-                        '<option value=""></option>'+
-                        // @endforeach
-                        '</select>'+
-                        '</td>'+
-                        '</tr>'+
-                        '<tr>'+
-                    '<td class="font-bold w-30">Sasaran Tematik Roadmap</td>'+
-                    '<td colspan="5">'+
-                    '<input type="text" name="nama['+idx+']" placeholder="Masukan Sasaran Roadmap" class="form-control" />'+
-                    '</td>'+
-                    '</tr>'+
-                    '<tr>'+
-                        '<td colspan="6"><div class="mt-5"><button type="button" class="btn btn-outline-dark border-dashed w-full bg-slate-50 dark:bg-transparent dark:border" onclick="hapus_input('+idx+');"><svg class="mr-1" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" icon-name="trash-2" data-lucide="trash-2" class="lucide lucide-trash-2 w-4 h-4"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg> Hapus</button></div></td>'+
-                    '</tr>'+
-                '</table>';
-    }
+        function output_form() {
+            const inputform = $('#inputform-sasaran-roadmap');
+            const htmlstr = inputform.get(0).outerHTML;
+            const wrapper = $('<div />',{html:htmlstr});
+            return wrapper.html();
+        }
 
-    function tambah_input() {
-        idx++;
-        $('#target_output_ext').append(output_form(idx));
-    }
+        function tambah_input() {
+            $('#target_output_ext').append(output_form());
+        }
 
-    function hapus_input(idx) {
-        $('#output_form'+idx).remove();
-    }
+        function hapus_input(th) {
+            $(th).parent().parent().parent().remove();
+        }
 
         function tambah_sasaran_roadmap() {
             modal_sasaran_roadmap.show();
@@ -487,7 +460,6 @@
         }
 
         function tambah_indikator_permasalahan(permasalahan, sasaran, permasalahan_id) {
-
             $('#tematik-permasalahan-id-onIndikatorPermasalahan').val(permasalahan_id);
             $('#permasalahan-onIndikatorPermasalahan').val(permasalahan);
             $('#sasaran-permasalahan-onIndikatorPermasalahan').val(sasaran);
@@ -498,12 +470,11 @@
     <script>
         $(function() {
             $("#perencanaan").DataTable({
-                'scrollX': true,
-                // 'orderFixed': [0, 'asc'],
-                'autoWidth': false,
-                'rowsGroup': [0, 1, 2, 3],
-                paging: false,
-                bInfo: false,
+                scrollX: true,
+                autoWidth: true,
+                rowsGroup: [0, 1],
+                paging: true,
+                bInfo: true
             });
         });
     </script>
