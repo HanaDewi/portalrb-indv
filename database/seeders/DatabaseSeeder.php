@@ -21,5 +21,14 @@ class DatabaseSeeder extends Seeder
             TemaSeeder::class,
 
         ]);
+        $this->call(BljrCategoriesTableSeeder::class);
+        $this->call(BljrLanguagesTableSeeder::class);
+        $this->call(BljrNewsTagsTableSeeder::class);
+        $this->call(BljrSettingsTableSeeder::class);
+        $this->call(BljrSlidersTableSeeder::class);
+        $this->call(BljrSocialCountsTableSeeder::class);
+        $this->call(BljrSocialLinksTableSeeder::class);
+        $this->call(BljrSubscribersTableSeeder::class);
+        $this->call(BljrArticlesTableSeeder::class);
     }
 }

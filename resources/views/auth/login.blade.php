@@ -37,6 +37,10 @@
                         <h2 class="intro-x font-bold text-2xl xl:text-3xl text-center xl:text-left">
                             Sign In
                         </h2>
+                        @if (app('request')->input('ruang-belajar'))
+                            <input id="ruang-belajar" type="hidden" class="form-check-input border mr-2" name="ruang-belajar" value="1">
+                            <input id="remember" type="checkbox" class="form-check-input border mr-2" name="remember">
+                        @endif
                         <div class="intro-x mt-8">
                             <input type="text" class="intro-x login__input form-control py-3 px-4 block @error('username') border-danger @enderror" placeholder="Username" name="username" value="{{ old('username') }}">
                             @if ($errors->has('username'))
@@ -47,6 +51,7 @@
                         <div class="intro-x flex text-slate-600 dark:text-slate-500 text-xs sm:text-sm mt-4">
                             <div class="flex items-center mr-auto">
                                 <input id="remember" type="checkbox" class="form-check-input border mr-2" name="remember">
+                                
                                 <label class="cursor-pointer select-none" for="remember">Remember me</label>
                             </div>
                         </div>

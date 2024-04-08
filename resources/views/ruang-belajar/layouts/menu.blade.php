@@ -27,7 +27,7 @@
                                 <li><a href="#">F.A.Q</a></li>
                                 <li><a href="{{ URL::to('/') }}">Portal RB</a></li>
                                 @if (auth()->check())
-                                <li><a href="{{ URL::to('/ruang-belajar/dashboard') }}">Admin</a></li>
+                                <li><a href="{{ URL::to('/ruang-belajar/admin-dashboard') }}">Admin</a></li>
                                 @endif                            </ul>
                         </nav>
                         <button type="button" class="th-menu-toggle d-block d-lg-none"><i
@@ -41,7 +41,7 @@
                                 <span class="badge">3</span>
                             </a>
                             @if (!auth()->check())
-                                <a href="{{ URL::to('/') }}/login" class="th-btn ml-25">Login<i
+                                <a href="{{ URL::to('/') }}/login?ruang-belajar=1" class="th-btn ml-25">Login<i
                                         class="fas fa-arrow-right ms-1"></i></a>
                             @else
                                 <form method="POST" action="{{ route('logout') }}">
