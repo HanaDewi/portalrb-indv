@@ -73,12 +73,13 @@
                                     {{ $tematikData['indikator_nama'] }}
                                 </td>
                                 <td>
+                                    {{ $tematikData['indikator_satuan'] }}
                                 </td>
                                 <td>
                                     {{ $tematikData['indikator_target'] }}
                                     @if ($tematikData['indikator_nama'])
                                         <button
-                                            onclick="tambah_permasalahan('{{ $tematikData['indikator_nama'] }}','{{ $tematikData['indikator_target'] }}', '{{ $tematikData['indikator_id'] }}');"
+                                            onclick="tambah_permasalahan('{{ $tematikData['indikator_nama'] }}','{{ $tematikData['indikator_target'] }}','{{ $tematikData['indikator_satuan'] }}', '{{ $tematikData['indikator_id'] }}');"
                                             class="btn btn-danger btn-sm w-full mb-2"><i data-lucide="edit"
                                                 class="w-4 h-4 mr-1"></i>Permasalahan</button>
                                     @endif
@@ -223,7 +224,7 @@
                                             <tr>
                                                 <td class="font-bold w-30">Satuan Target</td>
                                                 <td colspan="5">
-                                                    <input type="text" id="target-roadmap" name="target_roadmap"
+                                                    <input type="text" id="target-roadmap" name="target_satuan"
                                                         placeholder="Masukan Satuan Target" class="form-control" />
                                                 </td>
                                             </tr>
@@ -278,6 +279,13 @@
                                                 <td colspan="5">
                                                     <input type="text" id="indikator-roadmap-onPermasalahan"
                                                         name="indikator_roadmap" class="form-control" disabled />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="font-bold w-30">Satuan Target </td>
+                                                <td colspan="5">
+                                                    <input type="text" id="target-satuan-onPermasalahan"
+                                                        name="target_satuan" class="form-control" disabled />
                                                 </td>
                                             </tr>
                                             <tr>
@@ -452,10 +460,11 @@
             modal_indikator_roadmap.show();
         }
 
-        function tambah_permasalahan(indikator_roadmap, target_roadmap, indikator_roadmap_id) {
+        function tambah_permasalahan(indikator_roadmap, target_roadmap, satuan, indikator_roadmap_id) {
             $('#indikator-roadmap-id-onPermasalahan').val(indikator_roadmap_id);
             $('#indikator-roadmap-onPermasalahan').val(indikator_roadmap);
             $('#target-roadmap-onPermasalahan').val(target_roadmap);
+            $('#target-satuan-onPermasalahan').val(satuan);
             modal_permasalahan.show();
         }
 

@@ -42,7 +42,6 @@ class RBTematikController extends Controller
                 foreach ($sasaran->indikator_roadmap as $indikator) {
                     if (count($indikator->permasalahan)) {
                         foreach ($indikator->permasalahan as $permasalahan) {
-
                             if (count($permasalahan->indikator_permasalahan)) {
                                 foreach ($permasalahan->indikator_permasalahan as $indikator_permasalahan) {
                                     $tematikDatas[$jumlahBaris]["indikator_permasalahan_id"] = $indikator_permasalahan->id;
@@ -54,6 +53,7 @@ class RBTematikController extends Controller
                                     $tematikDatas[$jumlahBaris]["indikator_id"] = $indikator->id;
                                     $tematikDatas[$jumlahBaris]["indikator_nama"] = $indikator->nama;
                                     $tematikDatas[$jumlahBaris]["indikator_target"] = $indikator->target;
+                                    $tematikDatas[$jumlahBaris]["indikator_satuan"] = $indikator->satuan;
                                     $tematikDatas[$jumlahBaris]["sasaran_id"] = $sasaran->id;
                                     $tematikDatas[$jumlahBaris]["sasaran_nama"] = $sasaran->nama;
                                     $tematikDatas[$jumlahBaris]["tema_id"] = $sasaran->tema->id;
@@ -70,6 +70,7 @@ class RBTematikController extends Controller
                                 $tematikDatas[$jumlahBaris]["indikator_id"] = $indikator->id;
                                 $tematikDatas[$jumlahBaris]["indikator_nama"] = $indikator->nama;
                                 $tematikDatas[$jumlahBaris]["indikator_target"] = $indikator->target;
+                                $tematikDatas[$jumlahBaris]["indikator_satuan"] = $indikator->satuan;
                                 $tematikDatas[$jumlahBaris]["sasaran_id"] = $sasaran->id;
                                 $tematikDatas[$jumlahBaris]["sasaran_nama"] = $sasaran->nama;
                                 $tematikDatas[$jumlahBaris]["tema_id"] = $sasaran->tema->id;
@@ -87,6 +88,7 @@ class RBTematikController extends Controller
                         $tematikDatas[$jumlahBaris]["indikator_id"] = $indikator->id;
                         $tematikDatas[$jumlahBaris]["indikator_nama"] = $indikator->nama;
                         $tematikDatas[$jumlahBaris]["indikator_target"] = $indikator->target;
+                        $tematikDatas[$jumlahBaris]["indikator_satuan"] = $indikator->satuan;
                         $tematikDatas[$jumlahBaris]["sasaran_id"] = $sasaran->id;
                         $tematikDatas[$jumlahBaris]["sasaran_nama"] = $sasaran->nama;
                         $tematikDatas[$jumlahBaris]["tema_id"] = $sasaran->tema->id;
@@ -104,6 +106,7 @@ class RBTematikController extends Controller
                 $tematikDatas[$jumlahBaris]["indikator_id"] = null;
                 $tematikDatas[$jumlahBaris]["indikator_nama"] = null;
                 $tematikDatas[$jumlahBaris]["indikator_target"] = null;
+                $tematikDatas[$jumlahBaris]["indikator_satuan"] = null;
                 $tematikDatas[$jumlahBaris]["sasaran_id"] = $sasaran->id;
                 $tematikDatas[$jumlahBaris]["sasaran_nama"] = $sasaran->nama;
                 $tematikDatas[$jumlahBaris]["tema_id"] = $sasaran->tema->id;
@@ -183,6 +186,7 @@ class RBTematikController extends Controller
             $indikatorRoadmap->tematik_sasaran_roadmap_id = $request->sasaran_id;
             $indikatorRoadmap->nama = $request->indikator_roadmap;
             $indikatorRoadmap->target = $request->target_roadmap;
+            $indikatorRoadmap->satuan = $request->target_satuan;
         }
         if ($indikatorRoadmap->save()) {
             session()->flash('success', 'Data Indikator Roadmap Tematik berhasil disimpan.');
