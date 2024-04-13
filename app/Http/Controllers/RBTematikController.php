@@ -17,6 +17,7 @@ use App\Models\TematikPermasalahan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
+
 class RBTematikController extends Controller
 {
     public function __construct()
@@ -121,10 +122,11 @@ class RBTematikController extends Controller
         ]);
     }
 
-    public function renaksi()
+    public function permasalahan()
     {
         $temas = Tema::get();
         $sasaranRoadmaps = TematikSasaranRoadmap::orderBy('tema_id')->get();
+        $indikatorRoadmaps = TematikIndikatorRoadmap::orderBy('tematik_sasaran_roadmap_id')->get();
         $tematikDatas = [];
         $jumlahBaris = 0;
         foreach ($sasaranRoadmaps as $sasaran) {
@@ -204,11 +206,19 @@ class RBTematikController extends Controller
                 $jumlahBaris++;
             }
         }
-        return view('rb-tematik.renaksi', [
+        return view('rb-tematik.permasalahan', [
             "temas" => $temas,
             "sasaranRoadmaps" => $sasaranRoadmaps,
+            "indikatorRoadmaps" => $indikatorRoadmaps,
             "tematikDatas" => $tematikDatas
         ]);
+    }
+
+    public function getIndikatorRoadmap()
+    {
+        $tematik_sasaran_roadmap_id = request()->get('tematik_sasaran_roadmap_id');
+        $indikators = TematikIndikatorRoadmap::where('tematik_sasaran_roadmap_id', $tematik_sasaran_roadmap_id)->get();
+        return response()->json($indikators);
     }
 
     public function perencanaan_getData($kegiatan_utama_id, $indikator_id)
@@ -301,7 +311,7 @@ class RBTematikController extends Controller
         } else {
             session()->flash('success', 'Data Indikator Roadmap Tematik gagal disimpan! Silahkan dicoba kembali.');
         }
-        return redirect('rb-tematik/perencanaan');
+        return redirect('rb-tematik/permasalahan');
     }
 
     public function simpanIndikatorPermasalahan(Request $request)
@@ -318,7 +328,7 @@ class RBTematikController extends Controller
         } else {
             session()->flash('success', 'Data Indikator Roadmap Tematik gagal disimpan! Silahkan dicoba kembali.');
         }
-        return redirect('rb-tematik/perencanaan');
+        return redirect('rb-tematik/permasalahan');
     }
 
     public function perencanaan_simpanTarget(Request $request)

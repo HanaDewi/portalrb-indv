@@ -13,7 +13,7 @@
         <div id="tab1" class="tab-pane leading-relaxed active">
 
             <div class="form-inline items-start flex-col xl:flex-row  pt-5 first:mt-0 first:pt-0">
-                <button class="btn btn-outline-primary border-dashed w-full" id="dynamic-ar" onclick="tambah_sasaran_roadmap();">
+                <button class="btn btn-outline-primary border-dashed w-full" id="dynamic-ar" onclick="tambah_permasalahan();">
                     <svg xmlns="https://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" icon-name="plus" data-lucide="plus" class="lucide lucide-plus w-4 h-4 mr-2">
                         <line x1="12" y1="5" x2="12" y2="19"></line>
                         <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -144,73 +144,7 @@
     </div>
 </div> <!-- END: Modal Content -->
 
-{{-- Modal Form Indikator Roadmap --}}
-<div id="modal-indikator-roadmap" class="modal fade" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <!-- BEGIN: Modal Header -->
-            <div class="darkbg modal-header">
-                <h2 class="font-bold fw-medium  fs-base me-auto" id="title">Indikator Roadmap</h2>
-            </div> <!-- END: Modal Header -->
-            <!-- BEGIN: Modal Body -->
-            <form action="{{ url('rb-tematik/perencanaan/simpan-indikator-roadmap') }}" id="form-indikator-roadmap" method="post">
-                @csrf
-                <input type="hidden" name="sasaran_id" id="sasaran-id">
-                <div class="modal-body grid columns-12 ">
-                    <div class="g-col-12">
-                        <div class="border  rounded-md ">
-                            <div id="konten_tambah_aksi">
-                                <div class="relative   dark:border rounded-md">
-                                    <table class="table table-bordered">
-                                        <tr>
-                                            <td class="font-bold w-30">Tema </td>
-                                            <td colspan="5">
-                                                <input type="text" id="tema-indikator" name="tema_indikator" class="form-control" disabled />
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="font-bold w-30">Sasaran Roadmap </td>
-                                            <td colspan="5">
-                                                <input type="text" id="sasaran-roadmap" name="sasaran_roadmap" class="form-control" disabled />
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="font-bold w-30">Indikator Roadmap</td>
-                                            <td colspan="5">
-                                                <input type="text" id="indikator-roadmap" name="indikator_roadmap" placeholder="Masukan Indikator Roadmap" class="form-control" />
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="font-bold w-30">Target</td>
-                                            <td colspan="5">
-                                                <input type="text" class="form-control" id="target-roadmap" name="target_roadmap" placeholder="Masukan Jumlah Target" class="form-control" />
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="font-bold w-30">Satuan Target</td>
-                                            <td colspan="5">
-                                                <input type="text" id="target-roadmap" name="target_satuan" placeholder="Masukan Satuan Target" class="form-control" />
-                                            </td>
-                                        </tr>
 
-                                    </table>
-                                    <div id="dynamicAddRemove"></div>
-                                </div>
-                            </div>
-                        </div>
-
-
-                    </div>
-                </div> <!-- END: Modal Body -->
-                <!-- BEGIN: Modal Footer -->
-                <div class="modal-footer text-end">
-                    <button type="button" data-tw-dismiss="modal" class="btn btn-outline-secondary w-20 me-1">Cancel</button>
-                    <button type="submit" class="btn btn-primary w-20 saveButton">Simpan</button>
-                </div> <!-- END: Modal Footer -->
-            </form>
-        </div>
-    </div>
-</div> <!-- END: Modal Content -->
 
 {{-- Modal Form Permasalahan --}}
 <div id="modal-permasalahan" class="modal fade" tabindex="-1" aria-hidden="true">
@@ -231,18 +165,32 @@
                                 <div class="relative   dark:border rounded-md">
                                     <table class="table table-bordered">
                                         <tr>
-                                            <td class="font-bold w-30">Indikator Sasaran </td>
+                                            <td class="font-bold w-30">Sasaran Roadmap</td>
                                             <td colspan="5">
-                                                <input type="text" id="indikator-roadmap-onPermasalahan" name="indikator_roadmap" class="form-control" disabled />
+                                            <select class="form-select mt-2 sm:mr-2 form-control" id="sasaran-roadmap-onPermasalahan" name="sasaran_roadmap">
+                                                <option selected="true" disabled="disabled">Pilih Sasaran Roadmap</option>    
+                                                @foreach ($sasaranRoadmaps as $sasaran)
+                                                <option value="{{ $sasaran->id }}">{{ $sasaran->nama }}
+                                                </option>
+                                                @endforeach
+                                            </select>
                                             </td>
                                         </tr>
-
+                                        <tr>
+                                            <td class="font-bold w-30">Indikator Roadmap</td>
+                                            <td colspan="5">
+                                                <select class="form-select mt-2 sm:mr-2 form-control" id="indikator-roadmap-onPermasalahan" name="tematik_indikator_roadmap_id">
+                                                    <option selected="true" disabled="disabled">Pilih Indikator Roadmap</option>    
+                                                </select>
+                                            </td>
+                                        </tr>
                                         <tr>
                                             <td class="font-bold w-30">Target Indikator </td>
                                             <td colspan="5">
                                                 <input type="text" id="target-roadmap-onPermasalahan" name="target_roadmap" class="form-control" disabled />
                                             </td>
                                         </tr>
+
                                         <tr>
                                             <td class="font-bold w-30">Satuan Target </td>
                                             <td colspan="5">
@@ -252,13 +200,13 @@
                                         <tr>
                                             <td class="font-bold w-30">Permasalahan</td>
                                             <td colspan="5">
-                                                <input type="text" id="permasalahan" name="permasalahan" placeholder="Masukan Permasalahan" class="form-control" />
+                                                <textarea id="permasalahan" name="permasalahan" class="form-control" rows="8"></textarea>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="font-bold w-30">Sasaran Permasalahan</td>
                                             <td colspan="5">
-                                                <input type="text" id="sasaran-permasalahan" name="sasaran_permasalahan" placeholder="Masukan Sasaran Permasalahan" class="form-control" />
+                                            <textarea id="sasaran-permasalahan" name="sasaran_permasalahan"  class="form-control" rows="4" ></textarea>
                                             </td>
                                         </tr>
                                     </table>
@@ -365,9 +313,6 @@
             min: 0,
         });
 
-        modal_sasaran_roadmap = tailwind.Modal.getInstance(document.querySelector("#modal-sasaran-roadmap"));
-        modal_indikator_roadmap = tailwind.Modal.getInstance(document.querySelector(
-            "#modal-indikator-roadmap"));
         modal_permasalahan = tailwind.Modal.getInstance(document.querySelector(
             "#modal-permasalahan"));
         modal_indikator_permasalahan = tailwind.Modal.getInstance(document.querySelector(
@@ -391,22 +336,7 @@
         $(th).parent().parent().parent().remove();
     }
 
-    function tambah_sasaran_roadmap() {
-        modal_sasaran_roadmap.show();
-    }
-
-    function tambah_indikator_roadmap(tema, sasaran_roadmap, sasaran_id) {
-        $('#sasaran-id').val(sasaran_id);
-        $('#tema-indikator').val(tema);
-        $('#sasaran-roadmap').val(sasaran_roadmap);
-        modal_indikator_roadmap.show();
-    }
-
     function tambah_permasalahan(indikator_roadmap, target_roadmap, satuan, indikator_roadmap_id) {
-        $('#indikator-roadmap-id-onPermasalahan').val(indikator_roadmap_id);
-        $('#indikator-roadmap-onPermasalahan').val(indikator_roadmap);
-        $('#target-roadmap-onPermasalahan').val(target_roadmap);
-        $('#target-satuan-onPermasalahan').val(satuan);
         modal_permasalahan.show();
     }
 
@@ -423,9 +353,30 @@
         $("#perencanaan").DataTable({
             scrollX: true,
             autoWidth: true,
-            rowsGroup: [0, 1, 2, 3, 4, 5, 6, 7],
+            rowsGroup: [0, 1, 2],
             paging: true,
             bInfo: true
+        });
+    });
+</script>
+<script>
+    $('#sasaran-roadmap-onPermasalahan').on('change', function() {
+        var firstSelectValue = $(this).val();
+
+        $.ajax({
+            url: '{{url("/rb-tematik/permasalahan/get-indikator-roadmap")}}',
+            type: 'GET',
+            data: {"tematik_sasaran_roadmap_id": firstSelectValue},
+            success: function(response) {
+                // Clear previous options
+                $('#indikator-roadmap-onPermasalahan').empty();
+                // Add new options based on the response
+                $.each(response, function(key, value) {
+                    $('#indikator-roadmap-onPermasalahan').append('<option value="' + value["id"] + '">' + value["nama"] + '</option>');
+                    $('#target-roadmap-onPermasalahan').val(value["target"]);
+                    $('#target-satuan-onPermasalahan').val(value["satuan"]);
+                });
+            },
         });
     });
 </script>

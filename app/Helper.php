@@ -51,7 +51,7 @@ function menus()
                     'levels' => ['provinsi', 'kabupaten', 'kl'],
                     'title' => 'Permasalahan dan Rencana Aksi',
                     'icon' => 'check-circle',
-                    'url' => 'rb-tematik/renaksi',
+                    'url' => 'rb-tematik/permasalahan',
                 ],
                 [
                     'levels' => ['admin', 'provinsi', 'kabupaten', 'kl', 'tpn'],
