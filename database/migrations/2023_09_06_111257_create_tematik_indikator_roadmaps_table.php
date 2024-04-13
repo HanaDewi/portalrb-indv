@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('tematik_sasaran_roadmap_id');
             $table->text('nama');
+            $table->text('satuan');
             $table->text('target');
             $table->timestamps();
         });

@@ -33,8 +33,8 @@
                             <th class="w200">Tema</th>
                             <th class="w150">Sasaran Tematik Roadmap</th>
                             <th>Indikator</th>
-                            <th class="w-5">Satuan Target</th>
                             <th class="w-5">Target</th>
+                            <th class="w-5">Satuan Target</th>
                             <th class="w-5">Permasalahan (bottleneck)</th>
                             <th class="w-5">Sasaran</th>
                             <th class="w-5">Indikator</th>
@@ -72,9 +72,7 @@
                                 <td>
                                     {{ $tematikData['indikator_nama'] }}
                                 </td>
-                                <td>
-                                    {{ $tematikData['indikator_satuan'] }}
-                                </td>
+                               
                                 <td>
                                     {{ $tematikData['indikator_target'] }}
                                     @if ($tematikData['indikator_nama'])
@@ -83,6 +81,9 @@
                                             class="btn btn-danger btn-sm w-full mb-2"><i data-lucide="edit"
                                                 class="w-4 h-4 mr-1"></i>Permasalahan</button>
                                     @endif
+                                </td>
+                                <td>
+                                    {{ $tematikData['indikator_satuan'] }}
                                 </td>
                                 <td>
                                     {{ $tematikData['permasalahan_nama'] }}
@@ -222,19 +223,20 @@
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td class="font-bold w-30">Satuan Target</td>
-                                                <td colspan="5">
-                                                    <input type="text" id="target-roadmap" name="target_satuan"
-                                                        placeholder="Masukan Satuan Target" class="form-control" />
-                                                </td>
-                                            </tr>
-                                            <tr>
                                                 <td class="font-bold w-30">Target</td>
                                                 <td colspan="5">
                                                     <input type="text" class="form-control" id="target-roadmap" name="target_roadmap"
                                                         placeholder="Masukan Jumlah Target" class="form-control" />
                                                 </td>
                                             </tr>
+                                            <tr>
+                                                <td class="font-bold w-30">Satuan Target</td>
+                                                <td colspan="5">
+                                                    <input type="text" id="target-roadmap" name="target_satuan"
+                                                        placeholder="Masukan Satuan Target" class="form-control" />
+                                                </td>
+                                            </tr>
+                                            
                                         </table>
                                         <div id="dynamicAddRemove"></div>
                                     </div>
