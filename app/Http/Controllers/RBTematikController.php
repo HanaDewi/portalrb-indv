@@ -121,6 +121,96 @@ class RBTematikController extends Controller
         ]);
     }
 
+    public function renaksi()
+    {
+        $temas = Tema::get();
+        $sasaranRoadmaps = TematikSasaranRoadmap::orderBy('tema_id')->get();
+        $tematikDatas = [];
+        $jumlahBaris = 0;
+        foreach ($sasaranRoadmaps as $sasaran) {
+            if (count($sasaran->indikator_roadmap)) {
+                foreach ($sasaran->indikator_roadmap as $indikator) {
+                    if (count($indikator->permasalahan)) {
+                        foreach ($indikator->permasalahan as $permasalahan) {
+                            if (count($permasalahan->indikator_permasalahan)) {
+                                foreach ($permasalahan->indikator_permasalahan as $indikator_permasalahan) {
+                                    $tematikDatas[$jumlahBaris]["indikator_permasalahan_id"] = $indikator_permasalahan->id;
+                                    $tematikDatas[$jumlahBaris]["indikator_permasalahan_nama"] = $indikator_permasalahan->nama;
+                                    $tematikDatas[$jumlahBaris]["indikator_permasalahan_target"] = $indikator_permasalahan->target;
+                                    $tematikDatas[$jumlahBaris]["permasalahan_id"] = $permasalahan->id;
+                                    $tematikDatas[$jumlahBaris]["permasalahan_nama"] = $permasalahan->nama;
+                                    $tematikDatas[$jumlahBaris]["permasalahan_sasaran"] = $permasalahan->sasaran_permasalahan;
+                                    $tematikDatas[$jumlahBaris]["indikator_id"] = $indikator->id;
+                                    $tematikDatas[$jumlahBaris]["indikator_nama"] = $indikator->nama;
+                                    $tematikDatas[$jumlahBaris]["indikator_target"] = $indikator->target;
+                                    $tematikDatas[$jumlahBaris]["indikator_satuan"] = $indikator->satuan;
+                                    $tematikDatas[$jumlahBaris]["sasaran_id"] = $sasaran->id;
+                                    $tematikDatas[$jumlahBaris]["sasaran_nama"] = $sasaran->nama;
+                                    $tematikDatas[$jumlahBaris]["tema_id"] = $sasaran->tema->id;
+                                    $tematikDatas[$jumlahBaris]["tema_nama"] = $sasaran->tema->nama;
+                                    $jumlahBaris++;
+                                }
+                            } else {
+                                $tematikDatas[$jumlahBaris]["indikator_permasalahan_id"] = null;
+                                $tematikDatas[$jumlahBaris]["indikator_permasalahan_nama"] = null;
+                                $tematikDatas[$jumlahBaris]["indikator_permasalahan_target"] = null;
+                                $tematikDatas[$jumlahBaris]["permasalahan_id"] = $permasalahan->id;
+                                $tematikDatas[$jumlahBaris]["permasalahan_nama"] = $permasalahan->nama;
+                                $tematikDatas[$jumlahBaris]["permasalahan_sasaran"] = $permasalahan->sasaran_permasalahan;
+                                $tematikDatas[$jumlahBaris]["indikator_id"] = $indikator->id;
+                                $tematikDatas[$jumlahBaris]["indikator_nama"] = $indikator->nama;
+                                $tematikDatas[$jumlahBaris]["indikator_target"] = $indikator->target;
+                                $tematikDatas[$jumlahBaris]["indikator_satuan"] = $indikator->satuan;
+                                $tematikDatas[$jumlahBaris]["sasaran_id"] = $sasaran->id;
+                                $tematikDatas[$jumlahBaris]["sasaran_nama"] = $sasaran->nama;
+                                $tematikDatas[$jumlahBaris]["tema_id"] = $sasaran->tema->id;
+                                $tematikDatas[$jumlahBaris]["tema_nama"] = $sasaran->tema->nama;
+                                $jumlahBaris++;
+                            }
+                        }
+                    } else {
+                        $tematikDatas[$jumlahBaris]["indikator_permasalahan_id"] = null;
+                        $tematikDatas[$jumlahBaris]["indikator_permasalahan_nama"] = null;
+                        $tematikDatas[$jumlahBaris]["indikator_permasalahan_target"] = null;
+                        $tematikDatas[$jumlahBaris]["permasalahan_id"] = null;
+                        $tematikDatas[$jumlahBaris]["permasalahan_nama"] = null;
+                        $tematikDatas[$jumlahBaris]["permasalahan_sasaran"] = null;
+                        $tematikDatas[$jumlahBaris]["indikator_id"] = $indikator->id;
+                        $tematikDatas[$jumlahBaris]["indikator_nama"] = $indikator->nama;
+                        $tematikDatas[$jumlahBaris]["indikator_target"] = $indikator->target;
+                        $tematikDatas[$jumlahBaris]["indikator_satuan"] = $indikator->satuan;
+                        $tematikDatas[$jumlahBaris]["sasaran_id"] = $sasaran->id;
+                        $tematikDatas[$jumlahBaris]["sasaran_nama"] = $sasaran->nama;
+                        $tematikDatas[$jumlahBaris]["tema_id"] = $sasaran->tema->id;
+                        $tematikDatas[$jumlahBaris]["tema_nama"] = $sasaran->tema->nama;
+                        $jumlahBaris++;
+                    }
+                }
+            } else {
+                $tematikDatas[$jumlahBaris]["indikator_permasalahan_id"] = null;
+                $tematikDatas[$jumlahBaris]["indikator_permasalahan_nama"] = null;
+                $tematikDatas[$jumlahBaris]["indikator_permasalahan_target"] = null;
+                $tematikDatas[$jumlahBaris]["permasalahan_id"] = null;
+                $tematikDatas[$jumlahBaris]["permasalahan_nama"] = null;
+                $tematikDatas[$jumlahBaris]["permasalahan_sasaran"] = null;
+                $tematikDatas[$jumlahBaris]["indikator_id"] = null;
+                $tematikDatas[$jumlahBaris]["indikator_nama"] = null;
+                $tematikDatas[$jumlahBaris]["indikator_target"] = null;
+                $tematikDatas[$jumlahBaris]["indikator_satuan"] = null;
+                $tematikDatas[$jumlahBaris]["sasaran_id"] = $sasaran->id;
+                $tematikDatas[$jumlahBaris]["sasaran_nama"] = $sasaran->nama;
+                $tematikDatas[$jumlahBaris]["tema_id"] = $sasaran->tema->id;
+                $tematikDatas[$jumlahBaris]["tema_nama"] = $sasaran->tema->nama;
+                $jumlahBaris++;
+            }
+        }
+        return view('rb-tematik.renaksi', [
+            "temas" => $temas,
+            "sasaranRoadmaps" => $sasaranRoadmaps,
+            "tematikDatas" => $tematikDatas
+        ]);
+    }
+
     public function perencanaan_getData($kegiatan_utama_id, $indikator_id)
     {
         $user = Auth::User();
@@ -161,7 +251,7 @@ class RBTematikController extends Controller
         $user = Auth::User();
         $sasaranRoadmap = TematikSasaranRoadmap::where('instansi_id', $user->instansi_id)->where('tema_id', $request->tema_id)->where('nama', $request->nama)->first();
         if (!$sasaranRoadmap) {
-            foreach ($request->tema_id as $idx=>$tema_id) {
+            foreach ($request->tema_id as $idx => $tema_id) {
                 $sasaranRoadmap = new TematikSasaranRoadmap();
                 $sasaranRoadmap->instansi_id = $user->user_rel->instansi_id;
                 $sasaranRoadmap->tema_id = $tema_id;

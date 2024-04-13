@@ -24,7 +24,7 @@ function menus()
                 [
                     'levels' => ['provinsi', 'kabupaten', 'kl'],
                     'title' => 'Perencanaan dan Monev',
-                    'icon' => 'bar-chart',
+                    'icon' => 'clipboard-list',
                     'url' => 'rb-general/perencanaan',
                 ],
                 [
@@ -43,9 +43,15 @@ function menus()
             'items' => [
                 [
                     'levels' => ['provinsi', 'kabupaten', 'kl'],
-                    'title' => 'Perencanaan dan Monev',
-                    'icon' => 'bar-chart',
+                    'title' => 'Tema dan Sasaran Tematik',
+                    'icon' => 'clipboard-list',
                     'url' => 'rb-tematik/perencanaan',
+                ],
+                [
+                    'levels' => ['provinsi', 'kabupaten', 'kl'],
+                    'title' => 'Permasalahan dan Rencana Aksi',
+                    'icon' => 'check-circle',
+                    'url' => 'rb-tematik/renaksi',
                 ],
                 [
                     'levels' => ['admin', 'provinsi', 'kabupaten', 'kl', 'tpn'],
@@ -154,7 +160,7 @@ function indikators()
     $kegiatans = KegiatanUtama::all();
     foreach ($kegiatans as $kegiatan) {
         foreach ($kegiatan->indikators as $indikator) {
-            $indikators[$indikator->id] = '['.$kegiatan->nama.'] '.$indikator->nama;
+            $indikators[$indikator->id] = '[' . $kegiatan->nama . '] ' . $indikator->nama;
         }
     }
     return $indikators;

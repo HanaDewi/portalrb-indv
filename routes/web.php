@@ -88,6 +88,14 @@ Route::middleware('auth')->group(function () {
     Route::post('/rb-tematik/perencanaan/simpan-permasalahan', [RBTematikController::class, 'simpanPermasalahan']);
     Route::post('/rb-tematik/perencanaan/simpan-indikator-permasalahan', [RBTematikController::class, 'simpanIndikatorPermasalahan']);
     Route::post('/rb-tematik/perencanaan/simpanMonev', [RBTematikController::class, 'perencanaan_simpanMonev']);
+    // RB Tematik  Rencana Aksi
+    Route::get('/rb-tematik/renaksi', [RBTematikController::class, 'renaksi'])->name('renaksi');
+    Route::get('/rb-tematik/perencanaan/{perencanaan_id}/{target_id}/rencana_aksi', [RBGeneralController::class, 'rencana_aksi'])->name('rencana_aksi');
+    Route::get('/rb-tematik/perencanaan/{perencanaan_id}/{target_id}/rencana_aksi/getDatas', [RBGeneralController::class, 'rencana_aksi_getDatas']);
+    Route::get('/rb-tematik/perencanaan/{perencanaan_id}/{target_id}/rencana_aksi/getData/{id}', [RBGeneralController::class, 'rencana_aksi_getData']);
+    Route::post('/rb-tematik/perencanaan/{perencanaan_id}/{target_id}/rencana_aksi/simpan', [RBGeneralController::class, 'rencana_aksi_simpan']);
+    Route::post('/rb-tematik/perencanaan/{perencanaan_id}/{target_id}/rencana_aksi/hapus', [RBGeneralController::class, 'rencana_aksi_hapus']);
+
     // RB Tematik Rekap Data
     Route::get('/rb-tematik/rekap_data', [RBTematikController::class, 'rekap_data']);
     Route::get('/rb-tematik/rekap_data/getPerencanaan/{id}', [RBTematikController::class, 'rekap_data_getPerencanaan']);
