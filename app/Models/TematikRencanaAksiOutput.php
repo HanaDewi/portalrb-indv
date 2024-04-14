@@ -9,4 +9,9 @@ class TematikRencanaAksiOutput extends Model
 {
     use HasFactory;
     protected $table = 'tematik_rencana_aksi_output';
+
+    public function rencana_aksi()
+    {
+        return $this->belongsTo(TematikRencanaAksi::class, 'tematik_rencana_aksi_id');
+    }
 }
