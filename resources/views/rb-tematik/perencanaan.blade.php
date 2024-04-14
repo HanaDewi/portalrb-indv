@@ -441,7 +441,7 @@
             modal_indikator_permasalahan.show();
         }
     </script>
-    <script src="http://cdn.rawgit.com/ashl1/datatables-rowsgroup/v1.0.0/dataTables.rowsGroup.js"></script>
+    <script src="https://cdn.rawgit.com/ashl1/datatables-rowsgroup/v1.0.0/dataTables.rowsGroup.js"></script>
     <script>
         $(function() {
             $("#perencanaan").DataTable({
