@@ -179,6 +179,17 @@
                                 </td>
                             </tr>
                             <tr>
+                                <td class="font-bold">Fokus Intervensi<span class="text-danger">*</span></td>
+                                <td colspan="5">
+                                    <select class="form-select mt-2 sm:mr-2 form-control" name="fokus_intervensi">
+                                        @foreach ($fokus_intervensi as $intervensi)
+                                        <option value="{{ $intervensi->id }}">{{ $intervensi->nama }}
+                                        </option>
+                                        @endforeach
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
                                 <td class="font-bold">Unit Kerja Pelaksana <span class="text-danger">*</span></td>
                                 <td colspan="5">
                                     <input type="text" name="target_output[0][pelaksana]" id="pelaksana0" placeholder="Pelaksana" class="form-control mt-4" required>
