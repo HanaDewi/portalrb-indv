@@ -411,21 +411,20 @@ class RBTematikController extends Controller
     {
         $user = Auth::User();
         $indikator = TematikIndikatorPermasalahan::where('id', $indikator_id)->first();
-        print_r($indikator->id);
         $rencana_aksis = TematikRencanaAksi::where('tematik_indikator_permasalahan_id', $indikator->id)->get();
         $outputs = [];
         $no = 1;
-        // foreach ($rencana_aksis as $rencana_aksi) {
-        //     foreach ($rencana_aksi->output as $output) {
-        //         $output->no = $no;
-        //         $output->nama_rencana_aksi = $output->rencana_aksi->rencana_aksi;
-        //         $output->target_total = fnumber($output->target_total);
-        //         $output->anggaran_total = currency($output->anggaran_total);
-        //         $outputs[] = $output;
-        //     }
-        //     $no++;
-        // }
-        // return response()->json(['data' => $outputs]);
+        foreach ($rencana_aksis as $rencana_aksi) {
+            foreach ($rencana_aksi->output as $output) {
+                $output->no = $no;
+                $output->nama_rencana_aksi = $output->rencana_aksi->rencana_aksi;
+                $output->target_total = fnumber($output->target_total);
+                $output->anggaran_total = currency($output->anggaran_total);
+                $outputs[] = $output;
+            }
+            $no++;
+        }
+        return response()->json(['data' => $outputs]);
     }
 
     public function rencana_aksi_getData($perencanaan_id, $target_id, $id)
