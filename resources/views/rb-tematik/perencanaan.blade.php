@@ -112,8 +112,8 @@
                                                         @endforeach
                                                     </select>
                                                 </td>
-                                                <td class="font-bold w-30" rowspan="2">
-                                                    <button class="btn btn-xs btn-danger" onclick="hapus_input(this)">
+                                                <td class="font-bold w-30" rowspan="2" width="70px;">
+                                                    <button class="btn btn-xs btn-danger delete-item" onclick="hapus_input(this)" style="display:none;">
                                                         <i class="fa fa-trash" aria-hidden="true"></i>
                                                     </button>
                                                 </td>
@@ -453,4 +453,7 @@
             });
         });
     </script>
+    <style type="text/css">
+        #target_output_ext .delete-item {display: block !important;}
+    </style>
 @endpush
