@@ -495,22 +495,18 @@ class RBTematikController extends Controller
         return response()->json(['success' => $success]);
     }
 
-    public function rencana_aksi_hapus($perencanaan_id, $target_id, Request $request)
+    public function rencana_aksi_hapus($renaksi_id, Request $request)
     {
         $user = Auth::User();
-        $target = GeneralPerencanaanTarget::where('id', $target_id)->where('general_perencanaan_id', $perencanaan_id)
-            ->whereHas('perencanaan', function ($q) use ($user) {
-                $q->where('instansi_id', $user->instansi_id);
-            })->first();
-        if (!$target) {
+        $renaksiOutput = TematikRencanaAksiOutput::where('tematik_rencana_aksi_id', $renaksi_id)->first();
+        if (!$renaksiOutput) {
             abort(403);
         }
         $success = false;
         DB::beginTransaction();
         try {
-            $output = GeneralRencanaAksiOutput::find($request->id);
-            $rencana_aksi = $output->rencana_aksi;
-            if ($output->delete()) {
+            $rencana_aksi = $renaksiOutput->rencana_aksi;
+            if ($renaksiOutput->delete()) {
                 $success = true;
                 if (count($rencana_aksi->output) == 0) {
                     if (!$rencana_aksi->delete()) {

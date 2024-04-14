@@ -8,8 +8,8 @@
 <div class="intro-y col-span-12 lg:col-span-12">
     <div class="intro-y box">
         <div class="flex sm:flex-row items-center p-5 border-b border-slate-200/60">
-            <h2 class="font-bold text-base mr-auto flex items-center justify-center"> <i data-lucide="pie-chart" class="mr-1"></i> RB General - Rencana Aksi</h2>
-            <a href="{{ url('rb-general/perencanaan') }}" class="btn btn-warning shadow-md float-right"><i data-lucide="chevron-left"></i> Kembali</a>
+            <h2 class="font-bold text-base mr-auto flex items-center justify-center"> <i data-lucide="pie-chart" class="mr-1"></i> RB Tematik - Rencana Aksi</h2>
+            <a href="{{ url('rb-tematik/permasalahan') }}" class="btn btn-warning shadow-md float-right"><i data-lucide="chevron-left"></i> Kembali</a>
         </div>
         <div class="lg:col-span-12 p-5 border-b border-slate-200/60">
             <table class="table table-bordered table-striped table-hover">
@@ -40,7 +40,6 @@
                 <tr>
                     <td class="font-bold align-top">Satuan Target </td>
                     <td> {{$indikator->permasalahan->indikator_roadmap->satuan}}</td>
-                   
                 </tr>
             </table>
         </div>
@@ -542,7 +541,7 @@
         }).then((result) => {
             if (result.isConfirmed) {
                 $.ajax({
-                    url: "{{url('rb-tematik/permasalhan/renaksi'.$indikator->id.'/hapus')}}",
+                    url: "{{url('rb-tematik/permasalahan/renaksi/'.$indikator->id.'/hapus')}}",
                     type: "post",
                     data: {_token: '{{csrf_token()}}', id: id},
                     dataType: "json",
