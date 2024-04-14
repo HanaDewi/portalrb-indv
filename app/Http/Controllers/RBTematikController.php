@@ -417,7 +417,7 @@ class RBTematikController extends Controller
         foreach ($rencana_aksis as $rencana_aksi) {
             foreach ($rencana_aksi->output as $output) {
                 $output->no = $no;
-                $output->nama_rencana_aksi = $output->rencana_aksi->rencana_aksi;
+                $output->nama_rencana_aksi = $output->rencana_aksi->nama;
                 $output->target_total = fnumber($output->target_total);
                 $output->anggaran_total = currency($output->anggaran_total);
                 $outputs[] = $output;
