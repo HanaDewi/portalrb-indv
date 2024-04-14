@@ -307,9 +307,9 @@ class RBTematikController extends Controller
             $permasalahan->sasaran_permasalahan = $request->sasaran_permasalahan;
         }
         if ($permasalahan->save()) {
-            session()->flash('success', 'Data Indikator Roadmap Tematik berhasil disimpan.');
+            session()->flash('success', 'Data Permasalahan Indikator Roadmap Tematik berhasil disimpan.');
         } else {
-            session()->flash('success', 'Data Indikator Roadmap Tematik gagal disimpan! Silahkan dicoba kembali.');
+            session()->flash('success', 'Data Permasalahan Indikator Roadmap Tematik gagal disimpan! Silahkan dicoba kembali.');
         }
         return redirect('rb-tematik/permasalahan');
     }
@@ -324,9 +324,9 @@ class RBTematikController extends Controller
             $indikatorPermasalahan->target = $request->target_permasalahan;
         }
         if ($indikatorPermasalahan->save()) {
-            session()->flash('success', 'Data Indikator Roadmap Tematik berhasil disimpan.');
+            session()->flash('success', 'Data Indikator berhasil disimpan.');
         } else {
-            session()->flash('success', 'Data Indikator Roadmap Tematik gagal disimpan! Silahkan dicoba kembali.');
+            session()->flash('success', 'Data Indikator gagal disimpan! Silahkan dicoba kembali.');
         }
         return redirect('rb-tematik/permasalahan');
     }
@@ -393,17 +393,14 @@ class RBTematikController extends Controller
         return redirect('rb-tematik/perencanaan');
     }
 
-    public function rencana_aksi($perencanaan_id, $target_id)
+    public function rencana_aksi($indikator_id)
     {
         $user = Auth::User();
-        $target = GeneralPerencanaanTarget::where('id', $target_id)->where('general_perencanaan_id', $perencanaan_id)
-            ->whereHas('perencanaan', function ($q) use ($user) {
-                $q->where('instansi_id', $user->instansi_id);
-            })->first();
-        if (!$target) {
+        $indikator = TematikIndikatorPermasalahan::where('id', $indikator_id)->first();
+        if (!$indikator) {
             abort(404);
         }
-        return view('rb-tematik.rencana_aksi', compact('target'));
+        return view('rb-tematik.rencana_aksi', compact('indikator'));
     }
 
     public function rencana_aksi_getDatas($perencanaan_id, $target_id)

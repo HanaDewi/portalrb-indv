@@ -10,6 +10,33 @@
                 Tematik</h2>
         </div>
 
+      
+
+        <div class="lg:col-span-12 p-5 border-b border-slate-200/60">
+            <table class="table table-bordered table-striped mt-5">
+                <tr>
+                    <td class="font-bold" width="220">Tema</td>
+                    <td>Semua</td>
+                </tr>
+                <tr>
+                    <td class="font-bold">Sasaran Roadmap</td>
+                    <td>Semua</td>
+                </tr>
+                <tr>
+                    <td class="font-bold">Indikator Roadmap</td>
+                    <td>Semua</td>
+                </tr>
+                <tr>
+                    <td class="font-bold">Target</td>
+                    <td>Semua</td>
+                </tr>
+                <tr>
+                    <td class="font-bold">Satuan Target</td>
+                    <td>Semua</td>
+                </tr>
+            </table>
+        </div>
+
         <div id="tab1" class="tab-pane leading-relaxed active">
 
             <div class="form-inline items-start flex-col xl:flex-row  pt-5 first:mt-0 first:pt-0">
@@ -62,14 +89,11 @@
                         <td>
                             {{ $tematikData['indikator_permasalahan_target'] }}
                             @if ($tematikData['indikator_permasalahan_nama'])
-                            <a href="#" class="btn btn-primary btn-sm w-full">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" icon-name="trash-2" data-lucide="trash-2" class="lucide lucide-trash-2 w-4 h-4 mr-1">
-                                    <polyline points="3 6 5 6 21 6"></polyline>
-                                    <path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path>
-                                    <line x1="10" y1="11" x2="10" y2="17"></line>
-                                    <line x1="14" y1="11" x2="14" y2="17"></line>
-                                </svg> Renaksi
+                            <a href="{{ url('rb-tematik/permasalahan/renaksi/' . $tematikData['indikator_permasalahan_id'] )}}" class="btn btn-primary btn-sm w-full mb-2">
+                                <i data-lucide="edit" class="w-4 h-4 mr-1"></i> Renaksi
+                                <span class="text-xs px-1 rounded-full bg-warning text-white badge"><!-- count($target->rencana_aksi) --></span>
                             </a>
+                            <br>
                             <a href="#" class="btn btn-dark btn-sm w-full mb-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" icon-name="edit" data-lucide="edit" class="lucide lucide-edit w-4 h-4 mr-1">
                                     <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"></path>
                                     <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path>
@@ -155,7 +179,7 @@
                 <h2 class="font-bold fw-medium  fs-base me-auto" id="title">Permasalahan</h2>
             </div> <!-- END: Modal Header -->
             <!-- BEGIN: Modal Body -->
-            <form action="{{ url('rb-tematik/perencanaan/simpan-permasalahan') }}" id="form-permasalahan" method="post">
+            <form action="{{ url('rb-tematik/permasalahan/simpan-permasalahan') }}" id="form-permasalahan" method="post">
                 @csrf
                 <input type="hidden" name="tematik_indikator_roadmap_id" id="indikator-roadmap-id-onPermasalahan">
                 <div class="modal-body grid columns-12 ">
@@ -237,7 +261,7 @@
                 <h2 class="font-bold fw-medium  fs-base me-auto" id="title">Indikator Permasalahan</h2>
             </div> <!-- END: Modal Header -->
             <!-- BEGIN: Modal Body -->
-            <form action="{{ url('rb-tematik/perencanaan/simpan-indikator-permasalahan') }}" id="form-permasalahan" method="post">
+            <form action="{{ url('rb-tematik/permasalahan/simpan-indikator-permasalahan') }}" id="form-permasalahan" method="post">
                 @csrf
                 <input type="hidden" name="tematik_permasalahan_id_onIndikatorPermasalahan" id="tematik-permasalahan-id-onIndikatorPermasalahan">
                 <div class="modal-body grid columns-12 ">

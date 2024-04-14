@@ -14,4 +14,9 @@ class TematikIndikatorRoadmap extends Model
     {
         return $this->hasMany(TematikPermasalahan::class, 'tematik_indikator_roadmap_id')->orderBy('tematik_indikator_roadmap_id');
     }
+
+    public function sasaran_roadmap()
+    {
+        return $this->belongsTo(TematikSasaranRoadmap::class, 'tematik_sasaran_roadmap_id');
+    }
 }

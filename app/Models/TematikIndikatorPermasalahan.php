@@ -9,4 +9,9 @@ class TematikIndikatorPermasalahan extends Model
 {
     use HasFactory;
     protected $table = 'tematik_indikator_permasalahan';
+
+    public function permasalahan()
+    {
+        return $this->belongsTo(TematikPermasalahan::class, 'tematik_permasalahan_id');
+    }
 }

@@ -14,39 +14,33 @@
         <div class="lg:col-span-12 p-5 border-b border-slate-200/60">
             <table class="table table-bordered table-striped table-hover">
                 <tr>
-                    <td class="font-bold align-top">Kegiatan Utama</td>
-                    <td>{{ $target->perencanaan->kegiatan_utama->nama }}</td>
+                    <td class="font-bold align-top">Tema</td>
+                    <td>{{$indikator->permasalahan->indikator_roadmap->sasaran_roadmap->tema->nama}}</td>
+                    <td class="font-bold align-top">Permasalahan    </td>
+                    <td>{{$indikator->permasalahan->nama}}</td>
                 </tr>
                 <tr>
+                    <td class="font-bold align-top">Sasaran Tematik Roadmap</td>
+                    <td>{{$indikator->permasalahan->indikator_roadmap->sasaran_roadmap->nama}}</td>
+                    <td class="font-bold align-top">Sasaran</td>
+                    <td>{{$indikator->permasalahan->sasaran_permasalahan}}</td>
+                </tr>
+                <tr>
+                    <td class="font-bold align-top">Indikator Roadmap</td>
+                    <td>{{$indikator->permasalahan->indikator_roadmap->nama}}</td>
                     <td class="font-bold align-top">Indikator</td>
-                    <td>{{ $target->perencanaan->indikator->nama }}</td>
-                </tr>
-                <tr>
-                    <td class="font-bold align-top">Baseline</td>
-                    <td>
-                        <table class="table table-noborder">
-                            <tr>
-                                <td class="font-bold w-16">Tahun</td>
-                                <td>: {{ $target->perencanaan->baseline_tahun }}</td>
-                            </tr>
-                            <tr>
-                                <td class="font-bold">Target</td>
-                                <td>: {{ $target->perencanaan->baseline_target }}</td>
-                            </tr>
-                            <tr>
-                                <td class="font-bold">Realisasi</td>
-                                <td>: {{ $target->perencanaan->baseline_realisasi }}</td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="font-bold align-top">Tahun</td>
-                    <td>{{ $target->tahun }}</td>
+                    <td>{{$indikator->nama}}</td>
                 </tr>
                 <tr>
                     <td class="font-bold align-top">Target</td>
-                    <td>{{ $target->target }}</td>
+                    <td>{{$indikator->permasalahan->indikator_roadmap->target}}</td>
+                    <td class="font-bold align-top">Target    </td>
+                    <td>{{$indikator->target}}</td>
+                </tr>
+                <tr>
+                    <td class="font-bold align-top">Satuan Target </td>
+                    <td> {{$indikator->permasalahan->indikator_roadmap->satuan}}</td>
+                   
                 </tr>
             </table>
         </div>
@@ -87,7 +81,7 @@
                 <h2 class="font-bold fw-medium fs-base me-auto" id="title">Tambah Rencana Aksi</h2>
             </div> <!-- END: Modal Header -->
             <!-- BEGIN: Modal Body -->
-            <form action="{{ url('rb-general/perencanaan/'.$target->perencanaan->id.'/'.$target->id.'/rencana_aksi/simpan') }}" id="form-rencana_aksi" method="post">
+            <form action="{{ url('rb-tematik/permasalahan/renaksi/'.$indikator->id .'/simpan') }}" id="form-rencana_aksi" method="post">
                 @csrf
                 <input type="hidden" name="rencana_aksi_id" id="rencana_aksi_id">
                 <div class="modal-body grid columns-12 gap-4 gap-y-3">
@@ -336,7 +330,7 @@
     }); 
 
     function getData() {
-        rencana_aksi.ajax.url("{{url('rb-general/perencanaan/'.$target->perencanaan->id.'/'.$target->id.'/rencana_aksi/getDatas')}}").load(null, false);
+        rencana_aksi.ajax.url("{{url('rb-tematik/permasalahan/renaksi'.$indikator->id.'/getDatas')}}").load(null, false);
     }
 
     function formatNumber(num) {
@@ -500,7 +494,7 @@
         $('#rencana_aksi_output_id').val(id);
         $('#title').html('Edit Rencana Aksi Output');
         $('.saveButton').prop('disabled', true);
-        $.getJSON("{{url('rb-general/perencanaan/'.$target->perencanaan->id.'/'.$target->id.'/rencana_aksi/getData')}}/"+id, function(data) {
+        $.getJSON("{{url('rb-tematik/permasalahan/renaksi/'.$indikator->id.'/getData')}}/"+id, function(data) {
             $('#rencana_aksi_id').val(data.general_rencana_aksi_id);
             $('#rencana_aksi').val(data.rencana_aksi.rencana_aksi);
             $('#satuan_output0').val(data.satuan_output);
@@ -533,7 +527,7 @@
         }).then((result) => {
             if (result.isConfirmed) {
                 $.ajax({
-                    url: "{{url('rb-general/perencanaan/'.$target->perencanaan->id.'/'.$target->id.'/rencana_aksi/hapus')}}",
+                    url: "{{url('rb-tematik/permasalhan/renaksi'.$indikator->id.'/hapus')}}",
                     type: "post",
                     data: {_token: '{{csrf_token()}}', id: id},
                     dataType: "json",
