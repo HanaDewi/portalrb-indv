@@ -95,7 +95,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/rb-tematik/permasalahan/renaksi/{indikator_id}/getDatas', [RBTematikController::class, 'rencana_aksi_getDatas']);
     Route::get('/rb-tematik/permasalahan/renaksi//{indikator_id}/getData/{id}', [RBTematikController::class, 'rencana_aksi_getData']);
     Route::post('/rb-tematik/permasalahan/renaksi/{indikator_id}/simpan', [RBTematikController::class, 'rencana_aksi_simpan']);
-    Route::post('/rb-tematik/permasalahan/renaksi/{indikator_id}/hapus', [RBTematikController::class, 'rencana_aksi_hapus']);
+    Route::post('/rb-tematik/permasalahan/renaksi/{renaksi_output_id}/hapus', [RBTematikController::class, 'rencana_aksi_hapus']);
     Route::post('/rb-tematik/permasalahan/simpanMonev', [RBTematikController::class, 'perencanaan_simpanMonev']);
 
     // RB Tematik Rekap Data

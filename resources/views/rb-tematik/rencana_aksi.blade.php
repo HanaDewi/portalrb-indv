@@ -541,7 +541,7 @@
         }).then((result) => {
             if (result.isConfirmed) {
                 $.ajax({
-                    url: "{{url('rb-tematik/permasalahan/renaksi/'.$indikator->id.'/hapus')}}",
+                    url: "{{url('rb-tematik/permasalahan/renaksi/')}}/" + id + '/hapus',
                     type: "post",
                     data: {_token: '{{csrf_token()}}', id: id},
                     dataType: "json",

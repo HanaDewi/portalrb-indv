@@ -495,10 +495,10 @@ class RBTematikController extends Controller
         return response()->json(['success' => $success]);
     }
 
-    public function rencana_aksi_hapus($renaksi_id, Request $request)
+    public function rencana_aksi_hapus($renaksi_output_id, Request $request)
     {
         $user = Auth::User();
-        $renaksiOutput = TematikRencanaAksiOutput::where('tematik_rencana_aksi_id', $renaksi_id)->first();
+        $renaksiOutput = TematikRencanaAksiOutput::where('id', $renaksi_output_id)->first();
         if (!$renaksiOutput) {
             abort(403);
         }
