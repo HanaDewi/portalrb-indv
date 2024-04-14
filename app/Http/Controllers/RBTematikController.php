@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\FokusIntervensi;
 use App\Models\Instansi;
 use App\Models\Indikator;
 use Illuminate\Http\Request;
@@ -10,6 +11,8 @@ use App\Models\Tema;
 use App\Models\TematikSasaranRoadmap;
 use App\Models\TematikIndikatorRoadmap;
 use App\Models\TematikIndikatorPermasalahan;
+use App\Models\TematikRencanaAksi;
+use App\Models\TematikRencanaAksiOutput;
 use App\Models\GeneralPerencanaanTarget;
 use App\Models\GeneralRencanaAksiOutput;
 use App\Models\GeneralRencanaAksi;
@@ -397,20 +400,18 @@ class RBTematikController extends Controller
     {
         $user = Auth::User();
         $indikator = TematikIndikatorPermasalahan::where('id', $indikator_id)->first();
+        $fokus_intervensi = FokusIntervensi::all();
         if (!$indikator) {
             abort(404);
         }
-        return view('rb-tematik.rencana_aksi', compact('indikator'));
+        return view('rb-tematik.rencana_aksi', compact('indikator', 'fokus_intervensi'));
     }
 
-    public function rencana_aksi_getDatas($perencanaan_id, $target_id)
+    public function rencana_aksi_getDatas($indikator_id)
     {
         $user = Auth::User();
-        $target = GeneralPerencanaanTarget::where('id', $target_id)->where('general_perencanaan_id', $perencanaan_id)
-            ->whereHas('perencanaan', function ($q) use ($user) {
-                $q->where('instansi_id', $user->instansi_id);
-            })->first();
-        $rencana_aksis = GeneralRencanaAksi::where('general_perencanaan_target_id', $target->id)->get();
+        $indikator = TematikIndikatorPermasalahan::where('id', $indikator_id)->first();
+        $rencana_aksis = TematikRencanaAksi::where('tematik_indikator_permasalahan_id', $indikator->id)->get();
         $outputs = [];
         $no = 1;
         foreach ($rencana_aksis as $rencana_aksi) {
@@ -438,32 +439,29 @@ class RBTematikController extends Controller
         return response()->json($output);
     }
 
-    public function rencana_aksi_simpan($perencanaan_id, $target_id, Request $request)
+    public function rencana_aksi_simpan($indikator_id, Request $request)
     {
         $user = Auth::User();
-        $target = GeneralPerencanaanTarget::where('id', $target_id)->where('general_perencanaan_id', $perencanaan_id)
-            ->whereHas('perencanaan', function ($q) use ($user) {
-                $q->where('instansi_id', $user->instansi_id);
-            })->first();
-        if (!$target) {
+        $indikator = TematikIndikatorPermasalahan::where('id', $indikator_id)->first();
+        if (!$indikator) {
             abort(403);
         }
         $success = true;
         DB::beginTransaction();
         try {
-            $rencana_aksi = new GeneralRencanaAksi();
-            $rencana_aksi->general_perencanaan_target_id = $target->id;
+            $rencana_aksi = new TematikRencanaAksi();
+            $rencana_aksi->tematik_indikator_permasalahan_id = $indikator->id;
             if ($request->rencana_aksi_id) {
-                $rencana_aksi = GeneralRencanaAksi::where('general_perencanaan_target_id', $target->id)->where('id', $request->rencana_aksi_id)->first();
+                $rencana_aksi = TematikRencanaAksi::where('tematik_indikator_permasalahan_id', $indikator->id)->first();
             }
-            $rencana_aksi->rencana_aksi = $request->rencana_aksi;
+            $rencana_aksi->nama = $request->rencana_aksi;
             if ($rencana_aksi->save()) {
                 foreach ($request->target_output as $target_output) {
-                    $rencana_aksi_output = new GeneralRencanaAksiOutput();
+                    $rencana_aksi_output = new TematikRencanaAksiOutput();
                     if (isset($target_output['rencana_aksi_output_id'])) {
-                        $rencana_aksi_output = GeneralRencanaAksiOutput::find($target_output['rencana_aksi_output_id']);
+                        $rencana_aksi_output = TematikRencanaAksiOutput::find($target_output['rencana_aksi_output_id']);
                     }
-                    $rencana_aksi_output->general_rencana_aksi_id = $rencana_aksi->id;
+                    $rencana_aksi_output->tematik_rencana_aksi_id = $rencana_aksi->id;
                     $rencana_aksi_output->satuan_output = $target_output['satuan_output'];
                     $rencana_aksi_output->indikator_output = $target_output['indikator_output'];
                     $rencana_aksi_output->target_tw1 = str_replace('.', '', $target_output['target_tw1']);

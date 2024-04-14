@@ -78,7 +78,7 @@
         <div class="modal-content">
             <!-- BEGIN: Modal Header -->
             <div class="darkbg modal-header">
-                <h2 class="font-bold fw-medium fs-base me-auto" id="title">Tambah Rencana Aksi</h2>
+                <h2 class="font-bold fw-medium fs-base me-auto" id="title">Tambah Rencana Aksii</h2>
             </div> <!-- END: Modal Header -->
             <!-- BEGIN: Modal Body -->
             <form action="{{ url('rb-tematik/permasalahan/renaksi/'.$indikator->id .'/simpan') }}" id="form-rencana_aksi" method="post">
@@ -182,6 +182,7 @@
                                 <td class="font-bold">Fokus Intervensi<span class="text-danger">*</span></td>
                                 <td colspan="5">
                                     <select class="form-select mt-2 sm:mr-2 form-control" name="fokus_intervensi">
+                                        <option selected="true" disabled="disabled">Pilih Fokus Intervensi</option>  
                                         @foreach ($fokus_intervensi as $intervensi)
                                         <option value="{{ $intervensi->id }}">{{ $intervensi->nama }}
                                         </option>
@@ -341,7 +342,7 @@
     }); 
 
     function getData() {
-        rencana_aksi.ajax.url("{{url('rb-tematik/permasalahan/renaksi'.$indikator->id.'/getDatas')}}").load(null, false);
+        rencana_aksi.ajax.url("{{url('rb-tematik/permasalahan/renaksi/'.$indikator->id.'/getDatas')}}").load(null, false);
     }
 
     function formatNumber(num) {
