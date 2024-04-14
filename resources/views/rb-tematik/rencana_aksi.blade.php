@@ -61,6 +61,8 @@
                             <th>Indikator Output</th>
                             <th>Target</th>
                             <th>Anggaran</th>
+
+                            <th>Fokus Intervensi</th>
                             <th>Pelaksana</th>
                             <th>Koordinator</th>
                             <th>Aksi</th>
@@ -78,7 +80,7 @@
         <div class="modal-content">
             <!-- BEGIN: Modal Header -->
             <div class="darkbg modal-header">
-                <h2 class="font-bold fw-medium fs-base me-auto" id="title">Tambah Rencana Aksii</h2>
+                <h2 class="font-bold fw-medium fs-base me-auto" id="title">Tambah Rencana Aksi</h2>
             </div> <!-- END: Modal Header -->
             <!-- BEGIN: Modal Body -->
             <form action="{{ url('rb-tematik/permasalahan/renaksi/'.$indikator->id .'/simpan') }}" id="form-rencana_aksi" method="post">
@@ -328,6 +330,7 @@
                         '</table>';
                 }
             },
+            { data: 'nama_intervensi.nama' },
             { data: 'pelaksana' },
             { data: 'koordinator' },
             { 

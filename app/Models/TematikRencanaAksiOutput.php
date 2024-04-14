@@ -14,4 +14,9 @@ class TematikRencanaAksiOutput extends Model
     {
         return $this->belongsTo(TematikRencanaAksi::class, 'tematik_rencana_aksi_id');
     }
+
+    public function get_intervensi()
+    {
+        return $this->belongsTo(FokusIntervensi::class, 'fokus_intervensi');
+    }
 }

@@ -417,6 +417,7 @@ class RBTematikController extends Controller
         foreach ($rencana_aksis as $rencana_aksi) {
             foreach ($rencana_aksi->output as $output) {
                 $output->no = $no;
+                $output->nama_intervensi = FokusIntervensi::where('id', $output->fokus_intervensi)->first();
                 $output->nama_rencana_aksi = $output->rencana_aksi->nama;
                 $output->target_total = fnumber($output->target_total);
                 $output->anggaran_total = currency($output->anggaran_total);
@@ -474,6 +475,7 @@ class RBTematikController extends Controller
                     $rencana_aksi_output->anggaran_tw3 = str_replace('.', '', $target_output['anggaran_tw3']);
                     $rencana_aksi_output->anggaran_tw4 = str_replace('.', '', $target_output['anggaran_tw4']);
                     $rencana_aksi_output->anggaran_total = $rencana_aksi_output->anggaran_tw1 + $rencana_aksi_output->anggaran_tw2 + $rencana_aksi_output->anggaran_tw3 + $rencana_aksi_output->anggaran_tw4;
+                    $rencana_aksi_output->fokus_intervensi = $request->fokus_intervensi;
                     $rencana_aksi_output->pelaksana = $target_output['pelaksana'];
                     $rencana_aksi_output->koordinator = $target_output['koordinator'];
                     if (!$rencana_aksi_output->save()) {
