@@ -303,7 +303,7 @@
         ordering: false,
         columns: [
             { data: 'no' },
-            { data: 'rencana_aksi.rencana_aksi' },
+            { data: 'rencana_aksi.nama' },
             { data: 'satuan_output' },
             { data: 'indikator_output' },
             { 
