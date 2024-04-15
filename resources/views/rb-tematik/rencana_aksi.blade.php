@@ -182,6 +182,7 @@
                             <tr>
                                 <td class="font-bold">Fokus Intervensi<span class="text-danger">*</span></td>
                                 <td colspan="5">
+                                    
                                     <select class="form-select mt-2 sm:mr-2 form-control" name="fokus_intervensi">
                                         <option selected="true" disabled="disabled">Pilih Fokus Intervensi</option>  
                                         @foreach ($fokus_intervensi as $intervensi)
@@ -329,7 +330,7 @@
                         '</table>';
                 }
             },
-            { data: 'nama_intervensi.nama' },
+            { data: 'nama_intervensi' },
             { data: 'pelaksana' },
             { data: 'koordinator' },
             { 
@@ -508,7 +509,7 @@
         $('#rencana_aksi_output_id').val(id);
         $('#title').html('Edit Rencana Aksi Output');
         $('.saveButton').prop('disabled', true);
-        $.getJSON("{{url('rb-tematik/permasalahan/renaksi/'.$indikator->id.'/getData')}}/"+id, function(data) {
+        $.getJSON("{{url('rb-tematik/permasalahan/renaksi/getData')}}/"+id, function(data) {
             $('#rencana_aksi_id').val(data.general_rencana_aksi_id);
             $('#rencana_aksi').val(data.rencana_aksi.rencana_aksi);
             $('#satuan_output0').val(data.satuan_output);

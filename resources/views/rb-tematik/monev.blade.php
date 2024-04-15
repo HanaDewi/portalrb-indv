@@ -15,51 +15,35 @@
         <div class="lg:col-span-12 p-5 border-b border-slate-200/60">
             <table class="table table-bordered table-striped table-hover">
                 <tr>
-                    <td class="font-bold align-top">Kegiatan Utama</td>
-                    <td>{{ $target->perencanaan->kegiatan_utama->nama }}</td>
+                    <td class="font-bold align-top">Tema</td>
+                    <td>{{ $indikator->permasalahan->indikator_roadmap->sasaran_roadmap->tema->nama }}</td>
+                </tr><tr>
+                    <td class="font-bold align-top">Sasaran Roadmap</td>
+                    <td>{{ $indikator->permasalahan->indikator_roadmap->sasaran_roadmap->nama }}</td>
                 </tr>
                 <tr>
                     <td class="font-bold align-top">Indikator</td>
-                    <td>{{ $target->perencanaan->indikator->nama }}</td>
+                    <td>{{ $indikator->permasalahan->indikator_roadmap->nama }}</td>
                 </tr>
                 <tr>
-                    <td class="font-bold align-top">Baseline</td>
-                    <td>
-                        <table class="table table-noborder">
-                            <tr>
-                                <td class="font-bold w-16">Tahun</td>
-                                <td>: {{ $target->perencanaan->baseline_tahun }}</td>
-                            </tr>
-                            <tr>
-                                <td class="font-bold">Target</td>
-                                <td>: {{ $target->perencanaan->baseline_target }}</td>
-                            </tr>
-                            <tr>
-                                <td class="font-bold">Realisasi</td>
-                                <td>: {{ $target->perencanaan->baseline_realisasi }}</td>
-                            </tr>
-                        </table>
-                    </td>
+                    <td class="font-bold align-top">Permasalahan</td>
+                    <td>{{ $indikator->permasalahan->nama }}</td>
                 </tr>
                 <tr>
-                    <td class="font-bold align-top">Tahun</td>
-                    <td>{{ $target->tahun }}</td>
-                </tr>
-                <tr>
-                    <td class="font-bold align-top">Target</td>
-                    <td>{{ $target->target }}</td>
+                    <td class="font-bold align-top">indikator</td>
+                    <td>{{ $indikator->nama }}</td>
                 </tr>
                 <tr>
                     <td class="font-bold align-top">Realisasi Indikator</td>
-                    <td id="info_realisasi_indikator">{{ $target->realisasi_indikator }}</td>
+                    <td id="info_realisasi_indikator"></td>
                 </tr>
                 <tr>
                     <td class="font-bold align-top">Capaian Indikator</td>
-                    <td id="info_capaian_indikator">{{ $target->capaian_indikator }}</td>
+                    <td id="info_capaian_indikator">{{ $indikator->capaian_indikator }}</td>
                 </tr>
                 <tr>
                     <td class="font-bold align-top">Catatan</td>
-                    <td id="info_catatan">{{ $target->catatan }}</td>
+                    <td id="info_catatan">{{ $indikator->catatan }}</td>
                 </tr>
             </table>
         </div>
@@ -74,7 +58,7 @@
                         <th>Rencana Aksi</th>
                         <th>Satuan Output</th>
                         <th>Indikator Output</th>
-                        <th>Target</th>
+                        <th>indikator</th>
                         <th>Anggaran</th>
                         <th>Realisasi Output</th>
                         <th>Realisasi Anggaran</th>
@@ -96,7 +80,7 @@
                 <h2 class="font-bold fw-medium fs-base me-auto" id="title">Monitoring dan Evaluasi Rencana Aksi</h2>
             </div> <!-- END: Modal Header -->
             <!-- BEGIN: Modal Body -->
-            <form action="{{ url('rb-general/perencanaan/'.$target->perencanaan->id.'/'.$target->id.'/monev/simpan') }}" id="form-monev" method="post">
+            <form action="{{ url('rb-tematik/permasalahan/') }}" id="form-monev" method="post">
                 @csrf
                 <input type="hidden" name="output_id" id="output_id">
                 <div class="modal-body grid columns-12 gap-4 gap-y-3">
@@ -292,7 +276,7 @@
                 <h2 class="font-bold fw-medium fs-base me-auto" id="title">Monitoring dan Evaluasi Perencanaan</h2>
             </div> <!-- END: Modal Header -->
             <!-- BEGIN: Modal Body -->
-            <form action="{{ url('rb-general/perencanaan/'.$target->perencanaan->id.'/'.$target->id.'/monev/simpanTarget') }}" id="form-monev_perencanaan" method="post">
+            <form action="{{ url('rb-tematik/permasalahan/') }}" id="form-monev_perencanaan" method="post">
                 @csrf
                 <div class="modal-body grid columns-12 gap-4 gap-y-3">
                     <div class="g-col-12">
@@ -433,9 +417,9 @@
                         if (data.success) {
                             Swal.fire('Selamat!', 'Data Monitoring dan Evaluasi Perencanaan berhasil disimpan!', 'success');
                             modal_monev_perencanaan.hide();
-                            $('#info_realisasi_indikator').html(data.target.realisasi_indikator);
-                            $('#info_capaian_indikator').html(data.target.capaian_indikator);
-                            $('#info_catatan').html(data.target.catatan);
+                            $('#info_realisasi_indikator').html(data.indikator.realisasi_indikator);
+                            $('#info_capaian_indikator').html(data.indikator.capaian_indikator);
+                            $('#info_catatan').html(data.indikator.catatan);
                         } else {
                             Swal.fire('Aduh!', 'Data Monitoring dan Evaluasi Perencanaan gagal disimpan! Coba lagi nanti ya..', 'error');
                             modal_monev_perencanaan.hide();
@@ -519,7 +503,7 @@
     }); 
 
     function getData() {
-        monev.ajax.url("{{url('rb-general/perencanaan/'.$target->perencanaan->id.'/'.$target->id.'/monev/getDatas')}}").load(null, false);
+        monev.ajax.url("{{url('rb-tematik/permasalahan/monev/'.$indikator->id.'/getDatas')}}").load(null, false);
     }
 
     function formatNumber(num) {
@@ -570,7 +554,7 @@
     }
 
     function edit_monev() {
-        $.getJSON("{{url('rb-general/perencanaan/'.$target->perencanaan->id.'/'.$target->id.'/monev/getTarget')}}", function(data) {
+        $.getJSON("{{url('rb-tematik/')}}", function(data) {
             $('#realisasi_indikator').val(data.realisasi_indikator);
             $('#capaian_indikator').val(data.capaian_indikator);
             $('#catatan').val(data.catatan);
@@ -589,7 +573,7 @@
         $('#title').html('Monitoring dan Evaluasi Rencana Aksi');
         $('.saveButton').prop('disabled', true);
         modal_monev.show();
-        $.getJSON("{{url('rb-general/perencanaan/'.$target->perencanaan->id.'/'.$target->id.'/monev/getData')}}/"+id, function(data) {
+        $.getJSON("{{url('rb-tematik/permasalhan/')}}/"+id, function(data) {
             $('#rencana_aksi').val(data.rencana_aksi.rencana_aksi);
             $('#satuan_output').val(data.satuan_output);
             $('#indikator_output').val(data.indikator_output);

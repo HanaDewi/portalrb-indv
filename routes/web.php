@@ -93,10 +93,15 @@ Route::middleware('auth')->group(function () {
     // RB Tematik Renaksi
     Route::get('/rb-tematik/permasalahan/renaksi/{indikator_id}', [RBTematikController::class, 'rencana_aksi'])->name('rencana_aksi_tematik');
     Route::get('/rb-tematik/permasalahan/renaksi/{indikator_id}/getDatas', [RBTematikController::class, 'rencana_aksi_getDatas']);
-    Route::get('/rb-tematik/permasalahan/renaksi//{indikator_id}/getData/{id}', [RBTematikController::class, 'rencana_aksi_getData']);
+    Route::get('/rb-tematik/permasalahan/renaksi/getData/{renaksi_output_id}', [RBTematikController::class, 'rencana_aksi_getData']);
     Route::post('/rb-tematik/permasalahan/renaksi/{indikator_id}/simpan', [RBTematikController::class, 'rencana_aksi_simpan']);
     Route::post('/rb-tematik/permasalahan/renaksi/{renaksi_output_id}/hapus', [RBTematikController::class, 'rencana_aksi_hapus']);
-    Route::post('/rb-tematik/permasalahan/simpanMonev', [RBTematikController::class, 'perencanaan_simpanMonev']);
+    // RB Tematik MONEV
+    Route::get('/rb-tematik/permasalahan/monev/{indikator_id}', [RBTematikController::class, 'monev'])->name('monev_tematik');
+    Route::get('/rb-tematik/permasalahan/monev/{indikator_id}/getDatas', [RBTematikController::class, 'rencana_aksi_getDatas']);
+    Route::get('/rb-tematik/permasalahan/monev/getData/{renaksi_output_id}', [RBTematikController::class, 'rencana_aksi_getData']);
+    Route::post('/rb-tematik/permasalahan/monev/{indikator_id}/simpan', [RBTematikController::class, 'monev_simpan']);
+    Route::post('/rb-tematik/permasalahan/monev/{renaksi_output_id}/hapus', [RBTematikController::class, 'monev_hapus']);
 
     // RB Tematik Rekap Data
     Route::get('/rb-tematik/rekap_data', [RBTematikController::class, 'rekap_data']);

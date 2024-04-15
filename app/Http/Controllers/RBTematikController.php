@@ -37,8 +37,9 @@ class RBTematikController extends Controller
 
     public function perencanaan()
     {
+        $user = Auth::User();
         $temas = Tema::get();
-        $sasaranRoadmaps = TematikSasaranRoadmap::orderBy('tema_id')->get();
+        $sasaranRoadmaps = TematikSasaranRoadmap::where('instansi_id', $user->user_rel->instansi_id)->orderBy('tema_id')->get();
         $tematikDatas = [];
         $jumlahBaris = 0;
         foreach ($sasaranRoadmaps as $sasaran) {
@@ -127,9 +128,9 @@ class RBTematikController extends Controller
 
     public function permasalahan()
     {
+        $user = Auth::User();
         $temas = Tema::get();
-        $sasaranRoadmaps = TematikSasaranRoadmap::orderBy('tema_id')->get();
-        $indikatorRoadmaps = TematikIndikatorRoadmap::orderBy('tematik_sasaran_roadmap_id')->get();
+        $sasaranRoadmaps = TematikSasaranRoadmap::where('instansi_id', $user->user_rel->instansi_id)->orderBy('tema_id')->get();
         $tematikDatas = [];
         $jumlahBaris = 0;
         foreach ($sasaranRoadmaps as $sasaran) {
@@ -212,7 +213,6 @@ class RBTematikController extends Controller
         return view('rb-tematik.permasalahan', [
             "temas" => $temas,
             "sasaranRoadmaps" => $sasaranRoadmaps,
-            "indikatorRoadmaps" => $indikatorRoadmaps,
             "tematikDatas" => $tematikDatas
         ]);
     }
@@ -262,7 +262,7 @@ class RBTematikController extends Controller
     public function simpanSasaranRoadmap(Request $request)
     {
         $user = Auth::User();
-        $sasaranRoadmap = TematikSasaranRoadmap::where('instansi_id', $user->instansi_id)->where('tema_id', $request->tema_id)->where('nama', $request->nama)->first();
+        $sasaranRoadmap = TematikSasaranRoadmap::where('instansi_id', $user->user_rel->instansi_id)->where('tema_id', $request->tema_id)->where('nama', $request->nama)->first();
         if (!$sasaranRoadmap) {
             foreach ($request->tema_id as $idx => $tema_id) {
                 $sasaranRoadmap = new TematikSasaranRoadmap();
@@ -417,7 +417,7 @@ class RBTematikController extends Controller
         foreach ($rencana_aksis as $rencana_aksi) {
             foreach ($rencana_aksi->output as $output) {
                 $output->no = $no;
-                $output->nama_intervensi = FokusIntervensi::where('id', $output->fokus_intervensi)->first();
+                $output->nama_intervensi = $output->get_intervensi->nama;
                 $output->nama_rencana_aksi = $output->rencana_aksi->nama;
                 $output->target_total = fnumber($output->target_total);
                 $output->anggaran_total = currency($output->anggaran_total);
@@ -526,18 +526,17 @@ class RBTematikController extends Controller
         return response()->json(['success' => $success]);
     }
 
-    public function monev($perencanaan_id, $target_id)
+    public function monev($indikator_id)
     {
         $user = Auth::User();
-        $target = GeneralPerencanaanTarget::where('id', $target_id)->where('general_perencanaan_id', $perencanaan_id)
-            ->whereHas('perencanaan', function ($q) use ($user) {
-                $q->where('instansi_id', $user->instansi_id);
-            })->first();
-        if (!$target) {
+        $indikator = TematikIndikatorPermasalahan::where('id', $indikator_id)->first();
+        $fokus_intervensi = FokusIntervensi::all();
+        if (!$indikator) {
             abort(404);
         }
-        return view('rb-tematik.monev', compact('target'));
+        return view('rb-tematik.monev', compact('indikator'));
     }
+
 
     public function monev_getTarget($perencanaan_id, $target_id)
     {
