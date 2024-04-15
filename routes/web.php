@@ -100,6 +100,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/rb-tematik/permasalahan/monev/{indikator_id}', [RBTematikController::class, 'monev'])->name('monev_tematik');
     Route::get('/rb-tematik/permasalahan/monev/{indikator_id}/getDatas', [RBTematikController::class, 'rencana_aksi_getDatas']);
     Route::get('/rb-tematik/permasalahan/monev/getData/{renaksi_output_id}', [RBTematikController::class, 'rencana_aksi_getData']);
+    Route::get('/rb-tematik/permasalahan/monev/{indikator_id}/getIndikator', [RBTematikController::class, 'monev_getIndikatorPermasalahan']);
+    Route::post('/rb-tematik/permasalahan/monev/{indikator_id}/simpanIndikatorPermasalahan', [RBTematikController::class, 'monev_simpanIndikatorPermasalahan']);
     Route::post('/rb-tematik/permasalahan/monev/{indikator_id}/simpan', [RBTematikController::class, 'monev_simpan']);
     Route::post('/rb-tematik/permasalahan/monev/{renaksi_output_id}/hapus', [RBTematikController::class, 'monev_hapus']);
 

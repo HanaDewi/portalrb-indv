@@ -593,7 +593,7 @@
                             '<tr><th>TW 2</th><td>: '+formatNumber(row.capaian_output_tw2)+'</td></tr>'+
                             '<tr><th>TW 3</th><td>: '+formatNumber(row.capaian_output_tw3)+'</td></tr>'+
                             '<tr><th>TW 4</th><td>: '+formatNumber(row.capaian_output_tw4)+'</td></tr>'+
-                            '<tr><th class="border-top">Total</th><td>: '+formatNumber(row.realisasi_anggaran_total)+'</td></tr>'+
+                            '<tr><th class="border-top">Total</th><td>: '+formatNumber(row.capaian_output_total)+'</td></tr>'+
                         '</table>' : '';
                 }
             },
@@ -604,7 +604,7 @@
                             '<tr><th>TW 2</th><td>: '+formatNumber(row.capaian_anggaran_tw2)+'</td></tr>'+
                             '<tr><th>TW 3</th><td>: '+formatNumber(row.capaian_anggaran_tw3)+'</td></tr>'+
                             '<tr><th>TW 4</th><td>: '+formatNumber(row.capaian_anggaran_tw4)+'</td></tr>'+
-                            '<tr><th class="border-top">Total</th><td>: '+formatNumber(row.realisasi_anggaran_total)+'</td></tr>'+
+                            '<tr><th class="border-top">Total</th><td>: '+formatNumber(row.capaian_anggaran_total)+'</td></tr>'+
                         '</table>' : '';
                 }
             },

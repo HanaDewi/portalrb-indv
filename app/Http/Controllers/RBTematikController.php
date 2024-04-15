@@ -410,14 +410,19 @@ class RBTematikController extends Controller
     public function rencana_aksi_getDatas($indikator_id)
     {
         $user = Auth::User();
-        $indikator = TematikIndikatorPermasalahan::where('id', $indikator_id)->first();
-        $rencana_aksis = TematikRencanaAksi::where('tematik_indikator_permasalahan_id', $indikator->id)->get();
+        $rencana_aksis = TematikRencanaAksi::where('tematik_indikator_permasalahan_id', $indikator_id)->get();
         $outputs = [];
         $no = 1;
         foreach ($rencana_aksis as $rencana_aksi) {
             foreach ($rencana_aksi->output as $output) {
+
                 $output->no = $no;
-                $output->nama_intervensi = $output->get_intervensi->nama;
+                if (isset($output->get_intervensi->nama)) {
+                    $output->nama_intervensi = $output->get_intervensi->nama;
+                } else {
+                    $output->nama_intervensi = "";
+                }
+
                 $output->nama_rencana_aksi = $output->rencana_aksi->nama;
                 $output->target_total = fnumber($output->target_total);
                 $output->anggaran_total = currency($output->anggaran_total);
@@ -428,14 +433,10 @@ class RBTematikController extends Controller
         return response()->json(['data' => $outputs]);
     }
 
-    public function rencana_aksi_getData($perencanaan_id, $target_id, $id)
+    public function rencana_aksi_getData($id)
     {
         $user = Auth::User();
-        $target = GeneralPerencanaanTarget::where('id', $target_id)->where('general_perencanaan_id', $perencanaan_id)
-            ->whereHas('perencanaan', function ($q) use ($user) {
-                $q->where('instansi_id', $user->instansi_id);
-            })->first();
-        $output = GeneralRencanaAksiOutput::find($id);
+        $output = TematikRencanaAksiOutput::find($id);
         $output->rencana_aksi = $output->rencana_aksi;
         return response()->json($output);
     }
@@ -538,51 +539,38 @@ class RBTematikController extends Controller
     }
 
 
-    public function monev_getTarget($perencanaan_id, $target_id)
+    public function monev_getIndikatorPermasalahan($indikator_id)
     {
         $user = Auth::User();
-        $target = GeneralPerencanaanTarget::where('id', $target_id)->where('general_perencanaan_id', $perencanaan_id)
-            ->whereHas('perencanaan', function ($q) use ($user) {
-                $q->where('instansi_id', $user->instansi_id);
-            })->first();
+        $target = TematikIndikatorPermasalahan::where('id', $indikator_id)->first();
         if (!$target) {
             abort(404);
         }
         return response()->json($target);
     }
 
-    public function monev_simpanTarget($perencanaan_id, $target_id, Request $request)
+    public function monev_simpanIndikatorPermasalahan($indikator_id, Request $request)
     {
         $user = Auth::User();
-        $target = GeneralPerencanaanTarget::where('id', $target_id)->where('general_perencanaan_id', $perencanaan_id)
-            ->whereHas('perencanaan', function ($q) use ($user) {
-                $q->where('instansi_id', $user->instansi_id);
-            })->first();
-        if (!$target) {
+        $indikator = TematikIndikatorPermasalahan::where('id', $indikator_id)->first();
+        if (!$indikator) {
             abort(403);
         }
         $success = false;
-        $target->realisasi_indikator = $request->realisasi_indikator;
-        $target->capaian_indikator = $request->capaian_indikator;
-        $target->catatan = $request->catatan;
-        if ($target->save()) {
+        $indikator->realisasi_indikator = $request->realisasi_indikator;
+        $indikator->capaian_indikator = $request->capaian_indikator;
+        $indikator->catatan = $request->catatan;
+        if ($indikator->save()) {
             $success = true;
         }
-        return response()->json(compact('success', 'target'));
+        return response()->json(compact('success', 'indikator'));
     }
 
-    public function monev_simpan($perencanaan_id, $target_id, Request $request)
+    public function monev_simpan($indikator_id, Request $request)
     {
         $user = Auth::User();
-        $target = GeneralPerencanaanTarget::where('id', $target_id)->where('general_perencanaan_id', $perencanaan_id)
-            ->whereHas('perencanaan', function ($q) use ($user) {
-                $q->where('instansi_id', $user->instansi_id);
-            })->first();
-        if (!$target) {
-            abort(403);
-        }
         $success = false;
-        $output = GeneralRencanaAksiOutput::find($request->output_id);
+        $output = TematikRencanaAksiOutput::find($request->output_id);
         if (!$output) {
             abort(404);
         }
@@ -596,7 +584,16 @@ class RBTematikController extends Controller
         $output->realisasi_anggaran_tw3 = $request->realisasi_anggaran_tw3;
         $output->realisasi_anggaran_tw4 = $request->realisasi_anggaran_tw4;
         $output->realisasi_anggaran_total = $request->realisasi_anggaran_total;
-        $output->capaian_anggaran = $request->capaian_anggaran;
+        $output->capaian_output_tw1 = $request->capaian_output_tw1;
+        $output->capaian_output_tw2 = $request->capaian_output_tw2;
+        $output->capaian_output_tw3 = $request->capaian_output_tw3;
+        $output->capaian_output_tw4 = $request->capaian_output_tw4;
+        $output->capaian_output_total = $request->capaian_output_total;
+        $output->capaian_anggaran_tw1 = $request->capaian_anggaran_tw1;
+        $output->capaian_anggaran_tw2 = $request->capaian_anggaran_tw2;
+        $output->capaian_anggaran_tw3 = $request->capaian_anggaran_tw3;
+        $output->capaian_anggaran_tw4 = $request->capaian_anggaran_tw4;
+        $output->capaian_anggaran_total = $request->capaian_anggaran_total;
         if ($output->save()) {
             $success = true;
         }

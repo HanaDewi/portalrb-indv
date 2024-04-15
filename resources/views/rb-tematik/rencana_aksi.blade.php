@@ -511,7 +511,7 @@
         $('.saveButton').prop('disabled', true);
         $.getJSON("{{url('rb-tematik/permasalahan/renaksi/getData')}}/"+id, function(data) {
             $('#rencana_aksi_id').val(data.general_rencana_aksi_id);
-            $('#rencana_aksi').val(data.rencana_aksi.rencana_aksi);
+            $('#rencana_aksi').val(data.rencana_aksi.nama);
             $('#satuan_output0').val(data.satuan_output);
             $('#indikator_output0').val(data.indikator_output);
             $('#target_tw10').val(data.target_tw1);
