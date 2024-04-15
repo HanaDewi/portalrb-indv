@@ -8,7 +8,7 @@
 <div class="intro-y col-span-12 lg:col-span-12">
     <div class="intro-y box">
         <div class="flex sm:flex-row items-center p-5 border-b border-slate-200/60">
-            <h2 class="font-bold text-base mr-auto flex items-center justify-center"> <i data-lucide="pie-chart" class="mr-1"></i> RB General - Monitoring dan Evaluasi</h2>
+            <h2 class="font-bold text-base mr-auto flex items-center justify-center"> <i data-lucide="pie-chart" class="mr-1"></i> RB Tematik - Monitoring dan Evaluasi</h2>
             <button class="btn btn-danger shadow-md float-right mr-2" onclick="edit_monev();" data-bs-toggle="modal" data-bs-target="#modal-kegiatan_utama"><i data-lucide="edit" class="mr-1"></i> Evaluasi</button>
             <a href="{{ url('rb-general/perencanaan') }}" class="btn btn-warning shadow-md float-right"><i data-lucide="chevron-left"></i> Kembali</a>
         </div>
@@ -39,7 +39,7 @@
                 </tr>
                 <tr>
                     <td class="font-bold align-top">Capaian Indikator</td>
-                    <td id="info_capaian_indikator">{{ $indikator->capaian_indikator }}</td>
+                    <td id="info_capaian_indikator"></td>
                 </tr>
                 <tr>
                     <td class="font-bold align-top">Catatan</td>

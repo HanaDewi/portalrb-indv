@@ -1,0 +1,31 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::table('tematik_indikator_roadmap', function (Blueprint $table) {
+            $table->string('realisasi_indikator')->nullable();
+            $table->string('capaian_indikator')->nullable();
+            $table->text('catatan')->nullable();
+            $table->text('catatan_evaluator')->nullable();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::table('tematik_indikator_roadmap', function (Blueprint $table) {
+            //
+        });
+    }
+};
