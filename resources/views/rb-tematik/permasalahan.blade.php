@@ -57,6 +57,7 @@
                         <th class="w-5">Sasaran</th>
                         <th class="w-5">Indikator</th>
                         <th class="w-5">Target</th>
+                        <th class="w-5">Satuan</th>
                         <th class="w-5">Aksi</th>
                     </tr>
                 </thead>
@@ -96,6 +97,9 @@
                         </td>
                         <td>
                             {{ $tematikData['indikator_permasalahan_target'] }}
+                        </td>
+                        <td>
+                            {{ $tematikData['indikator_permasalahan_satuan_target'] }}
                         </td>
                         <td>
                             @if ($tematikData['indikator_permasalahan_nama'])
@@ -302,6 +306,12 @@
                                             <td class="font-bold w-30">Target</td>
                                             <td colspan="5">
                                                 <input type="text" id="target-permasalahan" name="target_permasalahan" placeholder="Masukan Target" class="form-control" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="font-bold w-30">Satuan</td>
+                                            <td colspan="5">
+                                                <input type="text" id="satuan-target-permasalahan" name="satuan_target_permasalahan" placeholder="Masukan Target" class="form-control" />
                                             </td>
                                         </tr>
                                     </table>

@@ -45,7 +45,6 @@ class RBTematikController extends Controller
         foreach ($sasaranRoadmaps as $sasaran) {
             if (count($sasaran->indikator_roadmap)) {
                 foreach ($sasaran->indikator_roadmap as $indikator) {
-
                     $tematikDatas[$jumlahBaris]["indikator_permasalahan_id"] = null;
                     $tematikDatas[$jumlahBaris]["indikator_permasalahan_nama"] = null;
                     $tematikDatas[$jumlahBaris]["indikator_permasalahan_target"] = null;
@@ -56,6 +55,9 @@ class RBTematikController extends Controller
                     $tematikDatas[$jumlahBaris]["indikator_nama"] = $indikator->nama;
                     $tematikDatas[$jumlahBaris]["indikator_target"] = $indikator->target;
                     $tematikDatas[$jumlahBaris]["indikator_satuan"] = $indikator->satuan;
+                    $tematikDatas[$jumlahBaris]["indikator_realisasi_indikator"] = $indikator->realisasi_indikator;
+                    $tematikDatas[$jumlahBaris]["indikator_capaian_indikator"] = $indikator->capaian_indikator;
+                    $tematikDatas[$jumlahBaris]["indikator_catatan"] = $indikator->catatan;
                     $tematikDatas[$jumlahBaris]["sasaran_id"] = $sasaran->id;
                     $tematikDatas[$jumlahBaris]["sasaran_nama"] = $sasaran->nama;
                     $tematikDatas[$jumlahBaris]["tema_id"] = $sasaran->tema->id;
@@ -73,6 +75,9 @@ class RBTematikController extends Controller
                 $tematikDatas[$jumlahBaris]["indikator_nama"] = null;
                 $tematikDatas[$jumlahBaris]["indikator_target"] = null;
                 $tematikDatas[$jumlahBaris]["indikator_satuan"] = null;
+                $tematikDatas[$jumlahBaris]["indikator_realisasi_indikator"] = null;
+                $tematikDatas[$jumlahBaris]["indikator_capaian_indikator"] = null;
+                $tematikDatas[$jumlahBaris]["indikator_catatan"] = null;
                 $tematikDatas[$jumlahBaris]["sasaran_id"] = $sasaran->id;
                 $tematikDatas[$jumlahBaris]["sasaran_nama"] = $sasaran->nama;
                 $tematikDatas[$jumlahBaris]["tema_id"] = $sasaran->tema->id;
@@ -104,6 +109,7 @@ class RBTematikController extends Controller
                                     $tematikDatas[$jumlahBaris]["indikator_permasalahan_id"] = $indikator_permasalahan->id;
                                     $tematikDatas[$jumlahBaris]["indikator_permasalahan_nama"] = $indikator_permasalahan->nama;
                                     $tematikDatas[$jumlahBaris]["indikator_permasalahan_target"] = $indikator_permasalahan->target;
+                                    $tematikDatas[$jumlahBaris]["indikator_permasalahan_satuan_target"] = $indikator_permasalahan->satuan;
                                     $tematikDatas[$jumlahBaris]["permasalahan_id"] = $permasalahan->id;
                                     $tematikDatas[$jumlahBaris]["permasalahan_nama"] = $permasalahan->nama;
                                     $tematikDatas[$jumlahBaris]["permasalahan_sasaran"] = $permasalahan->sasaran_permasalahan;
@@ -121,6 +127,7 @@ class RBTematikController extends Controller
                                 $tematikDatas[$jumlahBaris]["indikator_permasalahan_id"] = null;
                                 $tematikDatas[$jumlahBaris]["indikator_permasalahan_nama"] = null;
                                 $tematikDatas[$jumlahBaris]["indikator_permasalahan_target"] = null;
+                                $tematikDatas[$jumlahBaris]["indikator_permasalahan_satuan_target"] = null;
                                 $tematikDatas[$jumlahBaris]["permasalahan_id"] = $permasalahan->id;
                                 $tematikDatas[$jumlahBaris]["permasalahan_nama"] = $permasalahan->nama;
                                 $tematikDatas[$jumlahBaris]["permasalahan_sasaran"] = $permasalahan->sasaran_permasalahan;
@@ -139,6 +146,7 @@ class RBTematikController extends Controller
                         $tematikDatas[$jumlahBaris]["indikator_permasalahan_id"] = null;
                         $tematikDatas[$jumlahBaris]["indikator_permasalahan_nama"] = null;
                         $tematikDatas[$jumlahBaris]["indikator_permasalahan_target"] = null;
+                        $tematikDatas[$jumlahBaris]["indikator_permasalahan_satuan_target"] = null;
                         $tematikDatas[$jumlahBaris]["permasalahan_id"] = null;
                         $tematikDatas[$jumlahBaris]["permasalahan_nama"] = null;
                         $tematikDatas[$jumlahBaris]["permasalahan_sasaran"] = null;
@@ -157,6 +165,7 @@ class RBTematikController extends Controller
                 $tematikDatas[$jumlahBaris]["indikator_permasalahan_id"] = null;
                 $tematikDatas[$jumlahBaris]["indikator_permasalahan_nama"] = null;
                 $tematikDatas[$jumlahBaris]["indikator_permasalahan_target"] = null;
+                $tematikDatas[$jumlahBaris]["indikator_permasalahan_satuan_target"] = null;
                 $tematikDatas[$jumlahBaris]["permasalahan_id"] = null;
                 $tematikDatas[$jumlahBaris]["permasalahan_nama"] = null;
                 $tematikDatas[$jumlahBaris]["permasalahan_sasaran"] = null;
@@ -195,6 +204,9 @@ class RBTematikController extends Controller
             "indikator_roadmap" => $indikator->nama,
             "target_roadmap" => $indikator->target,
             "target_satuan" => $indikator->satuan,
+            "realisasi_indikator" => $indikator->realisasi_indikator,
+            "capaian_indikator" => $indikator->capaian_indikator,
+            "catatan" => $indikator->catatan,
         ];
         return response()->json($data);
     }
@@ -295,6 +307,7 @@ class RBTematikController extends Controller
             $indikatorPermasalahan->tematik_permasalahan_id = $request->tematik_permasalahan_id_onIndikatorPermasalahan;
             $indikatorPermasalahan->nama = $request->indikator_permasalahan;
             $indikatorPermasalahan->target = $request->target_permasalahan;
+            $indikatorPermasalahan->satuan = $request->satuan_target_permasalahan;
         }
         if ($indikatorPermasalahan->save()) {
             session()->flash('success', 'Data Indikator berhasil disimpan.');
@@ -508,6 +521,29 @@ class RBTematikController extends Controller
         return view('rb-tematik.monev', compact('indikator'));
     }
 
+    public function simpanMonevIndikatorRoadmap(Request $request)
+    {
+        $user = Auth::User();
+        $indikatorRoadmap = TematikIndikatorRoadmap::where('id', $request->monev_indikator_roadmap_id)->first();
+        if (!$indikatorRoadmap) {
+            abort(404);
+        }
+        if (isset($request->realisasi_indikator)) {
+            $indikatorRoadmap->realisasi_indikator = $request->realisasi_indikator;
+        }
+        if (isset($request->capaian_indikator)) {
+            $indikatorRoadmap->capaian_indikator = $request->capaian_indikator;
+        }
+        if (isset($request->catatan)) {
+            $indikatorRoadmap->catatan = $request->catatan;
+        }
+        if ($indikatorRoadmap->save()) {
+            session()->flash('success', 'Data Indikator Roadmap Tematik berhasil disimpan.');
+        } else {
+            session()->flash('success', 'Data Indikator Roadmap Tematik gagal disimpan! Silahkan dicoba kembali.');
+        }
+        return redirect('rb-tematik/perencanaan');
+    }
 
     public function monev_getIndikatorPermasalahan($indikator_id)
     {

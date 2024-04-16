@@ -35,6 +35,9 @@
                             <th>Indikator</th>
                             <th class="w-5">Target</th>
                             <th class="w-5">Satuan Target</th>
+                            <th class="w-5">Realisasi</th>
+                            <th class="w-5">Capaian</th>
+                            <th class="w-5">Catatan</th>
                             <th class="w-5">Aksi</th>
                         </tr>
                     </thead>
@@ -77,6 +80,15 @@
                                     {{ $tematikData['indikator_satuan'] }}
                                 </td>
                                 <td>
+                                    {{ $tematikData['indikator_realisasi_indikator'] }}
+                                </td>
+                                <td>
+                                    {{ $tematikData['indikator_capaian_indikator'] }}
+                                </td>
+                                <td>
+                                    {{ $tematikData['indikator_catatan'] }}
+                                </td>
+                                <td>
                                     @if ($tematikData['indikator_nama'])
                                     <a href="#" class="btn btn-primary btn-sm w-full mb-2"
                                     onclick="edit('{{$tematikData['indikator_id']}}')" > 
@@ -84,7 +96,7 @@
                                         <span class="text-xs px-1 rounded-full bg-warning text-white badge"><!-- count($target->rencana_aksi) --></span>
                                     </a>
                                     <br>
-                                    <a href="{{ url('rb-tematik/permasalahan/monev/' . $tematikData['indikator_permasalahan_id'] )}}" class="btn btn-dark btn-sm w-full mb-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" icon-name="edit" data-lucide="edit" class="lucide lucide-edit w-4 h-4 mr-1">
+                                    <a href="#" onclick="edit_monev('{{$tematikData['indikator_id']}}');" class="btn btn-dark btn-sm w-full mb-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" icon-name="edit" data-lucide="edit" class="lucide lucide-edit w-4 h-4 mr-1">
                                             <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"></path>
                                             <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                                         </svg>Monev</a>
@@ -237,147 +249,46 @@
         </div>
     </div> <!-- END: Modal Content -->
 
-    {{-- Modal Form Permasalahan --}}
-    <div id="modal-permasalahan" class="modal fade" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
+    {{-- Modal Form Monev Indikator Roadmap --}}
+    <div id="modal-monev-indikator-roadmap" class="modal fade" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <!-- BEGIN: Modal Header -->
                 <div class="darkbg modal-header">
-                    <h2 class="font-bold fw-medium  fs-base me-auto" id="title">Permasalahan</h2>
+                    <h2 class="font-bold fw-medium fs-base me-auto" id="title">Monitoring dan Evaluasi Indikator Sasaran Permasalahan</h2>
                 </div> <!-- END: Modal Header -->
                 <!-- BEGIN: Modal Body -->
-                <form action="{{ url('rb-tematik/perencanaan/simpan-permasalahan') }}" id="form-permasalahan"
-                    method="post">
+                <form action="{{ url('rb-tematik/perencanaan/monev/simpan-indikator-roadmap') }}" id="form-monev_perencanaan" method="post">
                     @csrf
-                    <input type="hidden" name="tematik_indikator_roadmap_id" id="indikator-roadmap-id-onPermasalahan">
-                    <div class="modal-body grid columns-12 ">
+                    <input type="hidden" name="monev_indikator_roadmap_id" id="monev-indikator-roadmap-id">
+                    <div class="modal-body grid columns-12 gap-4 gap-y-3">
                         <div class="g-col-12">
-                            <div class="border  rounded-md ">
-                                <div id="konten_tambah_aksi">
-                                    <div class="relative   dark:border rounded-md">
-                                        <table class="table table-bordered">
-                                            <tr>
-                                                <td class="font-bold w-30">Indikator Sasaran </td>
-                                                <td colspan="5">
-                                                    <input type="text" id="indikator-roadmap-onPermasalahan"
-                                                        name="indikator_roadmap" class="form-control" disabled />
-                                                </td>
-                                            </tr>
-                                            
-                                            <tr>
-                                                <td class="font-bold w-30">Target Indikator </td>
-                                                <td colspan="5">
-                                                    <input type="text" id="target-roadmap-onPermasalahan"
-                                                        name="target_roadmap" class="form-control" disabled />
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="font-bold w-30">Satuan Target </td>
-                                                <td colspan="5">
-                                                    <input type="text" id="target-satuan-onPermasalahan"
-                                                        name="target_satuan" class="form-control" disabled />
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="font-bold w-30">Permasalahan</td>
-                                                <td colspan="5">
-                                                    <input type="text" id="permasalahan" name="permasalahan"
-                                                        placeholder="Masukan Permasalahan" class="form-control" />
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="font-bold w-30">Sasaran Permasalahan</td>
-                                                <td colspan="5">
-                                                    <input type="text" id="sasaran-permasalahan"
-                                                        name="sasaran_permasalahan"
-                                                        placeholder="Masukan Sasaran Permasalahan" class="form-control" />
-                                                </td>
-                                            </tr>
-                                        </table>
-                                        <div id="dynamicAddRemove"></div>
-                                    </div>
-                                </div>
-                            </div>
-
-
+                            <table class="table table-noborder">
+                                <tr>
+                                    <td class="font-bold w-44">Realisasi Indikator</td>
+                                    <td>
+                                        <input type="text" name="realisasi_indikator" id="realisasi-indikator" placeholder="Realisasi Indikator" class="form-control">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="font-bold">Capaian Indikator</td>
+                                    <td>
+                                        <input type="text" name="capaian_indikator" id="capaian-indikator" placeholder="Capaian Indikator" class="form-control mt-4">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="font-bold">Catatan</td>
+                                    <td>
+                                        <textarea name="catatan" id="catatan" cols="30" rows="10" placeholder="Catatan" class="form-control mt-4"></textarea>
+                                    </td>
+                                </tr>
+                            </table>
                         </div>
                     </div> <!-- END: Modal Body -->
                     <!-- BEGIN: Modal Footer -->
-                    <div class="modal-footer text-end">
-                        <button type="button" data-tw-dismiss="modal"
-                            class="btn btn-outline-secondary w-20 me-1">Cancel</button>
-                        <button type="submit" class="btn btn-primary w-20 saveButton">Simpan</button>
-                    </div> <!-- END: Modal Footer -->
-                </form>
-            </div>
-        </div>
-    </div> <!-- END: Modal Content -->
-
-    {{-- Modal Form Indikator Permasalahan --}}
-    <div id="modal-indikator-permasalahan" class="modal fade" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <!-- BEGIN: Modal Header -->
-                <div class="darkbg modal-header">
-                    <h2 class="font-bold fw-medium  fs-base me-auto" id="title">Indikator Permasalahan</h2>
-                </div> <!-- END: Modal Header -->
-                <!-- BEGIN: Modal Body -->
-                <form action="{{ url('rb-tematik/perencanaan/simpan-indikator-permasalahan') }}" id="form-permasalahan"
-                    method="post">
-                    @csrf
-                    <input type="hidden" name="tematik_permasalahan_id_onIndikatorPermasalahan"
-                        id="tematik-permasalahan-id-onIndikatorPermasalahan">
-                    <div class="modal-body grid columns-12 ">
-                        <div class="g-col-12">
-                            <div class="border  rounded-md ">
-                                <div id="konten_tambah_aksi">
-                                    <div class="relative   dark:border rounded-md">
-                                        <table class="table table-bordered">
-                                            <tr>
-                                                <td class="font-bold w-30">Permasalahan </td>
-                                                <td colspan="5">
-                                                    <input type="text" id="permasalahan-onIndikatorPermasalahan"
-                                                        name="permasalahan" class="form-control" disabled />
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="font-bold w-30">Sasaran</td>
-                                                <td colspan="5">
-                                                    <input type="text"
-                                                        id="sasaran-permasalahan-onIndikatorPermasalahan"
-                                                        name="permasalahan_sasaran" class="form-control" disabled />
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="font-bold w-30">Indikator </td>
-                                                <td colspan="5">
-                                                    <input type="text" id="indikator-permasalahan"
-                                                        name="indikator_permasalahan" placeholder="Masukan Indikator"
-                                                        class="form-control" />
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="font-bold w-30">Target</td>
-                                                <td colspan="5">
-                                                    <input type="text" id="target-permasalahan"
-                                                        name="target_permasalahan" placeholder="Masukan Target"
-                                                        class="form-control" />
-                                                </td>
-                                            </tr>
-                                        </table>
-                                        <div id="dynamicAddRemove"></div>
-                                    </div>
-                                </div>
-                            </div>
-
-
-                        </div>
-                    </div> <!-- END: Modal Body -->
-                    <!-- BEGIN: Modal Footer -->
-                    <div class="modal-footer text-end">
-                        <button type="button" data-tw-dismiss="modal"
-                            class="btn btn-outline-secondary w-20 me-1">Cancel</button>
-                        <button type="submit" class="btn btn-primary w-20 saveButton">Simpan</button>
+                    <div class="modal-footer text-end"> 
+                        <button type="button" data-tw-dismiss="modal" class="btn btn-outline-secondary w-20 me-1">Cancel</button> 
+                        <button type="submit" class="btn btn-primary w-20 saveButton">Simpan</button> 
                     </div> <!-- END: Modal Footer -->
                 </form>
             </div>
@@ -412,10 +323,8 @@
             modal_sasaran_roadmap = tailwind.Modal.getInstance(document.querySelector("#modal-sasaran-roadmap"));
             modal_indikator_roadmap = tailwind.Modal.getInstance(document.querySelector(
                 "#modal-indikator-roadmap"));
-            modal_permasalahan = tailwind.Modal.getInstance(document.querySelector(
-                "#modal-permasalahan"));
-            modal_indikator_permasalahan = tailwind.Modal.getInstance(document.querySelector(
-                "#modal-indikator-permasalahan"));
+            modal_monev_indikator_roadmap = tailwind.Modal.getInstance(document.querySelector("#modal-monev-indikator-roadmap"));
+
         });
 
         function output_form() {
@@ -461,19 +370,17 @@
         });
         }
 
-        function tambah_permasalahan(indikator_roadmap, target_roadmap, satuan, indikator_roadmap_id) {
-            $('#indikator-roadmap-id-onPermasalahan').val(indikator_roadmap_id);
-            $('#indikator-roadmap-onPermasalahan').val(indikator_roadmap);
-            $('#target-roadmap-onPermasalahan').val(target_roadmap);
-            $('#target-satuan-onPermasalahan').val(satuan);
-            modal_permasalahan.show();
-        }
-
-        function tambah_indikator_permasalahan(permasalahan, sasaran, permasalahan_id) {
-            $('#tematik-permasalahan-id-onIndikatorPermasalahan').val(permasalahan_id);
-            $('#permasalahan-onIndikatorPermasalahan').val(permasalahan);
-            $('#sasaran-permasalahan-onIndikatorPermasalahan').val(sasaran);
-            modal_indikator_permasalahan.show();
+        function edit_monev(id) {
+            $('#monev-indikator-roadmap-id').val(id);
+            $('#title').html('Edit Rencana Aksi Output');
+            $('.saveButton').prop('disabled', true);
+            $.getJSON("{{url('rb-tematik/perencanaan/getData/')}}/"+id, function(data) {
+                $('#realisasi_indikator').val(data.realisasi_indikator);
+                $('#capaian_indikator').val(data.capaian_indikator);
+                $('#catatan').val(data.catatan);
+            $('.saveButton').prop('disabled', false);
+                modal_monev_indikator_roadmap.show();
+            });
         }
     </script>
     <script src="https://cdn.rawgit.com/ashl1/datatables-rowsgroup/v1.0.0/dataTables.rowsGroup.js"></script>
