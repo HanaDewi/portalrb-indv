@@ -82,7 +82,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/rb-general/rekap_data/simpanCatatanEvaluator', [RBGeneralController::class, 'rekap_data_simpanCatatanEvaluator']);
     // RB Tematik Sasaran Road Map
     Route::get('/rb-tematik/perencanaan', [RBTematikController::class, 'perencanaan'])->name('perencanaan');
-    Route::get('/rb-tematik/perencanaan/getData/{kegiatan_utama_id}/{indikator_id}', [RBTematikController::class, 'perencanaan_getData']);
+    Route::get('/rb-tematik/perencanaan/getData/{indikator_id}', [RBTematikController::class, 'indikator_getData']);
     Route::post('/rb-tematik/perencanaan/simpan-sasaran-roadmap', [RBTematikController::class, 'simpanSasaranRoadmap']);
     Route::post('/rb-tematik/perencanaan/simpan-indikator-roadmap', [RBTematikController::class, 'simpanIndikatorRoadmap']);
     // RB Tematik Permasalahan

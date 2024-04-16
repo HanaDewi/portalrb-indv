@@ -52,11 +52,12 @@
             <table id="perencanaan" class="table table-bordered table-striped mt-5" cellspacing="0" width="100%">
                 <thead class="table-dark font-bold">
                     <tr>
-                        <th class="w-5">No.</th>
+                        <th class="w-5">Roadmap</th>
                         <th class="w-5">Permasalahan (bottleneck)</th>
                         <th class="w-5">Sasaran</th>
                         <th class="w-5">Indikator</th>
                         <th class="w-5">Target</th>
+                        <th class="w-5">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -73,7 +74,14 @@
                     }
                     @endphp
                     <tr>
-                        <td class="font-bold">{{ $no }}</td>
+                        <td>
+                            <b>Tema Roadmap :</b><br/>
+                            {{ $tematikData['tema_nama'] }} <br/><br/>
+                            <b>Sasaran Roadmap :</b><br/>
+                            {{ $tematikData['sasaran_nama'] }} <br/><br/>
+                            <b>Indikator Roadmap :</b><br/>
+                            {{ $tematikData['indikator_nama'] }} 
+                        </td>
                         <td>
                             {{ $tematikData['permasalahan_nama'] }}
                         </td>
@@ -88,13 +96,15 @@
                         </td>
                         <td>
                             {{ $tematikData['indikator_permasalahan_target'] }}
+                        </td>
+                        <td>
                             @if ($tematikData['indikator_permasalahan_nama'])
-                            <a href="{{ url('rb-tematik/permasalahan/renaksi/' . $tematikData['indikator_permasalahan_id'] )}}" class="btn btn-primary btn-sm w-full mb-2">
+                            <a href="{{ url('rb-tematik/permasalahan/renaksi/' . $tematikData['indikator_permasalahan_id'])}}" class="btn btn-primary btn-sm w-full mb-2">
                                 <i data-lucide="edit" class="w-4 h-4 mr-1"></i> Renaksi
-                                <span class="text-xs px-1 rounded-full bg-warning text-white badge"><!-- count($target->rencana_aksi) --></span>
+                                <span class="text-xs px-1 rounded-full bg-warning text-white badge"> <!-- count($indikator->rencana_aksi) --> </span>
                             </a>
                             <br>
-                            <a href="{{ url('rb-tematik/permasalahan/monev/' . $tematikData['indikator_permasalahan_id'] )}}" class="btn btn-dark btn-sm w-full mb-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" icon-name="edit" data-lucide="edit" class="lucide lucide-edit w-4 h-4 mr-1">
+                            <a href="{{ url('rb-tematik/permasalahan/monev/' . $tematikData['indikator_permasalahan_id'])}}" class="btn btn-dark btn-sm w-full mb-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" icon-name="edit" data-lucide="edit" class="lucide lucide-edit w-4 h-4 mr-1">
                                     <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"></path>
                                     <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                                 </svg>Monev</a>

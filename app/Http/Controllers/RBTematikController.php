@@ -45,61 +45,22 @@ class RBTematikController extends Controller
         foreach ($sasaranRoadmaps as $sasaran) {
             if (count($sasaran->indikator_roadmap)) {
                 foreach ($sasaran->indikator_roadmap as $indikator) {
-                    if (count($indikator->permasalahan)) {
-                        foreach ($indikator->permasalahan as $permasalahan) {
-                            if (count($permasalahan->indikator_permasalahan)) {
-                                foreach ($permasalahan->indikator_permasalahan as $indikator_permasalahan) {
-                                    $tematikDatas[$jumlahBaris]["indikator_permasalahan_id"] = $indikator_permasalahan->id;
-                                    $tematikDatas[$jumlahBaris]["indikator_permasalahan_nama"] = $indikator_permasalahan->nama;
-                                    $tematikDatas[$jumlahBaris]["indikator_permasalahan_target"] = $indikator_permasalahan->target;
-                                    $tematikDatas[$jumlahBaris]["permasalahan_id"] = $permasalahan->id;
-                                    $tematikDatas[$jumlahBaris]["permasalahan_nama"] = $permasalahan->nama;
-                                    $tematikDatas[$jumlahBaris]["permasalahan_sasaran"] = $permasalahan->sasaran_permasalahan;
-                                    $tematikDatas[$jumlahBaris]["indikator_id"] = $indikator->id;
-                                    $tematikDatas[$jumlahBaris]["indikator_nama"] = $indikator->nama;
-                                    $tematikDatas[$jumlahBaris]["indikator_target"] = $indikator->target;
-                                    $tematikDatas[$jumlahBaris]["indikator_satuan"] = $indikator->satuan;
-                                    $tematikDatas[$jumlahBaris]["sasaran_id"] = $sasaran->id;
-                                    $tematikDatas[$jumlahBaris]["sasaran_nama"] = $sasaran->nama;
-                                    $tematikDatas[$jumlahBaris]["tema_id"] = $sasaran->tema->id;
-                                    $tematikDatas[$jumlahBaris]["tema_nama"] = $sasaran->tema->nama;
-                                    $jumlahBaris++;
-                                }
-                            } else {
-                                $tematikDatas[$jumlahBaris]["indikator_permasalahan_id"] = null;
-                                $tematikDatas[$jumlahBaris]["indikator_permasalahan_nama"] = null;
-                                $tematikDatas[$jumlahBaris]["indikator_permasalahan_target"] = null;
-                                $tematikDatas[$jumlahBaris]["permasalahan_id"] = $permasalahan->id;
-                                $tematikDatas[$jumlahBaris]["permasalahan_nama"] = $permasalahan->nama;
-                                $tematikDatas[$jumlahBaris]["permasalahan_sasaran"] = $permasalahan->sasaran_permasalahan;
-                                $tematikDatas[$jumlahBaris]["indikator_id"] = $indikator->id;
-                                $tematikDatas[$jumlahBaris]["indikator_nama"] = $indikator->nama;
-                                $tematikDatas[$jumlahBaris]["indikator_target"] = $indikator->target;
-                                $tematikDatas[$jumlahBaris]["indikator_satuan"] = $indikator->satuan;
-                                $tematikDatas[$jumlahBaris]["sasaran_id"] = $sasaran->id;
-                                $tematikDatas[$jumlahBaris]["sasaran_nama"] = $sasaran->nama;
-                                $tematikDatas[$jumlahBaris]["tema_id"] = $sasaran->tema->id;
-                                $tematikDatas[$jumlahBaris]["tema_nama"] = $sasaran->tema->nama;
-                                $jumlahBaris++;
-                            }
-                        }
-                    } else {
-                        $tematikDatas[$jumlahBaris]["indikator_permasalahan_id"] = null;
-                        $tematikDatas[$jumlahBaris]["indikator_permasalahan_nama"] = null;
-                        $tematikDatas[$jumlahBaris]["indikator_permasalahan_target"] = null;
-                        $tematikDatas[$jumlahBaris]["permasalahan_id"] = null;
-                        $tematikDatas[$jumlahBaris]["permasalahan_nama"] = null;
-                        $tematikDatas[$jumlahBaris]["permasalahan_sasaran"] = null;
-                        $tematikDatas[$jumlahBaris]["indikator_id"] = $indikator->id;
-                        $tematikDatas[$jumlahBaris]["indikator_nama"] = $indikator->nama;
-                        $tematikDatas[$jumlahBaris]["indikator_target"] = $indikator->target;
-                        $tematikDatas[$jumlahBaris]["indikator_satuan"] = $indikator->satuan;
-                        $tematikDatas[$jumlahBaris]["sasaran_id"] = $sasaran->id;
-                        $tematikDatas[$jumlahBaris]["sasaran_nama"] = $sasaran->nama;
-                        $tematikDatas[$jumlahBaris]["tema_id"] = $sasaran->tema->id;
-                        $tematikDatas[$jumlahBaris]["tema_nama"] = $sasaran->tema->nama;
-                        $jumlahBaris++;
-                    }
+
+                    $tematikDatas[$jumlahBaris]["indikator_permasalahan_id"] = null;
+                    $tematikDatas[$jumlahBaris]["indikator_permasalahan_nama"] = null;
+                    $tematikDatas[$jumlahBaris]["indikator_permasalahan_target"] = null;
+                    $tematikDatas[$jumlahBaris]["permasalahan_id"] = null;
+                    $tematikDatas[$jumlahBaris]["permasalahan_nama"] = null;
+                    $tematikDatas[$jumlahBaris]["permasalahan_sasaran"] = null;
+                    $tematikDatas[$jumlahBaris]["indikator_id"] = $indikator->id;
+                    $tematikDatas[$jumlahBaris]["indikator_nama"] = $indikator->nama;
+                    $tematikDatas[$jumlahBaris]["indikator_target"] = $indikator->target;
+                    $tematikDatas[$jumlahBaris]["indikator_satuan"] = $indikator->satuan;
+                    $tematikDatas[$jumlahBaris]["sasaran_id"] = $sasaran->id;
+                    $tematikDatas[$jumlahBaris]["sasaran_nama"] = $sasaran->nama;
+                    $tematikDatas[$jumlahBaris]["tema_id"] = $sasaran->tema->id;
+                    $tematikDatas[$jumlahBaris]["tema_nama"] = $sasaran->tema->nama;
+                    $jumlahBaris++;
                 }
             } else {
                 $tematikDatas[$jumlahBaris]["indikator_permasalahan_id"] = null;
@@ -224,11 +185,18 @@ class RBTematikController extends Controller
         return response()->json($indikators);
     }
 
-    public function perencanaan_getData($kegiatan_utama_id, $indikator_id)
+    public function indikator_getData($indikator_id)
     {
         $user = Auth::User();
-        $perencanaan = GeneralPerencanaan::where('instansi_id', $user->instansi_id)->where('kegiatan_utama_id', $kegiatan_utama_id)->where('indikator_id', $indikator_id)->first();
-        return response()->json($perencanaan);
+        $indikator = TematikIndikatorRoadmap::where('id', $indikator_id)->first();
+        $data = [
+            "tema" => $indikator->sasaran_roadmap->tema->nama,
+            "sasaran_roadmap" => $indikator->sasaran_roadmap->nama,
+            "indikator_roadmap" => $indikator->nama,
+            "target_roadmap" => $indikator->target,
+            "target_satuan" => $indikator->satuan,
+        ];
+        return response()->json($data);
     }
 
     public function perencanaan_getTarget($kegiatan_utama_id, $indikator_id)
@@ -283,14 +251,16 @@ class RBTematikController extends Controller
     public function simpanIndikatorRoadmap(Request $request)
     {
         $user = Auth::User();
-        $indikatorRoadmap = TematikIndikatorRoadmap::where('tematik_sasaran_roadmap_id',)->where('nama', $request->indikator_roadmap)->first();
-        if (!$indikatorRoadmap) {
+        if (isset($request->indikator_roadmap_id)) {
+            $indikatorRoadmap = TematikIndikatorRoadmap::where('id', $request->indikator_roadmap_id)->first();
+        } else {
             $indikatorRoadmap = new TematikIndikatorRoadmap();
             $indikatorRoadmap->tematik_sasaran_roadmap_id = $request->sasaran_id;
-            $indikatorRoadmap->nama = $request->indikator_roadmap;
-            $indikatorRoadmap->target = $request->target_roadmap;
-            $indikatorRoadmap->satuan = $request->target_satuan;
         }
+        $indikatorRoadmap->nama = $request->indikator_roadmap;
+        $indikatorRoadmap->target = $request->target_roadmap;
+        $indikatorRoadmap->satuan = $request->target_satuan;
+
         if ($indikatorRoadmap->save()) {
             session()->flash('success', 'Data Indikator Roadmap Tematik berhasil disimpan.');
         } else {
