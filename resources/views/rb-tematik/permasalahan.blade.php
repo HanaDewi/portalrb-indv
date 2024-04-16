@@ -52,7 +52,9 @@
             <table id="perencanaan" class="table table-bordered table-striped mt-5" cellspacing="0" width="100%">
                 <thead class="table-dark font-bold">
                     <tr>
-                        <th class="w-5">Roadmap</th>
+                        <th class="w-5">No</th>
+                        <th class="w-5">Tema</th>
+                        <th class="w-5">Sasaran & Indikator Roadmap</th>
                         <th class="w-5">Permasalahan (bottleneck)</th>
                         <th class="w-5">Sasaran</th>
                         <th class="w-5">Indikator</th>
@@ -75,9 +77,9 @@
                     }
                     @endphp
                     <tr>
+                        <td>{{$no;}}</td>
+                        <td>{{ $tematikData['tema_nama'] }}</td>
                         <td>
-                            <b>Tema Roadmap :</b><br/>
-                            {{ $tematikData['tema_nama'] }} <br/><br/>
                             <b>Sasaran Roadmap :</b><br/>
                             {{ $tematikData['sasaran_nama'] }} <br/><br/>
                             <b>Indikator Roadmap :</b><br/>
@@ -397,7 +399,7 @@
         $("#perencanaan").DataTable({
             scrollX: true,
             autoWidth: true,
-            rowsGroup: [0, 1, 2],
+            rowsGroup: [0, 1, 2,3,4],
             paging: true,
             bInfo: true
         });

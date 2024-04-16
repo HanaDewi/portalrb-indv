@@ -19,6 +19,7 @@ use App\Models\GeneralRencanaAksi;
 use App\Models\TematikPermasalahan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 
 class RBTematikController extends Controller
@@ -35,7 +36,7 @@ class RBTematikController extends Controller
         });
     }
 
-    public function perencanaan()
+    public function tema_sasaran()
     {
         $user = Auth::User();
         $temas = Tema::get();
@@ -187,58 +188,6 @@ class RBTematikController extends Controller
         ]);
     }
 
-    public function getIndikatorRoadmap()
-    {
-        $tematik_sasaran_roadmap_id = request()->get('tematik_sasaran_roadmap_id');
-        $indikators = TematikIndikatorRoadmap::where('tematik_sasaran_roadmap_id', $tematik_sasaran_roadmap_id)->get();
-        return response()->json($indikators);
-    }
-
-    public function indikator_getData($indikator_id)
-    {
-        $user = Auth::User();
-        $indikator = TematikIndikatorRoadmap::where('id', $indikator_id)->first();
-        $data = [
-            "tema" => $indikator->sasaran_roadmap->tema->nama,
-            "sasaran_roadmap" => $indikator->sasaran_roadmap->nama,
-            "indikator_roadmap" => $indikator->nama,
-            "target_roadmap" => $indikator->target,
-            "target_satuan" => $indikator->satuan,
-            "realisasi_indikator" => $indikator->realisasi_indikator,
-            "capaian_indikator" => $indikator->capaian_indikator,
-            "catatan" => $indikator->catatan,
-        ];
-        return response()->json($data);
-    }
-
-    public function perencanaan_getTarget($kegiatan_utama_id, $indikator_id)
-    {
-        $user = Auth::User();
-        $perencanaan = GeneralPerencanaan::where('instansi_id', $user->instansi_id)->where('kegiatan_utama_id', $kegiatan_utama_id)->where('indikator_id', $indikator_id)->first();
-        $success = true;
-        $input = '';
-        if ($perencanaan) {
-            if (count($perencanaan->target)) {
-                $idx = 0;
-                foreach ($perencanaan->target as $target) {
-                    $input .= '<tr>
-                                <td><input type="text" name="tahun[' . $idx . ']" id="target_tahun' . $idx . '" class="form-control w-full tahun" value="' . $target->tahun . '" required></td>
-                                <td><input type="text" name="target[' . $idx . ']" id="target_target' . $idx . '" class="form-control w-full" value="' . $target->target . '" required></td>
-                            </tr>';
-                    $idx++;
-                }
-            } else {
-                $input .= '<tr>
-                            <td><input type="text" name="tahun[0]" id="target_tahun0" class="form-control w-full tahun" value="' . date('Y') . '" required></td>
-                            <td><input type="text" name="target[0]" id="target_target0" class="form-control w-full" required></td>
-                        </tr>';
-            }
-        } else {
-            $success = false;
-        }
-        return response()->json(['success' => $success, 'input' => $input]);
-    }
-
     public function simpanSasaranRoadmap(Request $request)
     {
         $user = Auth::User();
@@ -256,18 +205,31 @@ class RBTematikController extends Controller
                     return redirect('rb-tematik/perencanaan');
                 }
             }
+        } else {
+            //untuk update
+
+            if (Gate::denies('modify-sasaran-roadmap', $sasaranRoadmap)) {
+                // Unauthorized, handle accordingly
+                abort(403, 'Unauthorized');
+            }
         }
+
+
         return redirect('rb-tematik/perencanaan');
     }
 
     public function simpanIndikatorRoadmap(Request $request)
     {
         $user = Auth::User();
-        if (isset($request->indikator_roadmap_id)) {
-            $indikatorRoadmap = TematikIndikatorRoadmap::where('id', $request->indikator_roadmap_id)->first();
-        } else {
+        $indikatorRoadmap = TematikIndikatorRoadmap::where('id', $request->indikator_roadmap_id)->first();
+        if (!$indikatorRoadmap) {
             $indikatorRoadmap = new TematikIndikatorRoadmap();
             $indikatorRoadmap->tematik_sasaran_roadmap_id = $request->sasaran_id;
+        }
+        //hanya user dan instansi terkait saja yang bisa ngedit
+        if (Gate::denies('modify-indikator-roadmap', $indikatorRoadmap)) {
+            // Unauthorized, handle accordingly
+            abort(403, 'Unauthorized');
         }
         $indikatorRoadmap->nama = $request->indikator_roadmap;
         $indikatorRoadmap->target = $request->target_roadmap;
@@ -281,16 +243,46 @@ class RBTematikController extends Controller
         return redirect('rb-tematik/perencanaan');
     }
 
+    public function getIndikatorRoadmap()
+    {
+        $tematik_sasaran_roadmap_id = request()->get('tematik_sasaran_roadmap_id');
+        $indikators = TematikIndikatorRoadmap::where('tematik_sasaran_roadmap_id', $tematik_sasaran_roadmap_id)->get();
+        return response()->json($indikators);
+    }
+
+    public function indikator_getData($indikator_id)
+    {
+        $indikator = TematikIndikatorRoadmap::where('id', $indikator_id)->first();
+        $data = [
+            "tema" => $indikator->sasaran_roadmap->tema->nama,
+            "sasaran_roadmap" => $indikator->sasaran_roadmap->nama,
+            "indikator_roadmap" => $indikator->nama,
+            "target_roadmap" => $indikator->target,
+            "target_satuan" => $indikator->satuan,
+            "realisasi_indikator" => $indikator->realisasi_indikator,
+            "capaian_indikator" => $indikator->capaian_indikator,
+            "catatan" => $indikator->catatan,
+        ];
+        return response()->json($data);
+    }
+
     public function simpanPermasalahan(Request $request)
     {
-        $user = Auth::User();
         $permasalahan = TematikPermasalahan::where('tematik_indikator_roadmap_id',)->where('nama', $request->indikator_roadmap)->first();
         if (!$permasalahan) {
             $permasalahan = new TematikPermasalahan();
             $permasalahan->tematik_indikator_roadmap_id = $request->tematik_indikator_roadmap_id;
-            $permasalahan->nama = $request->permasalahan;
-            $permasalahan->sasaran_permasalahan = $request->sasaran_permasalahan;
         }
+
+        //hanya user dan instansi terkait saja yang bisa ngedit
+        if (Gate::denies('modify-permasalahan', $permasalahan)) {
+            // Unauthorized, handle accordingly
+            abort(403, 'Unauthorized');
+        }
+
+        $permasalahan->nama = $request->permasalahan;
+        $permasalahan->sasaran_permasalahan = $request->sasaran_permasalahan;
+
         if ($permasalahan->save()) {
             session()->flash('success', 'Data Permasalahan Indikator Roadmap Tematik berhasil disimpan.');
         } else {
@@ -305,10 +297,18 @@ class RBTematikController extends Controller
         if (!$indikatorPermasalahan) {
             $indikatorPermasalahan = new TematikIndikatorPermasalahan();
             $indikatorPermasalahan->tematik_permasalahan_id = $request->tematik_permasalahan_id_onIndikatorPermasalahan;
-            $indikatorPermasalahan->nama = $request->indikator_permasalahan;
-            $indikatorPermasalahan->target = $request->target_permasalahan;
-            $indikatorPermasalahan->satuan = $request->satuan_target_permasalahan;
         }
+
+        //hanya user dan instansi terkait saja yang bisa ngedit
+        if (Gate::denies('modify-indikator', $indikatorPermasalahan)) {
+            // Unauthorized, handle accordingly
+            abort(403, 'Unauthorized');
+        }
+
+        $indikatorPermasalahan->nama = $request->indikator_permasalahan;
+        $indikatorPermasalahan->target = $request->target_permasalahan;
+        $indikatorPermasalahan->satuan = $request->satuan_target_permasalahan;
+
         if ($indikatorPermasalahan->save()) {
             session()->flash('success', 'Data Indikator berhasil disimpan.');
         } else {
@@ -317,71 +317,8 @@ class RBTematikController extends Controller
         return redirect('rb-tematik/permasalahan');
     }
 
-    public function perencanaan_simpanTarget(Request $request)
-    {
-        $user = Auth::User();
-        $perencanaan = GeneralPerencanaan::where('instansi_id', $user->instansi_id)->where('kegiatan_utama_id', $request->kegiatan_utama_id)->where('indikator_id', $request->indikator_id)->first();
-        $pesan = '';
-        if ($perencanaan) {
-            $success = true;
-            DB::beginTransaction();
-            try {
-                foreach ($request->tahun as $key => $tahun) {
-                    $target = GeneralPerencanaanTarget::where('general_perencanaan_id', $perencanaan->id)->where('tahun', $tahun)->first();
-                    if (!$target) {
-                        $target = new GeneralPerencanaanTarget();
-                    }
-                    $target->general_perencanaan_id = $perencanaan->id;
-                    $target->tahun = $tahun;
-                    $target->target = $request->target[$key];
-                    if (!$target->save()) {
-                        $success = false;
-                    }
-                    if ($tahun <= $perencanaan->baseline_tahun) {
-                        $success = false;
-                        $pesan .= 'Tahun yang di-input tidak boleh sama atau kurang dari tahun baseline!';
-                    }
-                }
-            } catch (\Throwable $th) {
-                throw $th;
-            }
-            if ($success) {
-                DB::commit();
-                session()->flash('success', 'Data Target Perencanaan General berhasil disimpan.');
-            } else {
-                DB::rollBack();
-                session()->flash('success', 'Data Target Perencanaan General gagal disimpan! ' . $pesan);
-            }
-        } else {
-            session()->flash('success', 'Data Target Perencanaan General gagal disimpan! Data Baseline tidak ditemukan.');
-        }
-        return redirect('rb-tematik/perencanaan');
-    }
-
-    public function perencanaan_simpanMonev(Request $request)
-    {
-        $user = Auth::User();
-        $perencanaan = GeneralPerencanaan::where('instansi_id', $user->instansi_id)->where('kegiatan_utama_id', $request->kegiatan_utama_id)->where('indikator_id', $request->indikator_id)->first();
-        if (!$perencanaan) {
-            $perencanaan = new GeneralPerencanaan();
-            $perencanaan->instansi_id = $user->instansi_id;
-            $perencanaan->kegiatan_utama_id = $request->kegiatan_utama_id;
-            $perencanaan->indikator_id = $request->indikator_id;
-        }
-        $perencanaan->realisasi_indikator = $request->realisasi_indikator;
-        $perencanaan->capaian_indikator = $request->capaian_indikator;
-        $perencanaan->catatan = $request->catatan;
-        if ($perencanaan->save()) {
-            session()->flash('success', 'Data Baseline Perencanaan General berhasil disimpan.');
-        } else {
-            session()->flash('success', 'Data Baseline Perencanaan General gagal disimpan! Silahkan dicoba kembali.');
-        }
-        return redirect('rb-tematik/perencanaan');
-    }
-
     public function rencana_aksi($indikator_id)
     {
-        $user = Auth::User();
         $indikator = TematikIndikatorPermasalahan::where('id', $indikator_id)->first();
         $fokus_intervensi = FokusIntervensi::all();
         if (!$indikator) {
@@ -392,7 +329,6 @@ class RBTematikController extends Controller
 
     public function rencana_aksi_getDatas($indikator_id)
     {
-        $user = Auth::User();
         $rencana_aksis = TematikRencanaAksi::where('tematik_indikator_permasalahan_id', $indikator_id)->get();
         $outputs = [];
         $no = 1;
@@ -426,7 +362,6 @@ class RBTematikController extends Controller
 
     public function rencana_aksi_simpan($indikator_id, Request $request)
     {
-        $user = Auth::User();
         $indikator = TematikIndikatorPermasalahan::where('id', $indikator_id)->first();
         if (!$indikator) {
             abort(403);
@@ -434,10 +369,15 @@ class RBTematikController extends Controller
         $success = true;
         DB::beginTransaction();
         try {
-            $rencana_aksi = new TematikRencanaAksi();
-            $rencana_aksi->tematik_indikator_permasalahan_id = $indikator->id;
-            if ($request->rencana_aksi_id) {
-                $rencana_aksi = TematikRencanaAksi::where('tematik_indikator_permasalahan_id', $indikator->id)->first();
+            $rencana_aksi = TematikRencanaAksi::where('tematik_indikator_permasalahan_id', $indikator->id)->first();
+            if (!$rencana_aksi) {
+                $rencana_aksi = new TematikRencanaAksi();
+                $rencana_aksi->tematik_indikator_permasalahan_id = $indikator->id;
+            }
+            //hanya user dan instansi terkait saja yang bisa ngedit
+            if (Gate::denies('modify-rencana-aksi', $rencana_aksi)) {
+                // Unauthorized, handle accordingly
+                abort(403, 'Unauthorized');
             }
             $rencana_aksi->nama = $request->rencana_aksi;
             if ($rencana_aksi->save()) {
@@ -486,6 +426,10 @@ class RBTematikController extends Controller
         if (!$renaksiOutput) {
             abort(403);
         }
+        if (Gate::denies('modify-rencana-aksi', $renaksiOutput->rencana_aksi)) {
+            // Unauthorized, handle accordingly
+            abort(403, 'Unauthorized');
+        }
         $success = false;
         DB::beginTransaction();
         try {
@@ -512,7 +456,6 @@ class RBTematikController extends Controller
 
     public function monev($indikator_id)
     {
-        $user = Auth::User();
         $indikator = TematikIndikatorPermasalahan::where('id', $indikator_id)->first();
         $fokus_intervensi = FokusIntervensi::all();
         if (!$indikator) {
@@ -528,15 +471,15 @@ class RBTematikController extends Controller
         if (!$indikatorRoadmap) {
             abort(404);
         }
-        if (isset($request->realisasi_indikator)) {
-            $indikatorRoadmap->realisasi_indikator = $request->realisasi_indikator;
+        if (Gate::denies('modify-indikator-roadmap', $indikatorRoadmap)) {
+            // Unauthorized, handle accordingly
+            abort(403, 'Unauthorized');
         }
-        if (isset($request->capaian_indikator)) {
-            $indikatorRoadmap->capaian_indikator = $request->capaian_indikator;
-        }
-        if (isset($request->catatan)) {
-            $indikatorRoadmap->catatan = $request->catatan;
-        }
+
+        $indikatorRoadmap->realisasi_indikator = $request->realisasi_indikator;
+        $indikatorRoadmap->capaian_indikator = $request->capaian_indikator;
+        $indikatorRoadmap->catatan = $request->catatan;
+
         if ($indikatorRoadmap->save()) {
             session()->flash('success', 'Data Indikator Roadmap Tematik berhasil disimpan.');
         } else {
@@ -557,10 +500,13 @@ class RBTematikController extends Controller
 
     public function monev_simpanIndikatorPermasalahan($indikator_id, Request $request)
     {
-        $user = Auth::User();
         $indikator = TematikIndikatorPermasalahan::where('id', $indikator_id)->first();
         if (!$indikator) {
             abort(403);
+        }
+        if (Gate::denies('modify-indikator', $indikator)) {
+            // Unauthorized, handle accordingly
+            abort(403, 'Unauthorized');
         }
         $success = false;
         $indikator->realisasi_indikator = $request->realisasi_indikator;
@@ -579,6 +525,10 @@ class RBTematikController extends Controller
         $output = TematikRencanaAksiOutput::find($request->output_id);
         if (!$output) {
             abort(404);
+        }
+        if (Gate::denies('modify-rencana-aksi', $output->rencana_aksi)) {
+            // Unauthorized, handle accordingly
+            abort(403, 'Unauthorized');
         }
         $output->realisasi_output_tw1 = $request->realisasi_output_tw1;
         $output->realisasi_output_tw2 = $request->realisasi_output_tw2;

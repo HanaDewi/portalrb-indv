@@ -13,4 +13,9 @@ class TematikRencanaAksi extends Model
     {
         return $this->hasMany(TematikRencanaAksiOutput::class, 'tematik_rencana_aksi_id');
     }
+
+    public function indikator()
+    {
+        return $this->belongsTo(TematikIndikatorPermasalahan::class, 'tematik_indikator_permasalahan_id');
+    }
 }
