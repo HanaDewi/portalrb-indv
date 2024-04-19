@@ -58,7 +58,7 @@ class MasterDataController extends Controller
         $pesan = '';
         $success = true;
         $kegiatan_utama = KegiatanUtama::find($request->id);
-        if ($kegiatan_utama->indikators) {
+        if (count($kegiatan_utama->indikators) > 0) {
             $pesan = 'Kegiatan Utama tidak bisa dihapus, silahkan hapus dulu Indikator yang menggunakan Kegiatan Utama ini!';
             $success = false;
         } else {

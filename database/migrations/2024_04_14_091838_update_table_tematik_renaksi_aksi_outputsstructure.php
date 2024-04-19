@@ -11,6 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
+        Schema::dropIfExists('tematik_rencana_aksi_output');
         Schema::create('tematik_rencana_aksi_output', function (Blueprint $table) {
             $table->id();
             $table->foreignId('tematik_rencana_aksi_id');
