@@ -10,31 +10,66 @@
                 Tematik</h2>
         </div>
 
-      
-
         <div class="lg:col-span-12 p-5 border-b border-slate-200/60">
-            <table class="table table-bordered table-striped mt-5">
-                <tr>
-                    <td class="font-bold" width="220">Tema</td>
-                    <td>Semua</td>
-                </tr>
-                <tr>
-                    <td class="font-bold">Sasaran Roadmap</td>
-                    <td>Semua</td>
-                </tr>
-                <tr>
-                    <td class="font-bold">Indikator Roadmap</td>
-                    <td>Semua</td>
-                </tr>
-                <tr>
-                    <td class="font-bold">Target</td>
-                    <td>Semua</td>
-                </tr>
-                <tr>
-                    <td class="font-bold">Satuan Target</td>
-                    <td>Semua</td>
-                </tr>
-            </table>
+            <form method="get" id="filter-form">
+                <table class="table table-bordered table-striped mt-5">
+                    <tr>
+                        <td class="font-bold" width="220">Tema</td>
+                        <td>
+                            <select class="form-control" name="ftema" onchange="$('#filter-form').submit();">
+                                <option value=""> -- Pilih tema -- </option>
+                                @foreach ($temas as $tema)
+                                <option value="{{ $tema->id }}" {{ $ftema==$tema->id ? 'selected':'' }} >{{ $tema->nama }}</option>
+                                @endforeach
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="font-bold">Sasaran Roadmap</td>
+                        <td>
+                            <select class="form-control" name="fsasaranroadmap" onchange="$('#filter-form').submit();">
+                                <option value=""> -- Pilih sasaran roadmap -- </option>
+                                @foreach ($filterSasaranRoadmap as $froadmap)
+                                <option value="{{ $froadmap->id }}" {{ $fsasaranroadmap==$froadmap->id ? 'selected':'' }}>{{ $froadmap->nama }}</option>
+                                @endforeach
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="font-bold">Indikator Roadmap</td>
+                        <td>
+                            <select class="form-control" name="findikatorroadmap" onchange="$('#filter-form').submit();">
+                                <option value=""> -- Pilih indikator roadmap -- </option>
+                                @foreach ($filterIndikatorRoadmap as $fir)
+                                <option value="{{ $fir->nama }}" {{ $findikatorroadmap==$fir->nama ? 'selected':'' }}>{{ $fir->nama }}</option>
+                                @endforeach
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="font-bold">Target</td>
+                        <td>
+                            <select class="form-control" name="ftarget" onchange="$('#filter-form').submit();">
+                                <option value=""> -- Pilih target -- </option>
+                                @foreach ($filterTarget as $targ)
+                                <option value="{{ $targ->target }}" {{ $ftarget==$targ->target ? 'selected':'' }}>{{ $targ->target }}</option>
+                                @endforeach
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="font-bold">Satuan Target</td>
+                        <td>
+                            <select class="form-control" name="fsatuantarget" onchange="$('#filter-form').submit();">
+                                <option value=""> -- Pilih satuan target -- </option>
+                                @foreach ($filterSatuanTarget as $starg)
+                                <option value="{{ $starg->satuan }}" {{ $fsatuantarget==$starg->satuan ? 'selected':'' }}>{{ $starg->satuan }}</option>
+                                @endforeach
+                            </select>
+                        </td>
+                    </tr>
+                </table>
+            </form>
         </div>
 
         <div id="tab1" class="tab-pane leading-relaxed active">

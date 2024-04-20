@@ -93,16 +93,53 @@ class RBTematikController extends Controller
         ]);
     }
 
-    public function permasalahan()
+    public function permasalahan(Request $request)
     {
         $user = Auth::User();
         $temas = Tema::get();
-        $sasaranRoadmaps = TematikSasaranRoadmap::where('instansi_id', $user->user_rel->instansi_id)->orderBy('tema_id')->get();
+
+        $ftema = $request->get('ftema');
+        $fsasaranroadmap = $request->get('fsasaranroadmap');
+        $findikatorroadmap = $request->get('findikatorroadmap');
+        $ftarget = $request->get('ftarget');
+        $fsatuantarget = $request->get('fsatuantarget');
+
+        $filterSasaranRoadmap = TematikSasaranRoadmap::where('instansi_id', $user->user_rel->instansi_id)->where('tema_id', $ftema)->orderBy('tema_id')->get();
+        $queryfilterIndikatorRoadmap = DB::table('tematik_indikator_roadmap')->select('nama')->distinct();
+        $queryfilterTarget = DB::table('tematik_indikator_roadmap')->select('target')->distinct();
+        $queryfilterSatuanTarget = DB::table('tematik_indikator_roadmap')->select('satuan')->distinct();
+        if ($fsasaranroadmap) {
+            $queryfilterIndikatorRoadmap->where('tematik_sasaran_roadmap_id', $fsasaranroadmap);
+            $queryfilterTarget->where('tematik_sasaran_roadmap_id', $fsasaranroadmap);
+            $queryfilterSatuanTarget->where('tematik_sasaran_roadmap_id', $fsasaranroadmap);
+        }
+        $filterIndikatorRoadmap = $queryfilterIndikatorRoadmap->get();
+        $filterTarget = $queryfilterTarget->get();
+        $filterSatuanTarget = $queryfilterSatuanTarget->get();
+        
+        $findikators = DB::table('tematik_indikator_roadmap')->select('id')
+                ->where('tematik_sasaran_roadmap_id', $fsasaranroadmap)
+                ->where(function ($query) use ($findikatorroadmap, $ftarget, $fsatuantarget) {
+                    return $query->where('nama', '=', $findikatorroadmap)
+                        ->orWhere('target', '=', $ftarget)->orWhere('satuan', '=', $fsatuantarget);
+                })->get()->map(fn ($row) => $row->id)->toArray();
+
+        $querysasaranRoadmaps = TematikSasaranRoadmap::where('instansi_id', $user->user_rel->instansi_id);
+        if ($ftema) {
+            $querysasaranRoadmaps->where('tema_id', $ftema);
+        }
+        if ($fsasaranroadmap) {
+            $querysasaranRoadmaps->where('id', $fsasaranroadmap);
+        }
+        $sasaranRoadmaps = $querysasaranRoadmaps->orderBy('tema_id')->get();
+
         $tematikDatas = [];
         $jumlahBaris = 0;
+
         foreach ($sasaranRoadmaps as $sasaran) {
-            if (count($sasaran->indikator_roadmap)) {
-                foreach ($sasaran->indikator_roadmap as $indikator) {
+            $check = $sasaran->indikator_roadmap($findikators)->get();
+            if (count($check)) {
+                foreach ($check as $indikator) {
                     if (count($indikator->permasalahan)) {
                         foreach ($indikator->permasalahan as $permasalahan) {
                             if (count($permasalahan->indikator_permasalahan)) {
@@ -181,8 +218,18 @@ class RBTematikController extends Controller
                 $jumlahBaris++;
             }
         }
+
         return view('rb-tematik.permasalahan', [
+            "ftema" => $ftema,
+            "fsasaranroadmap" => $fsasaranroadmap,
+            "findikatorroadmap" => $findikatorroadmap,
+            "ftarget" => $ftarget,
+            "fsatuantarget" => $fsatuantarget,
             "temas" => $temas,
+            "filterSasaranRoadmap" => $filterSasaranRoadmap,
+            "filterIndikatorRoadmap" => $filterIndikatorRoadmap,
+            "filterTarget" => $filterTarget,
+            "filterSatuanTarget" => $filterSatuanTarget,
             "sasaranRoadmaps" => $sasaranRoadmaps,
             "tematikDatas" => $tematikDatas
         ]);
@@ -268,7 +315,7 @@ class RBTematikController extends Controller
 
     public function simpanPermasalahan(Request $request)
     {
-        $permasalahan = TematikPermasalahan::where('tematik_indikator_roadmap_id',)->where('nama', $request->indikator_roadmap)->first();
+        $permasalahan = TematikPermasalahan::where('tematik_indikator_roadmap_id', )->where('nama', $request->indikator_roadmap)->first();
         if (!$permasalahan) {
             $permasalahan = new TematikPermasalahan();
             $permasalahan->tematik_indikator_roadmap_id = $request->tematik_indikator_roadmap_id;
@@ -293,7 +340,7 @@ class RBTematikController extends Controller
 
     public function simpanIndikatorPermasalahan(Request $request)
     {
-        $indikatorPermasalahan = TematikIndikatorPermasalahan::where('tematik_permasalahan_id',)->where('nama', $request->permasalahan)->first();
+        $indikatorPermasalahan = TematikIndikatorPermasalahan::where('tematik_permasalahan_id', )->where('nama', $request->permasalahan)->first();
         if (!$indikatorPermasalahan) {
             $indikatorPermasalahan = new TematikIndikatorPermasalahan();
             $indikatorPermasalahan->tematik_permasalahan_id = $request->tematik_permasalahan_id_onIndikatorPermasalahan;

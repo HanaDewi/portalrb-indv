@@ -194,3 +194,24 @@ function exts($ext)
     ];
     return $exts[$ext];
 }
+
+function readInstansi($request)
+{
+    $user = Auth::User();
+    if ($request->instansi_id && in_array($user->level, ['admin', 'tpn'])) {
+        $instansi_id = $request->instansi_id;
+    } else if ($user->user_rel->instansi_id) {
+        $instansi_id = $user->user_rel->instansi_id;
+    } else {
+        $instansi_id = KlpdInstansi::orderBy('id')->first()->id;
+    }
+    if ($instansi_id) {
+        $nama_instansi = KlpdInstansi::find($instansi_id)->name;
+        return [
+            'id' => $instansi_id,
+            'nama' => $nama_instansi
+        ];
+    } else {
+        return false;
+    }
+}

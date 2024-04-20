@@ -15,9 +15,13 @@ class TematikSasaranRoadmap extends Model
         return $this->belongsTo(Tema::class, 'tema_id');
     }
 
-    public function indikator_roadmap()
+    public function indikator_roadmap($ids=[])
     {
-        return $this->hasMany(TematikIndikatorRoadmap::class, 'tematik_sasaran_roadmap_id')->orderBy('tematik_sasaran_roadmap_id');
+        $select = $this->hasMany(TematikIndikatorRoadmap::class, 'tematik_sasaran_roadmap_id');
+        if (count($ids)>0) {
+            $select->whereIn('id', $ids)->orderBy('tematik_sasaran_roadmap_id');
+        }
+        return $select;
     }
 
     public function permasalahan()
