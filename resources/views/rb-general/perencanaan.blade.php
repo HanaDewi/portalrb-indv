@@ -191,6 +191,10 @@ $idx = 0;
                 <h2 class="font-bold fw-medium  fs-base me-auto" id="title">Data Baseline</h2>
             </div> <!-- END: Modal Header -->
             <!-- BEGIN: Modal Body -->
+            <form action="{{ url('rb-general/perencanaan/hapusBaseline') }}" id="form-hapus-baseline" method="post">
+                @csrf
+                <input type="hidden" name="perencanaan_id" id="baseline_perencanaan_id">
+            </form>
             <form action="{{ url('rb-general/perencanaan/simpanBaseline') }}" id="form-baseline" method="post">
                 @csrf
                 <input type="hidden" name="kegiatan_utama_id" id="baseline_kegiatan_utama_id">
@@ -214,6 +218,7 @@ $idx = 0;
                                     <th>Tahun</th>
                                     <th>Target</th>
                                     <th>Realisasi</th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -229,6 +234,11 @@ $idx = 0;
                                     <td>
                                         <input type="text" name="baseline_realisasi" id="baseline_realisasi"
                                             class="form-control w-full" required>
+                                    </td>
+                                    <td>
+                                        <a href="javascript:;" class="btn btn-danger btn-sm" id="hapus-baseline" onclick="hapus_baseline()">
+                                            <i data-lucide="trash-2" class="w-4 h-4 mr-1"></i>
+                                        </a>
                                     </td>
                                 </tr>
                             </tbody>
@@ -259,6 +269,7 @@ $idx = 0;
                 @csrf
                 <input type="hidden" name="kegiatan_utama_id" id="target_kegiatan_utama_id">
                 <input type="hidden" name="indikator_id" id="target_indikator_id">
+                <input type="hidden" name="perencanaan_id" id="target_perencanaan_id">
                 <div class="modal-body grid columns-12 gap-4 gap-y-3">
                     <div class="g-col-12">
                         <table class="table table-bordered hover">
@@ -277,6 +288,7 @@ $idx = 0;
                                 <tr>
                                     <th>Tahun</th>
                                     <th>Target</th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -483,13 +495,34 @@ $idx = 0;
         $('#baseline_kegiatan_utama').html(kegiatan_utama);
         $('#baseline_indikator').html(indikator);
         $('.saveButton').prop('disabled', true);
+        $('#hapus-baseline').hide();
         modal_baseline.show();
         $.getJSON("{{ url('rb-general/perencanaan/getData') }}/" + kegiatan_utama_id + "/" + indikator_id, function(data) {
             tahun = data.baseline_tahun ? data.baseline_tahun : 2022;
             $('#baseline_tahun').val(tahun);
             $('#baseline_target').val(data.baseline_target);
             $('#baseline_realisasi').val(data.baseline_realisasi);
+            if (data.id) {
+                $('#baseline_perencanaan_id').val(data.id);
+                $('#hapus-baseline').show();
+            }
             $('.saveButton').prop('disabled', false);
+        });
+    }
+
+    function hapus_baseline() {
+        id = $('#baseline_perencanaan_id').val();
+        Swal.fire({
+            title: "Yakin?",
+            text: "baseline-nya mau di hapus?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Ya, hapus aja!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $('#form-hapus-baseline').submit();
+            }
         });
     }
 
@@ -539,17 +572,23 @@ $idx = 0;
     }
 
     function tambah_tahun() {
-        idx = $('#target-table tbody tr').length;
-        last_idx = idx - 1;
-        last_tahun = $('#target_tahun' + last_idx).val();
-        tahun = parseInt(last_tahun) + 1;
-        input = '<tr>' +
-            '<td><input type="text" name="tahun[' + idx + ']" id="target_tahun' + idx +
+        last_tr = $('#target-table tbody tr:last').data('index');
+        last_tahun = $('#target_tahun' + last_tr).val();
+        index = last_tr + 1;
+        tahun = parseInt(last_tahun) > 0 ? parseInt(last_tahun) + 1 : {{ date('Y') }};
+        input = '<tr id="target'+index+'" data-index="'+index+'">' +
+            '<td><input type="text" name="tahun[' + index + ']" id="target_tahun' + index +
             '" class="form-control w-full tahun" value="' + tahun + '" required></td>' +
-            '<td><input type="text" name="target[' + idx + ']" id="target_target' + idx +
+            '<td><input type="text" name="target[' + index + ']" id="target_target' + index +
             '" class="form-control w-full" required></td>' +
+            '<td><a href="javascript:;" class="btn btn-danger btn-sm" id="hapus-target" onclick="hapus_target('+index+')"><i data-lucide="trash-2" class="w-4 h-4 mr-1"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" icon-name="trash-2" data-lucide="trash-2" class="lucide lucide-trash-2 block mx-auto"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg></i></a></td>' +
             '</tr>';
         $('#target-table tbody').append(input);
+    }
+
+    function hapus_target(index) {
+        console.log(index);
+        $('#target'+index).remove();
     }
 
     function tambah_dokumen(id) {
@@ -630,6 +669,10 @@ $idx = 0;
                 $('#dokumen'+id).remove();
             }
         });
+    }
+
+    function hapusBaseline() {
+        baseline_id = $('#')
     }
 </script>
 <script src="http://cdn.rawgit.com/ashl1/datatables-rowsgroup/v1.0.0/dataTables.rowsGroup.js"></script>
