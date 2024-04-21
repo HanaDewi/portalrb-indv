@@ -248,7 +248,7 @@ $idx = 0;
                 <!-- BEGIN: Modal Footer -->
                 <div class="modal-footer text-end">
                     <button type="button" data-tw-dismiss="modal"
-                        class="btn btn-outline-secondary w-20 me-1">Cancel</button>
+                        class="btn btn-outline-secondary w-20 me-1">Batal</button>
                     <button type="submit" class="btn btn-primary w-20 saveButton">Simpan</button>
                 </div> <!-- END: Modal Footer -->
             </form>
@@ -302,7 +302,7 @@ $idx = 0;
                 <!-- BEGIN: Modal Footer -->
                 <div class="modal-footer text-end">
                     <button type="button" data-tw-dismiss="modal"
-                        class="btn btn-outline-secondary w-20 me-1">Cancel</button>
+                        class="btn btn-outline-secondary w-20 me-1">Batal</button>
                     <button type="submit" class="btn btn-primary w-20 saveButton">Simpan</button>
                 </div> <!-- END: Modal Footer -->
             </form>
@@ -353,7 +353,7 @@ $idx = 0;
                 <!-- BEGIN: Modal Footer -->
                 <div class="modal-footer text-end">
                     <button type="button" data-tw-dismiss="modal"
-                        class="btn btn-outline-secondary w-20 me-1">Cancel</button>
+                        class="btn btn-outline-secondary w-20 me-1">Batal</button>
                     <button type="submit" class="btn btn-primary w-20 saveButton">Simpan</button>
                 </div> <!-- END: Modal Footer -->
             </form>
@@ -384,7 +384,7 @@ $idx = 0;
                 <!-- BEGIN: Modal Footer -->
                 <div class="modal-footer text-end">
                     <button type="button" data-tw-dismiss="modal"
-                        class="btn btn-outline-secondary w-20 me-1">Cancel</button>
+                        class="btn btn-outline-secondary w-20 me-1">Batal</button>
                     <button type="submit" class="btn btn-primary w-20 saveButton">Simpan</button>
                 </div> <!-- END: Modal Footer -->
             </form>

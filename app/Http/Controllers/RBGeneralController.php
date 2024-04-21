@@ -2,18 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\ExportGeneralRencanaAksiTemplate;
+use App\Imports\ImportGeneralRencanaAksi;
 use App\Models\GeneralPerencanaan;
 use App\Models\GeneralPerencanaanTarget;
 use App\Models\GeneralPerencanaanTargetDokumen;
 use App\Models\GeneralRencanaAksi;
 use App\Models\GeneralRencanaAksiOutput;
 use App\Models\Indikator;
-use App\Models\Instansi;
 use App\Models\KlpdInstansi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Maatwebsite\Excel\Facades\Excel;
+use Maatwebsite\Excel\HeadingRowImport;
 
 class RBGeneralController extends Controller
 {
@@ -274,6 +277,83 @@ class RBGeneralController extends Controller
         return view('rb-general.rencana_aksi', compact('target'));
     }
 
+    public function rencana_aksi_downloadTemplate()
+    {
+        $template = new ExportGeneralRencanaAksiTemplate();
+
+        return Excel::download($template, 'template_rb_general_rencana_aksi.xlsx');
+    }
+
+    public function rencana_aksi_import($perencanaan_id, $target_id, Request $request)
+    {
+        $user = Auth::User();
+        $target = GeneralPerencanaanTarget::where('id', $target_id)->where('general_perencanaan_id', $perencanaan_id)
+            ->whereHas('perencanaan', function ($q) use ($user) {
+                $q->where('instansi_id', $user->user_rel->instansi_id);
+            })->first();
+        if (!$target) {
+            abort(404);
+        }
+        $success = true;
+        DB::beginTransaction();
+        try {
+            $headings = (new HeadingRowImport())->toArray($request->file('file_rencana_aksi'));
+            if ($headings[0][0] == heading_template_rb_general_rencana_aksi()) {
+                $collections = Excel::toCollection(new ImportGeneralRencanaAksi, $request->file('file_rencana_aksi'))[0];
+                $collections = $collections->slice(2);
+                $collections = $collections->groupBy('rencana_aksi');
+                foreach ($collections as $key => $collection) {
+                    if ($key != '') {
+                        $rencana_aksi = GeneralRencanaAksi::where('general_perencanaan_target_id', $target_id)->where('rencana_aksi', $key)->first();
+                        if (!$rencana_aksi) {
+                            $rencana_aksi = new GeneralRencanaAksi();
+                            $rencana_aksi->general_perencanaan_target_id = $target->id;
+                        }
+                        $rencana_aksi->rencana_aksi = $key;
+                        if ($rencana_aksi->save()) {
+                            foreach ($collection as $output) {
+                                $rencana_aksi_output = new GeneralRencanaAksiOutput();
+                                $rencana_aksi_output->general_rencana_aksi_id = $rencana_aksi->id;
+                                $rencana_aksi_output->satuan_output = $output['satuan_output'];
+                                $rencana_aksi_output->indikator_output = $output['indikator_output'];
+                                $rencana_aksi_output->target_tw1 = preg_replace('/[^0-9.]+/', '', $output['target_tw1']);
+                                $rencana_aksi_output->target_tw2 = preg_replace('/[^0-9.]+/', '', $output['target_tw2']);
+                                $rencana_aksi_output->target_tw3 = preg_replace('/[^0-9.]+/', '', $output['target_tw3']);
+                                $rencana_aksi_output->target_tw4 = preg_replace('/[^0-9.]+/', '', $output['target_tw4']);
+                                $rencana_aksi_output->target_total = $rencana_aksi_output->target_tw1 + $rencana_aksi_output->target_tw2 + $rencana_aksi_output->target_tw3 + $rencana_aksi_output->target_tw4;
+                                $rencana_aksi_output->anggaran_tw1 = preg_replace('/[^0-9.]+/', '', $output['anggaran_tw1']);
+                                $rencana_aksi_output->anggaran_tw2 = preg_replace('/[^0-9.]+/', '', $output['anggaran_tw2']);
+                                $rencana_aksi_output->anggaran_tw3 = preg_replace('/[^0-9.]+/', '', $output['anggaran_tw3']);
+                                $rencana_aksi_output->anggaran_tw4 = preg_replace('/[^0-9.]+/', '', $output['anggaran_tw4']);
+                                $rencana_aksi_output->anggaran_total = $rencana_aksi_output->anggaran_tw1 + $rencana_aksi_output->anggaran_tw2 + $rencana_aksi_output->anggaran_tw3 + $rencana_aksi_output->anggaran_tw4;
+                                $rencana_aksi_output->pelaksana = $output['pelaksana'];
+                                $rencana_aksi_output->koordinator = $output['koordinator'];
+                                if (!$rencana_aksi_output->save()) {
+                                    $success = false;
+                                }
+                            }
+                        }
+                    }
+                }
+            } else {
+                session()->flash('error', 'File yang di upload tidak sesuai dengan template. Silahkan gunakan template yang telah disedikan!');
+            }
+        } catch (\Throwable $th) {
+            $success = false;
+            throw $th;
+        }
+        
+        if ($success) {
+            DB::commit();
+            session()->flash('success', 'Data RB General Rencana Aksi berhasil diimport!');
+        } else {
+            DB::rollBack();
+            session()->flash('error', 'Data RB General Rencana Aksi gagal diimport!');
+        }
+
+        return redirect('rb-general/perencanaan/'.$perencanaan_id.'/'.$target_id.'/rencana_aksi');
+    }
+
     public function rencana_aksi_getDatas($perencanaan_id, $target_id)
     {
         $user = Auth::User();
@@ -325,10 +405,13 @@ class RBGeneralController extends Controller
         $success = true;
         DB::beginTransaction();
         try {
-            $rencana_aksi = new GeneralRencanaAksi();
-            $rencana_aksi->general_perencanaan_target_id = $target->id;
-            if ($request->rencana_aksi_id) {
-                $rencana_aksi = GeneralRencanaAksi::where('general_perencanaan_target_id', $target->id)->where('id', $request->rencana_aksi_id)->first();
+            $rencana_aksi = GeneralRencanaAksi::where('general_perencanaan_target_id', $target_id)->where('rencana_aksi', $request->rencana_aksi)->first();
+            if (!$rencana_aksi) {
+                $rencana_aksi = new GeneralRencanaAksi();
+                $rencana_aksi->general_perencanaan_target_id = $target->id;
+                if ($request->rencana_aksi_id) {
+                    $rencana_aksi = GeneralRencanaAksi::where('general_perencanaan_target_id', $target->id)->where('id', $request->rencana_aksi_id)->first();
+                }
             }
             $rencana_aksi->rencana_aksi = $request->rencana_aksi;
             if ($rencana_aksi->save()) {

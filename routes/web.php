@@ -66,6 +66,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/rb-general/perencanaan/simpanDokumen', [RBGeneralController::class, 'perencanaan_simpanDokumen']);
     // RB General Rencana Aksi
     Route::get('/rb-general/perencanaan/{perencanaan_id}/{target_id}/rencana_aksi', [RBGeneralController::class, 'rencana_aksi'])->name('rencana_aksi');
+    Route::get('/rb-general/perencanaan/{perencanaan_id}/{target_id}/rencana_aksi/downloadTemplate', [RBGeneralController::class, 'rencana_aksi_downloadTemplate']);
+    Route::post('/rb-general/perencanaan/{perencanaan_id}/{target_id}/rencana_aksi/import', [RBGeneralController::class, 'rencana_aksi_import']);
     Route::get('/rb-general/perencanaan/{perencanaan_id}/{target_id}/rencana_aksi/getDatas', [RBGeneralController::class, 'rencana_aksi_getDatas']);
     Route::get('/rb-general/perencanaan/{perencanaan_id}/{target_id}/rencana_aksi/getData/{id}', [RBGeneralController::class, 'rencana_aksi_getData']);
     Route::post('/rb-general/perencanaan/{perencanaan_id}/{target_id}/rencana_aksi/simpan', [RBGeneralController::class, 'rencana_aksi_simpan']);

@@ -215,3 +215,22 @@ function readInstansi($request)
         return false;
     }
 }
+
+function heading_template_rb_general_rencana_aksi()
+{
+    return [
+        0 => "rencana_aksi",
+        1 => "satuan_output",
+        2 => "indikator_output",
+        3 => "target_tw1",
+        4 => "target_tw2",
+        5 => "target_tw3",
+        6 => "target_tw4",
+        7 => "anggaran_tw1",
+        8 => "anggaran_tw2",
+        9 => "anggaran_tw3",
+        10 => "anggaran_tw4",
+        11 => "pelaksana",
+        12 => "koordinator",
+    ];
+}
