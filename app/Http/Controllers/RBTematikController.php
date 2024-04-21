@@ -633,15 +633,15 @@ class RBTematikController extends Controller
                                 $datas[$key]['perencanaan'] = $perencanaan;
                                 $datas[$key]['target'] = $target;
                                 $datas[$key]['rencana_aksi'] = $rencana_aksi;
-                                $datas[$key]['output'] = new GeneralRencanaAksiOutput();
+                                $datas[$key]['output'] = new TematikRencanaAksiOutput();
                                 $key++;
                             }
                         }
                     } else {
                         $datas[$key]['perencanaan'] = $perencanaan;
                         $datas[$key]['target'] = $target;
-                        $datas[$key]['rencana_aksi'] = new GeneralRencanaAksi();
-                        $datas[$key]['output'] = new GeneralRencanaAksiOutput();
+                        $datas[$key]['rencana_aksi'] = new TematikRencanaAksi();
+                        $datas[$key]['output'] = new TematikRencanaAksiOutput();
                         $key++;
                     }
                 }
