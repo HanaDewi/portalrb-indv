@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\FokusIntervensi;
-use App\Models\Instansi;
-use App\Models\Indikator;
 use Illuminate\Http\Request;
 use App\Models\GeneralPerencanaan;
 use App\Models\Tema;
@@ -13,9 +11,7 @@ use App\Models\TematikIndikatorRoadmap;
 use App\Models\TematikIndikatorPermasalahan;
 use App\Models\TematikRencanaAksi;
 use App\Models\TematikRencanaAksiOutput;
-use App\Models\GeneralPerencanaanTarget;
-use App\Models\GeneralRencanaAksiOutput;
-use App\Models\GeneralRencanaAksi;
+use App\Models\KlpdInstansi;
 use App\Models\TematikPermasalahan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -672,54 +668,96 @@ class RBTematikController extends Controller
     public function rekap_data(Request $request)
     {
         $user = Auth::User();
-        if ($request->instansi_id && in_array($user->level, ['admin', 'evaluator'])) {
+        if ($request->instansi_id && in_array($user->level, ['admin', 'tpn'])) {
             $instansi_id = $request->instansi_id;
-        } else if ($user->instansi_id) {
-            $instansi_id = $user->instansi_id;
+        } else if ($user->user_rel->instansi_id) {
+            $instansi_id = $user->user_rel->instansi_id;
         } else {
-            $instansi_id = Instansi::orderBy('id')->first()->id;
+            $instansi_id = KlpdInstansi::orderBy('id')->first()->id;
         }
-        $sasarans = TematikSasaranRoadmap::where('instansi_id', $instansi_id)->orderBy('tema_id')->get();
+        $nama_instansi = KlpdInstansi::find($instansi_id)->name;
+        if ($request->sasaran_id) {
+            $sasaran_id = $request->sasaran_id;
+        } else {
+            $sasaran_id = [];
+        }
+        $model = TematikSasaranRoadmap::where('instansi_id', $instansi_id)->orderBy('tema_id')->orderBy('id');
+        if (count($sasaran_id)) {
+            $model = $model->whereIn('id', $sasaran_id);
+        }
+        $sasarans = $model->get();
         $key = 0;
         $datas = [];
         foreach ($sasarans as $sasaran) {
-            if (count($sasaran)) {
-                foreach ($perencanaan->indikator_roadmap as $indikator_roadmaps) {
-                    if (count($indikator_roadmaps->permasalahan)) {
-                        foreach ($target->rencana_aksi as $rencana_aksi) {
-                            if (count($rencana_aksi->output)) {
-                                foreach ($rencana_aksi->output as $output) {
-                                    $datas[$key]['perencanaan'] = $perencanaan;
-                                    $datas[$key]['target'] = $target;
-                                    $datas[$key]['rencana_aksi'] = $rencana_aksi;
-                                    $datas[$key]['output'] = $output;
-                                    $key++;
+            if (count($sasaran->indikator_roadmap)) {
+                foreach ($sasaran->indikator_roadmap as $indikator_roadmap) {
+                    if (count($indikator_roadmap->permasalahan)) {
+                        foreach ($indikator_roadmap->permasalahan as $permasalahan) {
+                            if (count($permasalahan->indikator_permasalahan)) {
+                                foreach ($permasalahan->indikator_permasalahan as $indikator_permasalahan) {
+                                    if (isset($indikator_permasalahan->rencana_aksi)) {
+                                        foreach ($indikator_permasalahan->rencana_aksi as $rencana_aksi) {
+                                            if (count($rencana_aksi->output)) {
+                                                foreach ($rencana_aksi->output as $output) {
+                                                    $datas[$key]['sasaran_roadmap'] = $sasaran;
+                                                    $datas[$key]['indikator_roadmap'] = $indikator_roadmap;
+                                                    $datas[$key]['permasalahan'] = $permasalahan;
+                                                    $datas[$key]['indikator_permasalahan'] = $indikator_permasalahan;
+                                                    $datas[$key]['rencana_aksi'] = $rencana_aksi;
+                                                    $datas[$key]['output'] = $output;
+                                                    $key++;
+                                                }
+                                            } else {
+                                                $datas[$key]['sasaran_roadmap'] = $sasaran;
+                                                $datas[$key]['indikator_roadmap'] = $indikator_roadmap;
+                                                $datas[$key]['permasalahan'] = $permasalahan;
+                                                $datas[$key]['indikator_permasalahan'] = $indikator_permasalahan;
+                                                $datas[$key]['rencana_aksi'] = $rencana_aksi;
+                                                $datas[$key]['output'] = new TematikRencanaAksiOutput();
+                                                $key++;
+                                            }
+                                        }
+                                    } else {
+                                        $datas[$key]['sasaran_roadmap'] = $sasaran;
+                                        $datas[$key]['indikator_roadmap'] = $indikator_roadmap;
+                                        $datas[$key]['permasalahan'] = $permasalahan;
+                                        $datas[$key]['indikator_permasalahan'] = $indikator_permasalahan;
+                                        $datas[$key]['rencana_aksi'] = new TematikRencanaAksi();
+                                        $datas[$key]['output'] = new TematikRencanaAksiOutput();
+                                        $key++;
+                                    }
                                 }
                             } else {
-                                $datas[$key]['perencanaan'] = $perencanaan;
-                                $datas[$key]['target'] = $target;
-                                $datas[$key]['rencana_aksi'] = $rencana_aksi;
+                                $datas[$key]['sasaran_roadmap'] = $sasaran;
+                                $datas[$key]['indikator_roadmap'] = $indikator_roadmap;
+                                $datas[$key]['permasalahan'] = $permasalahan;
+                                $datas[$key]['indikator_permasalahan'] = new TematikIndikatorPermasalahan();
+                                $datas[$key]['rencana_aksi'] = new TematikRencanaAksi();
                                 $datas[$key]['output'] = new TematikRencanaAksiOutput();
                                 $key++;
                             }
                         }
                     } else {
-                        $datas[$key]['perencanaan'] = $perencanaan;
-                        $datas[$key]['target'] = $target;
+                        $datas[$key]['sasaran_roadmap'] = $sasaran;
+                        $datas[$key]['indikator_roadmap'] = $indikator_roadmap;
+                        $datas[$key]['permasalahan'] = new TematikPermasalahan();
+                        $datas[$key]['indikator_permasalahan'] = new TematikIndikatorPermasalahan();
                         $datas[$key]['rencana_aksi'] = new TematikRencanaAksi();
                         $datas[$key]['output'] = new TematikRencanaAksiOutput();
                         $key++;
                     }
                 }
             } else {
-                $datas[$key]['perencanaan'] = $perencanaan;
-                $datas[$key]['target'] = new GeneralPerencanaanTarget();
-                $datas[$key]['rencana_aksi'] = new GeneralRencanaAksi();
-                $datas[$key]['output'] = new GeneralRencanaAksiOutput();
+                $datas[$key]['sasaran_roadmap'] = $sasaran;
+                $datas[$key]['indikator_roadmap'] = new TematikIndikatorRoadmap();
+                $datas[$key]['permasalahan'] = new TematikPermasalahan();
+                $datas[$key]['indikator_permasalahan'] = new TematikIndikatorPermasalahan();
+                $datas[$key]['rencana_aksi'] = new TematikRencanaAksi();
+                $datas[$key]['output'] = new TematikRencanaAksiOutput();
                 $key++;
             }
         }
-        return view('rb-tematik.rekap_data', compact('datas', 'instansi_id'));
+        return view('rb-tematik.rekap_data', compact('datas', 'instansi_id', 'sasaran_id', 'nama_instansi'));
     }
 
     public function rekap_data_getPerencanaan($id)

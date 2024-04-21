@@ -79,10 +79,10 @@ class RBGeneralController extends Controller
             if (count($perencanaan->target)) {
                 $idx = 0;
                 foreach ($perencanaan->target as $target) {
-                    $input .= '<tr id="target'.$idx.'" data-index="'.$idx.'">
+                    $input .= '<tr id="target' . $idx . '" data-index="' . $idx . '">
                                 <td><input type="text" name="tahun[' . $idx . ']" id="target_tahun' . $idx . '" class="form-control w-full tahun" value="' . $target->tahun . '" required></td>
                                 <td><input type="text" name="target[' . $idx . ']" id="target_target' . $idx . '" class="form-control w-full" value="' . $target->target . '" required></td>
-                                <td><a href="javascript:;" class="btn btn-danger btn-sm" id="hapus-target" onclick="hapus_target('.$idx.')"><i data-lucide="trash-2" class="w-4 h-4 mr-1"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" icon-name="trash-2" data-lucide="trash-2" class="lucide lucide-trash-2 block mx-auto"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg></i></a></td>
+                                <td><a href="javascript:;" class="btn btn-danger btn-sm" id="hapus-target" onclick="hapus_target(' . $idx . ')"><i data-lucide="trash-2" class="w-4 h-4 mr-1"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" icon-name="trash-2" data-lucide="trash-2" class="lucide lucide-trash-2 block mx-auto"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg></i></a></td>
                             </tr>';
                     $idx++;
                 }
