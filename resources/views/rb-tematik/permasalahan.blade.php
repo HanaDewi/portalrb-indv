@@ -130,6 +130,7 @@
                             @endif
                         </td>
                         <td>
+                            <input type="hidden" name="indikator_permasalahan_id" id="indikator-permasalahan-id">
                             {{ $tematikData['indikator_permasalahan_nama'] }}
                         </td>
                         <td>
@@ -140,6 +141,12 @@
                         </td>
                         <td>
                             @if ($tematikData['indikator_permasalahan_nama'])
+                            <a href="#" class="btn btn-pending btn-sm w-full mb-2"
+                            onclick="edit('{{$tematikData['indikator_permasalahan_id']}}')" > 
+                                <i data-lucide="edit" class="w-4 h-4 mr-1"></i> Edit
+                                <span class="text-xs px-1 rounded-full bg-warning text-white badge"><!-- count($target->rencana_aksi) --></span>
+                            </a>
+                            <br>
                             <a href="{{ url('rb-tematik/permasalahan/renaksi/' . $tematikData['indikator_permasalahan_id'])}}" class="btn btn-primary btn-sm w-full mb-2">
                                 <i data-lucide="edit" class="w-4 h-4 mr-1"></i> Renaksi
                                 <span class="text-xs px-1 rounded-full bg-warning text-white badge"> <!-- count($indikator->rencana_aksi) --> </span>
@@ -315,6 +322,7 @@
             <form action="{{ url('rb-tematik/permasalahan/simpan-indikator-permasalahan') }}" id="form-permasalahan" method="post">
                 @csrf
                 <input type="hidden" name="tematik_permasalahan_id_onIndikatorPermasalahan" id="tematik-permasalahan-id-onIndikatorPermasalahan">
+                <input type="hidden" name="tematik_indikator_permasalahan_id" id="tematik-indikator-permasalahan-id">
                 <div class="modal-body grid columns-12 ">
                     <div class="g-col-12">
                         <div class="border  rounded-md ">
@@ -398,6 +406,8 @@
             "#modal-permasalahan"));
         modal_indikator_permasalahan = tailwind.Modal.getInstance(document.querySelector(
             "#modal-indikator-permasalahan"));
+            
+            
     });
 
     function output_form() {
@@ -427,6 +437,22 @@
         $('#sasaran-permasalahan-onIndikatorPermasalahan').val(sasaran);
         modal_indikator_permasalahan.show();
     }
+
+     function edit(id) {
+        $('#indikator-permasalahan-id').val(id);
+        $('#title').html('Edit Indikator Permasalahan');
+        $('.saveButton').prop('disabled', true);
+        $.getJSON("{{url('rb-tematik/permasalahan/get-indikator-permasalahan')}}/"+id, function(data) {
+            $('#permasalahan-onIndikatorPermasalahan').val(data.permasalahan);
+            $('#tematik-indikator-permasalahan-id').val(data.indikator_permasalahan_id);
+            $('#sasaran-permasalahan-onIndikatorPermasalahan').val(data.sasaran);
+            $('#indikator-permasalahan').val(data.indikator_permasalahan_nama);
+            $('#target-permasalahan').val(data.indikator_permasalahan_target);
+            $('#satuan-target-permasalahan').val(data.indikator_permasalahan_satuan);
+            $('.saveButton').prop('disabled', false);
+            modal_indikator_permasalahan.show();
+        });
+        }
 </script>
 <script src="https://cdn.rawgit.com/ashl1/datatables-rowsgroup/v1.0.0/dataTables.rowsGroup.js"></script>
 <script>

@@ -90,7 +90,7 @@
                                 </td>
                                 <td>
                                     @if ($tematikData['indikator_nama'])
-                                    <a href="#" class="btn btn-primary btn-sm w-full mb-2"
+                                    <a href="#" class="btn btn-pending btn-sm w-full mb-2"
                                     onclick="edit('{{$tematikData['indikator_id']}}')" > 
                                         <i data-lucide="edit" class="w-4 h-4 mr-1"></i> Edit
                                         <span class="text-xs px-1 rounded-full bg-warning text-white badge"><!-- count($target->rencana_aksi) --></span>
