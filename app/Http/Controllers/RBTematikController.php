@@ -297,6 +297,40 @@ class RBTematikController extends Controller
         return response()->json($indikators);
     }
 
+    public function indikatorRoadmapHapus(Request $request)
+    {
+        $user = Auth::User();
+        $indikatorRoadmap = TematikIndikatorRoadmap::where('id', $request->id)->first();
+        if (!$indikatorRoadmap) {
+            abort(404);
+        }
+        if (Gate::denies('modify-indikator-roadmap', $indikatorRoadmap)) {
+            // Unauthorized, handle accordingly
+            abort(403, 'Unauthorized');
+        }
+        $success = false;
+        if ($indikatorRoadmap->permasalahan->count() > 0) {
+            // Haspus dulu permasalhan sebelum hapus indikatorRoadmap
+            abort(500, "Hapus dahulu permalasahan yang terkait dengan indikator roadmap ini");
+        } else {
+            DB::beginTransaction();
+            try {
+                if ($indikatorRoadmap->delete()) {
+                    $success = true;
+                }
+            } catch (\Throwable $th) {
+                DB::rollBack();
+                throw $th;
+            }
+            if ($success) {
+                DB::commit();
+            } else {
+                DB::rollBack();
+            }
+            return response()->json(['success' => $success]);
+        }
+    }
+
     public function indikator_getData($indikator_id)
     {
         $indikator = TematikIndikatorRoadmap::where('id', $indikator_id)->first();
