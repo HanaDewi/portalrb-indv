@@ -122,11 +122,18 @@
                         </td>
                         <td>
                             {{ $tematikData['permasalahan_nama'] }}
+                            @if ($tematikData['permasalahan_nama'])
+                            <a href="#" class="btn btn-pending btn-sm w-full mb-2"
+                            onclick="editPermasalahan('{{$tematikData['permasalahan_id']}}')" > 
+                                <i data-lucide="edit" class="w-4 h-4 mr-1"></i> Edit Permasalahan
+                                <span class="text-xs px-1 rounded-full bg-warning text-white badge"><!-- count($target->rencana_aksi) --></span>
+                            </a>
+                            @endif
                         </td>
                         <td>
                             {{ $tematikData['permasalahan_sasaran'] }}
                             @if ($tematikData['permasalahan_nama'])
-                            <button onclick="tambah_indikator_permasalahan('{{ $tematikData['permasalahan_nama'] }}','{{ $tematikData['permasalahan_sasaran'] }}', '{{ $tematikData['permasalahan_id'] }}');" class="btn btn-success btn-sm w-full mb-2"><i data-lucide="edit" class="w-4 h-4 mr-1"></i>Indikator</button>
+                            <button onclick="tambah_indikator_permasalahan('{{ $tematikData['permasalahan_nama'] }}','{{ $tematikData['permasalahan_sasaran'] }}', '{{ $tematikData['permasalahan_id'] }}');" class="btn btn-success btn-sm w-full mb-2"><i data-lucide="edit" class="w-4 h-4 mr-1"></i>Tambah Indikator</button>
                             @endif
                         </td>
                         <td>
@@ -143,7 +150,7 @@
                             @if ($tematikData['indikator_permasalahan_nama'])
                             <a href="#" class="btn btn-pending btn-sm w-full mb-2"
                             onclick="edit('{{$tematikData['indikator_permasalahan_id']}}')" > 
-                                <i data-lucide="edit" class="w-4 h-4 mr-1"></i> Edit
+                                <i data-lucide="edit" class="w-4 h-4 mr-1"></i> Edit Indikator
                                 <span class="text-xs px-1 rounded-full bg-warning text-white badge"><!-- count($target->rencana_aksi) --></span>
                             </a>
                             <br>
@@ -240,6 +247,7 @@
             <form action="{{ url('rb-tematik/permasalahan/simpan-permasalahan') }}" id="form-permasalahan" method="post">
                 @csrf
                 <input type="hidden" name="tematik_indikator_roadmap_id" id="indikator-roadmap-id-onPermasalahan">
+                <input type="hidden" name="permasalahan_id" id="permasalahan-id">
                 <div class="modal-body grid columns-12 ">
                     <div class="g-col-12">
                         <div class="border  rounded-md ">
@@ -282,13 +290,13 @@
                                         <tr>
                                             <td class="font-bold w-30">Permasalahan</td>
                                             <td colspan="5">
-                                                <textarea id="permasalahan" name="permasalahan" class="form-control" rows="8"></textarea>
+                                                <textarea id="modPermasalahan-permasalahan" name="permasalahan" class="form-control" rows="8"></textarea>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="font-bold w-30">Sasaran Permasalahan</td>
                                             <td colspan="5">
-                                            <textarea id="sasaran-permasalahan" name="sasaran_permasalahan"  class="form-control" rows="4" ></textarea>
+                                            <textarea id="modPermasalahan-sasaran-permasalahan" name="sasaran_permasalahan"  class="form-control" rows="4" ></textarea>
                                             </td>
                                         </tr>
                                     </table>
@@ -452,7 +460,23 @@
             $('.saveButton').prop('disabled', false);
             modal_indikator_permasalahan.show();
         });
-        }
+    }
+
+    function editPermasalahan(id) {
+        $('#permasalahan-id').val(id);
+        $('#title-permasalahan').html('Edit Permasalahan');
+        $('.saveButton').prop('disabled', true);
+        $.getJSON("{{url('rb-tematik/permasalahan/get-permasalahan/')}}/"+id, function(data) {
+            $('#sasaran-roadmap-onPermasalahan').val(data.sasaran_roadmap_id).change();
+            $('#indikator-roadmap-onPermasalahan').val(data.indikator_roadmap_id);
+            $('#target-roadmap-onPermasalahan').val(data.target_roadmap);
+            $('#target-satuan-onPermasalahan').val(data.target_satuan_roadmap);
+            $('#modPermasalahan-permasalahan').val(data.permasalahan_nama);
+            $('#modPermasalahan-sasaran-permasalahan').val(data.permasalahan_sasaran);
+            $('.saveButton').prop('disabled', false);
+            modal_permasalahan.show();
+        });
+    }
 </script>
 <script src="https://cdn.rawgit.com/ashl1/datatables-rowsgroup/v1.0.0/dataTables.rowsGroup.js"></script>
 <script>

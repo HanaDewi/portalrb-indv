@@ -90,6 +90,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/rb-tematik/permasalahan', [RBTematikController::class, 'permasalahan'])->name('permasalahan');
     Route::get('/rb-tematik/permasalahan/get-indikator-roadmap', [RBTematikController::class, 'getIndikatorRoadmap'])->name('get_indikator_roadmap');
     Route::post('/rb-tematik/permasalahan/simpan-permasalahan', [RBTematikController::class, 'simpanPermasalahan']);
+    Route::get('/rb-tematik/permasalahan/get-permasalahan/{indikator_permasalahan_id}', [RBTematikController::class, 'get_permaalahan'])->name('get_permasalahan');
     Route::get('/rb-tematik/permasalahan/get-indikator-permasalahan/{indikator_permasalahan_id}', [RBTematikController::class, 'get_indikator_permaalahan'])->name('get_indikator_permasalahan');
     Route::post('/rb-tematik/permasalahan/simpan-indikator-permasalahan', [RBTematikController::class, 'simpanIndikatorPermasalahan']);
     // RB Tematik Renaksi

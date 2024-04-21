@@ -315,11 +315,12 @@ class RBTematikController extends Controller
 
     public function simpanPermasalahan(Request $request)
     {
-        $permasalahan = TematikPermasalahan::where('tematik_indikator_roadmap_id',)->where('nama', $request->indikator_roadmap)->first();
+        $permasalahan = TematikPermasalahan::where('id', $request->permasalahan_id)->first();
         if (!$permasalahan) {
             $permasalahan = new TematikPermasalahan();
-            $permasalahan->tematik_indikator_roadmap_id = $request->tematik_indikator_roadmap_id;
-        }
+        };
+        $permasalahan->tematik_indikator_roadmap_id = $request->tematik_indikator_roadmap_id;
+
 
         //hanya user dan instansi terkait saja yang bisa ngedit
         if (Gate::denies('modify-permasalahan', $permasalahan)) {
@@ -362,6 +363,23 @@ class RBTematikController extends Controller
             session()->flash('success', 'Data Indikator gagal disimpan! Silahkan dicoba kembali.');
         }
         return redirect('rb-tematik/permasalahan');
+    }
+
+    public function get_permaalahan($permasalahan_id)
+    {
+        $permasalahan = TematikPermasalahan::where('id', $permasalahan_id)->first();
+        $permasalahan_lengkap  = [
+            "sasaran_roadmap_id" => $permasalahan->indikator_roadmap->sasaran_roadmap->id,
+            "sasaran_roadmap" => $permasalahan->indikator_roadmap->sasaran_roadmap->nama,
+            "indikator_roadmap_id" => $permasalahan->indikator_roadmap->id,
+            "indikator_roadmap" => $permasalahan->indikator_roadmap->nama,
+            "target_roadmap" => $permasalahan->indikator_roadmap->target,
+            "target_satuan_roadmap" => $permasalahan->indikator_roadmap->satuan,
+            "permasalahan_id" =>  $permasalahan->id,
+            "permasalahan_nama" =>  $permasalahan->nama,
+            "permasalahan_sasaran" => $permasalahan->sasaran_permasalahan,
+        ];
+        return response()->json($permasalahan_lengkap);
     }
 
     public function get_indikator_permaalahan($indikator_id)
