@@ -48,25 +48,11 @@
                     </tr>
                     <tr>
                         <td class="font-bold">Target</td>
-                        <td>
-                            <select class="form-control" name="ftarget" onchange="$('#filter-form').submit();">
-                                <option value=""> -- Pilih target -- </option>
-                                @foreach ($filterTarget as $targ)
-                                <option value="{{ $targ->target }}" {{ $ftarget==$targ->target ? 'selected':'' }}>{{ $targ->target }}</option>
-                                @endforeach
-                            </select>
-                        </td>
+                        <td>{{ $ftarget }}</td>
                     </tr>
                     <tr>
                         <td class="font-bold">Satuan Target</td>
-                        <td>
-                            <select class="form-control" name="fsatuantarget" onchange="$('#filter-form').submit();">
-                                <option value=""> -- Pilih satuan target -- </option>
-                                @foreach ($filterSatuanTarget as $starg)
-                                <option value="{{ $starg->satuan }}" {{ $fsatuantarget==$starg->satuan ? 'selected':'' }}>{{ $starg->satuan }}</option>
-                                @endforeach
-                            </select>
-                        </td>
+                        <td>{{ $fsatuantarget }}</td>
                     </tr>
                 </table>
             </form>

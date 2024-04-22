@@ -97,21 +97,25 @@ class RBTematikController extends Controller
         $ftema = $request->get('ftema');
         $fsasaranroadmap = $request->get('fsasaranroadmap');
         $findikatorroadmap = $request->get('findikatorroadmap');
-        $ftarget = $request->get('ftarget');
-        $fsatuantarget = $request->get('fsatuantarget');
 
         $filterSasaranRoadmap = TematikSasaranRoadmap::where('instansi_id', $user->user_rel->instansi_id)->where('tema_id', $ftema)->orderBy('tema_id')->get();
-        $queryfilterIndikatorRoadmap = DB::table('tematik_indikator_roadmap')->select('nama')->distinct();
-        $queryfilterTarget = DB::table('tematik_indikator_roadmap')->select('target')->distinct();
-        $queryfilterSatuanTarget = DB::table('tematik_indikator_roadmap')->select('satuan')->distinct();
         if ($fsasaranroadmap) {
+            $queryfilterIndikatorRoadmap = DB::table('tematik_indikator_roadmap')->select('nama');
             $queryfilterIndikatorRoadmap->where('tematik_sasaran_roadmap_id', $fsasaranroadmap);
-            $queryfilterTarget->where('tematik_sasaran_roadmap_id', $fsasaranroadmap);
-            $queryfilterSatuanTarget->where('tematik_sasaran_roadmap_id', $fsasaranroadmap);
+            $filterIndikatorRoadmap = $queryfilterIndikatorRoadmap->get();
+        } else {
+            $filterIndikatorRoadmap = [];
         }
-        $filterIndikatorRoadmap = $queryfilterIndikatorRoadmap->get();
-        $filterTarget = $queryfilterTarget->get();
-        $filterSatuanTarget = $queryfilterSatuanTarget->get();
+
+        $ftarget = '-';
+        $fsatuantarget = '-';
+        if ($findikatorroadmap) {
+            $select = TematikIndikatorRoadmap::where('nama', $findikatorroadmap)->first();
+            if ($select) {
+                $ftarget = $select->target;
+                $fsatuantarget = $select->satuan;
+            }
+        }
 
         $findikators = DB::table('tematik_indikator_roadmap')->select('id')
             ->where('tematik_sasaran_roadmap_id', $fsasaranroadmap)
@@ -224,8 +228,6 @@ class RBTematikController extends Controller
             "temas" => $temas,
             "filterSasaranRoadmap" => $filterSasaranRoadmap,
             "filterIndikatorRoadmap" => $filterIndikatorRoadmap,
-            "filterTarget" => $filterTarget,
-            "filterSatuanTarget" => $filterSatuanTarget,
             "sasaranRoadmaps" => $sasaranRoadmaps,
             "tematikDatas" => $tematikDatas
         ]);
