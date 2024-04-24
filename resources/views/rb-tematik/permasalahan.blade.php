@@ -25,7 +25,9 @@
                         </td>
                     </tr>
                     <tr>
-                        <td class="font-bold">Sasaran Roadmap</td>
+                        <td class="font-bold">Sasaran Roadmap 
+                        
+                        </td>
                         <td>
                             <select class="form-control" name="fsasaranroadmap" onchange="$('#filter-form').submit();">
                                 <option value=""> -- Pilih sasaran roadmap -- </option>
@@ -77,7 +79,9 @@
                         <th class="w-5">Tema</th>
                         <th class="w-5">Sasaran & Indikator Roadmap</th>
                         <th class="w-5">Permasalahan (bottleneck)</th>
-                        <th class="w-5">Sasaran</th>
+                        <th class="w-5">Sasaran <br/>
+                            <p style="font-size: 0.7em; line-height: 1.3;">(Kondisi yang menggambarkan untuk penyelesaian permasalahan)</p>
+                        </th>
                         <th class="w-5">Indikator</th>
                         <th class="w-5">Target</th>
                         <th class="w-5">Satuan</th>

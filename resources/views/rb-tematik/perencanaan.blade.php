@@ -353,8 +353,6 @@
             $('#target_output_ext').append(output_form());
         }
 
-       
-
         function hapus_input(th) {
             $(th).parent().parent().parent().remove();
         }
