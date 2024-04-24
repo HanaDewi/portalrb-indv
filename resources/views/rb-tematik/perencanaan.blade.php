@@ -338,6 +338,10 @@
 
         });
 
+        function getData() {
+        kegiatan_utama.ajax.url("{{url('master-data/kegiatan_utama/getDatas')}}").load(null, false);
+    }
+
         function output_form() {
             const inputform = $('#inputform-sasaran-roadmap');
             const htmlstr = inputform.get(0).outerHTML;
@@ -397,7 +401,7 @@
         function hapus(id) {
         Swal.fire({
             title: "Yakin?",
-            text: "Hapus Rencana Aksi ini?",
+            text: "Hapus Indikator Roadmap ini?",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: "#DD6B55",
@@ -410,15 +414,22 @@
                     data: {_token: '{{csrf_token()}}', id: id},
                     dataType: "json",
                     success: function(terhapus) {
-                        if (terhapus) {
-                            Swal.fire('Selamat!', 'Data Rencana Aksi berhasil dihapus!', 'success');
-                        } else {
-                            Swal.fire('Aduh!', 'Data Rencana Aksi gagal dihapus! Coba lagi nanti ya..', 'error');
+                        if (terhapus.success) {
+                            Swal.fire('Selamat!', 'Data Indikator Roadmap berhasil dihapus!', 'success');
+                            Swal.fire({
+                                title: "'Selamat!",
+                                text: 'Data Indikator Roadmap berhasil dihapus!! '+terhapus.pesan,
+                                icon: 'warning',
+                                confirmButtonColor: "#DD6B55",
+                                confirmButtonText: "Ya, Hapus aja!"
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    location.reload(true);
+                                };
+                            });
+                        } else {    
+                            Swal.fire('Aduh!', 'Data indikator Roadmap gagal dihapus! '+terhapus.pesan, 'error');
                         }
-                        setTimeout(function() {
-                            location.reload(true);
-                        }, 2000);
-                        
                     },
                     error: function(err) {
                         Swal.fire('Error!', 'Terjadi kesalahan! <br/> Pastikan menghapus dahulu permalasahan yang terkait dengan indikator roadmap ini', 'error');

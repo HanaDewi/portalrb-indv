@@ -297,6 +297,8 @@ class RBTematikController extends Controller
 
     public function indikatorRoadmapHapus(Request $request)
     {
+        $pesan = '';
+
         $user = Auth::User();
         $indikatorRoadmap = TematikIndikatorRoadmap::where('id', $request->id)->first();
         if (!$indikatorRoadmap) {
@@ -309,7 +311,9 @@ class RBTematikController extends Controller
         $success = false;
         if ($indikatorRoadmap->permasalahan->count() > 0) {
             // Haspus dulu permasalhan sebelum hapus indikatorRoadmap
-            abort(500, "Hapus dahulu permalasahan yang terkait dengan indikator roadmap ini");
+            $pesan = 'Hapus dahulu permalasahan yang terkait dengan indikator roadmap ini';
+            $success = false;
+            return response()->json(['success' => $success, 'pesan' => $pesan]);
         } else {
             DB::beginTransaction();
             try {
