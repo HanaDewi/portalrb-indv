@@ -66,7 +66,20 @@
                                         <button
                                             onclick="tambah_indikator_roadmap('{{ $tematikData['tema_nama'] }}','{{ $tematikData['sasaran_nama'] }}', '{{ $tematikData['sasaran_id'] }}');"
                                             class="btn btn-warning btn-sm w-full mb-2"><i data-lucide="edit"
-                                                class="w-4 h-4 mr-1"></i>Indikator</button>
+                                                class="w-4 h-4 mr-1"></i>Tambah Indikator
+                                        </button>
+                                        <br/>
+                                        <a href="#" class="btn btn-pending btn-sm w-full mb-2"
+                                        onclick="edit_sasaran_roadmap('{{$tematikData['sasaran_id']}}')" > 
+                                            <i data-lucide="edit" class="w-4 h-4 mr-1"></i> Edit Sasaran Tematik
+                                            <span class="text-xs px-1 rounded-full bg-warning text-white badge"><!-- count($target->rencana_aksi) --></span>
+                                        </a>
+                                        <br/>
+                                        <a href="#" class="btn btn-danger btn-sm w-full mb-2"
+                                            onclick="hapus_sasaran_roadmap('{{$tematikData['sasaran_id']}}')" > 
+                                            <i data-lucide="edit" class="w-4 h-4 mr-1"></i> Hapus Sasaran Tematik
+                                            <span class="text-xs px-1 rounded-full bg-warning text-white badge"><!-- count($target->rencana_aksi) --></span>
+                                        </a>
                                     @endif
                                 </td>
                                 <td>
@@ -90,21 +103,21 @@
                                 </td>
                                 <td>
                                     @if ($tematikData['indikator_nama'])
-                                    <a href="#" class="btn btn-pending btn-sm w-full mb-2"
-                                    onclick="edit('{{$tematikData['indikator_id']}}')" > 
-                                        <i data-lucide="edit" class="w-4 h-4 mr-1"></i> Edit
-                                        <span class="text-xs px-1 rounded-full bg-warning text-white badge"><!-- count($target->rencana_aksi) --></span>
-                                    </a>
-                                    <br>
                                     <a href="#" onclick="edit_monev('{{$tematikData['indikator_id']}}');" class="btn btn-dark btn-sm w-full mb-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" icon-name="edit" data-lucide="edit" class="lucide lucide-edit w-4 h-4 mr-1">
                                             <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"></path>
                                             <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                                         </svg>Monev
                                     </a>
                                     <br/>
+                                    <a href="#" class="btn btn-pending btn-sm w-full mb-2"
+                                    onclick="edit('{{$tematikData['indikator_id']}}')" > 
+                                        <i data-lucide="edit" class="w-4 h-4 mr-1"></i> Edit Indikator
+                                        <span class="text-xs px-1 rounded-full bg-warning text-white badge"><!-- count($target->rencana_aksi) --></span>
+                                    </a>
+                                    <br/>
                                     <a href="#" class="btn btn-danger btn-sm w-full mb-2"
                                     onclick="hapus('{{$tematikData['indikator_id']}}')" > 
-                                        <i data-lucide="edit" class="w-4 h-4 mr-1"></i> Hapus
+                                        <i data-lucide="edit" class="w-4 h-4 mr-1"></i> Hapus Indikator
                                         <span class="text-xs px-1 rounded-full bg-warning text-white badge"><!-- count($target->rencana_aksi) --></span>
                                     </a>
                                     @endif
