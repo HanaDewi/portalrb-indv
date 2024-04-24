@@ -100,8 +100,7 @@ class RBTematikController extends Controller
 
         $filterSasaranRoadmap = TematikSasaranRoadmap::where('instansi_id', $user->user_rel->instansi_id)->where('tema_id', $ftema)->orderBy('tema_id')->get();
         if ($fsasaranroadmap) {
-            $queryfilterIndikatorRoadmap = DB::table('tematik_indikator_roadmap')->select('nama');
-            $queryfilterIndikatorRoadmap->where('tematik_sasaran_roadmap_id', $fsasaranroadmap);
+            $queryfilterIndikatorRoadmap = TematikIndikatorRoadmap::where('tematik_sasaran_roadmap_id', $fsasaranroadmap);
             $filterIndikatorRoadmap = $queryfilterIndikatorRoadmap->get();
         } else {
             $filterIndikatorRoadmap = [];
@@ -109,20 +108,15 @@ class RBTematikController extends Controller
 
         $ftarget = '-';
         $fsatuantarget = '-';
+        $findikators = [];
         if ($findikatorroadmap) {
-            $select = TematikIndikatorRoadmap::where('nama', $findikatorroadmap)->first();
+            $select = TematikIndikatorRoadmap::where('id', $findikatorroadmap)->first();
             if ($select) {
                 $ftarget = $select->target;
                 $fsatuantarget = $select->satuan;
+                $findikators = [$select->id];
             }
         }
-
-        $findikators = DB::table('tematik_indikator_roadmap')->select('id')
-            ->where('tematik_sasaran_roadmap_id', $fsasaranroadmap)
-            ->where(function ($query) use ($findikatorroadmap, $ftarget, $fsatuantarget) {
-                return $query->where('nama', '=', $findikatorroadmap)
-                    ->orWhere('target', '=', $ftarget)->orWhere('satuan', '=', $fsatuantarget);
-            })->get()->map(fn ($row) => $row->id)->toArray();
 
         $querysasaranRoadmaps = TematikSasaranRoadmap::where('instansi_id', $user->user_rel->instansi_id);
         if ($ftema) {

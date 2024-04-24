@@ -43,7 +43,7 @@
                             <select class="form-control" name="findikatorroadmap" onchange="$('#filter-form').submit();">
                                 <option value=""> -- Pilih indikator roadmap -- </option>
                                 @foreach ($filterIndikatorRoadmap as $fir)
-                                <option value="{{ $fir->nama }}" {{ $findikatorroadmap==$fir->nama ? 'selected':'' }}>{{ $fir->nama }}</option>
+                                <option value="{{ $fir->id }}" {{ $findikatorroadmap==$fir->id ? 'selected':'' }}>{{ $fir->nama }}</option>
                                 @endforeach
                             </select>
                         </td>
