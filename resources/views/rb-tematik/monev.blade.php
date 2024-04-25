@@ -142,34 +142,10 @@
                             </tr>
                             <tr>
                                 <td class="font-bold">Anggaran</td>
-                                <td>
+                                <td colspan=5>
                                     <div class="input-group mt-4 mr-2">
-                                        <div class="input-group-text">TW1</div>
-                                        <input type="text" name="anggaran_tw1" id="anggaran_tw1" placeholder="Triwulan 1" class="form-control numeric" readonly>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="input-group mt-4 mr-2">
-                                        <div class="input-group-text">TW2</div>
-                                        <input type="text" name="anggaran_tw2" id="anggaran_tw2" placeholder="Triwulan 2" class="form-control numeric" readonly>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="input-group mt-4 mr-2">
-                                        <div class="input-group-text">TW3</div>
-                                        <input type="text" name="anggaran_tw3" id="anggaran_tw3" placeholder="Triwulan 3" class="form-control numeric" readonly>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="input-group mt-4 mr-2">
-                                        <div class="input-group-text">TW4</div>
-                                        <input type="text" name="anggaran_tw4" id="anggaran_tw4" placeholder="Triwulan 4" class="form-control numeric" readonly>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="input-group mt-4 mr-2">
-                                        <div class="input-group-text">Total</div>
-                                        <input type="text" name="anggaran_total" id="anggaran_total" placeholder="Total" class="form-control numeric" readonly>
+                                        <div class="input-group-text">Rp.</div>
+                                        <input type="text" name="anggaran_total" id="anggaran_total" placeholder="Rp" class="form-control numeric" readonly>
                                     </div>
                                 </td>
                             </tr>
@@ -214,40 +190,17 @@
                                 <td>
                                     <div class="input-group mt-4">
                                         <div class="input-group-text">Total</div>
-                                        <input type="text" name="realisasi_output_total" id="realisasi_output_total" placeholder="Total" class="form-control digit" readonly required>
+                                        <input type="text" name="realisasi_output_total" id="realisasi_output_total" placeholder="Total" class="form-control digit" required>
                                     </div>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="font-bold">Realisasi Anggaran <span class="text-danger">*</span></td>
-                                <td>
-                                    <div class="input-group mt-4 mr-2">
-                                        <div class="input-group-text">TW1</div>
-                                        <input type="text" name="realisasi_anggaran_tw1" id="realisasi_anggaran_tw1" placeholder="Triwulan 1" class="form-control digit" onkeyup="hitungTotal();" required>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="input-group mt-4 mr-2">
-                                        <div class="input-group-text">TW2</div>
-                                        <input type="text" name="realisasi_anggaran_tw2" id="realisasi_anggaran_tw2" placeholder="Triwulan 2" class="form-control digit" onkeyup="hitungTotal();" required>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="input-group mt-4 mr-2">
-                                        <div class="input-group-text">TW3</div>
-                                        <input type="text" name="realisasi_anggaran_tw3" id="realisasi_anggaran_tw3" placeholder="Triwulan 3" class="form-control digit" onkeyup="hitungTotal();" required>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="input-group mt-4 mr-2">
-                                        <div class="input-group-text">TW4</div>
-                                        <input type="text" name="realisasi_anggaran_tw4" id="realisasi_anggaran_tw4" placeholder="Triwulan 4" class="form-control digit" onkeyup="hitungTotal();" required>
-                                    </div>
-                                </td>
-                                <td>
+                            
+                                <td colspan="5">
                                     <div class="input-group mt-4">
-                                        <div class="input-group-text">Total</div>
-                                        <input type="text" name="realisasi_anggaran_total" id="realisasi_anggaran_total" placeholder="Total" class="form-control digit" readonly required>
+                                        <div class="input-group-text">Rp.</div>
+                                        <input type="text" name="realisasi_anggaran_total" id="realisasi_anggaran_total" placeholder="Total" class="form-control digit" required>
                                     </div>
                                 </td>
                             </tr>
