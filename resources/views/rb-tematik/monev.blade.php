@@ -200,7 +200,7 @@
                                 <td colspan="5">
                                     <div class="input-group mt-4">
                                         <div class="input-group-text">Rp.</div>
-                                        <input type="text" name="realisasi_anggaran_total" id="realisasi_anggaran_total" placeholder="Total" class="form-control digit" required>
+                                        <input type="text" name="realisasi_anggaran_total" id="realisasi_anggaran_total" placeholder="Total" class="form-control digit" onkeyup="hitungTotal()" required>
                                     </div>
                                 </td>
                             </tr>
@@ -245,37 +245,9 @@
                             <tr>
                                 <td class="font-bold">Capaian Anggaran <span class="text-danger">*</span></td>
                                 <td>
-                                    <div class="input-group mt-4 mr-2">
-                                        <div class="input-group-text">TW1</div>
-                                        <input type="text" name="capaian_anggaran_tw1" id="capaian_anggaran_tw1" placeholder="Triwulan 1" class="form-control digit" readonly>
-                                        <div class="input-group-text">%</div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="input-group mt-4 mr-2">
-                                        <div class="input-group-text">TW2</div>
-                                        <input type="text" name="capaian_anggaran_tw2" id="capaian_anggaran_tw2" placeholder="Triwulan 2" class="form-control digit" readonly>
-                                        <div class="input-group-text">%</div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="input-group mt-4 mr-2">
-                                        <div class="input-group-text">TW3</div>
-                                        <input type="text" name="capaian_anggaran_tw3" id="capaian_anggaran_tw3" placeholder="Triwulan 3" class="form-control digit" readonly>
-                                        <div class="input-group-text">%</div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="input-group mt-4 mr-2">
-                                        <div class="input-group-text">TW4</div>
-                                        <input type="text" name="capaian_anggaran_tw4" id="capaian_anggaran_tw4" placeholder="Triwulan 4" class="form-control digit" readonly>
-                                        <div class="input-group-text">%</div>
-                                    </div>
-                                </td>
-                                <td>
                                     <div class="input-group mt-4">
                                         <div class="input-group-text">Total</div>
-                                        <input type="text" name="capaian_anggaran_total" id="capaian_anggaran_total" placeholder="Total" class="form-control digit" readonly>
+                                        <input type="text" name="capaian_anggaran_total" id="capaian_anggaran_total" placeholder="Total" class="form-control digit" >
                                         <div class="input-group-text">%</div>
                                     </div>
                                 </td>
@@ -533,11 +505,7 @@
             { 
                 render: function (data, type, row, meta) {
                     return '<table class="table table-noborder">'+
-                            '<tr><th> TW 1</th><td>: '+formatNumber(row.anggaran_tw1)+'</td></tr>'+
-                            '<tr><th> TW 2</th><td>: '+formatNumber(row.anggaran_tw2)+'</td></tr>'+
-                            '<tr><th> TW 3</th><td>: '+formatNumber(row.anggaran_tw3)+'</td></tr>'+
-                            '<tr><th> TW 4</th><td>: '+formatNumber(row.anggaran_tw4)+'</td></tr>'+
-                            '<tr><th class="border-top"> Total</th><td>: '+formatNumber(row.anggaran_total)+'</td></tr>'+
+                            '<tr><th class="border-top"></th><td> '+formatNumber(row.anggaran_total)+'</td></tr>'+
                         '</table>';
                 }
             },
@@ -555,11 +523,7 @@
             { 
                 render: function (data, type, row, meta) {
                     return row.realisasi_anggaran_total ? '<table class="table table-noborder">'+
-                            '<tr><th> TW 1</th><td>: '+formatNumber(row.realisasi_anggaran_tw1)+'</td></tr>'+
-                            '<tr><th> TW 2</th><td>: '+formatNumber(row.realisasi_anggaran_tw2)+'</td></tr>'+
-                            '<tr><th> TW 3</th><td>: '+formatNumber(row.realisasi_anggaran_tw3)+'</td></tr>'+
-                            '<tr><th> TW 4</th><td>: '+formatNumber(row.realisasi_anggaran_tw4)+'</td></tr>'+
-                            '<tr><th class="border-top"> Total</th><td>: '+formatNumber(row.realisasi_anggaran_total)+'</td></tr>'+
+                            '<tr><th class="border-top"> Rp.</th><td> '+formatNumber(row.realisasi_anggaran_total)+'</td></tr>'+
                         '</table>' : '';
                 }
             },
@@ -577,10 +541,6 @@
             { 
                 render: function (data, type, row, meta) {
                     return row.capaian_anggaran_total ? '<table class="table table-noborder">'+
-                            '<tr><th> TW 1</th><td>: '+formatNumber(row.capaian_anggaran_tw1)+'</td></tr>'+
-                            '<tr><th> TW 2</th><td>: '+formatNumber(row.capaian_anggaran_tw2)+'</td></tr>'+
-                            '<tr><th> TW 3</th><td>: '+formatNumber(row.capaian_anggaran_tw3)+'</td></tr>'+
-                            '<tr><th> TW 4</th><td>: '+formatNumber(row.capaian_anggaran_tw4)+'</td></tr>'+
                             '<tr><th class="border-top"> Total</th><td>: '+formatNumber(row.capaian_anggaran_total)+'</td></tr>'+
                         '</table>' : '';
                 }
@@ -622,7 +582,7 @@
         ro3 = $('#realisasi_output_tw3').val();
         ro4 = $('#realisasi_output_tw4').val();
         ro_total = parseFloat(ro1) + parseFloat(ro2) + parseFloat(ro3) + parseFloat(ro4);
-        $('#realisasi_output_total').val(ro_total);
+        //$('#realisasi_output_total').val(ro_total);
         co1 = t1 > 0 ? (ro1 / t1) * 100 : 0;
         co2 = t2 > 0 ? (ro2 / t2) * 100 : 0;
         co3 = t3 > 0 ? (ro3 / t3) * 100 : 0;
@@ -645,50 +605,65 @@
             co_pembagi += 1;
         }
         co_total = (co1 + co2 + co3 + co4) / co_pembagi;
-        $('#capaian_output_total').val(co_total);
+        //$('#capaian_output_total').val(co_total);
         
         // Hitung Total Anggaran
-        if ($('#realisasi_anggaran_tw1').val() == '') {
-            $('#realisasi_anggaran_tw1').val(0);
-        }
-        if ($('#realisasi_anggaran_tw2').val() == '') {
-            $('#realisasi_anggaran_tw2').val(0);
-        }
-        if ($('#realisasi_anggaran_tw3').val() == '') {
-            $('#realisasi_anggaran_tw3').val(0);
-        }
-        if ($('#realisasi_anggaran_tw4').val() == '') {
-            $('#realisasi_anggaran_tw4').val(0);
-        }
-        ra1 = $('#realisasi_anggaran_tw1').val();
-        ra2 = $('#realisasi_anggaran_tw2').val();
-        ra3 = $('#realisasi_anggaran_tw3').val();
-        ra4 = $('#realisasi_anggaran_tw4').val();
-        ra_total = parseFloat(ra1) + parseFloat(ra2) + parseFloat(ra3) + parseFloat(ra4);
-        $('#realisasi_anggaran_total').val(ra_total);
-        ca1 = a1 > 0 ? (ra1 / a1) * 100 : 0;
-        ca2 = a2 > 0 ? (ra2 / a2) * 100 : 0;
-        ca3 = a3 > 0 ? (ra3 / a3) * 100 : 0;
-        ca4 = a4 > 0 ? (ra4 / a4) * 100 : 0;
-        $('#capaian_anggaran_tw1').val(ca1);
-        $('#capaian_anggaran_tw2').val(ca2);
-        $('#capaian_anggaran_tw3').val(ca3);
-        $('#capaian_anggaran_tw4').val(ca4);
-        ca_pembagi = 0;
-        if (ca1 > 0) {
-            ca_pembagi += 1;
-        }
-        if (ca2 > 0) {
-            ca_pembagi += 1;
-        }
-        if (ca3 > 0) {
-            ca_pembagi += 1;
-        }
-        if (ca4 > 0) {
-            ca_pembagi += 1;
-        }
-        ca_total = (ca1 + ca2 + ca3 + ca4) / ca_pembagi;
-        $('#capaian_anggaran_total').val(ca_total);
+        // if ($('#realisasi_anggaran_tw1').val() == '') {
+        //     $('#realisasi_anggaran_tw1').val(0);
+        // }
+        // if ($('#realisasi_anggaran_tw2').val() == '') {
+        //     $('#realisasi_anggaran_tw2').val(0);
+        // }
+        // if ($('#realisasi_anggaran_tw3').val() == '') {
+        //     $('#realisasi_anggaran_tw3').val(0);
+        // }
+        // if ($('#realisasi_anggaran_tw4').val() == '') {
+        //     $('#realisasi_anggaran_tw4').val(0);
+        // }
+        // ra1 = $('#realisasi_anggaran_tw1').val();
+        // ra2 = $('#realisasi_anggaran_tw2').val();
+        // ra3 = $('#realisasi_anggaran_tw3').val();
+        // ra4 = $('#realisasi_anggaran_tw4').val();
+        // ra_total = parseFloat(ra1) + parseFloat(ra2) + parseFloat(ra3) + parseFloat(ra4);
+        // $('#realisasi_anggaran_total').val(ra_total);
+        // ca1 = a1 > 0 ? (ra1 / a1) * 100 : 0;
+        // ca2 = a2 > 0 ? (ra2 / a2) * 100 : 0;
+        // ca3 = a3 > 0 ? (ra3 / a3) * 100 : 0;
+        // ca4 = a4 > 0 ? (ra4 / a4) * 100 : 0;
+        // $('#capaian_anggaran_tw1').val(ca1);
+        // $('#capaian_anggaran_tw2').val(ca2);
+        // $('#capaian_anggaran_tw3').val(ca3);
+        // $('#capaian_anggaran_tw4').val(ca4);
+        // ca_pembagi = 0;
+        // if (ca1 > 0) {
+        //     ca_pembagi += 1;
+        // }
+        // if (ca2 > 0) {
+        //     ca_pembagi += 1;
+        // }
+        // if (ca3 > 0) {
+        //     ca_pembagi += 1;
+        // }
+        // if (ca4 > 0) {
+        //     ca_pembagi += 1;
+        // }
+        // ca_total = (ca1 + ca2 + ca3 + ca4) / ca_pembagi;
+        //$('#capaian_anggaran_total').val(ca_total);
+        
+        target_total = $('#target_total').val();
+        realisasi_output_total = $('#realisasi_output_total').val();
+        //removeallDot
+        target_total = target_total.replace(/\./g,"");
+        realisasi_output_total = realisasi_output_total.replace(/\./g,"");
+        $('#capaian_output_total').val(realisasi_output_total*100/target_total);
+
+
+        anggaran_total= $('#anggaran_total').val();
+        realisasi_anggaran_total = $('#realisasi_anggaran_total').val();
+        //remove all dot
+        anggaran_total = anggaran_total.replace(/\./g,"");
+        realisasi_anggaran_total = realisasi_anggaran_total.replace(/\./g,"");
+        $('#capaian_anggaran_total').val(realisasi_anggaran_total*100/anggaran_total);
     }
 
    
