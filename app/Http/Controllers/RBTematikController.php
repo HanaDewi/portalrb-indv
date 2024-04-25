@@ -618,8 +618,8 @@ class RBTematikController extends Controller
             abort(403, 'Unauthorized');
         }
         $success = false;
-        $indikator->realisasi_indikator = $request->realisasi_indikator;
-        $indikator->capaian_indikator = $request->capaian_indikator;
+        $indikator->realisasi_indikator = $this->removeDot($request->realisasi_indikator);
+        $indikator->capaian_indikator = $this->removeDot($request->capaian_indikator);
         $indikator->catatan = $request->catatan;
         if ($indikator->save()) {
             $success = true;
@@ -639,26 +639,26 @@ class RBTematikController extends Controller
             // Unauthorized, handle accordingly
             abort(403, 'Unauthorized');
         }
-        $output->realisasi_output_tw1 = $request->realisasi_output_tw1;
-        $output->realisasi_output_tw2 = $request->realisasi_output_tw2;
-        $output->realisasi_output_tw3 = $request->realisasi_output_tw3;
-        $output->realisasi_output_tw4 = $request->realisasi_output_tw4;
-        $output->realisasi_output_total = $request->realisasi_output_total;
-        $output->realisasi_anggaran_tw1 = $request->realisasi_anggaran_tw1;
-        $output->realisasi_anggaran_tw2 = $request->realisasi_anggaran_tw2;
-        $output->realisasi_anggaran_tw3 = $request->realisasi_anggaran_tw3;
-        $output->realisasi_anggaran_tw4 = $request->realisasi_anggaran_tw4;
-        $output->realisasi_anggaran_total = $request->realisasi_anggaran_total;
-        $output->capaian_output_tw1 = $request->capaian_output_tw1;
-        $output->capaian_output_tw2 = $request->capaian_output_tw2;
-        $output->capaian_output_tw3 = $request->capaian_output_tw3;
-        $output->capaian_output_tw4 = $request->capaian_output_tw4;
-        $output->capaian_output_total = $request->capaian_output_total;
-        $output->capaian_anggaran_tw1 = $request->capaian_anggaran_tw1;
-        $output->capaian_anggaran_tw2 = $request->capaian_anggaran_tw2;
-        $output->capaian_anggaran_tw3 = $request->capaian_anggaran_tw3;
-        $output->capaian_anggaran_tw4 = $request->capaian_anggaran_tw4;
-        $output->capaian_anggaran_total = $request->capaian_anggaran_total;
+        $output->realisasi_output_tw1 = $this->removeDot($request->realisasi_output_tw1);
+        $output->realisasi_output_tw2 = $this->removeDot($request->realisasi_output_tw2);
+        $output->realisasi_output_tw3 = $this->removeDot($request->realisasi_output_tw3);
+        $output->realisasi_output_tw4 = $this->removeDot($request->realisasi_output_tw4);
+        $output->realisasi_output_total = $this->removeDot($request->realisasi_output_total);
+        $output->realisasi_anggaran_tw1 = $this->removeDot($request->realisasi_anggaran_tw1);
+        $output->realisasi_anggaran_tw2 = $this->removeDot($request->realisasi_anggaran_tw2);
+        $output->realisasi_anggaran_tw3 = $this->removeDot($request->realisasi_anggaran_tw3);
+        $output->realisasi_anggaran_tw4 = $this->removeDot($request->realisasi_anggaran_tw4);
+        $output->realisasi_anggaran_total = $this->removeDot($request->realisasi_anggaran_total);
+        $output->capaian_output_tw1 = $this->removeDot($request->capaian_output_tw1);
+        $output->capaian_output_tw2 = $this->removeDot($request->capaian_output_tw2);
+        $output->capaian_output_tw3 = $this->removeDot($request->capaian_output_tw3);
+        $output->capaian_output_tw4 = $this->removeDot($request->capaian_output_tw4);
+        $output->capaian_output_total = $this->removeDot($request->capaian_output_total);
+        $output->capaian_anggaran_tw1 = $this->removeDot($request->capaian_anggaran_tw1);
+        $output->capaian_anggaran_tw2 = $this->removeDot($request->capaian_anggaran_tw2);
+        $output->capaian_anggaran_tw3 = $this->removeDot($request->capaian_anggaran_tw3);
+        $output->capaian_anggaran_tw4 = $this->removeDot($request->capaian_anggaran_tw4);
+        $output->capaian_anggaran_total = $this->removeDot($request->capaian_anggaran_total);
         if ($output->save()) {
             $success = true;
         }
@@ -760,17 +760,12 @@ class RBTematikController extends Controller
         return view('rb-tematik.rekap_data', compact('datas', 'instansi_id', 'sasaran_id', 'nama_instansi'));
     }
 
-    public function rekap_data_getPerencanaan($id)
+    public function removeDot($i)
     {
-        $perencanaan = GeneralPerencanaan::find($id);
-        return response()->json($perencanaan);
-    }
-
-    public function rekap_data_simpanCatatanEvaluator(Request $request)
-    {
-        $perencanaan = GeneralPerencanaan::find($request->perencanaan_id);
-        $perencanaan->catatan = $request->catatan;
-        $perencanaan->save();
-        return redirect()->back();
+        if ($i) {
+            return (str_replace(".", "", $i));
+        } else {
+            return $i;
+        }
     }
 }

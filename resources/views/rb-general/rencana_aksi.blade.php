@@ -354,7 +354,6 @@
             customize: function (doc) {
             doc.defaultStyle.fontSize = 9; 
             doc.content[1].table.widths = [ '5%', '30%', '10%', '10%', '10%', '15%', '10%', '10%'];
-
                 doc.content[1].table.body.forEach(row => {
                     row.forEach((cell, index) => {
                         if (index === 4 || index === 5) {
