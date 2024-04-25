@@ -383,14 +383,55 @@
         }
 
         function edit_sasaran_roadmap(id) {
-        $('#sasaran-roadmap-id').val(id);
-        $('.saveButton').prop('disabled', true);
-        $.getJSON("{{url('rb-tematik/perencanaan/getSasaran/')}}/"+id, function(data) {
-            $('#tema_id_onSasaran').val(data.tema_id);
-            $('#sasaranOnModalSasaran').val(data.sasaran_roadmap);
-            $('.saveButton').prop('disabled', false);
-            $('#tambah_input_button').prop('disabled', true);
-            modal_sasaran_roadmap.show();
+            $('#sasaran-roadmap-id').val(id);
+            $('.saveButton').prop('disabled', true);
+            $.getJSON("{{url('rb-tematik/perencanaan/getSasaran/')}}/"+id, function(data) {
+                $('#tema_id_onSasaran').val(data.tema_id);
+                $('#sasaranOnModalSasaran').val(data.sasaran_roadmap);
+                $('.saveButton').prop('disabled', false);
+                $('#tambah_input_button').prop('disabled', true);
+                modal_sasaran_roadmap.show();
+            });
+        }
+
+        function hapus_sasaran_roadmap(id) {
+        Swal.fire({
+            title: "Yakin?",
+            text: "Hapus Sasaran Roadmap ini?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Ya, Hapus aja!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: "{{url('rb-tematik/perencanaan/sasaran_roadmap/')}}/hapus/"+id,
+                    type: "post",
+                    data: {_token: '{{csrf_token()}}', id: id},
+                    dataType: "json",
+                    success: function(terhapus) {
+                        if (terhapus.success) {
+                            Swal.fire('Selamat!', 'Data Sasaran Roadmap berhasil dihapus!', 'success');
+                            Swal.fire({
+                                title: "'Selamat!",
+                                text: 'Data Sasaran Roadmap berhasil dihapus!! '+terhapus.pesan,
+                                icon: 'warning',
+                                confirmButtonColor: "#DD6B55",
+                                confirmButtonText: "Ya, Hapus aja!"
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    location.reload(true);
+                                };
+                            });
+                        } else {    
+                            Swal.fire('Aduh!', 'Data sasaran Roadmap gagal dihapus! '+terhapus.pesan, 'error');
+                        }
+                    },
+                    error: function(err) {
+                        Swal.fire('Error!', 'Terjadi kesalahan! <br/> Pastikan menghapus dahulu indikator roadmap yang terkait dengan sasaran ini', 'error');
+                    }
+                });
+            }
         });
         }
 
@@ -461,7 +502,7 @@
                 });
             }
         });
-    }
+        }
     </script>
     <script src="https://cdn.rawgit.com/ashl1/datatables-rowsgroup/v1.0.0/dataTables.rowsGroup.js"></script>
     <script>

@@ -258,6 +258,44 @@ class RBTematikController extends Controller
         return redirect('rb-tematik/perencanaan');
     }
 
+    public function sasaranRoadmapHapus(Request $request)
+    {
+        $pesan = '';
+
+        $user = Auth::User();
+        $sasaranRoadmap = TematikSasaranRoadmap::where('id', $request->id)->first();
+        if (!$sasaranRoadmap) {
+            abort(404);
+        }
+        if (Gate::denies('modify-sasaran-roadmap', $sasaranRoadmap)) {
+            // Unauthorized, handle accordingly
+            abort(403, 'Unauthorized');
+        }
+        $success = false;
+        if ($sasaranRoadmap->indikator_roadmap->count() > 0) {
+            // Haspus dulu permasalhan sebelum hapus indikatorRoadmap
+            $pesan = 'Hapus dahulu indikator roadmap yang terkait dengan sasaran roadmap ini';
+            $success = false;
+            return response()->json(['success' => $success, 'pesan' => $pesan]);
+        } else {
+            DB::beginTransaction();
+            try {
+                if ($sasaranRoadmap->delete()) {
+                    $success = true;
+                }
+            } catch (\Throwable $th) {
+                DB::rollBack();
+                throw $th;
+            }
+            if ($success) {
+                DB::commit();
+            } else {
+                DB::rollBack();
+            }
+            return response()->json(['success' => $success]);
+        }
+    }
+
     public function simpanIndikatorRoadmap(Request $request)
     {
         $user = Auth::User();
