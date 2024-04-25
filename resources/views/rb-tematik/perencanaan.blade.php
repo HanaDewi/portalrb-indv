@@ -143,6 +143,7 @@
                     method="post">
                     @csrf
                     <input type="hidden" name="tema_id" id="tema_id">
+                    <input type="hidden" name="sasaran_roadmap_id" id="sasaran-roadmap-id">
                     <div class="modal-body grid columns-12 ">
                         <div class="g-col-12">
                             <div class="border  rounded-md ">
@@ -152,7 +153,7 @@
                                             <tr>
                                                 <td class="font-bold w-30">Tema </td>
                                                 <td colspan="5">
-                                                    <select class="form-select mt-2 sm:mr-2 form-control" name="tema_id[]">
+                                                    <select class="form-select mt-2 sm:mr-2 form-control" name="tema_id[]" id="tema_id_onSasaran">
                                                         @foreach ($temas as $tema)
                                                             <option value="{{ $tema->id }}">{{ $tema->nama }}
                                                             </option>
@@ -168,7 +169,7 @@
                                             <tr>
                                                 <td class="font-bold w-30">Sasaran Tematik Roadmap</td>
                                                 <td colspan="5">
-                                                    <input type="text" name="nama[]"
+                                                    <input type="text" name="nama[]" id="sasaranOnModalSasaran"
                                                         placeholder="Masukan Sasaran Roadmap" class="form-control" />
                                                 </td>
                                             </tr>
@@ -381,6 +382,18 @@
             modal_indikator_roadmap.show();
         }
 
+        function edit_sasaran_roadmap(id) {
+        $('#sasaran-roadmap-id').val(id);
+        $('.saveButton').prop('disabled', true);
+        $.getJSON("{{url('rb-tematik/perencanaan/getSasaran/')}}/"+id, function(data) {
+            $('#tema_id_onSasaran').val(data.tema_id);
+            $('#sasaranOnModalSasaran').val(data.sasaran_roadmap);
+            $('.saveButton').prop('disabled', false);
+            $('#tambah_input_button').prop('disabled', true);
+            modal_sasaran_roadmap.show();
+        });
+        }
+
         function edit(id) {
         $('#indikator-roadmap-id').val(id);
         $('#title').html('Edit Rencana Aksi Output');
@@ -406,7 +419,7 @@
                 $('#catatan').val(data.catatan);
             $('.saveButton').prop('disabled', false);
                 modal_monev_indikator_roadmap.show();
-            });
+            }); 
         }
 
         function hapus(id) {

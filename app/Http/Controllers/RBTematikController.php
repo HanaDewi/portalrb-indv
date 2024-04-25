@@ -229,7 +229,7 @@ class RBTematikController extends Controller
     public function simpanSasaranRoadmap(Request $request)
     {
         $user = Auth::User();
-        $sasaranRoadmap = TematikSasaranRoadmap::where('instansi_id', $user->user_rel->instansi_id)->where('tema_id', $request->tema_id)->where('nama', $request->nama)->first();
+        $sasaranRoadmap = TematikSasaranRoadmap::where('instansi_id', $user->user_rel->instansi_id)->where('id', $request->sasaran_roadmap_id)->first();
         if (!$sasaranRoadmap) {
             foreach ($request->tema_id as $idx => $tema_id) {
                 $sasaranRoadmap = new TematikSasaranRoadmap();
@@ -244,11 +244,13 @@ class RBTematikController extends Controller
                 }
             }
         } else {
-            //untuk update
-
-            if (Gate::denies('modify-sasaran-roadmap', $sasaranRoadmap)) {
-                // Unauthorized, handle accordingly
-                abort(403, 'Unauthorized');
+            $sasaranRoadmap->tema_id = $request->tema_id[0];
+            $sasaranRoadmap->nama = $request->nama[0];
+            if ($sasaranRoadmap->save()) {
+                session()->flash('success', 'Data Sasaran Roadmap Tematik berhasil disimpan.');
+            } else {
+                session()->flash('success', 'Data Sasaran Roadmap Tematik gagal disimpan! Silahkan dicoba kembali.');
+                return redirect('rb-tematik/perencanaan');
             }
         }
 
@@ -324,6 +326,18 @@ class RBTematikController extends Controller
             }
             return response()->json(['success' => $success]);
         }
+    }
+
+    public function sasaran_getData($sasaran_id)
+    {
+        $sasaran_roadmap = TematikSasaranRoadmap::where('id', $sasaran_id)->first();
+        $data = [
+            "tema_id" => $sasaran_roadmap->tema->id,
+            "tema" => $sasaran_roadmap->tema->nama,
+            "sasaran_roadmap_id" => $sasaran_roadmap->nama,
+            "sasaran_roadmap" => $sasaran_roadmap->nama,
+        ];
+        return response()->json($data);
     }
 
     public function indikator_getData($indikator_id)
