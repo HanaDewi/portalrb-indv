@@ -165,7 +165,7 @@
                                 @endif
                             </td>
                             <td>
-                                {{ $data['output']->get_intervensi }}
+                                {{ $data['output']->get_intervensi ? $data['output']->get_intervensi->nama:'' }}
                             </td>
                             <td>
                                 {{ $data['output']->koordinator }}
