@@ -455,8 +455,8 @@
             $('#title').html('Edit Rencana Aksi Output');
             $('.saveButton').prop('disabled', true);
             $.getJSON("{{url('rb-tematik/perencanaan/getData/')}}/"+id, function(data) {
-                $('#realisasi_indikator').val(data.realisasi_indikator);
-                $('#capaian_indikator').val(data.capaian_indikator);
+                $('#realisasi-indikator').val(data.realisasi_indikator);
+                $('#capaian-indikator').val(data.capaian_indikator);
                 $('#catatan').val(data.catatan);
             $('.saveButton').prop('disabled', false);
                 modal_monev_indikator_roadmap.show();
