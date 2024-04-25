@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\FokusIntervensi;
 use Illuminate\Http\Request;
-use App\Models\GeneralPerencanaan;
 use App\Models\Tema;
 use App\Models\TematikSasaranRoadmap;
 use App\Models\TematikIndikatorRoadmap;
@@ -369,6 +368,60 @@ class RBTematikController extends Controller
         return redirect('rb-tematik/permasalahan');
     }
 
+    public function get_permasalahan($permasalahan_id)
+    {
+        $permasalahan = TematikPermasalahan::where('id', $permasalahan_id)->first();
+        $permasalahan_lengkap  = [
+            "sasaran_roadmap_id" => $permasalahan->indikator_roadmap->sasaran_roadmap->id,
+            "sasaran_roadmap" => $permasalahan->indikator_roadmap->sasaran_roadmap->nama,
+            "indikator_roadmap_id" => $permasalahan->indikator_roadmap->id,
+            "indikator_roadmap" => $permasalahan->indikator_roadmap->nama,
+            "target_roadmap" => $permasalahan->indikator_roadmap->target,
+            "target_satuan_roadmap" => $permasalahan->indikator_roadmap->satuan,
+            "permasalahan_id" =>  $permasalahan->id,
+            "permasalahan_nama" =>  $permasalahan->nama,
+            "permasalahan_sasaran" => $permasalahan->sasaran_permasalahan,
+        ];
+        return response()->json($permasalahan_lengkap);
+    }
+
+    public function permasalahanHapus(Request $request)
+    {
+        $pesan = '';
+
+        $user = Auth::User();
+        $permasalahan = TematikPermasalahan::where('id', $request->id)->first();
+        if (!$permasalahan) {
+            abort(404);
+        }
+        if (Gate::denies('modify-permasalahan', $permasalahan)) {
+            // Unauthorized, handle accordingly
+            abort(403, 'Unauthorized');
+        }
+        $success = false;
+        if ($permasalahan->indikator_permasalahan->count() > 0) {
+            $pesan = 'Hapus dahulu indikator permasalahan yang terkait dengan permasalahan ini';
+            $success = false;
+            return response()->json(['success' => $success, 'pesan' => $pesan]);
+        } else {
+            DB::beginTransaction();
+            try {
+                if ($permasalahan->delete()) {
+                    $success = true;
+                }
+            } catch (\Throwable $th) {
+                DB::rollBack();
+                throw $th;
+            }
+            if ($success) {
+                DB::commit();
+            } else {
+                DB::rollBack();
+            }
+            return response()->json(['success' => $success]);
+        }
+    }
+
     public function simpanIndikatorPermasalahan(Request $request)
     {
         $indikatorPermasalahan = TematikIndikatorPermasalahan::where('id', $request->tematik_indikator_permasalahan_id)->first();
@@ -395,24 +448,44 @@ class RBTematikController extends Controller
         return redirect('rb-tematik/permasalahan');
     }
 
-    public function get_permaalahan($permasalahan_id)
+    public function indikatorPermasalahanHapus(Request $request)
     {
-        $permasalahan = TematikPermasalahan::where('id', $permasalahan_id)->first();
-        $permasalahan_lengkap  = [
-            "sasaran_roadmap_id" => $permasalahan->indikator_roadmap->sasaran_roadmap->id,
-            "sasaran_roadmap" => $permasalahan->indikator_roadmap->sasaran_roadmap->nama,
-            "indikator_roadmap_id" => $permasalahan->indikator_roadmap->id,
-            "indikator_roadmap" => $permasalahan->indikator_roadmap->nama,
-            "target_roadmap" => $permasalahan->indikator_roadmap->target,
-            "target_satuan_roadmap" => $permasalahan->indikator_roadmap->satuan,
-            "permasalahan_id" =>  $permasalahan->id,
-            "permasalahan_nama" =>  $permasalahan->nama,
-            "permasalahan_sasaran" => $permasalahan->sasaran_permasalahan,
-        ];
-        return response()->json($permasalahan_lengkap);
+        $pesan = '';
+
+        $user = Auth::User();
+        $indikatorPermasalahan = TematikIndikatorPermasalahan::where('id', $request->id)->first();
+        if (!$indikatorPermasalahan) {
+            abort(404);
+        }
+        if (Gate::denies('modify-indikator', $indikatorPermasalahan)) {
+            // Unauthorized, handle accordingly
+            abort(403, 'Unauthorized');
+        }
+        $success = false;
+        if ($indikatorPermasalahan->rencana_aksi->count() > 0) {
+            $pesan = 'Hapus dahulu rencana aksi yang terkait dengan indikator ini';
+            $success = false;
+            return response()->json(['success' => $success, 'pesan' => $pesan]);
+        } else {
+            DB::beginTransaction();
+            try {
+                if ($indikatorPermasalahan->delete()) {
+                    $success = true;
+                }
+            } catch (\Throwable $th) {
+                DB::rollBack();
+                throw $th;
+            }
+            if ($success) {
+                DB::commit();
+            } else {
+                DB::rollBack();
+            }
+            return response()->json(['success' => $success]);
+        }
     }
 
-    public function get_indikator_permaalahan($indikator_id)
+    public function get_indikator_permasalahan($indikator_id)
     {
         $indikator_permasalahan = TematikIndikatorPermasalahan::where('id', $indikator_id)->first();
         $indikator_permasalahan_lengkap  = [

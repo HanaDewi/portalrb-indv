@@ -162,7 +162,7 @@
                             </a>
                             <br/>
                             <a href="#" class="btn btn-danger btn-sm w-full mb-2"
-                            onclick="hapus('{{$tematikData['indikator_permasalahan_id']}}')" > 
+                            onclick="hapus_indikator('{{$tematikData['indikator_permasalahan_id']}}')" > 
                                 <i data-lucide="edit" class="w-4 h-4 mr-1"></i> Hapus Indikator
                                 <span class="text-xs px-1 rounded-full bg-warning text-white badge"><!-- count($target->rencana_aksi) --></span>
                             </a>
@@ -198,7 +198,7 @@
                                         <tr>
                                             <td class="font-bold w-30">Tema </td>
                                             <td colspan="5">
-                                                <select class="form-select mt-2 sm:mr-2 form-control" name="tema_id[]">
+                                                <select class="form-select mt-2 sm:mr-2 form-control" name="tema_id[]" required>
                                                     @foreach ($temas as $tema)
                                                     <option value="{{ $tema->id }}">{{ $tema->nama }}
                                                     </option>
@@ -214,7 +214,7 @@
                                         <tr>
                                             <td class="font-bold w-30">Sasaran Tematik Roadmap</td>
                                             <td colspan="5">
-                                                <input type="text" name="nama[]" placeholder="Masukan Sasaran Roadmap" class="form-control" />
+                                                <input type="text" name="nama[]" placeholder="Masukan Sasaran Roadmap" class="form-control" / required>
                                             </td>
                                         </tr>
                                     </table>
@@ -293,13 +293,13 @@
                                         <tr>
                                             <td class="font-bold w-30">Permasalahan</td>
                                             <td colspan="5">
-                                                <textarea id="modPermasalahan-permasalahan" name="permasalahan" class="form-control" rows="8"></textarea>
+                                                <textarea id="modPermasalahan-permasalahan" name="permasalahan" class="form-control" rows="8" required></textarea>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="font-bold w-30">Sasaran Permasalahan</td>
                                             <td colspan="5">
-                                            <textarea id="modPermasalahan-sasaran-permasalahan" name="sasaran_permasalahan"  class="form-control" rows="4" ></textarea>
+                                            <textarea id="modPermasalahan-sasaran-permasalahan" name="sasaran_permasalahan"  class="form-control" rows="4" required></textarea>
                                             </td>
                                         </tr>
                                     </table>
@@ -355,19 +355,19 @@
                                         <tr>
                                             <td class="font-bold w-30">Indikator </td>
                                             <td colspan="5">
-                                                <input type="text" id="indikator-permasalahan" name="indikator_permasalahan" placeholder="Masukan Indikator" class="form-control" />
+                                                <input type="text" id="indikator-permasalahan" name="indikator_permasalahan" placeholder="Masukan Indikator" class="form-control" required/>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="font-bold w-30">Target</td>
                                             <td colspan="5">
-                                                <input type="text" id="target-permasalahan" name="target_permasalahan" placeholder="Masukan Target" class="form-control" />
+                                                <input type="text" id="target-permasalahan" name="target_permasalahan" placeholder="Masukan Target" class="form-control" required/>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="font-bold w-30">Satuan</td>
                                             <td colspan="5">
-                                                <input type="text" id="satuan-target-permasalahan" name="satuan_target_permasalahan" placeholder="Masukan Target" class="form-control" />
+                                                <input type="text" id="satuan-target-permasalahan" name="satuan_target_permasalahan" placeholder="Masukan Target" class="form-control" required/>
                                             </td>
                                         </tr>
                                     </table>
@@ -483,6 +483,88 @@
             $('#modPermasalahan-sasaran-permasalahan').val(data.permasalahan_sasaran);
             $('.saveButton').prop('disabled', false);
             modal_permasalahan.show();
+        });
+    }
+
+    function hapusPermasalahan(id) {
+        Swal.fire({
+            title: "Yakin?",
+            text: "Hapus Permasalahan ini?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Ya, Hapus aja!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: "{{url('rb-tematik/permasalahan/')}}/hapus/"+id,
+                    type: "post",
+                    data: {_token: '{{csrf_token()}}', id: id},
+                    dataType: "json",
+                    success: function(terhapus) {
+                        if (terhapus.success) {
+                            Swal.fire('Selamat!', 'Data permasalahan berhasil dihapus!', 'success');
+                            Swal.fire({
+                                title: "'Selamat!",
+                                text: 'Data permasalahan berhasil dihapus!! '+terhapus.pesan,
+                                icon: 'warning',
+                                confirmButtonColor: "#DD6B55",
+                                confirmButtonText: "Ya, Hapus aja!"
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    location.reload(true);
+                                };
+                            });
+                        } else {    
+                            Swal.fire('Aduh!', 'Data permasalahan gagal dihapus! '+terhapus.pesan, 'error');
+                        }
+                    },
+                    error: function(err) {
+                        Swal.fire('Error!', 'Terjadi kesalahan! <br/> Pastikan menghapus dahulu indikator permasalahan yang terkait dengan indikator roadmap ini', 'error');
+                    }
+                });
+            }
+        });
+    }
+
+    function hapus_indikator(id) {
+        Swal.fire({
+            title: "Yakin?",
+            text: "Hapus Indikator ini?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Ya, Hapus aja!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: "{{url('rb-tematik/permasalahan/indikator_permasalahan/')}}/hapus/"+id,
+                    type: "post",
+                    data: {_token: '{{csrf_token()}}', id: id},
+                    dataType: "json",
+                    success: function(terhapus) {
+                        if (terhapus.success) {
+                            Swal.fire('Selamat!', 'Data Indikator berhasil dihapus!', 'success');
+                            Swal.fire({
+                                title: "'Selamat!",
+                                text: 'Data Indikator berhasil dihapus!! '+terhapus.pesan,
+                                icon: 'warning',
+                                confirmButtonColor: "#DD6B55",
+                                confirmButtonText: "Ya, Hapus aja!"
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    location.reload(true);
+                                };
+                            });
+                        } else {    
+                            Swal.fire('Aduh!', 'Data indikator gagal dihapus! '+terhapus.pesan, 'error');
+                        }
+                    },
+                    error: function(err) {
+                        Swal.fire('Error!', 'Terjadi kesalahan! <br/> Pastikan menghapus dahulu rencana aksi yang terkait dengan indikator roadmap ini', 'error');
+                    }
+                });
+            }
         });
     }
 </script>
