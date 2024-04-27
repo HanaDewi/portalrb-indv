@@ -18,7 +18,7 @@
                 <div class="grid grid-cols-4">
                     <div class="col-span-3">
                         <label for="instansi_id" class="form-label mt-2 font-bold">Instansi</label>
-                        {!! Form::select('instansi_id', instansis(), $instansi_id, ['class' => 'tom-select mt-1', 'id' => 'instansi_id', 'data-placeholder' => 'Pilih Kegiatan Utama', 'required']) !!}
+                        {!! Form::select('instansi_id', instansis(), $instansi_id, ['class' => 'tom-select mt-1', 'id' => 'instansi_id', 'data-placeholder' => 'Pilih Instansi', 'required']) !!}
                     </div>
                     <div class="ml-5">
                         <button type="submit" class="btn btn-success saveButton mt-10">Lihat Data</button>

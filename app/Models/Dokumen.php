@@ -19,4 +19,9 @@ class Dokumen extends Model
     {
         return $this->hasMany(DokumenFile::class, 'dokumen_id');
     }
+
+    public function instansi()
+    {
+        return $this->belongsTo(KlpdInstansi::class, 'instansi_id');
+    }
 }

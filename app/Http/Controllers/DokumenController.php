@@ -25,18 +25,38 @@ class DokumenController extends Controller
 
     public function index()
     {
-        $max_id = DokumenFile::max('id');
-        $idx = $max_id > 0 ? $max_id + 1 : 1;
-        return view('dokumen.index', compact('idx'));
+        $user = Auth::User();
+        if (in_array($user->level, ['admin', 'tpn', 'tpm'])) {
+            return view('dokumen.admin');
+        } else {
+            $max_id = DokumenFile::max('id');
+            $idx = $max_id > 0 ? $max_id + 1 : 1;
+            return view('dokumen.index', compact('idx'));
+        }
     }
 
-    public function getDatas()
+    public function getDatas(Request $request)
     {
         $user = Auth::User();
-        $instansi_id = $user->user_rel->instansi_id;
-        $dokumens = Dokumen::where('instansi_id', $instansi_id)->get();
+        if (in_array($user->level, ['provinsi', 'kabupaten', 'kl'])) {
+            $instansi_id = $user->user_rel->instansi_id;
+            $dokumens = Dokumen::where('instansi_id', $instansi_id)->get();
+        } else {
+            $model = new Dokumen();
+            if ($request->instansi_id) {
+                $model = $model->whereIn('instansi_id', $request->instansi_id);
+            } 
+            if ($request->tahun) {
+                $model = $model->whereIn('tahun', $request->tahun);
+            } 
+            if ($request->kategori_id) {
+                $model = $model->whereIn('kategori_id', $request->kategori_id);
+            } 
+            $dokumens = $model->get();
+        }
         foreach ($dokumens as $dokumen) {
             $dokumen->nama_kategori = $dokumen->kategori->nama;
+            $dokumen->nama_instansi = $dokumen->instansi->name;
             $dokumen->filenya = '';
             foreach ($dokumen->files as $file) {
                 $ext = pathinfo($file->file, PATHINFO_EXTENSION);
