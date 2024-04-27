@@ -191,7 +191,12 @@ function fnumber($number, $digit = 0)
 
 function instansis()
 {
-    return KlpdInstansi::orderBy('id')->pluck('name', 'id');
+    $inslist = KlpdInstansi::orderBy('id')->pluck('name', 'id');
+    $result = ['-'=>' -- Pilih instansi -- '];
+    foreach ($inslist as $kk=>$lst) {
+        $result[$kk] = $lst;
+    }
+    return $result;
 }
 
 function exts($ext)

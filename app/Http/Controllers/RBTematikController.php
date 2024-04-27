@@ -792,24 +792,56 @@ class RBTematikController extends Controller
 
     public function rekap_data(Request $request)
     {
+        $temas = Tema::get();
         $user = Auth::User();
-        if ($request->instansi_id && in_array($user->level, ['admin', 'tpn'])) {
-            $instansi_id = $request->instansi_id;
-        } else if ($user->user_rel->instansi_id) {
-            $instansi_id = $user->user_rel->instansi_id;
+
+        $finstansi = $request->get('instansi_id');
+        $ftema = $request->get('ftema');
+        $fsasaranroadmap = $request->get('fsasaranroadmap');
+        $findikatorroadmap = $request->get('findikatorroadmap');
+        $fpermasalahan = $request->get('fpermasalahan');
+
+        if (in_array($user->level, ['admin', 'tpn'])) {
+            if ($finstansi=='-') {
+                $finstansi = '';
+            }
+            $instansi_id = $finstansi;
         } else {
-            $instansi_id = KlpdInstansi::orderBy('id')->first()->id;
+            if ($request->instansi_id && in_array($user->level, ['admin', 'tpn'])) {
+                $instansi_id = $request->instansi_id;
+            } else if ($user->user_rel->instansi_id) {
+                $instansi_id = $user->user_rel->instansi_id;
+            } else {
+                $instansi_id = KlpdInstansi::orderBy('id')->first()->id;
+            }
         }
-        $nama_instansi = KlpdInstansi::find($instansi_id)->name;
-        if ($request->sasaran_id) {
-            $sasaran_id = $request->sasaran_id;
+
+        if ($instansi_id) {
+            $filterSasaranRoadmap = TematikSasaranRoadmap::where('instansi_id', $instansi_id)->where('tema_id', $ftema)->orderBy('tema_id')->get();
+            $nama_instansi = KlpdInstansi::find($instansi_id)->name;
         } else {
-            $sasaran_id = [];
+            $filterSasaranRoadmap = TematikSasaranRoadmap::where('tema_id', $ftema)->orderBy('tema_id')->get();
+            $nama_instansi = '';
         }
-        $model = TematikSasaranRoadmap::where('instansi_id', $instansi_id)->orderBy('tema_id')->orderBy('id');
-        if (count($sasaran_id)) {
-            $model = $model->whereIn('id', $sasaran_id);
+        if ($fsasaranroadmap) {
+            $queryfilterIndikatorRoadmap = TematikIndikatorRoadmap::where('tematik_sasaran_roadmap_id', $fsasaranroadmap);
+            $filterIndikatorRoadmap = $queryfilterIndikatorRoadmap->get();
+        } else {
+            $filterIndikatorRoadmap = [];
         }
+
+        if ($findikatorroadmap) {
+            $filterTematikPermasalahan = TematikPermasalahan::where('tematik_indikator_roadmap_id', $findikatorroadmap)->get();
+        } else {
+            $filterTematikPermasalahan = [];
+        }
+
+        if ($instansi_id) {
+            $model = TematikSasaranRoadmap::where('instansi_id', $instansi_id)->orderBy('tema_id')->orderBy('id');;
+        } else {
+            $model = TematikSasaranRoadmap::where('id', 'not null')->orderBy('tema_id')->orderBy('id');
+        }
+
         $sasarans = $model->get();
         $key = 0;
         $datas = [];
@@ -882,7 +914,20 @@ class RBTematikController extends Controller
                 $key++;
             }
         }
-        return view('rb-tematik.rekap_data', compact('datas', 'instansi_id', 'sasaran_id', 'nama_instansi'));
+        return view('rb-tematik.rekap_data', compact(
+            'datas', 
+            'instansi_id', 
+            'nama_instansi', 
+            'temas',
+            'filterSasaranRoadmap',
+            'filterIndikatorRoadmap',
+            'filterTematikPermasalahan',
+            'finstansi',
+            'ftema',
+            'fsasaranroadmap',
+            'findikatorroadmap',
+            'fpermasalahan'
+        ));
     }
 
     public function removeDot($i)
