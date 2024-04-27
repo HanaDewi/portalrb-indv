@@ -103,7 +103,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/rb-general/rekap_data/simpanCatatanEvaluator', [RBGeneralController::class, 'rekap_data_simpanCatatanEvaluator']);
     // RB Tematik Sasaran Road Map
     Route::get('/rb-tematik/perencanaan', [RBTematikController::class, 'tema_sasaran'])->name('tema_sasaran');
+    Route::get('/rb-tematik/perencanaan/getSasaran/{sasaran_id}', [RBTematikController::class, 'sasaran_getData']);
     Route::get('/rb-tematik/perencanaan/getData/{indikator_id}', [RBTematikController::class, 'indikator_getData']);
+    Route::post('/rb-tematik/perencanaan/sasaran_roadmap/hapus/{sasaran_id}', [RBTematikController::class, 'sasaranRoadmapHapus']);
     Route::post('/rb-tematik/perencanaan/simpan-sasaran-roadmap', [RBTematikController::class, 'simpanSasaranRoadmap']);
     Route::post('/rb-tematik/perencanaan/simpan-indikator-roadmap', [RBTematikController::class, 'simpanIndikatorRoadmap']);
     Route::post('/rb-tematik/perencanaan/indikator_roadmap/hapus/{indikator_id}', [RBTematikController::class, 'indikatorRoadmapHapus']);
@@ -111,9 +113,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/rb-tematik/permasalahan', [RBTematikController::class, 'permasalahan'])->name('permasalahan');
     Route::get('/rb-tematik/permasalahan/get-indikator-roadmap', [RBTematikController::class, 'getIndikatorRoadmap'])->name('get_indikator_roadmap');
     Route::post('/rb-tematik/permasalahan/simpan-permasalahan', [RBTematikController::class, 'simpanPermasalahan']);
-    Route::get('/rb-tematik/permasalahan/get-permasalahan/{indikator_permasalahan_id}', [RBTematikController::class, 'get_permaalahan'])->name('get_permasalahan');
-    Route::get('/rb-tematik/permasalahan/get-indikator-permasalahan/{indikator_permasalahan_id}', [RBTematikController::class, 'get_indikator_permaalahan'])->name('get_indikator_permasalahan');
+    Route::get('/rb-tematik/permasalahan/get-permasalahan/{indikator_permasalahan_id}', [RBTematikController::class, 'get_permasalahan'])->name('get_permasalahan');
+    Route::post('/rb-tematik/permasalahan/hapus/{permasalahan_id}', [RBTematikController::class, 'permasalahanHapus']);
+    Route::get('/rb-tematik/permasalahan/get-indikator-permasalahan/{indikator_permasalahan_id}', [RBTematikController::class, 'get_indikator_permasalahan'])->name('get_indikator_permasalahan');
     Route::post('/rb-tematik/permasalahan/simpan-indikator-permasalahan', [RBTematikController::class, 'simpanIndikatorPermasalahan']);
+    Route::post('/rb-tematik/permasalahan/indikator_permasalahan/hapus/{indikator_id}', [RBTematikController::class, 'indikatorPermasalahanHapus']);
     // RB Tematik Renaksi
     Route::get('/rb-tematik/permasalahan/renaksi/{indikator_id}', [RBTematikController::class, 'rencana_aksi'])->name('rencana_aksi_tematik');
     Route::get('/rb-tematik/permasalahan/renaksi/{indikator_id}/getDatas', [RBTematikController::class, 'rencana_aksi_getDatas']);

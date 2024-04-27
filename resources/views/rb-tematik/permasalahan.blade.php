@@ -25,7 +25,9 @@
                         </td>
                     </tr>
                     <tr>
-                        <td class="font-bold">Sasaran Roadmap</td>
+                        <td class="font-bold">Sasaran Roadmap 
+                        
+                        </td>
                         <td>
                             <select class="form-control" name="fsasaranroadmap" onchange="$('#filter-form').submit();">
                                 <option value=""> -- Pilih sasaran roadmap -- </option>
@@ -41,32 +43,18 @@
                             <select class="form-control" name="findikatorroadmap" onchange="$('#filter-form').submit();">
                                 <option value=""> -- Pilih indikator roadmap -- </option>
                                 @foreach ($filterIndikatorRoadmap as $fir)
-                                <option value="{{ $fir->nama }}" {{ $findikatorroadmap==$fir->nama ? 'selected':'' }}>{{ $fir->nama }}</option>
+                                <option value="{{ $fir->id }}" {{ $findikatorroadmap==$fir->id ? 'selected':'' }}>{{ $fir->nama }}</option>
                                 @endforeach
                             </select>
                         </td>
                     </tr>
                     <tr>
                         <td class="font-bold">Target</td>
-                        <td>
-                            <select class="form-control" name="ftarget" onchange="$('#filter-form').submit();">
-                                <option value=""> -- Pilih target -- </option>
-                                @foreach ($filterTarget as $targ)
-                                <option value="{{ $targ->target }}" {{ $ftarget==$targ->target ? 'selected':'' }}>{{ $targ->target }}</option>
-                                @endforeach
-                            </select>
-                        </td>
+                        <td>{{ $ftarget }}</td>
                     </tr>
                     <tr>
                         <td class="font-bold">Satuan Target</td>
-                        <td>
-                            <select class="form-control" name="fsatuantarget" onchange="$('#filter-form').submit();">
-                                <option value=""> -- Pilih satuan target -- </option>
-                                @foreach ($filterSatuanTarget as $starg)
-                                <option value="{{ $starg->satuan }}" {{ $fsatuantarget==$starg->satuan ? 'selected':'' }}>{{ $starg->satuan }}</option>
-                                @endforeach
-                            </select>
-                        </td>
+                        <td>{{ $fsatuantarget }}</td>
                     </tr>
                 </table>
             </form>
@@ -91,7 +79,9 @@
                         <th class="w-5">Tema</th>
                         <th class="w-5">Sasaran & Indikator Roadmap</th>
                         <th class="w-5">Permasalahan (bottleneck)</th>
-                        <th class="w-5">Sasaran</th>
+                        <th class="w-5">Sasaran <br/>
+                            <p style="font-size: 0.7em; line-height: 1.3;">(Kondisi yang menggambarkan untuk penyelesaian permasalahan)</p>
+                        </th>
                         <th class="w-5">Indikator</th>
                         <th class="w-5">Target</th>
                         <th class="w-5">Satuan</th>
@@ -128,6 +118,12 @@
                                 <i data-lucide="edit" class="w-4 h-4 mr-1"></i> Edit Permasalahan
                                 <span class="text-xs px-1 rounded-full bg-warning text-white badge"><!-- count($target->rencana_aksi) --></span>
                             </a>
+                            <br/>
+                            <a href="#" class="btn btn-danger btn-sm w-full mb-2"
+                            onclick="hapusPermasalahan('{{$tematikData['permasalahan_id']}}')" > 
+                                <i data-lucide="edit" class="w-4 h-4 mr-1"></i> Hapus Permasalahan
+                                <span class="text-xs px-1 rounded-full bg-warning text-white badge"><!-- count($target->rencana_aksi) --></span>
+                            </a>
                             @endif
                         </td>
                         <td>
@@ -148,12 +144,6 @@
                         </td>
                         <td>
                             @if ($tematikData['indikator_permasalahan_nama'])
-                            <a href="#" class="btn btn-pending btn-sm w-full mb-2"
-                            onclick="edit('{{$tematikData['indikator_permasalahan_id']}}')" > 
-                                <i data-lucide="edit" class="w-4 h-4 mr-1"></i> Edit Indikator
-                                <span class="text-xs px-1 rounded-full bg-warning text-white badge"><!-- count($target->rencana_aksi) --></span>
-                            </a>
-                            <br>
                             <a href="{{ url('rb-tematik/permasalahan/renaksi/' . $tematikData['indikator_permasalahan_id'])}}" class="btn btn-primary btn-sm w-full mb-2">
                                 <i data-lucide="edit" class="w-4 h-4 mr-1"></i> Renaksi
                                 <span class="text-xs px-1 rounded-full bg-warning text-white badge"> <!-- count($indikator->rencana_aksi) --> </span>
@@ -162,7 +152,20 @@
                             <a href="{{ url('rb-tematik/permasalahan/monev/' . $tematikData['indikator_permasalahan_id'])}}" class="btn btn-dark btn-sm w-full mb-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" icon-name="edit" data-lucide="edit" class="lucide lucide-edit w-4 h-4 mr-1">
                                     <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"></path>
                                     <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                                </svg>Monev</a>
+                                </svg>Monev
+                            </a>
+                            <br/>
+                            <a href="#" class="btn btn-pending btn-sm w-full mb-2"
+                            onclick="edit('{{$tematikData['indikator_permasalahan_id']}}')" > 
+                                <i data-lucide="edit" class="w-4 h-4 mr-1"></i> Edit Indikator
+                                <span class="text-xs px-1 rounded-full bg-warning text-white badge"><!-- count($target->rencana_aksi) --></span>
+                            </a>
+                            <br/>
+                            <a href="#" class="btn btn-danger btn-sm w-full mb-2"
+                            onclick="hapus_indikator('{{$tematikData['indikator_permasalahan_id']}}')" > 
+                                <i data-lucide="edit" class="w-4 h-4 mr-1"></i> Hapus Indikator
+                                <span class="text-xs px-1 rounded-full bg-warning text-white badge"><!-- count($target->rencana_aksi) --></span>
+                            </a>
                             
                             @endif
                         </td>
@@ -195,7 +198,7 @@
                                         <tr>
                                             <td class="font-bold w-30">Tema </td>
                                             <td colspan="5">
-                                                <select class="form-select mt-2 sm:mr-2 form-control" name="tema_id[]">
+                                                <select class="form-select mt-2 sm:mr-2 form-control" name="tema_id[]" required>
                                                     @foreach ($temas as $tema)
                                                     <option value="{{ $tema->id }}">{{ $tema->nama }}
                                                     </option>
@@ -211,7 +214,7 @@
                                         <tr>
                                             <td class="font-bold w-30">Sasaran Tematik Roadmap</td>
                                             <td colspan="5">
-                                                <input type="text" name="nama[]" placeholder="Masukan Sasaran Roadmap" class="form-control" />
+                                                <input type="text" name="nama[]" placeholder="Masukan Sasaran Roadmap" class="form-control" / required>
                                             </td>
                                         </tr>
                                     </table>
@@ -290,13 +293,13 @@
                                         <tr>
                                             <td class="font-bold w-30">Permasalahan</td>
                                             <td colspan="5">
-                                                <textarea id="modPermasalahan-permasalahan" name="permasalahan" class="form-control" rows="8"></textarea>
+                                                <textarea id="modPermasalahan-permasalahan" name="permasalahan" class="form-control" rows="8" required></textarea>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="font-bold w-30">Sasaran Permasalahan</td>
                                             <td colspan="5">
-                                            <textarea id="modPermasalahan-sasaran-permasalahan" name="sasaran_permasalahan"  class="form-control" rows="4" ></textarea>
+                                            <textarea id="modPermasalahan-sasaran-permasalahan" name="sasaran_permasalahan"  class="form-control" rows="4" required></textarea>
                                             </td>
                                         </tr>
                                     </table>
@@ -352,19 +355,19 @@
                                         <tr>
                                             <td class="font-bold w-30">Indikator </td>
                                             <td colspan="5">
-                                                <input type="text" id="indikator-permasalahan" name="indikator_permasalahan" placeholder="Masukan Indikator" class="form-control" />
+                                                <input type="text" id="indikator-permasalahan" name="indikator_permasalahan" placeholder="Masukan Indikator" class="form-control" required/>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="font-bold w-30">Target</td>
                                             <td colspan="5">
-                                                <input type="text" id="target-permasalahan" name="target_permasalahan" placeholder="Masukan Target" class="form-control" />
+                                                <input type="text" id="target-permasalahan" name="target_permasalahan" placeholder="Masukan Target" class="form-control" required/>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="font-bold w-30">Satuan</td>
                                             <td colspan="5">
-                                                <input type="text" id="satuan-target-permasalahan" name="satuan_target_permasalahan" placeholder="Masukan Target" class="form-control" />
+                                                <input type="text" id="satuan-target-permasalahan" name="satuan_target_permasalahan" placeholder="Masukan Target" class="form-control" required/>
                                             </td>
                                         </tr>
                                     </table>
@@ -482,6 +485,88 @@
             modal_permasalahan.show();
         });
     }
+
+    function hapusPermasalahan(id) {
+        Swal.fire({
+            title: "Yakin?",
+            text: "Hapus Permasalahan ini?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Ya, Hapus aja!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: "{{url('rb-tematik/permasalahan/')}}/hapus/"+id,
+                    type: "post",
+                    data: {_token: '{{csrf_token()}}', id: id},
+                    dataType: "json",
+                    success: function(terhapus) {
+                        if (terhapus.success) {
+                            Swal.fire('Selamat!', 'Data permasalahan berhasil dihapus!', 'success');
+                            Swal.fire({
+                                title: "'Selamat!",
+                                text: 'Data permasalahan berhasil dihapus!! '+terhapus.pesan,
+                                icon: 'warning',
+                                confirmButtonColor: "#DD6B55",
+                                confirmButtonText: "Ya, Hapus aja!"
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    location.reload(true);
+                                };
+                            });
+                        } else {    
+                            Swal.fire('Aduh!', 'Data permasalahan gagal dihapus! '+terhapus.pesan, 'error');
+                        }
+                    },
+                    error: function(err) {
+                        Swal.fire('Error!', 'Terjadi kesalahan! <br/> Pastikan menghapus dahulu indikator permasalahan yang terkait dengan indikator roadmap ini', 'error');
+                    }
+                });
+            }
+        });
+    }
+
+    function hapus_indikator(id) {
+        Swal.fire({
+            title: "Yakin?",
+            text: "Hapus Indikator ini?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Ya, Hapus aja!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: "{{url('rb-tematik/permasalahan/indikator_permasalahan/')}}/hapus/"+id,
+                    type: "post",
+                    data: {_token: '{{csrf_token()}}', id: id},
+                    dataType: "json",
+                    success: function(terhapus) {
+                        if (terhapus.success) {
+                            Swal.fire('Selamat!', 'Data Indikator berhasil dihapus!', 'success');
+                            Swal.fire({
+                                title: "'Selamat!",
+                                text: 'Data Indikator berhasil dihapus!! '+terhapus.pesan,
+                                icon: 'warning',
+                                confirmButtonColor: "#DD6B55",
+                                confirmButtonText: "Ya, Hapus aja!"
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    location.reload(true);
+                                };
+                            });
+                        } else {    
+                            Swal.fire('Aduh!', 'Data indikator gagal dihapus! '+terhapus.pesan, 'error');
+                        }
+                    },
+                    error: function(err) {
+                        Swal.fire('Error!', 'Terjadi kesalahan! <br/> Pastikan menghapus dahulu rencana aksi yang terkait dengan indikator roadmap ini', 'error');
+                    }
+                });
+            }
+        });
+    }
 </script>
 <script src="https://cdn.rawgit.com/ashl1/datatables-rowsgroup/v1.0.0/dataTables.rowsGroup.js"></script>
 <script>
@@ -503,7 +588,15 @@
                 extend: 'excel',
                 text: '<button class="btn btn-warning btn-sm w-32 mr-2 mb-2"> <svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 50 50" width="18px" height="18px"><path d="M 28.875 0 C 28.855469 0.0078125 28.832031 0.0195313 28.8125 0.03125 L 0.8125 5.34375 C 0.335938 5.433594 -0.0078125 5.855469 0 6.34375 L 0 43.65625 C -0.0078125 44.144531 0.335938 44.566406 0.8125 44.65625 L 28.8125 49.96875 C 29.101563 50.023438 29.402344 49.949219 29.632813 49.761719 C 29.859375 49.574219 29.996094 49.296875 30 49 L 30 44 L 47 44 C 48.09375 44 49 43.09375 49 42 L 49 8 C 49 6.90625 48.09375 6 47 6 L 30 6 L 30 1 C 30.003906 0.710938 29.878906 0.4375 29.664063 0.246094 C 29.449219 0.0546875 29.160156 -0.0351563 28.875 0 Z M 28 2.1875 L 28 6.53125 C 27.867188 6.808594 27.867188 7.128906 28 7.40625 L 28 42.8125 C 27.972656 42.945313 27.972656 43.085938 28 43.21875 L 28 47.8125 L 2 42.84375 L 2 7.15625 Z M 30 8 L 47 8 L 47 42 L 30 42 L 30 37 L 34 37 L 34 35 L 30 35 L 30 29 L 34 29 L 34 27 L 30 27 L 30 22 L 34 22 L 34 20 L 30 20 L 30 15 L 34 15 L 34 13 L 30 13 Z M 36 13 L 36 15 L 44 15 L 44 13 Z M 6.6875 15.6875 L 12.15625 25.03125 L 6.1875 34.375 L 11.1875 34.375 L 14.4375 28.34375 C 14.664063 27.761719 14.8125 27.316406 14.875 27.03125 L 14.90625 27.03125 C 15.035156 27.640625 15.160156 28.054688 15.28125 28.28125 L 18.53125 34.375 L 23.5 34.375 L 17.75 24.9375 L 23.34375 15.6875 L 18.65625 15.6875 L 15.6875 21.21875 C 15.402344 21.941406 15.199219 22.511719 15.09375 22.875 L 15.0625 22.875 C 14.898438 22.265625 14.710938 21.722656 14.5 21.28125 L 11.8125 15.6875 Z M 36 20 L 36 22 L 44 22 L 44 20 Z M 36 27 L 36 29 L 44 29 L 44 27 Z M 36 35 L 36 37 L 44 37 L 44 35 Z"/></svg>  &nbsp;Excel </button>',
                         titleAttr: 'Download Excel'
-            }],
+            },
+            {
+                text: '<a href="/dashboard" class="btn btn-success btn-sm w-32 mr-2 mb-2"> <svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 50 50" width="18px" height="18px"><path d="M 28.875 0 C 28.855469 0.0078125 28.832031 0.0195313 28.8125 0.03125 L 0.8125 5.34375 C 0.335938 5.433594 -0.0078125 5.855469 0 6.34375 L 0 43.65625 C -0.0078125 44.144531 0.335938 44.566406 0.8125 44.65625 L 28.8125 49.96875 C 29.101563 50.023438 29.402344 49.949219 29.632813 49.761719 C 29.859375 49.574219 29.996094 49.296875 30 49 L 30 44 L 47 44 C 48.09375 44 49 43.09375 49 42 L 49 8 C 49 6.90625 48.09375 6 47 6 L 30 6 L 30 1 C 30.003906 0.710938 29.878906 0.4375 29.664063 0.246094 C 29.449219 0.0546875 29.160156 -0.0351563 28.875 0 Z M 28 2.1875 L 28 6.53125 C 27.867188 6.808594 27.867188 7.128906 28 7.40625 L 28 42.8125 C 27.972656 42.945313 27.972656 43.085938 28 43.21875 L 28 47.8125 L 2 42.84375 L 2 7.15625 Z M 30 8 L 47 8 L 47 42 L 30 42 L 30 37 L 34 37 L 34 35 L 30 35 L 30 29 L 34 29 L 34 27 L 30 27 L 30 22 L 34 22 L 34 20 L 30 20 L 30 15 L 34 15 L 34 13 L 30 13 Z M 36 13 L 36 15 L 44 15 L 44 13 Z M 6.6875 15.6875 L 12.15625 25.03125 L 6.1875 34.375 L 11.1875 34.375 L 14.4375 28.34375 C 14.664063 27.761719 14.8125 27.316406 14.875 27.03125 L 14.90625 27.03125 C 15.035156 27.640625 15.160156 28.054688 15.28125 28.28125 L 18.53125 34.375 L 23.5 34.375 L 17.75 24.9375 L 23.34375 15.6875 L 18.65625 15.6875 L 15.6875 21.21875 C 15.402344 21.941406 15.199219 22.511719 15.09375 22.875 L 15.0625 22.875 C 14.898438 22.265625 14.710938 21.722656 14.5 21.28125 L 11.8125 15.6875 Z M 36 20 L 36 22 L 44 22 L 44 20 Z M 36 27 L 36 29 L 44 29 L 44 27 Z M 36 35 L 36 37 L 44 37 L 44 35 Z"/></svg>  &nbsp;Panduan-Pengisian </a>',
+                        titleAttr: 'Download Tata Cara',
+                action: function ( e, dt, button, config ) {
+                            window.location = 'panduan.php';
+                        }  
+            }
+        ],
             
             scrollX: true,
             autoWidth: true,

@@ -1,8 +1,6 @@
 <?php
 
 use App\Models\DokumenKategori;
-use App\Models\Indikator;
-use App\Models\Instansi;
 use App\Models\KegiatanUtama;
 use App\Models\KlpdInstansi;
 use App\Models\Tahun;
@@ -71,6 +69,12 @@ function menus()
             ]
         ],
         [
+            'levels' => ['admin', 'provinsi', 'kabupaten', 'kl', 'tpn', 'tpm'],
+            'title' => 'Hasil',
+            'icon' => 'database',
+            'url' => 'hasil',
+        ],
+        [
             'levels' => ['devider'],
         ],
         [
@@ -110,12 +114,6 @@ function menus()
             'title' => 'Profil',
             'icon' => 'user',
             'url' => 'profil',
-        ],
-        [
-            'levels' => ['admin', 'provinsi', 'kabupaten', 'kl', 'tpn', 'tpm'],
-            'title' => 'Hasil',
-            'icon' => 'database',
-            'url' => 'hasil',
         ],
         [
             'levels' => ['admin'],

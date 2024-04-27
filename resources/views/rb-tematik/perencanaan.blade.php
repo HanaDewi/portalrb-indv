@@ -66,7 +66,20 @@
                                         <button
                                             onclick="tambah_indikator_roadmap('{{ $tematikData['tema_nama'] }}','{{ $tematikData['sasaran_nama'] }}', '{{ $tematikData['sasaran_id'] }}');"
                                             class="btn btn-warning btn-sm w-full mb-2"><i data-lucide="edit"
-                                                class="w-4 h-4 mr-1"></i>Indikator</button>
+                                                class="w-4 h-4 mr-1"></i>Tambah Indikator
+                                        </button>
+                                        <br/>
+                                        <a href="#" class="btn btn-pending btn-sm w-full mb-2"
+                                        onclick="edit_sasaran_roadmap('{{$tematikData['sasaran_id']}}')" > 
+                                            <i data-lucide="edit" class="w-4 h-4 mr-1"></i> Edit Sasaran Tematik
+                                            <span class="text-xs px-1 rounded-full bg-warning text-white badge"><!-- count($target->rencana_aksi) --></span>
+                                        </a>
+                                        <br/>
+                                        <a href="#" class="btn btn-danger btn-sm w-full mb-2"
+                                            onclick="hapus_sasaran_roadmap('{{$tematikData['sasaran_id']}}')" > 
+                                            <i data-lucide="edit" class="w-4 h-4 mr-1"></i> Hapus Sasaran Tematik
+                                            <span class="text-xs px-1 rounded-full bg-warning text-white badge"><!-- count($target->rencana_aksi) --></span>
+                                        </a>
                                     @endif
                                 </td>
                                 <td>
@@ -90,21 +103,21 @@
                                 </td>
                                 <td>
                                     @if ($tematikData['indikator_nama'])
-                                    <a href="#" class="btn btn-pending btn-sm w-full mb-2"
-                                    onclick="edit('{{$tematikData['indikator_id']}}')" > 
-                                        <i data-lucide="edit" class="w-4 h-4 mr-1"></i> Edit
-                                        <span class="text-xs px-1 rounded-full bg-warning text-white badge"><!-- count($target->rencana_aksi) --></span>
-                                    </a>
-                                    <br>
                                     <a href="#" onclick="edit_monev('{{$tematikData['indikator_id']}}');" class="btn btn-dark btn-sm w-full mb-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" icon-name="edit" data-lucide="edit" class="lucide lucide-edit w-4 h-4 mr-1">
                                             <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"></path>
                                             <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                                         </svg>Monev
                                     </a>
                                     <br/>
+                                    <a href="#" class="btn btn-pending btn-sm w-full mb-2"
+                                    onclick="edit('{{$tematikData['indikator_id']}}')" > 
+                                        <i data-lucide="edit" class="w-4 h-4 mr-1"></i> Edit Indikator
+                                        <span class="text-xs px-1 rounded-full bg-warning text-white badge"><!-- count($target->rencana_aksi) --></span>
+                                    </a>
+                                    <br/>
                                     <a href="#" class="btn btn-danger btn-sm w-full mb-2"
                                     onclick="hapus('{{$tematikData['indikator_id']}}')" > 
-                                        <i data-lucide="edit" class="w-4 h-4 mr-1"></i> Hapus
+                                        <i data-lucide="edit" class="w-4 h-4 mr-1"></i> Hapus Indikator
                                         <span class="text-xs px-1 rounded-full bg-warning text-white badge"><!-- count($target->rencana_aksi) --></span>
                                     </a>
                                     @endif
@@ -130,6 +143,7 @@
                     method="post">
                     @csrf
                     <input type="hidden" name="tema_id" id="tema_id">
+                    <input type="hidden" name="sasaran_roadmap_id" id="sasaran-roadmap-id">
                     <div class="modal-body grid columns-12 ">
                         <div class="g-col-12">
                             <div class="border  rounded-md ">
@@ -139,7 +153,7 @@
                                             <tr>
                                                 <td class="font-bold w-30">Tema </td>
                                                 <td colspan="5">
-                                                    <select class="form-select mt-2 sm:mr-2 form-control" name="tema_id[]">
+                                                    <select class="form-select mt-2 sm:mr-2 form-control" name="tema_id[]" id="tema_id_onSasaran">
                                                         @foreach ($temas as $tema)
                                                             <option value="{{ $tema->id }}">{{ $tema->nama }}
                                                             </option>
@@ -155,7 +169,7 @@
                                             <tr>
                                                 <td class="font-bold w-30">Sasaran Tematik Roadmap</td>
                                                 <td colspan="5">
-                                                    <input type="text" name="nama[]"
+                                                    <input type="text" name="nama[]" id="sasaranOnModalSasaran"
                                                         placeholder="Masukan Sasaran Roadmap" class="form-control" />
                                                 </td>
                                             </tr>
@@ -338,6 +352,10 @@
 
         });
 
+        function getData() {
+        kegiatan_utama.ajax.url("{{url('master-data/kegiatan_utama/getDatas')}}").load(null, false);
+    }
+
         function output_form() {
             const inputform = $('#inputform-sasaran-roadmap');
             const htmlstr = inputform.get(0).outerHTML;
@@ -348,8 +366,6 @@
         function tambah_input() {
             $('#target_output_ext').append(output_form());
         }
-
-       
 
         function hapus_input(th) {
             $(th).parent().parent().parent().remove();
@@ -364,6 +380,59 @@
             $('#tema-indikator').val(tema);
             $('#sasaran-roadmap').val(sasaran_roadmap);
             modal_indikator_roadmap.show();
+        }
+
+        function edit_sasaran_roadmap(id) {
+            $('#sasaran-roadmap-id').val(id);
+            $('.saveButton').prop('disabled', true);
+            $.getJSON("{{url('rb-tematik/perencanaan/getSasaran/')}}/"+id, function(data) {
+                $('#tema_id_onSasaran').val(data.tema_id);
+                $('#sasaranOnModalSasaran').val(data.sasaran_roadmap);
+                $('.saveButton').prop('disabled', false);
+                $('#tambah_input_button').prop('disabled', true);
+                modal_sasaran_roadmap.show();
+            });
+        }
+
+        function hapus_sasaran_roadmap(id) {
+        Swal.fire({
+            title: "Yakin?",
+            text: "Hapus Sasaran Roadmap ini?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Ya, Hapus aja!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: "{{url('rb-tematik/perencanaan/sasaran_roadmap/')}}/hapus/"+id,
+                    type: "post",
+                    data: {_token: '{{csrf_token()}}', id: id},
+                    dataType: "json",
+                    success: function(terhapus) {
+                        if (terhapus.success) {
+                            Swal.fire('Selamat!', 'Data Sasaran Roadmap berhasil dihapus!', 'success');
+                            Swal.fire({
+                                title: "'Selamat!",
+                                text: 'Data Sasaran Roadmap berhasil dihapus!! '+terhapus.pesan,
+                                icon: 'warning',
+                                confirmButtonColor: "#DD6B55",
+                                confirmButtonText: "Ya, Hapus aja!"
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    location.reload(true);
+                                };
+                            });
+                        } else {    
+                            Swal.fire('Aduh!', 'Data sasaran Roadmap gagal dihapus! '+terhapus.pesan, 'error');
+                        }
+                    },
+                    error: function(err) {
+                        Swal.fire('Error!', 'Terjadi kesalahan! <br/> Pastikan menghapus dahulu indikator roadmap yang terkait dengan sasaran ini', 'error');
+                    }
+                });
+            }
+        });
         }
 
         function edit(id) {
@@ -386,18 +455,18 @@
             $('#title').html('Edit Rencana Aksi Output');
             $('.saveButton').prop('disabled', true);
             $.getJSON("{{url('rb-tematik/perencanaan/getData/')}}/"+id, function(data) {
-                $('#realisasi_indikator').val(data.realisasi_indikator);
-                $('#capaian_indikator').val(data.capaian_indikator);
+                $('#realisasi-indikator').val(data.realisasi_indikator);
+                $('#capaian-indikator').val(data.capaian_indikator);
                 $('#catatan').val(data.catatan);
             $('.saveButton').prop('disabled', false);
                 modal_monev_indikator_roadmap.show();
-            });
+            }); 
         }
 
         function hapus(id) {
         Swal.fire({
             title: "Yakin?",
-            text: "Hapus Rencana Aksi ini?",
+            text: "Hapus Indikator Roadmap ini?",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: "#DD6B55",
@@ -410,15 +479,22 @@
                     data: {_token: '{{csrf_token()}}', id: id},
                     dataType: "json",
                     success: function(terhapus) {
-                        if (terhapus) {
-                            Swal.fire('Selamat!', 'Data Rencana Aksi berhasil dihapus!', 'success');
-                        } else {
-                            Swal.fire('Aduh!', 'Data Rencana Aksi gagal dihapus! Coba lagi nanti ya..', 'error');
+                        if (terhapus.success) {
+                            Swal.fire('Selamat!', 'Data Indikator Roadmap berhasil dihapus!', 'success');
+                            Swal.fire({
+                                title: "'Selamat!",
+                                text: 'Data Indikator Roadmap berhasil dihapus!! '+terhapus.pesan,
+                                icon: 'warning',
+                                confirmButtonColor: "#DD6B55",
+                                confirmButtonText: "Ya, Hapus aja!"
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    location.reload(true);
+                                };
+                            });
+                        } else {    
+                            Swal.fire('Aduh!', 'Data indikator Roadmap gagal dihapus! '+terhapus.pesan, 'error');
                         }
-                        setTimeout(function() {
-                            location.reload(true);
-                        }, 2000);
-                        
                     },
                     error: function(err) {
                         Swal.fire('Error!', 'Terjadi kesalahan! <br/> Pastikan menghapus dahulu permalasahan yang terkait dengan indikator roadmap ini', 'error');
@@ -426,7 +502,7 @@
                 });
             }
         });
-    }
+        }
     </script>
     <script src="https://cdn.rawgit.com/ashl1/datatables-rowsgroup/v1.0.0/dataTables.rowsGroup.js"></script>
     <script>

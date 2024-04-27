@@ -20,6 +20,7 @@ class FokusIntervensiSeeder extends Seeder
             ['id' => '4', 'nama' => 'Pengawasan'],
             ['id' => '5', 'nama' => 'Teknologi dan Informasi'],
             ['id' => '6', 'nama' => 'Inovasi'],
+            ['id' => '7', 'nama' => 'Lain-lain'],
         ]);
     }
 }
