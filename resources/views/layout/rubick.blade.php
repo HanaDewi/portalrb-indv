@@ -193,9 +193,7 @@
             </div>
         
             <div class="col-span-12 grid grid-cols-12 gap-6">
-                <div class="intro-y col-span-12 md:col-span-12 lg:col-span-12 xl:col-span-12 pt-5">
                     @yield('content')
-                </div>
             </div>
         </div>
     </div>

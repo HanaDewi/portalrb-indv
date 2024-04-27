@@ -1,10 +1,13 @@
 <?php
 
+use App\Models\DokumenKategori;
 use App\Models\Indikator;
 use App\Models\Instansi;
 use App\Models\KegiatanUtama;
 use App\Models\KlpdInstansi;
+use App\Models\Tahun;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 function menus()
 {
@@ -14,6 +17,12 @@ function menus()
             'title' => 'Dashboard',
             'icon' => 'home',
             'url' => 'dashboard',
+        ],
+        [
+            'levels' => ['admin', 'provinsi', 'kabupaten', 'kl', 'tpn', 'tpm'],
+            'title' => 'Dokumen',
+            'icon' => 'file-text',
+            'url' => 'dokumen',
         ],
         [
             'levels' => ['admin', 'provinsi', 'kabupaten', 'kl', 'tpn'],
@@ -87,6 +96,12 @@ function menus()
                     'title' => 'Tema',
                     'icon' => 'bookmark',
                     'url' => 'master-data/tema',
+                ],
+                [
+                    'levels' => ['admin'],
+                    'title' => 'Dokumen',
+                    'icon' => 'file-text',
+                    'url' => 'master-data/dokumen',
                 ],
             ]
         ],
@@ -233,4 +248,14 @@ function heading_template_rb_general_rencana_aksi()
         11 => "pelaksana",
         12 => "koordinator",
     ];
+}
+
+function tahun()
+{
+    return Tahun::pluck('tahun', 'tahun');
+}
+
+function dokumen_kategori()
+{
+    return DokumenKategori::pluck('nama', 'id');
 }

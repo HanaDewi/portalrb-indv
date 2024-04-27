@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DokumenController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RBGeneralController;
@@ -53,6 +54,23 @@ Route::middleware('auth')->group(function () {
     Route::get('/master-data/tema/getData/{id}', [MasterDataController::class, 'tema_getData']);
     Route::post('/master-data/tema/simpan', [MasterDataController::class, 'tema_simpan']);
     Route::post('/master-data/tema/hapus', [MasterDataController::class, 'tema_hapus']);
+    // Dokumen
+    Route::get('/master-data/dokumen', [MasterDataController::class, 'dokumen'])->name('master-data_dokumen');
+    Route::get('/master-data/dokumen/getDataTahun', [MasterDataController::class, 'dokumen_getDataTahun']);
+    Route::post('/master-data/dokumen/simpanTahun', [MasterDataController::class, 'dokumen_simpanTahun']);
+    Route::post('/master-data/dokumen/hapusTahun', [MasterDataController::class, 'dokumen_hapusTahun']);
+    Route::get('/master-data/dokumen/getDataKategoris', [MasterDataController::class, 'dokumen_getDataKategoris']);
+    Route::get('/master-data/dokumen/getDataKategori/{id}', [MasterDataController::class, 'dokumen_getDataKategori']);
+    Route::post('/master-data/dokumen/simpanKategori', [MasterDataController::class, 'dokumen_simpanKategori']);
+    Route::post('/master-data/dokumen/hapusKategori', [MasterDataController::class, 'dokumen_hapusKategori']);
+
+
+    // Dokumen Upload
+    Route::get('/dokumen', [DokumenController::class, 'index'])->name('dokumen');
+    Route::get('/dokumen/getDatas', [DokumenController::class, 'getDatas']);
+    Route::get('/dokumen/getData/{tahun}/{kategori_id}', [DokumenController::class, 'getData']);
+    Route::post('/dokumen/simpan', [DokumenController::class, 'simpan']);
+    Route::post('/dokumen/hapus', [DokumenController::class, 'hapus']);
 
     // RB General Perencanaan
     Route::get('/rb-general/perencanaan', [RBGeneralController::class, 'perencanaan'])->name('perencanaan');

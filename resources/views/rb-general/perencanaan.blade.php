@@ -30,7 +30,7 @@ $idx = 0;
                         <th class="w150">Indikator</th>
                         <th>Baseline</th>
                         <th class="w-5">Target</th>
-                        <th class="w-5">Dokumen</th>
+                        {{-- <th class="w-5">Dokumen</th> --}}
                         <th class="w150">Keterangan</th>
                         <th class="w-5">Atur</th>
                     </tr>
@@ -80,7 +80,7 @@ $idx = 0;
                                             <span class="font-bold mr-1">{{ $target->tahun }}: </span> {{ $target->target }}
                                         </div>
                                     </td>
-                                    <td>
+                                    {{-- <td>
                                         <button onclick="tambah_dokumen('{{ $target->id }}');" class="btn btn-primary btn-sm w-full mb-2"><i data-lucide="plus" class="w-4 h-4 mr-1"></i>Dokumen</button>
                                         @php
                                         $idx = $target->dokumens ? $target->dokumens->max('id') + 1 : 0;
@@ -94,7 +94,7 @@ $idx = 0;
                                         }
                                         @endphp
                                         {!! $dokumen_list !!}
-                                    </td>
+                                    </td> --}}
                                     <td>
                                         <span class="font-bold mr-1">Realisasi Indikator: </span>{{ $target->realiasasi_indikator ? $target->realiasasi_indikator : '-' }}<br>
                                         <span class="font-bold mr-1">Capaian Indikator: </span>{{ $target->capaian_indikator ? $target->capaian_indikator : '-' }}<br>
