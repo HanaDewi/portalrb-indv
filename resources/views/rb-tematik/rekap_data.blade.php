@@ -120,7 +120,7 @@
                     @endphp
                         <tr>
                             <td class="font-bold">{{ $no }}</td>
-                            <td class="font-bold">{{ $data['sasaran_roadmap']->tema->nama }}</td>
+                            <td class="font-bold">{{ $data['sasaran_roadmap']->tema ? $data['sasaran_roadmap']->tema->nama:'' }}</td>
                             <td>{{ $data['sasaran_roadmap']->nama }}</td>
                             <td>
                                 {{ $data['indikator_roadmap']->nama }}

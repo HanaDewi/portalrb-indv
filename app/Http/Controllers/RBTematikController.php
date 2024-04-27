@@ -837,9 +837,9 @@ class RBTematikController extends Controller
         }
 
         if ($instansi_id) {
-            $model = TematikSasaranRoadmap::where('instansi_id', $instansi_id)->orderBy('tema_id')->orderBy('id');;
+            $model = TematikSasaranRoadmap::where('instansi_id', $instansi_id)->orderBy('tema_id')->orderBy('id');
         } else {
-            $model = TematikSasaranRoadmap::where('id', 'not null')->orderBy('tema_id')->orderBy('id');
+            $model = TematikSasaranRoadmap::orderBy('tema_id')->orderBy('id');
         }
 
         $sasarans = $model->get();
