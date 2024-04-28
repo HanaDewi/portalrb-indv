@@ -2,11 +2,11 @@
 @section('title', 'RB General - Perencanaan General')
 
 @section('content')
-@include('common.status')
 @php
 $idx = 0;
 @endphp
 <div class="intro-y col-span-12 lg:col-span-12">
+    @include('common.status')
     <div class="intro-y box">
         <div class="flex flex-col sm:flex-row items-center p-5 border-b border-slate-200/60">
             <h2 class="font-bold text-base mr-auto"> Data RB General - Perencanaan dan Monev</h2>
@@ -60,10 +60,6 @@ $idx = 0;
                                                 <tr>
                                                     <td class="font-bold w-16">Tahun</td>
                                                     <td>: {{ $indikator->baseline_tahun }}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="font-bold">Target</td>
-                                                    <td>: {{ $indikator->baseline_target }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td class="font-bold">Realisasi</td>
@@ -216,7 +212,6 @@ $idx = 0;
                             <thead class="table-dark">
                                 <tr>
                                     <th>Tahun</th>
-                                    <th>Target</th>
                                     <th>Realisasi</th>
                                     <th></th>
                                 </tr>
@@ -226,10 +221,6 @@ $idx = 0;
                                     <td>
                                         <input type="text" name="baseline_tahun" id="baseline_tahun"
                                             class="form-control w-full tahun" value="{{ date('Y') - 1 }}" required>
-                                    </td>
-                                    <td>
-                                        <input type="text" name="baseline_target" id="baseline_target"
-                                            class="form-control w-full" required>
                                     </td>
                                     <td>
                                         <input type="text" name="baseline_realisasi" id="baseline_realisasi"
@@ -498,7 +489,7 @@ $idx = 0;
         $('#hapus-baseline').hide();
         modal_baseline.show();
         $.getJSON("{{ url('rb-general/perencanaan/getData') }}/" + kegiatan_utama_id + "/" + indikator_id, function(data) {
-            tahun = data.baseline_tahun ? data.baseline_tahun : 2022;
+            tahun = data.baseline_tahun ? data.baseline_tahun : 2023;
             $('#baseline_tahun').val(tahun);
             $('#baseline_target').val(data.baseline_target);
             $('#baseline_realisasi').val(data.baseline_realisasi);
@@ -539,6 +530,14 @@ $idx = 0;
         $.getJSON("{{ url('rb-general/perencanaan/getTarget') }}/" + kegiatan_utama_id + "/" + indikator_id, function(data) {
             if (data.success) {
                 $('#target-table tbody').append(data.input);
+                $(".target").inputmask("decimal",{
+                    radixPoint:".",
+                    groupSeparator: "",
+                    digits: 2,
+                    autoGroup: true,
+                    rightAlign: false,
+                    min: data.baseline_realisasi,
+                });
             } else {
                 Swal.fire('Aduh!',
                     'Data Target belum bisa di-input, Data Baseline-nya belum ada! Input dulu Data Baseline-nya ya..',
