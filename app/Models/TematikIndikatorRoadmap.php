@@ -10,9 +10,13 @@ class TematikIndikatorRoadmap extends Model
     use HasFactory;
     protected $table = 'tematik_indikator_roadmap';
 
-    public function permasalahan()
+    public function permasalahan($ids=[])
     {
-        return $this->hasMany(TematikPermasalahan::class, 'tematik_indikator_roadmap_id')->orderBy('tematik_indikator_roadmap_id');
+        $select = $this->hasMany(TematikPermasalahan::class, 'tematik_indikator_roadmap_id')->orderBy('tematik_indikator_roadmap_id');
+        if (count($ids)>0) {
+            $select->whereIn('id', $ids);
+        }
+        return $select;
     }
 
     public function sasaran_roadmap()

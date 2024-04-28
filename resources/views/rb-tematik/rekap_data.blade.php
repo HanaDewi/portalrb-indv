@@ -9,26 +9,61 @@
             <h2 class="font-bold text-base mr-auto"> Rekap Data RB General - {{ auth()->user()->nama }}</h2>
         </div>
         <div class="lg:col-span-12 p-5 border-b border-slate-200/60">
-            <form>
-                <div>
-                    <label for="indikator_id" class="form-label font-bold">Indikator</label>
-                    {!! Form::select('sasaran_id[]', indikators(), $sasaran_id, ['class' => 'w-full', 'id' => 'indikator_id', 'data-placeholder' => 'Pilih Indikator', 'multiple' => 'multiple']) !!}
-                </div>
-                @if (in_array(auth()->user()->level, ['admin', 'tpn']))
-                <div class="grid grid-cols-4">
-                    <div class="col-span-3">
-                        <label for="instansi_id" class="form-label mt-2 font-bold">Instansi</label>
-                        {!! Form::select('instansi_id', instansis(), $instansi_id, ['class' => 'tom-select mt-1', 'id' => 'instansi_id', 'data-placeholder' => 'Pilih Kegiatan Utama', 'required']) !!}
-                    </div>
-                    <div class="ml-5">
-                        <button type="submit" class="btn btn-danger saveButton mt-10">Lihat Data</button>
-                    </div>
-                </div>
-                @else
-                <div class="mt-5 pb-10">
-                    <button type="submit" class="btn btn-danger saveButton float-right">Lihat Data</button>
-                </div>
-                @endif
+            <form id="filter-form" method="get">
+                <table class="table table-bordered table-striped mt-5">
+                    @if (in_array(auth()->user()->level, ['admin', 'tpn']))
+                    <tr>
+                        <td class="font-bold">Instansi</td>
+                        <td>{!! Form::select('instansi_id', instansis(), $finstansi, ['class' => 'tom-select mt-1', 'id' => 'instansi_id', 'data-placeholder' => 'Pilih instansi', 'onchange'=>"$('#filter-form').submit();"]) !!}</td>
+                    </tr>
+                    @endif
+                    <tr>
+                        <td class="font-bold" width="220">Tema</td>
+                        <td>
+                            <select class="form-control" name="ftema" onchange="$('#filter-form').submit();">
+                                <option value=""> -- Pilih Tema -- </option>
+                                @foreach ($temas as $tema)
+                                <option value="{{ $tema->id }}" {{ $ftema==$tema->id ? 'selected':'' }} >{{ $tema->nama }}</option>
+                                @endforeach
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="font-bold">Sasaran Roadmap 
+                        
+                        </td>
+                        <td>
+                            <select class="form-control" name="fsasaranroadmap" onchange="$('#filter-form').submit();">
+                                <option value=""> -- Pilih sasaran roadmap -- </option>
+                                @foreach ($filterSasaranRoadmap as $froadmap)
+                                <option value="{{ $froadmap->id }}" {{ $fsasaranroadmap==$froadmap->id ? 'selected':'' }}>{{ $froadmap->nama }}</option>
+                                @endforeach
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="font-bold">Indikator Roadmap</td>
+                        <td>
+                            <select class="form-control" name="findikatorroadmap" onchange="$('#filter-form').submit();">
+                                <option value=""> -- Pilih indikator roadmap -- </option>
+                                @foreach ($filterIndikatorRoadmap as $fir)
+                                <option value="{{ $fir->id }}" {{ $findikatorroadmap==$fir->id ? 'selected':'' }}>{{ $fir->nama }}</option>
+                                @endforeach
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="font-bold">Permasalahan</td>
+                        <td>
+                            <select class="form-control" name="fpermasalahan" onchange="$('#filter-form').submit();">
+                                <option value=""> -- Pilih permasalahan -- </option>
+                                @foreach ($filterTematikPermasalahan as $pir)
+                                <option value="{{ $pir->id }}" {{ $fpermasalahan==$pir->id ? 'selected':'' }}>{{ $pir->nama }}</option>
+                                @endforeach
+                            </select>
+                        </td>
+                    </tr>
+                </table>
             </form>
             <div class="separator mt-5"></div>
             <table id="perencanaan" class="table table-bordered table-striped" cellspacing="0" width="100%">
@@ -85,7 +120,7 @@
                     @endphp
                         <tr>
                             <td class="font-bold">{{ $no }}</td>
-                            <td class="font-bold">{{ $data['sasaran_roadmap']->tema->nama }}</td>
+                            <td class="font-bold">{{ $data['sasaran_roadmap']->tema ? $data['sasaran_roadmap']->tema->nama:'' }}</td>
                             <td>{{ $data['sasaran_roadmap']->nama }}</td>
                             <td>
                                 {{ $data['indikator_roadmap']->nama }}
@@ -278,8 +313,6 @@
 <script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.html5.min.js"></script>
 <script>
 $(document).ready(function(){
-    $('#indikator_id').select2();
-
     var empDataTable = $('#perencanaan').DataTable({
         dom: 'Blfrtip',
         buttons: [
@@ -298,8 +331,10 @@ $(document).ready(function(){
             bInfo: false,
             ordering: false,
     });
-        modal_catatan = tailwind.Modal.getInstance(document.querySelector("#modal-catatan"));
-    });
+    @if (auth()->user()->level == 'tpn')
+    modal_catatan = tailwind.Modal.getInstance(document.querySelector("#modal-catatan"));
+    @endif
+});
 
 @if (auth()->user()->level == 'tpn')
 function catatan_evaluator(id) {
@@ -310,5 +345,6 @@ function catatan_evaluator(id) {
     });
 }
 @endif
+
 </script>
 @endpush

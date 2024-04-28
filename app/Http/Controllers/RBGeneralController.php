@@ -579,7 +579,7 @@ class RBGeneralController extends Controller
         $user = Auth::User();
         if ($request->instansi_id && in_array($user->level, ['admin', 'tpn'])) {
             $instansi_id = $request->instansi_id;
-        } else if ($user->user_rel->instansi_id) {
+        } else if (isset($user->user_rel->instansi_id)) {
             $instansi_id = $user->user_rel->instansi_id;
         } else {
             $instansi_id = KlpdInstansi::orderBy('id')->first()->id;
