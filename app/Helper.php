@@ -193,7 +193,7 @@ function fnumber($number, $digit = 0)
     if (gettype($number)=='integer' || gettype($number)=='double') { 
         return number_format($number, $digit, ',', '.');
     } else {
-        $number = str_replace('.', '', $number);
+        $number = (double)str_replace('.', '', $number);
         return number_format($number, $digit, ',', '.');
     }
 }
