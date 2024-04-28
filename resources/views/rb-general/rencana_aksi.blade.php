@@ -125,37 +125,37 @@
                                 <td>
                                     <div class="input-group mt-4 mr-2">
                                         <div class="input-group-text">TW1</div>
-                                        <input type="text" name="target_output[0][target_tw1]" id="target_tw10" placeholder="Triwulan 1" class="form-control digit" onkeyup="hitungTotal(0);" required>
+                                        <input type="text" name="target_output[0][target_tw1]" id="target_tw10" placeholder="Triwulan 1" class="form-control digit" required>
                                     </div>
                                 </td>
                                 <td>
                                     <div class="input-group mt-4 mr-2">
                                         <div class="input-group-text">TW2</div>
-                                        <input type="text" name="target_output[0][target_tw2]" id="target_tw20" placeholder="Triwulan 2" class="form-control digit" onkeyup="hitungTotal(0);" required>
+                                        <input type="text" name="target_output[0][target_tw2]" id="target_tw20" placeholder="Triwulan 2" class="form-control digit" required>
                                     </div>
                                 </td>
                                 <td>
                                     <div class="input-group mt-4 mr-2">
                                         <div class="input-group-text">TW3</div>
-                                        <input type="text" name="target_output[0][target_tw3]" id="target_tw30" placeholder="Triwulan 3" class="form-control digit" onkeyup="hitungTotal(0);" required>
+                                        <input type="text" name="target_output[0][target_tw3]" id="target_tw30" placeholder="Triwulan 3" class="form-control digit" required>
                                     </div>
                                 </td>
                                 <td>
                                     <div class="input-group mt-4 mr-2">
                                         <div class="input-group-text">TW4</div>
-                                        <input type="text" name="target_output[0][target_tw4]" id="target_tw40" placeholder="Triwulan 4" class="form-control digit" onkeyup="hitungTotal(0);" required>
+                                        <input type="text" name="target_output[0][target_tw4]" id="target_tw40" placeholder="Triwulan 4" class="form-control digit" required>
                                     </div>
                                 </td>
                                 <td>
                                     <div class="input-group mt-4">
                                         <div class="input-group-text">Total</div>
-                                        <input type="text" name="target_output[0][target_total]" id="target_total0" placeholder="Total" class="form-control digit" readonly required>
+                                        <input type="text" name="target_output[0][target_total]" id="target_total0" placeholder="Total" class="form-control digit" required>
                                     </div>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="font-bold">Anggaran <span class="text-danger">*</span></td>
-                                <td>
+                                {{-- <td>
                                     <div class="input-group mt-4 mr-2">
                                         <div class="input-group-text">TW1</div>
                                         <input type="text" name="target_output[0][anggaran_tw1]" id="anggaran_tw10" placeholder="Triwulan 1" class="form-control digit" onkeyup="hitungTotalAnggaran(0);" required>
@@ -178,11 +178,11 @@
                                         <div class="input-group-text">TW4</div>
                                         <input type="text" name="target_output[0][anggaran_tw4]" id="anggaran_tw40" placeholder="Triwulan 4" class="form-control digit" onkeyup="hitungTotalAnggaran(0);" required>
                                     </div>
-                                </td>
-                                <td>
+                                </td> --}}
+                                <td colspan="5">
                                     <div class="input-group mt-4">
                                         <div class="input-group-text">Total</div>
-                                        <input type="text" name="target_output[0][anggaran_total]" id="anggaran_total0" placeholder="Total" class="form-control digit" readonly required>
+                                        <input type="text" name="target_output[0][anggaran_total]" id="anggaran_total0" placeholder="Total" class="form-control digit" required>
                                     </div>
                                 </td>
                             </tr>
@@ -391,17 +391,7 @@
                         '</table>';
                 }
             },
-            { 
-                render: function (data, type, row, meta) {
-                    return '<table class="table table-noborder">'+
-                            '<tr><td> TW 1 : '+formatNumber(row.anggaran_tw1)+'</td></tr>'+
-                            '<tr><td> TW 2 : '+formatNumber(row.anggaran_tw2)+'</td></tr>'+
-                            '<tr><td> TW 3 : '+formatNumber(row.anggaran_tw3)+'</td></tr>'+
-                            '<tr><td> TW 4 : '+formatNumber(row.anggaran_tw4)+'</td></tr>'+
-                            '<tr><td> Total : '+formatNumber(row.anggaran_total)+'</td></tr>'+
-                        '</table>';
-                }
-            },
+            { data: 'anggaran_total' },
             { data: 'pelaksana' },
             { data: 'koordinator' },
             { 

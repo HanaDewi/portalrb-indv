@@ -120,6 +120,7 @@ class MasterDataController extends Controller
                 }
                 $indikator->kegiatan_utama_id = $request->kegiatan_utama_id;
                 $indikator->nama = $nama;
+                $indikator->tipe = $request->tipe[$key];
                 $indikator->kl = isset($request->kl[$key]) ? 1 : 0;
                 $indikator->provinsi = isset($request->provinsi[$key]) ? 1 : 0;
                 $indikator->kabupaten = isset($request->kabupaten[$key]) ? 1 : 0;

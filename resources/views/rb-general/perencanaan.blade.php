@@ -530,13 +530,12 @@ $idx = 0;
         $.getJSON("{{ url('rb-general/perencanaan/getTarget') }}/" + kegiatan_utama_id + "/" + indikator_id, function(data) {
             if (data.success) {
                 $('#target-table tbody').append(data.input);
-                $(".target").inputmask("decimal",{
+                $(".Kuantitatif").inputmask("decimal",{
                     radixPoint:".",
                     groupSeparator: "",
                     digits: 2,
                     autoGroup: true,
                     rightAlign: false,
-                    min: data.baseline_realisasi,
                 });
             } else {
                 Swal.fire('Aduh!',

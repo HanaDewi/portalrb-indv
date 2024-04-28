@@ -16,7 +16,8 @@
                         <th class="w-5">No.</th>
                         <th>Nama Kegiatan Utama</th>
                         <th>Indikator</th>
-                        <th class="w-10">Pengguna Indikator</th>
+                        <th class="w-10">Tipe</th>
+                        <th class="w-20">Pengguna Indikator</th>
                         <th class="w-5">Aksi</th>
                     </tr>
                 </thead>
@@ -42,12 +43,16 @@
                     <div class="g-col-12"> 
                         <div class="form-group">
                             <label for="kegiatan_utama_id" class="form-label mt-2">Kegiatan Utama <span class="text-danger">*</span></label>
-                            {!! Form::select('kegiatan_utama_id', kegiatanUtama(), null, ['class' => 'w-full mt-2', 'id' => 'kegiatan_utama_id', 'data-placeholder' => 'Pilih Kegiatan Utama', 'required']) !!}
-                        </div> <!-- END: Basic Select -->
+                            {!! Form::select('kegiatan_utama_id', kegiatanUtama(), null, ['class' => 'w-full', 'id' => 'kegiatan_utama_id', 'data-placeholder' => 'Pilih Kegiatan Utama', 'required']) !!}
+                        </div>
                         <div id="indikator_input">
                             <div class="form-group">
                                 <label for="nama" class="form-label mt-2">Nama Indikator <span class="text-danger">*</span></label> 
                                 <textarea id="nama0" name="nama[0]" class="form-control" placeholder="Nama Indikator" required></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="tipe" class="form-label mt-2">Tipe <span class="text-danger">*</span></label>
+                                {!! Form::select('tipe[0]', ['Kualitatif' => 'Kualitatif', 'Kuantitatif' => 'Kuantitatif'], null, ['class' => 'w-full', 'id' => 'tipe', 'data-placeholder' => 'Pilih Tipe', 'required']) !!}
                             </div>
                             <div>
                                 <label>Pengguna Indikator</label>
@@ -155,6 +160,7 @@
             },
             { data: 'nama_kegiatan_utama' },
             { data: 'nama' },
+            { data: 'tipe' },
             { data: 'pengguna_indikator' },
             { 
                 sortable: false, 
@@ -179,6 +185,13 @@
         return '<div class="form-group">'+
                     '<label for="nama'+idx+'" class="form-label mt-2">Nama Indikator <span class="text-danger">*</span></label> '+
                     '<textarea id="nama'+idx+'" name="nama['+idx+']" class="form-control" placeholder="Nama Indikator" required></textarea>'+
+                '</div>'+
+                '<div class="form-group">'+
+                    '<label for="tipe'+idx+'" class="form-label mt-2">Tipe <span class="text-danger">*</span></label> '+
+                    '<select class="w-full" id="tipe'+idx+'" data-placeholder="Pilih Tipe" required="required" name="tipe['+idx+']" aria-invalid="false">'+
+                        '<option value="Kualitatif">Kualitatif</option>'+
+                        '<option value="Kuantitatif">Kuantitatif</option>'+
+                    '</select>'+
                 '</div>'+
                 '<div class="mt-5 mb-5"><hr class="mb-5">'+
                     '<label>Pengguna Indikator</label>'+
