@@ -233,6 +233,9 @@
                     <div class="g-col-12">
                         <input type="file" id="file_rencana_aksi" name="file_rencana_aksi" required>
                     </div>
+                    <div class="g-col-12">
+                        <span class="text-danger font-bold"><i>* Rencana Aksi yang diupload hanya untuk Kegiatan Utama yang dipilih!</i></span>
+                    </div>
                 </div> <!-- END: Modal Body -->
                 <!-- BEGIN: Modal Footer -->
                 <div class="modal-footer text-end"> 
