@@ -399,7 +399,8 @@ class RBTematikController extends Controller
         $permasalahan = TematikPermasalahan::where('id', $request->permasalahan_id)->first();
         if (!$permasalahan) {
             $permasalahan = new TematikPermasalahan();
-        };
+        }
+        ;
         $permasalahan->tematik_indikator_roadmap_id = $request->tematik_indikator_roadmap_id;
 
 
@@ -423,15 +424,15 @@ class RBTematikController extends Controller
     public function get_permasalahan($permasalahan_id)
     {
         $permasalahan = TematikPermasalahan::where('id', $permasalahan_id)->first();
-        $permasalahan_lengkap  = [
+        $permasalahan_lengkap = [
             "sasaran_roadmap_id" => $permasalahan->indikator_roadmap->sasaran_roadmap->id,
             "sasaran_roadmap" => $permasalahan->indikator_roadmap->sasaran_roadmap->nama,
             "indikator_roadmap_id" => $permasalahan->indikator_roadmap->id,
             "indikator_roadmap" => $permasalahan->indikator_roadmap->nama,
             "target_roadmap" => $permasalahan->indikator_roadmap->target,
             "target_satuan_roadmap" => $permasalahan->indikator_roadmap->satuan,
-            "permasalahan_id" =>  $permasalahan->id,
-            "permasalahan_nama" =>  $permasalahan->nama,
+            "permasalahan_id" => $permasalahan->id,
+            "permasalahan_nama" => $permasalahan->nama,
             "permasalahan_sasaran" => $permasalahan->sasaran_permasalahan,
         ];
         return response()->json($permasalahan_lengkap);
@@ -540,8 +541,8 @@ class RBTematikController extends Controller
     public function get_indikator_permasalahan($indikator_id)
     {
         $indikator_permasalahan = TematikIndikatorPermasalahan::where('id', $indikator_id)->first();
-        $indikator_permasalahan_lengkap  = [
-            "permasalahan" =>  $indikator_permasalahan->permasalahan->nama,
+        $indikator_permasalahan_lengkap = [
+            "permasalahan" => $indikator_permasalahan->permasalahan->nama,
             "sasaran" => $indikator_permasalahan->permasalahan->sasaran_permasalahan,
             "indikator_permasalahan_id" => $indikator_permasalahan->id,
             "indikator_permasalahan_nama" => $indikator_permasalahan->nama,
@@ -802,7 +803,7 @@ class RBTematikController extends Controller
         $fpermasalahan = $request->get('fpermasalahan');
 
         if (in_array($user->level, ['admin', 'tpn'])) {
-            if ($finstansi=='-') {
+            if ($finstansi == '-') {
                 $finstansi = '';
             }
             $instansi_id = $finstansi;
@@ -842,14 +843,37 @@ class RBTematikController extends Controller
             $model = TematikSasaranRoadmap::orderBy('tema_id')->orderBy('id');
         }
 
+        if ($ftema) {
+            $model->where('tema_id', $ftema);
+        }
+
         $sasarans = $model->get();
         $key = 0;
         $datas = [];
+
+        $indikators = [];
+        foreach($filterIndikatorRoadmap as $finr) {
+            $indikators[] = $finr->id;
+        }
+        if ($findikatorroadmap) {
+            $indikators = [$findikatorroadmap];
+        }
+
+        $masalahs = [];
+        foreach($filterTematikPermasalahan as $fmas) {
+            $masalahs[] = $fmas->id;
+        }
+        if ($fpermasalahan) {
+            $masalahs = [$fpermasalahan];
+        }
+
         foreach ($sasarans as $sasaran) {
-            if (count($sasaran->indikator_roadmap)) {
-                foreach ($sasaran->indikator_roadmap as $indikator_roadmap) {
-                    if (count($indikator_roadmap->permasalahan)) {
-                        foreach ($indikator_roadmap->permasalahan as $permasalahan) {
+            $dataindikators = $sasaran->indikator_roadmap($indikators)->get();
+            if (count($dataindikators)) {
+                foreach ($dataindikators as $indikator_roadmap) {
+                    $datamasalah = $indikator_roadmap->permasalahan($masalahs)->get();
+                    if (count($datamasalah)) {
+                        foreach ($datamasalah as $permasalahan) {
                             if (count($permasalahan->indikator_permasalahan)) {
                                 foreach ($permasalahan->indikator_permasalahan as $indikator_permasalahan) {
                                     if (isset($indikator_permasalahan->rencana_aksi)) {
@@ -915,9 +939,9 @@ class RBTematikController extends Controller
             }
         }
         return view('rb-tematik.rekap_data', compact(
-            'datas', 
-            'instansi_id', 
-            'nama_instansi', 
+            'datas',
+            'instansi_id',
+            'nama_instansi',
             'temas',
             'filterSasaranRoadmap',
             'filterIndikatorRoadmap',
@@ -927,7 +951,8 @@ class RBTematikController extends Controller
             'fsasaranroadmap',
             'findikatorroadmap',
             'fpermasalahan'
-        ));
+        )
+        );
     }
 
     public function removeDot($i)

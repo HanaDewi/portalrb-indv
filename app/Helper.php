@@ -181,12 +181,21 @@ function indikators()
 
 function currency($number)
 {
-    return $number > 0 ? 'Rp. ' . number_format($number, 0, ',', '.') : '';
+    if (gettype($number)=='integer' || gettype($number)=='double') { 
+        return $number > 0 ? 'Rp. ' . number_format($number, 0, ',', '.') : '';
+    } else {
+        return $number;
+    }
 }
 
 function fnumber($number, $digit = 0)
 {
-    return number_format($number, $digit, ',', '.');
+    if (gettype($number)=='integer' || gettype($number)=='double') { 
+        return number_format($number, $digit, ',', '.');
+    } else {
+        $number = str_replace('.', '', $number);
+        return number_format($number, $digit, ',', '.');
+    }
 }
 
 function instansis()

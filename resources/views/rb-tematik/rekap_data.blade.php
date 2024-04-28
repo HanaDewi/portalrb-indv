@@ -21,7 +21,7 @@
                         <td class="font-bold" width="220">Tema</td>
                         <td>
                             <select class="form-control" name="ftema" onchange="$('#filter-form').submit();">
-                                <option value=""> -- Pilih tema -- </option>
+                                <option value=""> -- Pilih Tema -- </option>
                                 @foreach ($temas as $tema)
                                 <option value="{{ $tema->id }}" {{ $ftema==$tema->id ? 'selected':'' }} >{{ $tema->nama }}</option>
                                 @endforeach
@@ -345,5 +345,6 @@ function catatan_evaluator(id) {
     });
 }
 @endif
+
 </script>
 @endpush
