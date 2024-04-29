@@ -209,6 +209,6 @@ class RBTematikImportController extends Controller
             session()->flash('error', 'Data RB General Rencana Aksi gagal diimport!');
         }
 
-        //return redirect('/rb-tematik/rekap_data');
+        return redirect('/rb-tematik/rekap_data');
     }
 }
