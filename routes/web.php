@@ -148,6 +148,9 @@ Route::middleware('auth')->group(function () {
     // Access
     Route::get('/access', [HasilController::class, 'access'])->name('access');
     Route::post('/access/simpan', [HasilController::class, 'access_simpan']);
+    // Activity Log
+    Route::get('/activitylog', [HasilController::class, 'activitylog'])->name('activitylog');
+    Route::get('/activitylog/getData', [HasilController::class, 'activitylog_getData']);
 });
 
 #########Ruang Belajar
