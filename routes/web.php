@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RBGeneralController;
 use App\Http\Controllers\RBTematikController;
+use App\Http\Controllers\RBTematikImportController;
 use App\Http\Controllers\MasterDataController;
 use App\Http\Controllers\HasilController;
 use App\Http\Controllers\RuangBelajar\DashboardController;
@@ -109,6 +110,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/rb-tematik/perencanaan/simpan-sasaran-roadmap', [RBTematikController::class, 'simpanSasaranRoadmap']);
     Route::post('/rb-tematik/perencanaan/simpan-indikator-roadmap', [RBTematikController::class, 'simpanIndikatorRoadmap']);
     Route::post('/rb-tematik/perencanaan/indikator_roadmap/hapus/{indikator_id}', [RBTematikController::class, 'indikatorRoadmapHapus']);
+    Route::get('/rb-tematik/perencanaan/downloadTemplate', [RBTematikImportController::class, 'rbTematik_downloadTemplate']);
+    Route::post('/rb-tematik/perencanaan/import', [RBTematikImportController::class, 'rbTematik_import']);
     // RB Tematik Permasalahan
     Route::get('/rb-tematik/permasalahan', [RBTematikController::class, 'permasalahan'])->name('permasalahan');
     Route::get('/rb-tematik/permasalahan/get-indikator-roadmap', [RBTematikController::class, 'getIndikatorRoadmap'])->name('get_indikator_roadmap');

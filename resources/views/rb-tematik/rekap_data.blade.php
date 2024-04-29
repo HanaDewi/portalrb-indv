@@ -2,8 +2,8 @@
 @section('title', 'Rekap Data RB General - ' .auth()->user()->nama)
 
 @section('content')
-@include('common.status')
 <div class="intro-y col-span-12 lg:col-span-12">
+    @include('common.status')
     <div class="intro-y box">
         <div class="flex flex-col sm:flex-row items-center p-5 border-b border-slate-200/60">
             <h2 class="font-bold text-base mr-auto"> Rekap Data RB General - {{ auth()->user()->nama }}</h2>

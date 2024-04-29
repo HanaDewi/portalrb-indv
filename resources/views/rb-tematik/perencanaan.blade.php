@@ -2,27 +2,24 @@
 @section('title', 'RB Tematik - Perencanaan')
 
 @section('content')
-    @include('common.status')
+   
     <div class="intro-y col-span-12 lg:col-span-12">
+        @include('common.status')
         <div class="intro-y box">
             <div class="flex flex-col sm:flex-row items-center p-5 border-b border-slate-200/60">
                 <h2 class="font-bold text-base mr-auto"> Perencanaan Aksi RB
                     Tematik</h2>
             </div>
 
-            <div id="tab1" class="tab-pane leading-relaxed active">
-
-                <div class="form-inline items-start flex-col xl:flex-row  pt-5 first:mt-0 first:pt-0">
-                    <button class="btn btn-outline-primary border-dashed w-full" id="dynamic-ar"
-                        onclick="tambah_sasaran_roadmap();">
-                        <svg xmlns="https://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                            stroke-linejoin="round" icon-name="plus" data-lucide="plus"
-                            class="lucide lucide-plus w-4 h-4 mr-2">
-                            <line x1="12" y1="5" x2="12" y2="19"></line>
-                            <line x1="5" y1="12" x2="19" y2="12"></line>
-                        </svg> Tambah Sasaran Tematik Roadmap </button>
-                </div>
+           
+            <div class="flex sm:flex-row items-center p-5 border-b border-slate-200/60">
+                <h2 class="font-bold text-base mr-auto flex items-center justify-center">
+                    <i data-lucide="file-text" class="mr-1"></i> Data Rencana Aksi
+                </h2>
+                <!--<a href="{{url('rb-tematik/perencanaan/downloadTemplate') }}" class="btn btn-success btn-sm mr-2"><svg width="16px" height="16px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <title></title> <g id="Complete"> <g id="download"> <g> <path d="M3,12.3v7a2,2,0,0,0,2,2H19a2,2,0,0,0,2-2v-7" fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path> <g> <polyline data-name="Right" fill="none" id="Right-2" points="7.9 12.3 12 16.3 16.1 12.3" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></polyline> <line fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" x1="12" x2="12" y1="2.7" y2="14.2"></line> </g> </g> </g> </g> </g></svg>&nbsp;Template</a>-->
+                <a href="{{asset('template_import/template_import_tematik.xlsx')}}" class="btn btn-success btn-sm mr-2"><svg width="16px" height="16px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <title></title> <g id="Complete"> <g id="download"> <g> <path d="M3,12.3v7a2,2,0,0,0,2,2H19a2,2,0,0,0,2-2v-7" fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path> <g> <polyline data-name="Right" fill="none" id="Right-2" points="7.9 12.3 12 16.3 16.1 12.3" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></polyline> <line fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" x1="12" x2="12" y1="2.7" y2="14.2"></line> </g> </g> </g> </g> </g></svg>&nbsp;Template</a>
+                <button class="btn btn-success btn-sm mr-2" onclick="importRBTematik();"><svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 50 50" width="18px" height="18px"><path d="M 28.875 0 C 28.855469 0.0078125 28.832031 0.0195313 28.8125 0.03125 L 0.8125 5.34375 C 0.335938 5.433594 -0.0078125 5.855469 0 6.34375 L 0 43.65625 C -0.0078125 44.144531 0.335938 44.566406 0.8125 44.65625 L 28.8125 49.96875 C 29.101563 50.023438 29.402344 49.949219 29.632813 49.761719 C 29.859375 49.574219 29.996094 49.296875 30 49 L 30 44 L 47 44 C 48.09375 44 49 43.09375 49 42 L 49 8 C 49 6.90625 48.09375 6 47 6 L 30 6 L 30 1 C 30.003906 0.710938 29.878906 0.4375 29.664063 0.246094 C 29.449219 0.0546875 29.160156 -0.0351563 28.875 0 Z M 28 2.1875 L 28 6.53125 C 27.867188 6.808594 27.867188 7.128906 28 7.40625 L 28 42.8125 C 27.972656 42.945313 27.972656 43.085938 28 43.21875 L 28 47.8125 L 2 42.84375 L 2 7.15625 Z M 30 8 L 47 8 L 47 42 L 30 42 L 30 37 L 34 37 L 34 35 L 30 35 L 30 29 L 34 29 L 34 27 L 30 27 L 30 22 L 34 22 L 34 20 L 30 20 L 30 15 L 34 15 L 34 13 L 30 13 Z M 36 13 L 36 15 L 44 15 L 44 13 Z M 6.6875 15.6875 L 12.15625 25.03125 L 6.1875 34.375 L 11.1875 34.375 L 14.4375 28.34375 C 14.664063 27.761719 14.8125 27.316406 14.875 27.03125 L 14.90625 27.03125 C 15.035156 27.640625 15.160156 28.054688 15.28125 28.28125 L 18.53125 34.375 L 23.5 34.375 L 17.75 24.9375 L 23.34375 15.6875 L 18.65625 15.6875 L 15.6875 21.21875 C 15.402344 21.941406 15.199219 22.511719 15.09375 22.875 L 15.0625 22.875 C 14.898438 22.265625 14.710938 21.722656 14.5 21.28125 L 11.8125 15.6875 Z M 36 20 L 36 22 L 44 22 L 44 20 Z M 36 27 L 36 29 L 44 29 L 44 27 Z M 36 35 L 36 37 L 44 37 L 44 35 Z"/></svg>&nbsp;Import</button>
+                <button class="btn btn-danger btn-sm shadow-md" onclick="tambah_sasaran_roadmap();" data-bs-toggle="modal" data-bs-target="#modal-kegiatan_utama"><i data-lucide="plus" class="mr-1" width="18px" height="18px"></i> Tambah Sasaran Tematik Roadmap</button>
             </div>
 
             <div class="lg:col-span-12 p-5 border-b border-slate-200/60">
@@ -315,6 +312,36 @@
         </div>
     </div> <!-- END: Modal Content -->
 
+
+    <!-- Modal Form Import RBTematik -->
+<div id="modal-import_rbTematik" class="modal fade" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <!-- BEGIN: Modal Header -->
+            <div class="darkbg modal-header">
+                <h2 class="font-bold fw-medium fs-base me-auto" id="title">Import RBTematik</h2>
+            </div> <!-- END: Modal Header -->
+            <!-- BEGIN: Modal Body -->
+            <form action="{{ url('/rb-tematik/perencanaan/import') }}" id="form-import_rencana_aksi" method="post" enctype="multipart/form-data">
+                @csrf
+                <div class="modal-body grid columns-12 gap-4 gap-y-3">
+                    <div class="g-col-12">
+                        <input type="file" id="file_rbTematik" name="file_rbTematik" required>
+                    </div>
+                    <div class="g-col-12">
+                        <span class="text-danger font-bold"><i>* RB Tematik yang diupload harus sesuai dengan template yang diberikan</i></span>
+                    </div>
+                </div> <!-- END: Modal Body -->
+                <!-- BEGIN: Modal Footer -->
+                <div class="modal-footer text-end"> 
+                    <button type="button" data-tw-dismiss="modal" class="btn btn-outline-secondary w-20 me-1">Batal</button> 
+                    <button type="submit" class="btn btn-primary w-20 saveButton">Import</button> 
+                </div> <!-- END: Modal Footer -->
+            </form>
+        </div>
+    </div>
+</div> <!-- END: Modal Content -->
+
 @endsection
 
 @push('js')
@@ -349,12 +376,19 @@
             modal_indikator_roadmap = tailwind.Modal.getInstance(document.querySelector(
                 "#modal-indikator-roadmap"));
             modal_monev_indikator_roadmap = tailwind.Modal.getInstance(document.querySelector("#modal-monev-indikator-roadmap"));
+            modal_import_rbTematik = tailwind.Modal.getInstance(document.querySelector("#modal-import_rbTematik"));
+
+            
 
         });
 
+        function importRBTematik() {
+                modal_import_rbTematik.show();
+        }
+
         function getData() {
-        kegiatan_utama.ajax.url("{{url('master-data/kegiatan_utama/getDatas')}}").load(null, false);
-    }
+            kegiatan_utama.ajax.url("{{url('master-data/kegiatan_utama/getDatas')}}").load(null, false);
+        }
 
         function output_form() {
             const inputform = $('#inputform-sasaran-roadmap');

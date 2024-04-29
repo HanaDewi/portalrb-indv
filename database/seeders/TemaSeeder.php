@@ -18,7 +18,7 @@ class TemaSeeder extends Seeder
             ['id' => '2', 'nama' => 'Realisasi Investasi'],
             ['id' => '3', 'nama' => 'Digitalisasi Pemerintahan'],
             ['id' => '4', 'nama' => 'Penggunaan Produk Dalam Negeri'],
-            ['id' => '5', 'nama' => ' Pengendalian Inflasi'],
+            ['id' => '5', 'nama' => 'Pengendalian Inflasi'],
         ]);
     }
 }
