@@ -93,7 +93,7 @@ $idx = 0;
                                     </td> --}}
                                     <td>
                                         <span class="font-bold mr-1">Realisasi Indikator: </span>{{ $target->realiasasi_indikator ? $target->realiasasi_indikator : '-' }}<br>
-                                        <span class="font-bold mr-1">Capaian Indikator: </span>{{ $target->capaian_indikator ? $target->capaian_indikator : '-' }}<br>
+                                        <span class="font-bold mr-1">Capaian Indikator: </span>{{ $target->capaian_indikator ? number_format((float)$target->capaian_indikator, 2, '.', '') : '-' }}<br>
                                         <span class="font-bold mr-1">Catatan: </span>{{ $target->catatan ? $target->catatan : '-' }}<br>
                                     </td>
                                     <td>
