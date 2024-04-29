@@ -252,11 +252,11 @@ function heading_template_rb_general_rencana_aksi()
         3 => "target_tw1",
         4 => "target_tw2",
         5 => "target_tw3",
-        7 => "target_tw4",
-        8 => "target_total",
-        9 => "anggaran_total",
-        10 => "pelaksana",
-        11 => "koordinator",
+        6 => "target_tw4",
+        7 => "target_total",
+        8 => "anggaran_total",
+        9 => "pelaksana",
+        10 => "koordinator",
     ];
 }
 

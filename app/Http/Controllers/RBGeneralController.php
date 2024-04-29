@@ -323,6 +323,10 @@ class RBGeneralController extends Controller
                                 $rencana_aksi_output->target_tw3 = preg_replace('/[^0-9.]+/', '', $output['target_tw3']);
                                 $rencana_aksi_output->target_tw4 = preg_replace('/[^0-9.]+/', '', $output['target_tw4']);
                                 $rencana_aksi_output->target_total = preg_replace('/[^0-9.]+/', '', $output['target_total']);
+                                $rencana_aksi_output->anggaran_tw1 = 0;
+                                $rencana_aksi_output->anggaran_tw2 = 0;
+                                $rencana_aksi_output->anggaran_tw3 = 0;
+                                $rencana_aksi_output->anggaran_tw4 = 0;
                                 $rencana_aksi_output->anggaran_total = preg_replace('/[^0-9.]+/', '', $output['anggaran_total']);
                                 $rencana_aksi_output->pelaksana = $output['pelaksana'];
                                 $rencana_aksi_output->koordinator = $output['koordinator'];
@@ -334,6 +338,7 @@ class RBGeneralController extends Controller
                     }
                 }
             } else {
+                $success = false;
                 session()->flash('error', 'File yang di upload tidak sesuai dengan template. Silahkan gunakan template yang telah disedikan!');
             }
         } catch (\Throwable $th) {
@@ -428,6 +433,10 @@ class RBGeneralController extends Controller
                     $rencana_aksi_output->target_tw3 = str_replace('.', '', $target_output['target_tw3']);
                     $rencana_aksi_output->target_tw4 = str_replace('.', '', $target_output['target_tw4']);
                     $rencana_aksi_output->target_total = str_replace('.', '', $target_output['target_total']);
+                    $rencana_aksi_output->anggaran_tw1 = 0;
+                    $rencana_aksi_output->anggaran_tw2 = 0;
+                    $rencana_aksi_output->anggaran_tw3 = 0;
+                    $rencana_aksi_output->anggaran_tw4 = 0;
                     $rencana_aksi_output->anggaran_total = str_replace('.', '', $target_output['anggaran_total']);
                     $rencana_aksi_output->pelaksana = $target_output['pelaksana'];
                     $rencana_aksi_output->koordinator = $target_output['koordinator'];
