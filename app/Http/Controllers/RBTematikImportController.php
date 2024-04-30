@@ -159,9 +159,11 @@ class RBTematikImportController extends Controller
                                                     $success = false;
                                                 }else{
                                                     $rencanaAksiOutput = TematikRencanaAksiOutput::where('tematik_rencana_aksi_id', $rencanaAksi->id)->where('indikator_output', $collection["indikator_output"])->first();
+                                                    
                                                     if (!$rencanaAksiOutput) {
                                                         $rencanaAksiOutput = new TematikRencanaAksiOutput();
                                                     }
+                                                    
                                                     $rencanaAksiOutput->tematik_rencana_aksi_id = $rencanaAksi->id;
                                                     $rencanaAksiOutput->satuan_output = $collection["satuan_output"];
                                                     $rencanaAksiOutput->indikator_output = $collection["indikator_output"];
@@ -180,7 +182,7 @@ class RBTematikImportController extends Controller
                                                     $rencanaAksiOutput->realisasi_output_total = $collection["realisasi_total"];
                                                     $rencanaAksiOutput->realisasi_anggaran_total = $collection["realisasi_anggaran"];
                                                     $rencanaAksiOutput->fokus_intervensi= $fokus_intervensi->id;
-                                                    if (!$rencanaAksi->save()) {
+                                                    if (!$rencanaAksiOutput->save()) {
                                                         $success = false;
                                                     }
                                                 }
