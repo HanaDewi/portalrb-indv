@@ -23,7 +23,7 @@ return new class extends Migration
             $table->float('realisasi_output_tw3')->nullable()->change();
             $table->float('realisasi_output_tw4')->nullable()->change();
             $table->float('realisasi_output_total')->nullable()->change();
-            $table->float('realisasi_anggaran_total')->nullable()->change();
+            $table->bigInteger('realisasi_anggaran_total')->nullable()->change();
         });
     }
 
