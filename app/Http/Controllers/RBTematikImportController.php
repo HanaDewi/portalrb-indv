@@ -48,6 +48,7 @@ class RBTematikImportController extends Controller
         $user = Auth::User();
         $instansi_id = $user->user_rel->instansi_id;
         $success = true;
+        $message = "";
         DB::beginTransaction();
         try {
             $headings = (new HeadingRowImport())->toArray($request->file('file_rbTematik'));
@@ -90,112 +91,135 @@ class RBTematikImportController extends Controller
             ) {
                 $collections = Excel::toCollection(new ImportRBTematik, $request->file('file_rbTematik'))[0];
                 $message = '';
+                $baris = 2;
                 foreach ($collections as $key => $collection) {
                     if ($key != '') {
                         $tema = Tema::where('nama',$collection["tema"] )->first();
                         if(!$tema){
                             $success = false;
-                            $message = "Tema : " . $collection["tema"] . " tidak sesuai dengan tema yang ada di sistem";
+                            $message = "Tema : " . $collection["tema"] . "Tidak sesuai dengan tema yang ada di sistem, harap menggunakan template yang disediakan ( Baris "  . $baris  . ")";
                         }else{
-                            $sasaranRoadmap = TematikSasaranRoadmap::where('instansi_id', $instansi_id)->where('tema_id',$tema->id)->where("nama", $collection["sasaran"] )->first();
-                            if (!$sasaranRoadmap) {
-                                $sasaranRoadmap = new TematikSasaranRoadmap();
-                            }
-                            $sasaranRoadmap->tema_id = $tema->id;
-                            $sasaranRoadmap->instansi_id = $instansi_id;
-                            $sasaranRoadmap->nama = $collection["sasaran"];
-                            if (!$sasaranRoadmap->save()) {
-                                $success = false;
-                            }else{
-                                $indikatorRoadmap = TematikIndikatorRoadmap::where('tematik_sasaran_roadmap_id', $sasaranRoadmap->id)->where('nama', $collection["indikator_roadmap"])->first();
-                                if (!$indikatorRoadmap) {
-                                    $indikatorRoadmap = new TematikIndikatorRoadmap();
+                            //cek apakah cell di excelnya kosong
+                            if(str_replace(' ', '', $collection["sasaran"])){
+                                $sasaranRoadmap = TematikSasaranRoadmap::where('instansi_id', $instansi_id)->where('tema_id',$tema->id)->where("nama", $collection["sasaran"] )->first();
+                                if (!$sasaranRoadmap) {
+                                    $sasaranRoadmap = new TematikSasaranRoadmap();
                                 }
-                                $indikatorRoadmap->tematik_sasaran_roadmap_id = $sasaranRoadmap->id;
-                                $indikatorRoadmap->nama = $collection["indikator_roadmap"];
-                                $indikatorRoadmap->target = $collection["target"];
-                                $indikatorRoadmap->satuan = $collection["satuan_target"];
-                                $indikatorRoadmap->realisasi_indikator = $collection["realisasi"];
-                                $indikatorRoadmap->capaian_indikator = $collection["capaian"];
-                                $indikatorRoadmap->catatan = $collection["catatan"];
-                                if (!$indikatorRoadmap->save()) {
+                                $sasaranRoadmap->tema_id = $tema->id;
+                                $sasaranRoadmap->instansi_id = $instansi_id;
+                                $sasaranRoadmap->nama = $collection["sasaran"];
+                                if (!$sasaranRoadmap->save()) {
                                     $success = false;
+                                    $message = "Sasaran Tidak Bisa disimpan, mohon di cek kembali ( Baris "  . $baris  . " )";
                                 }else{
-                                    $permasalahan = TematikPermasalahan::where('tematik_indikator_roadmap_id', $indikatorRoadmap->id)->where('nama', $collection["permasalahan"])->first();
-                                    if (!$permasalahan) {
-                                        $permasalahan = new TematikPermasalahan();
-                                    }
-                                    $permasalahan->tematik_indikator_roadmap_id	= $indikatorRoadmap->id;
-                                    $permasalahan->nama = $collection["permasalahan"];
-                                    $permasalahan->sasaran_permasalahan = $collection["sasaran_permasalahan"];
-                                    if (!$permasalahan->save()) {
-                                        $success = false;
-                                    }else{
-                                        $indikatorPermasalahan = TematikIndikatorPermasalahan::where('tematik_permasalahan_id', $permasalahan->id)->where('nama', $collection["indikator_permasalahan"])->first();
-                                        if (!$indikatorPermasalahan) {
-                                            $indikatorPermasalahan = new TematikIndikatorPermasalahan();
-                                        }
-                                        $indikatorPermasalahan->tematik_permasalahan_id = $permasalahan->id;
-                                        $indikatorPermasalahan->nama = $collection["indikator_permasalahan"];
-                                        $indikatorPermasalahan->target = $collection["target_indikator_permasalahan"];
-                                        $indikatorPermasalahan->satuan = $collection["satuan_target_indikator_permasalahan"];
-                                        $indikatorPermasalahan->realisasi_indikator = $collection["realisasi_indikator_permasalahan"];
-                                        $indikatorPermasalahan->capaian_indikator = $collection["capaian_indikator_permasalahan"];
-                                        $indikatorPermasalahan->catatan = $collection["catatan_indikator_permasalahan"];
-                                        if (!$indikatorPermasalahan->save()) {
-                                            $success = false;
-                                        }else{
-                                            $rencanaAksi = TematikRencanaAksi::where('tematik_indikator_permasalahan_id', $indikatorPermasalahan->id)->where('nama', $collection["rencana_aksi"])->first();
-                                            if (!$rencanaAksi) {
-                                                $rencanaAksi = new TematikRencanaAksi();
+                                    //cek apakah cell di excelnya kosong
+                                    if(str_replace(' ', '', $collection["indikator_roadmap"])){
+                                        if($collection["target"]!=Null ){
+                                            $indikatorRoadmap = TematikIndikatorRoadmap::where('tematik_sasaran_roadmap_id', $sasaranRoadmap->id)->where('nama', $collection["indikator_roadmap"])->first();
+                                            if (!$indikatorRoadmap) {
+                                                $indikatorRoadmap = new TematikIndikatorRoadmap();
                                             }
-                                            $rencanaAksi->tematik_indikator_permasalahan_id = $indikatorPermasalahan->id ;
-                                            $rencanaAksi->nama = $collection["rencana_aksi"];
-                                            if (!$rencanaAksi->save()) {
+                                            $indikatorRoadmap->tematik_sasaran_roadmap_id = $sasaranRoadmap->id;
+                                            $indikatorRoadmap->nama = $collection["indikator_roadmap"];
+                                            $indikatorRoadmap->target = $collection["target"];
+                                            $indikatorRoadmap->satuan = $collection["satuan_target"];
+                                            $indikatorRoadmap->realisasi_indikator = $collection["realisasi"];
+                                            $indikatorRoadmap->capaian_indikator = $collection["capaian"];
+                                            $indikatorRoadmap->catatan = $collection["catatan"];
+                                            if (!$indikatorRoadmap->save()) {
                                                 $success = false;
                                             }else{
-                                                $fokus_intervensi = FokusIntervensi::where("nama", $collection["fokus_intervensi"])->first();
-                                                if(!$fokus_intervensi){
-                                                    $success = false;
-                                                }else{
-                                                    $rencanaAksiOutput = TematikRencanaAksiOutput::where('tematik_rencana_aksi_id', $rencanaAksi->id)->where('indikator_output', $collection["indikator_output"])->first();
-                                                    
-                                                    if (!$rencanaAksiOutput) {
-                                                        $rencanaAksiOutput = new TematikRencanaAksiOutput();
+                                                if(str_replace(' ', '', $collection["permasalahan"])){
+                                                    $permasalahan = TematikPermasalahan::where('tematik_indikator_roadmap_id', $indikatorRoadmap->id)->where('nama', $collection["permasalahan"])->first();
+                                                    if (!$permasalahan) {
+                                                        $permasalahan = new TematikPermasalahan();
                                                     }
-                                                    
-                                                    $rencanaAksiOutput->tematik_rencana_aksi_id = $rencanaAksi->id;
-                                                    $rencanaAksiOutput->satuan_output = $collection["satuan_output"];
-                                                    $rencanaAksiOutput->indikator_output = $collection["indikator_output"];
-                                                    $rencanaAksiOutput->target_tw1 = $collection["target_tw1"];
-                                                    $rencanaAksiOutput->target_tw2 = $collection["target_tw2"];
-                                                    $rencanaAksiOutput->target_tw3 = $collection["target_tw3"];
-                                                    $rencanaAksiOutput->target_tw4 = $collection["target_tw4"];
-                                                    $rencanaAksiOutput->target_total = $collection["target_total"];
-                                                    $rencanaAksiOutput->anggaran_total = $collection["anggaran"];
-                                                    $rencanaAksiOutput->pelaksana = $collection["pelaksana"];
-                                                    $rencanaAksiOutput->koordinator = $collection["koordinator"];
-                                                    $rencanaAksiOutput->realisasi_output_tw1 = $collection["realisasi_tw1"];
-                                                    $rencanaAksiOutput->realisasi_output_tw2 = $collection["realisasi_tw2"];
-                                                    $rencanaAksiOutput->realisasi_output_tw3 = $collection["realisasi_tw3"];
-                                                    $rencanaAksiOutput->realisasi_output_tw4 = $collection["realisasi_tw4"];
-                                                    $rencanaAksiOutput->realisasi_output_total = $collection["realisasi_total"];
-                                                    $rencanaAksiOutput->realisasi_anggaran_total = $collection["realisasi_anggaran"];
-                                                    $rencanaAksiOutput->fokus_intervensi= $fokus_intervensi->id;
-                                                    if (!$rencanaAksiOutput->save()) {
+                                                    $permasalahan->tematik_indikator_roadmap_id	= $indikatorRoadmap->id;
+                                                    $permasalahan->nama = $collection["permasalahan"];
+                                                    $permasalahan->sasaran_permasalahan = $collection["sasaran_permasalahan"];
+                                                    if (!$permasalahan->save()) {
                                                         $success = false;
+                                                    }else{
+                                                        if(str_replace(' ', '', $collection["indikator_permasalahan"]) && str_replace(' ', '', $collection["target_indikator_permasalahan"])){
+                                                            $indikatorPermasalahan = TematikIndikatorPermasalahan::where('tematik_permasalahan_id', $permasalahan->id)->where('nama', $collection["indikator_permasalahan"])->first();
+                                                            if (!$indikatorPermasalahan) {
+                                                                $indikatorPermasalahan = new TematikIndikatorPermasalahan();
+                                                            }
+                                                            $indikatorPermasalahan->tematik_permasalahan_id = $permasalahan->id;
+                                                            $indikatorPermasalahan->nama = $collection["indikator_permasalahan"];
+                                                            $indikatorPermasalahan->target = $collection["target_indikator_permasalahan"];
+                                                            $indikatorPermasalahan->satuan = $collection["satuan_target_indikator_permasalahan"];
+                                                            $indikatorPermasalahan->realisasi_indikator = $collection["realisasi_indikator_permasalahan"];
+                                                            $indikatorPermasalahan->capaian_indikator = $collection["capaian_indikator_permasalahan"];
+                                                            $indikatorPermasalahan->catatan = $collection["catatan_indikator_permasalahan"];
+                                                            if (!$indikatorPermasalahan->save()) {
+                                                                $success = false;
+                                                            }else{
+                                                                if(str_replace(' ', '', $collection["rencana_aksi"]) && str_replace(' ', '', $collection["indikator_output"])&& str_replace(' ', '', $collection["satuan_output"])){
+                                                                    $rencanaAksi = TematikRencanaAksi::where('tematik_indikator_permasalahan_id', $indikatorPermasalahan->id)->where('nama', $collection["rencana_aksi"])->first();
+                                                                    if (!$rencanaAksi) {
+                                                                        $rencanaAksi = new TematikRencanaAksi();
+                                                                    }
+                                                                    $rencanaAksi->tematik_indikator_permasalahan_id = $indikatorPermasalahan->id ;
+                                                                    $rencanaAksi->nama = $collection["rencana_aksi"];
+                                                                    if (!$rencanaAksi->save()) {
+                                                                        $success = false;
+                                                                    }else{
+                                                                        $fokus_intervensi = FokusIntervensi::where("nama", $collection["fokus_intervensi"])->first();
+                                                                        if(!$fokus_intervensi){
+                                                                            $success = false;
+                                                                        }else{
+                                                                            $rencanaAksiOutput = TematikRencanaAksiOutput::where('tematik_rencana_aksi_id', $rencanaAksi->id)->where('indikator_output', $collection["indikator_output"])->first();
+                                                                            
+                                                                            if (!$rencanaAksiOutput) {
+                                                                                $rencanaAksiOutput = new TematikRencanaAksiOutput();
+                                                                            }
+                                                                            
+                                                                            $rencanaAksiOutput->tematik_rencana_aksi_id = $rencanaAksi->id;
+                                                                            $rencanaAksiOutput->satuan_output = $collection["satuan_output"];
+                                                                            $rencanaAksiOutput->indikator_output = $collection["indikator_output"];
+                                                                            $rencanaAksiOutput->target_tw1 = $collection["target_tw1"];
+                                                                            $rencanaAksiOutput->target_tw2 = $collection["target_tw2"];
+                                                                            $rencanaAksiOutput->target_tw3 = $collection["target_tw3"];
+                                                                            $rencanaAksiOutput->target_tw4 = $collection["target_tw4"];
+                                                                            $rencanaAksiOutput->target_total = $collection["target_total"];
+                                                                            $rencanaAksiOutput->anggaran_total = $collection["anggaran"];
+                                                                            $rencanaAksiOutput->pelaksana = $collection["pelaksana"];
+                                                                            $rencanaAksiOutput->koordinator = $collection["koordinator"];
+                                                                            $rencanaAksiOutput->realisasi_output_tw1 = $collection["realisasi_tw1"];
+                                                                            $rencanaAksiOutput->realisasi_output_tw2 = $collection["realisasi_tw2"];
+                                                                            $rencanaAksiOutput->realisasi_output_tw3 = $collection["realisasi_tw3"];
+                                                                            $rencanaAksiOutput->realisasi_output_tw4 = $collection["realisasi_tw4"];
+                                                                            $rencanaAksiOutput->realisasi_output_total = $collection["realisasi_total"];
+                                                                            $rencanaAksiOutput->realisasi_anggaran_total = $collection["realisasi_anggaran"];
+                                                                            $rencanaAksiOutput->fokus_intervensi= $fokus_intervensi->id;
+                                                                            if (!$rencanaAksiOutput->save()) {
+                                                                                $success = false;
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
                                                     }
                                                 }
                                             }
+                                        }else{
+                                            $success = false;
+                                            $message = "Jika Anda mengisi indikator Roadmap maka target tidak boleh kosong ( Baris "  . $baris  . " )";
                                         }
                                     }
                                 }
+                            }else{
+                                $success = false;
+                                $message = "Sasarannya tidak boleh kosong ( Baris "  . $baris  . " )";
                             }
                         }
                     } else {
                         $success = false;
                         session()->flash('error', $message);
                     }
+                    $baris++;
                 }
             }
         } catch (\Throwable $th) {
@@ -205,10 +229,10 @@ class RBTematikImportController extends Controller
         
         if ($success) {
             DB::commit();
-            session()->flash('success', 'Data RB General Rencana Aksi berhasil diimport!');
+            session()->flash('success', 'Data RB Tematik Rencana Aksi berhasil diimport!');
         } else {
             DB::rollBack();
-            session()->flash('error', 'Data RB General Rencana Aksi gagal diimport!');
+            session()->flash('error', $message);
         }
 
         return redirect('/rb-tematik/rekap_data');

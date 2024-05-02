@@ -1,5 +1,5 @@
 @extends('layout.rubick')
-@section('title', 'RB General - Rencana Aksi')
+@section('title', 'RB Tematik - Rencana Aksi')
 
 @section('button')
 @endsection

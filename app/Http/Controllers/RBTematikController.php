@@ -575,21 +575,61 @@ class RBTematikController extends Controller
         $outputs = [];
         $no = 1;
         foreach ($rencana_aksis as $rencana_aksi) {
-            foreach ($rencana_aksi->output as $output) {
+            if($rencana_aksi->output->count()){
+                foreach ($rencana_aksi->output as $output) {
+                    $output->no = $no;
+                    if (isset($output->get_intervensi->nama)) {
+                        $output->nama_intervensi = $output->get_intervensi->nama;
+                    } else {
+                        $output->nama_intervensi = "";
+                    }
 
-                $output->no = $no;
-                if (isset($output->get_intervensi->nama)) {
-                    $output->nama_intervensi = $output->get_intervensi->nama;
-                } else {
-                    $output->nama_intervensi = "";
+                    $output->nama_rencana_aksi = $output->rencana_aksi->nama;
+                    $output->target_total = fnumber($output->target_total);
+                    $output->anggaran_total = currency($output->anggaran_total);
+                    $outputs[] = $output;
+                    $no++;
                 }
-
-                $output->nama_rencana_aksi = $output->rencana_aksi->nama;
-                $output->target_total = fnumber($output->target_total);
-                $output->anggaran_total = currency($output->anggaran_total);
-                $outputs[] = $output;
+            }else{
+                $renaksi = [
+                    "no" => $no,
+                    "tematik_rencana_aksi_id" => $rencana_aksi->id,
+                    "rencana_aksi" => [
+                        "nama" => $rencana_aksi->nama
+                    ],
+                    "satuan_output" => "",
+                    "indikator_output" => "",
+                    "target_tw1" => 0,
+                    "target_tw2" => 0,
+                    "target_tw3" => 0,
+                    "target_tw4" => 0,
+                    "target_total" => 0,
+                    "anggaran_total" => "Rp. 0",
+                    "pelaksana"=> "-",
+                    "koordinator"=> "-",
+                    "realisasi_output_tw1"=> 0,
+                    "realisasi_output_tw2"=> 0,
+                    "realisasi_output_tw3"=> 0,
+                    "realisasi_output_tw4"=> 0,
+                    "realisasi_output_total"=> 4,
+                    "realisasi_anggaran_total"=> "Rp 0",
+                    "capaian_output_tw1" => null,
+                    "capaian_output_tw2" =>  null,
+                    "capaian_output_tw3" => null,
+                    "capaian_output_tw4" => null,
+                    "capaian_output_total" => null,
+                    "capaian_anggaran_tw1"=> null,
+                    "capaian_anggaran_tw2"=> null,
+                    "capaian_anggaran_tw3"=> null,
+                    "capaian_anggaran_tw4"=> null,
+                    "capaian_anggaran_total"=> null,
+                    "nama_intervensi"=> "-",
+                ];
+                $outputs[] = $renaksi;
+                $no++;
             }
-            $no++;
+            
+            
         }
         return response()->json(['data' => $outputs]);
     }
@@ -598,7 +638,9 @@ class RBTematikController extends Controller
     {
         $user = Auth::User();
         $output = TematikRencanaAksiOutput::find($id);
-        $output->rencana_aksi = $output->rencana_aksi;
+        if($output){
+            $output->rencana_aksi = $output->rencana_aksi;
+        }
         return response()->json($output);
     }
 
@@ -883,7 +925,7 @@ class RBTematikController extends Controller
                         foreach ($datamasalah as $permasalahan) {
                             if (count($permasalahan->indikator_permasalahan)) {
                                 foreach ($permasalahan->indikator_permasalahan as $indikator_permasalahan) {
-                                    if (isset($indikator_permasalahan->rencana_aksi)) {
+                                    if (count($indikator_permasalahan->rencana_aksi)) {
                                         foreach ($indikator_permasalahan->rencana_aksi as $rencana_aksi) {
                                             if (count($rencana_aksi->output)) {
                                                 foreach ($rencana_aksi->output as $output) {

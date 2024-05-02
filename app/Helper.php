@@ -139,7 +139,7 @@ function allowed_url()
     foreach (menus() as $menu) {
         if (in_array($level, $menu['levels'])) {
             if (isset($menu['items'])) {
-                foreach ($menu['items'] as $item) {
+                foreach ($menu['items'] as $item) { 
                     if (in_array($level, $item['levels'])) {
                         if (isset($item['url'])) {
                             array_push($allowed_url, str_replace($base_url, '', $item['url']) . '*');

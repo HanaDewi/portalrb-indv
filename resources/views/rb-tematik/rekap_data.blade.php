@@ -1,12 +1,12 @@
 @extends('layout.rubick')
-@section('title', 'Rekap Data RB General - ' .auth()->user()->nama)
+@section('title', 'Rekap Data RB Tematik - ' .auth()->user()->nama)
 
 @section('content')
 <div class="intro-y col-span-12 lg:col-span-12">
     @include('common.status')
     <div class="intro-y box">
         <div class="flex flex-col sm:flex-row items-center p-5 border-b border-slate-200/60">
-            <h2 class="font-bold text-base mr-auto"> Rekap Data RB General - {{ auth()->user()->nama }}</h2>
+            <h2 class="font-bold text-base mr-auto"> Rekap Data RB Tematik - {{ auth()->user()->nama }}</h2>
         </div>
         <div class="lg:col-span-12 p-5 border-b border-slate-200/60">
             <form id="filter-form" method="get">
@@ -110,9 +110,9 @@
                     $no = 0; 
                     $nama = '';
                 @endphp
-              
+                
                 @foreach ($datas as $data)
-                    @php 
+                    @php
                         if ($nama != $data['sasaran_roadmap']->tema->nama) {
                             $nama = $data['sasaran_roadmap']->tema->nama;
                             $no++;

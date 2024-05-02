@@ -2,7 +2,6 @@
 @section('title', 'RB Tematik - Perencanaan')
 
 @section('content')
-   
     <div class="intro-y col-span-12 lg:col-span-12">
         @include('common.status')
         <div class="intro-y box">
@@ -10,8 +9,6 @@
                 <h2 class="font-bold text-base mr-auto"> Perencanaan Aksi RB
                     Tematik</h2>
             </div>
-
-           
             <div class="flex sm:flex-row items-center p-5 border-b border-slate-200/60">
                 <h2 class="font-bold text-base mr-auto flex items-center justify-center">
                     <i data-lucide="file-text" class="mr-1"></i> Data Rencana Aksi
