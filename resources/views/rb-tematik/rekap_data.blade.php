@@ -191,10 +191,6 @@
                             <td>
                                 @if ($data['output']->anggaran_total)
                                 <table class="table table-noborder">
-                                    <tr><th>TW 1</th><td>: {{ fnumber($data['output']->anggaran_tw1) }}</td></tr>
-                                    <tr><th>TW 2</th><td>: {{ fnumber($data['output']->anggaran_tw2) }}</td></tr>
-                                    <tr><th>TW 3</th><td>: {{ fnumber($data['output']->anggaran_tw3) }}</td></tr>
-                                    <tr><th>TW 4</th><td>: {{ fnumber($data['output']->anggaran_tw4) }}</td></tr>
                                     <tr><th>Total</th><td>: {{ fnumber($data['output']->anggaran_total) }}</td></tr>
                                 </table>
                                 @endif
@@ -222,10 +218,6 @@
                             <td>
                                 @if ($data['output']->realisasi_anggaran_total)
                                 <table class="table table-noborder">
-                                    <tr><th>TW 1</th><td>: {{ fnumber($data['output']->realisasi_anggaran_tw1) }}</td></tr>
-                                    <tr><th>TW 2</th><td>: {{ fnumber($data['output']->realisasi_anggaran_tw2) }}</td></tr>
-                                    <tr><th>TW 3</th><td>: {{ fnumber($data['output']->realisasi_anggaran_tw3) }}</td></tr>
-                                    <tr><th>TW 4</th><td>: {{ fnumber($data['output']->realisasi_anggaran_tw4) }}</td></tr>
                                     <tr><th>Total</th><td>: {{ fnumber($data['output']->realisasi_anggaran_total) }}</td></tr>
                                 </table>
                                 @endif
@@ -244,10 +236,6 @@
                             <td>
                                 @if ($data['output']->capaian_anggaran_total)
                                 <table class="table table-noborder">
-                                    <tr><th>TW 1</th><td>: {{ fnumber($data['output']->capaian_anggaran_tw1, 2) }}</td></tr>
-                                    <tr><th>TW 2</th><td>: {{ fnumber($data['output']->capaian_anggaran_tw2, 2) }}</td></tr>
-                                    <tr><th>TW 3</th><td>: {{ fnumber($data['output']->capaian_anggaran_tw3, 2) }}</td></tr>
-                                    <tr><th>TW 4</th><td>: {{ fnumber($data['output']->capaian_anggaran_tw4, 2) }}</td></tr>
                                     <tr><th>Total</th><td>: {{ fnumber($data['output']->capaian_anggaran_total, 2) }}</td></tr>
                                 </table>
                                 @endif
