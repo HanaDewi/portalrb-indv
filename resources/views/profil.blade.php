@@ -3,6 +3,7 @@
 
 @section('content')
 @include('common.status')
+<div class="intro-y col-span-12 lg:col-span-12">
 <form action="{{ url('profil_simpan') }}" id="form-user" method="post">
     @csrf
     <div class="grid grid-cols-12 gap-6">
@@ -72,6 +73,7 @@
         </div>
     </div>
 </form>
+</div>
 @endsection
 
 @push('js')
