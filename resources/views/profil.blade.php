@@ -3,10 +3,14 @@
 
 @section('content')
 @include('common.status')
+<<<<<<< HEAD
 <div class="intro-y col-span-12 lg:col-span-12">
 <form action="{{ url('profil_simpan') }}" id="form-user" method="post">
+=======
+<form action="{{ url('profil_simpan') }}" id="form-user" method="post" class="intro-y col-span-12 lg:col-span-12">
+>>>>>>> 359d8c9 (fix: class style)
     @csrf
-    <div class="grid grid-cols-12 gap-6">
+    <div class="grid grid-cols-6 gap-6">
         <div class="intro-y col-span-12 lg:col-span-6">
             <!-- BEGIN: Input -->
             <div class="intro-y box">
