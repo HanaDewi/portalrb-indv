@@ -61,14 +61,14 @@
             </form>
         </div>
 
-        <div id="tab1" class="tab-pane leading-relaxed active">
-
-            <div class="form-inline items-start flex-col xl:flex-row  pt-5 first:mt-0 first:pt-0">
-                <button class="btn btn-outline-primary border-dashed w-full" id="dynamic-ar" onclick="tambah_permasalahan();">
-                    <svg xmlns="https://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" icon-name="plus" data-lucide="plus" class="lucide lucide-plus w-4 h-4 mr-2">
-                        <line x1="12" y1="5" x2="12" y2="19"></line>
-                        <line x1="5" y1="12" x2="19" y2="12"></line>
-                    </svg> Tambah Permasalahan </button>
+        <div id="tab1" class="tab-pane leading-relaxed active text-right">
+            <div class="flex sm:flex-row items-center p-5 border-b border-slate-200/60">
+                <h2 class="font-bold text-base mr-auto flex items-center justify-center">
+                    <i data-lucide="file-text" class="mr-1"></i> Data Permasalahan
+                </h2>
+                <p class="text-right">    
+                    <button class="btn btn-danger btn-sm shadow-md" onclick="tambah_permasalahan();" data-bs-toggle="modal" data-bs-target="#modal-kegiatan_utama"><i data-lucide="plus" class="mr-1" width="18px" height="18px"></i> Tambah Permasalahan</button>
+                </p>
             </div>
         </div>
 
@@ -261,8 +261,8 @@
                                         <tr>
                                             <td class="font-bold w-30">Sasaran Roadmap</td>
                                             <td colspan="5">
-                                            <select class="form-select mt-2 sm:mr-2 form-control" id="sasaran-roadmap-onPermasalahan" name="sasaran_roadmap">
-                                                <option selected="true" disabled="disabled">Pilih Sasaran Roadmap</option>    
+                                            <select class="form-select mt-2 sm:mr-2 form-control" id="sasaran-roadmap-onPermasalahan" name="sasaran_roadmap" required>
+                                                <option selected="true" disabled="disabled" value="">Pilih Sasaran Roadmap</option>    
                                                 @foreach ($sasaranRoadmaps as $sasaran)
                                                 <option value="{{ $sasaran->id }}">{{ $sasaran->nama }}
                                                 </option>
@@ -273,8 +273,8 @@
                                         <tr>
                                             <td class="font-bold w-30">Indikator Roadmap</td>
                                             <td colspan="5">
-                                                <select class="form-select mt-2 sm:mr-2 form-control" id="indikator-roadmap-onPermasalahan" name="tematik_indikator_roadmap_id">
-                                                    <option selected="true" disabled="disabled">Pilih Indikator Roadmap</option>    
+                                                <select class="form-select mt-2 sm:mr-2 form-control" id="indikator-roadmap-onPermasalahan" name="tematik_indikator_roadmap_id" required>
+                                                    <option selected="true" disabled="disabled" value="">Pilih Indikator Roadmap</option>    
                                                 </select>
                                             </td>
                                         </tr>
@@ -610,7 +610,8 @@
 <script>
     $('#sasaran-roadmap-onPermasalahan').on('change', function() {
         var firstSelectValue = $(this).val();
-
+        $('#target-roadmap-onPermasalahan').val("");
+        $('#target-satuan-onPermasalahan').val("");
         $.ajax({
             url: '{{url("/rb-tematik/permasalahan/get-indikator-roadmap")}}',
             type: 'GET',
