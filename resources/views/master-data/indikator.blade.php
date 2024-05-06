@@ -52,7 +52,15 @@
                             </div>
                             <div class="form-group">
                                 <label for="tipe" class="form-label mt-2">Tipe <span class="text-danger">*</span></label>
-                                {!! Form::select('tipe[0]', ['Kualitatif' => 'Kualitatif', 'Kuantitatif' => 'Kuantitatif'], null, ['class' => 'w-full', 'id' => 'tipe', 'data-placeholder' => 'Pilih Tipe', 'required']) !!}
+                                {!! Form::select('tipe[0]', ['Kualitatif' => 'Kualitatif', 'Kuantitatif' => 'Kuantitatif'], null, ['class' => 'w-full', 'id' => 'tipe', 'data-placeholder' => 'Pilih Tipe', 'required', 'onchange' => 'showMinMax();']) !!}
+                            </div>
+                            <div class="form-group kuantitatif">
+                                <label for="min" class="form-label mt-2">Minimal <span class="text-danger">*</span></label>
+                                <input type="text" name="min" id="min" placeholder="Minimal" class="form-control" required>
+                            </div>
+                            <div class="form-group kuantitatif">
+                                <label for="max" class="form-label mt-2">Maksimal <span class="text-danger">*</span></label>
+                                <input type="text" name="max" id="max" placeholder="Maksimal" class="form-control" required>
                             </div>
                             <div>
                                 <label>Pengguna Indikator</label>
@@ -95,6 +103,15 @@
         getData();
         modal_indikator = tailwind.Modal.getInstance(document.querySelector("#modal-indikator"));
         
+        $(".digit").inputmask("decimal",{
+            radixPoint:",",
+            groupSeparator: ".",
+            digits: 0,
+            autoGroup: true,
+            rightAlign: false,
+            min: 0,
+        });
+
         $('#form-indikator').validate({
             highlight: function (input) {
                 $(input).addClass('border-danger');
@@ -179,6 +196,23 @@
     function clearForm() {
         $('#form-indikator').trigger('reset');
         $('#indikator_id').val('');
+        showMinMax(0);
+    }
+
+    function showMinMax(id) {
+        tipe = $('#tipe'+id).val();
+        if (tipe == 'Kuantitatif') {
+            $('.kuantitatif'+id).show();
+            $(".digit").inputmask("decimal",{
+                radixPoint:".",
+                groupSeparator: "",
+                digits: 2,
+                autoGroup: true,
+                rightAlign: false,
+            });
+        } else {
+            $('.kuantitatif'+id).hide();
+        }
     }
 
     function indikator_input(idx) {
@@ -188,10 +222,18 @@
                 '</div>'+
                 '<div class="form-group">'+
                     '<label for="tipe'+idx+'" class="form-label mt-2">Tipe <span class="text-danger">*</span></label> '+
-                    '<select class="w-full" id="tipe'+idx+'" data-placeholder="Pilih Tipe" required="required" name="tipe['+idx+']" aria-invalid="false">'+
+                    '<select class="w-full" id="tipe'+idx+'" data-placeholder="Pilih Tipe" required="required" name="tipe['+idx+']" aria-invalid="false" onchange="showMinMax('+idx+');">'+
                         '<option value="Kualitatif">Kualitatif</option>'+
                         '<option value="Kuantitatif">Kuantitatif</option>'+
                     '</select>'+
+                '</div>'+
+                '<div class="form-group kuantitatif'+idx+'">'+
+                    '<label for="min" class="form-label mt-2">Minimal <span class="text-danger">*</span></label>'+
+                    '<input type="text" name="min['+idx+']" id="min'+idx+'" placeholder="Minimal" class="form-control digit" required>'+
+                '</div>'+
+                '<div class="form-group kuantitatif'+idx+'">'+
+                    '<label for="max" class="form-label mt-2">Maksimal <span class="text-danger">*</span></label>'+
+                    '<input type="text" name="max['+idx+']" id="max'+idx+'" placeholder="Maksimal" class="form-control digit" required>'+
                 '</div>'+
                 '<div class="mt-5 mb-5"><hr class="mb-5">'+
                     '<label>Pengguna Indikator</label>'+
@@ -240,6 +282,10 @@
             $('#kl0').prop('checked', kl_checked);
             $('#provinsi0').prop('checked', provinsi_checked);
             $('#kabupaten0').prop('checked', kabupaten_checked);
+            $('#tipe0').val(data.tipe);
+            $('#min0').val(data.min);
+            $('#max0').val(data.max);
+            showMinMax(0);
             $('.tambahinput').hide();
             $('.saveButton').prop('disabled', false);
             modal_indikator.show();
