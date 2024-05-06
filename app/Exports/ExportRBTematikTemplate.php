@@ -22,6 +22,6 @@ class ExportRBTematikTemplate implements FromView, WithStyles, WithTitle
 
     public function title(): string
     {
-        return 'RB General - Rencana Aksi';
+        return 'RB Tematik - Rencana Aksi';
     }
 }

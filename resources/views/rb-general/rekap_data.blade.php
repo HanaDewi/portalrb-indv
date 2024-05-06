@@ -41,7 +41,6 @@
                         <th class="w-5" rowspan="2">Tahun Target</th>
                         <th class="w-10" rowspan="2">Realisasi Indikator</th>
                         <th class="w-10" rowspan="2">Capaian Indikator</th>
-                        <th class="w-10" rowspan="2">Dokumen Pendukung</th>
                         <th class="w-10" rowspan="2">Catatan</th>
                         <th class="w-10" rowspan="2">Catatan Evalator</th>
                         <th class="w-15" rowspan="2">Rencana Aksi</th>
@@ -97,8 +96,7 @@
                                 @endif
                             </td>
                             <td>{{ $data['target']->realisasi_indikator }}</td>
-                            <td>{{ number_format((float)$data['target']->capaian_indikatorgit, 2, '.', '') }}</td>
-                            <td></td>
+                            <td>{{ number_format((float)$data['target']->capaian_indikator, 2, '.', '') }}</td>
                             <td>{{ $data['target']->catatan }}</td>
                             <td>
                                 @if (auth()->user()->level == 'tpn')
