@@ -683,7 +683,7 @@ class RBTematikController extends Controller
                     //$rencana_aksi_output->anggaran_tw3 = str_replace('.', '', $target_output['anggaran_tw3']);
                     //$rencana_aksi_output->anggaran_tw4 = str_replace('.', '', $target_output['anggaran_tw4']);
                     $rencana_aksi_output->anggaran_total = $this->removeDot($target_output['anggaran_total']);
-                    $rencana_aksi_output->fokus_intervensi = $request->fokus_intervensi;
+                    $rencana_aksi_output->fokus_intervensi = $target_output['fokus_intervensi'];
                     $rencana_aksi_output->pelaksana = $target_output['pelaksana'];
                     $rencana_aksi_output->koordinator = $target_output['koordinator'];
                     if (!$rencana_aksi_output->save()) {

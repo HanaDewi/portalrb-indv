@@ -159,7 +159,7 @@
                                 <td class="font-bold">Fokus Intervensi<span class="text-danger">*</span></td>
                                 <td colspan="5">
                                     
-                                    <select class="form-select mt-2 sm:mr-2 form-control" name="fokus_intervensi">
+                                    <select class="form-select mt-2 sm:mr-2 form-control" name="target_output[0][fokus_intervensi]">
                                         <option selected="true" disabled="disabled">Pilih Fokus Intervensi</option>  
                                         @foreach ($fokus_intervensi as $intervensi)
                                         <option value="{{ $intervensi->id }}">{{ $intervensi->nama }}
@@ -447,37 +447,37 @@
                     '<tr>'+
                         '<td class="font-bold">Target Output <span class="text-danger">*</span></td>'+
                         '<td>'+
-                            '<div class="input-group mt-4 mr-2"><div class="input-group-text">TW1</div><input type="text" name="target_output['+idx+'][target_tw1]" id="target_tw1'+idx+'" placeholder="Triwulan 1" class="form-control numeric" onkeyup="hitungTotal('+idx+');" required></div>'+
+                            '<div class="input-group mt-4 mr-2"><div class="input-group-text">TW1</div><input type="text" name="target_output['+idx+'][target_tw1]" id="target_tw1'+idx+'" placeholder="Triwulan 1" class="form-control numeric"  required></div>'+
                         '</td>'+
                         '<td>'+
-                            '<div class="input-group mt-4 mr-2"><div class="input-group-text">TW2</div><input type="text" name="target_output['+idx+'][target_tw2]" id="target_tw2'+idx+'" placeholder="Triwulan 2" class="form-control numeric" onkeyup="hitungTotal('+idx+');" required></div>'+
+                            '<div class="input-group mt-4 mr-2"><div class="input-group-text">TW2</div><input type="text" name="target_output['+idx+'][target_tw2]" id="target_tw2'+idx+'" placeholder="Triwulan 2" class="form-control numeric"  required></div>'+
                         '</td>'+
                         '<td>'+
-                            '<div class="input-group mt-4 mr-2"><div class="input-group-text">TW3</div><input type="text" name="target_output['+idx+'][target_tw3]" id="target_tw3'+idx+'" placeholder="Triwulan 3" class="form-control numeric" onkeyup="hitungTotal('+idx+');" required></div>'+
+                            '<div class="input-group mt-4 mr-2"><div class="input-group-text">TW3</div><input type="text" name="target_output['+idx+'][target_tw3]" id="target_tw3'+idx+'" placeholder="Triwulan 3" class="form-control numeric"  required></div>'+
                         '</td>'+
                         '<td>'+
-                            '<div class="input-group mt-4 mr-2"><div class="input-group-text">TW4</div><input type="text" name="target_output['+idx+'][target_tw4]" id="target_tw4'+idx+'" placeholder="Triwulan 4" class="form-control numeric" onkeyup="hitungTotal('+idx+');" required></div>'+
+                            '<div class="input-group mt-4 mr-2"><div class="input-group-text">TW4</div><input type="text" name="target_output['+idx+'][target_tw4]" id="target_tw4'+idx+'" placeholder="Triwulan 4" class="form-control numeric"  required></div>'+
                         '</td>'+
                         '<td>'+
-                            '<div class="input-group mt-4"><div class="input-group-text">Total</div><input type="text" name="target_output['+idx+'][target_total]" id="target_total'+idx+'" placeholder="Total" class="form-control numeric" readonly required></div>'+
+                            '<div class="input-group mt-4"><div class="input-group-text">Total</div><input type="text" name="target_output['+idx+'][target_total]" id="target_total'+idx+'" placeholder="Total" class="form-control numeric"  required></div>'+
                         '</td>'+
                     '</tr>'+
                     '<tr>'+
                         '<td class="font-bold">Anggaran <span class="text-danger">*</span></td>'+
                         '<td>'+
-                            '<div class="input-group mt-4 mr-2"><div class="input-group-text">TW1</div><input type="text" name="target_output['+idx+'][anggaran_tw1]" id="anggaran_tw1'+idx+'" placeholder="Triwulan 1" class="form-control digit" onkeyup="hitungTotalAnggaran('+idx+');" required></div>'+
+                            '<div class="input-group mt-4"><div class="input-group-text">Rp.</div><input type="text" name="target_output['+idx+'][anggaran_total]" id="anggaran_total'+idx+'" placeholder="Total" class="form-control digit"  required></div>'+
                         '</td>'+
-                        '<td>'+
-                            '<div class="input-group mt-4 mr-2"><div class="input-group-text">TW2</div><input type="text" name="target_output['+idx+'][anggaran_tw2]" id="anggaran_tw2'+idx+'" placeholder="Triwulan 2" class="form-control digit" onkeyup="hitungTotalAnggaran('+idx+');" required></div>'+
-                        '</td>'+
-                        '<td>'+
-                            '<div class="input-group mt-4 mr-2"><div class="input-group-text">TW3</div><input type="text" name="target_output['+idx+'][anggaran_tw3]" id="anggaran_tw3'+idx+'" placeholder="Triwulan 3" class="form-control digit" onkeyup="hitungTotalAnggaran('+idx+');" required></div>'+
-                        '</td>'+
-                        '<td>'+
-                            '<div class="input-group mt-4 mr-2"><div class="input-group-text">TW4</div><input type="text" name="target_output['+idx+'][anggaran_tw4]" id="anggaran_tw4'+idx+'" placeholder="Triwulan 4" class="form-control digit" onkeyup="hitungTotalAnggaran('+idx+');" required></div>'+
-                        '</td>'+
-                        '<td>'+
-                            '<div class="input-group mt-4"><div class="input-group-text">Total</div><input type="text" name="target_output['+idx+'][anggaran_total]" id="anggaran_total'+idx+'" placeholder="Total" class="form-control digit" readonly required></div>'+
+                    '</tr>'+
+                    '<tr>'+
+                        '<td class="font-bold">Fokus Intervensi <span class="text-danger">*</span></td>'+
+                        '<td colspan="5">'+
+                            '<select class="form-select mt-2 sm:mr-2 form-control" name="target_output['+idx+'][fokus_intervensi]">'+
+                                '<option selected="true" disabled="disabled">Pilih Fokus Intervensi</option>' +  
+                                    @foreach ($fokus_intervensi as $intervensi)
+                                        '<option value="{{ $intervensi->id }}">{{ $intervensi->nama }}'+
+                                        '</option>'+
+                                    @endforeach
+                            '</select>'+
                         '</td>'+
                     '</tr>'+
                     '<tr>'+
