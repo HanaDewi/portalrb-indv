@@ -8,6 +8,7 @@ use App\Http\Controllers\RBTematikController;
 use App\Http\Controllers\RBTematikImportController;
 use App\Http\Controllers\MasterDataController;
 use App\Http\Controllers\HasilController;
+use App\Http\Controllers\ManageUserController;
 use App\Http\Controllers\RuangBelajar\DashboardController;
 use App\Http\Controllers\RuangBelajar\AdminController;
 
@@ -154,6 +155,12 @@ Route::middleware('auth')->group(function () {
     // Activity Log
     Route::get('/activitylog', [HasilController::class, 'activitylog'])->name('activitylog');
     Route::get('/activitylog/getData', [HasilController::class, 'activitylog_getData']);
+    // Kelola user
+    Route::get('/manage-user', [ManageUserController::class, 'index'])->name('index');
+    Route::get('/manage-user/getDatas', [ManageUserController::class, 'manage_user_getDatas']);
+    Route::get('/manage-user/getData/{id}', [ManageUserController::class, 'manage_user_getData']);
+    Route::post('/manage-user/simpan', [ManageUserController::class, 'manage_user_simpan']);
+    Route::post('/manage-user/hapus', [ManageUserController::class, 'manage_user_hapus']);
 });
 
 #########Ruang Belajar

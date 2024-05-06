@@ -127,6 +127,12 @@ function menus()
             'icon' => 'at-sign',
             'url' => 'activitylog',
         ],
+        [
+            'levels' => ['admin'],
+            'title' => 'Kelola User',
+            'icon' => 'users',
+            'url' => 'manage-user'
+        ],
     ];
     return $menu;
 }
