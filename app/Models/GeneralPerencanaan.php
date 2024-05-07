@@ -4,10 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class GeneralPerencanaan extends Model
 {
-    use HasFactory;
+    use LogsActivity, HasFactory;
     protected $table = 'general_perencanaan';
 
     public function target()
@@ -23,5 +25,11 @@ class GeneralPerencanaan extends Model
     public function indikator()
     {
         return $this->belongsTo(Indikator::class, 'indikator_id');
+    }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+        ->logOnly(['id', 'instansi_id', 'kegiatan_utama_id', 'indikator_id', 'baseline_tahun', 'baseline_target', 'baseline_realisasi']);
     }
 }

@@ -152,9 +152,11 @@ Route::middleware('auth')->group(function () {
     // Access
     Route::get('/access', [HasilController::class, 'access'])->name('access');
     Route::post('/access/simpan', [HasilController::class, 'access_simpan']);
+
+    
     // Activity Log
-    Route::get('/activitylog', [HasilController::class, 'activitylog'])->name('activitylog');
-    Route::get('/activitylog/getData', [HasilController::class, 'activitylog_getData']);
+    Route::get('/activitylog', [HomeController::class, 'activitylog'])->name('activitylog');
+    Route::get('/activitylog/getData', [HomeController::class, 'activitylog_getData']);
     // Kelola user
     Route::get('/manage-user', [ManageUserController::class, 'index'])->name('index');
     Route::get('/manage-user/getDatas', [ManageUserController::class, 'manage_user_getDatas']);
