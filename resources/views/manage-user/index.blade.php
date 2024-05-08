@@ -42,8 +42,43 @@
                 <div class="modal-body grid columns-12 gap-4 gap-y-3">
                     <div class="g-col-12">
                         <div class="form-group">
-                            <label for="nama" class="form-label">Nama Kegiatan Utama  <span class="text-danger">*</span></label> 
-                            <textarea id="nama" name="nama" class="form-control" placeholder="Nama Kegiatan Utama" required></textarea>
+                            <label for="idusername" class="form-label">Username  <span class="text-danger">*</span></label> 
+                            <input id="idusername" type="text" name="username" class="form-control" placeholder="Username" required />
+                        </div> 
+                        <div class="form-group">
+                            <label for="idemail" class="form-label">Email  <span class="text-danger">*</span></label> 
+                            <input id="idemail" type="email" name="email" class="form-control" placeholder="Email" required />
+                        </div> 
+                        <div class="form-group">
+                            <label for="idnama" class="form-label">Nama  <span class="text-danger">*</span></label> 
+                            <input id="idnama" type="text" name="nama" class="form-control" placeholder="Nama" required />
+                        </div> 
+                        <div class="form-group">
+                            <label for="idpassword" class="form-label">Password  <span class="text-danger">*</span></label> 
+                            <input id="idpassword" type="password" name="pwda" class="form-control" placeholder="Password" required />
+                        </div> 
+                        <div class="form-group">
+                            <label for="idpassword_" class="form-label">Password lagi  <span class="text-danger">*</span></label> 
+                            <input id="idpassword_" type="password" name="pwdb" class="form-control" placeholder="Password lagi" required />
+                        </div> 
+                        <div class="form-group">
+                            <label for="idlevel" class="form-label">Level  <span class="text-danger">*</span></label> 
+                            <select id="idlevel" name="level" class="form-control" placeholder="Level">
+                                <option value="kabupaten">Kabupaten</option>
+                                <option value="provinsi">Provinsi</option>
+                                <option value="kl">KL</option>
+                                <option value="tpm">TPM</option>
+                                <option value="tpn">TPN</option>
+                                <option value="admin">Administrator</option>
+                            </select>
+                        </div> 
+                        <div class="form-group">
+                            <label for="idinstansi" class="form-label">Instansi  <span class="text-danger"></span></label> 
+                            {!! Form::select('instansi_id', instansis(), '', ['class' => 'tom-select mt-1', 'id' => 'idinstansi', 'data-placeholder' => 'Pilih Instansi', '']) !!}
+                        </div> 
+                        <div class="form-group">
+                            <label for="idpenilai" class="form-label">Penilai  <span class="text-danger"></span></label> 
+                            {!! Form::select('penilai_id', timpenilai(), '', ['class' => 'tom-select mt-1', 'id' => 'idpenilai', 'data-placeholder' => 'Pilih Tim Penilai', '']) !!}
                         </div> 
                     </div>
                 </div>

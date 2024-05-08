@@ -3,6 +3,7 @@
 use App\Models\DokumenKategori;
 use App\Models\KegiatanUtama;
 use App\Models\KlpdInstansi;
+use App\Models\LkeTP;
 use App\Models\Tahun;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -215,6 +216,16 @@ function instansis()
     $inslist = KlpdInstansi::orderBy('id')->pluck('name', 'id');
     $result = ['-'=>' -- Pilih instansi -- '];
     foreach ($inslist as $kk=>$lst) {
+        $result[$kk] = $lst;
+    }
+    return $result;
+}
+
+function timpenilai()
+{
+    $ltp = LkeTP::orderBy('id')->pluck('name', 'id');
+    $result = ['-'=>' -- Pilih tim penilai -- '];
+    foreach ($ltp as $kk=>$lst) {
         $result[$kk] = $lst;
     }
     return $result;
