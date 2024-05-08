@@ -7,7 +7,7 @@
     <div class="intro-y box">
         <div class="flex flex-col sm:flex-row items-center p-5 border-b border-slate-200/60">
             <h2 class="font-medium text-base mr-auto"> Kelola User</h2>
-            <button class="btn btn-danger shadow-md mr-2 float-right" onclick="tambah();" data-bs-toggle="modal" data-bs-target="#modal-kegiatan_utama">Tambah User</button>
+            <button class="btn btn-danger shadow-md mr-2 float-right" onclick="tambah();" data-bs-toggle="modal" data-bs-target="#modal-user">Tambah User</button>
         </div>
         <div class="lg:col-span-12 p-5 border-b border-slate-200/60">
             <table id="kegiatan_utama" class="table table-bordered table-striped table-hover" cellspacing="0" width="100%">
@@ -19,8 +19,6 @@
                         <th>Email</th>
                         <th>Level</th>
                         <th>Instansi</th>
-                        <th>Company</th>
-                        <th>Partner</th>
                         <th>Penilai</th>
                         <th class="w-5">Aksi</th>
                     </tr>
@@ -35,14 +33,12 @@
 <div id="modal-user" class="modal fade" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <!-- BEGIN: Modal Header -->
             <div class="modal-header">
                 <h2 class="fw-medium fs-base me-auto" id="title">Tambah User</h2>
-            </div> <!-- END: Modal Header -->
-            <!-- BEGIN: Modal Body -->
+            </div> 
             <form action="{{ url('manage-user/simpan') }}" id="form-user" method="post">
                 @csrf
-                <input type="hidden" name="kegiatan_utama_id" id="kegiatan_utama_id">
+                <input type="hidden" name="id">
                 <div class="modal-body grid columns-12 gap-4 gap-y-3">
                     <div class="g-col-12">
                         <div class="form-group">
@@ -50,16 +46,15 @@
                             <textarea id="nama" name="nama" class="form-control" placeholder="Nama Kegiatan Utama" required></textarea>
                         </div> 
                     </div>
-                </div> <!-- END: Modal Body -->
-                <!-- BEGIN: Modal Footer -->
+                </div>
                 <div class="modal-footer text-end"> 
                     <button type="button" data-tw-dismiss="modal" class="btn btn-outline-secondary w-20 me-1">Batal</button> 
                     <button type="submit" class="btn btn-success w-20 saveButton">Simpan</button> 
-                </div> <!-- END: Modal Footer -->
+                </div>
             </form>
         </div>
     </div>
-</div> <!-- END: Modal Content -->
+</div>
 @endsection
 
 @push('js')
@@ -69,9 +64,10 @@
 <script>
     $(document).ready(function() {
         getData();
-        modal_kegiatan_utama = tailwind.Modal.getInstance(document.querySelector("#modal-kegiatan_utama"));
+
+        modal_user = tailwind.Modal.getInstance(document.querySelector("#modal-user"));
         
-        $('#form-kegiatan_utama').validate({
+        $('#form-user').validate({
             highlight: function (input) {
                 $(input).addClass('border-danger');
             },
@@ -136,10 +132,15 @@
             { data: 'nama' },
             { data: 'email' },
             { data: 'level' },
-            { data: 'instansi_id' },
-            { data: 'company_id' },
-            { data: 'partner_id' },
-            { data: 'penilai_id' },
+            { 
+                render: function (data, type, row, meta) {
+                    if (row.user_rel && row.user_rel.instansi && row.user_rel.instansi.name) {
+                        return row?.user_rel?.instansi?.name;
+                    }
+                    return '';
+                },
+            },
+            { data: 'penilai.name' },
             { 
                 sortable: false, 
                 searchable: false,
@@ -162,7 +163,7 @@
     function tambah() {
         clearForm();
         $('.saveButton').prop('disabled', false);
-        modal_kegiatan_utama.show();
+        modal_user.show();
     }
 
     function edit(id) {

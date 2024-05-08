@@ -27,7 +27,7 @@ class ManageUserController extends Controller
 
     public function manage_user_getDatas()
     {
-        $datas = User::latest()->get();
+        $datas = User::with(['user_rel.instansi', 'penilai'])->latest()->get();
         return response()->json(['data' => $datas]);
     }
 
