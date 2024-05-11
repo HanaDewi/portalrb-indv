@@ -56,7 +56,7 @@
                         <div class="form-group">
                             <label for="idpassword" class="form-label">Password  <span class="text-danger">*</span></label> 
                             <div class="input-group">
-                                <input id="idpassword" type="password" name="pwda" class="form-control" placeholder="Password" required  autocomplete="" />
+                                <input id="idpassword" type="password" name="pwda" class="form-control" placeholder="Password" autocomplete="" />
                                 <div class="input-group-append">
                                     <button class="btn btn-outline-secondary" type="button" onclick="togglePWD(this)"><span class="fa fa-eye-slash"></span> &nbsp; </button>
                                 </div>

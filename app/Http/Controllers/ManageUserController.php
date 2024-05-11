@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\KlpdUserRel;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -40,6 +41,7 @@ class ManageUserController extends Controller
     public function manage_user_simpan(Request $request)
     {
         $success = false;
+        $message = '';
         $data = new User();
 
         $uname = $request->username;
@@ -51,19 +53,27 @@ class ManageUserController extends Controller
         $instansi = $request->instansi_id;
         $penilai = $request->penilai_id;
 
-        echo $uname . '<br/>';
-        echo $email . '<br/>';
-        echo $nama . '<br/>';
-        echo $pwda . '<br/>';
-        echo $pwdb . '<br/>';
-        echo $level . '<br/>';
-        echo $instansi . '<br/>';
-        echo $penilai . '<br/>';
-        die;
-        if ($data->save()) {
-            $success = true;
-        };
-        return response()->json(['success' => $success]);
+        $data->username = $uname;
+        $data->email = $email;
+        $data->nama = $nama;
+        $data->password = $pwda;
+        $data->level = $level;
+        $data->instansi_id = $instansi;
+        $data->penilai_id = $penilai;
+
+        try {
+            if ($data->save()) {
+                $userrel = new KlpdUserRel();
+                $userrel->user_id = $data->id;
+                $userrel->instansi_id = $instansi;
+                $userrel->save();
+                $success = true;
+            }
+        } catch (\Exception $e){
+            $message = $e->getMessage();
+        }
+
+        return response()->json(['success' => $success, 'message' => $message]);
     }
 
     public function manage_user_hapus(Request $request)
