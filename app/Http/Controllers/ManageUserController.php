@@ -41,7 +41,25 @@ class ManageUserController extends Controller
     {
         $success = false;
         $data = new User();
-        
+
+        $uname = $request->username;
+        $email = $request->email;
+        $nama = $request->nama;
+        $pwda = $request->pwda;
+        $pwdb = $request->pwdb;
+        $level = $request->level;
+        $instansi = $request->instansi_id;
+        $penilai = $request->penilai_id;
+
+        echo $uname . '<br/>';
+        echo $email . '<br/>';
+        echo $nama . '<br/>';
+        echo $pwda . '<br/>';
+        echo $pwdb . '<br/>';
+        echo $level . '<br/>';
+        echo $instansi . '<br/>';
+        echo $penilai . '<br/>';
+        die;
         if ($data->save()) {
             $success = true;
         };

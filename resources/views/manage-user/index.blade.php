@@ -56,19 +56,29 @@
                         <div class="form-group">
                             <label for="idpassword" class="form-label">Password  <span class="text-danger">*</span></label> 
                             <div class="input-group">
-                                <input id="idpassword" type="password" name="pwda" class="form-control" placeholder="Password" required  autocomplete=""/>
+                                <input id="idpassword" type="password" name="pwda" class="form-control" placeholder="Password" required  autocomplete="" />
                                 <div class="input-group-append">
                                     <button class="btn btn-outline-secondary" type="button" onclick="togglePWD(this)"><span class="fa fa-eye-slash"></span> &nbsp; </button>
                                 </div>
+                            </div>
+                            <div class="password-requirements mb-4" style="font-size:10pt;">
+                                <p class="requirement" id="length">Min. 8 characters</p>
+                                <p class="requirement" id="lowercase">Include lowercase letter</p>
+                                <p class="requirement" id="uppercase">Include uppercase letter</p>
+                                <p class="requirement" id="number">Include number</p>
+                                <p class="requirement" id="characters">Include a special character: #.-?!@$%^&*</p>
                             </div>
                         </div> 
                         <div class="form-group">
                             <label for="idpassword_" class="form-label">Password lagi  <span class="text-danger">*</span></label> 
                             <div class="input-group">
-                                <input id="idpassword_" type="password" name="pwdb" class="form-control" placeholder="Password lagi" required />
+                                <input id="idpassword_" type="password" name="pwdb" class="form-control" placeholder="Password lagi" placeholder=""/>
                                 <div class="input-group-append">
                                     <button class="btn btn-outline-secondary" type="button" onclick="togglePWD(this)"><span class="fa fa-eye-slash"></span> &nbsp; </button>
                                 </div>
+                            </div>
+                            <div class="password-requirements mb-4" style="font-size:10pt;">
+                                <p class="requirement" id="confirmpwd">Password tidak sama</p>
                             </div>
                         </div> 
                         <div class="form-group">
@@ -103,6 +113,9 @@
 @endsection
 
 @push('js')
+<style type="text/css">
+    .password-requirements .requirement {color:red}
+</style>
 <script src="{{ asset('ext/jquery-validation/jquery.validate.min.js') }}"></script>
 <script src="{{ asset('ext/jquery-validation/localization/messages_id.min.js') }}"></script>
 <script src="{{ asset('ext') }}/jquery-inputmask/jquery.inputmask.bundle.js"></script>
@@ -130,6 +143,9 @@
                 // console.log(error, placement);
             },
             submitHandler: function(form) {
+                if (!validate()) {
+                    return;
+                }
                 $('.saveButton').prop('disabled', true);
                 $.ajax({
                     url: form.action,
@@ -156,7 +172,50 @@
                 });
             }
         });
+
+        document.getElementById('idpassword').addEventListener("input", (event) => {
+            const value = event.target.value;
+            window.validLength = value.length >= 8;
+            window.validLCase = /[a-z]/.test(value);
+            window.validUCase =/[A-Z]/.test(value);
+            window.validNum = /\d/.test(value);
+            window.validChr = /[#.?!@$%^&*-]/.test(value);
+            if (window.validLength)
+                $('#length').css('color', 'blue');
+            else
+                $('#length').css('color', 'red');
+            if (window.validLCase)
+                $('#lowercase').css('color', 'blue');
+            else
+                $('#lowercase').css('color', 'red');
+            if (window.validUCase)
+                $('#uppercase').css('color', 'blue');
+            else
+                $('#uppercase').css('color', 'red');
+            if (window.validNum)
+                $('#number').css('color', 'blue');
+            else
+                $('#number').css('color', 'red');
+            if (window.validChr)
+                $('#characters').css('color', 'blue');
+            else
+                $('#characters').css('color', 'red');
+            $('#idpassword_').trigger('change');
+        });
+        document.getElementById('idpassword_').addEventListener("input", (event) => {
+            const value = event.target.value;
+            const pval = document.getElementById('idpassword').value;
+            window.validConfirm = value==pval;
+            if (window.validConfirm)
+                $('#confirmpwd').css('color', 'blue');
+            else
+                $('#confirmpwd').css('color', 'red');
+        });
     });
+
+    function validate() {
+        return window.validLength===true && window.validLCase===true && window.validUCase===true && window.validNum===true && window.validChr==true && window.validConfirm===true;
+    }
 
     var kegiatan_utama = $('#kegiatan_utama').DataTable( {
         responsive: true,
