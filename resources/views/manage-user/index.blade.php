@@ -30,11 +30,11 @@
     </div>
 </div>
 
-<div id="modal-user" class="modal fade" tabindex="-1" aria-hidden="true">
+<div id="modal-user" class="modal fade" tabindex="-1" aria-hidden="true" data-tw-backdrop="static" data-tw-keyboard="false">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="fw-medium fs-base me-auto" id="title">Tambah User</h2>
+                <h1 class="fw-medium fs-base me-auto" id="title">Tambah User</h1>
             </div> 
             <form action="{{ url('manage-user/simpan') }}" id="form-user" method="post">
                 @csrf
@@ -43,7 +43,7 @@
                     <div class="g-col-12">
                         <div class="form-group">
                             <label for="idusername" class="form-label">Username  <span class="text-danger">*</span></label> 
-                            <input id="idusername" type="text" name="username" class="form-control" placeholder="Username" required />
+                            <input id="idusername" type="text" name="username" class="form-control" placeholder="Username" required onfocus="$(this).removeAttr('readonly');" readonly/>
                         </div> 
                         <div class="form-group">
                             <label for="idemail" class="form-label">Email  <span class="text-danger">*</span></label> 
@@ -55,11 +55,21 @@
                         </div> 
                         <div class="form-group">
                             <label for="idpassword" class="form-label">Password  <span class="text-danger">*</span></label> 
-                            <input id="idpassword" type="password" name="pwda" class="form-control" placeholder="Password" required />
+                            <div class="input-group">
+                                <input id="idpassword" type="password" name="pwda" class="form-control" placeholder="Password" required  autocomplete=""/>
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary" type="button" onclick="togglePWD(this)"><span class="fa fa-eye-slash"></span> &nbsp; </button>
+                                </div>
+                            </div>
                         </div> 
                         <div class="form-group">
                             <label for="idpassword_" class="form-label">Password lagi  <span class="text-danger">*</span></label> 
-                            <input id="idpassword_" type="password" name="pwdb" class="form-control" placeholder="Password lagi" required />
+                            <div class="input-group">
+                                <input id="idpassword_" type="password" name="pwdb" class="form-control" placeholder="Password lagi" required />
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary" type="button" onclick="togglePWD(this)"><span class="fa fa-eye-slash"></span> &nbsp; </button>
+                                </div>
+                            </div>
                         </div> 
                         <div class="form-group">
                             <label for="idlevel" class="form-label">Level  <span class="text-danger">*</span></label> 
@@ -117,7 +127,7 @@
                 if (error.text() !== '') {
                     placement.append(error);
                 }
-                console.log(error, placement);
+                // console.log(error, placement);
             },
             submitHandler: function(form) {
                 $('.saveButton').prop('disabled', true);
@@ -199,6 +209,7 @@
         clearForm();
         $('.saveButton').prop('disabled', false);
         modal_user.show();
+        setTimeout(()=>$('#idusername').removeAttr('readonly'), 100);
     }
 
     function edit(id) {
@@ -243,6 +254,16 @@
                 });
             }
         });
+    }
+
+    function togglePWD(th) {
+        if ($(th).parent().siblings('input').attr('type')=='password') {
+            $(th).parent().siblings('input').attr('type','text');
+            $(th).find('span').attr('class', 'fa fa-eye');
+        } else {
+            $(th).parent().siblings('input').attr('type','password');
+            $(th).find('span').attr('class', 'fa fa-eye-slash');
+        }
     }
 </script>
 @endpush
