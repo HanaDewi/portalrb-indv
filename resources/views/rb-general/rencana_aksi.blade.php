@@ -248,6 +248,14 @@
 </div> <!-- END: Modal Content -->
 @endsection
 
+@push('css')
+<style>
+    table td {
+        vertical-align: top !important;
+    }
+</style>
+@endpush
+
 @push('js')
 <script src="{{ asset('ext/jquery-validation/jquery.validate.min.js') }}"></script>
 <script src="{{ asset('ext/jquery-validation/localization/messages_id.min.js') }}"></script>
@@ -386,11 +394,11 @@
             { 
                 render: function (data, type, row, meta) {
                     return'<table class="table table-noborder">'+
-                            '<tr><td> TW 1 : '+formatNumber(row.target_tw1)+ '</td></tr>'+
-                            '<tr><td> TW 2 : '+formatNumber(row.target_tw2)+ '</td></tr>'+
-                            '<tr><td> TW 3 : '+formatNumber(row.target_tw3)+ '</td></tr>'+
-                            '<tr><td> TW 4 : '+formatNumber(row.target_tw4)+ '</td></tr>'+
-                            '<tr><td> Total : '+formatNumber(row.target_total)+'</td></tr>'+
+                            '<tr><th> TW 1 </th><td>: '+formatNumber(row.target_tw1)+ '</td></tr>'+
+                            '<tr><th> TW 2 </th><td>: '+formatNumber(row.target_tw2)+ '</td></tr>'+
+                            '<tr><th> TW 3 </th><td>: '+formatNumber(row.target_tw3)+ '</td></tr>'+
+                            '<tr><th> TW 4 </th><td>: '+formatNumber(row.target_tw4)+ '</td></tr>'+
+                            '<tr><th> Total </th><td>: '+formatNumber(row.target_total)+'</td></tr>'+
                         '</table>';
                 }
             },

@@ -53,6 +53,7 @@
                         <th class="w-5" rowspan="2" style="text-align: center;">Realisasi Anggaran</th>
                         <th class="w-5" rowspan="2">Capaian Output</th>
                         <th class="w-5" rowspan="2">Capaian Anggaran</th>
+                        <th class="w-5" rowspan="2">Catatan Output</th>
                     </tr>
                     <tr>
                         <th>Koordinator</th>
@@ -185,6 +186,9 @@
                                 </table>
                                 @endif
                             </td>
+                            <td>
+                                {{ $data['output']->catatan }}
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>
@@ -232,6 +236,11 @@
 
 @push('css')
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<style>
+    table td {
+        vertical-align: top !important;
+    }
+</style>
 @endpush
 
 @push('js')
@@ -274,7 +283,7 @@ $(document).ready(function(){
         scrollX: true,
             // 'orderFixed': [0, 'asc'],
             autoWidth: false,
-            rowsGroup: [0, 1, 2, 3],
+            rowsGroup: [0, 1, 2, 3, 4, 5, 6, 7, 8],
             paging: true,
             bInfo: false,
             ordering: false,

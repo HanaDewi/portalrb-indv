@@ -81,6 +81,7 @@
                         <th>Realisasi Anggaran</th>
                         <th>Capaian Output</th>
                         <th>Capaian Anggaran</th>
+                        <th>Catatan</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
@@ -341,6 +342,12 @@
                                         <div class="input-group-text">%</div>
                                     </div>
                                 </td>
+                                <tr>
+                                    <td class="font-bold">Catatan</td>
+                                    <td colspan="5">
+                                        <textarea name="catatan" id="catatan_output" cols="30" rows="10" placeholder="Catatan" class="form-control mt-4"></textarea>
+                                    </td>
+                                </tr>
                             </tr>
                         </table>
                     </div>
@@ -400,6 +407,14 @@
     </div>
 </div> <!-- END: Modal Content -->
 @endsection
+
+@push('css')
+<style>
+    table td {
+        vertical-align: top !important;
+    }
+</style>
+@endpush
 
 @push('js')
 <script src="{{ asset('ext/jquery-validation/jquery.validate.min.js') }}"></script>
@@ -540,7 +555,6 @@
         dom: 'Blfrtip',
             buttons: [
             {
-                
                 extend: 'pdfHtml5',
                 orientation: 'landscape',
                 pageSize: 'A4',
@@ -591,11 +605,11 @@
             { 
                 render: function (data, type, row, meta) {
                     return '<table class="table table-noborder">'+
-                            '<tr><th> TW 1 : '+formatNumber(row.target_tw1)+'</td></tr>'+
-                            '<tr><th> TW 2 : '+formatNumber(row.target_tw2)+'</td></tr>'+
-                            '<tr><th> TW 3 : '+formatNumber(row.target_tw3)+'</td></tr>'+
-                            '<tr><th> TW 4 : '+formatNumber(row.target_tw4)+'</td></tr>'+
-                            '<tr><th> Total : '+formatNumber(row.target_total)+'</td></tr>'+
+                            '<tr><th> TW 1 </th><td>: '+formatNumber(row.target_tw1)+'</td></tr>'+
+                            '<tr><th> TW 2 </th><td>: '+formatNumber(row.target_tw2)+'</td></tr>'+
+                            '<tr><th> TW 3 </th><td>: '+formatNumber(row.target_tw3)+'</td></tr>'+
+                            '<tr><th> TW 4 </th><td>: '+formatNumber(row.target_tw4)+'</td></tr>'+
+                            '<tr><th> Total </th><td>: '+formatNumber(row.target_total)+'</td></tr>'+
                         '</table>';
                 }
             },
@@ -603,11 +617,11 @@
             { 
                 render: function (data, type, row, meta) {
                     return row.realisasi_output_total ? '<table class="table table-noborder">'+
-                            '<tr><th> TW 1 : '+formatNumber(row.realisasi_output_tw1)+'</td></tr>'+
-                            '<tr><th> TW 2 : '+formatNumber(row.realisasi_output_tw2)+'</td></tr>'+
-                            '<tr><th> TW 3 : '+formatNumber(row.realisasi_output_tw3)+'</td></tr>'+
-                            '<tr><th> TW 4 : '+formatNumber(row.realisasi_output_tw4)+'</td></tr>'+
-                            '<tr><th> Total : '+formatNumber(row.realisasi_output_total)+'</td></tr>'+
+                            '<tr><th> TW 1 </th><td>: '+formatNumber(row.realisasi_output_tw1)+'</td></tr>'+
+                            '<tr><th> TW 2 </th><td>: '+formatNumber(row.realisasi_output_tw2)+'</td></tr>'+
+                            '<tr><th> TW 3 </th><td>: '+formatNumber(row.realisasi_output_tw3)+'</td></tr>'+
+                            '<tr><th> TW 4 </th><td>: '+formatNumber(row.realisasi_output_tw4)+'</td></tr>'+
+                            '<tr><th> Total </th><td>: '+formatNumber(row.realisasi_output_total)+'</td></tr>'+
                         '</table>' : '';
                 }
             },
@@ -615,15 +629,16 @@
             { 
                 render: function (data, type, row, meta) {
                     return row.capaian_output_total ? '<table class="table table-noborder">'+
-                            '<tr><th> TW 1 : '+formatNumber(row.capaian_output_tw1)+'%</td></tr>'+
-                            '<tr><th> TW 2 : '+formatNumber(row.capaian_output_tw2)+'%</td></tr>'+
-                            '<tr><th> TW 3 : '+formatNumber(row.capaian_output_tw3)+'%</td></tr>'+
-                            '<tr><th> TW 4 : '+formatNumber(row.capaian_output_tw4)+'%</td></tr>'+
-                            '<tr><th class="border-top"> Total : '+formatNumber(row.capaian_output_total)+'%</td></tr>'+
+                            '<tr><th> TW 1 </th><td>: '+formatNumber(row.capaian_output_tw1)+'%</td></tr>'+
+                            '<tr><th> TW 2 </th><td>: '+formatNumber(row.capaian_output_tw2)+'%</td></tr>'+
+                            '<tr><th> TW 3 </th><td>: '+formatNumber(row.capaian_output_tw3)+'%</td></tr>'+
+                            '<tr><th> TW 4 </th><td>: '+formatNumber(row.capaian_output_tw4)+'%</td></tr>'+
+                            '<tr><th class="border-top"> Total </th><td>: '+formatNumber(row.capaian_output_total)+'%</td></tr>'+
                         '</table>' : '';
                 }
             },
             { data: 'capaian_anggaran_total' },
+            { data: 'catatan' },
             { 
                 sortable: false, 
                 searchable: false,
@@ -792,6 +807,7 @@
             $('#capaian_anggaran_tw3').val(data.capaian_anggaran_tw3);
             $('#capaian_anggaran_tw4').val(data.capaian_anggaran_tw4);
             $('#capaian_anggaran_total').val(data.capaian_anggaran_total);
+            $('#catatan_output').val(data.catatan);
             $('.saveButton').prop('disabled', false);
         });
     }

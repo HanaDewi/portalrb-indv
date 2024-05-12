@@ -583,6 +583,7 @@ class RBGeneralController extends Controller
         $output->capaian_anggaran_tw3 = $request->capaian_anggaran_tw3;
         $output->capaian_anggaran_tw4 = $request->capaian_anggaran_tw4;
         $output->capaian_anggaran_total = $request->capaian_anggaran_total;
+        $output->catatan = $request->catatan;
         if ($output->save()) {
             $success = true;
         }
