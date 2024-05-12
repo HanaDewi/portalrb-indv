@@ -42,8 +42,14 @@ class ManageUserController extends Controller
     {
         $success = false;
         $message = '';
-        $data = new User();
 
+        $id = $request->id;
+
+        if (empty($id)) {
+            $data = new User();
+        } else {
+            $data = User::find($id);
+        }
         $uname = $request->username;
         $email = $request->email;
         $nama = $request->nama;
@@ -56,13 +62,26 @@ class ManageUserController extends Controller
         $data->username = $uname;
         $data->email = $email;
         $data->nama = $nama;
-        $data->password = $pwda;
         $data->level = $level;
         $data->instansi_id = $instansi;
         $data->penilai_id = $penilai;
 
+        if (empty($id)) {
+            if (!empty($pwda) && $pwda==$pwdb) {
+                $data->password = $pwda;
+            } else {
+                return response()->json(['success' => false, 'message' => 'Invalid password']);
+            }
+
+        } else {
+            if (!empty($pwda) && $pwda==$pwdb) {
+                $data->password = $pwda;
+            }
+        }
+
         try {
             if ($data->save()) {
+                KlpdUserRel::where('user_id', '=', $data->id)->delete();
                 $userrel = new KlpdUserRel();
                 $userrel->user_id = $data->id;
                 $userrel->instansi_id = $instansi;

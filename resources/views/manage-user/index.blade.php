@@ -10,7 +10,7 @@
             <button class="btn btn-danger shadow-md mr-2 float-right" onclick="tambah();" data-bs-toggle="modal" data-bs-target="#modal-user">Tambah User</button>
         </div>
         <div class="lg:col-span-12 p-5 border-b border-slate-200/60">
-            <table id="kegiatan_utama" class="table table-bordered table-striped table-hover" cellspacing="0" width="100%">
+            <table id="tabel-user" class="table table-bordered table-striped table-hover" cellspacing="0" width="100%">
                 <thead class="table-dark">
                     <tr>
                         <th class="w-5">No.</th>
@@ -52,6 +52,9 @@
                         <div class="form-group">
                             <label for="idnama" class="form-label">Nama  <span class="text-danger">*</span></label> 
                             <input id="idnama" type="text" name="nama" class="form-control" placeholder="Nama" required />
+                            <div class="mt-4 edit-info" hidden>
+                                <p style="font-size:10pt;font-style:italic;">Kosongkan password jika tidak akan diedit</p>
+                            </div>
                         </div> 
                         <div class="form-group">
                             <label for="idpassword" class="form-label">Password  <span class="text-danger">*</span></label> 
@@ -157,13 +160,13 @@
                     success: function(data) {
                         $('.saveButton').prop('disabled', false);
                         if (data.success) {
-                            Swal.fire('Selamat!', 'Data Kegiatan Utama berhasil disimpan!', 'success');
-                            modal_kegiatan_utama.hide();
+                            Swal.fire('Selamat!', 'Data user berhasil disimpan!', 'success');
+                            modal_user.hide();
                         } else {
-                            Swal.fire('Aduh!', 'Data Kegiatan Utama gagal disimpan! Coba lagi nanti ya..', 'error');
-                            modal_kegiatan_utama.hide();
+                            Swal.fire('Aduh!', 'Data user gagal disimpan! Coba lagi nanti ya..', 'error');
+                            modal_user.hide();
                         }
-                        getData();
+                        datauser.ajax.reload();
                     },
                     error: function(err) {
                         Swal.fire('Error!', 'Terjadi kesalahan!', 'error');
@@ -214,10 +217,17 @@
     });
 
     function validate() {
-        return window.validLength===true && window.validLCase===true && window.validUCase===true && window.validNum===true && window.validChr==true && window.validConfirm===true;
+        const pval = document.getElementById('idpassword').value;
+        const cpval = document.getElementById('idpassword_').value;
+        return (window.validLength===true 
+            && window.validLCase===true 
+            && window.validUCase===true 
+            && window.validNum===true 
+            && window.validChr==true 
+            && window.validConfirm===true) || (window.editMode===true && pval=='' && cpval=='');
     }
 
-    var kegiatan_utama = $('#kegiatan_utama').DataTable( {
+    const datauser = $('#tabel-user').DataTable( {
         responsive: true,
         processing: true,
         ajax: {
@@ -256,29 +266,38 @@
     }); 
 
     function getData() {
-        kegiatan_utama.ajax.url("{{url('manage-user/getDatas')}}").load(null, false);
+        datauser.ajax.url("{{url('manage-user/getDatas')}}").load(null, false);
     }
 
     function clearForm() {
         $('#form-kegiatan_utama').trigger('reset');
-        $('#kegiatan_utama_id').val('');
+        $('#tabel-user_id').val('');
     }
 
     function tambah() {
+        window.editMode = false;
         clearForm();
+        $('.edit-info').hide();
         $('.saveButton').prop('disabled', false);
         modal_user.show();
         setTimeout(()=>$('#idusername').removeAttr('readonly'), 100);
     }
 
     function edit(id) {
+        window.editMode = true;
         clearForm();
-        $('#kegiatan_utama_id').val(id);
-        $('#title').html('Edit Kegiatan Utama');
+        $('input[name=id]').val(id);
+        $('#title').html('Edit User');
         $('.saveButton').prop('disabled', true);
-        modal_kegiatan_utama.show();
-        $.getJSON("{{url('master-data/kegiatan_utama/getData')}}/"+id, function(data) {
-            $('#nama').val(data.nama);
+        $('.edit-info').show();
+        modal_user.show();
+        $.getJSON("{{url('manage-user/getData')}}/"+id, function(data) {
+            $('input[name=username]').val(data.username);
+            $('input[name=email]').val(data.email);
+            $('input[name=nama]').val(data.nama);
+            $('select[name=level]').val(data.level);
+            document.getElementById('idinstansi').tomselect.setValue(data.instansi_id);
+            document.getElementById('idpenilai').tomselect.setValue(data.penilai_id);
             $('.saveButton').prop('disabled', false);
         });
     }
@@ -286,7 +305,7 @@
     function hapus(id) {
         Swal.fire({
             title: "Yakin?",
-            text: "Hapus Kegiatan Utama ini?",
+            text: "Hapus data user ini?",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: "#DD6B55",
@@ -294,16 +313,16 @@
         }).then((result) => {
             if (result.isConfirmed) {
                 $.ajax({
-                    url: "{{url('master-data/kegiatan_utama/hapus')}}",
+                    url: "{{url('manage-user/hapus')}}",
                     type: "post",
                     data: {_token: '{{csrf_token()}}', id: id},
                     dataType: "json",
                     success: function(terhapus) {
                         console.log(terhapus);
                         if (terhapus.success) {
-                            Swal.fire('Selamat!', 'Data Kegiatan Utama berhasil dihapus!', 'success');
+                            Swal.fire('Selamat!', 'Data user berhasil dihapus!', 'success');
                         } else {
-                            Swal.fire('Aduh!', 'Data Kegiatan Utama gagal dihapus! '+terhapus.pesan, 'error');
+                            Swal.fire('Aduh!', 'Data user gagal dihapus! '+terhapus.pesan, 'error');
                         }
                         getData();
                     },
