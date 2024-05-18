@@ -97,11 +97,11 @@
                         </div> 
                         <div class="form-group">
                             <label for="idinstansi" class="form-label">Instansi  <span class="text-danger"></span></label> 
-                            {!! Form::select('instansi_id', instansis(), '', ['class' => 'tom-select mt-1', 'id' => 'idinstansi', 'data-placeholder' => 'Pilih Instansi', '']) !!}
+                            {!! Form::select('instansi_id', instansis(), '', ['class' => 'form-control mt-1', 'id' => 'idinstansi', 'data-placeholder' => 'Pilih Instansi', '']) !!}
                         </div> 
                         <div class="form-group">
                             <label for="idpenilai" class="form-label">Penilai  <span class="text-danger"></span></label> 
-                            {!! Form::select('penilai_id', timpenilai(), '', ['class' => 'tom-select mt-1', 'id' => 'idpenilai', 'data-placeholder' => 'Pilih Tim Penilai', '']) !!}
+                            {!! Form::select('penilai_id', timpenilai(), '', ['class' => 'form-control mt-1', 'id' => 'idpenilai', 'data-placeholder' => 'Pilih Tim Penilai', '']) !!}
                         </div> 
                     </div>
                 </div>
@@ -270,7 +270,7 @@
     }
 
     function clearForm() {
-        $('#form-kegiatan_utama').trigger('reset');
+        $('#form-user').trigger('reset');
         $('#tabel-user_id').val('');
     }
 
