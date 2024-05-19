@@ -296,8 +296,8 @@
             $('input[name=email]').val(data.email);
             $('input[name=nama]').val(data.nama);
             $('select[name=level]').val(data.level);
-            document.getElementById('idinstansi').tomselect.setValue(data.instansi_id);
-            document.getElementById('idpenilai').tomselect.setValue(data.penilai_id);
+            $('#idinstansi').val(data.instansi_id);
+            $('#idpenilai').val(data.penilai_id);
             $('.saveButton').prop('disabled', false);
         });
     }
