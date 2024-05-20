@@ -206,31 +206,31 @@
                                 <td>
                                     <div class="input-group mt-4 mr-2">
                                         <div class="input-group-text">TW1</div>
-                                        <input type="text" name="realisasi_output_tw1" id="realisasi_output_tw1" placeholder="Triwulan 1" class="form-control digit" onkeyup="hitungTotal();" required>
+                                        <input type="text" name="realisasi_output_tw1" id="realisasi_output_tw1" placeholder="Triwulan 1" class="form-control digit" required>
                                     </div>
                                 </td>
                                 <td>
                                     <div class="input-group mt-4 mr-2">
                                         <div class="input-group-text">TW2</div>
-                                        <input type="text" name="realisasi_output_tw2" id="realisasi_output_tw2" placeholder="Triwulan 2" class="form-control digit" onkeyup="hitungTotal();" required>
+                                        <input type="text" name="realisasi_output_tw2" id="realisasi_output_tw2" placeholder="Triwulan 2" class="form-control digit" required>
                                     </div>
                                 </td>
                                 <td>
                                     <div class="input-group mt-4 mr-2">
                                         <div class="input-group-text">TW3</div>
-                                        <input type="text" name="realisasi_output_tw3" id="realisasi_output_tw3" placeholder="Triwulan 3" class="form-control digit" onkeyup="hitungTotal();" required>
+                                        <input type="text" name="realisasi_output_tw3" id="realisasi_output_tw3" placeholder="Triwulan 3" class="form-control digit" required>
                                     </div>
                                 </td>
                                 <td>
                                     <div class="input-group mt-4 mr-2">
                                         <div class="input-group-text">TW4</div>
-                                        <input type="text" name="realisasi_output_tw4" id="realisasi_output_tw4" placeholder="Triwulan 4" class="form-control digit" onkeyup="hitungTotal();" required>
+                                        <input type="text" name="realisasi_output_tw4" id="realisasi_output_tw4" placeholder="Triwulan 4" class="form-control digit" required>
                                     </div>
                                 </td>
                                 <td>
                                     <div class="input-group mt-4">
                                         <div class="input-group-text">Total</div>
-                                        <input type="text" name="realisasi_output_total" id="realisasi_output_total" placeholder="Total" class="form-control digit" readonly required>
+                                        <input type="text" name="realisasi_output_total" id="realisasi_output_total" placeholder="Total" class="form-control digit" required>
                                     </div>
                                 </td>
                             </tr>
