@@ -191,7 +191,7 @@
                                 <td>
                                     <div class="input-group mt-4">
                                         <div class="input-group-text">Total</div>
-                                        <input type="text" name="realisasi_output_total" id="realisasi_output_total" placeholder="Total" class="form-control digit" required>
+                                        <input type="text" name="realisasi_output_total" id="realisasi_output_total" placeholder="Total" class="form-control digit"onkeyup="hitungTotal();" required>
                                     </div>
                                 </td>
                             </tr>
