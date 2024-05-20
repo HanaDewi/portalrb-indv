@@ -834,6 +834,7 @@ class RBTematikController extends Controller
         $output->capaian_anggaran_tw3 = $this->removeDot($request->capaian_anggaran_tw3);
         $output->capaian_anggaran_tw4 = $this->removeDot($request->capaian_anggaran_tw4);
         $output->capaian_anggaran_total = $this->removeDot($request->capaian_anggaran_total);
+        $output->catatan = $this->removeDot($request->catatan);
         if ($output->save()) {
             $success = true;
         }

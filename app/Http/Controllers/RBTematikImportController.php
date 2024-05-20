@@ -87,7 +87,8 @@ class RBTematikImportController extends Controller
                 $headings[0][0][30] == "realisasi_tw3" &&
                 $headings[0][0][31] == "realisasi_tw4" &&
                 $headings[0][0][32] == "realisasi_total" &&
-                $headings[0][0][33] == "realisasi_anggaran"
+                $headings[0][0][33] == "realisasi_anggaran" &&
+                $headings[0][0][34] == "catatan_monev"
             ) {
                 $collections = Excel::toCollection(new ImportRBTematik, $request->file('file_rbTematik'))[0];
                 $message = '';
@@ -192,6 +193,7 @@ class RBTematikImportController extends Controller
                                                                             $rencanaAksiOutput->realisasi_output_tw4 = (float)$collection["realisasi_tw4"];
                                                                             $rencanaAksiOutput->realisasi_output_total = (float)$collection["realisasi_total"];
                                                                             $rencanaAksiOutput->realisasi_anggaran_total = (int)$collection["realisasi_anggaran"];
+                                                                            $rencanaAksiOutput->catatan = $collection["catatan_monev"];
 
                                                                             #hitung capaian
                                                                             $rencanaAksiOutput->capaian_output_tw1 = (float)$collection["realisasi_tw1"]*100/(float)$collection["target_tw1"];
