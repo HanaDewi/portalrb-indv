@@ -193,7 +193,7 @@ class RBTematikImportController extends Controller
                                                                             $rencanaAksiOutput->realisasi_output_tw4 = (float)$collection["realisasi_tw4"];
                                                                             $rencanaAksiOutput->realisasi_output_total = (float)$collection["realisasi_total"];
                                                                             $rencanaAksiOutput->realisasi_anggaran_total = (int)$collection["realisasi_anggaran"];
-                                                                            $rencanaAksiOutput->realisasi_anggaran_total = $collection["catatan_monev"];
+                                                                            $rencanaAksiOutput->catatan = $collection["catatan_monev"];
 
                                                                             #hitung capaian
                                                                             $rencanaAksiOutput->capaian_output_tw1 = (float)$collection["realisasi_tw1"]*100/(float)$collection["target_tw1"];

@@ -22,5 +22,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('tematik_rencana_aksi_output', function (Blueprint $table) {
+            //
+        });
     }
 };

@@ -99,6 +99,7 @@
                         <th class="w-5" rowspan="2" style="text-align: center;">Realisasi Anggaran</th>
                         <th class="w-5" rowspan="2" style="text-align: center;">Capaian Output</th>
                         <th class="w-5" rowspan="2" style="text-align: center;">Capaian Anggaran</th>
+                        <th class="w-5" rowspan="2" style="text-align: center;">Keterangan</th>
                     </tr>
                     <tr>
                         <th>Koordinator</th>
@@ -238,6 +239,11 @@
                                 <table class="table table-noborder">
                                     <tr><th>Total</th><td>: {{ fnumber($data['output']->capaian_anggaran_total, 2) }}</td></tr>
                                 </table>
+                                @endif
+                            </td>
+                            <td>
+                                @if ($data['output']->catatan)
+                                    {{ $data['output']->catatan }}
                                 @endif
                             </td>
                         </tr>

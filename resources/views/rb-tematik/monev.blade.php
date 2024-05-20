@@ -64,6 +64,7 @@
                         <th>Realisasi Anggaran</th>
                         <th>Capaian Output</th>
                         <th>Capaian Anggaran</th>
+                        <th>Catatan</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
@@ -249,6 +250,14 @@
                                         <div class="input-group-text">Total</div>
                                         <input type="text" name="capaian_anggaran_total" id="capaian_anggaran_total" placeholder="Total" class="form-control digit" >
                                         <div class="input-group-text">%</div>
+                                    </div>
+                                </td>   
+                            </tr>
+                            <tr>
+                                <td class="font-bold">Catatan <span class="text-danger">*</span></td>
+                                <td colspan=5>
+                                    <div class="input-group mt-4 mr-2">
+                                        <textarea  name="catatan" id="catatan_monev" placeholder="Catatan" cols="30" rows="10" class="form-control"></textarea>
                                     </div>
                                 </td>
                             </tr>
@@ -546,6 +555,13 @@
                 }
             },
             { 
+                render: function (data, type, row, meta) {
+                    return row.catatan ? '<table class="table table-noborder">'+
+                            '<tr><td> '+row.catatan+'</td></tr>'+
+                        '</table>' : '';
+                }
+            },
+            { 
                 sortable: false, 
                 searchable: false,
                 render: function (data, type, row, meta) {
@@ -727,6 +743,7 @@
             $('#capaian_anggaran_tw3').val(data.capaian_anggaran_tw3);
             $('#capaian_anggaran_tw4').val(data.capaian_anggaran_tw4);
             $('#capaian_anggaran_total').val(data.capaian_anggaran_total);
+            $('#catatan_monev').val(data.catatan);
             $('.saveButton').prop('disabled', false);
         });
     }
