@@ -248,14 +248,6 @@
 </div> <!-- END: Modal Content -->
 @endsection
 
-@push('css')
-<style>
-    table td {
-        vertical-align: top !important;
-    }
-</style>
-@endpush
-
 @push('js')
 <script src="{{ asset('ext/jquery-validation/jquery.validate.min.js') }}"></script>
 <script src="{{ asset('ext/jquery-validation/localization/messages_id.min.js') }}"></script>
