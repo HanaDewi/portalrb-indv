@@ -693,7 +693,9 @@
         if (co4 > 0) {
             co_pembagi += 1;
         }
-        co_total = (co1 + co2 + co3 + co4) / co_pembagi;
+        ro_total = $('#realisasi_output_total').val();
+        to_total = $('#target_total').val();
+        co_total = (ro_total / to_total) * 100;
         $('#capaian_output_total').val(co_total);
         
         // Hitung Total Anggaran
