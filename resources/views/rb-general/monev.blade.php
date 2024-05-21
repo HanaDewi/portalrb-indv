@@ -670,8 +670,8 @@
         ro2 = $('#realisasi_output_tw2').val();
         ro3 = $('#realisasi_output_tw3').val();
         ro4 = $('#realisasi_output_tw4').val();
-        ro_total = parseFloat(ro1) + parseFloat(ro2) + parseFloat(ro3) + parseFloat(ro4);
-        $('#realisasi_output_total').val(ro_total);
+        // ro_total = parseFloat(ro1) + parseFloat(ro2) + parseFloat(ro3) + parseFloat(ro4);
+        // $('#realisasi_output_total').val(ro_total);
         co1 = t1 > 0 ? (ro1 / t1) * 100 : 0;
         co2 = t2 > 0 ? (ro2 / t2) * 100 : 0;
         co3 = t3 > 0 ? (ro3 / t3) * 100 : 0;
