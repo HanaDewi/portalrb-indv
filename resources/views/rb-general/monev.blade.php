@@ -128,31 +128,31 @@
                                 <td>
                                     <div class="input-group mt-4 mr-2">
                                         <div class="input-group-text">TW1</div>
-                                        <input type="text" name="target_tw1" id="target_tw1" placeholder="Triwulan 1"  class="form-control numeric" readonly>
+                                        <input type="text" name="target_tw1" id="target_tw1" placeholder="Triwulan 1"  class="form-control digit" readonly>
                                     </div>    
                                 </td>
                                 <td>
                                     <div class="input-group mt-4 mr-2">
                                         <div class="input-group-text">TW2</div>
-                                        <input type="text" name="target_tw2" id="target_tw2" placeholder="Triwulan 2" class="form-control numeric" readonly>
+                                        <input type="text" name="target_tw2" id="target_tw2" placeholder="Triwulan 2" class="form-control digit" readonly>
                                     </div>
                                 </td>
                                 <td>
                                     <div class="input-group mt-4 mr-2">
                                         <div class="input-group-text">TW3</div>
-                                        <input type="text" name="target_tw3" id="target_tw3" placeholder="Triwulan 3" class="form-control numeric" readonly>
+                                        <input type="text" name="target_tw3" id="target_tw3" placeholder="Triwulan 3" class="form-control digit" readonly>
                                     </div>
                                 </td>
                                 <td>
                                     <div class="input-group mt-4 mr-2">
                                         <div class="input-group-text">TW4</div>
-                                        <input type="text" name="target_tw4" id="target_tw4" placeholder="Triwulan 4" class="form-control numeric" readonly>
+                                        <input type="text" name="target_tw4" id="target_tw4" placeholder="Triwulan 4" class="form-control digit" readonly>
                                     </div>
                                 </td>
                                 <td>
                                     <div class="input-group mt-4">
                                         <div class="input-group-text">Total</div>
-                                        <input type="text" name="target_total" id="target_total" placeholder="Total" class="form-control numeric" readonly>
+                                        <input type="text" name="target_total" id="target_total" placeholder="Total" class="form-control digit" readonly>
                                     </div>
                                 </td>
                             </tr>
@@ -161,31 +161,31 @@
                                 {{-- <td>
                                     <div class="input-group mt-4 mr-2">
                                         <div class="input-group-text">TW1</div>
-                                        <input type="text" name="anggaran_tw1" id="anggaran_tw1" placeholder="Triwulan 1" class="form-control numeric" readonly>
+                                        <input type="text" name="anggaran_tw1" id="anggaran_tw1" placeholder="Triwulan 1" class="form-control digit" readonly>
                                     </div>
                                 </td>
                                 <td>
                                     <div class="input-group mt-4 mr-2">
                                         <div class="input-group-text">TW2</div>
-                                        <input type="text" name="anggaran_tw2" id="anggaran_tw2" placeholder="Triwulan 2" class="form-control numeric" readonly>
+                                        <input type="text" name="anggaran_tw2" id="anggaran_tw2" placeholder="Triwulan 2" class="form-control digit" readonly>
                                     </div>
                                 </td>
                                 <td>
                                     <div class="input-group mt-4 mr-2">
                                         <div class="input-group-text">TW3</div>
-                                        <input type="text" name="anggaran_tw3" id="anggaran_tw3" placeholder="Triwulan 3" class="form-control numeric" readonly>
+                                        <input type="text" name="anggaran_tw3" id="anggaran_tw3" placeholder="Triwulan 3" class="form-control digit" readonly>
                                     </div>
                                 </td>
                                 <td>
                                     <div class="input-group mt-4 mr-2">
                                         <div class="input-group-text">TW4</div>
-                                        <input type="text" name="anggaran_tw4" id="anggaran_tw4" placeholder="Triwulan 4" class="form-control numeric" readonly>
+                                        <input type="text" name="anggaran_tw4" id="anggaran_tw4" placeholder="Triwulan 4" class="form-control digit" readonly>
                                     </div>
                                 </td> --}}
                                 <td colspan="5">
                                     <div class="input-group mt-4 mr-2">
                                         <div class="input-group-text">Total</div>
-                                        <input type="text" name="anggaran_total" id="anggaran_total" placeholder="Total" class="form-control numeric" readonly>
+                                        <input type="text" name="anggaran_total" id="anggaran_total" placeholder="Total" class="form-control digit2" readonly>
                                     </div>
                                 </td>
                             </tr>
@@ -263,7 +263,7 @@
                                 <td colspan="5">
                                     <div class="input-group mt-4">
                                         <div class="input-group-text">Total</div>
-                                        <input type="text" name="realisasi_anggaran_total" id="realisasi_anggaran_total" placeholder="Total" class="form-control digit" onkeyup="hitungTotal();" required>
+                                        <input type="text" name="realisasi_anggaran_total" id="realisasi_anggaran_total" placeholder="Total" class="form-control digit2" onkeyup="hitungTotal();" required>
                                     </div>
                                 </td>
                             </tr>
@@ -379,7 +379,7 @@
                             <tr>
                                 <td class="font-bold w-44">Realisasi Indikator</td>
                                 <td>
-                                    <input type="text" name="realisasi_indikator" id="realisasi_indikator" placeholder="Realisasi Indikator" class="form-control numeric" onkeyup="hitungCapaian();">
+                                    <input type="text" name="realisasi_indikator" id="realisasi_indikator" placeholder="Realisasi Indikator" class="form-control digit" onkeyup="hitungCapaian();">
                                 </td>
                             </tr>
                             <tr>
@@ -427,18 +427,19 @@
         modal_monev = tailwind.Modal.getInstance(document.querySelector("#modal-monev"));
         modal_monev_perencanaan = tailwind.Modal.getInstance(document.querySelector("#modal-monev_perencanaan"));
 
-        $(".numeric").inputmask("decimal",{
-            groupSeparator: "",
-            digits: 0,
-            autoGroup: false,
+        $(".digit").inputmask("decimal",{
+            radixPoint:",",
+            groupSeparator: ".",
+            digits: 2,
+            autoGroup: true,
             rightAlign: false,
-            min: 0
+            min: 0,
         });
 
-        $(".digit").inputmask("decimal",{
-            radixPoint:".",
-            groupSeparator: "",
-            digits: 2,
+        $(".digit2").inputmask("decimal",{
+            radixPoint:",",
+            groupSeparator: ".",
+            digits: 0,
             autoGroup: true,
             rightAlign: false,
             min: 0,
@@ -650,7 +651,7 @@
     }
 
     function formatNumber(num) {
-        return num ? num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.') : '';
+        return new Intl.NumberFormat(["ban", "id"]).format(num);
     }
 
     function hitungTotal() {

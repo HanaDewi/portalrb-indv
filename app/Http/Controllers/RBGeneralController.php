@@ -307,6 +307,7 @@ class RBGeneralController extends Controller
             abort(404);
         }
         $success = true;
+        $pesan = '';
         DB::beginTransaction();
         try {
             $headings = (new HeadingRowImport())->toArray($request->file('file_rencana_aksi'));
@@ -324,24 +325,29 @@ class RBGeneralController extends Controller
                         $rencana_aksi->rencana_aksi = $key;
                         if ($rencana_aksi->save()) {
                             foreach ($collection as $output) {
-                                $rencana_aksi_output = new GeneralRencanaAksiOutput();
-                                $rencana_aksi_output->general_rencana_aksi_id = $rencana_aksi->id;
-                                $rencana_aksi_output->satuan_output = $output['satuan_output'];
-                                $rencana_aksi_output->indikator_output = $output['indikator_output'];
-                                $rencana_aksi_output->target_tw1 = preg_replace('/[^0-9.]+/', '', $output['target_tw1']);
-                                $rencana_aksi_output->target_tw2 = preg_replace('/[^0-9.]+/', '', $output['target_tw2']);
-                                $rencana_aksi_output->target_tw3 = preg_replace('/[^0-9.]+/', '', $output['target_tw3']);
-                                $rencana_aksi_output->target_tw4 = preg_replace('/[^0-9.]+/', '', $output['target_tw4']);
-                                $rencana_aksi_output->target_total = preg_replace('/[^0-9.]+/', '', $output['target_total']);
-                                $rencana_aksi_output->anggaran_tw1 = 0;
-                                $rencana_aksi_output->anggaran_tw2 = 0;
-                                $rencana_aksi_output->anggaran_tw3 = 0;
-                                $rencana_aksi_output->anggaran_tw4 = 0;
-                                $rencana_aksi_output->anggaran_total = preg_replace('/[^0-9.]+/', '', $output['anggaran_total']);
-                                $rencana_aksi_output->pelaksana = $output['pelaksana'];
-                                $rencana_aksi_output->koordinator = $output['koordinator'];
-                                if (!$rencana_aksi_output->save()) {
+                                if (preg_match("/[^0-9.]+/", $output['target_tw1']) || preg_match("/[^0-9.]+/", $output['target_tw2']) || preg_match("/[^0-9.]+/", $output['target_tw3']) || preg_match("/[^0-9.]+/", $output['target_tw4']) || preg_match("/[^0-9.]+/", $output['target_total']) || preg_match("/[^0-9.]+/", $output['anggaran_total'])) {
                                     $success = false;
+                                    $pesan = 'Format Angka tidak sesuai! Harap perbaiki terlebih dahulu!';
+                                } else {
+                                    $rencana_aksi_output = new GeneralRencanaAksiOutput();
+                                    $rencana_aksi_output->general_rencana_aksi_id = $rencana_aksi->id;
+                                    $rencana_aksi_output->satuan_output = $output['satuan_output'];
+                                    $rencana_aksi_output->indikator_output = $output['indikator_output'];
+                                    $rencana_aksi_output->target_tw1 = preg_replace('/[^0-9.]+/', '', $output['target_tw1']);
+                                    $rencana_aksi_output->target_tw2 = preg_replace('/[^0-9.]+/', '', $output['target_tw2']);
+                                    $rencana_aksi_output->target_tw3 = preg_replace('/[^0-9.]+/', '', $output['target_tw3']);
+                                    $rencana_aksi_output->target_tw4 = preg_replace('/[^0-9.]+/', '', $output['target_tw4']);
+                                    $rencana_aksi_output->target_total = preg_replace('/[^0-9.]+/', '', $output['target_total']);
+                                    $rencana_aksi_output->anggaran_tw1 = 0;
+                                    $rencana_aksi_output->anggaran_tw2 = 0;
+                                    $rencana_aksi_output->anggaran_tw3 = 0;
+                                    $rencana_aksi_output->anggaran_tw4 = 0;
+                                    $rencana_aksi_output->anggaran_total = preg_replace('/[^0-9.]+/', '', $output['anggaran_total']);
+                                    $rencana_aksi_output->pelaksana = $output['pelaksana'];
+                                    $rencana_aksi_output->koordinator = $output['koordinator'];
+                                    if (!$rencana_aksi_output->save()) {
+                                        $success = false;
+                                    }
                                 }
                             }
                         }
@@ -361,7 +367,7 @@ class RBGeneralController extends Controller
             session()->flash('success', 'Data RB General Rencana Aksi berhasil diimport!');
         } else {
             DB::rollBack();
-            session()->flash('error', 'Data RB General Rencana Aksi gagal diimport!');
+            session()->flash('error', 'Data RB General Rencana Aksi gagal diimport! '.$pesan);
         }
 
         return redirect('rb-general/perencanaan/'.$perencanaan_id.'/'.$target_id.'/rencana_aksi');
@@ -438,11 +444,11 @@ class RBGeneralController extends Controller
                     $rencana_aksi_output->general_rencana_aksi_id = $rencana_aksi->id;
                     $rencana_aksi_output->satuan_output = $target_output['satuan_output'];
                     $rencana_aksi_output->indikator_output = $target_output['indikator_output'];
-                    $rencana_aksi_output->target_tw1 = str_replace('.', '', $target_output['target_tw1']);
-                    $rencana_aksi_output->target_tw2 = str_replace('.', '', $target_output['target_tw2']);
-                    $rencana_aksi_output->target_tw3 = str_replace('.', '', $target_output['target_tw3']);
-                    $rencana_aksi_output->target_tw4 = str_replace('.', '', $target_output['target_tw4']);
-                    $rencana_aksi_output->target_total = str_replace('.', '', $target_output['target_total']);
+                    $rencana_aksi_output->target_tw1 = str_replace(',', '.', str_replace('.', '', $target_output['target_tw1']));
+                    $rencana_aksi_output->target_tw2 = str_replace(',', '.', str_replace('.', '', $target_output['target_tw2']));
+                    $rencana_aksi_output->target_tw3 = str_replace(',', '.', str_replace('.', '', $target_output['target_tw3']));
+                    $rencana_aksi_output->target_tw4 = str_replace(',', '.', str_replace('.', '', $target_output['target_tw4']));
+                    $rencana_aksi_output->target_total = str_replace(',', '.', str_replace('.', '', $target_output['target_total']));
                     $rencana_aksi_output->anggaran_tw1 = 0;
                     $rencana_aksi_output->anggaran_tw2 = 0;
                     $rencana_aksi_output->anggaran_tw3 = 0;
