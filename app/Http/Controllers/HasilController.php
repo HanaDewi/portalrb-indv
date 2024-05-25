@@ -2,18 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Instansi;
-use App\Models\Indikator;
 use App\Models\LkeTestTp;
 use App\Models\KlpdInstansi;
 use Illuminate\Http\Request;
 use App\Models\LkeTestTpLine;
-use App\Models\GeneralPerencanaan;
-use App\Models\GeneralRencanaAksi;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-use App\Models\GeneralPerencanaanTarget;
-use App\Models\GeneralRencanaAksiOutput;
 use App\Models\LkeTestTpFile;
 use App\Models\OpenAccessSetting;
 use Carbon\Carbon;
@@ -162,7 +156,7 @@ class HasilController extends Controller
                         $berkas->test_tp_id = $tp->id;
                         $berkas->deskripsi = $request->deskripsi[$key];
                         $time = time();
-                        $filename = $berkas->deskripsi."_$time." . $file_berkas->extension();
+                        $filename = $berkas->deskripsi."_$time." . $file_berkas->getClientOriginalExtension();
                         $file_berkas->storeAs('berkas', $filename, 'public');
                         $berkas->file = $filename;
                         if ($berkas->save()) {

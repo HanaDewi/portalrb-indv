@@ -52,4 +52,9 @@ class User extends Authenticatable
     {
         return $this->hasOne(KlpdUserRel::class, 'user_id');
     }
+
+    public function penilai()
+    {
+        return $this->belongsTo(LkeTP::class, "penilai_id");
+    }
 }

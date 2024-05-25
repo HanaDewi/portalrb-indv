@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\RuangBelajar;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class general_perencanaan_dokumen extends Model
+class Subscriber extends Model
 {
     use HasFactory;
+    protected $table = 'bljr_subscribers';
 }

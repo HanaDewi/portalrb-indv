@@ -8,7 +8,7 @@
     <meta name="keywords" content="Lembar Kerja Evaluasi">
     <meta name="author" content="MENPANRB">
     <title>@yield('title') - LKE KEMENPANRB</title>
-    <link  rel="stylesheet"  href='http://fonts.googleapis.com/css?family=Roboto:400,100,300,100italic,300italic,400italic,500italic,500,700,700italic,900,900italic' rel='stylesheet' type='text/css'>
+    <link  rel="stylesheet"  href='https://fonts.googleapis.com/css?family=Roboto:400,100,300,100italic,300italic,400italic,500italic,500,700,700italic,900,900italic' rel='stylesheet' type='text/css'>
     <!-- End plugin css for this page -->
     <link href="{{ asset('ext') }}/sweetalert2/sweetalert2.css" rel="stylesheet">
     @stack('css')
@@ -16,7 +16,8 @@
     <link rel="stylesheet" href="{{ asset('ext') }}/datatables/datatables.css" />
     <link rel="stylesheet" href="{{ asset('ext') }}/datatables/buttons.dataTables.min.css" />
     <link href='https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css' rel='stylesheet' type='text/css'>
-   
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css" integrity="sha512-10/jx2EXwxxWqCLX/hHth/vu2KY3jCF70dCQB8TSgNjbCVAC/8vai53GfMDrO2Emgwccf2pJqxct9ehpzG+MTw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style type="text/css">::-webkit-scrollbar { display: none;}</style>
 </head>
 
 <body class="py-5">
@@ -73,10 +74,10 @@
                 <li>
                     <a href="{{ route('logout') }}" onclick="event.preventDefault(); $('#logout').submit();"
                         class="side-menu">
-                        <div class="menu__icon">
+                        <div class="side-menu__icon">
                             <i data-lucide="log-out"></i>
                         </div>
-                        <div class="menu__title"> Logout </div>
+                        <div class="side-menu__title"> Logout </div>
                     </a>
                 </li>
             </ul>
@@ -145,7 +146,7 @@
         <div class="content">
             <div class="top-bar">
                 <nav aria-label="breadcrumb" class="-intro-x mr-auto hidden sm:flex">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" icon-name="globe" data-lucide="globe" class="lucide lucide-globe block mx-auto"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"></path></svg>
+                  <svg xmlns="https://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" icon-name="globe" data-lucide="globe" class="lucide lucide-globe block mx-auto"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"></path></svg>
                     <h1 style="padding-left: 5px; padding-right: 5px;" class="mr-auto text-lg font-extrabold"
                         style="font-weight: 600">SISTEM INFORMASI LEMBAR KERJA </h1>
                     <h1 class="text-lg text-danger font-extrabold"> EVALUASI RB</h1>
@@ -166,7 +167,7 @@
                             <li class="p-2">
                                 <div class="font-medium">{{ auth()->user()->username }}</div>
                                 <div class="text-xs text-white/70 mt-0.5 dark:text-slate-200">
-                                    {{ auth()->user()->nama }}</div>
+                                    {{ auth()->user()->nama }} - {{ auth()->user()->level }}</div>
                             </li>
                             <li>
                                 <hr class="dropdown-divider border-white/[0.08]">
@@ -193,13 +194,11 @@
             </div>
         
             <div class="col-span-12 grid grid-cols-12 gap-6">
-                <div class="intro-y col-span-12 md:col-span-12 lg:col-span-12 xl:col-span-12 pt-5">
                     @yield('content')
-                </div>
             </div>
         </div>
     </div>
-    <script src="{{ asset('template_lkerb') }}/dist/js/app.js?{{ date('YmdHis') }}"></script>
+    <script src="{{ asset('template_lkerb') }}/dist/js/app.js"></script>
     <script src="{{ asset('ext') }}/jquery/jquery.js"></script>
     {{-- Sweetalert2 --}}
     <script src="{{ asset('ext') }}/sweetalert2/sweetalert2.js"></script>

@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\DokumenKategori;
 use App\Models\Indikator;
 use App\Models\KegiatanUtama;
+use App\Models\Tahun;
 use App\Models\Tema;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -58,7 +60,7 @@ class MasterDataController extends Controller
         $pesan = '';
         $success = true;
         $kegiatan_utama = KegiatanUtama::find($request->id);
-        if ($kegiatan_utama->indikators) {
+        if (count($kegiatan_utama->indikators) > 0) {
             $pesan = 'Kegiatan Utama tidak bisa dihapus, silahkan hapus dulu Indikator yang menggunakan Kegiatan Utama ini!';
             $success = false;
         } else {
@@ -118,6 +120,11 @@ class MasterDataController extends Controller
                 }
                 $indikator->kegiatan_utama_id = $request->kegiatan_utama_id;
                 $indikator->nama = $nama;
+                $indikator->tipe = $request->tipe[$key];
+                if (isset($request->min[$key]) && isset($request->max[$key])) {
+                    $indikator->min = $request->min[$key];
+                    $indikator->max = $request->max[$key];
+                }
                 $indikator->kl = isset($request->kl[$key]) ? 1 : 0;
                 $indikator->provinsi = isset($request->provinsi[$key]) ? 1 : 0;
                 $indikator->kabupaten = isset($request->kabupaten[$key]) ? 1 : 0;
@@ -146,6 +153,7 @@ class MasterDataController extends Controller
             return false;
         }
     }
+
     public function tema()
     {
         return view('master-data.tema');
@@ -156,8 +164,6 @@ class MasterDataController extends Controller
         $datas = Tema::latest()->get();
         return response()->json(['data' => $datas]);
     }
-
-
 
     public function tema_getData($id)
     {
@@ -183,6 +189,77 @@ class MasterDataController extends Controller
     {
         $tema = Tema::find($request->id);
         if ($tema->delete()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function dokumen()
+    {
+        return view('master-data.dokumen');
+    }
+
+    public function dokumen_getDataTahun()
+    {
+        $datas = Tahun::orderBy('tahun', 'desc')->get();
+        return response()->json(['data' => $datas]);
+    }
+
+    public function dokumen_simpanTahun(Request $request)
+    {
+        $success = false;
+        $tahun = Tahun::where('tahun', $request->tahun)->first();
+        if (!$tahun) {
+            $tahun = new Tahun();
+        }
+        $tahun->tahun = $request->tahun;
+        if ($tahun->save()) {
+            $success = true;
+        };
+        return response()->json(['success' => $success]);
+    }
+
+    public function dokumen_hapusTahun(Request $request)
+    {
+        $tahun = Tahun::where('tahun', $request->tahun);
+        if ($tahun->delete()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function dokumen_getDataKategoris()
+    {
+        $datas = DokumenKategori::all();
+        return response()->json(['data' => $datas]);
+    }
+
+    public function dokumen_getDataKategori($id)
+    {
+        $data = DokumenKategori::find($id);
+        return $data;
+    }
+
+    public function dokumen_simpanKategori(Request $request)
+    {
+        $success = false;
+        $kategori = new DokumenKategori();
+        if ($request->kategori_id) {
+            $kategori = DokumenKategori::find($request->kategori_id);
+        }
+        $kategori->nama = $request->nama;
+        if ($kategori->save()) {
+            $success = true;
+        };
+        return response()->json(['success' => $success]);
+    }
+
+    public function dokumen_hapusKategori(Request $request)
+    {
+        $kategori = DokumenKategori::find($request->id);
+        if ($kategori->delete()) {
             return true;
         } else {
             return false;

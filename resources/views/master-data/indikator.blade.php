@@ -2,8 +2,8 @@
 @section('title', 'Indikator')
 
 @section('content')
-@include('common.status')
 <div class="intro-y col-span-12 lg:col-span-12">
+    @include('common.status')
     <div class="intro-y box">
         <div class="flex flex-col sm:flex-row items-center p-5 border-b border-slate-200/60">
             <h2 class="font-medium text-base mr-auto"> Indikator</h2>
@@ -16,7 +16,8 @@
                         <th class="w-5">No.</th>
                         <th>Nama Kegiatan Utama</th>
                         <th>Indikator</th>
-                        <th class="w-10">Pengguna Indikator</th>
+                        <th class="w-10">Tipe</th>
+                        <th class="w-20">Pengguna Indikator</th>
                         <th class="w-5">Aksi</th>
                     </tr>
                 </thead>
@@ -42,12 +43,24 @@
                     <div class="g-col-12"> 
                         <div class="form-group">
                             <label for="kegiatan_utama_id" class="form-label mt-2">Kegiatan Utama <span class="text-danger">*</span></label>
-                            {!! Form::select('kegiatan_utama_id', kegiatanUtama(), null, ['class' => 'w-full mt-2', 'id' => 'kegiatan_utama_id', 'data-placeholder' => 'Pilih Kegiatan Utama', 'required']) !!}
-                        </div> <!-- END: Basic Select -->
+                            {!! Form::select('kegiatan_utama_id', kegiatanUtama(), null, ['class' => 'w-full', 'id' => 'kegiatan_utama_id', 'data-placeholder' => 'Pilih Kegiatan Utama', 'required']) !!}
+                        </div>
                         <div id="indikator_input">
                             <div class="form-group">
                                 <label for="nama" class="form-label mt-2">Nama Indikator <span class="text-danger">*</span></label> 
                                 <textarea id="nama0" name="nama[0]" class="form-control" placeholder="Nama Indikator" required></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="tipe" class="form-label mt-2">Tipe <span class="text-danger">*</span></label>
+                                {!! Form::select('tipe[0]', ['Kualitatif' => 'Kualitatif', 'Kuantitatif' => 'Kuantitatif'], null, ['class' => 'w-full', 'id' => 'tipe', 'data-placeholder' => 'Pilih Tipe', 'required', 'onchange' => 'showMinMax();']) !!}
+                            </div>
+                            <div class="form-group kuantitatif">
+                                <label for="min" class="form-label mt-2">Minimal <span class="text-danger">*</span></label>
+                                <input type="text" name="min" id="min" placeholder="Minimal" class="form-control" required>
+                            </div>
+                            <div class="form-group kuantitatif">
+                                <label for="max" class="form-label mt-2">Maksimal <span class="text-danger">*</span></label>
+                                <input type="text" name="max" id="max" placeholder="Maksimal" class="form-control" required>
                             </div>
                             <div>
                                 <label>Pengguna Indikator</label>
@@ -70,7 +83,7 @@
                 </div> <!-- END: Modal Body -->
                 <!-- BEGIN: Modal Footer -->
                 <div class="modal-footer text-end"> 
-                    <button type="button" data-tw-dismiss="modal" class="btn btn-outline-secondary w-20 me-1">Cancel</button> 
+                    <button type="button" data-tw-dismiss="modal" class="btn btn-outline-secondary w-20 me-1">Batal</button> 
                     <button type="submit" class="btn btn-success w-20 saveButton">Simpan</button> 
                 </div> <!-- END: Modal Footer -->
             </form>
@@ -90,6 +103,15 @@
         getData();
         modal_indikator = tailwind.Modal.getInstance(document.querySelector("#modal-indikator"));
         
+        $(".digit").inputmask("decimal",{
+            radixPoint:",",
+            groupSeparator: ".",
+            digits: 0,
+            autoGroup: true,
+            rightAlign: false,
+            min: 0,
+        });
+
         $('#form-indikator').validate({
             highlight: function (input) {
                 $(input).addClass('border-danger');
@@ -155,6 +177,7 @@
             },
             { data: 'nama_kegiatan_utama' },
             { data: 'nama' },
+            { data: 'tipe' },
             { data: 'pengguna_indikator' },
             { 
                 sortable: false, 
@@ -173,12 +196,44 @@
     function clearForm() {
         $('#form-indikator').trigger('reset');
         $('#indikator_id').val('');
+        showMinMax(0);
+    }
+
+    function showMinMax(id) {
+        tipe = $('#tipe'+id).val();
+        if (tipe == 'Kuantitatif') {
+            $('.kuantitatif'+id).show();
+            $(".digit").inputmask("decimal",{
+                radixPoint:".",
+                groupSeparator: "",
+                digits: 2,
+                autoGroup: true,
+                rightAlign: false,
+            });
+        } else {
+            $('.kuantitatif'+id).hide();
+        }
     }
 
     function indikator_input(idx) {
         return '<div class="form-group">'+
                     '<label for="nama'+idx+'" class="form-label mt-2">Nama Indikator <span class="text-danger">*</span></label> '+
                     '<textarea id="nama'+idx+'" name="nama['+idx+']" class="form-control" placeholder="Nama Indikator" required></textarea>'+
+                '</div>'+
+                '<div class="form-group">'+
+                    '<label for="tipe'+idx+'" class="form-label mt-2">Tipe <span class="text-danger">*</span></label> '+
+                    '<select class="w-full" id="tipe'+idx+'" data-placeholder="Pilih Tipe" required="required" name="tipe['+idx+']" aria-invalid="false" onchange="showMinMax('+idx+');">'+
+                        '<option value="Kualitatif">Kualitatif</option>'+
+                        '<option value="Kuantitatif">Kuantitatif</option>'+
+                    '</select>'+
+                '</div>'+
+                '<div class="form-group kuantitatif'+idx+'">'+
+                    '<label for="min" class="form-label mt-2">Minimal <span class="text-danger">*</span></label>'+
+                    '<input type="text" name="min['+idx+']" id="min'+idx+'" placeholder="Minimal" class="form-control digit" required>'+
+                '</div>'+
+                '<div class="form-group kuantitatif'+idx+'">'+
+                    '<label for="max" class="form-label mt-2">Maksimal <span class="text-danger">*</span></label>'+
+                    '<input type="text" name="max['+idx+']" id="max'+idx+'" placeholder="Maksimal" class="form-control digit" required>'+
                 '</div>'+
                 '<div class="mt-5 mb-5"><hr class="mb-5">'+
                     '<label>Pengguna Indikator</label>'+
@@ -227,6 +282,10 @@
             $('#kl0').prop('checked', kl_checked);
             $('#provinsi0').prop('checked', provinsi_checked);
             $('#kabupaten0').prop('checked', kabupaten_checked);
+            $('#tipe0').val(data.tipe);
+            $('#min0').val(data.min);
+            $('#max0').val(data.max);
+            showMinMax(0);
             $('.tambahinput').hide();
             $('.saveButton').prop('disabled', false);
             modal_indikator.show();

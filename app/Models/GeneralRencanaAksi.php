@@ -4,10 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class GeneralRencanaAksi extends Model
 {
-    use HasFactory;
+    use LogsActivity, HasFactory;
     protected $table = 'general_rencana_aksi';
 
     public function target()
@@ -18,5 +20,11 @@ class GeneralRencanaAksi extends Model
     public function output()
     {
         return $this->hasMany(GeneralRencanaAksiOutput::class, 'general_rencana_aksi_id');
+    }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+        ->logOnly(['id', 'general_perencanaan_target_id', 'rencana_aksi']);
     }
 }

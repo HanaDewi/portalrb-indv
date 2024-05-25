@@ -3,41 +3,34 @@
 
 @section('content')
 @include('common.status')
-<form action="{{ url('access/simpan') }}" id="form-access" method="post">
-    @csrf
-    <div class="grid grid-cols-12 gap-6">
-        <div class="intro-y col-span-12 lg:col-span-12">
-            <!-- BEGIN: Input -->
-            <div class="intro-y box">
-                <div class="flex flex-col sm:flex-row items-center p-5 border-b border-slate-200/60 dark:border-darkmode-400">
-                    <h2 class="font-bold text-base mr-auto">
-                        Log Aktifitas
-                    </h2>
-                </div>
-                <div class="grid grid-cols-12 gap-6 p-5">
-                    <div class="intro-y col-span-12 lg:col-span-12">
-                        <table class="table table-bordered table-striped table-hover w-full" cellspacing="0" width="100%" id="activitylog-table">
-                            <thead class="table-dark">
-                                <tr>
-                                    <th>No.</th>
-                                    <th>Pelaku</th>
-                                    <th>Model</th>
-                                    <th>Even</th>
-                                    <th>Instansi</th>
-                                    <th>Propertis</th>
-                                    <th>Pada</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+<div class="intro-y col-span-12 lg:col-span-12">
+    <div class="intro-y box">
+        <div class="flex flex-col sm:flex-row items-center p-5 border-b border-slate-200/60 dark:border-darkmode-400">
+            <h2 class="font-bold text-base mr-auto">
+                Log Aktifitas
+            </h2>
+        </div>
+        <div class="grid grid-cols-12 gap-6 p-5">
+            <div class="intro-y col-span-12 lg:col-span-12">
+                <table class="table table-bordered table-striped table-hover w-full" cellspacing="0" width="100%" id="activitylog-table">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>No.</th>
+                            <th>Pelaku</th>
+                            <th>Model</th>
+                            <th>Even</th>
+                            <th>Instansi</th>
+                            <th>Propertis</th>
+                            <th>Pada</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
             </div>
-            <!-- END: Input -->
         </div>
     </div>
-</form>
+</div>
 @endsection
 
 @push('js')

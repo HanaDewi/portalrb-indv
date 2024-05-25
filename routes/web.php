@@ -1,11 +1,16 @@
 <?php
 
+use App\Http\Controllers\DokumenController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RBGeneralController;
 use App\Http\Controllers\RBTematikController;
+use App\Http\Controllers\RBTematikImportController;
 use App\Http\Controllers\MasterDataController;
 use App\Http\Controllers\HasilController;
+use App\Http\Controllers\ManageUserController;
+use App\Http\Controllers\RuangBelajar\DashboardController;
+use App\Http\Controllers\RuangBelajar\AdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -51,16 +56,38 @@ Route::middleware('auth')->group(function () {
     Route::get('/master-data/tema/getData/{id}', [MasterDataController::class, 'tema_getData']);
     Route::post('/master-data/tema/simpan', [MasterDataController::class, 'tema_simpan']);
     Route::post('/master-data/tema/hapus', [MasterDataController::class, 'tema_hapus']);
+    // Dokumen
+    Route::get('/master-data/dokumen', [MasterDataController::class, 'dokumen'])->name('master-data_dokumen');
+    Route::get('/master-data/dokumen/getDataTahun', [MasterDataController::class, 'dokumen_getDataTahun']);
+    Route::post('/master-data/dokumen/simpanTahun', [MasterDataController::class, 'dokumen_simpanTahun']);
+    Route::post('/master-data/dokumen/hapusTahun', [MasterDataController::class, 'dokumen_hapusTahun']);
+    Route::get('/master-data/dokumen/getDataKategoris', [MasterDataController::class, 'dokumen_getDataKategoris']);
+    Route::get('/master-data/dokumen/getDataKategori/{id}', [MasterDataController::class, 'dokumen_getDataKategori']);
+    Route::post('/master-data/dokumen/simpanKategori', [MasterDataController::class, 'dokumen_simpanKategori']);
+    Route::post('/master-data/dokumen/hapusKategori', [MasterDataController::class, 'dokumen_hapusKategori']);
+
+
+    // Dokumen Upload
+    Route::get('/dokumen', [DokumenController::class, 'index'])->name('dokumen');
+    Route::get('/dokumen/getDatas', [DokumenController::class, 'getDatas']);
+    Route::get('/dokumen/getData/{tahun}/{kategori_id}', [DokumenController::class, 'getData']);
+    Route::post('/dokumen/simpan', [DokumenController::class, 'simpan']);
+    Route::post('/dokumen/hapus', [DokumenController::class, 'hapus']);
 
     // RB General Perencanaan
     Route::get('/rb-general/perencanaan', [RBGeneralController::class, 'perencanaan'])->name('perencanaan');
     Route::get('/rb-general/perencanaan/getData/{kegiatan_utama_id}/{indikator_id}', [RBGeneralController::class, 'perencanaan_getData']);
     Route::post('/rb-general/perencanaan/simpanBaseline', [RBGeneralController::class, 'perencanaan_simpanBaseline']);
+    Route::post('/rb-general/perencanaan/hapusBaseline', [RBGeneralController::class, 'perencanaan_hapusBaseline']);
     Route::get('/rb-general/perencanaan/getTarget/{kegiatan_utama_id}/{indikator_id}', [RBGeneralController::class, 'perencanaan_getTarget']);
     Route::post('/rb-general/perencanaan/simpanTarget', [RBGeneralController::class, 'perencanaan_simpanTarget']);
     Route::post('/rb-general/perencanaan/simpanMonev', [RBGeneralController::class, 'perencanaan_simpanMonev']);
+    Route::get('/rb-general/perencanaan/getDokumen/{id}', [RBGeneralController::class, 'perencanaan_getDokumen']);
+    Route::post('/rb-general/perencanaan/simpanDokumen', [RBGeneralController::class, 'perencanaan_simpanDokumen']);
     // RB General Rencana Aksi
     Route::get('/rb-general/perencanaan/{perencanaan_id}/{target_id}/rencana_aksi', [RBGeneralController::class, 'rencana_aksi'])->name('rencana_aksi');
+    Route::get('/rb-general/perencanaan/{perencanaan_id}/{target_id}/rencana_aksi/downloadTemplate', [RBGeneralController::class, 'rencana_aksi_downloadTemplate']);
+    Route::post('/rb-general/perencanaan/{perencanaan_id}/{target_id}/rencana_aksi/import', [RBGeneralController::class, 'rencana_aksi_import']);
     Route::get('/rb-general/perencanaan/{perencanaan_id}/{target_id}/rencana_aksi/getDatas', [RBGeneralController::class, 'rencana_aksi_getDatas']);
     Route::get('/rb-general/perencanaan/{perencanaan_id}/{target_id}/rencana_aksi/getData/{id}', [RBGeneralController::class, 'rencana_aksi_getData']);
     Route::post('/rb-general/perencanaan/{perencanaan_id}/{target_id}/rencana_aksi/simpan', [RBGeneralController::class, 'rencana_aksi_simpan']);
@@ -77,13 +104,40 @@ Route::middleware('auth')->group(function () {
     Route::get('/rb-general/rekap_data/getTarget/{id}', [RBGeneralController::class, 'rekap_data_getTarget']);
     Route::post('/rb-general/rekap_data/simpanCatatanEvaluator', [RBGeneralController::class, 'rekap_data_simpanCatatanEvaluator']);
     // RB Tematik Sasaran Road Map
-    Route::get('/rb-tematik/perencanaan', [RBTematikController::class, 'perencanaan'])->name('perencanaan');
-    Route::get('/rb-tematik/perencanaan/getData/{kegiatan_utama_id}/{indikator_id}', [RBTematikController::class, 'perencanaan_getData']);
+    Route::get('/rb-tematik/perencanaan', [RBTematikController::class, 'tema_sasaran'])->name('tema_sasaran');
+    Route::get('/rb-tematik/perencanaan/getSasaran/{sasaran_id}', [RBTematikController::class, 'sasaran_getData']);
+    Route::get('/rb-tematik/perencanaan/getData/{indikator_id}', [RBTematikController::class, 'indikator_getData']);
+    Route::post('/rb-tematik/perencanaan/sasaran_roadmap/hapus/{sasaran_id}', [RBTematikController::class, 'sasaranRoadmapHapus']);
     Route::post('/rb-tematik/perencanaan/simpan-sasaran-roadmap', [RBTematikController::class, 'simpanSasaranRoadmap']);
     Route::post('/rb-tematik/perencanaan/simpan-indikator-roadmap', [RBTematikController::class, 'simpanIndikatorRoadmap']);
-    Route::post('/rb-tematik/perencanaan/simpan-permasalahan', [RBTematikController::class, 'simpanPermasalahan']);
-    Route::post('/rb-tematik/perencanaan/simpan-indikator-permasalahan', [RBTematikController::class, 'simpanIndikatorPermasalahan']);
-    Route::post('/rb-tematik/perencanaan/simpanMonev', [RBTematikController::class, 'perencanaan_simpanMonev']);
+    Route::post('/rb-tematik/perencanaan/indikator_roadmap/hapus/{indikator_id}', [RBTematikController::class, 'indikatorRoadmapHapus']);
+    Route::get('/rb-tematik/perencanaan/downloadTemplate', [RBTematikImportController::class, 'rbTematik_downloadTemplate']);
+    Route::post('/rb-tematik/perencanaan/import', [RBTematikImportController::class, 'rbTematik_import']);
+    // RB Tematik Permasalahan
+    Route::get('/rb-tematik/permasalahan', [RBTematikController::class, 'permasalahan'])->name('permasalahan');
+    Route::get('/rb-tematik/permasalahan/get-indikator-roadmap', [RBTematikController::class, 'getIndikatorRoadmap'])->name('get_indikator_roadmap');
+    Route::post('/rb-tematik/permasalahan/simpan-permasalahan', [RBTematikController::class, 'simpanPermasalahan']);
+    Route::get('/rb-tematik/permasalahan/get-permasalahan/{indikator_permasalahan_id}', [RBTematikController::class, 'get_permasalahan'])->name('get_permasalahan');
+    Route::post('/rb-tematik/permasalahan/hapus/{permasalahan_id}', [RBTematikController::class, 'permasalahanHapus']);
+    Route::get('/rb-tematik/permasalahan/get-indikator-permasalahan/{indikator_permasalahan_id}', [RBTematikController::class, 'get_indikator_permasalahan'])->name('get_indikator_permasalahan');
+    Route::post('/rb-tematik/permasalahan/simpan-indikator-permasalahan', [RBTematikController::class, 'simpanIndikatorPermasalahan']);
+    Route::post('/rb-tematik/permasalahan/indikator_permasalahan/hapus/{indikator_id}', [RBTematikController::class, 'indikatorPermasalahanHapus']);
+    // RB Tematik Renaksi
+    Route::get('/rb-tematik/permasalahan/renaksi/{indikator_id}', [RBTematikController::class, 'rencana_aksi'])->name('rencana_aksi_tematik');
+    Route::get('/rb-tematik/permasalahan/renaksi/{indikator_id}/getDatas', [RBTematikController::class, 'rencana_aksi_getDatas']);
+    Route::get('/rb-tematik/permasalahan/renaksi/getData/{renaksi_output_id}', [RBTematikController::class, 'rencana_aksi_getData']);
+    Route::post('/rb-tematik/permasalahan/renaksi/{indikator_id}/simpan', [RBTematikController::class, 'rencana_aksi_simpan']);
+    Route::post('/rb-tematik/permasalahan/renaksi/{renaksi_output_id}/hapus', [RBTematikController::class, 'rencana_aksi_hapus']);
+    // RB Tematik MONEV
+    Route::post('/rb-tematik/perencanaan/monev/simpan-indikator-roadmap', [RBTematikController::class, 'simpanMonevIndikatorRoadmap']);
+    Route::get('/rb-tematik/permasalahan/monev/{indikator_id}', [RBTematikController::class, 'monev'])->name('monev_tematik');
+    Route::get('/rb-tematik/permasalahan/monev/{indikator_id}/getDatas', [RBTematikController::class, 'rencana_aksi_getDatas']);
+    Route::get('/rb-tematik/permasalahan/monev/getData/{renaksi_output_id}', [RBTematikController::class, 'rencana_aksi_getData']);
+    Route::get('/rb-tematik/permasalahan/monev/{indikator_id}/getIndikator', [RBTematikController::class, 'monev_getIndikatorPermasalahan']);
+    Route::post('/rb-tematik/permasalahan/monev/{indikator_id}/simpanIndikatorPermasalahan', [RBTematikController::class, 'monev_simpanIndikatorPermasalahan']);
+    Route::post('/rb-tematik/permasalahan/monev/{indikator_id}/simpan', [RBTematikController::class, 'monev_simpan']);
+    Route::post('/rb-tematik/permasalahan/monev/{renaksi_output_id}/hapus', [RBTematikController::class, 'monev_hapus']);
+
     // RB Tematik Rekap Data
     Route::get('/rb-tematik/rekap_data', [RBTematikController::class, 'rekap_data']);
     Route::get('/rb-tematik/rekap_data/getPerencanaan/{id}', [RBTematikController::class, 'rekap_data_getPerencanaan']);
@@ -98,9 +152,38 @@ Route::middleware('auth')->group(function () {
     // Access
     Route::get('/access', [HasilController::class, 'access'])->name('access');
     Route::post('/access/simpan', [HasilController::class, 'access_simpan']);
+    
     // Activity Log
-    Route::get('/activitylog', [HasilController::class, 'activitylog'])->name('activitylog');
-    Route::get('/activitylog/getData', [HasilController::class, 'activitylog_getData']);
+    Route::get('/activitylog', [HomeController::class, 'activitylog'])->name('activitylog');
+    Route::get('/activitylog/getData', [HomeController::class, 'activitylog_getData']);
+    // Kelola user
+    Route::get('/manage-user', [ManageUserController::class, 'index'])->name('index');
+    Route::get('/manage-user/getDatas', [ManageUserController::class, 'manage_user_getDatas']);
+    Route::get('/manage-user/getData/{id}', [ManageUserController::class, 'manage_user_getData']);
+    Route::post('/manage-user/simpan', [ManageUserController::class, 'manage_user_simpan']);
+    Route::post('/manage-user/hapus', [ManageUserController::class, 'manage_user_hapus']);
+});
+
+#########Ruang Belajar
+Route::group(['prefix' => 'ruang-belajar', 'as' => 'ruang-belajar.'], function () {
+    Route::get('/home', [DashboardController::class, 'index'])->name('home');
+    Route::get('/praktek-details/{slug}', [DashboardController::class, 'ShowPraktek'])->name('praktek-details');
+    /** Article Details Routes */
+    Route::get('article', [DashboardController::class, 'news'])->name('article');
+    /** Article Comment Routes */
+    Route::post('article-comment', [DashboardController::class, 'handleComment'])->name('article-comment');
+    Route::post('article-comment-replay', [DashboardController::class, 'handleReplay'])->name('article-comment-replay');
+
+    Route::middleware('auth')->group(function () {
+        /** Admin */
+        Route::get('admin-dashboard', [AdminController::class, 'index'])->name('admin-dashboard');
+        Route::get('category', [AdminController::class, 'category'])->name('admin-category');
+        Route::get('category-edit/{id}', [AdminController::class, 'category_edit'])->name('admin-category-edit');
+        Route::get('artikel', [AdminController::class, 'artikel'])->name('admin-artikel');
+        Route::get('artikel-pending', [AdminController::class, 'artikel_pending'])->name('admin-artikel-pending');
+        Route::get('social-media', [AdminController::class, 'social_media'])->name('admin-social-media');
+        Route::get('subscriber', [AdminController::class, 'subscriber'])->name('admin-subscriber');
+    });
 });
 
 require __DIR__ . '/auth.php';

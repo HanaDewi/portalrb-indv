@@ -100,13 +100,13 @@
                                 <div class="navbar-collapse collapse clearfix">
                                     <ul class="navigation clearfix">
                                         <li>
-                                            <a href="#">Beranda</a>
+                                            <a href="{{ url('/') }}">Beranda</a>
                                         </li>
                                         <li>
-                                            <a href="#">Evaluasi</a>
+                                            <a href="{{ url('dashboard') }}">Evaluasi</a>
                                         </li>
                                         <li>
-                                            <a href="#">Ruang Belajar</a>
+                                            <a href="{{ url('/ruang-belajar/home') }}">Ruang Belajar</a>
                                         </li>
                                         <li>
                                             <a href="{{ url('login') }}">

@@ -9,4 +9,14 @@ class TematikIndikatorPermasalahan extends Model
 {
     use HasFactory;
     protected $table = 'tematik_indikator_permasalahan';
+
+    public function permasalahan()
+    {
+        return $this->belongsTo(TematikPermasalahan::class, 'tematik_permasalahan_id');
+    }
+
+    public function rencana_aksi()
+    {
+        return $this->hasMany(TematikRencanaAksi::class, 'tematik_indikator_permasalahan_id')->orderBy('tematik_indikator_permasalahan_id');
+    }
 }

@@ -3,7 +3,7 @@
 
 @section('content')
 @include('common.status')
-<form action="{{ url('access/simpan') }}" id="form-access" method="post">
+<form action="{{ url('access/simpan') }}" id="form-access" method="post" class="intro-y col-span-12 lg:col-span-12">
     @csrf
     <div class="grid grid-cols-12 gap-6">
         <div class="intro-y col-span-12 lg:col-span-12">
