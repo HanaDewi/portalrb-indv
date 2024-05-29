@@ -189,7 +189,7 @@
                 <h2 class="font-bold fw-medium fs-base me-auto" id="title">Monitoring dan Evaluasi Perencanaan</h2>
             </div> <!-- END: Modal Header -->
             <!-- BEGIN: Modal Body -->
-            <form action="{{ url('rb-general/rekap_data/simpanCatatanEvaluator') }}" id="form-catatan_evaluator" method="post">
+            <form action="{{ url('rencana_aksi/rb-general/rekap_data/simpanCatatanEvaluator') }}" id="form-catatan_evaluator" method="post">
                 @csrf
                 <input type="hidden" id="target_id" name="target_id">
                 <div class="modal-body grid columns-12 gap-4 gap-y-3">
@@ -271,7 +271,7 @@ $(document).ready(function(){
 @if (auth()->user()->level == 'tpn')
 function catatan_evaluator(id) {
     $('#target_id').val(id);
-    $.getJSON("{{url('rb-general/rekap_data/getTarget')}}/"+id, function(data) {
+    $.getJSON("{{url('rencana_aksi/rb-general/rekap_data/getTarget')}}/"+id, function(data) {
         $('#catatan_evaluator').val(data.catatan_evaluator);
         modal_catatan.show();
     });

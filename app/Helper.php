@@ -28,61 +28,56 @@ if(! function_exists('menus'))
                 'levels' => ['admin', 'provinsi', 'kabupaten', 'kl', 'tpn'],
                 'title' => 'Rencana Aksi',
                 'icon' => 'inbox',
-                'url' => 'rb-general',
+                'url' => 'rencana_aksi',
                 'items' => [ 
                     [
                         'levels' => ['admin', 'provinsi', 'kabupaten', 'kl', 'tpn'],
                         'title' => 'RB General',
                         'icon' => 'activity',
-                        'url' => 'rb-general',
+                        'url' => 'rencana_aksi/rb-general',
                         'items' => [
                             [
                                 'levels' => ['provinsi', 'kabupaten', 'kl'],
                                 'title' => 'Perencanaan dan Monev',
                                 'icon' => 'clipboard-list',
-                                'url' => 'rb-general/perencanaan',
+                                'url' => 'rencana_aksi/rb-general/perencanaan',
                             ],
                             [
                                 'levels' => ['admin', 'provinsi', 'kabupaten', 'kl', 'tpn'],
                                 'title' => 'Rekap Data',
                                 'icon' => 'clipboard',
-                                'url' => 'rb-general/rekap_data',
+                                'url' => 'rencana_aksi/rb-general/rekap_data',
                             ],
                         ]
                     ],
-
-                    [
-                'levels' => ['admin', 'provinsi', 'kabupaten', 'kl', 'tpn'],
-                'title' => 'RB Tematik',
-                'icon' => 'bookmark',
-                'url' => 'rb-tematik',
-                'items' => [
-                    [
-                        'levels' => ['provinsi', 'kabupaten', 'kl'],
-                        'title' => 'Tema dan Sasaran Tematik',
-                        'icon' => 'clipboard-list',
-                        'url' => 'rb-tematik/perencanaan',
-                    ],
-                    [
-                        'levels' => ['provinsi', 'kabupaten', 'kl'],
-                        'title' => 'Permasalahan dan Rencana Aksi',
-                        'icon' => 'check-circle',
-                        'url' => 'rb-tematik/permasalahan',
-                    ],
                     [
                         'levels' => ['admin', 'provinsi', 'kabupaten', 'kl', 'tpn'],
-                        'title' => 'Rekap Data',
-                        'icon' => 'clipboard',
-                        'url' => 'rb-tematik/rekap_data',
+                        'title' => 'RB Tematik',
+                        'icon' => 'bookmark',
+                        'url' => 'rencana_aksi/rb-tematik',
+                        'items' => [
+                            [
+                                'levels' => ['provinsi', 'kabupaten', 'kl'],
+                                'title' => 'Tema dan Sasaran Tematik',
+                                'icon' => 'clipboard-list',
+                                'url' => 'rencana_aksi/rb-tematik/perencanaan',
+                            ],
+                            [
+                                'levels' => ['provinsi', 'kabupaten', 'kl'],
+                                'title' => 'Permasalahan dan Rencana Aksi',
+                                'icon' => 'check-circle',
+                                'url' => 'rencana_aksi/rb-tematik/permasalahan',
+                            ],
+                            [
+                                'levels' => ['admin', 'provinsi', 'kabupaten', 'kl', 'tpn'],
+                                'title' => 'Rekap Data',
+                                'icon' => 'clipboard',
+                                'url' => 'rencana_aksi/rb-tematik/rekap_data',
+                            ],
+                        ]
                     ],
-                ]
-            ],
-
-
                 ],
             ],
-            
-           
             [
                 'levels' => ['admin', 'provinsi', 'kabupaten', 'kl', 'tpn', 'tpm'],
                 'title' => 'Hasil',

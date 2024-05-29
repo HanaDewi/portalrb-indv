@@ -75,34 +75,34 @@ Route::middleware('auth')->group(function () {
     Route::post('/dokumen/hapus', [DokumenController::class, 'hapus']);
 
     // RB General Perencanaan
-    Route::get('/rb-general/perencanaan', [RBGeneralController::class, 'perencanaan'])->name('perencanaan');
-    Route::get('/rb-general/perencanaan/getData/{kegiatan_utama_id}/{indikator_id}', [RBGeneralController::class, 'perencanaan_getData']);
-    Route::post('/rb-general/perencanaan/simpanBaseline', [RBGeneralController::class, 'perencanaan_simpanBaseline']);
-    Route::post('/rb-general/perencanaan/hapusBaseline', [RBGeneralController::class, 'perencanaan_hapusBaseline']);
-    Route::get('/rb-general/perencanaan/getTarget/{kegiatan_utama_id}/{indikator_id}', [RBGeneralController::class, 'perencanaan_getTarget']);
-    Route::post('/rb-general/perencanaan/simpanTarget', [RBGeneralController::class, 'perencanaan_simpanTarget']);
-    Route::post('/rb-general/perencanaan/simpanMonev', [RBGeneralController::class, 'perencanaan_simpanMonev']);
-    Route::get('/rb-general/perencanaan/getDokumen/{id}', [RBGeneralController::class, 'perencanaan_getDokumen']);
-    Route::post('/rb-general/perencanaan/simpanDokumen', [RBGeneralController::class, 'perencanaan_simpanDokumen']);
+    Route::get('/rencana_aksi/rb-general/perencanaan', [RBGeneralController::class, 'perencanaan'])->name('perencanaan');
+    Route::get('/rencana_aksi/rb-general/perencanaan/getData/{kegiatan_utama_id}/{indikator_id}', [RBGeneralController::class, 'perencanaan_getData']);
+    Route::post('/rencana_aksi/rb-general/perencanaan/simpanBaseline', [RBGeneralController::class, 'perencanaan_simpanBaseline']);
+    Route::post('/rencana_aksi/rb-general/perencanaan/hapusBaseline', [RBGeneralController::class, 'perencanaan_hapusBaseline']);
+    Route::get('/rencana_aksi/rb-general/perencanaan/getTarget/{kegiatan_utama_id}/{indikator_id}', [RBGeneralController::class, 'perencanaan_getTarget']);
+    Route::post('/rencana_aksi/rb-general/perencanaan/simpanTarget', [RBGeneralController::class, 'perencanaan_simpanTarget']);
+    Route::post('/rencana_aksi/rb-general/perencanaan/simpanMonev', [RBGeneralController::class, 'perencanaan_simpanMonev']);
+    Route::get('/rencana_aksi/rb-general/perencanaan/getDokumen/{id}', [RBGeneralController::class, 'perencanaan_getDokumen']);
+    Route::post('/rencana_aksi/rb-general/perencanaan/simpanDokumen', [RBGeneralController::class, 'perencanaan_simpanDokumen']);
     // RB General Rencana Aksi
-    Route::get('/rb-general/perencanaan/{perencanaan_id}/{target_id}/rencana_aksi', [RBGeneralController::class, 'rencana_aksi'])->name('rencana_aksi');
-    Route::get('/rb-general/perencanaan/{perencanaan_id}/{target_id}/rencana_aksi/downloadTemplate', [RBGeneralController::class, 'rencana_aksi_downloadTemplate']);
-    Route::post('/rb-general/perencanaan/{perencanaan_id}/{target_id}/rencana_aksi/import', [RBGeneralController::class, 'rencana_aksi_import']);
-    Route::get('/rb-general/perencanaan/{perencanaan_id}/{target_id}/rencana_aksi/getDatas', [RBGeneralController::class, 'rencana_aksi_getDatas']);
-    Route::get('/rb-general/perencanaan/{perencanaan_id}/{target_id}/rencana_aksi/getData/{id}', [RBGeneralController::class, 'rencana_aksi_getData']);
-    Route::post('/rb-general/perencanaan/{perencanaan_id}/{target_id}/rencana_aksi/simpan', [RBGeneralController::class, 'rencana_aksi_simpan']);
-    Route::post('/rb-general/perencanaan/{perencanaan_id}/{target_id}/rencana_aksi/hapus', [RBGeneralController::class, 'rencana_aksi_hapus']);
+    Route::get('/rencana_aksi/rb-general/perencanaan/{perencanaan_id}/{target_id}/rencana_aksi', [RBGeneralController::class, 'rencana_aksi'])->name('rencana_aksi');
+    Route::get('/rencana_aksi/rb-general/perencanaan/{perencanaan_id}/{target_id}/rencana_aksi/downloadTemplate', [RBGeneralController::class, 'rencana_aksi_downloadTemplate']);
+    Route::post('/rencana_aksi/rb-general/perencanaan/{perencanaan_id}/{target_id}/rencana_aksi/import', [RBGeneralController::class, 'rencana_aksi_import']);
+    Route::get('/rencana_aksi/rb-general/perencanaan/{perencanaan_id}/{target_id}/rencana_aksi/getDatas', [RBGeneralController::class, 'rencana_aksi_getDatas']);
+    Route::get('/rencana_aksi/rb-general/perencanaan/{perencanaan_id}/{target_id}/rencana_aksi/getData/{id}', [RBGeneralController::class, 'rencana_aksi_getData']);
+    Route::post('/rencana_aksi/rb-general/perencanaan/{perencanaan_id}/{target_id}/rencana_aksi/simpan', [RBGeneralController::class, 'rencana_aksi_simpan']);
+    Route::post('/rencana_aksi/rb-general/perencanaan/{perencanaan_id}/{target_id}/rencana_aksi/hapus', [RBGeneralController::class, 'rencana_aksi_hapus']);
     // RB General Evaluasi
-    Route::get('/rb-general/perencanaan/{perencanaan_id}/{target_id}/monev', [RBGeneralController::class, 'monev'])->name('monev');
-    Route::get('/rb-general/perencanaan/{perencanaan_id}/{target_id}/monev/getDatas', [RBGeneralController::class, 'rencana_aksi_getDatas']);
-    Route::get('/rb-general/perencanaan/{perencanaan_id}/{target_id}/monev/getData/{id}', [RBGeneralController::class, 'rencana_aksi_getData']);
-    Route::get('/rb-general/perencanaan/{perencanaan_id}/{target_id}/monev/getTarget', [RBGeneralController::class, 'monev_getTarget']);
-    Route::post('/rb-general/perencanaan/{perencanaan_id}/{target_id}/monev/simpan', [RBGeneralController::class, 'monev_simpan']);
-    Route::post('/rb-general/perencanaan/{perencanaan_id}/{target_id}/monev/simpanTarget', [RBGeneralController::class, 'monev_simpanTarget']);
+    Route::get('/rencana_aksi/rb-general/perencanaan/{perencanaan_id}/{target_id}/monev', [RBGeneralController::class, 'monev'])->name('monev');
+    Route::get('/rencana_aksi/rb-general/perencanaan/{perencanaan_id}/{target_id}/monev/getDatas', [RBGeneralController::class, 'rencana_aksi_getDatas']);
+    Route::get('/rencana_aksi/rb-general/perencanaan/{perencanaan_id}/{target_id}/monev/getData/{id}', [RBGeneralController::class, 'rencana_aksi_getData']);
+    Route::get('/rencana_aksi/rb-general/perencanaan/{perencanaan_id}/{target_id}/monev/getTarget', [RBGeneralController::class, 'monev_getTarget']);
+    Route::post('/rencana_aksi/rb-general/perencanaan/{perencanaan_id}/{target_id}/monev/simpan', [RBGeneralController::class, 'monev_simpan']);
+    Route::post('/rencana_aksi/rb-general/perencanaan/{perencanaan_id}/{target_id}/monev/simpanTarget', [RBGeneralController::class, 'monev_simpanTarget']);
     // RB General Rekap Data
-    Route::get('/rb-general/rekap_data', [RBGeneralController::class, 'rekap_data']);
-    Route::get('/rb-general/rekap_data/getTarget/{id}', [RBGeneralController::class, 'rekap_data_getTarget']);
-    Route::post('/rb-general/rekap_data/simpanCatatanEvaluator', [RBGeneralController::class, 'rekap_data_simpanCatatanEvaluator']);
+    Route::get('/rencana_aksi/rb-general/rekap_data', [RBGeneralController::class, 'rekap_data']);
+    Route::get('/rencana_aksi/rb-general/rekap_data/getTarget/{id}', [RBGeneralController::class, 'rekap_data_getTarget']);
+    Route::post('/rencana_aksi/rb-general/rekap_data/simpanCatatanEvaluator', [RBGeneralController::class, 'rekap_data_simpanCatatanEvaluator']);
     // RB Tematik Sasaran Road Map
     Route::get('/rb-tematik/perencanaan', [RBTematikController::class, 'tema_sasaran'])->name('tema_sasaran');
     Route::get('/rb-tematik/perencanaan/getSasaran/{sasaran_id}', [RBTematikController::class, 'sasaran_getData']);

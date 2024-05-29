@@ -35,14 +35,9 @@
                 <i data-lucide="x-circle" class="w-8 h-8 text-white transform -rotate-90"></i>
             </a>
             <ul class="scrollable__content py-2">
-
-                
-
                 @foreach (menus() as $menu)
                     @if (in_array('devider', $menu['levels']))
                         <li class="menu__devider my-6"></li>
-
-                        
                     @elseif (in_array(auth()->user()->level, $menu['levels']))
                         @php
                             $active = request()->is($menu['url']) || request()->is($menu['url'] . '/*') ? 'menu--active' : '';
@@ -63,12 +58,28 @@
                                     @foreach ($menu['items'] as $item)
                                         @php
                                             $active = request()->is($item['url']) || request()->is($item['url'] . '/*') ? 'menu--active' : '';
+                                            $open = request()->is($item['url']) || request()->is($item['url'] . '/*') ? 'menu__sub-open' : '';
                                         @endphp
                                         <li>
                                             <a href="{{ url($item['url']) }}" class="menu {{ $active }}">
                                                 <div class="menu__icon"> <i data-lucide="{{ $item['icon'] }}"></i> </div>
                                                 <div class="menu__title"> {{ $item['title'] }} </div>
                                             </a>
+                                            @isset($item['items'])
+                                            <ul class="{{ $open }}">
+                                                @foreach ($item['items'] as $subitem)
+                                                @php
+                                                    $active = request()->is($subitem['url']) || request()->is($subitem['url'] . '/*') ? 'menu--active' : '';
+                                                @endphp
+                                                <li>
+                                                    <a href="{{ url($subitem['url']) }}" class="menu {{ $active }}">
+                                                        <div class="menu__icon"> <i data-lucide="{{ $subitem['icon'] }}"></i> </div>
+                                                        <div class="menu__title"> {{ $subitem['title'] }} </div>
+                                                    </a>
+                                                </li>
+                                                @endforeach
+                                            </ul>
+                                            @endisset
                                         </li>
                                     @endforeach
                                 </ul>
@@ -88,8 +99,7 @@
             </ul>
         </div>
     </div>
-    
-   <div class="flex mt-[4.7rem] md:mt-0">
+    <div class="flex mt-[4.7rem] md:mt-0">
     <nav class="side-nav">
         <a href="" class="intro-x flex items-center pl-2 pt-4">
             <img alt="LKE RB" src="{{ asset('template_lkerb') }}/dist/images/logo.jpg">
@@ -115,34 +125,37 @@
                             <div class="side-menu__title">{{ $menu['title'] }} {!! $subicon !!}</div>
                         </a>
                         @isset($menu['items'])
-                            <ul class="{{ $subopen }}">
-                                @foreach ($menu['items'] as $item)
-                                    @php
-                                        $active = request()->is($item['url']) || request()->is($item['url'] . '/*') ? 'side-menu--active' : '';
-                                        $open = request()->is($item['url']) || request()->is($item['url'] . '/*') ? 'side-menu--open' : '';
-                                    @endphp
-                                    <li>
-                                        <a href="javascript:;" class="side-menu {{ $active }} {{ $open }}">
-                                            <div class="side-menu__icon"><i data-lucide="{{ $item['icon'] }}"></i></div>
-                                            <div class="side-menu__title">{{ $item['title'] }} {!! isset($item['items']) ? '<div class="side-menu__sub-icon "> <i data-lucide="chevron-down"></i> </div>' : '' !!}</div>
-                                        </a>
-                                        @isset($item['items'])
-                                            <ul class="{{ $open }}">
-                                                @foreach ($item['items'] as $subitem)
-                                                    @if (in_array(auth()->user()->level, $subitem['levels']))
-                                                        <li>
-                                                            <a href="{{ url($subitem['url']) }}" class="side-menu {{ $active }}">
-                                                                <div class="side-menu__icon"><i data-lucide="{{ $subitem['icon'] }}"></i></div>
-                                                                <div class="side-menu__title">{{ $subitem['title'] }}</div>
-                                                            </a>
-                                                        </li>
-                                                    @endif
-                                                @endforeach
-                                            </ul>
-                                        @endisset
-                                    </li>
-                                @endforeach
-                            </ul>
+                        <ul class="{{ $subopen }}">
+                            @foreach ($menu['items'] as $item)
+                            @php
+                                $active = request()->is($item['url']) || request()->is($item['url'] . '/*') ? 'side-menu--active' : '';
+                                $open = request()->is($item['url']) || request()->is($item['url'] . '/*') ? 'side-menu__sub-open' : '';
+                            @endphp
+                            <li>
+                                <a href="javascript:;" class="side-menu {{ $active }}">
+                                    <div class="side-menu__icon"><i data-lucide="{{ $item['icon'] }}"></i></div>
+                                    <div class="side-menu__title">{{ $item['title'] }} {!! isset($item['items']) ? '<div class="side-menu__sub-icon "> <i data-lucide="chevron-down"></i> </div>' : '' !!}</div>
+                                </a>
+                                @isset($item['items'])
+                                <ul class="{{ $open }}">
+                                    @foreach ($item['items'] as $subitem)
+                                        @php
+                                            $active = request()->is($subitem['url']) || request()->is($subitem['url'] . '/*') ? 'side-menu--active' : '';
+                                        @endphp
+                                        @if (in_array(auth()->user()->level, $subitem['levels']))
+                                            <li>
+                                                <a href="{{ url($subitem['url']) }}" class="side-menu {{ $active }}">
+                                                    <div class="side-menu__icon"><i data-lucide="{{ $subitem['icon'] }}"></i></div>
+                                                    <div class="side-menu__title">{{ $subitem['title'] }}</div>
+                                                </a>
+                                            </li>
+                                        @endif
+                                    @endforeach
+                                </ul>
+                                @endisset
+                            </li>
+                            @endforeach
+                        </ul>
                         @endisset
                     </li>
                 @endif

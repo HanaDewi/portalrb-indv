@@ -103,6 +103,8 @@ class RBGeneralController extends Controller
     public function perencanaan_simpanBaseline(Request $request)
     {
         $user = Auth::User();
+        $success = true;
+        $pesan = '';
         $perencanaan = GeneralPerencanaan::where('instansi_id', $user->user_rel->instansi_id)->where('kegiatan_utama_id', $request->kegiatan_utama_id)->where('indikator_id', $request->indikator_id)->first();
         if (!$perencanaan) {
             $perencanaan = new GeneralPerencanaan();
@@ -113,10 +115,19 @@ class RBGeneralController extends Controller
         $perencanaan->baseline_tahun = $request->baseline_tahun;
         $perencanaan->baseline_target = 0;
         $perencanaan->baseline_realisasi = $request->baseline_realisasi;
-        if ($perencanaan->save()) {
+        if ($perencanaan->indikator->min != null && $perencanaan->baseline_tahun < $perencanaan->indikator->min) {
+            $success = false;
+            $pesan .= 'Baseline tidak boleh kurang dari '.$perencanaan->indikator->min.'!!';
+        } else if ($perencanaan->indikator->max != null && $perencanaan->baseline_tahun > $perencanaan->indikator->max) {
+            $success = false;
+            $pesan .= 'Baseline tidak boleh lebih dari '.$perencanaan->indikator->max.'!!';
+        }
+
+        if ($success) {
+            $perencanaan->save();
             session()->flash('success', 'Data Baseline Perencanaan General berhasil disimpan.');
         } else {
-            session()->flash('error', 'Data Baseline Perencanaan General gagal disimpan! Silahkan dicoba kembali.');
+            session()->flash('error', 'Data Baseline Perencanaan General gagal disimpan! '.$pesan);
         }
         return redirect('rb-general/perencanaan');
     }
@@ -157,11 +168,9 @@ class RBGeneralController extends Controller
                         $success = false;
                     }
                     if ($perencanaan->indikator->tipe == 'Kuantitatif') {
-                        if ($perencanaan->indikator->min == null && $perencanaan->indikator->max == null) {
-                            if ($target->target < $perencanaan->baseline_realisasi) {
-                                $success = false;
-                                $pesan .= 'Target tidak boleh kurang dari Baseline Realisasi!!';
-                            }
+                        if ($target->target < $perencanaan->baseline_realisasi) {
+                            $success = false;
+                            $pesan .= 'Target tidak boleh kurang dari Baseline Realisasi!!';
                         } else if ($perencanaan->indikator->min != null && $target->target < $perencanaan->indikator->min) {
                             $success = false;
                             $pesan .= 'Target tidak boleh kurang dari '.$perencanaan->indikator->min.'!!';

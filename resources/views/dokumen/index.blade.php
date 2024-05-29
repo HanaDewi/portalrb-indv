@@ -266,6 +266,9 @@
                 var desc = desc.replace("."+ext, "");
                 if (!isAllowed(ext)) {
                     Swal.fire("Perhatian", "File yang di input tidak sesuai ketentuan (pdf, word, excel, power point).", "error");
+                } else if (input.files[0].size > 5242880) {
+                    Swal.fire("Maaf!", "File yang di input tidak boleh lebih dari 5MB.", "error");
+                    $(input).val('');
                 } else {
                     src = ext.toLowerCase() == 'pdf' ? "{{asset('images/pdf.png')}}" : (ext.toLowerCase() == 'xls' || ext.toLowerCase() == 'xlsx' ? "{{asset('images/excel.png')}}" : (ext.toLowerCase() == 'doc' || ext.toLowerCase() == 'docx' ? "{{asset('images/word.png')}}" : (ext.toLowerCase() == 'ppt' || ext.toLowerCase() == 'pptx' ? "{{asset('images/ppt.png')}}" : e.target.result)));
                     console.log(src, ext.toLowerCase());
