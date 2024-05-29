@@ -158,9 +158,8 @@
                             <tr>
                                 <td class="font-bold">Fokus Intervensi<span class="text-danger">*</span></td>
                                 <td colspan="5">
-                                    
-                                    <select class="form-select mt-2 sm:mr-2 form-control" name="target_output[0][fokus_intervensi]">
-                                        <option selected="true" disabled="disabled">Pilih Fokus Intervensi</option>  
+                                    <select class="form-select mt-2 sm:mr-2 form-control" name="target_output[0][fokus_intervensi]" id="fokus_intervensi0" required>
+                                        <option selected="true" disabled="disabled" value="">Pilih Fokus Intervensi</option>  
                                         @foreach ($fokus_intervensi as $intervensi)
                                         <option value="{{ $intervensi->id }}">{{ $intervensi->nama }}
                                         </option>
@@ -227,7 +226,7 @@
         $(".digit").inputmask("decimal",{
             radixPoint:",",
             groupSeparator: ".",
-            digits: 0,
+            digits: 2,
             autoGroup: true,
             rightAlign: false,
             min: 0,
@@ -354,7 +353,7 @@
             { 
                 render: function (data, type, row, meta) {
                     return '<table class="table table-noborder">'+
-                            '<tr><th class="border-top"> </th><td>: '+formatNumber(row.anggaran_total)+'</td></tr>'+
+                            '<tr><th class="border-top"> </th><td>: '+row.anggaran_total+'</td></tr>'+
                         '</table>';
                 }
             },
@@ -481,8 +480,8 @@
                     '<tr>'+
                         '<td class="font-bold">Fokus Intervensi <span class="text-danger">*</span></td>'+
                         '<td colspan="5">'+
-                            '<select class="form-select mt-2 sm:mr-2 form-control" name="target_output['+idx+'][fokus_intervensi]">'+
-                                '<option selected="true" disabled="disabled">Pilih Fokus Intervensi</option>' +  
+                            '<select class="form-select mt-2 sm:mr-2 form-control" name="target_output['+idx+'][fokus_intervensi]" required>' +
+                                '<option selected="true" disabled="disabled" value="">Pilih Fokus Intervensi</option>' +  
                                     @foreach ($fokus_intervensi as $intervensi)
                                         '<option value="{{ $intervensi->id }}">{{ $intervensi->nama }}'+
                                         '</option>'+
@@ -562,6 +561,7 @@
             $('#anggaran_tw30').val(data.anggaran_tw3);
             $('#anggaran_tw40').val(data.anggaran_tw4);
             $('#anggaran_total0').val(data.anggaran_total);
+            $('#fokus_intervensi0').val(data.fokus_intervensi);
             $('#pelaksana0').val(data.pelaksana);
             $('#koordinator0').val(data.koordinator);
             $('.saveButton').prop('disabled', false);

@@ -585,7 +585,7 @@ class RBTematikController extends Controller
                     }
 
                     $output->nama_rencana_aksi = $output->rencana_aksi->nama;
-                    $output->target_total = fnumber($output->target_total);
+                    $output->target_total = $output->target_total;
                     $output->anggaran_total = currency($output->anggaran_total);
                     $outputs[] = $output;
                     $no++;
@@ -666,29 +666,27 @@ class RBTematikController extends Controller
             $rencana_aksi->nama = $request->rencana_aksi;
             if ($rencana_aksi->save()) {
                 foreach ($request->target_output as $target_output) {
-                    $rencana_aksi_output = new TematikRencanaAksiOutput();
-                    if (isset($target_output['rencana_aksi_output_id'])) {
-                        $rencana_aksi_output = TematikRencanaAksiOutput::find($target_output['rencana_aksi_output_id']);
-                    }
-                    $rencana_aksi_output->tematik_rencana_aksi_id = $rencana_aksi->id;
-                    $rencana_aksi_output->satuan_output = $target_output['satuan_output'];
-                    $rencana_aksi_output->indikator_output = $target_output['indikator_output'];
-                    $rencana_aksi_output->target_tw1 = str_replace('.', '', $target_output['target_tw1']);
-                    $rencana_aksi_output->target_tw2 = str_replace('.', '', $target_output['target_tw2']);
-                    $rencana_aksi_output->target_tw3 = str_replace('.', '', $target_output['target_tw3']);
-                    $rencana_aksi_output->target_tw4 = str_replace('.', '', $target_output['target_tw4']);
-                    $rencana_aksi_output->target_total = $this->removeDot($target_output['target_total']);
-                    //$rencana_aksi_output->anggaran_tw1 = str_replace('.', '', $target_output['anggaran_tw1']);
-                    //$rencana_aksi_output->anggaran_tw2 = str_replace('.', '', $target_output['anggaran_tw2']);
-                    //$rencana_aksi_output->anggaran_tw3 = str_replace('.', '', $target_output['anggaran_tw3']);
-                    //$rencana_aksi_output->anggaran_tw4 = str_replace('.', '', $target_output['anggaran_tw4']);
-                    $rencana_aksi_output->anggaran_total = $this->removeDot($target_output['anggaran_total']);
-                    $rencana_aksi_output->fokus_intervensi = $target_output['fokus_intervensi'];
-                    $rencana_aksi_output->pelaksana = $target_output['pelaksana'];
-                    $rencana_aksi_output->koordinator = $target_output['koordinator'];
-                    if (!$rencana_aksi_output->save()) {
-                        $success = false;
-                    }
+                    
+                        $rencana_aksi_output = new TematikRencanaAksiOutput();
+                        if (isset($target_output['rencana_aksi_output_id'])) {
+                            $rencana_aksi_output = TematikRencanaAksiOutput::find($target_output['rencana_aksi_output_id']);
+                        }
+                        $rencana_aksi_output->tematik_rencana_aksi_id = $rencana_aksi->id;
+                        $rencana_aksi_output->satuan_output = $target_output['satuan_output'];
+                        $rencana_aksi_output->indikator_output = $target_output['indikator_output'];
+                        $rencana_aksi_output->target_tw1 = str_replace(',', '.', str_replace('.', '', $target_output['target_tw1']));
+                        $rencana_aksi_output->target_tw2 = str_replace(',', '.', str_replace('.', '', $target_output['target_tw2']));
+                        $rencana_aksi_output->target_tw3 = str_replace(',', '.', str_replace('.', '', $target_output['target_tw3']));
+                        $rencana_aksi_output->target_tw4 = str_replace(',', '.', str_replace('.', '', $target_output['target_tw4']));
+                        $rencana_aksi_output->target_total = str_replace(',', '.', str_replace('.', '', $target_output['target_total']));
+                        $rencana_aksi_output->anggaran_total = $this->removeDot($target_output['anggaran_total']);
+                        $rencana_aksi_output->fokus_intervensi = $target_output['fokus_intervensi'];
+                        $rencana_aksi_output->pelaksana = $target_output['pelaksana'];
+                        $rencana_aksi_output->koordinator = $target_output['koordinator'];
+                        if (!$rencana_aksi_output->save()) {
+                            $success = false;
+                        }
+                    
                 }
             }
         } catch (\Throwable $th) {
