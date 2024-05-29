@@ -1,5 +1,4 @@
 <?php
-
 use App\Models\DokumenKategori;
 use App\Models\KegiatanUtama;
 use App\Models\KlpdInstansi;
@@ -27,25 +26,32 @@ if(! function_exists('menus'))
             ],
             [
                 'levels' => ['admin', 'provinsi', 'kabupaten', 'kl', 'tpn'],
-                'title' => 'RB General',
-                'icon' => 'pie-chart',
+                'title' => 'Rencana Aksi',
+                'icon' => 'inbox',
                 'url' => 'rb-general',
-                'items' => [
-                    [
-                        'levels' => ['provinsi', 'kabupaten', 'kl'],
-                        'title' => 'Perencanaan dan Monev',
-                        'icon' => 'clipboard-list',
-                        'url' => 'rb-general/perencanaan',
-                    ],
+                'items' => [ 
                     [
                         'levels' => ['admin', 'provinsi', 'kabupaten', 'kl', 'tpn'],
-                        'title' => 'Rekap Data',
-                        'icon' => 'clipboard',
-                        'url' => 'rb-general/rekap_data',
+                        'title' => 'RB General',
+                        'icon' => 'activity',
+                        'url' => 'rb-general',
+                        'items' => [
+                            [
+                                'levels' => ['provinsi', 'kabupaten', 'kl'],
+                                'title' => 'Perencanaan dan Monev',
+                                'icon' => 'clipboard-list',
+                                'url' => 'rb-general/perencanaan',
+                            ],
+                            [
+                                'levels' => ['admin', 'provinsi', 'kabupaten', 'kl', 'tpn'],
+                                'title' => 'Rekap Data',
+                                'icon' => 'clipboard',
+                                'url' => 'rb-general/rekap_data',
+                            ],
+                        ]
                     ],
-                ]
-            ],
-            [
+
+                    [
                 'levels' => ['admin', 'provinsi', 'kabupaten', 'kl', 'tpn'],
                 'title' => 'RB Tematik',
                 'icon' => 'bookmark',
@@ -71,6 +77,12 @@ if(! function_exists('menus'))
                     ],
                 ]
             ],
+
+
+                ],
+            ],
+            
+           
             [
                 'levels' => ['admin', 'provinsi', 'kabupaten', 'kl', 'tpn', 'tpm'],
                 'title' => 'Hasil',
@@ -324,3 +336,4 @@ if(! function_exists('dokumen_kategori')) {
         return DokumenKategori::pluck('nama', 'id');
     }
 }
+
