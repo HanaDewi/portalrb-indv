@@ -23,52 +23,52 @@ function menus()
             'icon' => 'file-text',
             'url' => 'dokumen',
         ],
-        [
-            'levels' => ['admin', 'provinsi', 'kabupaten', 'kl', 'tpn'],
-            'title' => 'RB General',
-            'icon' => 'pie-chart',
-            'url' => 'rb-general',
-            'items' => [
-                [
-                    'levels' => ['provinsi', 'kabupaten', 'kl'],
-                    'title' => 'Perencanaan dan Monev',
-                    'icon' => 'clipboard-list',
-                    'url' => 'rb-general/perencanaan',
-                ],
-                [
-                    'levels' => ['admin', 'provinsi', 'kabupaten', 'kl', 'tpn'],
-                    'title' => 'Rekap Data',
-                    'icon' => 'clipboard',
-                    'url' => 'rb-general/rekap_data',
-                ],
-            ]
-        ],
-        [
-            'levels' => ['admin', 'provinsi', 'kabupaten', 'kl', 'tpn'],
-            'title' => 'RB Tematik',
-            'icon' => 'bookmark',
-            'url' => 'rb-tematik',
-            'items' => [
-                [
-                    'levels' => ['provinsi', 'kabupaten', 'kl'],
-                    'title' => 'Tema dan Sasaran Tematik',
-                    'icon' => 'clipboard-list',
-                    'url' => 'rb-tematik/perencanaan',
-                ],
-                [
-                    'levels' => ['provinsi', 'kabupaten', 'kl'],
-                    'title' => 'Permasalahan dan Rencana Aksi',
-                    'icon' => 'check-circle',
-                    'url' => 'rb-tematik/permasalahan',
-                ],
-                [
-                    'levels' => ['admin', 'provinsi', 'kabupaten', 'kl', 'tpn'],
-                    'title' => 'Rekap Data',
-                    'icon' => 'clipboard',
-                    'url' => 'rb-tematik/rekap_data',
-                ],
-            ]
-        ],
+        // [
+        //     'levels' => ['admin', 'provinsi', 'kabupaten', 'kl', 'tpn'],
+        //     'title' => 'RB General',
+        //     'icon' => 'pie-chart',
+        //     'url' => 'rb-general',
+        //     'items' => [
+        //         [
+        //             'levels' => ['provinsi', 'kabupaten', 'kl'],
+        //             'title' => 'Perencanaan dan Monev',
+        //             'icon' => 'clipboard-list',
+        //             'url' => 'rb-general/perencanaan',
+        //         ],
+        //         [
+        //             'levels' => ['admin', 'provinsi', 'kabupaten', 'kl', 'tpn'],
+        //             'title' => 'Rekap Data',
+        //             'icon' => 'clipboard',
+        //             'url' => 'rb-general/rekap_data',
+        //         ],
+        //     ]
+        // ],
+        // [
+        //     'levels' => ['admin', 'provinsi', 'kabupaten', 'kl', 'tpn'],
+        //     'title' => 'RB Tematik',
+        //     'icon' => 'bookmark',
+        //     'url' => 'rb-tematik',
+        //     'items' => [
+        //         [
+        //             'levels' => ['provinsi', 'kabupaten', 'kl'],
+        //             'title' => 'Tema dan Sasaran Tematik',
+        //             'icon' => 'clipboard-list',
+        //             'url' => 'rb-tematik/perencanaan',
+        //         ],
+        //         [
+        //             'levels' => ['provinsi', 'kabupaten', 'kl'],
+        //             'title' => 'Permasalahan dan Rencana Aksi',
+        //             'icon' => 'check-circle',
+        //             'url' => 'rb-tematik/permasalahan',
+        //         ],
+        //         [
+        //             'levels' => ['admin', 'provinsi', 'kabupaten', 'kl', 'tpn'],
+        //             'title' => 'Rekap Data',
+        //             'icon' => 'clipboard',
+        //             'url' => 'rb-tematik/rekap_data',
+        //         ],
+        //     ]
+        // ],
         [
             'levels' => ['admin', 'provinsi', 'kabupaten', 'kl', 'tpn', 'tpm'],
             'title' => 'Hasil',
