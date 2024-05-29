@@ -233,6 +233,15 @@
             min: 0,
         });
 
+        $(".digit2").inputmask("decimal",{
+            radixPoint:",",
+            groupSeparator: ".",
+            digits: 0,
+            autoGroup: true,
+            rightAlign: false,
+            min: 0,
+        });
+
         $('#form-rencana_aksi').validate({
             highlight: function (input) {
                 $(input).addClass('border-danger');
@@ -368,7 +377,8 @@
     }
 
     function formatNumber(num) {
-        return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+        //return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+        return new Intl.NumberFormat(["ban", "id"]).format(num);
     }
 
     function clearForm() {
@@ -447,19 +457,19 @@
                     '<tr>'+
                         '<td class="font-bold">Target Output <span class="text-danger">*</span></td>'+
                         '<td>'+
-                            '<div class="input-group mt-4 mr-2"><div class="input-group-text">TW1</div><input type="text" name="target_output['+idx+'][target_tw1]" id="target_tw1'+idx+'" placeholder="Triwulan 1" class="form-control numeric"  required></div>'+
+                            '<div class="input-group mt-4 mr-2"><div class="input-group-text">TW1</div><input type="text" name="target_output['+idx+'][target_tw1]" id="target_tw1'+idx+'" placeholder="Triwulan 1" class="form-control digit"  required></div>'+
                         '</td>'+
                         '<td>'+
-                            '<div class="input-group mt-4 mr-2"><div class="input-group-text">TW2</div><input type="text" name="target_output['+idx+'][target_tw2]" id="target_tw2'+idx+'" placeholder="Triwulan 2" class="form-control numeric"  required></div>'+
+                            '<div class="input-group mt-4 mr-2"><div class="input-group-text">TW2</div><input type="text" name="target_output['+idx+'][target_tw2]" id="target_tw2'+idx+'" placeholder="Triwulan 2" class="form-control digit"  required></div>'+
                         '</td>'+
                         '<td>'+
-                            '<div class="input-group mt-4 mr-2"><div class="input-group-text">TW3</div><input type="text" name="target_output['+idx+'][target_tw3]" id="target_tw3'+idx+'" placeholder="Triwulan 3" class="form-control numeric"  required></div>'+
+                            '<div class="input-group mt-4 mr-2"><div class="input-group-text">TW3</div><input type="text" name="target_output['+idx+'][target_tw3]" id="target_tw3'+idx+'" placeholder="Triwulan 3" class="form-control digit"  required></div>'+
                         '</td>'+
                         '<td>'+
-                            '<div class="input-group mt-4 mr-2"><div class="input-group-text">TW4</div><input type="text" name="target_output['+idx+'][target_tw4]" id="target_tw4'+idx+'" placeholder="Triwulan 4" class="form-control numeric"  required></div>'+
+                            '<div class="input-group mt-4 mr-2"><div class="input-group-text">TW4</div><input type="text" name="target_output['+idx+'][target_tw4]" id="target_tw4'+idx+'" placeholder="Triwulan 4" class="form-control digit"  required></div>'+
                         '</td>'+
                         '<td>'+
-                            '<div class="input-group mt-4"><div class="input-group-text">Total</div><input type="text" name="target_output['+idx+'][target_total]" id="target_total'+idx+'" placeholder="Total" class="form-control numeric"  required></div>'+
+                            '<div class="input-group mt-4"><div class="input-group-text">Total</div><input type="text" name="target_output['+idx+'][target_total]" id="target_total'+idx+'" placeholder="Total" class="form-control digit2"  required></div>'+
                         '</td>'+
                     '</tr>'+
                     '<tr>'+
@@ -510,6 +520,15 @@
         });
 
         $(".digit").inputmask("decimal",{
+            radixPoint:",",
+            groupSeparator: ".",
+            digits: 2,
+            autoGroup: true,
+            rightAlign: false,
+            min: 0,
+        });
+
+        $(".digit2").inputmask("decimal",{
             radixPoint:",",
             groupSeparator: ".",
             digits: 0,
