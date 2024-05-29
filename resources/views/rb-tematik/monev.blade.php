@@ -10,7 +10,7 @@
         <div class="flex sm:flex-row items-center p-5 border-b border-slate-200/60">
             <h2 class="font-bold text-base mr-auto flex items-center justify-center"> <i data-lucide="pie-chart" class="mr-1"></i> RB Tematik - Monitoring dan Evaluasi</h2>
             <button class="btn btn-danger shadow-md float-right mr-2" onclick="edit_monev();" data-bs-toggle="modal" data-bs-target="#modal-kegiatan_utama"><i data-lucide="edit" class="mr-1"></i> Evaluasi</button>
-            <a href="{{ url('rb-general/perencanaan') }}" class="btn btn-warning shadow-md float-right"><i data-lucide="chevron-left"></i> Kembali</a>
+            <a href="{{ url('rb-tematik/perencanaan') }}" class="btn btn-warning shadow-md float-right"><i data-lucide="chevron-left"></i> Kembali</a>
         </div>
         <div class="lg:col-span-12 p-5 border-b border-slate-200/60">
             <table class="table table-bordered table-striped table-hover">

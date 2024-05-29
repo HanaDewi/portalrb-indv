@@ -143,7 +143,8 @@ function allowed_url()
     $level = auth()->user()->level;
     $allowed_url = [];
     $base_url = config('app.client_url') == 'localhost' ? url('/') . '/' : config('app.client_url');
-    foreach (menus() as $menu) {
+    $menu_menu = menus();
+    foreach ($menu_menu as $menu) {
         if (in_array($level, $menu['levels'])) {
             if (isset($menu['items'])) {
                 foreach ($menu['items'] as $item) { 
