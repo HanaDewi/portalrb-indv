@@ -230,7 +230,7 @@
                                 <td>
                                     <div class="input-group mt-4">
                                         <div class="input-group-text">Total</div>
-                                        <input type="text" name="realisasi_output_total" id="realisasi_output_total" placeholder="Total" class="form-control digit" required>
+                                        <input type="text" name="realisasi_output_total" id="realisasi_output_total" placeholder="Total" class="form-control digit" onkeyup="hitungTotal();" required>
                                     </div>
                                 </td>
                             </tr>
@@ -343,9 +343,9 @@
                                     </div>
                                 </td>
                                 <tr>
-                                    <td class="font-bold">Catatan</td>
+                                    <td class="font-bold">Catatan <span class="text-danger">*</span></td>
                                     <td colspan="5">
-                                        <textarea name="catatan" id="catatan_output" cols="30" rows="10" placeholder="Catatan" class="form-control mt-4"></textarea>
+                                        <textarea name="catatan" id="catatan_output" cols="30" rows="10" placeholder="Catatan" class="form-control mt-4" required></textarea>
                                     </td>
                                 </tr>
                             </tr>
@@ -667,16 +667,17 @@
         if ($('#realisasi_output_tw4').val() == '') {
             $('#realisasi_output_tw4').val(0);
         }
-        ro1 = $('#realisasi_output_tw1').val();
-        ro2 = $('#realisasi_output_tw2').val();
-        ro3 = $('#realisasi_output_tw3').val();
-        ro4 = $('#realisasi_output_tw4').val();
+        ro1 = $('#realisasi_output_tw1').val().replace(',', '.');
+        ro2 = $('#realisasi_output_tw2').val().replace(',', '.');
+        ro3 = $('#realisasi_output_tw3').val().replace(',', '.');
+        ro4 = $('#realisasi_output_tw4').val().replace(',', '.');
         // ro_total = parseFloat(ro1) + parseFloat(ro2) + parseFloat(ro3) + parseFloat(ro4);
         // $('#realisasi_output_total').val(ro_total);
         co1 = t1 > 0 ? (ro1 / t1) * 100 : 0;
         co2 = t2 > 0 ? (ro2 / t2) * 100 : 0;
         co3 = t3 > 0 ? (ro3 / t3) * 100 : 0;
         co4 = t4 > 0 ? (ro4 / t4) * 100 : 0;
+
         $('#capaian_output_tw1').val(co1);
         $('#capaian_output_tw2').val(co2);
         $('#capaian_output_tw3').val(co3);
@@ -694,8 +695,8 @@
         if (co4 > 0) {
             co_pembagi += 1;
         }
-        ro_total = $('#realisasi_output_total').val();
-        to_total = $('#target_total').val();
+        ro_total = $('#realisasi_output_total').val().replace(',', '.');
+        to_total = $('#target_total').val().replace(',', '.');
         co_total = (ro_total / to_total) * 100;
         $('#capaian_output_total').val(co_total);
         

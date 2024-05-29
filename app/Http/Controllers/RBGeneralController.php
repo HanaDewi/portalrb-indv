@@ -115,10 +115,11 @@ class RBGeneralController extends Controller
         $perencanaan->baseline_tahun = $request->baseline_tahun;
         $perencanaan->baseline_target = 0;
         $perencanaan->baseline_realisasi = $request->baseline_realisasi;
-        if ($perencanaan->indikator->min != null && $perencanaan->baseline_tahun < $perencanaan->indikator->min) {
+
+        if ($perencanaan->indikator->min != null && $request->baseline_realisasi < $perencanaan->indikator->min) {
             $success = false;
             $pesan .= 'Baseline tidak boleh kurang dari '.$perencanaan->indikator->min.'!!';
-        } else if ($perencanaan->indikator->max != null && $perencanaan->baseline_tahun > $perencanaan->indikator->max) {
+        } else if ($perencanaan->indikator->max != null && $request->baseline_realisasi > $perencanaan->indikator->max) {
             $success = false;
             $pesan .= 'Baseline tidak boleh lebih dari '.$perencanaan->indikator->max.'!!';
         }
@@ -129,7 +130,7 @@ class RBGeneralController extends Controller
         } else {
             session()->flash('error', 'Data Baseline Perencanaan General gagal disimpan! '.$pesan);
         }
-        return redirect('rb-general/perencanaan');
+        return redirect('rencana_aksi/rb-general/perencanaan');
     }
 
     public function perencanaan_hapusBaseline(Request $request)
@@ -144,7 +145,7 @@ class RBGeneralController extends Controller
         } else {
             session()->flash('error', 'Data Baseline Perencanaan General gagal dihapus! Silahkan dicoba kembali.');
         }
-        return redirect('rb-general/perencanaan');
+        return redirect('rencana_aksi/rb-general/perencanaan');
     }
 
     public function perencanaan_simpanTarget(Request $request)
@@ -198,7 +199,7 @@ class RBGeneralController extends Controller
         } else {
             session()->flash('error', 'Data Target Perencanaan General gagal disimpan! Data Baseline tidak ditemukan.');
         }
-        return redirect('rb-general/perencanaan');
+        return redirect('rencana_aksi/rb-general/perencanaan');
     }
 
     public function perencanaan_simpanMonev(Request $request)
@@ -219,7 +220,7 @@ class RBGeneralController extends Controller
         } else {
             session()->flash('error', 'Data Baseline Perencanaan General gagal disimpan! Silahkan dicoba kembali.');
         }
-        return redirect('rb-general/perencanaan');
+        return redirect('rencana_aksi/rb-general/perencanaan');
     }
 
     public function perencanaan_getDokumen($id)
@@ -282,7 +283,7 @@ class RBGeneralController extends Controller
         } else {
             session()->flash('error', 'Data Test TP gagal disimpan! Silahkan dicoba kembali.');
         }
-        return redirect('rb-general/perencanaan');
+        return redirect('rencana_aksi/rb-general/perencanaan');
     }
 
     public function rencana_aksi($perencanaan_id, $target_id)
@@ -379,7 +380,7 @@ class RBGeneralController extends Controller
             session()->flash('error', 'Data RB General Rencana Aksi gagal diimport! '.$pesan);
         }
 
-        return redirect('rb-general/perencanaan/'.$perencanaan_id.'/'.$target_id.'/rencana_aksi');
+        return redirect('rencana_aksi/rb-general/perencanaan/'.$perencanaan_id.'/'.$target_id.'/rencana_aksi');
     }
 
     public function rencana_aksi_getDatas($perencanaan_id, $target_id)
@@ -578,26 +579,18 @@ class RBGeneralController extends Controller
         if (!$output) {
             abort(404);
         }
-        $output->realisasi_output_tw1 = $request->realisasi_output_tw1;
-        $output->realisasi_output_tw2 = $request->realisasi_output_tw2;
-        $output->realisasi_output_tw3 = $request->realisasi_output_tw3;
-        $output->realisasi_output_tw4 = $request->realisasi_output_tw4;
-        $output->realisasi_output_total = $request->realisasi_output_total;
-        $output->realisasi_anggaran_tw1 = $request->realisasi_anggaran_tw1;
-        $output->realisasi_anggaran_tw2 = $request->realisasi_anggaran_tw2;
-        $output->realisasi_anggaran_tw3 = $request->realisasi_anggaran_tw3;
-        $output->realisasi_anggaran_tw4 = $request->realisasi_anggaran_tw4;
-        $output->realisasi_anggaran_total = $request->realisasi_anggaran_total;
-        $output->capaian_output_tw1 = $request->capaian_output_tw1;
-        $output->capaian_output_tw2 = $request->capaian_output_tw2;
-        $output->capaian_output_tw3 = $request->capaian_output_tw3;
-        $output->capaian_output_tw4 = $request->capaian_output_tw4;
-        $output->capaian_output_total = $request->capaian_output_total;
-        $output->capaian_anggaran_tw1 = $request->capaian_anggaran_tw1;
-        $output->capaian_anggaran_tw2 = $request->capaian_anggaran_tw2;
-        $output->capaian_anggaran_tw3 = $request->capaian_anggaran_tw3;
-        $output->capaian_anggaran_tw4 = $request->capaian_anggaran_tw4;
-        $output->capaian_anggaran_total = $request->capaian_anggaran_total;
+        $output->realisasi_output_tw1 = str_replace(',', '.', str_replace('.', '', $request->realisasi_output_tw1));
+        $output->realisasi_output_tw2 = str_replace(',', '.', str_replace('.', '', $request->realisasi_output_tw2));
+        $output->realisasi_output_tw3 = str_replace(',', '.', str_replace('.', '', $request->realisasi_output_tw3));
+        $output->realisasi_output_tw4 = str_replace(',', '.', str_replace('.', '', $request->realisasi_output_tw4));
+        $output->realisasi_output_total = str_replace(',', '.', str_replace('.', '', $request->realisasi_output_total));
+        $output->realisasi_anggaran_total = str_replace('.', '', $request->realisasi_anggaran_total);
+        $output->capaian_output_tw1 = str_replace(',', '.', str_replace('.', '', $request->capaian_output_tw1));
+        $output->capaian_output_tw2 = str_replace(',', '.', str_replace('.', '', $request->capaian_output_tw2));
+        $output->capaian_output_tw3 = str_replace(',', '.', str_replace('.', '', $request->capaian_output_tw3));
+        $output->capaian_output_tw4 = str_replace(',', '.', str_replace('.', '', $request->capaian_output_tw4));
+        $output->capaian_output_total = str_replace(',', '.', str_replace('.', '', $request->capaian_output_total));
+        $output->capaian_anggaran_total = str_replace('.', '', $request->capaian_anggaran_total);
         $output->catatan = $request->catatan;
         if ($output->save()) {
             $success = true;
