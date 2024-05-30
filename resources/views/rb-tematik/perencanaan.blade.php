@@ -13,7 +13,7 @@
                 <h2 class="font-bold text-base mr-auto flex items-center justify-center">
                     <i data-lucide="file-text" class="mr-1"></i> Data Rencana Aksi
                 </h2>
-                <!--<a href="{{url('rb-tematik/perencanaan/downloadTemplate') }}" class="btn btn-success btn-sm mr-2"><svg width="16px" height="16px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <title></title> <g id="Complete"> <g id="download"> <g> <path d="M3,12.3v7a2,2,0,0,0,2,2H19a2,2,0,0,0,2-2v-7" fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path> <g> <polyline data-name="Right" fill="none" id="Right-2" points="7.9 12.3 12 16.3 16.1 12.3" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></polyline> <line fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" x1="12" x2="12" y1="2.7" y2="14.2"></line> </g> </g> </g> </g> </g></svg>&nbsp;Template</a>-->
+                <!--<a href="{{url('rencana_aksi/rb-tematik/perencanaan/downloadTemplate') }}" class="btn btn-success btn-sm mr-2"><svg width="16px" height="16px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <title></title> <g id="Complete"> <g id="download"> <g> <path d="M3,12.3v7a2,2,0,0,0,2,2H19a2,2,0,0,0,2-2v-7" fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path> <g> <polyline data-name="Right" fill="none" id="Right-2" points="7.9 12.3 12 16.3 16.1 12.3" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></polyline> <line fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" x1="12" x2="12" y1="2.7" y2="14.2"></line> </g> </g> </g> </g> </g></svg>&nbsp;Template</a>-->
                 <a href="{{asset('template_import/template_import_tematik.xlsx')}}" class="btn btn-success btn-sm mr-2"><svg width="16px" height="16px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <title></title> <g id="Complete"> <g id="download"> <g> <path d="M3,12.3v7a2,2,0,0,0,2,2H19a2,2,0,0,0,2-2v-7" fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path> <g> <polyline data-name="Right" fill="none" id="Right-2" points="7.9 12.3 12 16.3 16.1 12.3" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></polyline> <line fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" x1="12" x2="12" y1="2.7" y2="14.2"></line> </g> </g> </g> </g> </g></svg>&nbsp;Template</a>
                 <button class="btn btn-success btn-sm mr-2" onclick="importRBTematik();"><svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 50 50" width="18px" height="18px"><path d="M 28.875 0 C 28.855469 0.0078125 28.832031 0.0195313 28.8125 0.03125 L 0.8125 5.34375 C 0.335938 5.433594 -0.0078125 5.855469 0 6.34375 L 0 43.65625 C -0.0078125 44.144531 0.335938 44.566406 0.8125 44.65625 L 28.8125 49.96875 C 29.101563 50.023438 29.402344 49.949219 29.632813 49.761719 C 29.859375 49.574219 29.996094 49.296875 30 49 L 30 44 L 47 44 C 48.09375 44 49 43.09375 49 42 L 49 8 C 49 6.90625 48.09375 6 47 6 L 30 6 L 30 1 C 30.003906 0.710938 29.878906 0.4375 29.664063 0.246094 C 29.449219 0.0546875 29.160156 -0.0351563 28.875 0 Z M 28 2.1875 L 28 6.53125 C 27.867188 6.808594 27.867188 7.128906 28 7.40625 L 28 42.8125 C 27.972656 42.945313 27.972656 43.085938 28 43.21875 L 28 47.8125 L 2 42.84375 L 2 7.15625 Z M 30 8 L 47 8 L 47 42 L 30 42 L 30 37 L 34 37 L 34 35 L 30 35 L 30 29 L 34 29 L 34 27 L 30 27 L 30 22 L 34 22 L 34 20 L 30 20 L 30 15 L 34 15 L 34 13 L 30 13 Z M 36 13 L 36 15 L 44 15 L 44 13 Z M 6.6875 15.6875 L 12.15625 25.03125 L 6.1875 34.375 L 11.1875 34.375 L 14.4375 28.34375 C 14.664063 27.761719 14.8125 27.316406 14.875 27.03125 L 14.90625 27.03125 C 15.035156 27.640625 15.160156 28.054688 15.28125 28.28125 L 18.53125 34.375 L 23.5 34.375 L 17.75 24.9375 L 23.34375 15.6875 L 18.65625 15.6875 L 15.6875 21.21875 C 15.402344 21.941406 15.199219 22.511719 15.09375 22.875 L 15.0625 22.875 C 14.898438 22.265625 14.710938 21.722656 14.5 21.28125 L 11.8125 15.6875 Z M 36 20 L 36 22 L 44 22 L 44 20 Z M 36 27 L 36 29 L 44 29 L 44 27 Z M 36 35 L 36 37 L 44 37 L 44 35 Z"/></svg>&nbsp;Import</button>
                 <button class="btn btn-danger btn-sm shadow-md" onclick="tambah_sasaran_roadmap();" data-bs-toggle="modal" data-bs-target="#modal-kegiatan_utama"><i data-lucide="plus" class="mr-1" width="18px" height="18px"></i> Tambah Sasaran Tematik Roadmap</button>
@@ -133,7 +133,7 @@
                     <h2 class="font-bold fw-medium  fs-base me-auto" id="title">Sasaran Roadmaps</h2>
                 </div> <!-- END: Modal Header -->
                 <!-- BEGIN: Modal Body -->
-                <form action="{{ url('rb-tematik/perencanaan/simpan-sasaran-roadmap') }}" id="form-sasaran-roadmap"
+                <form action="{{ url('rencana_aksi/rb-tematik/perencanaan/simpan-sasaran-roadmap') }}" id="form-sasaran-roadmap"
                     method="post">
                     @csrf
                     <input type="hidden" name="tema_id" id="tema_id">
@@ -196,7 +196,7 @@
                     <h2 class="font-bold fw-medium  fs-base me-auto" id="title">Indikator Roadmap</h2>
                 </div> <!-- END: Modal Header -->
                 <!-- BEGIN: Modal Body -->
-                <form action="{{ url('rb-tematik/perencanaan/simpan-indikator-roadmap') }}" id="form-indikator-roadmap"
+                <form action="{{ url('rencana_aksi/rb-tematik/perencanaan/simpan-indikator-roadmap') }}" id="form-indikator-roadmap"
                     method="post">
                     @csrf
                     <input type="hidden" name="sasaran_id" id="sasaran-id">
@@ -272,7 +272,7 @@
                     <h2 class="font-bold fw-medium fs-base me-auto" id="title">Monitoring dan Evaluasi Indikator Sasaran Permasalahan</h2>
                 </div> <!-- END: Modal Header -->
                 <!-- BEGIN: Modal Body -->
-                <form action="{{ url('rb-tematik/perencanaan/monev/simpan-indikator-roadmap') }}" id="form-monev_perencanaan" method="post">
+                <form action="{{ url('rencana_aksi/rb-tematik/perencanaan/monev/simpan-indikator-roadmap') }}" id="form-monev_perencanaan" method="post">
                     @csrf
                     <input type="hidden" name="monev_indikator_roadmap_id" id="monev-indikator-roadmap-id">
                     <div class="modal-body grid columns-12 gap-4 gap-y-3">
@@ -319,7 +319,7 @@
                 <h2 class="font-bold fw-medium fs-base me-auto" id="title">Import RBTematik</h2>
             </div> <!-- END: Modal Header -->
             <!-- BEGIN: Modal Body -->
-            <form action="{{ url('/rb-tematik/perencanaan/import') }}" id="form-import_rencana_aksi" method="post" enctype="multipart/form-data">
+            <form action="{{ url('rencana_aksi/rb-tematik/perencanaan/import') }}" id="form-import_rencana_aksi" method="post" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body grid columns-12 gap-4 gap-y-3">
                     <div class="g-col-12">
@@ -416,7 +416,7 @@
         function edit_sasaran_roadmap(id) {
             $('#sasaran-roadmap-id').val(id);
             $('.saveButton').prop('disabled', true);
-            $.getJSON("{{url('rb-tematik/perencanaan/getSasaran/')}}/"+id, function(data) {
+            $.getJSON("{{url('rencana_aksi/rb-tematik/perencanaan/getSasaran/')}}/"+id, function(data) {
                 $('#tema_id_onSasaran').val(data.tema_id);
                 $('#sasaranOnModalSasaran').val(data.sasaran_roadmap);
                 $('.saveButton').prop('disabled', false);
@@ -436,7 +436,7 @@
         }).then((result) => {
             if (result.isConfirmed) {
                 $.ajax({
-                    url: "{{url('rb-tematik/perencanaan/sasaran_roadmap/')}}/hapus/"+id,
+                    url: "{{url('rencana_aksi/rb-tematik/perencanaan/sasaran_roadmap/')}}/hapus/"+id,
                     type: "post",
                     data: {_token: '{{csrf_token()}}', id: id},
                     dataType: "json",
@@ -470,7 +470,7 @@
         $('#indikator-roadmap-id').val(id);
         $('#title').html('Edit Rencana Aksi Output');
         $('.saveButton').prop('disabled', true);
-        $.getJSON("{{url('rb-tematik/perencanaan/getData/')}}/"+id, function(data) {
+        $.getJSON("{{url('rencana_aksi/rb-tematik/perencanaan/getData/')}}/"+id, function(data) {
             $('#tema-indikator').val(data.tema);
             $('#sasaran-roadmap').val(data.sasaran_roadmap);
             $('#indikator-roadmap').val(data.indikator_roadmap);
@@ -485,7 +485,7 @@
             $('#monev-indikator-roadmap-id').val(id);
             $('#title').html('Edit Rencana Aksi Output');
             $('.saveButton').prop('disabled', true);
-            $.getJSON("{{url('rb-tematik/perencanaan/getData/')}}/"+id, function(data) {
+            $.getJSON("{{url('rencana_aksi/rb-tematik/perencanaan/getData/')}}/"+id, function(data) {
                 $('#realisasi-indikator').val(data.realisasi_indikator);
                 $('#capaian-indikator').val(data.capaian_indikator);
                 $('#catatan').val(data.catatan);
@@ -505,7 +505,7 @@
         }).then((result) => {
             if (result.isConfirmed) {
                 $.ajax({
-                    url: "{{url('rb-tematik/perencanaan/indikator_roadmap/')}}/hapus/"+id,
+                    url: "{{url('rencana_aksi/rb-tematik/perencanaan/indikator_roadmap/')}}/hapus/"+id,
                     type: "post",
                     data: {_token: '{{csrf_token()}}', id: id},
                     dataType: "json",

@@ -181,18 +181,18 @@
                             <td>
                                 @if ($data['output']->target_total)
                                 <table class="table table-noborder">
-                                    <tr><th>TW 1</th><td>: {{ fnumber($data['output']->target_tw1) }}</td></tr>
-                                    <tr><th>TW 2</th><td>: {{ fnumber($data['output']->target_tw2) }}</td></tr>
-                                    <tr><th>TW 3</th><td>: {{ fnumber($data['output']->target_tw3) }}</td></tr>
-                                    <tr><th>TW 4</th><td>: {{ fnumber($data['output']->target_tw4) }}</td></tr>
-                                    <tr><th>Total</th><td>: {{ fnumber($data['output']->target_total) }}</td></tr>
+                                    <tr><th>TW 1 </th><td>: <i class="digit">{{$data['output']->target_tw1}}</i> </td></tr>
+                                    <tr><th>TW 2 </th><td>: <i class="digit">{{ $data['output']->target_tw2 }}</i></td></tr>
+                                    <tr><th>TW 3 </th><td>: <i class="digit">{{ $data['output']->target_tw3 }}</i></td></tr>
+                                    <tr><th>TW 4 </th><td>: <i class="digit">{{ $data['output']->target_tw4 }}</i></td></tr>
+                                    <tr><th>Total </th><td>: <i class="digit">{{$data['output']->target_total }}</i></td></tr>
                                 </table>
                                 @endif
                             </td>
                             <td>
                                 @if ($data['output']->anggaran_total)
                                 <table class="table table-noborder">
-                                    <tr><th>Total</th><td>: {{ fnumber($data['output']->anggaran_total) }}</td></tr>
+                                    <tr><td>Rp. <i class="digit">{{ $data['output']->anggaran_total }}</i></td></tr>
                                 </table>
                                 @endif
                             </td>
@@ -208,36 +208,36 @@
                             <td>
                                 @if ($data['output']->realisasi_output_total)
                                 <table class="table table-noborder">
-                                    <tr><th>TW 1</th><td>: {{ fnumber($data['output']->realisasi_output_tw1) }}</td></tr>
-                                    <tr><th>TW 2</th><td>: {{ fnumber($data['output']->realisasi_output_tw2) }}</td></tr>
-                                    <tr><th>TW 3</th><td>: {{ fnumber($data['output']->realisasi_output_tw3) }}</td></tr>
-                                    <tr><th>TW 4</th><td>: {{ fnumber($data['output']->realisasi_output_tw4) }}</td></tr>
-                                    <tr><th>Total</th><td>: {{ fnumber($data['output']->realisasi_output_total) }}</td></tr>
+                                    <tr><th>TW 1</th><td>: <i class="digit"> {{ $data['output']->realisasi_output_tw1 }}</i></td></tr>
+                                    <tr><th>TW 2</th><td>: <i class="digit"> {{ $data['output']->realisasi_output_tw2 }}</i></td></tr>
+                                    <tr><th>TW 3</th><td>: <i class="digit"> {{ $data['output']->realisasi_output_tw3 }}</i></td></tr>
+                                    <tr><th>TW 4</th><td>: <i class="digit"> {{ $data['output']->realisasi_output_tw4 }}</i></td></tr>
+                                    <tr><th>Total</th><td>: <i class="digit"> {{$data['output']->realisasi_output_total }}</i></td></tr>
                                 </table>
                                 @endif
                             </td>
                             <td>
                                 @if ($data['output']->realisasi_anggaran_total)
                                 <table class="table table-noborder">
-                                    <tr><th>Total</th><td>: {{ fnumber($data['output']->realisasi_anggaran_total) }}</td></tr>
+                                    <tr><td>Rp. <i class="digit"> {{ $data['output']->realisasi_anggaran_total }} </i></td></tr>
                                 </table>
                                 @endif
                             </td>
                             <td>
                                 @if ($data['output']->capaian_output_total)
                                 <table class="table table-noborder">
-                                    <tr><th>TW 1</th><td>: {{ fnumber($data['output']->capaian_output_tw1) }}</td></tr>
-                                    <tr><th>TW 2</th><td>: {{ fnumber($data['output']->capaian_output_tw2) }}</td></tr>
-                                    <tr><th>TW 3</th><td>: {{ fnumber($data['output']->capaian_output_tw3) }}</td></tr>
-                                    <tr><th>TW 4</th><td>: {{ fnumber($data['output']->capaian_output_tw4) }}</td></tr>
-                                    <tr><th>Total</th><td>: {{ fnumber($data['output']->capaian_output_total) }}</td></tr>
+                                    <tr><th>TW 1</th><td>: <i class="digit">{{ $data['output']->capaian_output_tw1 }}</i>%</td></tr>
+                                    <tr><th>TW 2</th><td>: <i class="digit">{{ $data['output']->capaian_output_tw2 }}</i>%</td></tr>
+                                    <tr><th>TW 3</th><td>: <i class="digit">{{ $data['output']->capaian_output_tw3 }}</i>%</td></tr>
+                                    <tr><th>TW 4</th><td>: <i class="digit">{{ $data['output']->capaian_output_tw4 }}</i>%</td></tr>
+                                    <tr><th>Total</th><td>: <i class="digit">{{$data['output']->capaian_output_total }}</i>%</td></tr>
                                 </table>
                                 @endif
                             </td>
                             <td>
                                 @if ($data['output']->capaian_anggaran_total)
                                 <table class="table table-noborder">
-                                    <tr><th>Total</th><td>: {{ fnumber($data['output']->capaian_anggaran_total, 2) }}</td></tr>
+                                    <tr><td><i class="digit">{{ $data['output']->capaian_anggaran_total, 2 }}</i>%</td></tr>
                                 </table>
                                 @endif
                             </td>
@@ -326,8 +326,20 @@ $(document).ready(function(){
             ordering: false,
     });
     @if (auth()->user()->level == 'tpn')
-    modal_catatan = tailwind.Modal.getInstance(document.querySelector("#modal-catatan"));
+        modal_catatan = tailwind.Modal.getInstance(document.querySelector("#modal-catatan"));
     @endif
+
+
+    $(".digit").each(function() {
+        numberAsIs = $(this).html().replace('.', ',');;
+        numberFormated = formatNumber(numberAsIs);
+        $(this).html(numberFormated)
+    });
+    
+
+    function formatNumber(num) {
+        return num ? num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.') : '';
+    }
 });
 
 @if (auth()->user()->level == 'tpn')
