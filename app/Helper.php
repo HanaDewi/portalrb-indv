@@ -17,12 +17,12 @@ function menus()
             'icon' => 'home',
             'url' => 'dashboard',
         ],
-        [
-            'levels' => ['admin', 'provinsi', 'kabupaten', 'kl', 'tpn', 'tpm'],
-            'title' => 'Dokumen',
-            'icon' => 'file-text',
-            'url' => 'dokumen',
-        ],
+        // [
+        //     'levels' => ['admin', 'provinsi', 'kabupaten', 'kl', 'tpn', 'tpm'],
+        //     'title' => 'Dokumen',
+        //     'icon' => 'file-text',
+        //     'url' => 'dokumen',
+        // ],
         // [
         //     'levels' => ['admin', 'provinsi', 'kabupaten', 'kl', 'tpn'],
         //     'title' => 'RB General',
