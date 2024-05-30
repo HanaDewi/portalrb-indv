@@ -262,6 +262,6 @@ class RBTematikImportController extends Controller
             session()->flash('error', $message);
         }
 
-        return redirect('/rb-tematik/rekap_data');
+        return redirect('rencana_aksi/rb-tematik/rekap_data');
     }
 }

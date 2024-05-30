@@ -145,12 +145,12 @@
                         </td>
                         <td>
                             @if ($tematikData['indikator_permasalahan_nama'])
-                            <a href="{{ url('rb-tematik/permasalahan/renaksi/' . $tematikData['indikator_permasalahan_id'])}}" class="btn btn-primary btn-sm w-full mb-2">
+                            <a href="{{ url('rencana_aksi/rb-tematik/permasalahan/renaksi/' . $tematikData['indikator_permasalahan_id'])}}" class="btn btn-primary btn-sm w-full mb-2">
                                 <i data-lucide="edit" class="w-4 h-4 mr-1"></i> Renaksi
                                 <span class="text-xs px-1 rounded-full bg-warning text-white badge"> <!-- count($indikator->rencana_aksi) --> </span>
                             </a>
                             <br>
-                            <a href="{{ url('rb-tematik/permasalahan/monev/' . $tematikData['indikator_permasalahan_id'])}}" class="btn btn-dark btn-sm w-full mb-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" icon-name="edit" data-lucide="edit" class="lucide lucide-edit w-4 h-4 mr-1">
+                            <a href="{{ url('rencana_aksi/rb-tematik/permasalahan/monev/' . $tematikData['indikator_permasalahan_id'])}}" class="btn btn-dark btn-sm w-full mb-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" icon-name="edit" data-lucide="edit" class="lucide lucide-edit w-4 h-4 mr-1">
                                     <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"></path>
                                     <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                                 </svg>Monev
@@ -187,7 +187,7 @@
                 <h2 class="font-bold fw-medium  fs-base me-auto" id="title">Sasaran Roadmaps</h2>
             </div> <!-- END: Modal Header -->
             <!-- BEGIN: Modal Body -->
-            <form action="{{ url('rb-tematik/perencanaan/simpan-sasaran-roadmap') }}" id="form-sasaran-roadmap" method="post">
+            <form action="{{ url('rencana_aksi/rb-tematik/perencanaan/simpan-sasaran-roadmap') }}" id="form-sasaran-roadmap" method="post">
                 @csrf
                 <input type="hidden" name="tema_id" id="tema_id">
                 <div class="modal-body grid columns-12 ">
@@ -248,7 +248,7 @@
                 <h2 class="font-bold fw-medium  fs-base me-auto" id="title">Permasalahan</h2>
             </div> <!-- END: Modal Header -->
             <!-- BEGIN: Modal Body -->
-            <form action="{{ url('rb-tematik/permasalahan/simpan-permasalahan') }}" id="form-permasalahan" method="post">
+            <form action="{{ url('rencana_aksi/rb-tematik/permasalahan/simpan-permasalahan') }}" id="form-permasalahan" method="post">
                 @csrf
                 <input type="hidden" name="tematik_indikator_roadmap_id" id="indikator-roadmap-id-onPermasalahan">
                 <input type="hidden" name="permasalahan_id" id="permasalahan-id">
@@ -331,7 +331,7 @@
                 <h2 class="font-bold fw-medium  fs-base me-auto" id="title">Indikator Permasalahan</h2>
             </div> <!-- END: Modal Header -->
             <!-- BEGIN: Modal Body -->
-            <form action="{{ url('rb-tematik/permasalahan/simpan-indikator-permasalahan') }}" id="form-permasalahan" method="post">
+            <form action="{{ url('rencana_aksi/rb-tematik/permasalahan/simpan-indikator-permasalahan') }}" id="form-permasalahan" method="post">
                 @csrf
                 <input type="hidden" name="tematik_permasalahan_id_onIndikatorPermasalahan" id="tematik-permasalahan-id-onIndikatorPermasalahan">
                 <input type="hidden" name="tematik_indikator_permasalahan_id" id="tematik-indikator-permasalahan-id">
@@ -459,7 +459,7 @@
         $('#indikator-permasalahan-id').val(id);
         $('#title').html('Edit Indikator Permasalahan');
         $('.saveButton').prop('disabled', true);
-        $.getJSON("{{url('rb-tematik/permasalahan/get-indikator-permasalahan')}}/"+id, function(data) {
+        $.getJSON("{{url('rencana_aksi/rb-tematik/permasalahan/get-indikator-permasalahan')}}/"+id, function(data) {
             $('#permasalahan-onIndikatorPermasalahan').val(data.permasalahan);
             $('#tematik-indikator-permasalahan-id').val(data.indikator_permasalahan_id);
             $('#sasaran-permasalahan-onIndikatorPermasalahan').val(data.sasaran);
@@ -475,7 +475,7 @@
         $('#permasalahan-id').val(id);
         $('#title-permasalahan').html('Edit Permasalahan');
         $('.saveButton').prop('disabled', true);
-        $.getJSON("{{url('rb-tematik/permasalahan/get-permasalahan/')}}/"+id, function(data) {
+        $.getJSON("{{url('rencana_aksi/rb-tematik/permasalahan/get-permasalahan/')}}/"+id, function(data) {
             $('#sasaran-roadmap-onPermasalahan').val(data.sasaran_roadmap_id).change();
             $('#indikator-roadmap-onPermasalahan').val(data.indikator_roadmap_id);
             $('#target-roadmap-onPermasalahan').val(data.target_roadmap);
@@ -498,7 +498,7 @@
         }).then((result) => {
             if (result.isConfirmed) {
                 $.ajax({
-                    url: "{{url('rb-tematik/permasalahan/')}}/hapus/"+id,
+                    url: "{{url('rencana_aksi/rb-tematik/permasalahan/')}}/hapus/"+id,
                     type: "post",
                     data: {_token: '{{csrf_token()}}', id: id},
                     dataType: "json",
@@ -539,7 +539,7 @@
         }).then((result) => {
             if (result.isConfirmed) {
                 $.ajax({
-                    url: "{{url('rb-tematik/permasalahan/indikator_permasalahan/')}}/hapus/"+id,
+                    url: "{{url('rencana_aksi/rb-tematik/permasalahan/indikator_permasalahan/')}}/hapus/"+id,
                     type: "post",
                     data: {_token: '{{csrf_token()}}', id: id},
                     dataType: "json",
@@ -613,7 +613,7 @@
         $('#target-roadmap-onPermasalahan').val("");
         $('#target-satuan-onPermasalahan').val("");
         $.ajax({
-            url: '{{url("/rb-tematik/permasalahan/get-indikator-roadmap")}}',
+            url: '{{url("rencana_aksi/rb-tematik/permasalahan/get-indikator-roadmap")}}',
             type: 'GET',
             data: {"tematik_sasaran_roadmap_id": firstSelectValue},
             success: function(response) {

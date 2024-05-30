@@ -247,7 +247,7 @@ class RBTematikController extends Controller
                     session()->flash('success', 'Data Sasaran Roadmap Tematik berhasil disimpan.');
                 } else {
                     session()->flash('success', 'Data Sasaran Roadmap Tematik gagal disimpan! Silahkan dicoba kembali.');
-                    return redirect('rb-tematik/perencanaan');
+                    return redirect('rencana_aksi/rb-tematik/perencanaan');
                 }
             }
         } else {
@@ -257,12 +257,12 @@ class RBTematikController extends Controller
                 session()->flash('success', 'Data Sasaran Roadmap Tematik berhasil disimpan.');
             } else {
                 session()->flash('success', 'Data Sasaran Roadmap Tematik gagal disimpan! Silahkan dicoba kembali.');
-                return redirect('rb-tematik/perencanaan');
+                return redirect('rencana_aksi/rb-tematik/perencanaan');
             }
         }
 
 
-        return redirect('rb-tematik/perencanaan');
+        return redirect('rencana_aksi/rb-tematik/perencanaan');
     }
 
     public function sasaranRoadmapHapus(Request $request)
@@ -325,7 +325,7 @@ class RBTematikController extends Controller
         } else {
             session()->flash('success', 'Data Indikator Roadmap Tematik gagal disimpan! Silahkan dicoba kembali.');
         }
-        return redirect('rb-tematik/perencanaan');
+        return redirect('rencana_aksi/rb-tematik/perencanaan');
     }
 
     public function getIndikatorRoadmap()
@@ -425,7 +425,7 @@ class RBTematikController extends Controller
         } else {
             session()->flash('success', 'Data Permasalahan Indikator Roadmap Tematik gagal disimpan! Silahkan dicoba kembali.');
         }
-        return redirect('rb-tematik/permasalahan');
+        return redirect('rencana_aksi/rb-tematik/permasalahan');
     }
 
     public function get_permasalahan($permasalahan_id)
@@ -505,7 +505,7 @@ class RBTematikController extends Controller
         } else {
             session()->flash('success', 'Data Indikator gagal disimpan! Silahkan dicoba kembali.');
         }
-        return redirect('rb-tematik/permasalahan');
+        return redirect('rencana_aksi/rb-tematik/permasalahan');
     }
 
     public function indikatorPermasalahanHapus(Request $request)
@@ -767,7 +767,7 @@ class RBTematikController extends Controller
         } else {
             session()->flash('success', 'Data Indikator Roadmap Tematik gagal disimpan! Silahkan dicoba kembali.');
         }
-        return redirect('rb-tematik/perencanaan');
+        return redirect('rencana_aksi/rb-tematik/perencanaan');
     }
 
     public function monev_getIndikatorPermasalahan($indikator_id)
@@ -817,10 +817,10 @@ class RBTematikController extends Controller
         $output->realisasi_output_tw3 = $this->removeDot($request->realisasi_output_tw3);
         $output->realisasi_output_tw4 = $this->removeDot($request->realisasi_output_tw4);
         $output->realisasi_output_total = $this->removeDot($request->realisasi_output_total);
-        $output->realisasi_anggaran_tw1 = $this->removeDot($request->realisasi_anggaran_tw1);
-        $output->realisasi_anggaran_tw2 = $this->removeDot($request->realisasi_anggaran_tw2);
-        $output->realisasi_anggaran_tw3 = $this->removeDot($request->realisasi_anggaran_tw3);
-        $output->realisasi_anggaran_tw4 = $this->removeDot($request->realisasi_anggaran_tw4);
+        //$output->realisasi_anggaran_tw1 = $this->removeDot($request->realisasi_anggaran_tw1);
+        // $output->realisasi_anggaran_tw2 = $this->removeDot($request->realisasi_anggaran_tw2);
+        // $output->realisasi_anggaran_tw3 = $this->removeDot($request->realisasi_anggaran_tw3);
+        // $output->realisasi_anggaran_tw4 = $this->removeDot($request->realisasi_anggaran_tw4);
         $output->realisasi_anggaran_total = $this->removeDot($request->realisasi_anggaran_total);
         $output->capaian_output_tw1 = $this->removeDot($request->capaian_output_tw1);
         $output->capaian_output_tw2 = $this->removeDot($request->capaian_output_tw2);
@@ -1005,10 +1005,7 @@ class RBTematikController extends Controller
 
     public function removeDot($i)
     {
-        if ($i) {
-            return (str_replace(".", "", $i));
-        } else {
-            return $i;
-        }
+        $format_angka =  str_replace(',', '.', str_replace('.', '', $i));
+        return $format_angka;
     }
 }
