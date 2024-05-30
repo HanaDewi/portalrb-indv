@@ -568,7 +568,6 @@
             customize: function (doc) {
             doc.defaultStyle.fontSize = 8.5; 
             doc.content[1].table.widths = [ '3%', '15%', '7%', '7%', '7%', '13%', '13%', '13%','13%', '13%'];
-
                 doc.content[1].table.body.forEach(row => {
                     row.forEach((cell, index) => {
                         if (index === 4 || index === 5 || index === 6 || index === 7) {
@@ -667,10 +666,10 @@
         if ($('#realisasi_output_tw4').val() == '') {
             $('#realisasi_output_tw4').val(0);
         }
-        ro1 = $('#realisasi_output_tw1').val().replace(',', '.');
-        ro2 = $('#realisasi_output_tw2').val().replace(',', '.');
-        ro3 = $('#realisasi_output_tw3').val().replace(',', '.');
-        ro4 = $('#realisasi_output_tw4').val().replace(',', '.');
+        ro1 = $('#realisasi_output_tw1').val().replace('.', '').replace(',', '.');
+        ro4 = $('#realisasi_output_tw4').val().replace('.', '').replace(',', '.');
+        ro2 = $('#realisasi_output_tw2').val().replace('.', '').replace(',', '.');
+        ro3 = $('#realisasi_output_tw3').val().replace('.', '').replace(',', '.');
         // ro_total = parseFloat(ro1) + parseFloat(ro2) + parseFloat(ro3) + parseFloat(ro4);
         // $('#realisasi_output_total').val(ro_total);
         co1 = t1 > 0 ? (ro1 / t1) * 100 : 0;
@@ -695,8 +694,8 @@
         if (co4 > 0) {
             co_pembagi += 1;
         }
-        ro_total = $('#realisasi_output_total').val().replace(',', '.');
-        to_total = $('#target_total').val().replace(',', '.');
+        ro_total = $('#realisasi_output_total').val().replace('.', '').replace(',', '.');
+        to_total = $('#target_total').val().replace('.', '').replace(',', '.');
         co_total = (ro_total / to_total) * 100;
         $('#capaian_output_total').val(co_total);
         
@@ -741,7 +740,7 @@
         //     ca_pembagi += 1;
         // }
         // ca_total = (ca1 + ca2 + ca3 + ca4) / ca_pembagi;
-        ra_total = $('#realisasi_anggaran_total').val();
+        ra_total = $('#realisasi_anggaran_total').val().replace('.', '').replace(',', '.');
         ca_total = (ra_total/atotal) * 100;
         $('#capaian_anggaran_total').val(ca_total);
     }
