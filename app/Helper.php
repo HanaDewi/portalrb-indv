@@ -230,7 +230,7 @@ if(! function_exists('fnumber')) {
         if (gettype($number)=='integer' || gettype($number)=='double') { 
             return number_format($number, $digit, ',', '.');
         } else {
-            $number = (double)str_replace('.', '', $number);
+            $number = (double) $number;
             return number_format($number, $digit, ',', '.');
         }
     }

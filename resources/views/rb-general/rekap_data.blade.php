@@ -127,7 +127,7 @@
                             </td>
                             <td>
                                 @if ($data['output']->anggaran_total)
-                                {{ fnumber($data['output']->anggaran_total) }}
+                                {{ currency($data['output']->anggaran_total) }}
                                 @endif
                             </td>
                             <td>
@@ -149,23 +149,23 @@
                             </td>
                             <td>
                                 @if ($data['output']->realisasi_anggaran_total)
-                                {{ fnumber($data['output']->realisasi_anggaran_total) }}
+                                {{ currency($data['output']->realisasi_anggaran_total) }}
                                 @endif
                             </td>
                             <td>
                                 @if ($data['output']->capaian_output_total)
                                 <table class="table table-noborder">
-                                    <tr><th>TW 1</th><td>: {{ fnumber($data['output']->capaian_output_tw1, 2) }}</td></tr>
-                                    <tr><th>TW 2</th><td>: {{ fnumber($data['output']->capaian_output_tw2, 2) }}</td></tr>
-                                    <tr><th>TW 3</th><td>: {{ fnumber($data['output']->capaian_output_tw3, 2) }}</td></tr>
-                                    <tr><th>TW 4</th><td>: {{ fnumber($data['output']->capaian_output_tw4, 2) }}</td></tr>
-                                    <tr><th>Total</th><td>: {{ fnumber($data['output']->capaian_output_total, 2) }}</td></tr>
+                                    <tr><th>TW 1</th><td>: {{ fnumber($data['output']->capaian_output_tw1, 2) }} %</td></tr>
+                                    <tr><th>TW 2</th><td>: {{ fnumber($data['output']->capaian_output_tw2, 2) }} %</td></tr>
+                                    <tr><th>TW 3</th><td>: {{ fnumber($data['output']->capaian_output_tw3, 2) }} %</td></tr>
+                                    <tr><th>TW 4</th><td>: {{ fnumber($data['output']->capaian_output_tw4, 2) }} %</td></tr>
+                                    <tr><th>Total</th><td>: {{ fnumber($data['output']->capaian_output_total, 2) }} %</td></tr>
                                 </table>
                                 @endif
                             </td>
                             <td>
                                 @if ($data['output']->capaian_anggaran_total)
-                                {{ fnumber($data['output']->capaian_anggaran_total, 2) }}
+                                {{ fnumber($data['output']->capaian_anggaran_total, 2) }} %
                                 @endif
                             </td>
                             <td>
