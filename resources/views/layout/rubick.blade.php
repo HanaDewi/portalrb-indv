@@ -128,12 +128,13 @@
                         <ul class="{{ $subopen }}">
                             @foreach ($menu['items'] as $item)
                             @php
-                                $url = isset($item['items']) ? 'javascript:;' : url($item['url']);
                                 $active = request()->is($item['url']) || request()->is($item['url'] . '/*') ? 'side-menu--active' : '';
                                 $open = request()->is($item['url']) || request()->is($item['url'] . '/*') ? 'side-menu__sub-open' : '';
+                                $url = isset($menu['items']) ? 'javascript:;' : url($menu['url']);
+                                $itemUrl = isset($item['items']) && count($item['items']) > 0 ? 'javascript:;' : url($item['url']);
                             @endphp
                             <li>
-                                <a href="{{ $url }}" class="side-menu {{ $active }}">
+                                <a href="{{ $itemUrl }}" class="side-menu {{ $active }}">
                                     <div class="side-menu__icon"><i data-lucide="{{ $item['icon'] }}"></i></div>
                                     <div class="side-menu__title">{{ $item['title'] }} {!! isset($item['items']) ? '<div class="side-menu__sub-icon "> <i data-lucide="chevron-down"></i> </div>' : '' !!}</div>
                                 </a>

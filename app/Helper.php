@@ -14,10 +14,45 @@ if(! function_exists('menus'))
         $menu = [
             [
                 'levels' => ['admin', 'provinsi', 'kabupaten', 'kl', 'tpn', 'tpm'],
-                'title' => 'Dashboard',
+                'title' => 'Beranda',
                 'icon' => 'home',
                 'url' => 'dashboard',
             ],
+            [
+                'levels' => ['tpn'],
+                'title' => 'Dashboard',
+                'icon' => 'pie-chart',
+                'url' => 'webdashboard',
+                'items' => [ 
+                    [
+                        'levels' => ['tpn'],
+                        'title' => 'Rencana Aksi',
+                        'icon' => 'inbox',
+                        'url' => 'webdashboard/rencana-aksi',
+                        'items' => [
+                            [
+                                'levels' => ['tpn'],
+                                'title' => 'RB General',
+                                'icon' => 'clipboard-list',
+                                'url' => 'webdashboard/rencana-aksi/rb-general',
+                            ],
+                            [
+                                'levels' => ['tpn'],
+                                'title' => 'RB Tematik',
+                                'icon' => 'clipboard',
+                                'url' => 'webdashboard/rencana-aksi/rb-tematik',
+                            ],
+                        ]
+                    ],
+                    [
+                        'levels' => ['tpn'],
+                        'title' => 'Hasil Evaluasi',
+                        'icon' => 'target',
+                        'url' => 'webdashboard/hasil-evaluasi'
+                    ],
+                ],
+            ],
+
             [
                 'levels' => ['admin', 'provinsi', 'kabupaten', 'kl', 'tpn', 'tpm'],
                 'title' => 'Dokumen',
@@ -230,7 +265,7 @@ if(! function_exists('fnumber')) {
         if (gettype($number)=='integer' || gettype($number)=='double') { 
             return number_format($number, $digit, ',', '.');
         } else {
-            $number = (double) $number;
+            $number = (double)str_replace('.', '', $number);
             return number_format($number, $digit, ',', '.');
         }
     }

@@ -11,6 +11,7 @@ use App\Http\Controllers\HasilController;
 use App\Http\Controllers\ManageUserController;
 use App\Http\Controllers\RuangBelajar\DashboardController;
 use App\Http\Controllers\RuangBelajar\AdminController;
+use App\Http\Controllers\WebDashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,6 +39,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/profil', [HomeController::class, 'profil'])->name('profil');
     Route::post('/profil_simpan', [HomeController::class, 'profil_simpan']);
     // MASTER DATA
+
+    // Web Dashboard
+    Route::middleware(['auth'])->group(function () {
+    Route::get('webdashboard/rencana-aksi/rb-general', [WebDashboardController::class, 'rbGeneral'])->name('webdashboard.rb-general');
+    Route::get('webdashboard/rencana-aksi/rb-tematik', [WebDashboardController::class, 'rbTematik'])->name('webdashboard.rb-tematik');
+    Route::get('webdashboard/hasil-evaluasi', [WebDashboardController::class, 'hasilEvaluasi'])->name('webdashboard.hasil-evaluasi');
+    });
     // Kegiatan Utama
     Route::get('/master-data/kegiatan_utama', [MasterDataController::class, 'kegiatan_utama'])->name('kegiatan_utama');
     Route::get('/master-data/kegiatan_utama/getDatas', [MasterDataController::class, 'kegiatan_utama_getDatas']);
