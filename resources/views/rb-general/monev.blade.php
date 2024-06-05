@@ -666,10 +666,10 @@
         if ($('#realisasi_output_tw4').val() == '') {
             $('#realisasi_output_tw4').val(0);
         }
-        ro1 = $('#realisasi_output_tw1').val().replace('.', '').replace(',', '.');
-        ro4 = $('#realisasi_output_tw4').val().replace('.', '').replace(',', '.');
-        ro2 = $('#realisasi_output_tw2').val().replace('.', '').replace(',', '.');
-        ro3 = $('#realisasi_output_tw3').val().replace('.', '').replace(',', '.');
+        ro1 = $('#realisasi_output_tw1').val().replaceAll('.', '').replaceAll(',', '.');
+        ro4 = $('#realisasi_output_tw4').val().replaceAll('.', '').replaceAll(',', '.');
+        ro2 = $('#realisasi_output_tw2').val().replaceAll('.', '').replaceAll(',', '.');
+        ro3 = $('#realisasi_output_tw3').val().replaceAll('.', '').replaceAll(',', '.');
         // ro_total = parseFloat(ro1) + parseFloat(ro2) + parseFloat(ro3) + parseFloat(ro4);
         // $('#realisasi_output_total').val(ro_total);
         co1 = t1 > 0 ? (ro1 / t1) * 100 : 0;
@@ -694,8 +694,8 @@
         if (co4 > 0) {
             co_pembagi += 1;
         }
-        ro_total = $('#realisasi_output_total').val().replace('.', '').replace(',', '.');
-        to_total = $('#target_total').val().replace('.', '').replace(',', '.');
+        ro_total = $('#realisasi_output_total').val().replaceAll('.', '').replaceAll(',', '.');
+        to_total = $('#target_total').val().replaceAll('.', '').replaceAll(',', '.');
         co_total = (ro_total / to_total) * 100;
         $('#capaian_output_total').val(co_total);
         
@@ -740,7 +740,8 @@
         //     ca_pembagi += 1;
         // }
         // ca_total = (ca1 + ca2 + ca3 + ca4) / ca_pembagi;
-        ra_total = $('#realisasi_anggaran_total').val().replace('.', '').replace(',', '.');
+        ra_total = $('#realisasi_anggaran_total').val().replaceAll('.', '');
+        console.log(ra_total, atotal);
         ca_total = (ra_total/atotal) * 100;
         $('#capaian_anggaran_total').val(ca_total);
     }
