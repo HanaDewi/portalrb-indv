@@ -14,16 +14,22 @@
                     @if (in_array(auth()->user()->level, ['admin', 'tpn']))
                     <tr>
                         <td class="font-bold">Instansi</td>
-                        <td>{!! Form::select('instansi_id', instansis(), $finstansi, ['class' => 'tom-select mt-1', 'id' => 'instansi_id', 'data-placeholder' => 'Pilih instansi', 'onchange'=>"$('#filter-form').submit();"]) !!}</td>
+                        <td>
+                            <select class="form-control tom-select mt-1" name="instansi_id[]" onchange="$('#filter-form').submit();" multiple>
+                                @foreach (instansis() as $idx=>$ins)
+                                <option value="{{ $idx }}" {{ in_array($idx, $finstansi) ? 'selected':'' }} >{{ $ins }}</option>
+                                @endforeach
+                            </select>
+                        </td>
                     </tr>
                     @endif
                     <tr>
                         <td class="font-bold" width="220">Tema</td>
                         <td>
-                            <select class="form-control" name="ftema" onchange="$('#filter-form').submit();">
+                            <select class="form-control tom-select mt-1" name="ftema[]" onchange="$('#filter-form').submit();" multiple>
                                 <option value=""> -- Pilih Tema -- </option>
                                 @foreach ($temas as $tema)
-                                <option value="{{ $tema->id }}" {{ $ftema==$tema->id ? 'selected':'' }} >{{ $tema->nama }}</option>
+                                <option value="{{ $tema->id }}" {{ in_array($tema->id, $ftema) ? 'selected':'' }} >{{ $tema->nama }}</option>
                                 @endforeach
                             </select>
                         </td>
