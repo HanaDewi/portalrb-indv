@@ -74,81 +74,81 @@
                         $yes_kab = 0;
                         $no_kab = 0;
                     @endphp
-    @foreach ($instansis as $instansi)
-    @php
-        $no++;
-        $instansi_id = $instansi->id;
-        $sql = "
-       WITH baseline_check AS (
-    SELECT
-        CASE
-            WHEN EXISTS (
-                SELECT 1
-                FROM tematik_sasaran_roadmap tsr
-                WHERE tsr.instansi_id = ?
-            ) THEN 'yes'
-            ELSE 'no'
-        END as tematik
-),
-permasalahan_check AS (
-    SELECT
-        CASE
-            WHEN EXISTS (
-                SELECT 1
-                FROM tematik_sasaran_roadmap tsr
-                JOIN tematik_indikator_roadmap tir ON tir.tematik_sasaran_roadmap_id = tsr.id
-                JOIN tematik_permasalahan tp ON tp.tematik_indikator_roadmap_id = tir.id
-                WHERE tsr.instansi_id = ?
-            ) THEN 'yes'
-            ELSE 'no'
-        END as permasalahan
-),
-rencana_aksi_check AS (
-    SELECT
-        CASE
-            WHEN EXISTS (
-                SELECT 1
-                FROM tematik_sasaran_roadmap tsr
-                JOIN tematik_indikator_roadmap tir ON tir.tematik_sasaran_roadmap_id = tsr.id
-                JOIN tematik_permasalahan tp ON tp.tematik_indikator_roadmap_id = tir.id
-                JOIN tematik_indikator_permasalahan tip ON tip.tematik_permasalahan_id = tp.id
-                JOIN tematik_rencana_aksi tra ON tra.tematik_indikator_permasalahan_id = tip.id
-                WHERE tsr.instansi_id = ?
-            ) THEN 'yes'
-            ELSE 'no'
-        END as rencana_aksi
-)
-SELECT tematik, permasalahan, rencana_aksi
-FROM baseline_check, permasalahan_check, rencana_aksi_check;
+                        @foreach ($instansis as $instansi)
+                        @php
+                            $no++;
+                            $instansi_id = $instansi->id;
+                            $sql = "
+                        WITH baseline_check AS (
+                        SELECT
+                            CASE
+                                WHEN EXISTS (
+                                    SELECT 1
+                                    FROM tematik_sasaran_roadmap tsr
+                                    WHERE tsr.instansi_id = ?
+                                ) THEN 'yes'
+                                ELSE '---'
+                            END as tematik
+                    ),
+                    permasalahan_check AS (
+                        SELECT
+                            CASE
+                                WHEN EXISTS (
+                                    SELECT 1
+                                    FROM tematik_sasaran_roadmap tsr
+                                    JOIN tematik_indikator_roadmap tir ON tir.tematik_sasaran_roadmap_id = tsr.id
+                                    JOIN tematik_permasalahan tp ON tp.tematik_indikator_roadmap_id = tir.id
+                                    WHERE tsr.instansi_id = ?
+                                ) THEN 'yes'
+                                ELSE '---'
+                            END as permasalahan
+                    ),
+                    rencana_aksi_check AS (
+                        SELECT
+                            CASE
+                                WHEN EXISTS (
+                                    SELECT 1
+                                    FROM tematik_sasaran_roadmap tsr
+                                    JOIN tematik_indikator_roadmap tir ON tir.tematik_sasaran_roadmap_id = tsr.id
+                                    JOIN tematik_permasalahan tp ON tp.tematik_indikator_roadmap_id = tir.id
+                                    JOIN tematik_indikator_permasalahan tip ON tip.tematik_permasalahan_id = tp.id
+                                    JOIN tematik_rencana_aksi tra ON tra.tematik_indikator_permasalahan_id = tip.id
+                                    WHERE tsr.instansi_id = ?
+                                ) THEN 'yes'
+                                ELSE '---'
+                            END as rencana_aksi
+                    )
+                    SELECT tematik, permasalahan, rencana_aksi
+                    FROM baseline_check, permasalahan_check, rencana_aksi_check;
 
-        ";
+                            ";
 
-        $exists = DB::select($sql, [$instansi_id, $instansi_id, $instansi_id]);
-        $tematik = $exists[0]->tematik ?? '---';
-        $permasalahan = $exists[0]->permasalahan ?? '---';
-        $rencana_aksi = $exists[0]->rencana_aksi ?? '---';
-        $semua = ($tematik == 'yes' && $permasalahan == 'yes' && $rencana_aksi == 'yes') ? 'yes' : '---';
+                            $exists = DB::select($sql, [$instansi_id, $instansi_id, $instansi_id]);
+                            $tematik = $exists[0]->tematik ?? '---';
+                            $permasalahan = $exists[0]->permasalahan ?? '---';
+                            $rencana_aksi = $exists[0]->rencana_aksi ?? '---';
+                            $semua = ($tematik == 'yes' && $permasalahan == 'yes' && $rencana_aksi == 'yes') ? 'yes' : '---';
 
-        if ($instansi->group == 'kl') {
-            if ($semua == 'yes') {
-                $yes_kl++;
-            } else {
-                $no_kl++;
-            }
-        } elseif ($instansi->group == 'prov') {
-            if ($semua == 'yes') {
-                $yes_prov++;
-            } else {
-                $no_prov++;
-            }
-        } elseif ($instansi->group == 'kab') {
-            if ($semua == 'yes') {
-                $yes_kab++;
-            } else {
-                $no_kab++;
-            }
-        }
-    @endphp
+                            if ($instansi->group == 'kl') {
+                                if ($semua == 'yes') {
+                                    $yes_kl++;
+                                } else {
+                                    $no_kl++;
+                                }
+                            } elseif ($instansi->group == 'prov') {
+                                if ($semua == 'yes') {
+                                    $yes_prov++;
+                                } else {
+                                    $no_prov++;
+                                }
+                            } elseif ($instansi->group == 'kab') {
+                                if ($semua == 'yes') {
+                                    $yes_kab++;
+                                } else {
+                                    $no_kab++;
+                                }
+                            }
+                        @endphp
     <tr>
         <td>{{ $no }}</td>
         <td><a class="tabel" href="{{ URL::to('/rencana_aksi/rb-tematik/rekap_data?instansi_id=' . $instansi->id) }}">{{ $instansi->name }}</a></td>
