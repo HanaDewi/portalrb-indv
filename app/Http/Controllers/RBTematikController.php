@@ -14,6 +14,7 @@ use App\Models\TematikIndikatorPermasalahan;
 use App\Models\TematikRencanaAksi;
 use App\Models\TematikRencanaAksiOutput;
 use App\Models\KlpdInstansi;
+use App\Models\OpenAccessSetting;
 use App\Models\TematikPermasalahan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -40,6 +41,15 @@ class RBTematikController extends Controller
     public function tema_sasaran()
     {
         $user = Auth::User();
+        if (in_array($user->level, ['kabupaten', 'provinsi', 'kl'])) {
+            $access = OpenAccessSetting::where('user_level', $user->level)->where('fitur', 'rencana_aksi')->first();
+            if ($access) {
+                $today = date('Y-m-d');
+                if ($access->waktu_awal > $today || $access->waktu_akhir < $today) {
+                    return view('belumbuka');
+                }
+            }
+        }
         $temas = Tema::get();
         $sasaranRoadmaps = TematikSasaranRoadmap::where('instansi_id', $user->user_rel->instansi_id)->orderBy('tema_id')->get();
         $tematikDatas = [];
@@ -98,6 +108,15 @@ class RBTematikController extends Controller
     public function permasalahan(Request $request)
     {
         $user = Auth::User();
+        if (in_array($user->level, ['kabupaten', 'provinsi', 'kl'])) {
+            $access = OpenAccessSetting::where('user_level', $user->level)->where('fitur', 'rencana_aksi')->first();
+            if ($access) {
+                $today = date('Y-m-d');
+                if ($access->waktu_awal > $today || $access->waktu_akhir < $today) {
+                    return view('belumbuka');
+                }
+            }
+        }
         $temas = Tema::get();
 
         $ftema = $request->get('ftema');
@@ -561,6 +580,16 @@ class RBTematikController extends Controller
 
     public function rencana_aksi($indikator_id)
     {
+        $user = Auth::User();
+        if (in_array($user->level, ['kabupaten', 'provinsi', 'kl'])) {
+            $access = OpenAccessSetting::where('user_level', $user->level)->where('fitur', 'rencana_aksi')->first();
+            if ($access) {
+                $today = date('Y-m-d');
+                if ($access->waktu_awal > $today || $access->waktu_akhir < $today) {
+                    return view('belumbuka');
+                }
+            }
+        }
         $indikator = TematikIndikatorPermasalahan::where('id', $indikator_id)->first();
         $fokus_intervensi = FokusIntervensi::all();
         if (!$indikator) {
@@ -636,7 +665,6 @@ class RBTematikController extends Controller
 
     public function rencana_aksi_getData($id)
     {
-        $user = Auth::User();
         $output = TematikRencanaAksiOutput::find($id);
         if ($output) {
             $output->rencana_aksi = $output->rencana_aksi;
@@ -703,7 +731,6 @@ class RBTematikController extends Controller
 
     public function rencana_aksi_hapus($renaksi_output_id, Request $request)
     {
-        $user = Auth::User();
         $renaksiOutput = TematikRencanaAksiOutput::where('id', $renaksi_output_id)->first();
         if (!$renaksiOutput) {
             abort(403);
@@ -738,6 +765,16 @@ class RBTematikController extends Controller
 
     public function monev($indikator_id)
     {
+        $user = Auth::User();
+        if (in_array($user->level, ['kabupaten', 'provinsi', 'kl'])) {
+            $access = OpenAccessSetting::where('user_level', $user->level)->where('fitur', 'rencana_aksi')->first();
+            if ($access) {
+                $today = date('Y-m-d');
+                if ($access->waktu_awal > $today || $access->waktu_akhir < $today) {
+                    return view('belumbuka');
+                }
+            }
+        }
         $indikator = TematikIndikatorPermasalahan::where('id', $indikator_id)->first();
         $fokus_intervensi = FokusIntervensi::all();
         if (!$indikator) {
@@ -841,8 +878,17 @@ class RBTematikController extends Controller
 
     public function rekap_data(Request $request)
     {
-        $temas = Tema::get();
         $user = Auth::User();
+        if (in_array($user->level, ['kabupaten', 'provinsi', 'kl'])) {
+            $access = OpenAccessSetting::where('user_level', $user->level)->where('fitur', 'rencana_aksi')->first();
+            if ($access) {
+                $today = date('Y-m-d');
+                if ($access->waktu_awal > $today || $access->waktu_akhir < $today) {
+                    return view('belumbuka');
+                }
+            }
+        }
+        $temas = Tema::get();
 
         $finstansi = $request->get('instansi_id');
         $ftema = $request->get('ftema');
@@ -861,6 +907,7 @@ class RBTematikController extends Controller
         $fsasaranroadmap = $request->get('fsasaranroadmap');
         $findikatorroadmap = $request->get('findikatorroadmap');
         $fpermasalahan = $request->get('fpermasalahan');
+        $fintervensi = $request->get('fintervensi');
 
         if (in_array($user->level, ['admin', 'tpn'])) {
             $instansi_id = $finstansi;
@@ -937,8 +984,11 @@ class RBTematikController extends Controller
                                 foreach ($permasalahan->indikator_permasalahan as $indikator_permasalahan) {
                                     if (count($indikator_permasalahan->rencana_aksi)) {
                                         foreach ($indikator_permasalahan->rencana_aksi as $rencana_aksi) {
-                                            if (count($rencana_aksi->output)) {
-                                                foreach ($rencana_aksi->output as $output) {
+                                            
+                                            $ra_output = $rencana_aksi->output([$fintervensi])->get();
+
+                                            if (count($ra_output)) {
+                                                foreach ($ra_output as $output) {
                                                     $datas[$key]['sasaran_roadmap'] = $sasaran;
                                                     $datas[$key]['indikator_roadmap'] = $indikator_roadmap;
                                                     $datas[$key]['permasalahan'] = $permasalahan;
@@ -1011,7 +1061,8 @@ class RBTematikController extends Controller
                 'ftema',
                 'fsasaranroadmap',
                 'findikatorroadmap',
-                'fpermasalahan'
+                'fpermasalahan',
+                'fintervensi'
             )
         );
     }

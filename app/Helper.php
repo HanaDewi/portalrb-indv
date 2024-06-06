@@ -1,5 +1,6 @@
 <?php
 use App\Models\DokumenKategori;
+use App\Models\FokusIntervensi;
 use App\Models\KegiatanUtama;
 use App\Models\KlpdInstansi;
 use App\Models\LkeTP;
@@ -19,25 +20,25 @@ if(! function_exists('menus'))
                 'url' => 'dashboard',
             ],
             [
-                'levels' => ['tpn'],
+                'levels' => ['tpn', 'admin'],
                 'title' => 'Dashboard',
                 'icon' => 'pie-chart',
                 'url' => 'webdashboard',
                 'items' => [ 
                     [
-                        'levels' => ['tpn'],
+                        'levels' => ['tpn', 'admin'],
                         'title' => 'Rencana Aksi',
                         'icon' => 'inbox',
                         'url' => 'webdashboard/rencana-aksi',
                         'items' => [
                             [
-                                'levels' => ['tpn'],
+                                'levels' => ['tpn', 'admin'],
                                 'title' => 'RB General',
                                 'icon' => 'clipboard-list',
                                 'url' => 'webdashboard/rencana-aksi/rb-general',
                             ],
                             [
-                                'levels' => ['tpn'],
+                                'levels' => ['tpn', 'admin'],
                                 'title' => 'RB Tematik',
                                 'icon' => 'clipboard',
                                 'url' => 'webdashboard/rencana-aksi/rb-tematik',
@@ -45,7 +46,7 @@ if(! function_exists('menus'))
                         ]
                     ],
                     [
-                        'levels' => ['tpn'],
+                        'levels' => ['tpn', 'admin'],
                         'title' => 'Hasil Evaluasi',
                         'icon' => 'target',
                         'url' => 'webdashboard/hasil-evaluasi'
@@ -234,6 +235,13 @@ if(! function_exists('kegiatanUtama')) {
     }
 }
 
+if(! function_exists('fokusIntervensi')) {
+    function fokusIntervensi()
+    {
+        return FokusIntervensi::pluck('nama', 'id')->toArray();
+    }
+}
+
 if(! function_exists('indikators')) {
     function indikators()
     {
@@ -367,3 +375,12 @@ if(! function_exists('dokumen_kategori')) {
     }
 }
 
+function fiturs($fitur = null)
+{
+    $fiturs = [
+        'hasil_evaluasi' => 'Hasil Evaluasi',
+        'rencana_aksi' => 'Rencana Aksi'
+    ];
+    
+    return $fitur ? $fiturs[$fitur] : $fiturs;
+}
