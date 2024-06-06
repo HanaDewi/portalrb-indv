@@ -639,19 +639,18 @@ class RBGeneralController extends Controller
             }
         }
         if ($request->instansi_id && in_array($user->level, ['admin', 'tpn'])) {
-            $instansi_id = $request->instansi_id;
+            $instansi_ids = $request->instansi_id;
         } else if (isset($user->user_rel->instansi_id)) {
-            $instansi_id = $user->user_rel->instansi_id;
+            $instansi_ids = [$user->user_rel->instansi_id];
         } else {
-            $instansi_id = KlpdInstansi::orderBy('id')->first()->id;
+            $instansi_ids = [KlpdInstansi::orderBy('id')->first()->id];
         }
-        $nama_instansi = KlpdInstansi::find($instansi_id)->name;
         if ($request->indikator_id) {
             $indikator_id = $request->indikator_id;
         } else {
             $indikator_id = [];
         }
-        $model = GeneralPerencanaan::where('instansi_id', $instansi_id)->orderBy('kegiatan_utama_id')->orderBy('indikator_id');
+        $model = GeneralPerencanaan::whereIn('instansi_id', $instansi_ids)->orderBy('kegiatan_utama_id')->orderBy('indikator_id');
         if (count($indikator_id)) {
             $model = $model->whereIn('indikator_id', $indikator_id);
         }
@@ -695,7 +694,7 @@ class RBGeneralController extends Controller
                 $key++;
             }
         }
-        return view('rb-general.rekap_data', compact('datas', 'instansi_id', 'indikator_id', 'nama_instansi'));
+        return view('rb-general.rekap_data', compact('datas', 'instansi_ids', 'indikator_id'));
     }
 
     public function rekap_data_getTarget($id)

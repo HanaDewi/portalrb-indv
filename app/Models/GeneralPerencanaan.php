@@ -27,6 +27,11 @@ class GeneralPerencanaan extends Model
         return $this->belongsTo(Indikator::class, 'indikator_id');
     }
 
+    public function instansi()
+    {
+        return $this->belongsTo(KlpdInstansi::class, 'instansi_id');
+    }
+
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()

@@ -12,13 +12,13 @@
             <form>
                 <div>
                     <label for="indikator_id" class="form-label font-bold">Indikator</label>
-                    {!! Form::select('indikator_id[]', indikators(), $indikator_id, ['class' => 'w-full', 'id' => 'indikator_id', 'data-placeholder' => 'Pilih Indikator', 'multiple' => 'multiple']) !!}
+                    {!! Form::select('indikator_id[]', indikators(), $indikator_id, ['class' => 'select2 w-full', 'id' => 'indikator_id', 'data-placeholder' => 'Pilih Indikator', 'multiple' => 'multiple']) !!}
                 </div>
                 @if (in_array(auth()->user()->level, ['admin', 'tpn']))
                 <div class="grid grid-cols-4">
                     <div class="col-span-3">
-                        <label for="instansi_id" class="form-label mt-2 font-bold">Instansi</label>
-                        {!! Form::select('instansi_id', instansis(), $instansi_id, ['class' => 'tom-select mt-1', 'id' => 'instansi_id', 'data-placeholder' => 'Pilih Instansi', 'required']) !!}
+                        <label for="instansi_id" class="form-label mt-4 font-bold">Instansi</label>
+                        {!! Form::select('instansi_id[]', instansis(), $instansi_ids, ['class' => 'select2 mt-2 w-full', 'id' => 'instansi_id', 'data-placeholder' => 'Pilih Instansi', 'multiple' => 'multiple']) !!}
                     </div>
                     <div class="ml-5">
                         <button type="submit" class="btn btn-success saveButton mt-10">Lihat Data</button>
@@ -35,6 +35,7 @@
                 <thead class="table-dark font-bold">
                     <tr>
                         <th class="w-5" rowspan="2">No.</th>
+                        <th class="w-10" rowspan="2">Nama Instansi</th>
                         <th class="w-10" rowspan="2">Kegiatan Utama</th>
                         <th class="w-10" rowspan="2">Indikator</th>
                         <th rowspan="2">Baseline</th>
@@ -74,6 +75,7 @@
                     @endphp
                         <tr>
                             <td class="font-bold">{{ $no }}</td>
+                            <td class="font-bold">{{ $data['perencanaan']->instansi->name }}</td>
                             <td class="font-bold">{{ $data['perencanaan']->kegiatan_utama->nama }}</td>
                             <td>{{ $data['perencanaan']->indikator->nama }}</td>
                             <td>
@@ -231,7 +233,7 @@
 <script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.html5.min.js"></script>
 <script>
 $(document).ready(function(){
-    $('#indikator_id').select2();
+    $('.select2').select2();
 
     var empDataTable = $('#perencanaan').DataTable({
         dom: 'Blfrtip',
@@ -239,11 +241,11 @@ $(document).ready(function(){
         {
             extend: 'pdf',
             exportOptions: {
-                columns: [0,1,2,3,4,5,6,8,9,10,11,12,13,14,15,16,17,18,19,20]
+                columns: [0,1,2,3,4,5,6,8,9,10,11,12,13,14,15,16,17,18,19,20,21]
             },
             orientation: 'landscape',
             pageSize: 'Legal',
-            title: 'Rekap Data RB General - {{ $nama_instansi }}',
+            title: 'Rekap Data RB General',
             customize: function(doc) {
             doc.defaultStyle.fontSize = 8; 
             doc.styles.tableHeader.fontSize = 7.5;
