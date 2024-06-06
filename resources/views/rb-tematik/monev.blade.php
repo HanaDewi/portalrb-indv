@@ -247,7 +247,7 @@
                                 <td class="font-bold">Capaian Anggaran <span class="text-danger">*</span></td>
                                 <td>
                                     <div class="input-group mt-4">
-                                        <div class="input-group-text">Total</div>
+                                        <div class="input-group-text"></div>
                                         <input type="text" name="capaian_anggaran_total" id="capaian_anggaran_total" placeholder="Total" class="form-control digit" readonly>
                                         <div class="input-group-text">%</div>
                                     </div>
@@ -539,18 +539,18 @@
             { 
                 render: function (data, type, row, meta) {
                     return row.capaian_output_total ? '<table class="table table-noborder">'+
-                            '<tr><th> TW 1</th><td>: '+formatNumber(row.capaian_output_tw1)+'</td></tr>'+
-                            '<tr><th> TW 2</th><td>: '+formatNumber(row.capaian_output_tw2)+'</td></tr>'+
-                            '<tr><th> TW 3</th><td>: '+formatNumber(row.capaian_output_tw3)+'</td></tr>'+
-                            '<tr><th> TW 4</th><td>: '+formatNumber(row.capaian_output_tw4)+'</td></tr>'+
-                            '<tr><th class="border-top"> Total</th><td>: '+formatNumber(row.capaian_output_total)+'</td></tr>'+
+                            '<tr><th> TW 1</th><td>: '+formatNumber(row.capaian_output_tw1)+' %</td></tr>'+
+                            '<tr><th> TW 2</th><td>: '+formatNumber(row.capaian_output_tw2)+' %</td></tr>'+
+                            '<tr><th> TW 3</th><td>: '+formatNumber(row.capaian_output_tw3)+' %</td></tr>'+
+                            '<tr><th> TW 4</th><td>: '+formatNumber(row.capaian_output_tw4)+' %</td></tr>'+
+                            '<tr><th class="border-top"> Total</th><td>: '+formatNumber(row.capaian_output_total)+' % </td></tr>'+
                         '</table>' : '';
                 }
             },
             { 
                 render: function (data, type, row, meta) {
                     return row.capaian_anggaran_total ? '<table class="table table-noborder">'+
-                            '<tr><th class="border-top"> Total</th><td>: '+formatNumber(row.capaian_anggaran_total)+'</td></tr>'+
+                            '<tr><th class="border-top"> </th><td>: '+formatNumber(row.capaian_anggaran_total)+' % </td></tr>'+
                         '</table>' : '';
                 }
             },
@@ -596,20 +596,20 @@
         if ($('#realisasi_output_total').val() == '') {
             $('#realisasi_output_total').val(0); 
         }
-        ro1 = parseFloat($('#realisasi_output_tw1').val().replace('.', '').replace(',', '.'));
-        ro2 = parseFloat($('#realisasi_output_tw2').val().replace('.', '').replace(',', '.'));
-        ro3 = parseFloat($('#realisasi_output_tw3').val().replace('.', '').replace(',', '.'));
-        ro4 = parseFloat($('#realisasi_output_tw4').val().replace('.', '').replace(',', '.'));
-        roTotal = parseFloat($('#realisasi_output_total').val().replace('.', '').replace(',', '.'));
+        ro1 = parseFloat($('#realisasi_output_tw1').val().replaceAll('.', '').replaceAll(',', '.'));
+        ro2 = parseFloat($('#realisasi_output_tw2').val().replaceAll('.', '').replaceAll(',', '.'));
+        ro3 = parseFloat($('#realisasi_output_tw3').val().replaceAll('.', '').replaceAll(',', '.'));
+        ro4 = parseFloat($('#realisasi_output_tw4').val().replaceAll('.', '').replaceAll(',', '.'));
+        roTotal = parseFloat($('#realisasi_output_total').val().replaceAll('.', '').replaceAll(',', '.'));
         
         
         //ro_total = parseFloat(ro1) + parseFloat(ro2) + parseFloat(ro3) + parseFloat(ro4);
         //$('#realisasi_output_total').val(ro_total);
-        co1 = t1 > 0 ? (ro1 / t1) * 100 : 0;
-        co2 = t2 > 0 ? (ro2 / t2) * 100 : 0;
-        co3 = t3 > 0 ? (ro3 / t3) * 100 : 0;
-        co4 = t4 > 0 ? (ro4 / t4) * 100 : 0;
-        coTotal = tTotal > 0 ? (roTotal/tTotal) * 100 : 0;
+        co1 = Math.round( t1 > 0 ? (ro1 / t1) * 100 : 0);
+        co2 = Math.round(t2 > 0 ? (ro2 / t2) * 100 : 0);
+        co3 = Math.round(t3 > 0 ? (ro3 / t3) * 100 : 0);
+        co4 = Math.round(t4 > 0 ? (ro4 / t4) * 100 : 0);
+        coTotal = Math.round(tTotal > 0 ? (roTotal/tTotal) * 100 : 0);
         
         $('#capaian_output_tw1').val(co1);
         $('#capaian_output_tw2').val(co2);
@@ -618,9 +618,10 @@
         $('#capaian_output_total').val(coTotal);
 
         
-        realisasi_anggaran_total = parseFloat($('#realisasi_anggaran_total').val().replace('.', '').replace(',', '.'));
+        realisasi_anggaran_total = $('#realisasi_anggaran_total').val().replaceAll('.', '').replaceAll(',', '.');
         
-        $('#capaian_anggaran_total').val(realisasi_anggaran_total*100/anggaranTotal);
+        
+        $('#capaian_anggaran_total').val(Math.round(realisasi_anggaran_total*100/anggaranTotal));
     }
 
    

@@ -35,6 +35,17 @@
                         </td>
                     </tr>
                     <tr>
+                        <td class="font-bold" width="220">Fokus Intervensi</td>
+                        <td>
+                            <select class="form-control tom-select mt-1" name="fintervensi" onchange="$('#filter-form').submit();">
+                                <option value=""> -- Pilih Fokus Intervensi -- </option>
+                                @foreach (fokusIntervensi() as $fid=>$fnama)
+                                <option value="{{ $fid }}" {{ $fintervensi==$fid ?'selected':'' }}>{{ $fnama }}</option>
+                                @endforeach
+                            </select>
+                        </td>
+                    </tr>
+                    <!-- <tr>
                         <td class="font-bold">Sasaran Roadmap 
                         
                         </td>
@@ -68,7 +79,7 @@
                                 @endforeach
                             </select>
                         </td>
-                    </tr>
+                    </tr> -->
                 </table>
             </form>
             <div class="separator mt-5"></div>

@@ -907,6 +907,7 @@ class RBTematikController extends Controller
         $fsasaranroadmap = $request->get('fsasaranroadmap');
         $findikatorroadmap = $request->get('findikatorroadmap');
         $fpermasalahan = $request->get('fpermasalahan');
+        $fintervensi = $request->get('fintervensi');
 
         if (in_array($user->level, ['admin', 'tpn'])) {
             $instansi_id = $finstansi;
@@ -983,8 +984,11 @@ class RBTematikController extends Controller
                                 foreach ($permasalahan->indikator_permasalahan as $indikator_permasalahan) {
                                     if (count($indikator_permasalahan->rencana_aksi)) {
                                         foreach ($indikator_permasalahan->rencana_aksi as $rencana_aksi) {
-                                            if (count($rencana_aksi->output)) {
-                                                foreach ($rencana_aksi->output as $output) {
+                                            
+                                            $ra_output = $rencana_aksi->output([$fintervensi])->get();
+
+                                            if (count($ra_output)) {
+                                                foreach ($ra_output as $output) {
                                                     $datas[$key]['sasaran_roadmap'] = $sasaran;
                                                     $datas[$key]['indikator_roadmap'] = $indikator_roadmap;
                                                     $datas[$key]['permasalahan'] = $permasalahan;
@@ -1057,7 +1061,8 @@ class RBTematikController extends Controller
                 'ftema',
                 'fsasaranroadmap',
                 'findikatorroadmap',
-                'fpermasalahan'
+                'fpermasalahan',
+                'fintervensi'
             )
         );
     }

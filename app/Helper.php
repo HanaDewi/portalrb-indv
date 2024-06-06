@@ -1,5 +1,6 @@
 <?php
 use App\Models\DokumenKategori;
+use App\Models\FokusIntervensi;
 use App\Models\KegiatanUtama;
 use App\Models\KlpdInstansi;
 use App\Models\LkeTP;
@@ -231,6 +232,13 @@ if(! function_exists('kegiatanUtama')) {
     function kegiatanUtama()
     {
         return KegiatanUtama::pluck('nama', 'id')->toArray();
+    }
+}
+
+if(! function_exists('fokusIntervensi')) {
+    function fokusIntervensi()
+    {
+        return FokusIntervensi::pluck('nama', 'id')->toArray();
     }
 }
 

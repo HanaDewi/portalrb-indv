@@ -9,9 +9,13 @@ class TematikRencanaAksi extends Model
 {
     use HasFactory;
     protected $table = 'tematik_rencana_aksi';
-    public function output()
+    public function output($fokus_intervensi_ids=[])
     {
-        return $this->hasMany(TematikRencanaAksiOutput::class, 'tematik_rencana_aksi_id');
+        $select = $this->hasMany(TematikRencanaAksiOutput::class, 'tematik_rencana_aksi_id');
+        if (count($fokus_intervensi_ids)>0) {
+            $select->whereIn('fokus_intervensi', $fokus_intervensi_ids);
+        }
+        return $select;
     }
 
     public function indikator()
