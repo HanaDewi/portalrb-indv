@@ -17,7 +17,7 @@
     <link rel="stylesheet" href="{{ asset('ext') }}/datatables/buttons.dataTables.min.css" />
     <link href='https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css" integrity="sha512-10/jx2EXwxxWqCLX/hHth/vu2KY3jCF70dCQB8TSgNjbCVAC/8vai53GfMDrO2Emgwccf2pJqxct9ehpzG+MTw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <style type="text/css">::-webkit-scrollbar { display: none;}</style>
+   
 </head>
 
 <body class="py-5">
