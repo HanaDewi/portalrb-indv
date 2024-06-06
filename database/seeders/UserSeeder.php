@@ -65,7 +65,7 @@ class UserSeeder extends Seeder
             ['id' => 5289, 'username' => 'tasikmalaya.d110.2', 'nama' => 'Kabupaten Tasikmalaya', 'password' => bcrypt('Nbpqd04!'), 'level' => 'kabupaten', 'company_id' => 1, 'partner_id' => 5322, 'penilai_id' => null],
             ['id' => 5290, 'username' => 'tasikmalaya.d110.3', 'nama' => 'Kabupaten Tasikmalaya', 'password' => bcrypt('Iqeuc24!'), 'level' => 'kabupaten', 'company_id' => 1, 'partner_id' => 5323, 'penilai_id' => null],
             ['id' => 5291, 'username' => 'tasikmalaya.d110.4', 'nama' => 'Kabupaten Tasikmalaya', 'password' => bcrypt('Rgssh20!'), 'level' => 'kabupaten', 'company_id' => 1, 'partner_id' => 5324, 'penilai_id' => null],
-            ['id' => 5292, 'username' => 'bekasi.d115.1', 'nama' => 'Kabupaten Bekasi', 'password' => bcrypt('Nqnug41!'), 'level' => 'kabupaten', 'company_id' => 1, 'partner_id' => 5325, 'penilai_id' => null],
+            ['id' => 5292, 'username' => 'bekasi.d115.1', 'nama' => 'Kabupaten Bekasi', 'password' => bcrypt('  '), 'level' => 'kabupaten', 'company_id' => 1, 'partner_id' => 5325, 'penilai_id' => null],
             ['id' => 5293, 'username' => 'bekasi.d115.2', 'nama' => 'Kabupaten Bekasi', 'password' => bcrypt('Cyeso95!'), 'level' => 'kabupaten', 'company_id' => 1, 'partner_id' => 5326, 'penilai_id' => null],
             ['id' => 5294, 'username' => 'bekasi.d115.3', 'nama' => 'Kabupaten Bekasi', 'password' => bcrypt('Hstis59!'), 'level' => 'kabupaten', 'company_id' => 1, 'partner_id' => 5327, 'penilai_id' => null],
             ['id' => 5295, 'username' => 'bekasi.d115.4', 'nama' => 'Kabupaten Bekasi', 'password' => bcrypt('ZgjZZ98!'), 'level' => 'kabupaten', 'company_id' => 1, 'partner_id' => 5328, 'penilai_id' => null],
