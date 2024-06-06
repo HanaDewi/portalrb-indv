@@ -11,6 +11,7 @@ use App\Models\GeneralRencanaAksi;
 use App\Models\GeneralRencanaAksiOutput;
 use App\Models\Indikator;
 use App\Models\KlpdInstansi;
+use App\Models\OpenAccessSetting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -35,6 +36,15 @@ class RBGeneralController extends Controller
     public function perencanaan(Request $request)
     {
         $user = Auth::User();
+        if (in_array($user->level, ['kabupaten', 'provinsi', 'kl'])) {
+            $access = OpenAccessSetting::where('user_level', $user->level)->where('fitur', 'rencana_aksi')->first();
+            if ($access) {
+                $today = date('Y-m-d');
+                if ($access->waktu_awal > $today || $access->waktu_akhir < $today) {
+                    return view('belumbuka');
+                }
+            }
+        }
         if ($request->indikator_id) {
             $indikator_id = $request->indikator_id;
         } else {
@@ -289,6 +299,15 @@ class RBGeneralController extends Controller
     public function rencana_aksi($perencanaan_id, $target_id)
     {
         $user = Auth::User();
+        if (in_array($user->level, ['kabupaten', 'provinsi', 'kl'])) {
+            $access = OpenAccessSetting::where('user_level', $user->level)->where('fitur', 'rencana_aksi')->first();
+            if ($access) {
+                $today = date('Y-m-d');
+                if ($access->waktu_awal > $today || $access->waktu_akhir < $today) {
+                    return view('belumbuka');
+                }
+            }
+        }
         $target = GeneralPerencanaanTarget::where('id', $target_id)->where('general_perencanaan_id', $perencanaan_id)
             ->whereHas('perencanaan', function ($q) use ($user) {
                 $q->where('instansi_id', $user->user_rel->instansi_id);
@@ -521,6 +540,15 @@ class RBGeneralController extends Controller
     public function monev($perencanaan_id, $target_id)
     {
         $user = Auth::User();
+        if (in_array($user->level, ['kabupaten', 'provinsi', 'kl'])) {
+            $access = OpenAccessSetting::where('user_level', $user->level)->where('fitur', 'rencana_aksi')->first();
+            if ($access) {
+                $today = date('Y-m-d');
+                if ($access->waktu_awal > $today || $access->waktu_akhir < $today) {
+                    return view('belumbuka');
+                }
+            }
+        }
         $target = GeneralPerencanaanTarget::where('id', $target_id)->where('general_perencanaan_id', $perencanaan_id)
             ->whereHas('perencanaan', function ($q) use ($user) {
                 $q->where('instansi_id', $user->user_rel->instansi_id);
@@ -601,6 +629,15 @@ class RBGeneralController extends Controller
     public function rekap_data(Request $request)
     {
         $user = Auth::User();
+        if (in_array($user->level, ['kabupaten', 'provinsi', 'kl'])) {
+            $access = OpenAccessSetting::where('user_level', $user->level)->where('fitur', 'rencana_aksi')->first();
+            if ($access) {
+                $today = date('Y-m-d');
+                if ($access->waktu_awal > $today || $access->waktu_akhir < $today) {
+                    return view('belumbuka');
+                }
+            }
+        }
         if ($request->instansi_id && in_array($user->level, ['admin', 'tpn'])) {
             $instansi_id = $request->instansi_id;
         } else if (isset($user->user_rel->instansi_id)) {

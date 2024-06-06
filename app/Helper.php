@@ -367,3 +367,12 @@ if(! function_exists('dokumen_kategori')) {
     }
 }
 
+function fiturs($fitur = null)
+{
+    $fiturs = [
+        'hasil_evaluasi' => 'Hasil Evaluasi',
+        'rencana_aksi' => 'Rencana Aksi'
+    ];
+    
+    return $fitur ? $fiturs[$fitur] : $fiturs;
+}

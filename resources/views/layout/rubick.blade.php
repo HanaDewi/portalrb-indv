@@ -59,9 +59,10 @@
                                         @php
                                             $active = request()->is($item['url']) || request()->is($item['url'] . '/*') ? 'menu--active' : '';
                                             $open = request()->is($item['url']) || request()->is($item['url'] . '/*') ? 'menu__sub-open' : '';
+                                            $itemUrl = isset($item['items']) && count($item['items']) > 0 ? 'javascript:;' : url($item['url']);
                                         @endphp
                                         <li>
-                                            <a href="{{ url($item['url']) }}" class="menu {{ $active }}">
+                                            <a href="{{ $itemUrl }}" class="menu {{ $active }}">
                                                 <div class="menu__icon"> <i data-lucide="{{ $item['icon'] }}"></i> </div>
                                                 <div class="menu__title"> {{ $item['title'] }} </div>
                                             </a>
@@ -130,7 +131,6 @@
                             @php
                                 $active = request()->is($item['url']) || request()->is($item['url'] . '/*') ? 'side-menu--active' : '';
                                 $open = request()->is($item['url']) || request()->is($item['url'] . '/*') ? 'side-menu__sub-open' : '';
-                                $url = isset($menu['items']) ? 'javascript:;' : url($menu['url']);
                                 $itemUrl = isset($item['items']) && count($item['items']) > 0 ? 'javascript:;' : url($item['url']);
                             @endphp
                             <li>
