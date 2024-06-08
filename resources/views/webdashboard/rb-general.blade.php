@@ -181,7 +181,7 @@
                         @endphp
                             <tr>
                                 <td>{{ $no }}</td>
-                                <td><a class="tabel" href="{{ URL::to('/rencana_aksi/rb-general/rekap_data?instansi_id=' . $instansi->id) }}">{{ $instansi->name }}</a></td>
+                                <td><a class="tabel" href="{{ URL::to('/rencana_aksi/rb-general/rekap_data?instansi_id%5B%5D=' . $instansi->id) }}">{{ $instansi->name }}</a></td>
                                                             @php
                                     $group = $instansi->group == 'kl' ? 'Kementerian' :
                                             ($instansi->group == 'prov' ? 'Provinsi' :
