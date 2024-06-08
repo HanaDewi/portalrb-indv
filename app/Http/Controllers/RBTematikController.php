@@ -14,6 +14,7 @@ use App\Models\TematikIndikatorPermasalahan;
 use App\Models\TematikRencanaAksi;
 use App\Models\TematikRencanaAksiOutput;
 use App\Models\KlpdInstansi;
+use App\Models\OpenAccessSetting;
 use App\Models\TematikPermasalahan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -40,6 +41,15 @@ class RBTematikController extends Controller
     public function tema_sasaran()
     {
         $user = Auth::User();
+        if (in_array($user->level, ['kabupaten', 'provinsi', 'kl'])) {
+            $access = OpenAccessSetting::where('user_level', $user->level)->where('fitur', 'rencana_aksi')->first();
+            if ($access) {
+                $today = date('Y-m-d');
+                if ($access->waktu_awal > $today || $access->waktu_akhir < $today) {
+                    return view('belumbuka');
+                }
+            }
+        }
         $temas = Tema::get();
         $sasaranRoadmaps = TematikSasaranRoadmap::where('instansi_id', $user->user_rel->instansi_id)->orderBy('tema_id')->get();
         $tematikDatas = [];
@@ -92,12 +102,21 @@ class RBTematikController extends Controller
             "sasaranRoadmaps" => $sasaranRoadmaps,
             "tematikDatas" => $tematikDatas
         ]);
-    }   
+    }
 
 
     public function permasalahan(Request $request)
     {
         $user = Auth::User();
+        if (in_array($user->level, ['kabupaten', 'provinsi', 'kl'])) {
+            $access = OpenAccessSetting::where('user_level', $user->level)->where('fitur', 'rencana_aksi')->first();
+            if ($access) {
+                $today = date('Y-m-d');
+                if ($access->waktu_awal > $today || $access->waktu_akhir < $today) {
+                    return view('belumbuka');
+                }
+            }
+        }
         $temas = Tema::get();
 
         $ftema = $request->get('ftema');
@@ -247,7 +266,7 @@ class RBTematikController extends Controller
                     session()->flash('success', 'Data Sasaran Roadmap Tematik berhasil disimpan.');
                 } else {
                     session()->flash('success', 'Data Sasaran Roadmap Tematik gagal disimpan! Silahkan dicoba kembali.');
-                    return redirect('rb-tematik/perencanaan');
+                    return redirect('rencana_aksi/rb-tematik/perencanaan');
                 }
             }
         } else {
@@ -257,12 +276,12 @@ class RBTematikController extends Controller
                 session()->flash('success', 'Data Sasaran Roadmap Tematik berhasil disimpan.');
             } else {
                 session()->flash('success', 'Data Sasaran Roadmap Tematik gagal disimpan! Silahkan dicoba kembali.');
-                return redirect('rb-tematik/perencanaan');
+                return redirect('rencana_aksi/rb-tematik/perencanaan');
             }
         }
 
 
-        return redirect('rb-tematik/perencanaan');
+        return redirect('rencana_aksi/rb-tematik/perencanaan');
     }
 
     public function sasaranRoadmapHapus(Request $request)
@@ -325,7 +344,7 @@ class RBTematikController extends Controller
         } else {
             session()->flash('success', 'Data Indikator Roadmap Tematik gagal disimpan! Silahkan dicoba kembali.');
         }
-        return redirect('rb-tematik/perencanaan');
+        return redirect('rencana_aksi/rb-tematik/perencanaan');
     }
 
     public function getIndikatorRoadmap()
@@ -425,7 +444,7 @@ class RBTematikController extends Controller
         } else {
             session()->flash('success', 'Data Permasalahan Indikator Roadmap Tematik gagal disimpan! Silahkan dicoba kembali.');
         }
-        return redirect('rb-tematik/permasalahan');
+        return redirect('rencana_aksi/rb-tematik/permasalahan');
     }
 
     public function get_permasalahan($permasalahan_id)
@@ -505,7 +524,7 @@ class RBTematikController extends Controller
         } else {
             session()->flash('success', 'Data Indikator gagal disimpan! Silahkan dicoba kembali.');
         }
-        return redirect('rb-tematik/permasalahan');
+        return redirect('rencana_aksi/rb-tematik/permasalahan');
     }
 
     public function indikatorPermasalahanHapus(Request $request)
@@ -561,6 +580,16 @@ class RBTematikController extends Controller
 
     public function rencana_aksi($indikator_id)
     {
+        $user = Auth::User();
+        if (in_array($user->level, ['kabupaten', 'provinsi', 'kl'])) {
+            $access = OpenAccessSetting::where('user_level', $user->level)->where('fitur', 'rencana_aksi')->first();
+            if ($access) {
+                $today = date('Y-m-d');
+                if ($access->waktu_awal > $today || $access->waktu_akhir < $today) {
+                    return view('belumbuka');
+                }
+            }
+        }
         $indikator = TematikIndikatorPermasalahan::where('id', $indikator_id)->first();
         $fokus_intervensi = FokusIntervensi::all();
         if (!$indikator) {
@@ -575,7 +604,7 @@ class RBTematikController extends Controller
         $outputs = [];
         $no = 1;
         foreach ($rencana_aksis as $rencana_aksi) {
-            if($rencana_aksi->output->count()){
+            if ($rencana_aksi->output->count()) {
                 foreach ($rencana_aksi->output as $output) {
                     $output->no = $no;
                     if (isset($output->get_intervensi->nama)) {
@@ -585,12 +614,12 @@ class RBTematikController extends Controller
                     }
 
                     $output->nama_rencana_aksi = $output->rencana_aksi->nama;
-                    $output->target_total = fnumber($output->target_total);
+                    $output->target_total = $output->target_total;
                     $output->anggaran_total = currency($output->anggaran_total);
                     $outputs[] = $output;
                     $no++;
                 }
-            }else{
+            } else {
                 $renaksi = [
                     "no" => $no,
                     "tematik_rencana_aksi_id" => $rencana_aksi->id,
@@ -605,40 +634,39 @@ class RBTematikController extends Controller
                     "target_tw4" => 0,
                     "target_total" => 0,
                     "anggaran_total" => "Rp. 0",
-                    "pelaksana"=> "-",
-                    "koordinator"=> "-",
-                    "realisasi_output_tw1"=> 0,
-                    "realisasi_output_tw2"=> 0,
-                    "realisasi_output_tw3"=> 0,
-                    "realisasi_output_tw4"=> 0,
-                    "realisasi_output_total"=> 4,
-                    "realisasi_anggaran_total"=> "Rp 0",
+                    "pelaksana" => "-",
+                    "koordinator" => "-",
+                    "realisasi_output_tw1" => 0,
+                    "realisasi_output_tw2" => 0,
+                    "realisasi_output_tw3" => 0,
+                    "realisasi_output_tw4" => 0,
+                    "realisasi_output_total" => 4,
+                    "realisasi_anggaran_total" => "Rp 0",
                     "capaian_output_tw1" => null,
-                    "capaian_output_tw2" =>  null,
+                    "capaian_output_tw2" => null,
                     "capaian_output_tw3" => null,
                     "capaian_output_tw4" => null,
                     "capaian_output_total" => null,
-                    "capaian_anggaran_tw1"=> null,
-                    "capaian_anggaran_tw2"=> null,
-                    "capaian_anggaran_tw3"=> null,
-                    "capaian_anggaran_tw4"=> null,
-                    "capaian_anggaran_total"=> null,
-                    "nama_intervensi"=> "-",
+                    "capaian_anggaran_tw1" => null,
+                    "capaian_anggaran_tw2" => null,
+                    "capaian_anggaran_tw3" => null,
+                    "capaian_anggaran_tw4" => null,
+                    "capaian_anggaran_total" => null,
+                    "nama_intervensi" => "-",
                 ];
                 $outputs[] = $renaksi;
                 $no++;
             }
-            
-            
+
+
         }
         return response()->json(['data' => $outputs]);
     }
 
     public function rencana_aksi_getData($id)
     {
-        $user = Auth::User();
         $output = TematikRencanaAksiOutput::find($id);
-        if($output){
+        if ($output) {
             $output->rencana_aksi = $output->rencana_aksi;
         }
         return response()->json($output);
@@ -666,6 +694,7 @@ class RBTematikController extends Controller
             $rencana_aksi->nama = $request->rencana_aksi;
             if ($rencana_aksi->save()) {
                 foreach ($request->target_output as $target_output) {
+
                     $rencana_aksi_output = new TematikRencanaAksiOutput();
                     if (isset($target_output['rencana_aksi_output_id'])) {
                         $rencana_aksi_output = TematikRencanaAksiOutput::find($target_output['rencana_aksi_output_id']);
@@ -673,15 +702,11 @@ class RBTematikController extends Controller
                     $rencana_aksi_output->tematik_rencana_aksi_id = $rencana_aksi->id;
                     $rencana_aksi_output->satuan_output = $target_output['satuan_output'];
                     $rencana_aksi_output->indikator_output = $target_output['indikator_output'];
-                    $rencana_aksi_output->target_tw1 = str_replace('.', '', $target_output['target_tw1']);
-                    $rencana_aksi_output->target_tw2 = str_replace('.', '', $target_output['target_tw2']);
-                    $rencana_aksi_output->target_tw3 = str_replace('.', '', $target_output['target_tw3']);
-                    $rencana_aksi_output->target_tw4 = str_replace('.', '', $target_output['target_tw4']);
-                    $rencana_aksi_output->target_total = $this->removeDot($target_output['target_total']);
-                    //$rencana_aksi_output->anggaran_tw1 = str_replace('.', '', $target_output['anggaran_tw1']);
-                    //$rencana_aksi_output->anggaran_tw2 = str_replace('.', '', $target_output['anggaran_tw2']);
-                    //$rencana_aksi_output->anggaran_tw3 = str_replace('.', '', $target_output['anggaran_tw3']);
-                    //$rencana_aksi_output->anggaran_tw4 = str_replace('.', '', $target_output['anggaran_tw4']);
+                    $rencana_aksi_output->target_tw1 = str_replace(',', '.', str_replace('.', '', $target_output['target_tw1']));
+                    $rencana_aksi_output->target_tw2 = str_replace(',', '.', str_replace('.', '', $target_output['target_tw2']));
+                    $rencana_aksi_output->target_tw3 = str_replace(',', '.', str_replace('.', '', $target_output['target_tw3']));
+                    $rencana_aksi_output->target_tw4 = str_replace(',', '.', str_replace('.', '', $target_output['target_tw4']));
+                    $rencana_aksi_output->target_total = str_replace(',', '.', str_replace('.', '', $target_output['target_total']));
                     $rencana_aksi_output->anggaran_total = $this->removeDot($target_output['anggaran_total']);
                     $rencana_aksi_output->fokus_intervensi = $target_output['fokus_intervensi'];
                     $rencana_aksi_output->pelaksana = $target_output['pelaksana'];
@@ -689,6 +714,7 @@ class RBTematikController extends Controller
                     if (!$rencana_aksi_output->save()) {
                         $success = false;
                     }
+
                 }
             }
         } catch (\Throwable $th) {
@@ -705,7 +731,6 @@ class RBTematikController extends Controller
 
     public function rencana_aksi_hapus($renaksi_output_id, Request $request)
     {
-        $user = Auth::User();
         $renaksiOutput = TematikRencanaAksiOutput::where('id', $renaksi_output_id)->first();
         if (!$renaksiOutput) {
             abort(403);
@@ -740,6 +765,16 @@ class RBTematikController extends Controller
 
     public function monev($indikator_id)
     {
+        $user = Auth::User();
+        if (in_array($user->level, ['kabupaten', 'provinsi', 'kl'])) {
+            $access = OpenAccessSetting::where('user_level', $user->level)->where('fitur', 'rencana_aksi')->first();
+            if ($access) {
+                $today = date('Y-m-d');
+                if ($access->waktu_awal > $today || $access->waktu_akhir < $today) {
+                    return view('belumbuka');
+                }
+            }
+        }
         $indikator = TematikIndikatorPermasalahan::where('id', $indikator_id)->first();
         $fokus_intervensi = FokusIntervensi::all();
         if (!$indikator) {
@@ -769,7 +804,7 @@ class RBTematikController extends Controller
         } else {
             session()->flash('success', 'Data Indikator Roadmap Tematik gagal disimpan! Silahkan dicoba kembali.');
         }
-        return redirect('rb-tematik/perencanaan');
+        return redirect('rencana_aksi/rb-tematik/perencanaan');
     }
 
     public function monev_getIndikatorPermasalahan($indikator_id)
@@ -819,10 +854,10 @@ class RBTematikController extends Controller
         $output->realisasi_output_tw3 = $this->removeDot($request->realisasi_output_tw3);
         $output->realisasi_output_tw4 = $this->removeDot($request->realisasi_output_tw4);
         $output->realisasi_output_total = $this->removeDot($request->realisasi_output_total);
-        $output->realisasi_anggaran_tw1 = $this->removeDot($request->realisasi_anggaran_tw1);
-        $output->realisasi_anggaran_tw2 = $this->removeDot($request->realisasi_anggaran_tw2);
-        $output->realisasi_anggaran_tw3 = $this->removeDot($request->realisasi_anggaran_tw3);
-        $output->realisasi_anggaran_tw4 = $this->removeDot($request->realisasi_anggaran_tw4);
+        //$output->realisasi_anggaran_tw1 = $this->removeDot($request->realisasi_anggaran_tw1);
+        // $output->realisasi_anggaran_tw2 = $this->removeDot($request->realisasi_anggaran_tw2);
+        // $output->realisasi_anggaran_tw3 = $this->removeDot($request->realisasi_anggaran_tw3);
+        // $output->realisasi_anggaran_tw4 = $this->removeDot($request->realisasi_anggaran_tw4);
         $output->realisasi_anggaran_total = $this->removeDot($request->realisasi_anggaran_total);
         $output->capaian_output_tw1 = $this->removeDot($request->capaian_output_tw1);
         $output->capaian_output_tw2 = $this->removeDot($request->capaian_output_tw2);
@@ -843,35 +878,56 @@ class RBTematikController extends Controller
 
     public function rekap_data(Request $request)
     {
-        $temas = Tema::get();
         $user = Auth::User();
+        if (in_array($user->level, ['kabupaten', 'provinsi', 'kl'])) {
+            $access = OpenAccessSetting::where('user_level', $user->level)->where('fitur', 'rencana_aksi')->first();
+            if ($access) {
+                $today = date('Y-m-d');
+                if ($access->waktu_awal > $today || $access->waktu_akhir < $today) {
+                    return view('belumbuka');
+                }
+            }
+        }
+        $temas = Tema::get();
 
         $finstansi = $request->get('instansi_id');
         $ftema = $request->get('ftema');
+        if ($finstansi==null) {
+            $finstansi = [];
+        }
+        if ($ftema==null) {
+            $ftema = [];
+        }
+        if (!is_array($finstansi)) {
+            $finstansi = [ $finstansi ];
+        }
+        if (!is_array($ftema)) {
+            $ftema = [ $ftema ];
+        }
         $fsasaranroadmap = $request->get('fsasaranroadmap');
         $findikatorroadmap = $request->get('findikatorroadmap');
         $fpermasalahan = $request->get('fpermasalahan');
+        $fintervensi = $request->get('fintervensi');
 
         if (in_array($user->level, ['admin', 'tpn'])) {
-            if ($finstansi == '-') {
-                $finstansi = '';
-            }
             $instansi_id = $finstansi;
         } else {
             if ($request->instansi_id && in_array($user->level, ['admin', 'tpn'])) {
-                $instansi_id = $request->instansi_id;
+                $instansi_id = [$request->instansi_id];
             } else if ($user->user_rel->instansi_id) {
-                $instansi_id = $user->user_rel->instansi_id;
+                $instansi_id = [$user->user_rel->instansi_id];
             } else {
-                $instansi_id = KlpdInstansi::orderBy('id')->first()->id;
+                $instansi_id = [KlpdInstansi::orderBy('id')->first()->id];
             }
         }
 
-        if ($instansi_id) {
-            $filterSasaranRoadmap = TematikSasaranRoadmap::where('instansi_id', $instansi_id)->where('tema_id', $ftema)->orderBy('tema_id')->get();
-            $nama_instansi = KlpdInstansi::find($instansi_id)->name;
+        if (count($instansi_id) > 0) {
+            $filterSasaranRoadmap = TematikSasaranRoadmap::whereIn('instansi_id', $instansi_id)->whereIn('tema_id', $ftema)->orderBy('tema_id')->get();
+            $daftar_instansi = KlpdInstansi::whereIn('id', $instansi_id)->get()->toArray();
+            $nama_ins = array_column($daftar_instansi, 'name');
+            $nama_instansi = join(', ', $nama_ins);
         } else {
-            $filterSasaranRoadmap = TematikSasaranRoadmap::where('tema_id', $ftema)->orderBy('tema_id')->get();
+            $filterSasaranRoadmap = TematikSasaranRoadmap::whereIn('tema_id', $ftema)->orderBy('tema_id')->get();
             $nama_instansi = '';
         }
         if ($fsasaranroadmap) {
@@ -888,13 +944,13 @@ class RBTematikController extends Controller
         }
 
         if ($instansi_id) {
-            $model = TematikSasaranRoadmap::where('instansi_id', $instansi_id)->orderBy('tema_id')->orderBy('id');
+            $model = TematikSasaranRoadmap::whereIn('instansi_id', $instansi_id)->orderBy('tema_id')->orderBy('id');
         } else {
             $model = TematikSasaranRoadmap::orderBy('tema_id')->orderBy('id');
         }
 
-        if ($ftema) {
-            $model->where('tema_id', $ftema);
+        if (count($ftema) > 0) {
+            $model->whereIn('tema_id', $ftema);
         }
 
         $sasarans = $model->get();
@@ -902,7 +958,7 @@ class RBTematikController extends Controller
         $datas = [];
 
         $indikators = [];
-        foreach($filterIndikatorRoadmap as $finr) {
+        foreach ($filterIndikatorRoadmap as $finr) {
             $indikators[] = $finr->id;
         }
         if ($findikatorroadmap) {
@@ -910,7 +966,7 @@ class RBTematikController extends Controller
         }
 
         $masalahs = [];
-        foreach($filterTematikPermasalahan as $fmas) {
+        foreach ($filterTematikPermasalahan as $fmas) {
             $masalahs[] = $fmas->id;
         }
         if ($fpermasalahan) {
@@ -928,8 +984,11 @@ class RBTematikController extends Controller
                                 foreach ($permasalahan->indikator_permasalahan as $indikator_permasalahan) {
                                     if (count($indikator_permasalahan->rencana_aksi)) {
                                         foreach ($indikator_permasalahan->rencana_aksi as $rencana_aksi) {
-                                            if (count($rencana_aksi->output)) {
-                                                foreach ($rencana_aksi->output as $output) {
+                                            
+                                            $ra_output = $rencana_aksi->output([$fintervensi])->get();
+
+                                            if (count($ra_output)) {
+                                                foreach ($ra_output as $output) {
                                                     $datas[$key]['sasaran_roadmap'] = $sasaran;
                                                     $datas[$key]['indikator_roadmap'] = $indikator_roadmap;
                                                     $datas[$key]['permasalahan'] = $permasalahan;
@@ -988,29 +1047,29 @@ class RBTematikController extends Controller
                 $key++;
             }
         }
-        return view('rb-tematik.rekap_data', compact(
-            'datas',
-            'instansi_id',
-            'nama_instansi',
-            'temas',
-            'filterSasaranRoadmap',
-            'filterIndikatorRoadmap',
-            'filterTematikPermasalahan',
-            'finstansi',
-            'ftema',
-            'fsasaranroadmap',
-            'findikatorroadmap',
-            'fpermasalahan'
-        )
+        return view(
+            'rb-tematik.rekap_data',
+            compact(
+                'datas',
+                'instansi_id',
+                'nama_instansi',
+                'temas',
+                'filterSasaranRoadmap',
+                'filterIndikatorRoadmap',
+                'filterTematikPermasalahan',
+                'finstansi',
+                'ftema',
+                'fsasaranroadmap',
+                'findikatorroadmap',
+                'fpermasalahan',
+                'fintervensi'
+            )
         );
     }
 
     public function removeDot($i)
     {
-        if ($i) {
-            return (str_replace(".", "", $i));
-        } else {
-            return $i;
-        }
+        $format_angka = str_replace(',', '.', str_replace('.', '', $i));
+        return $format_angka;
     }
 }

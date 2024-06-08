@@ -10,7 +10,7 @@
         <div class="flex sm:flex-row items-center p-5 border-b border-slate-200/60">
             <h2 class="font-bold text-base mr-auto flex items-center justify-center"> <i data-lucide="pie-chart" class="mr-1"></i> RB Tematik - Monitoring dan Evaluasi</h2>
             <button class="btn btn-danger shadow-md float-right mr-2" onclick="edit_monev();" data-bs-toggle="modal" data-bs-target="#modal-kegiatan_utama"><i data-lucide="edit" class="mr-1"></i> Evaluasi</button>
-            <a href="{{ url('rb-general/perencanaan') }}" class="btn btn-warning shadow-md float-right"><i data-lucide="chevron-left"></i> Kembali</a>
+            <a href="{{ url('rencana_aksi/rb-tematik/perencanaan') }}" class="btn btn-warning shadow-md float-right"><i data-lucide="chevron-left"></i> Kembali</a>
         </div>
         <div class="lg:col-span-12 p-5 border-b border-slate-200/60">
             <table class="table table-bordered table-striped table-hover">
@@ -84,7 +84,7 @@
                 <h2 class="font-bold fw-medium fs-base me-auto" id="title">Monitoring dan Evaluasi Rencana Aksi</h2>
             </div> <!-- END: Modal Header -->
             <!-- BEGIN: Modal Body -->
-            <form action="{{ url('rb-tematik/permasalahan/monev/'. $indikator->id .'/simpan') }}" id="form-monev" method="post">
+            <form action="{{ url('rencana_aksi/rb-tematik/permasalahan/monev/'. $indikator->id .'/simpan') }}" id="form-monev" method="post">
                 @csrf
                 <input type="hidden" name="output_id" id="output_id">
                 <div class="modal-body grid columns-12 gap-4 gap-y-3">
@@ -113,31 +113,31 @@
                                 <td>
                                     <div class="input-group mt-4 mr-2">
                                         <div class="input-group-text">TW1</div>
-                                        <input type="text" name="target_tw1" id="target_tw1" placeholder="Triwulan 1"  class="form-control numeric" readonly>
+                                        <input type="text" name="target_tw1" id="target_tw1" placeholder="Triwulan 1"  class="form-control digit" readonly>
                                     </div>    
                                 </td>
                                 <td>
                                     <div class="input-group mt-4 mr-2">
                                         <div class="input-group-text">TW2</div>
-                                        <input type="text" name="target_tw2" id="target_tw2" placeholder="Triwulan 2" class="form-control numeric" readonly>
+                                        <input type="text" name="target_tw2" id="target_tw2" placeholder="Triwulan 2" class="form-control digit" readonly>
                                     </div>
                                 </td>
                                 <td>
                                     <div class="input-group mt-4 mr-2">
                                         <div class="input-group-text">TW3</div>
-                                        <input type="text" name="target_tw3" id="target_tw3" placeholder="Triwulan 3" class="form-control numeric" readonly>
+                                        <input type="text" name="target_tw3" id="target_tw3" placeholder="Triwulan 3" class="form-control digit" readonly>
                                     </div>
                                 </td>
                                 <td>
                                     <div class="input-group mt-4 mr-2">
                                         <div class="input-group-text">TW4</div>
-                                        <input type="text" name="target_tw4" id="target_tw4" placeholder="Triwulan 4" class="form-control numeric" readonly>
+                                        <input type="text" name="target_tw4" id="target_tw4" placeholder="Triwulan 4" class="form-control digit" readonly>
                                     </div>
                                 </td>
                                 <td>
                                     <div class="input-group mt-4">
                                         <div class="input-group-text">Total</div>
-                                        <input type="text" name="target_total" id="target_total" placeholder="Total" class="form-control numeric" readonly>
+                                        <input type="text" name="target_total" id="target_total" placeholder="Total" class="form-control digit" readonly>
                                     </div>
                                 </td>
                             </tr>
@@ -247,8 +247,8 @@
                                 <td class="font-bold">Capaian Anggaran <span class="text-danger">*</span></td>
                                 <td>
                                     <div class="input-group mt-4">
-                                        <div class="input-group-text">Total</div>
-                                        <input type="text" name="capaian_anggaran_total" id="capaian_anggaran_total" placeholder="Total" class="form-control digit" >
+                                        <div class="input-group-text"></div>
+                                        <input type="text" name="capaian_anggaran_total" id="capaian_anggaran_total" placeholder="Total" class="form-control digit" readonly>
                                         <div class="input-group-text">%</div>
                                     </div>
                                 </td>   
@@ -283,7 +283,7 @@
                 <h2 class="font-bold fw-medium fs-base me-auto" id="title">Monitoring dan Evaluasi Indikator Sasaran Permasalahan</h2>
             </div> <!-- END: Modal Header -->
             <!-- BEGIN: Modal Body -->
-            <form action="{{ url('rb-tematik/permasalahan/monev/') .'/'. $indikator->id .'/simpanIndikatorPermasalahan' }}" id="form-monev_perencanaan" method="post">
+            <form action="{{ url('rencana_aksi/rb-tematik/permasalahan/monev/') .'/'. $indikator->id .'/simpanIndikatorPermasalahan' }}" id="form-monev_perencanaan" method="post">
                 @csrf
                 <div class="modal-body grid columns-12 gap-4 gap-y-3">
                     <div class="g-col-12">
@@ -347,7 +347,7 @@
         $(".digit").inputmask("decimal",{
             radixPoint:",",
             groupSeparator: ".",
-            digits: 0,
+            digits: 2,
             autoGroup: true,
             rightAlign: false,
             min: 0,
@@ -539,18 +539,18 @@
             { 
                 render: function (data, type, row, meta) {
                     return row.capaian_output_total ? '<table class="table table-noborder">'+
-                            '<tr><th> TW 1</th><td>: '+formatNumber(row.capaian_output_tw1)+'</td></tr>'+
-                            '<tr><th> TW 2</th><td>: '+formatNumber(row.capaian_output_tw2)+'</td></tr>'+
-                            '<tr><th> TW 3</th><td>: '+formatNumber(row.capaian_output_tw3)+'</td></tr>'+
-                            '<tr><th> TW 4</th><td>: '+formatNumber(row.capaian_output_tw4)+'</td></tr>'+
-                            '<tr><th class="border-top"> Total</th><td>: '+formatNumber(row.capaian_output_total)+'</td></tr>'+
+                            '<tr><th> TW 1</th><td>: '+formatNumber(row.capaian_output_tw1)+' %</td></tr>'+
+                            '<tr><th> TW 2</th><td>: '+formatNumber(row.capaian_output_tw2)+' %</td></tr>'+
+                            '<tr><th> TW 3</th><td>: '+formatNumber(row.capaian_output_tw3)+' %</td></tr>'+
+                            '<tr><th> TW 4</th><td>: '+formatNumber(row.capaian_output_tw4)+' %</td></tr>'+
+                            '<tr><th class="border-top"> Total</th><td>: '+formatNumber(row.capaian_output_total)+' % </td></tr>'+
                         '</table>' : '';
                 }
             },
             { 
                 render: function (data, type, row, meta) {
                     return row.capaian_anggaran_total ? '<table class="table table-noborder">'+
-                            '<tr><th class="border-top"> Total</th><td>: '+formatNumber(row.capaian_anggaran_total)+'</td></tr>'+
+                            '<tr><th class="border-top"> </th><td>: '+formatNumber(row.capaian_anggaran_total)+' % </td></tr>'+
                         '</table>' : '';
                 }
             },
@@ -573,7 +573,7 @@
     }); 
 
     function getData() {
-        monev.ajax.url("{{url('rb-tematik/permasalahan/monev/'.$indikator->id.'/getDatas')}}").load(null, false);
+        monev.ajax.url("{{url('rencana_aksi/rb-tematik/permasalahan/monev/'.$indikator->id.'/getDatas')}}").load(null, false);
     }
 
     function formatNumber(num) {
@@ -593,99 +593,41 @@
         if ($('#realisasi_output_tw4').val() == '') {
             $('#realisasi_output_tw4').val(0);
         }
-        ro1 = $('#realisasi_output_tw1').val();
-        ro2 = $('#realisasi_output_tw2').val();
-        ro3 = $('#realisasi_output_tw3').val();
-        ro4 = $('#realisasi_output_tw4').val();
-        ro_total = parseFloat(ro1) + parseFloat(ro2) + parseFloat(ro3) + parseFloat(ro4);
+        if ($('#realisasi_output_total').val() == '') {
+            $('#realisasi_output_total').val(0); 
+        }
+        ro1 = parseFloat($('#realisasi_output_tw1').val().replaceAll('.', '').replaceAll(',', '.'));
+        ro2 = parseFloat($('#realisasi_output_tw2').val().replaceAll('.', '').replaceAll(',', '.'));
+        ro3 = parseFloat($('#realisasi_output_tw3').val().replaceAll('.', '').replaceAll(',', '.'));
+        ro4 = parseFloat($('#realisasi_output_tw4').val().replaceAll('.', '').replaceAll(',', '.'));
+        roTotal = parseFloat($('#realisasi_output_total').val().replaceAll('.', '').replaceAll(',', '.'));
+        
+        
+        //ro_total = parseFloat(ro1) + parseFloat(ro2) + parseFloat(ro3) + parseFloat(ro4);
         //$('#realisasi_output_total').val(ro_total);
-        co1 = t1 > 0 ? (ro1 / t1) * 100 : 0;
-        co2 = t2 > 0 ? (ro2 / t2) * 100 : 0;
-        co3 = t3 > 0 ? (ro3 / t3) * 100 : 0;
-        co4 = t4 > 0 ? (ro4 / t4) * 100 : 0;
+        co1 = Math.round( t1 > 0 ? (ro1 / t1) * 100 : 0);
+        co2 = Math.round(t2 > 0 ? (ro2 / t2) * 100 : 0);
+        co3 = Math.round(t3 > 0 ? (ro3 / t3) * 100 : 0);
+        co4 = Math.round(t4 > 0 ? (ro4 / t4) * 100 : 0);
+        coTotal = Math.round(tTotal > 0 ? (roTotal/tTotal) * 100 : 0);
+        
         $('#capaian_output_tw1').val(co1);
         $('#capaian_output_tw2').val(co2);
         $('#capaian_output_tw3').val(co3);
         $('#capaian_output_tw4').val(co4);
-        co_pembagi = 0;
-        if (co1 > 0) {
-            co_pembagi += 1;
-        }
-        if (co2 > 0) {
-            co_pembagi += 1;
-        }
-        if (co3 > 0) {
-            co_pembagi += 1;
-        }
-        if (co4 > 0) {
-            co_pembagi += 1;
-        }
-        co_total = (co1 + co2 + co3 + co4) / co_pembagi;
-        //$('#capaian_output_total').val(co_total);
-        
-        // Hitung Total Anggaran
-        // if ($('#realisasi_anggaran_tw1').val() == '') {
-        //     $('#realisasi_anggaran_tw1').val(0);
-        // }
-        // if ($('#realisasi_anggaran_tw2').val() == '') {
-        //     $('#realisasi_anggaran_tw2').val(0);
-        // }
-        // if ($('#realisasi_anggaran_tw3').val() == '') {
-        //     $('#realisasi_anggaran_tw3').val(0);
-        // }
-        // if ($('#realisasi_anggaran_tw4').val() == '') {
-        //     $('#realisasi_anggaran_tw4').val(0);
-        // }
-        // ra1 = $('#realisasi_anggaran_tw1').val();
-        // ra2 = $('#realisasi_anggaran_tw2').val();
-        // ra3 = $('#realisasi_anggaran_tw3').val();
-        // ra4 = $('#realisasi_anggaran_tw4').val();
-        // ra_total = parseFloat(ra1) + parseFloat(ra2) + parseFloat(ra3) + parseFloat(ra4);
-        // $('#realisasi_anggaran_total').val(ra_total);
-        // ca1 = a1 > 0 ? (ra1 / a1) * 100 : 0;
-        // ca2 = a2 > 0 ? (ra2 / a2) * 100 : 0;
-        // ca3 = a3 > 0 ? (ra3 / a3) * 100 : 0;
-        // ca4 = a4 > 0 ? (ra4 / a4) * 100 : 0;
-        // $('#capaian_anggaran_tw1').val(ca1);
-        // $('#capaian_anggaran_tw2').val(ca2);
-        // $('#capaian_anggaran_tw3').val(ca3);
-        // $('#capaian_anggaran_tw4').val(ca4);
-        // ca_pembagi = 0;
-        // if (ca1 > 0) {
-        //     ca_pembagi += 1;
-        // }
-        // if (ca2 > 0) {
-        //     ca_pembagi += 1;
-        // }
-        // if (ca3 > 0) {
-        //     ca_pembagi += 1;
-        // }
-        // if (ca4 > 0) {
-        //     ca_pembagi += 1;
-        // }
-        // ca_total = (ca1 + ca2 + ca3 + ca4) / ca_pembagi;
-        //$('#capaian_anggaran_total').val(ca_total);
-        
-        target_total = $('#target_total').val();
-        realisasi_output_total = $('#realisasi_output_total').val();
-        //removeallDot
-        target_total = target_total.replace(/\./g,"");
-        realisasi_output_total = realisasi_output_total.replace(/\./g,"");
-        $('#capaian_output_total').val(realisasi_output_total*100/target_total);
+        $('#capaian_output_total').val(coTotal);
 
-
-        anggaran_total= $('#anggaran_total').val();
-        realisasi_anggaran_total = $('#realisasi_anggaran_total').val();
-        //remove all dot
-        anggaran_total = anggaran_total.replace(/\./g,"");
-        realisasi_anggaran_total = realisasi_anggaran_total.replace(/\./g,"");
-        $('#capaian_anggaran_total').val(realisasi_anggaran_total*100/anggaran_total);
+        
+        realisasi_anggaran_total = $('#realisasi_anggaran_total').val().replaceAll('.', '').replaceAll(',', '.');
+        
+        
+        $('#capaian_anggaran_total').val(Math.round(realisasi_anggaran_total*100/anggaranTotal));
     }
 
    
 
     function edit_monev() {
-        $.getJSON("{{url('rb-tematik/permasalahan/monev/').'/'. $indikator->id .'/getIndikator'}}", function(data) {
+        $.getJSON("{{url('rencana_aksi/rb-tematik/permasalahan/monev/').'/'. $indikator->id .'/getIndikator'}}", function(data) {
             $('#realisasi_indikator').val(data.realisasi_indikator);
             $('#capaian_indikator').val(data.capaian_indikator);
             $('#catatan').val(data.catatan);
@@ -704,7 +646,8 @@
         $('#title').html('Monitoring dan Evaluasi Rencana Aksi');
         $('.saveButton').prop('disabled', true);
         modal_monev.show();
-        $.getJSON("{{url('rb-tematik/permasalahan/monev/getData')}}/"+id, function(data) {
+        $.getJSON("{{url('rencana_aksi/rb-tematik/permasalahan/monev/getData')}}/"+id, function(data) {
+            console.log(data);
             $('#rencana_aksi').val(data.rencana_aksi.nama);
             $('#satuan_output').val(data.satuan_output);
             $('#indikator_output').val(data.indikator_output);
@@ -712,10 +655,12 @@
             t2 = data.target_tw2;
             t3 = data.target_tw3;
             t4 = data.target_tw4;
+            tTotal = data.target_total;
             a1 = data.anggaran_tw1;
             a2 = data.anggaran_tw2;
             a3 = data.anggaran_tw3;
             a4 = data.anggaran_tw4;
+            anggaranTotal = data.anggaran_total;
             $('#target_tw1').val(data.target_tw1);
             $('#target_tw2').val(data.target_tw2);
             $('#target_tw3').val(data.target_tw3);
@@ -738,6 +683,11 @@
             $('#realisasi_anggaran_tw3').val(data.realisasi_anggaran_tw3);
             $('#realisasi_anggaran_tw4').val(data.realisasi_anggaran_tw4);
             $('#realisasi_anggaran_total').val(data.realisasi_anggaran_total);
+            $('#capaian_output_tw1').val(data.capaian_output_tw1);
+            $('#capaian_output_tw2').val(data.capaian_output_tw2);
+            $('#capaian_output_tw3').val(data.capaian_output_tw3);
+            $('#capaian_output_tw4').val(data.capaian_output_tw4);
+            $('#capaian_output_total').val(data.capaian_output_total);
             $('#capaian_anggaran_tw1').val(data.capaian_anggaran_tw1);
             $('#capaian_anggaran_tw2').val(data.capaian_anggaran_tw2);
             $('#capaian_anggaran_tw3').val(data.capaian_anggaran_tw3);

@@ -11,6 +11,7 @@ use App\Models\GeneralRencanaAksi;
 use App\Models\GeneralRencanaAksiOutput;
 use App\Models\Indikator;
 use App\Models\KlpdInstansi;
+use App\Models\OpenAccessSetting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -35,6 +36,15 @@ class RBGeneralController extends Controller
     public function perencanaan(Request $request)
     {
         $user = Auth::User();
+        if (in_array($user->level, ['kabupaten', 'provinsi', 'kl'])) {
+            $access = OpenAccessSetting::where('user_level', $user->level)->where('fitur', 'rencana_aksi')->first();
+            if ($access) {
+                $today = date('Y-m-d');
+                if ($access->waktu_awal > $today || $access->waktu_akhir < $today) {
+                    return view('belumbuka');
+                }
+            }
+        }
         if ($request->indikator_id) {
             $indikator_id = $request->indikator_id;
         } else {
@@ -103,6 +113,8 @@ class RBGeneralController extends Controller
     public function perencanaan_simpanBaseline(Request $request)
     {
         $user = Auth::User();
+        $success = true;
+        $pesan = '';
         $perencanaan = GeneralPerencanaan::where('instansi_id', $user->user_rel->instansi_id)->where('kegiatan_utama_id', $request->kegiatan_utama_id)->where('indikator_id', $request->indikator_id)->first();
         if (!$perencanaan) {
             $perencanaan = new GeneralPerencanaan();
@@ -113,12 +125,22 @@ class RBGeneralController extends Controller
         $perencanaan->baseline_tahun = $request->baseline_tahun;
         $perencanaan->baseline_target = 0;
         $perencanaan->baseline_realisasi = $request->baseline_realisasi;
-        if ($perencanaan->save()) {
+
+        if ($perencanaan->indikator->min != null && $request->baseline_realisasi < $perencanaan->indikator->min) {
+            $success = false;
+            $pesan .= 'Baseline tidak boleh kurang dari '.$perencanaan->indikator->min.'!!';
+        } else if ($perencanaan->indikator->max != null && $request->baseline_realisasi > $perencanaan->indikator->max) {
+            $success = false;
+            $pesan .= 'Baseline tidak boleh lebih dari '.$perencanaan->indikator->max.'!!';
+        }
+
+        if ($success) {
+            $perencanaan->save();
             session()->flash('success', 'Data Baseline Perencanaan General berhasil disimpan.');
         } else {
-            session()->flash('error', 'Data Baseline Perencanaan General gagal disimpan! Silahkan dicoba kembali.');
+            session()->flash('error', 'Data Baseline Perencanaan General gagal disimpan! '.$pesan);
         }
-        return redirect('rb-general/perencanaan');
+        return redirect('rencana_aksi/rb-general/perencanaan');
     }
 
     public function perencanaan_hapusBaseline(Request $request)
@@ -133,7 +155,7 @@ class RBGeneralController extends Controller
         } else {
             session()->flash('error', 'Data Baseline Perencanaan General gagal dihapus! Silahkan dicoba kembali.');
         }
-        return redirect('rb-general/perencanaan');
+        return redirect('rencana_aksi/rb-general/perencanaan');
     }
 
     public function perencanaan_simpanTarget(Request $request)
@@ -157,11 +179,9 @@ class RBGeneralController extends Controller
                         $success = false;
                     }
                     if ($perencanaan->indikator->tipe == 'Kuantitatif') {
-                        if ($perencanaan->indikator->min == null && $perencanaan->indikator->max == null) {
-                            if ($target->target < $perencanaan->baseline_realisasi) {
-                                $success = false;
-                                $pesan .= 'Target tidak boleh kurang dari Baseline Realisasi!!';
-                            }
+                        if ($target->target < $perencanaan->baseline_realisasi) {
+                            $success = false;
+                            $pesan .= 'Target tidak boleh kurang dari Baseline Realisasi!!';
                         } else if ($perencanaan->indikator->min != null && $target->target < $perencanaan->indikator->min) {
                             $success = false;
                             $pesan .= 'Target tidak boleh kurang dari '.$perencanaan->indikator->min.'!!';
@@ -189,7 +209,7 @@ class RBGeneralController extends Controller
         } else {
             session()->flash('error', 'Data Target Perencanaan General gagal disimpan! Data Baseline tidak ditemukan.');
         }
-        return redirect('rb-general/perencanaan');
+        return redirect('rencana_aksi/rb-general/perencanaan');
     }
 
     public function perencanaan_simpanMonev(Request $request)
@@ -210,7 +230,7 @@ class RBGeneralController extends Controller
         } else {
             session()->flash('error', 'Data Baseline Perencanaan General gagal disimpan! Silahkan dicoba kembali.');
         }
-        return redirect('rb-general/perencanaan');
+        return redirect('rencana_aksi/rb-general/perencanaan');
     }
 
     public function perencanaan_getDokumen($id)
@@ -273,12 +293,21 @@ class RBGeneralController extends Controller
         } else {
             session()->flash('error', 'Data Test TP gagal disimpan! Silahkan dicoba kembali.');
         }
-        return redirect('rb-general/perencanaan');
+        return redirect('rencana_aksi/rb-general/perencanaan');
     }
 
     public function rencana_aksi($perencanaan_id, $target_id)
     {
         $user = Auth::User();
+        if (in_array($user->level, ['kabupaten', 'provinsi', 'kl'])) {
+            $access = OpenAccessSetting::where('user_level', $user->level)->where('fitur', 'rencana_aksi')->first();
+            if ($access) {
+                $today = date('Y-m-d');
+                if ($access->waktu_awal > $today || $access->waktu_akhir < $today) {
+                    return view('belumbuka');
+                }
+            }
+        }
         $target = GeneralPerencanaanTarget::where('id', $target_id)->where('general_perencanaan_id', $perencanaan_id)
             ->whereHas('perencanaan', function ($q) use ($user) {
                 $q->where('instansi_id', $user->user_rel->instansi_id);
@@ -370,7 +399,7 @@ class RBGeneralController extends Controller
             session()->flash('error', 'Data RB General Rencana Aksi gagal diimport! '.$pesan);
         }
 
-        return redirect('rb-general/perencanaan/'.$perencanaan_id.'/'.$target_id.'/rencana_aksi');
+        return redirect('rencana_aksi/rb-general/perencanaan/'.$perencanaan_id.'/'.$target_id.'/rencana_aksi');
     }
 
     public function rencana_aksi_getDatas($perencanaan_id, $target_id)
@@ -511,6 +540,15 @@ class RBGeneralController extends Controller
     public function monev($perencanaan_id, $target_id)
     {
         $user = Auth::User();
+        if (in_array($user->level, ['kabupaten', 'provinsi', 'kl'])) {
+            $access = OpenAccessSetting::where('user_level', $user->level)->where('fitur', 'rencana_aksi')->first();
+            if ($access) {
+                $today = date('Y-m-d');
+                if ($access->waktu_awal > $today || $access->waktu_akhir < $today) {
+                    return view('belumbuka');
+                }
+            }
+        }
         $target = GeneralPerencanaanTarget::where('id', $target_id)->where('general_perencanaan_id', $perencanaan_id)
             ->whereHas('perencanaan', function ($q) use ($user) {
                 $q->where('instansi_id', $user->user_rel->instansi_id);
@@ -569,26 +607,18 @@ class RBGeneralController extends Controller
         if (!$output) {
             abort(404);
         }
-        $output->realisasi_output_tw1 = $request->realisasi_output_tw1;
-        $output->realisasi_output_tw2 = $request->realisasi_output_tw2;
-        $output->realisasi_output_tw3 = $request->realisasi_output_tw3;
-        $output->realisasi_output_tw4 = $request->realisasi_output_tw4;
-        $output->realisasi_output_total = $request->realisasi_output_total;
-        $output->realisasi_anggaran_tw1 = $request->realisasi_anggaran_tw1;
-        $output->realisasi_anggaran_tw2 = $request->realisasi_anggaran_tw2;
-        $output->realisasi_anggaran_tw3 = $request->realisasi_anggaran_tw3;
-        $output->realisasi_anggaran_tw4 = $request->realisasi_anggaran_tw4;
-        $output->realisasi_anggaran_total = $request->realisasi_anggaran_total;
-        $output->capaian_output_tw1 = $request->capaian_output_tw1;
-        $output->capaian_output_tw2 = $request->capaian_output_tw2;
-        $output->capaian_output_tw3 = $request->capaian_output_tw3;
-        $output->capaian_output_tw4 = $request->capaian_output_tw4;
-        $output->capaian_output_total = $request->capaian_output_total;
-        $output->capaian_anggaran_tw1 = $request->capaian_anggaran_tw1;
-        $output->capaian_anggaran_tw2 = $request->capaian_anggaran_tw2;
-        $output->capaian_anggaran_tw3 = $request->capaian_anggaran_tw3;
-        $output->capaian_anggaran_tw4 = $request->capaian_anggaran_tw4;
-        $output->capaian_anggaran_total = $request->capaian_anggaran_total;
+        $output->realisasi_output_tw1 = str_replace(',', '.', str_replace('.', '', $request->realisasi_output_tw1));
+        $output->realisasi_output_tw2 = str_replace(',', '.', str_replace('.', '', $request->realisasi_output_tw2));
+        $output->realisasi_output_tw3 = str_replace(',', '.', str_replace('.', '', $request->realisasi_output_tw3));
+        $output->realisasi_output_tw4 = str_replace(',', '.', str_replace('.', '', $request->realisasi_output_tw4));
+        $output->realisasi_output_total = str_replace(',', '.', str_replace('.', '', $request->realisasi_output_total));
+        $output->realisasi_anggaran_total = str_replace('.', '', $request->realisasi_anggaran_total);
+        $output->capaian_output_tw1 = str_replace(',', '.', str_replace('.', '', $request->capaian_output_tw1));
+        $output->capaian_output_tw2 = str_replace(',', '.', str_replace('.', '', $request->capaian_output_tw2));
+        $output->capaian_output_tw3 = str_replace(',', '.', str_replace('.', '', $request->capaian_output_tw3));
+        $output->capaian_output_tw4 = str_replace(',', '.', str_replace('.', '', $request->capaian_output_tw4));
+        $output->capaian_output_total = str_replace(',', '.', str_replace('.', '', $request->capaian_output_total));
+        $output->capaian_anggaran_total = str_replace('.', '', $request->capaian_anggaran_total);
         $output->catatan = $request->catatan;
         if ($output->save()) {
             $success = true;
@@ -599,20 +629,28 @@ class RBGeneralController extends Controller
     public function rekap_data(Request $request)
     {
         $user = Auth::User();
-        if ($request->instansi_id && in_array($user->level, ['admin', 'tpn'])) {
-            $instansi_id = $request->instansi_id;
-        } else if (isset($user->user_rel->instansi_id)) {
-            $instansi_id = $user->user_rel->instansi_id;
-        } else {
-            $instansi_id = KlpdInstansi::orderBy('id')->first()->id;
+        if (in_array($user->level, ['kabupaten', 'provinsi', 'kl'])) {
+            $access = OpenAccessSetting::where('user_level', $user->level)->where('fitur', 'rencana_aksi')->first();
+            if ($access) {
+                $today = date('Y-m-d');
+                if ($access->waktu_awal > $today || $access->waktu_akhir < $today) {
+                    return view('belumbuka');
+                }
+            }
         }
-        $nama_instansi = KlpdInstansi::find($instansi_id)->name;
+        if ($request->instansi_id && in_array($user->level, ['admin', 'tpn'])) {
+            $instansi_ids = $request->instansi_id;
+        } else if (isset($user->user_rel->instansi_id)) {
+            $instansi_ids = [$user->user_rel->instansi_id];
+        } else {
+            $instansi_ids = [KlpdInstansi::orderBy('id')->first()->id];
+        }
         if ($request->indikator_id) {
             $indikator_id = $request->indikator_id;
         } else {
             $indikator_id = [];
         }
-        $model = GeneralPerencanaan::where('instansi_id', $instansi_id)->orderBy('kegiatan_utama_id')->orderBy('indikator_id');
+        $model = GeneralPerencanaan::whereIn('instansi_id', $instansi_ids)->orderBy('kegiatan_utama_id')->orderBy('indikator_id');
         if (count($indikator_id)) {
             $model = $model->whereIn('indikator_id', $indikator_id);
         }
@@ -656,7 +694,7 @@ class RBGeneralController extends Controller
                 $key++;
             }
         }
-        return view('rb-general.rekap_data', compact('datas', 'instansi_id', 'indikator_id', 'nama_instansi'));
+        return view('rb-general.rekap_data', compact('datas', 'instansi_ids', 'indikator_id'));
     }
 
     public function rekap_data_getTarget($id)

@@ -17,7 +17,7 @@
     <link rel="stylesheet" href="{{ asset('ext') }}/datatables/buttons.dataTables.min.css" />
     <link href='https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css" integrity="sha512-10/jx2EXwxxWqCLX/hHth/vu2KY3jCF70dCQB8TSgNjbCVAC/8vai53GfMDrO2Emgwccf2pJqxct9ehpzG+MTw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <style type="text/css">::-webkit-scrollbar { display: none;}</style>
+   
 </head>
 
 <body class="py-5">
@@ -58,12 +58,29 @@
                                     @foreach ($menu['items'] as $item)
                                         @php
                                             $active = request()->is($item['url']) || request()->is($item['url'] . '/*') ? 'menu--active' : '';
+                                            $open = request()->is($item['url']) || request()->is($item['url'] . '/*') ? 'menu__sub-open' : '';
+                                            $itemUrl = isset($item['items']) && count($item['items']) > 0 ? 'javascript:;' : url($item['url']);
                                         @endphp
                                         <li>
-                                            <a href="{{ url($item['url']) }}" class="menu {{ $active }}">
+                                            <a href="{{ $itemUrl }}" class="menu {{ $active }}">
                                                 <div class="menu__icon"> <i data-lucide="{{ $item['icon'] }}"></i> </div>
                                                 <div class="menu__title"> {{ $item['title'] }} </div>
                                             </a>
+                                            @isset($item['items'])
+                                            <ul class="{{ $open }}">
+                                                @foreach ($item['items'] as $subitem)
+                                                @php
+                                                    $active = request()->is($subitem['url']) || request()->is($subitem['url'] . '/*') ? 'menu--active' : '';
+                                                @endphp
+                                                <li>
+                                                    <a href="{{ url($subitem['url']) }}" class="menu {{ $active }}">
+                                                        <div class="menu__icon"> <i data-lucide="{{ $subitem['icon'] }}"></i> </div>
+                                                        <div class="menu__title"> {{ $subitem['title'] }} </div>
+                                                    </a>
+                                                </li>
+                                                @endforeach
+                                            </ul>
+                                            @endisset
                                         </li>
                                     @endforeach
                                 </ul>
@@ -84,69 +101,80 @@
         </div>
     </div>
     <div class="flex mt-[4.7rem] md:mt-0">
-        <nav class="side-nav">
-            <a href="" class="intro-x flex items-center pl-2 pt-4">
-                <img alt="LKE RB" src="{{ asset('template_lkerb') }}/dist/images/logo.jpg">
-            </a>
-            <div class="side-nav__devider my-6"></div>
-            <ul>
-                @foreach (menus() as $menu)
-                    @if (in_array('devider', $menu['levels']))
-                        <div class="side-nav__devider my-6"></div>
-                    @elseif (in_array(auth()->user()->level, $menu['levels']))
+    <nav class="side-nav">
+        <a href="" class="intro-x flex items-center pl-2 pt-4">
+            <img alt="LKE RB" src="{{ asset('template_lkerb') }}/dist/images/logo.jpg">
+        </a>
+        <div class="side-nav__devider my-6"></div>
+        <ul>
+            @foreach (menus() as $menu)
+                @if (in_array('devider', $menu['levels']))
+                    <div class="side-nav__devider my-6"></div>
+                @elseif (in_array(auth()->user()->level, $menu['levels']))
+                    @php
+                        $active = request()->is($menu['url']) || request()->is($menu['url'] . '/*') ? 'side-menu--active' : '';
+                        $open = request()->is($menu['url']) || request()->is($menu['url'] . '/*') ? 'side-menu--open' : '';
+                    @endphp
+                    <li>
                         @php
-                            $active = request()->is($menu['url']) || request()->is($menu['url'] . '/*') ? 'side-menu--active' : '';
-                            $open = request()->is($menu['url']) || request()->is($menu['url'] . '/*') ? 'side-menu--open' : '';
+                            $url = isset($menu['items']) ? 'javascript:;' : url($menu['url']);
+                            $subicon = isset($menu['items']) ? (request()->is($menu['url']) || request()->is($menu['url'] . '/*') ? '<div class="side-menu__sub-icon transform rotate-180"> <i data-lucide="chevron-down"></i></div>' : '<div class="side-menu__sub-icon "> <i data-lucide="chevron-down"></i> </div>') : '';
+                            $subopen = request()->is($menu['url']) || request()->is($menu['url'] . '/*') ? 'side-menu__sub-open' : '';
                         @endphp
-                        <li>
+                        <a href="{{ $url }}" class="side-menu {{ $active }} {{ $open }}">
+                            <div class="side-menu__icon"><i data-lucide="{{ $menu['icon'] }}"></i></div>
+                            <div class="side-menu__title">{{ $menu['title'] }} {!! $subicon !!}</div>
+                        </a>
+                        @isset($menu['items'])
+                        <ul class="{{ $subopen }}">
+                            @foreach ($menu['items'] as $item)
                             @php
-                                $url = isset($menu['items']) ? 'javascript:;' : url($menu['url']);
-                                $subicon = isset($menu['items']) ? (request()->is($menu['url']) || request()->is($menu['url'] . '/*') ? '<div class="side-menu__sub-icon transform rotate-180"> <i data-lucide="chevron-down"></i></div>' : '<div class="side-menu__sub-icon "> <i data-lucide="chevron-down"></i> </div>') : '';
-                                $subopen = request()->is($menu['url']) || request()->is($menu['url'] . '/*') ? 'side-menu__sub-open' : '';
+                                $active = request()->is($item['url']) || request()->is($item['url'] . '/*') ? 'side-menu--active' : '';
+                                $open = request()->is($item['url']) || request()->is($item['url'] . '/*') ? 'side-menu__sub-open' : '';
+                                $itemUrl = isset($item['items']) && count($item['items']) > 0 ? 'javascript:;' : url($item['url']);
                             @endphp
-                            <a href="{{ $url }}" class="side-menu {{ $active }} {{ $open }}">
-                                <div class="side-menu__icon"><i data-lucide="{{ $menu['icon'] }}"></i></div>
-                                <div class="side-menu__title">{{ $menu['title'] }} {!! $subicon !!}</div>
-                            </a>
-                            @isset($menu['items'])
-                                <ul class="{{ $subopen }}">
-                                    @foreach ($menu['items'] as $item)
+                            <li>
+                                <a href="{{ $itemUrl }}" class="side-menu {{ $active }}">
+                                    <div class="side-menu__icon"><i data-lucide="{{ $item['icon'] }}"></i></div>
+                                    <div class="side-menu__title">{{ $item['title'] }} {!! isset($item['items']) ? '<div class="side-menu__sub-icon "> <i data-lucide="chevron-down"></i> </div>' : '' !!}</div>
+                                </a>
+                                @isset($item['items'])
+                                <ul class="{{ $open }}">
+                                    @foreach ($item['items'] as $subitem)
                                         @php
-                                            $active = request()->is($item['url']) || request()->is($item['url'] . '/*') ? 'side-menu--active' : '';
+                                            $active = request()->is($subitem['url']) || request()->is($subitem['url'] . '/*') ? 'side-menu--active' : '';
                                         @endphp
-                                        @if (in_array(auth()->user()->level, $item['levels']))
-                                        <li>
-                                            <a href="{{ url($item['url']) }}" class="side-menu {{ $active }}">
-                                                <div class="side-menu__icon"> 
-                                                    <i data-lucide="{{ $item['icon'] }}"></i>
-                                                </div>
-                                                <div class="side-menu__title"> 
-                                                    {{ $item['title'] }} 
-                                                </div>
-                                            </a>
-                                        </li>
+                                        @if (in_array(auth()->user()->level, $subitem['levels']))
+                                            <li>
+                                                <a href="{{ url($subitem['url']) }}" class="side-menu {{ $active }}">
+                                                    <div class="side-menu__icon"><i data-lucide="{{ $subitem['icon'] }}"></i></div>
+                                                    <div class="side-menu__title">{{ $subitem['title'] }}</div>
+                                                </a>
+                                            </li>
                                         @endif
                                     @endforeach
                                 </ul>
-                            @endisset
-                        </li>
-                    @endif
-                @endforeach
-                <li>
-                    <a href="{{ route('logout') }}" onclick="event.preventDefault(); $('#logout').submit();"
-                        class="side-menu">
-                        <div class="side-menu__icon">
-                            <i data-lucide="log-out"></i>
-                        </div>
-                        <div class="side-menu__title"> Logout </div>
-                    </a>
-                </li>
-            </ul>
-        </nav>
+                                @endisset
+                            </li>
+                            @endforeach
+                        </ul>
+                        @endisset
+                    </li>
+                @endif
+            @endforeach
+            <li>
+                <a href="{{ route('logout') }}" onclick="event.preventDefault(); $('#logout').submit();" class="side-menu">
+                    <div class="side-menu__icon"><i data-lucide="log-out"></i></div>
+                    <div class="side-menu__title"> Logout </div>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
         <div class="content">
             <div class="top-bar">
                 <nav aria-label="breadcrumb" class="-intro-x mr-auto hidden sm:flex">
-                  <svg xmlns="https://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" icon-name="globe" data-lucide="globe" class="lucide lucide-globe block mx-auto"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"></path></svg>
+                <svg xmlns="https://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" icon-name="globe" data-lucide="globe" class="lucide lucide-globe block mx-auto"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"></path></svg>
                     <h1 style="padding-left: 5px; padding-right: 5px;" class="mr-auto text-lg font-extrabold"
                         style="font-weight: 600">SISTEM INFORMASI LEMBAR KERJA </h1>
                     <h1 class="text-lg text-danger font-extrabold"> EVALUASI RB</h1>

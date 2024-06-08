@@ -9,7 +9,7 @@
     <div class="intro-y box">
         <div class="flex sm:flex-row items-center p-5 border-b border-slate-200/60">
             <h2 class="font-bold text-base mr-auto flex items-center justify-center"> <i data-lucide="pie-chart" class="mr-1"></i> RB Tematik - Rencana Aksi</h2>
-            <a href="{{ url('rb-tematik/permasalahan') }}" class="btn btn-warning shadow-md float-right"><i data-lucide="chevron-left"></i> Kembali</a>
+            <a href="{{ url('rencana_aksi/rb-tematik/permasalahan') }}" class="btn btn-warning shadow-md float-right"><i data-lucide="chevron-left"></i> Kembali</a>
         </div>
         <div class="lg:col-span-12 p-5 border-b border-slate-200/60">
             <table class="table table-bordered table-striped table-hover">
@@ -82,7 +82,7 @@
                 <h2 class="font-bold fw-medium fs-base me-auto" id="title">Tambah Rencana Aksi</h2>
             </div> <!-- END: Modal Header -->
             <!-- BEGIN: Modal Body -->
-            <form action="{{ url('rb-tematik/permasalahan/renaksi/'.$indikator->id .'/simpan') }}" id="form-rencana_aksi" method="post">
+            <form action="{{ url('rencana_aksi/rb-tematik/permasalahan/renaksi/'.$indikator->id .'/simpan') }}" id="form-rencana_aksi" method="post">
                 @csrf
                 <input type="hidden" name="rencana_aksi_id" id="rencana_aksi_id">
                 <div class="modal-body grid columns-12 gap-4 gap-y-3">
@@ -158,9 +158,8 @@
                             <tr>
                                 <td class="font-bold">Fokus Intervensi<span class="text-danger">*</span></td>
                                 <td colspan="5">
-                                    
-                                    <select class="form-select mt-2 sm:mr-2 form-control" name="target_output[0][fokus_intervensi]">
-                                        <option selected="true" disabled="disabled">Pilih Fokus Intervensi</option>  
+                                    <select class="form-select mt-2 sm:mr-2 form-control" name="target_output[0][fokus_intervensi]" id="fokus_intervensi0" required>
+                                        <option selected="true" disabled="disabled" value="">Pilih Fokus Intervensi</option>  
                                         @foreach ($fokus_intervensi as $intervensi)
                                         <option value="{{ $intervensi->id }}">{{ $intervensi->nama }}
                                         </option>
@@ -225,6 +224,15 @@
         });
 
         $(".digit").inputmask("decimal",{
+            radixPoint:",",
+            groupSeparator: ".",
+            digits: 2,
+            autoGroup: true,
+            rightAlign: false,
+            min: 0,
+        });
+
+        $(".digit2").inputmask("decimal",{
             radixPoint:",",
             groupSeparator: ".",
             digits: 0,
@@ -334,7 +342,7 @@
             { 
                 render: function (data, type, row, meta) {
                     return '<table class="table table-noborder">'+
-                            '<tr><th> TW 1</th><td>: '+formatNumber(row.target_tw1)+'</td></tr>'+
+                            '<tr><th> TW 1</th><td>: '+formatNumber(row.target_tw1)+ '</td></tr>'+
                             '<tr><th> TW 2</th><td>: '+formatNumber(row.target_tw2)+'</td></tr>'+
                             '<tr><th> TW 3</th><td>: '+formatNumber(row.target_tw3)+'</td></tr>'+
                             '<tr><th> TW 4</th><td>: '+formatNumber(row.target_tw4)+'</td></tr>'+
@@ -345,7 +353,7 @@
             { 
                 render: function (data, type, row, meta) {
                     return '<table class="table table-noborder">'+
-                            '<tr><th class="border-top"> </th><td>: '+formatNumber(row.anggaran_total)+'</td></tr>'+
+                            '<tr><th class="border-top"> </th><td> '+row.anggaran_total+'</td></tr>'+
                         '</table>';
                 }
             },
@@ -360,15 +368,17 @@
                 },
             },
         ],
-        rowsGroup: [0,1] 
+        
+        rowsGroup: [0,1,2] 
     }); 
 
     function getData() {
-        rencana_aksi.ajax.url("{{url('rb-tematik/permasalahan/renaksi/'.$indikator->id.'/getDatas')}}").load(null, false);
+        rencana_aksi.ajax.url("{{url('rencana_aksi/rb-tematik/permasalahan/renaksi/'.$indikator->id.'/getDatas')}}").load(null, false);
     }
 
     function formatNumber(num) {
-        return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+        //return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+        return new Intl.NumberFormat(["ban", "id"]).format(num);
     }
 
     function clearForm() {
@@ -447,19 +457,19 @@
                     '<tr>'+
                         '<td class="font-bold">Target Output <span class="text-danger">*</span></td>'+
                         '<td>'+
-                            '<div class="input-group mt-4 mr-2"><div class="input-group-text">TW1</div><input type="text" name="target_output['+idx+'][target_tw1]" id="target_tw1'+idx+'" placeholder="Triwulan 1" class="form-control numeric"  required></div>'+
+                            '<div class="input-group mt-4 mr-2"><div class="input-group-text">TW1</div><input type="text" name="target_output['+idx+'][target_tw1]" id="target_tw1'+idx+'" placeholder="Triwulan 1" class="form-control digit"  required></div>'+
                         '</td>'+
                         '<td>'+
-                            '<div class="input-group mt-4 mr-2"><div class="input-group-text">TW2</div><input type="text" name="target_output['+idx+'][target_tw2]" id="target_tw2'+idx+'" placeholder="Triwulan 2" class="form-control numeric"  required></div>'+
+                            '<div class="input-group mt-4 mr-2"><div class="input-group-text">TW2</div><input type="text" name="target_output['+idx+'][target_tw2]" id="target_tw2'+idx+'" placeholder="Triwulan 2" class="form-control digit"  required></div>'+
                         '</td>'+
                         '<td>'+
-                            '<div class="input-group mt-4 mr-2"><div class="input-group-text">TW3</div><input type="text" name="target_output['+idx+'][target_tw3]" id="target_tw3'+idx+'" placeholder="Triwulan 3" class="form-control numeric"  required></div>'+
+                            '<div class="input-group mt-4 mr-2"><div class="input-group-text">TW3</div><input type="text" name="target_output['+idx+'][target_tw3]" id="target_tw3'+idx+'" placeholder="Triwulan 3" class="form-control digit"  required></div>'+
                         '</td>'+
                         '<td>'+
-                            '<div class="input-group mt-4 mr-2"><div class="input-group-text">TW4</div><input type="text" name="target_output['+idx+'][target_tw4]" id="target_tw4'+idx+'" placeholder="Triwulan 4" class="form-control numeric"  required></div>'+
+                            '<div class="input-group mt-4 mr-2"><div class="input-group-text">TW4</div><input type="text" name="target_output['+idx+'][target_tw4]" id="target_tw4'+idx+'" placeholder="Triwulan 4" class="form-control digit"  required></div>'+
                         '</td>'+
                         '<td>'+
-                            '<div class="input-group mt-4"><div class="input-group-text">Total</div><input type="text" name="target_output['+idx+'][target_total]" id="target_total'+idx+'" placeholder="Total" class="form-control numeric"  required></div>'+
+                            '<div class="input-group mt-4"><div class="input-group-text">Total</div><input type="text" name="target_output['+idx+'][target_total]" id="target_total'+idx+'" placeholder="Total" class="form-control digit"  required></div>'+
                         '</td>'+
                     '</tr>'+
                     '<tr>'+
@@ -471,8 +481,8 @@
                     '<tr>'+
                         '<td class="font-bold">Fokus Intervensi <span class="text-danger">*</span></td>'+
                         '<td colspan="5">'+
-                            '<select class="form-select mt-2 sm:mr-2 form-control" name="target_output['+idx+'][fokus_intervensi]">'+
-                                '<option selected="true" disabled="disabled">Pilih Fokus Intervensi</option>' +  
+                            '<select class="form-select mt-2 sm:mr-2 form-control" name="target_output['+idx+'][fokus_intervensi]" required>' +
+                                '<option selected="true" disabled="disabled" value="">Pilih Fokus Intervensi</option>' +  
                                     @foreach ($fokus_intervensi as $intervensi)
                                         '<option value="{{ $intervensi->id }}">{{ $intervensi->nama }}'+
                                         '</option>'+
@@ -512,6 +522,15 @@
         $(".digit").inputmask("decimal",{
             radixPoint:",",
             groupSeparator: ".",
+            digits: 2,
+            autoGroup: true,
+            rightAlign: false,
+            min: 0,
+        });
+
+        $(".digit2").inputmask("decimal",{
+            radixPoint:",",
+            groupSeparator: ".",
             digits: 0,
             autoGroup: true,
             rightAlign: false,
@@ -528,7 +547,7 @@
         $('#rencana_aksi_output_id').val(id);
         $('#title').html('Edit Rencana Aksi Output');
         $('.saveButton').prop('disabled', true);
-        $.getJSON("{{url('rb-tematik/permasalahan/renaksi/getData')}}/"+id, function(data) {
+        $.getJSON("{{url('rencana_aksi/rb-tematik/permasalahan/renaksi/getData')}}/"+id, function(data) {
             $('#rencana_aksi_id').val(data.general_rencana_aksi_id);
             $('#rencana_aksi').val(data.rencana_aksi.nama);
             $('#satuan_output0').val(data.satuan_output);
@@ -543,6 +562,7 @@
             $('#anggaran_tw30').val(data.anggaran_tw3);
             $('#anggaran_tw40').val(data.anggaran_tw4);
             $('#anggaran_total0').val(data.anggaran_total);
+            $('#fokus_intervensi0').val(data.fokus_intervensi);
             $('#pelaksana0').val(data.pelaksana);
             $('#koordinator0').val(data.koordinator);
             $('.saveButton').prop('disabled', false);
@@ -561,7 +581,7 @@
         }).then((result) => {
             if (result.isConfirmed) {
                 $.ajax({
-                    url: "{{url('rb-tematik/permasalahan/renaksi/')}}/" + id + '/hapus',
+                    url: "{{url('rencana_aksi/rb-tematik/permasalahan/renaksi/')}}/" + id + '/hapus',
                     type: "post",
                     data: {_token: '{{csrf_token()}}', id: id},
                     dataType: "json",

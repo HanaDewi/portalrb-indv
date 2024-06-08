@@ -175,33 +175,44 @@ class RBTematikImportController extends Controller
                                                                             if (!$rencanaAksiOutput) {
                                                                                 $rencanaAksiOutput = new TematikRencanaAksiOutput();
                                                                             }
-                                                                            
+                                                                            $target_tw1 = str_replace(',', '.', str_replace('.', '', $collection["target_tw1"])); 
+                                                                            $target_tw2 = str_replace(',', '.', str_replace('.', '', $collection["target_tw2"]));
+                                                                            $target_tw3 = str_replace(',', '.', str_replace('.', '', $collection['target_tw3']));
+                                                                            $target_tw4 = str_replace(',', '.', str_replace('.', '', $collection['target_tw4']));
+                                                                            $target_total = str_replace(',', '.', str_replace('.', '', $collection['target_total']));
+                                                                            $realisasi_tw1 = str_replace(',', '.', str_replace('.', '', $collection["realisasi_tw1"])); 
+                                                                            $realisasi_tw2 = str_replace(',', '.', str_replace('.', '', $collection["realisasi_tw2"])); 
+                                                                            $realisasi_tw3 = str_replace(',', '.', str_replace('.', '', $collection["realisasi_tw3"])); 
+                                                                            $realisasi_tw4 = str_replace(',', '.', str_replace('.', '', $collection["realisasi_tw4"])); 
+                                                                            $realisasi_total = str_replace(',', '.', str_replace('.', '', $collection["realisasi_total"])); 
+                                                                            $anggaran_total = str_replace(',', '.', str_replace('.', '', $collection["anggaran"]));
+                                                                            $realisasi_anggaran = str_replace(',', '.', str_replace('.', '', $collection["realisasi_anggaran"]));
                                                                             $rencanaAksiOutput->tematik_rencana_aksi_id = $rencanaAksi->id;
                                                                             $rencanaAksiOutput->satuan_output = $collection["satuan_output"];
                                                                             $rencanaAksiOutput->indikator_output = $collection["indikator_output"];
-                                                                            $rencanaAksiOutput->target_tw1 = (float)$collection["target_tw1"];
-                                                                            $rencanaAksiOutput->target_tw2 = (float)$collection["target_tw2"];
-                                                                            $rencanaAksiOutput->target_tw3 = (float)$collection["target_tw3"];
-                                                                            $rencanaAksiOutput->target_tw4 = (float)$collection["target_tw4"];
-                                                                            $rencanaAksiOutput->target_total = (float)$collection["target_total"];
-                                                                            $rencanaAksiOutput->anggaran_total = (int)$collection["anggaran"];
+                                                                            $rencanaAksiOutput->target_tw1 = $target_tw1;
+                                                                            $rencanaAksiOutput->target_tw2 = $target_tw2;
+                                                                            $rencanaAksiOutput->target_tw3 = $target_tw3;
+                                                                            $rencanaAksiOutput->target_tw4 = $target_tw4;
+                                                                            $rencanaAksiOutput->target_total = $target_total;
+                                                                            $rencanaAksiOutput->anggaran_total = $anggaran_total;
                                                                             $rencanaAksiOutput->pelaksana = $collection["pelaksana"];
                                                                             $rencanaAksiOutput->koordinator = $collection["koordinator"];
-                                                                            $rencanaAksiOutput->realisasi_output_tw1 = (float)$collection["realisasi_tw1"];
-                                                                            $rencanaAksiOutput->realisasi_output_tw2 = (float)$collection["realisasi_tw2"];
-                                                                            $rencanaAksiOutput->realisasi_output_tw3 = (float)$collection["realisasi_tw3"];
-                                                                            $rencanaAksiOutput->realisasi_output_tw4 = (float)$collection["realisasi_tw4"];
-                                                                            $rencanaAksiOutput->realisasi_output_total = (float)$collection["realisasi_total"];
-                                                                            $rencanaAksiOutput->realisasi_anggaran_total = (int)$collection["realisasi_anggaran"];
+                                                                            $rencanaAksiOutput->realisasi_output_tw1 = $realisasi_tw1;
+                                                                            $rencanaAksiOutput->realisasi_output_tw2 = $realisasi_tw2;
+                                                                            $rencanaAksiOutput->realisasi_output_tw3 = $realisasi_tw3;
+                                                                            $rencanaAksiOutput->realisasi_output_tw4 = $realisasi_tw4;
+                                                                            $rencanaAksiOutput->realisasi_output_total = $realisasi_total;
+                                                                            $rencanaAksiOutput->realisasi_anggaran_total = $realisasi_anggaran;
                                                                             $rencanaAksiOutput->catatan = $collection["catatan_monev"];
 
                                                                             #hitung capaian
-                                                                            $rencanaAksiOutput->capaian_output_tw1 = (float)$collection["realisasi_tw1"]*100/(float)$collection["target_tw1"];
-                                                                            $rencanaAksiOutput->capaian_output_tw2 = (float)$collection["realisasi_tw2"]*100/(float)$collection["target_tw2"];
-                                                                            $rencanaAksiOutput->capaian_output_tw3 = (float)$collection["realisasi_tw3"]*100/(float)$collection["target_tw3"];
-                                                                            $rencanaAksiOutput->capaian_output_tw4 = (float)$collection["realisasi_tw4"]*100/(float)$collection["target_tw4"];
-                                                                            $rencanaAksiOutput->capaian_output_total = (float)$collection["realisasi_total"]*100/(float)$collection["target_total"];
-                                                                            $rencanaAksiOutput->capaian_anggaran_total =  (int)$collection["realisasi_anggaran"]*100/(int)$collection["anggaran"];
+                                                                            $rencanaAksiOutput->capaian_output_tw1 = $realisasi_tw1*100/$target_tw1;
+                                                                            $rencanaAksiOutput->capaian_output_tw2 = $realisasi_tw2*100/$target_tw2;
+                                                                            $rencanaAksiOutput->capaian_output_tw3 = $realisasi_tw3*100/$target_tw3;
+                                                                            $rencanaAksiOutput->capaian_output_tw4 = $realisasi_total*100/$target_tw4;;
+                                                                            $rencanaAksiOutput->capaian_output_total = $realisasi_total*100/$target_total;
+                                                                            $rencanaAksiOutput->capaian_anggaran_total =  $realisasi_anggaran*100/$anggaran_total;
                                                                             $rencanaAksiOutput->fokus_intervensi= $fokus_intervensi->id;
                                                                             if (!$rencanaAksiOutput->save()) {
                                                                                 $success = false;
@@ -251,6 +262,6 @@ class RBTematikImportController extends Controller
             session()->flash('error', $message);
         }
 
-        return redirect('/rb-tematik/rekap_data');
+        return redirect('rencana_aksi/rb-tematik/rekap_data');
     }
 }

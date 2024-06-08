@@ -31,6 +31,15 @@ class HasilController extends Controller
     public function hasil_seluruh()
     {
         $user = Auth::User();
+        if (in_array($user->level, ['kabupaten', 'provinsi', 'kl'])) {
+            $access = OpenAccessSetting::where('user_level', $user->level)->where('fitur', 'hasil_evaluasi')->first();
+            if ($access) {
+                $today = date('Y-m-d');
+                if ($access->waktu_awal > $today || $access->waktu_akhir < $today) {
+                    return view('belumbuka');
+                }
+            }
+        }
         if (in_array($user->level, ['admin', 'tpn', 'tpm'])) {
             $instansis = KlpdInstansi::all();
             return view('hasil.hasil_semua', compact('instansis'));
@@ -43,7 +52,7 @@ class HasilController extends Controller
     {
         $user = Auth::User();
         if (in_array($user->level, ['kabupaten', 'provinsi', 'kl'])) {
-            $access = OpenAccessSetting::where('user_level', $user->level)->first();
+            $access = OpenAccessSetting::where('user_level', $user->level)->where('fitur', 'hasil_evaluasi')->first();
             if ($access) {
                 $today = date('Y-m-d');
                 if ($access->waktu_awal > $today || $access->waktu_akhir < $today) {
@@ -207,11 +216,12 @@ class HasilController extends Controller
 
     public function access_simpan(Request $request)
     {
-        $access = OpenAccessSetting::where('user_level', $request->user_level)->first();
+        $access = OpenAccessSetting::where('user_level', $request->user_level)->where('fitur', $request->fitur)->first();
         if (!$access) {
             $access = new OpenAccessSetting();
         }
         $access->user_level = $request->user_level;
+        $access->fitur = $request->fitur;
         $access->waktu_awal = $request->waktu_awal;
         $access->waktu_akhir = $request->waktu_akhir;
         if ($access->save()) {

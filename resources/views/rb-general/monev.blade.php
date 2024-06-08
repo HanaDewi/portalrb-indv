@@ -10,7 +10,7 @@
         <div class="flex sm:flex-row items-center p-5 border-b border-slate-200/60">
             <h2 class="font-bold text-base mr-auto flex items-center justify-center"> <i data-lucide="pie-chart" class="mr-1"></i> RB General - Monitoring dan Evaluasi</h2>
             <button class="btn btn-danger btn-sm shadow-md float-right mr-2" onclick="edit_monev();" data-bs-toggle="modal" data-bs-target="#modal-kegiatan_utama"><i data-lucide="edit" class="mr-1" width="18px" height="18px"></i> Evaluasi</button>
-            <a href="{{ url('rb-general/perencanaan') }}" class="btn btn-warning btn-sm shadow-md float-right"><i data-lucide="chevron-left" width="18px" height="18px"></i> Kembali</a>
+            <a href="{{ url('rencana_aksi/rb-general/perencanaan') }}" class="btn btn-warning btn-sm shadow-md float-right"><i data-lucide="chevron-left" width="18px" height="18px"></i> Kembali</a>
         </div>
         <div class="lg:col-span-12 p-5 border-b border-slate-200/60">
             <table class="table table-bordered table-striped table-hover">
@@ -99,7 +99,7 @@
                 <h2 class="font-bold fw-medium fs-base me-auto" id="title">Monitoring dan Evaluasi Rencana Aksi</h2>
             </div> <!-- END: Modal Header -->
             <!-- BEGIN: Modal Body -->
-            <form action="{{ url('rb-general/perencanaan/'.$target->perencanaan->id.'/'.$target->id.'/monev/simpan') }}" id="form-monev" method="post">
+            <form action="{{ url('rencana_aksi/rb-general/perencanaan/'.$target->perencanaan->id.'/'.$target->id.'/monev/simpan') }}" id="form-monev" method="post">
                 @csrf
                 <input type="hidden" name="output_id" id="output_id">
                 <div class="modal-body grid columns-12 gap-4 gap-y-3">
@@ -230,7 +230,7 @@
                                 <td>
                                     <div class="input-group mt-4">
                                         <div class="input-group-text">Total</div>
-                                        <input type="text" name="realisasi_output_total" id="realisasi_output_total" placeholder="Total" class="form-control digit" required>
+                                        <input type="text" name="realisasi_output_total" id="realisasi_output_total" placeholder="Total" class="form-control digit" onkeyup="hitungTotal();" required>
                                     </div>
                                 </td>
                             </tr>
@@ -343,9 +343,9 @@
                                     </div>
                                 </td>
                                 <tr>
-                                    <td class="font-bold">Catatan</td>
+                                    <td class="font-bold">Catatan <span class="text-danger">*</span></td>
                                     <td colspan="5">
-                                        <textarea name="catatan" id="catatan_output" cols="30" rows="10" placeholder="Catatan" class="form-control mt-4"></textarea>
+                                        <textarea name="catatan" id="catatan_output" cols="30" rows="10" placeholder="Catatan" class="form-control mt-4" required></textarea>
                                     </td>
                                 </tr>
                             </tr>
@@ -371,7 +371,7 @@
                 <h2 class="font-bold fw-medium fs-base me-auto" id="title">Monitoring dan Evaluasi Perencanaan</h2>
             </div> <!-- END: Modal Header -->
             <!-- BEGIN: Modal Body -->
-            <form action="{{ url('rb-general/perencanaan/'.$target->perencanaan->id.'/'.$target->id.'/monev/simpanTarget') }}" id="form-monev_perencanaan" method="post">
+            <form action="{{ url('rencana_aksi/rb-general/perencanaan/'.$target->perencanaan->id.'/'.$target->id.'/monev/simpanTarget') }}" id="form-monev_perencanaan" method="post">
                 @csrf
                 <div class="modal-body grid columns-12 gap-4 gap-y-3">
                     <div class="g-col-12">
@@ -568,7 +568,6 @@
             customize: function (doc) {
             doc.defaultStyle.fontSize = 8.5; 
             doc.content[1].table.widths = [ '3%', '15%', '7%', '7%', '7%', '13%', '13%', '13%','13%', '13%'];
-
                 doc.content[1].table.body.forEach(row => {
                     row.forEach((cell, index) => {
                         if (index === 4 || index === 5 || index === 6 || index === 7) {
@@ -647,7 +646,7 @@
     }); 
 
     function getData() {
-        monev.ajax.url("{{url('rb-general/perencanaan/'.$target->perencanaan->id.'/'.$target->id.'/monev/getDatas')}}").load(null, false);
+        monev.ajax.url("{{url('rencana_aksi/rb-general/perencanaan/'.$target->perencanaan->id.'/'.$target->id.'/monev/getDatas')}}").load(null, false);
     }
 
     function formatNumber(num) {
@@ -667,16 +666,17 @@
         if ($('#realisasi_output_tw4').val() == '') {
             $('#realisasi_output_tw4').val(0);
         }
-        ro1 = $('#realisasi_output_tw1').val();
-        ro2 = $('#realisasi_output_tw2').val();
-        ro3 = $('#realisasi_output_tw3').val();
-        ro4 = $('#realisasi_output_tw4').val();
+        ro1 = $('#realisasi_output_tw1').val().replaceAll('.', '').replaceAll(',', '.');
+        ro4 = $('#realisasi_output_tw4').val().replaceAll('.', '').replaceAll(',', '.');
+        ro2 = $('#realisasi_output_tw2').val().replaceAll('.', '').replaceAll(',', '.');
+        ro3 = $('#realisasi_output_tw3').val().replaceAll('.', '').replaceAll(',', '.');
         // ro_total = parseFloat(ro1) + parseFloat(ro2) + parseFloat(ro3) + parseFloat(ro4);
         // $('#realisasi_output_total').val(ro_total);
         co1 = t1 > 0 ? (ro1 / t1) * 100 : 0;
         co2 = t2 > 0 ? (ro2 / t2) * 100 : 0;
         co3 = t3 > 0 ? (ro3 / t3) * 100 : 0;
         co4 = t4 > 0 ? (ro4 / t4) * 100 : 0;
+
         $('#capaian_output_tw1').val(co1);
         $('#capaian_output_tw2').val(co2);
         $('#capaian_output_tw3').val(co3);
@@ -694,8 +694,8 @@
         if (co4 > 0) {
             co_pembagi += 1;
         }
-        ro_total = $('#realisasi_output_total').val();
-        to_total = $('#target_total').val();
+        ro_total = $('#realisasi_output_total').val().replaceAll('.', '').replaceAll(',', '.');
+        to_total = $('#target_total').val().replaceAll('.', '').replaceAll(',', '.');
         co_total = (ro_total / to_total) * 100;
         $('#capaian_output_total').val(co_total);
         
@@ -740,13 +740,14 @@
         //     ca_pembagi += 1;
         // }
         // ca_total = (ca1 + ca2 + ca3 + ca4) / ca_pembagi;
-        ra_total = $('#realisasi_anggaran_total').val();
+        ra_total = $('#realisasi_anggaran_total').val().replaceAll('.', '');
+        console.log(ra_total, atotal);
         ca_total = (ra_total/atotal) * 100;
         $('#capaian_anggaran_total').val(ca_total);
     }
 
     function edit_monev() {
-        $.getJSON("{{url('rb-general/perencanaan/'.$target->perencanaan->id.'/'.$target->id.'/monev/getTarget')}}", function(data) {
+        $.getJSON("{{url('rencana_aksi/rb-general/perencanaan/'.$target->perencanaan->id.'/'.$target->id.'/monev/getTarget')}}", function(data) {
             $('#realisasi_indikator').val(data.realisasi_indikator);
             $('#capaian_indikator').val(data.capaian_indikator);
             $('#catatan').val(data.catatan);
@@ -765,7 +766,7 @@
         $('#title').html('Monitoring dan Evaluasi Rencana Aksi');
         $('.saveButton').prop('disabled', true);
         modal_monev.show();
-        $.getJSON("{{url('rb-general/perencanaan/'.$target->perencanaan->id.'/'.$target->id.'/monev/getData')}}/"+id, function(data) {
+        $.getJSON("{{url('rencana_aksi/rb-general/perencanaan/'.$target->perencanaan->id.'/'.$target->id.'/monev/getData')}}/"+id, function(data) {
             $('#rencana_aksi').val(data.rencana_aksi.rencana_aksi);
             $('#satuan_output').val(data.satuan_output);
             $('#indikator_output').val(data.indikator_output);

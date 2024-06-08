@@ -97,12 +97,12 @@ $idx = 0;
                                         <span class="font-bold mr-1">Catatan: </span>{{ $target->catatan ? $target->catatan : '-' }}<br>
                                     </td>
                                     <td>
-                                        <a href="{{ url('rb-general/perencanaan/' . $indikator->perencanaan_id . '/' . $target->id . '/rencana_aksi') }}" class="btn btn-primary btn-sm w-full mb-2">
+                                        <a href="{{ url('rencana_aksi/rb-general/perencanaan/' . $indikator->perencanaan_id . '/' . $target->id . '/rencana_aksi') }}" class="btn btn-primary btn-sm w-full mb-2">
                                             <i data-lucide="edit" class="w-4 h-4 mr-1"></i> Renaksi
                                             <span class="text-xs px-1 rounded-full bg-warning text-white badge">{{ count($target->rencana_aksi) }}</span>
                                         </a>
                                         <br>
-                                        <a href="{{ url('rb-general/perencanaan/' . $indikator->perencanaan_id . '/' . $target->id . '/monev') }}"
+                                        <a href="{{ url('rencana_aksi/rb-general/perencanaan/' . $indikator->perencanaan_id . '/' . $target->id . '/monev') }}"
                                             class="btn btn-dark btn-sm w-full mb-2"><i data-lucide="edit"
                                                 class="w-4 h-4 mr-1"></i>Monev</a>
                                     </td>
@@ -145,7 +145,6 @@ $idx = 0;
                                 </td>
                                 <td></td>
                                 <td></td>
-                                <td></td>
                                 <td>
                                     @foreach ($indikator->target as $key => $target)
                                         @php
@@ -155,7 +154,7 @@ $idx = 0;
                                         <div class="flex items-center"><i data-lucide="bar-chart"
                                                 class="w-4 h-4 mr-1"></i><span class="font-bold mr-1">
                                                 {{ $target->tahun }}: </span> {{ $target->target }}</div>
-                                        <a href="{{ url('rb-general/perencanaan/' . $indikator->perencanaan_id . '/' . $target->id . '/rencana_aksi') }}"
+                                        <a href="{{ url('rencana_aksi/rb-general/perencanaan/' . $indikator->perencanaan_id . '/' . $target->id . '/rencana_aksi') }}"
                                             class="btn btn-primary btn-sm w-full mb-2">
                                             <i data-lucide="edit" class="w-4 h-4 mr-1"></i>
                                             Renaksi
@@ -163,7 +162,7 @@ $idx = 0;
                                                 class="text-xs px-1 rounded-full bg-warning text-white badge">{{ count($target->rencana_aksi) }}</span>
                                         </a>
                                         <br>
-                                        <a href="{{ url('rb-general/perencanaan/' . $indikator->perencanaan_id . '/' . $target->id . '/monev') }}"
+                                        <a href="{{ url('rencana_aksi/rb-general/perencanaan/' . $indikator->perencanaan_id . '/' . $target->id . '/monev') }}"
                                             class="btn btn-dark btn-sm w-full"><i data-lucide="edit"
                                                 class="w-4 h-4 mr-1"></i>Monev</a>
                                     @endforeach
@@ -187,11 +186,11 @@ $idx = 0;
                 <h2 class="font-bold fw-medium  fs-base me-auto" id="title">Data Baseline</h2>
             </div> <!-- END: Modal Header -->
             <!-- BEGIN: Modal Body -->
-            <form action="{{ url('rb-general/perencanaan/hapusBaseline') }}" id="form-hapus-baseline" method="post">
+            <form action="{{ url('rencana_aksi/rb-general/perencanaan/hapusBaseline') }}" id="form-hapus-baseline" method="post">
                 @csrf
                 <input type="hidden" name="perencanaan_id" id="baseline_perencanaan_id">
             </form>
-            <form action="{{ url('rb-general/perencanaan/simpanBaseline') }}" id="form-baseline" method="post">
+            <form action="{{ url('rencana_aksi/rb-general/perencanaan/simpanBaseline') }}" id="form-baseline" method="post">
                 @csrf
                 <input type="hidden" name="kegiatan_utama_id" id="baseline_kegiatan_utama_id">
                 <input type="hidden" name="indikator_id" id="baseline_indikator_id">
@@ -256,7 +255,7 @@ $idx = 0;
                 <h2 class="font-bold fw-medium fs-base me-auto" id="title">Data Target</h2>
             </div> <!-- END: Modal Header -->
             <!-- BEGIN: Modal Body -->
-            <form action="{{ url('rb-general/perencanaan/simpanTarget') }}" id="form-target" method="post">
+            <form action="{{ url('rencana_aksi/rb-general/perencanaan/simpanTarget') }}" id="form-target" method="post">
                 @csrf
                 <input type="hidden" name="kegiatan_utama_id" id="target_kegiatan_utama_id">
                 <input type="hidden" name="indikator_id" id="target_indikator_id">
@@ -311,7 +310,7 @@ $idx = 0;
                 </h2>
             </div> <!-- END: Modal Header -->
             <!-- BEGIN: Modal Body -->
-            <form action="{{ url('rb-general/perencanaan/simpanMonev') }}" id="form-monev" method="post">
+            <form action="{{ url('rencana_aksi/rb-general/perencanaan/simpanMonev') }}" id="form-monev" method="post">
                 @csrf
                 <input type="hidden" name="kegiatan_utama_id" id="monev_kegiatan_utama_id">
                 <input type="hidden" name="indikator_id" id="monev_indikator_id">
@@ -362,7 +361,7 @@ $idx = 0;
                 </h2>
             </div> <!-- END: Modal Header -->
             <!-- BEGIN: Modal Body -->
-            <form action="{{ url('rb-general/perencanaan/simpanDokumen') }}" id="form-dokumen" method="post" enctype="multipart/form-data">
+            <form action="{{ url('rencana_aksi/rb-general/perencanaan/simpanDokumen') }}" id="form-dokumen" method="post" enctype="multipart/form-data">
                 @csrf
                 <input type="hidden" name="general_perencanaan_target_id" id="general_perencanaan_target_id">
                 <div class="modal-body grid columns-12 gap-4 gap-y-3">
@@ -488,7 +487,7 @@ $idx = 0;
         $('.saveButton').prop('disabled', true);
         $('#hapus-baseline').hide();
         modal_baseline.show();
-        $.getJSON("{{ url('rb-general/perencanaan/getData') }}/" + kegiatan_utama_id + "/" + indikator_id, function(data) {
+        $.getJSON("{{ url('rencana_aksi/rb-general/perencanaan/getData') }}/" + kegiatan_utama_id + "/" + indikator_id, function(data) {
             tahun = data.baseline_tahun ? data.baseline_tahun : 2023;
             $('#baseline_tahun').val(tahun);
             $('#baseline_target').val(data.baseline_target);
@@ -527,7 +526,7 @@ $idx = 0;
         $('#target_indikator').html(indikator);
         $('.saveButton').prop('disabled', true);
         modal_target.show();
-        $.getJSON("{{ url('rb-general/perencanaan/getTarget') }}/" + kegiatan_utama_id + "/" + indikator_id, function(data) {
+        $.getJSON("{{ url('rencana_aksi/rb-general/perencanaan/getTarget') }}/" + kegiatan_utama_id + "/" + indikator_id, function(data) {
             if (data.success) {
                 $('#target-table tbody').append(data.input);
                 $(".Kuantitatif").inputmask("decimal",{
@@ -554,7 +553,7 @@ $idx = 0;
         $('#capaian_indikator').val('');
         $('.saveButton').prop('disabled', true);
         modal_monev.show();
-        $.getJSON("{{ url('rb-general/perencanaan/getData') }}/" + kegiatan_utama_id + "/" + indikator_id, function(data) {
+        $.getJSON("{{ url('rencana_aksi/rb-general/perencanaan/getData') }}/" + kegiatan_utama_id + "/" + indikator_id, function(data) {
             if (data.baseline_tahun) {
                 $('#realisasi_indikator').val(data.realisasi_indikator);
                 $('#capaian_indikator').val(data.capaian_indikator);
@@ -591,7 +590,7 @@ $idx = 0;
 
     function tambah_dokumen(id) {
         $('#general_perencanaan_target_id').val(id);
-        $.getJSON("{{ url('rb-general/perencanaan/getDokumen') }}/" + id, function(data) {
+        $.getJSON("{{ url('rencana_aksi/rb-general/perencanaan/getDokumen') }}/" + id, function(data) {
             $('#dokumen_list').html(data.dokumen_list);
             modal_dokumen.show();
         });

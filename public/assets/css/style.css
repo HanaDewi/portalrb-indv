@@ -5091,9 +5091,16 @@ h6,
   transition: all 500ms ease;
 }
 
-@media only screen and (min-width: 376px) {
+@media only screen and (min-width: 992px) {
   .main-menu .navbar-collapse li a {
     color: white;
+    font-size: 18px;
+  }
+}
+
+@media only screen and (max-width: 991px) {
+  .main-menu .navbar-collapse li a {
+    color: black;
     font-size: 18px;
   }
 }
@@ -5254,7 +5261,7 @@ h6,
 }
 
 .main-menu .navbar-header .navbar-toggle .icon-bar {
-  background: var(--base-color);
+  background: white;
   height: 2px;
   width: 30px;
   display: block;
