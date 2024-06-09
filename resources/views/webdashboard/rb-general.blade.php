@@ -143,7 +143,7 @@
                                                 WHERE gp.instansi_id = ?
                                                 AND gp.id = gpt.general_perencanaan_id
                                             )
-                                            AND NOT EXISTS (
+                                            AND EXISTS (
                                                 SELECT 1
                                                 FROM general_rencana_aksi gra
                                                 WHERE gra.general_perencanaan_target_id = gpt.id
