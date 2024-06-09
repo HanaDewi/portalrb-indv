@@ -984,9 +984,11 @@ class RBTematikController extends Controller
                                 foreach ($permasalahan->indikator_permasalahan as $indikator_permasalahan) {
                                     if (count($indikator_permasalahan->rencana_aksi)) {
                                         foreach ($indikator_permasalahan->rencana_aksi as $rencana_aksi) {
-                                            
-                                            $ra_output = $rencana_aksi->output([$fintervensi])->get();
-
+                                            if (!empty($fintervensi)) {
+                                                $ra_output = $rencana_aksi->output([$fintervensi])->get();
+                                            }else{
+                                                $ra_output = $rencana_aksi->output()->get();
+                                            }
                                             if (count($ra_output)) {
                                                 foreach ($ra_output as $output) {
                                                     $datas[$key]['sasaran_roadmap'] = $sasaran;
