@@ -137,7 +137,7 @@
                                         WHEN target = 'yes' AND EXISTS (
                                             SELECT 1
                                             FROM general_perencanaan_target gpt
-                                            WHERE  EXISTS (
+                                            WHERE EXISTS (
                                                 SELECT 1
                                                 FROM general_perencanaan gp
                                                 WHERE gp.instansi_id = ?
