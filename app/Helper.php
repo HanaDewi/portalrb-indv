@@ -278,6 +278,13 @@ if(! function_exists('fnumber')) {
     }
 }
 
+if(! function_exists('fnumber2')) {
+    function fnumber2($number, $digit = 0)
+    {
+        return number_format($number, $digit, ',', '.');
+    }
+}
+
 if(! function_exists('instansis')) {
     function instansis()
     {
