@@ -13,7 +13,7 @@ class LkeTestTpFile extends Model
         HasFactory;
     protected $table = 'lke_test_tp_files';
 
-    public function test_tp()
+    public function lke_test_tp()
     {
         return $this->belongsTo(LkeTestTp::class, "test_tp_id");
     }

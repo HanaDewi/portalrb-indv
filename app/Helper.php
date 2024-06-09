@@ -53,7 +53,6 @@ if(! function_exists('menus'))
                     ],
                 ],
             ],
-
             [
                 'levels' => ['admin', 'provinsi', 'kabupaten', 'kl', 'tpn', 'tpm'],
                 'title' => 'Dokumen',
@@ -276,6 +275,13 @@ if(! function_exists('fnumber')) {
             $number = (double)str_replace('.', '', $number);
             return number_format($number, $digit, ',', '.');
         }
+    }
+}
+
+if(! function_exists('fnumber2')) {
+    function fnumber2($number, $digit = 0)
+    {
+        return number_format($number, $digit, ',', '.');
     }
 }
 

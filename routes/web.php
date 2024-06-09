@@ -160,7 +160,6 @@ Route::middleware('auth')->group(function () {
     // Access
     Route::get('/access', [HasilController::class, 'access'])->name('access');
     Route::post('/access/simpan', [HasilController::class, 'access_simpan']);
-
     
     // Activity Log
     Route::get('/activitylog', [HomeController::class, 'activitylog'])->name('activitylog');
