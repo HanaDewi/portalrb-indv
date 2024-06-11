@@ -125,13 +125,14 @@ class RBGeneralController extends Controller
         $perencanaan->baseline_tahun = $request->baseline_tahun;
         $perencanaan->baseline_target = 0;
         $perencanaan->baseline_realisasi = $request->baseline_realisasi;
-
-        if ($perencanaan->indikator->min != null && $request->baseline_realisasi < $perencanaan->indikator->min) {
-            $success = false;
-            $pesan .= 'Baseline tidak boleh kurang dari '.$perencanaan->indikator->min.'!!';
-        } else if ($perencanaan->indikator->max != null && $request->baseline_realisasi > $perencanaan->indikator->max) {
-            $success = false;
-            $pesan .= 'Baseline tidak boleh lebih dari '.$perencanaan->indikator->max.'!!';
+        if ($perencanaan->indikator->tipe == 'Kuantitatif') {
+            if ($perencanaan->indikator->min != null && $request->baseline_realisasi < $perencanaan->indikator->min) {
+                $success = false;
+                $pesan .= 'Baseline tidak boleh kurang dari '.$perencanaan->indikator->min.'!!';
+            } else if ($perencanaan->indikator->max != null && $request->baseline_realisasi > $perencanaan->indikator->max) {
+                $success = false;
+                $pesan .= 'Baseline tidak boleh lebih dari '.$perencanaan->indikator->max.'!!';
+            }
         }
 
         if ($success) {
