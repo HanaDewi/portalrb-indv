@@ -137,13 +137,13 @@
                                         WHEN target = 'yes' AND EXISTS (
                                             SELECT 1
                                             FROM general_perencanaan_target gpt
-                                            WHERE  EXISTS (
+                                            WHERE EXISTS (
                                                 SELECT 1
                                                 FROM general_perencanaan gp
                                                 WHERE gp.instansi_id = ?
                                                 AND gp.id = gpt.general_perencanaan_id
                                             )
-                                            AND NOT EXISTS (
+                                            AND EXISTS (
                                                 SELECT 1
                                                 FROM general_rencana_aksi gra
                                                 WHERE gra.general_perencanaan_target_id = gpt.id
