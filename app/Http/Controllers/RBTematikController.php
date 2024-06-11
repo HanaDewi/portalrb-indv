@@ -681,7 +681,7 @@ class RBTematikController extends Controller
         $success = true;
         DB::beginTransaction();
         try {
-            $rencana_aksi = TematikRencanaAksi::where('tematik_indikator_permasalahan_id', $indikator->id)->first();
+            $rencana_aksi = TematikRencanaAksi::where('tematik_indikator_permasalahan_id', $indikator->id)->where('nama', $request->rencana_aksi)->first();
             if (!$rencana_aksi) {
                 $rencana_aksi = new TematikRencanaAksi();
                 $rencana_aksi->tematik_indikator_permasalahan_id = $indikator->id;
