@@ -417,7 +417,6 @@ class RBGeneralController extends Controller
             foreach ($rencana_aksi->output as $output) {
                 $output->no = $no;
                 $output->nama_rencana_aksi = $output->rencana_aksi->rencana_aksi;
-                $output->target_total = fnumber($output->target_total);
                 $output->anggaran_total = currency($output->anggaran_total);
                 $output->realisasi_anggaran_total = currency((int) $output->realisasi_anggaran_total);
                 $output->capaian_anggaran_total = $output->capaian_anggaran_total ? $output->capaian_anggaran_total.'%' : '';
