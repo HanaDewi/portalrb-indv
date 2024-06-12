@@ -181,7 +181,7 @@ class RBTematikImportController extends Controller
                                                                             $target_tw4 = str_replace(',', '.', str_replace('.', '', $collection['target_tw4']));
                                                                             $target_total = str_replace(',', '.', str_replace('.', '', $collection['target_total']));
                                                                             
-                                                                            $realisasi_tw1 = ($collection["realisasi_tw1"]>0)?str_replace(',', '.', str_replace('.', '', $collection["realisasi_tw1"])):0; 
+                                                                            $realisasi_tw1 = str_replace(',', '.', str_replace('.', '', $collection["realisasi_tw1"])); 
                                                                             $realisasi_tw2 = str_replace(',', '.', str_replace('.', '', $collection["realisasi_tw2"])); 
                                                                             $realisasi_tw3 = str_replace(',', '.', str_replace('.', '', $collection["realisasi_tw3"])); 
                                                                             $realisasi_tw4 = str_replace(',', '.', str_replace('.', '', $collection["realisasi_tw4"])); 
