@@ -180,6 +180,7 @@ class RBTematikImportController extends Controller
                                                                             $target_tw3 = str_replace(',', '.', str_replace('.', '', $collection['target_tw3']));
                                                                             $target_tw4 = str_replace(',', '.', str_replace('.', '', $collection['target_tw4']));
                                                                             $target_total = str_replace(',', '.', str_replace('.', '', $collection['target_total']));
+                                                                            
                                                                             $realisasi_tw1 = str_replace(',', '.', str_replace('.', '', $collection["realisasi_tw1"])); 
                                                                             $realisasi_tw2 = str_replace(',', '.', str_replace('.', '', $collection["realisasi_tw2"])); 
                                                                             $realisasi_tw3 = str_replace(',', '.', str_replace('.', '', $collection["realisasi_tw3"])); 
@@ -190,29 +191,37 @@ class RBTematikImportController extends Controller
                                                                             $rencanaAksiOutput->tematik_rencana_aksi_id = $rencanaAksi->id;
                                                                             $rencanaAksiOutput->satuan_output = $collection["satuan_output"];
                                                                             $rencanaAksiOutput->indikator_output = $collection["indikator_output"];
-                                                                            $rencanaAksiOutput->target_tw1 = $target_tw1;
-                                                                            $rencanaAksiOutput->target_tw2 = $target_tw2;
-                                                                            $rencanaAksiOutput->target_tw3 = $target_tw3;
-                                                                            $rencanaAksiOutput->target_tw4 = $target_tw4;
-                                                                            $rencanaAksiOutput->target_total = $target_total;
-                                                                            $rencanaAksiOutput->anggaran_total = $anggaran_total;
+                                                                            $rencanaAksiOutput->target_tw1 = (float)$target_tw1;
+                                                                            $rencanaAksiOutput->target_tw2 = (float)$target_tw2;
+                                                                            $rencanaAksiOutput->target_tw3 = (float)$target_tw3;
+                                                                            $rencanaAksiOutput->target_tw4 = (float)$target_tw4;
+                                                                            $rencanaAksiOutput->target_total = (float)$target_total;
+                                                                            $rencanaAksiOutput->anggaran_total = (float)$anggaran_total;
                                                                             $rencanaAksiOutput->pelaksana = $collection["pelaksana"];
                                                                             $rencanaAksiOutput->koordinator = $collection["koordinator"];
-                                                                            $rencanaAksiOutput->realisasi_output_tw1 = $realisasi_tw1;
-                                                                            $rencanaAksiOutput->realisasi_output_tw2 = $realisasi_tw2;
-                                                                            $rencanaAksiOutput->realisasi_output_tw3 = $realisasi_tw3;
-                                                                            $rencanaAksiOutput->realisasi_output_tw4 = $realisasi_tw4;
-                                                                            $rencanaAksiOutput->realisasi_output_total = $realisasi_total;
-                                                                            $rencanaAksiOutput->realisasi_anggaran_total = $realisasi_anggaran;
+                                                                            $rencanaAksiOutput->realisasi_output_tw1 = (float)$realisasi_tw1;
+                                                                            $rencanaAksiOutput->realisasi_output_tw2 = (float)$realisasi_tw2;
+                                                                            $rencanaAksiOutput->realisasi_output_tw3 = (float)$realisasi_tw3;
+                                                                            $rencanaAksiOutput->realisasi_output_tw4 = (float)$realisasi_tw4;
+                                                                            $rencanaAksiOutput->realisasi_output_total = (float)$realisasi_total;
+                                                                            $rencanaAksiOutput->realisasi_anggaran_total = (float)$realisasi_anggaran;
                                                                             $rencanaAksiOutput->catatan = $collection["catatan_monev"];
 
                                                                             #hitung capaian
-                                                                            $rencanaAksiOutput->capaian_output_tw1 = $realisasi_tw1*100/$target_tw1;
-                                                                            $rencanaAksiOutput->capaian_output_tw2 = $realisasi_tw2*100/$target_tw2;
-                                                                            $rencanaAksiOutput->capaian_output_tw3 = $realisasi_tw3*100/$target_tw3;
-                                                                            $rencanaAksiOutput->capaian_output_tw4 = $realisasi_total*100/$target_tw4;;
-                                                                            $rencanaAksiOutput->capaian_output_total = $realisasi_total*100/$target_total;
-                                                                            $rencanaAksiOutput->capaian_anggaran_total =  $realisasi_anggaran*100/$anggaran_total;
+                                                                            #biar gak dibagi sama nol
+                                                                            $pembagi_tw1 = (float)($target_tw1>0 )?$target_tw1:1;
+                                                                            $pembagi_tw2 = (float)($target_tw2>0 )?$target_tw2:1;
+                                                                            $pembagi_tw3 = (float)($target_tw3>0 )?$target_tw3:1;
+                                                                            $pembagi_tw4 = (float)($target_tw4>0 )?$target_tw4:1;
+                                                                            $pembagi_total = (float)($target_total>0 )?$target_total:1;
+                                                                            $pembagi_anggaran_total = (float)($anggaran_total>0 )?$anggaran_total:1;
+
+                                                                            $rencanaAksiOutput->capaian_output_tw1 = (float)$realisasi_tw1*100/$pembagi_tw1;
+                                                                            $rencanaAksiOutput->capaian_output_tw2 = (float)$realisasi_tw2*100/$pembagi_tw2;
+                                                                            $rencanaAksiOutput->capaian_output_tw3 = (float)$realisasi_tw3*100/$pembagi_tw3;
+                                                                            $rencanaAksiOutput->capaian_output_tw4 = (float)$realisasi_total*100/$pembagi_tw4;
+                                                                            $rencanaAksiOutput->capaian_output_total = (float)$realisasi_total*100/$pembagi_total;;
+                                                                            $rencanaAksiOutput->capaian_anggaran_total =  (float)$realisasi_anggaran*100/$pembagi_anggaran_total;
                                                                             $rencanaAksiOutput->fokus_intervensi= $fokus_intervensi->id;
                                                                             if (!$rencanaAksiOutput->save()) {
                                                                                 $success = false;
