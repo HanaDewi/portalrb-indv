@@ -312,6 +312,7 @@ if(! function_exists('timpenilai')) {
 if(! function_exists('exts')) {
     function exts($ext)
     {
+        $ext = strtolower($ext);
         $exts = [
             'pdf' => 'pdf.png',
             'xlsx' => 'excel.png',
