@@ -54,8 +54,8 @@
 
                         <div class="intro-x mt-8">
                             <input id="email" type="email" class="intro-x login__input form-control py-3 px-4"
-                                name="email" placeholder="Email" name="email" value="{{ old('email') }}" required
-                                autofocus>
+                                name="email" placeholder="Email" name="email" value="{{ $email }}" required
+                                readonly>
 
                             @if ($errors->has('email'))
                                 <span class="error invalid-feedback text-danger mt-2">{{ $errors->first('email') }}</span>
@@ -65,7 +65,7 @@
                         <div class="intro-x mt-8">
 
                             <input id="password" type="password" class="intro-x login__input form-control py-3 px-4"
-                                name="password" placeholder="Password" required>
+                                name="password" placeholder="Password" required autofocus>
 
                             @if ($errors->has('password'))
                                 <span
