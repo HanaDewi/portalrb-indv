@@ -281,6 +281,7 @@ if(! function_exists('fnumber')) {
 if(! function_exists('fnumber2')) {
     function fnumber2($number, $digit = 0)
     {
+        $number = (double) $number;
         return number_format($number, $digit, ',', '.');
     }
 }
