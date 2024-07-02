@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DokumenController;
+use App\Http\Controllers\PengusulanZIController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RBGeneralController;
@@ -27,6 +28,11 @@ use App\Http\Controllers\WebDashboardController;
 Route::get('/', function () {
     return view('home');
 });
+
+Route::middleware('auth')->group(function () {
+    Route::get('/zi', [PengusulanZIController::class, 'index'])->name('pengusulan_zi');
+});
+
 Route::get('/emptyDT', function () {
     return response()->json(['data' => []]);
 });

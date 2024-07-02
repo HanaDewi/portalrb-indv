@@ -109,10 +109,22 @@
                                             <a href="{{ url('/ruang-belajar/home') }}">Ruang Belajar</a>
                                         </li>
                                         <li>
-                                            <a href="{{ url('login') }}">
-                                                <span class="xbtn">
-                                                    <i class="fas fa-arrow-right"></i> Login </span>
-                                            </a>
+                                            <a href="{{ url('/zi/') }}">Zona Integritas</a>
+                                        </li>
+                                        <li>
+                                            @if(Auth::User())
+                                            <a href="{{ url('logout') }}"
+                                                onclick="event.preventDefault(); $('#logout').submit();">
+                                                <form method="POST" action="{{ route('logout') }}" id="logout">
+                                                    @csrf
+                                                </form>
+                                                @else
+                                                <a href="{{ url('login') }}">
+                                                    @endif
+                                                    <span class="xbtn">
+                                                        <i class="fas fa-arrow-right"></i> {{
+                                                        (Auth::User())?"Logout":"Login" }} </span>
+                                                </a>
                                         </li>
                                     </ul>
                                 </div>
@@ -149,8 +161,7 @@
                         <div class="container container-1000">
                             <div class="row gap-80 align-items-center">
                                 <div class="col-lg-7">
-                                    <img class="one wow fadeInRight delay-0-2s"
-                                        src="{{ URL::to('/') }}/assets/images/slide2.png
+                                    <img class="one wow fadeInRight delay-0-2s" src="{{ URL::to('/') }}/assets/images/slide2.png
 " alt="Hero">
                                 </div>
                                 <div class="col-lg-5">
@@ -175,8 +186,7 @@
                                 <div class="col-lg-5">
                                     <div class="hero-images">
                                         <img width="50%" class="one wow fadeInRight delay-0-2s"
-                                            src="{{ URL::to('/') }}/assets/images/presiden.png"
-                                            alt="Hero">
+                                            src="{{ URL::to('/') }}/assets/images/presiden.png" alt="Hero">
                                     </div>
                                 </div>
                             </div>

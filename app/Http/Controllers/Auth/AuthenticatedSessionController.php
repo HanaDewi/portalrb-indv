@@ -30,6 +30,8 @@ class AuthenticatedSessionController extends Controller
         $request->session()->regenerate();
         if ($request->input('ruang-belajar')) {
             return redirect('/ruang-belajar/admin-dashboard');
+        }elseif ($request->input('zi')) {
+            return redirect('/zi');
         };
 
         return redirect()->intended(RouteServiceProvider::HOME);
