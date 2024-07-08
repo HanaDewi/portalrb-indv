@@ -47,15 +47,7 @@
             -moz-appearance: textfield;
         }
     </style>
-    <script>
-        $(document).ready(function() {
-            $("#owl-demo").owlCarousel({
-                pagination: false,
-                autoPlay: 5000,
-                singleItem: true
-            });
-        });
-    </script>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 
@@ -179,6 +171,26 @@
                     <div class="col-lg-8 col-md-8">
                         <div class="feature-item" style="background-color: white; border-radius: 25px;">
                             <div class="content">
+                                @if(Auth::User()->level =="admin" || Auth::User()->level == "tpn")
+
+                                <form action="{{URL::to('zi')}}" method="get">
+                                    @csrf
+                                    <div class="row">
+                                        <div class="col-md-9">
+                                            <select name="instansi_id">
+                                                @foreach ($instansis as $inst )
+                                                <option value="{{$inst->id}}" @if($inst->name==$instansi) selected
+                                                    @endif>{{$inst->name}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <button type="submit" class="btn btn-primary">Cari</button>
+                                        </div>
+                                    </div>
+                                </form>
+                                @endif
+                                <br>
                                 <h5>{{ $instansi}}</h5>
                                 <img src="assets/images/syarat_min_instansi.jpg" width="75%">
                                 <hr />
@@ -308,8 +320,11 @@
                     </div>
 
                     @if($status_akhir > 0)
-                    <form>
+                    <form action="{{URL::to('zi')}}" method="post">
                         @csrf
+                        @if(Auth::User()->level =="admin" || Auth::User()->level == "tpn")
+                        <input type="hidden" name="instansi_id" value="{{ $instansi_id}}">
+                        @endif
                         <div class="row">
                             <div class="col-lg-2 col-md-2">
                             </div>
@@ -320,40 +335,23 @@
                                             <div class="col-md-1">
                                             </div>
                                             <div class="col-md-10 form-group" style="text-align: left">
-
-                                                <input type="hidden" name="instansi_id"
-                                                    value="{{  Auth::User()->user_rel->instansi_id;}}">
-
-
-                                                <!-- <div class="form-group">
-                                                    <label for="">Nama Instansi</label>
-                                                    <select>
-                                                        <option value="" selected disabled>Pilih Instansi</option>
-                                                        foreach ($instansis as $instansi )
-                                                        <option>
-                                                            {$instansi->name}}
-                                                        </option>
-                                                        endforeach
-                                                    </select>
-                                                    <small id="emailHelp" class="form-text text-muted">Pastikan anda
-                                                        memilih
-                                                        instansi yang sesuai</small>
-                                                </div>-->
                                                 <div class="form-group">
                                                     <label>PIC</label>
-                                                    <input type="text" class="form-control">
+                                                    <input type="text" name="pic" class="form-control" required>
                                                 </div>
                                                 <div class="form-group">
                                                     <label class="text-left">Email</label>
-                                                    <input type="text" class="form-control">
+                                                    <input type="email" name="email" class="form-control" required>
                                                 </div>
                                                 <div class="form-group">
                                                     <label>Nomor Kontak</label>
-                                                    <input type="text" class="form-control">
+                                                    <input type="text" name="nomor_kontak" class="form-control"
+                                                        required>
                                                 </div>
                                                 <div class="form-group">
                                                     <label>Surat Usulan Unit</label>
-                                                    <input type="text" class="form-control">
+                                                    <input type="text" name="surat_usulan" class="form-control"
+                                                        required>
                                                     <small id="emailHelp" class="form-text text-muted">Input link Drive
                                                         yang
                                                         berisi surat usulan unit/satuan kerja
@@ -362,7 +360,7 @@
 
                                                 <div class="form-group">
                                                     <label> SPTJM </label>
-                                                    <input type="text" placeholder="" class="form-control">
+                                                    <input type="text" name="sptjm" class="form-control" required>
                                                     <small id="emailHelp" class="form-text text-muted">Input link Drive
                                                         yang
                                                         berisi Surat Pernyataan Tanggung Jawab
@@ -370,7 +368,7 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <label>TLHP</label>
-                                                    <input type="text" placeholder="" class="form-control">
+                                                    <input type="text" name="tlhp" class="form-control" required>
                                                     <small id="emailHelp" class="form-text text-muted">Input link Drive
                                                         yang
                                                         berisi Surat Pernyataan Clearance TLHP oleh
@@ -378,7 +376,8 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <label>Survei Mandiri</label>
-                                                    <input type="text" placeholder="" class="form-control">
+                                                    <input type="text" name="survei_mandiri" class="form-control"
+                                                        required>
                                                     <small id="emailHelp" class="form-text text-muted">Input link Drive
                                                         yang
                                                         berisi Laporan hasil pelaksanaan survei
@@ -413,13 +412,13 @@
                                                     <div class="row">
                                                         <div class="col-md-4">
                                                             <label style="text-align: center; color:white;">WBK</label>
-                                                            <input type="number" id="jmlWBK" name="jmlWBK"
+                                                            <input type="number" name="jml_wbk" id="jmlWBK"
                                                                 onkeyup="hitungTotal();" class="form-control"
                                                                 style="text-align: center;">
                                                         </div>
                                                         <div class="col-md-4">
                                                             <label style="text-align: center; color:white;">WBBM</label>
-                                                            <input type="number" id="jmlWBBM" name="jmlWBBM"
+                                                            <input type="number" name="jml_wbbm" id="jmlWBBM"
                                                                 onkeyup="hitungTotal()" class="form-control"
                                                                 style="text-align: center;" @if($status_akhir==1 or
                                                                 $status_akhir==3) disabled @endif>
@@ -444,7 +443,6 @@
                                                         <div class=" col-md-1">
                                                         </div>
                                                     </div>
-
                                                 </div>
                                             </div>
                                         </div>
@@ -556,8 +554,6 @@
                                                     style="width:100%; padding:15px; display:block;">Kirim</button>
                                             </div>
                                         </div>
-
-
                     </form>
                     @endif
 
@@ -651,7 +647,6 @@
             }
             var total = parseInt($('#jmlWBK').val()) + parseInt($('#jmlWBBM').val())
             $('#jmlUnit').val( total); 
-               
         };
 
         function tambah_input(){
@@ -661,31 +656,31 @@
                 if ($('#jmlWBK').val() >0 ) {
                     $("#row-wbk").show();
                     for (var i = 1; i <= $('#jmlWBK').val(); i++) {
-                        tambah_wbk();
+                        tambah_wbk(pertama_kali = 1);
                     };
                 }
                 if ($('#jmlWBBM').val() >0 ) {
                     $("#row-wbbm").show();
                     for (var i = 1; i <= $('#jmlWBBM').val(); i++) {
-                        tambah_wbbm();
+                        tambah_wbbm(pertama_kali = 1);
                     };
                 }
             }
         }
 
-        function tambah_wbk(){
+        function tambah_wbk(pertama_kali = 0){
             var row_str = '<br>\
-                <div class="row"> \
+                <div class="row deleteSegini" > \
                     <div class="col-md-4"> \
-                        <input type="text" class="form-control" style="text-align:center" placeholder="Nama Unit WBK "> \
+                        <input type="text" name="unit_wbk[]" class="form-control" style="text-align:center" placeholder="Nama Unit WBK " required> \
                     </div> \
                     <div class="col-md-4"> \
-                        <input type="text" class="form-control" style="text-align:center" placeholder="link LKE"> \
+                        <input type="text" name="lke_wbk[]" class="form-control" style="text-align:center" placeholder="link LKE" required> \
                     </div>';
 
                 @if($group_kld == "prov" || $group_kld == "kab")
                     row_str = row_str + '<div class="col-md-2"> \
-                        <input type="checkbox" id="vehicle1" name="vehicle1"  style=" margin-top:0.7em;\
+                        <input type="checkbox" name="afirmasi[]" value=1 style=" margin-top:0.7em;\
                         height: 25px;\
                         width: 25px;\
                         background-color: #eee;"' ;  
@@ -700,27 +695,55 @@
                 @elseif ($group_kld == "kl")
                     row_str = row_str + '<div class="col-md-4">';
                 @endif
-                    row_str = row_str + '<a href="#" class="btn btn-danger" style=" margin-top:0.3em;\">X</a>\
+                    row_str = row_str + '<a href="#inigakada" class="btn btn-danger " style=" margin-top:0.3em;\" onclick = "hapus_unit_wbk(this)" >X</a>\
                     </div> \
                 </div>';
             $('#cont-tambah-unit-wbk').append(row_str);   
+            if(!pertama_kali){
+                jml_wbk = $('#jmlWBK').val();
+                $('#jmlWBK').val(parseInt(jml_wbk)+1);
+                hitungTotal();
+            }
+            
         }
-        function tambah_wbbm(){
+
+        function hapus_unit_wbk(ortu){
+            $(ortu).parent().parent().remove();
+            jml_wbk = $('#jmlWBK').val();
+            $('#jmlWBK').val(jml_wbk-1);
+            hitungTotal();
+        }
+
+        function tambah_wbbm(pertama_kali = 0){
             var row_str = '<br>\
                 <div class="row"> \
                     <div class="col-md-5"> \
-                        <input type="text" class="form-control" style="text-align:center" placeholder="Nama Unit WBBM "> \
+                        <input type="text" name="unit_wbbm[]" class="form-control" style="text-align:center" placeholder="Nama Unit WBBM " required> \
                     </div> \
                     <div class="col-md-5"> \
-                        <input type="text" class="form-control" style="text-align:center" placeholder="link LKE"> \
+                        <input type="text" name="lke_wbbm[]" class="form-control" style="text-align:center" placeholder="link LKE" required> \
                     </div> \
                     <div class="col-md-2"> \
-                        <a href="#" class="btn btn-danger" style=" margin-top:0.3em;\">X</a>\
+                        <button  class="btn btn-danger" style=" margin-top:0.3em;\" onclick = "hapus_unit_wbbm(this)">X</button>\
                     </div> \
                 </div>';
             $('#cont-tambah-unit-wbbm').append(row_str);      
+            if(!pertama_kali){
+                jml_wbbm = $('#jmlWBBM').val();
+                $('#jmlWBBM').val(parseInt(jml_wbbm)+1);
+                hitungTotal();
+            }
         }
+
+        function hapus_unit_wbbm(ortu){
+            $(ortu).parent().parent().remove();
+            jml_wbbm = $('#jmlWBBM').val();
+            $('#jmlWBBM').val(jml_wbbm-1);
+            hitungTotal();
+            
+        }   
     </script>
+
 </body>
 
 
