@@ -94,6 +94,9 @@ class RBTematikImportController extends Controller
                 $message = '';
                 $baris = 2;
                 foreach ($collections as $key => $collection) {
+                    if ($collection["tema"]==null) {
+                        continue;
+                    }
                     if ($key != '') {
                         $tema = Tema::where('nama',$collection["tema"] )->first();
                         if(!$tema){

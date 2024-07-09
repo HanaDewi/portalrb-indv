@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DokumenController;
+use App\Http\Controllers\PengusulanZIController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RBGeneralController;
@@ -27,6 +28,17 @@ use App\Http\Controllers\WebDashboardController;
 Route::get('/', function () {
     return view('home');
 });
+
+Route::middleware('auth')->group(function () {
+    Route::get('/zi', [PengusulanZIController::class, 'index'])->name('pengusulan_zi');
+    Route::post('/zi', [PengusulanZIController::class, 'store_bukti_dukung'])->name('pengusulan_zi_store');
+    Route::get('/zi-tinjau', [PengusulanZIController::class, 'tinjau'])->name('tinjau_zi');
+    Route::get('/zi/generate_skor', [PengusulanZIController::class, 'generate_rekap_instansi_skor'])->name('pengusulan_zi');
+    Route::get('/zi/admin', [PengusulanZIController::class, 'dashboard'])->name('dashboard_zi');
+    Route::get('/zi/rekap-pengusulan', [PengusulanZIController::class, 'rekap_pengusulan'])->name('rekap_pengusulan');
+    Route::get('/zi/rekap-pengusulan-detail/{id}', [PengusulanZIController::class, 'rekap_pengusulan_detail'])->name('rekap_pengusulan_detail');
+});
+
 Route::get('/emptyDT', function () {
     return response()->json(['data' => []]);
 });

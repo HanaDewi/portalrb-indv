@@ -19,4 +19,11 @@ class KlpdInstansi extends Model
     {
         return $this->hasOne(LkeTestTp::class,  "lke_instansi_id");
     }
+
+    public function instansi_zi(): HasOne
+    {
+        return $this->hasOne(InstansiZI::class,  "instansi_id");
+    }
+
+
 }
