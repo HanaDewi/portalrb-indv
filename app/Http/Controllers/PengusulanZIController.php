@@ -319,7 +319,7 @@ class PengusulanZIController extends Controller
                         $keterangan = "Mohon Maaf Anda belum memenuhi persyaratan untuk mengusulkan unit penerima WBK maupun WBBM. ";
                         #cek kalau pemda afirmasi
                         if($group_kld == "prov" || $group_kld == "kab"){
-                            $keterangan = $keterangan . "Anda hanya bisa mengajukan Unit Afirmasi untuk nominasi penerima WBK";
+                            $keterangan = $keterangan . ". Anda hanya bisa mengajukan Unit Afirmasi untuk nominasi penerima WBK";
                             $status_akhir = 3;
                         }
                     }
