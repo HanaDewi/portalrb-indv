@@ -24,6 +24,9 @@ class PengusulanZIController extends Controller
                     return redirect('zi-tinjau?instansi_id='.$instansi_id);
                 }
             }
+        }elseif(Auth::User()->level == "tpn"){
+            $instansi_obj = KlpdInstansi::find(1);
+            $instansiZI = InstansiZI::where("instansi_id", $instansi_obj->id)->first();
         }else{
             $instansi_obj = Auth::User()->user_rel->instansi;
             $instansi_id = $instansi_obj->id;
