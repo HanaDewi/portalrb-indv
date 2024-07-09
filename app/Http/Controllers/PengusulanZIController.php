@@ -277,6 +277,8 @@ class PengusulanZIController extends Controller
                 }elseif($group_kld  == "kl"){#Jika KL
                     ($skor_indeks_rb > 60)?$syarat_indeksrb_wbk = "LULUS":$syarat_indeksrb_wbk="GAGAL";#wbk index B keatas
                     ($skor_indeks_rb > 70)?$syarat_indeksrb_wbbm = "LULUS":$syarat_indeksrb_wbbm="GAGAL";#wbbm index BB
+                }else{
+                    continue;
                 }
                 
                 ($skor_maturitas_spip >= 3)?$syarat_maturitas_spip = "LULUS":$syarat_maturitas_spip="GAGAL" ; #predikat B keatas
