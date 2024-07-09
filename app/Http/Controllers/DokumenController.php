@@ -51,8 +51,12 @@ class DokumenController extends Controller
             } 
             if ($request->kategori_id) {
                 $model = $model->whereIn('kategori_id', $request->kategori_id);
-            } 
-            $dokumens = $model->get();
+            }
+            if ($request->instansi_id || $request->tahun || $request->kategori_id) {
+                $dokumens = $model->get();
+            } else {
+                $dokumens = $model->where('tahun', '-1')->get();
+            }
         }
         foreach ($dokumens as $dokumen) {
             $dokumen->nama_kategori = $dokumen->kategori->nama;
