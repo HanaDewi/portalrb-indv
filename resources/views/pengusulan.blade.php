@@ -17,6 +17,15 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.theme.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/js/bootstrap-select.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/css/bootstrap-select.min.css"
+        rel="stylesheet" />
+
+
+
     <style>
         #owl-demo .item img {
             display: block;
@@ -177,7 +186,8 @@
                                     @csrf
                                     <div class="row">
                                         <div class="col-md-9">
-                                            <select name="instansi_id">
+                                            <select name="instansi_id" class="form-control selectpicker"
+                                                data-live-search="true">
                                                 @foreach ($instansis as $inst )
                                                 <option value="{{$inst->id}}" @if($inst->name==$instansi) selected
                                                     @endif>{{$inst->name}}</option>
@@ -742,6 +752,8 @@
             hitungTotal();
             
         }   
+
+        
     </script>
 
 </body>
