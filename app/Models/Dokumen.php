@@ -4,10 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class Dokumen extends Model
 {
-    use HasFactory;
+    use LogsActivity, HasFactory;
     protected $table = 'dokumen';
 
     public function kategori()
@@ -23,5 +25,11 @@ class Dokumen extends Model
     public function instansi()
     {
         return $this->belongsTo(KlpdInstansi::class, 'instansi_id');
+    }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+        ->logOnly(['id', 'instansi_id', 'kategori_id', 'tahun']);
     }
 }

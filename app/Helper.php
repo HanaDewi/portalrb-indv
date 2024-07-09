@@ -311,9 +311,8 @@ if(! function_exists('timpenilai')) {
 }
 
 if(! function_exists('exts')) {
-    function exts($ext)
+    function exts($ext = null)
     {
-        $ext = strtolower($ext);
         $exts = [
             'pdf' => 'pdf.png',
             'xlsx' => 'excel.png',
@@ -323,7 +322,12 @@ if(! function_exists('exts')) {
             'pptx' => 'ppt.png',
             'ppt' => 'ppt.png',
         ];
-        return $exts[$ext];
+        if ($ext) {
+            $ext = strtolower($ext);
+            return $exts[$ext];
+        } else {
+            return array_keys($exts);
+        }
     }
 }
 

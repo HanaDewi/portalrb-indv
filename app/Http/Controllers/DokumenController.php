@@ -110,31 +110,39 @@ class DokumenController extends Controller
                 $dokumen->kategori_id = $kategori_id;
                 $dokumen->save();
             }
-            foreach ($dokumen->files as $file) {
-                if (!isset($request->file_existing[$file->id])) {
-                    Storage::disk('public')->delete('dokumen/' . $file->file);
-                    $file->delete();
-                } else {
-                    $file->deskripsi = $request->deskripsi_existing[$file->id];
-                    $file->save();
-                }
-            }
             if ($request->hasFile('dokumen')) {
                 foreach ($request->file('dokumen') as $key => $dokumen_file) {
-                    $file = new DokumenFile();
-                    $file->dokumen_id = $dokumen->id;
-                    $file->deskripsi = $request->deskripsi[$key];
-                    $time = time();
-                    $filename = $file->deskripsi."_$time." . $dokumen_file->getClientOriginalExtension();
-                    $dokumen_file->storeAs('dokumen', $filename, 'public');
-                    $file->file = $filename;
-                    if (!$file->save()) {
+                    $ext = $dokumen_file->getClientOriginalExtension();
+                    if (!in_array($ext, exts())) {
                         $success = false;
+                    } else {
+                        $file = new DokumenFile();
+                        $file->dokumen_id = $dokumen->id;
+                        $file->deskripsi = $request->deskripsi[$key];
+                        $time = time();
+                        $filename = $file->deskripsi."_$time." . $dokumen_file->getClientOriginalExtension();
+                        $dokumen_file->storeAs('dokumen', $filename, 'public');
+                        $file->file = $filename;
+                        if (!$file->save()) {
+                            $success = false;
+                        }
+                    }
+                }
+            }
+            if ($success) {
+                foreach ($dokumen->files as $file) {
+                    if (!isset($request->file_existing[$file->id])) {
+                        Storage::disk('public')->delete('dokumen/' . $file->file);
+                        $file->delete();
+                    } else {
+                        $file->deskripsi = $request->deskripsi_existing[$file->id];
+                        $file->save();
                     }
                 }
             }
         } catch (\Throwable $th) {
-            throw $th;
+            DB::rollBack();
+            return response()->json(['success' => false, 'error' => $th->getMessage()]);
         }
         
         if ($success) {
