@@ -24,6 +24,9 @@ class PengusulanZIController extends Controller
                     return redirect('zi-tinjau?instansi_id='.$instansi_id);
                 }
             }
+        }elseif(Auth::User()->level == "tpn"){
+            $instansi_obj = KlpdInstansi::find(1);
+            $instansiZI = InstansiZI::where("instansi_id", $instansi_obj->id)->first();
         }else{
             $instansi_obj = Auth::User()->user_rel->instansi;
             $instansi_id = $instansi_obj->id;
@@ -254,9 +257,11 @@ class PengusulanZIController extends Controller
                 foreach($lkeTestTPLine as$tpLine){
                     if($tpLine->paramL4->name == "Opini BPK"){
                         ($tpLine->score)?$skor_opini_bpk = $tpLine->score: $skor_opini_bpk = 0 ; 
-                    }elseif($tpLine->paramL4->name == "Nilai Sistem Akuntabilitas Kinerja Instansi Pemerintah (SAKIP)"){
+                    }elseif($tpLine->paramL4->name == "Nilai Sistem Akuntabilitas Kinerja Instansi Pemerintah (SAKIP)" || 
+                            $tpLine->paramL4->name == "Nilai Sistem Akuntabilitas Kinerja Instansi Pemerintah" || 
+                            $tpLine->paramL4->name == "Nilai Sitem Akuntabilitas Kinerja Instansi Pemerintah (SAKIP)"){ // di database paramerter l4 nya ada dua
                         ($tpLine->score)?$skor_predikat_sakip = $tpLine->score:$skor_predikat_sakip =0;
-                    }elseif($tpLine->paramL4->name == "Tingkat Maturitas Sistem Pengendalian Intern Pemerintah (SPIP)"){
+                    }elseif($tpLine->paramL4->name == "Tingkat Maturitas Sistem Pengendalian Intern Pemerintah (SPIP)" || $tpLine->paramL4->name == "Tingkat Maturitas Sistem Pengendalian Intern Pemerintah"){
                         ($tpLine->score)?$skor_maturitas_spip = $tpLine->score: $skor_maturitas_spip;
                     }
                 }
@@ -277,6 +282,8 @@ class PengusulanZIController extends Controller
                 }elseif($group_kld  == "kl"){#Jika KL
                     ($skor_indeks_rb > 60)?$syarat_indeksrb_wbk = "LULUS":$syarat_indeksrb_wbk="GAGAL";#wbk index B keatas
                     ($skor_indeks_rb > 70)?$syarat_indeksrb_wbbm = "LULUS":$syarat_indeksrb_wbbm="GAGAL";#wbbm index BB
+                }else{
+                    continue;
                 }
                 
                 ($skor_maturitas_spip >= 3)?$syarat_maturitas_spip = "LULUS":$syarat_maturitas_spip="GAGAL" ; #predikat B keatas
@@ -314,7 +321,7 @@ class PengusulanZIController extends Controller
                         $keterangan = "Mohon Maaf Anda belum memenuhi persyaratan untuk mengusulkan unit penerima WBK maupun WBBM. ";
                         #cek kalau pemda afirmasi
                         if($group_kld == "prov" || $group_kld == "kab"){
-                            $keterangan = $keterangan . "Anda hanya bisa mengajukan Unit Afirmasi untuk nominasi penerima WBK";
+                            $keterangan = $keterangan . ". Anda hanya bisa mengajukan Unit Afirmasi untuk nominasi penerima WBK";
                             $status_akhir = 3;
                         }
                     }

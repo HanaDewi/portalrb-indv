@@ -17,6 +17,15 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.theme.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/js/bootstrap-select.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/css/bootstrap-select.min.css"
+        rel="stylesheet" />
+
+
+
     <style>
         #owl-demo .item img {
             display: block;
@@ -177,7 +186,8 @@
                                     @csrf
                                     <div class="row">
                                         <div class="col-md-9">
-                                            <select name="instansi_id">
+                                            <select name="instansi_id" class="form-control selectpicker"
+                                                data-live-search="true">
                                                 @foreach ($instansis as $inst )
                                                 <option value="{{$inst->id}}" @if($inst->name==$instansi) selected
                                                     @endif>{{$inst->name}}</option>
@@ -308,8 +318,8 @@
                                         <hr />
                                         <small class="form-text" {{ ($status_akhir==0 || $status_akhir==3
                                             )?"style=color:red ":"" }}>{{$keterangan}}.
-                                            Jika terdapat kesalahan pada data diatas mohon menghubungi
-                                            administrator</small>
+                                            Jika terdapat ketidaksesuaian pada data diatas harap menghubungi 
+                                            <a href='#'>PIC kementerian PANRB</a></small>
                                     </div>
 
                                     <div class=" col-md-1">
@@ -336,7 +346,7 @@
                                             </div>
                                             <div class="col-md-10 form-group" style="text-align: left">
                                                 <div class="form-group">
-                                                    <label>PIC</label>
+                                                    <label>PIC Instansi Pemerintah</label>
                                                     <input type="text" name="pic" class="form-control" required>
                                                 </div>
                                                 <div class="form-group">
@@ -349,13 +359,12 @@
                                                         required>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label>Surat Usulan Unit</label>
+                                                    <label>Surat Usulan</label>
                                                     <input type="text" name="surat_usulan" class="form-control"
                                                         required>
                                                     <small id="emailHelp" class="form-text text-muted">Input link Drive
-                                                        yang
-                                                        berisi surat usulan unit/satuan kerja
-                                                        pembangunan ZI</small>
+                                                        yang berisi surat usulan dari pimpinan instansi pemerintah
+                                                    </small>
                                                 </div>
 
                                                 <div class="form-group">
@@ -382,7 +391,14 @@
                                                         yang
                                                         berisi Laporan hasil pelaksanaan survei
                                                         mandiri yang memuat nilai SPAK dan SPKP</small>
-
+                                                </div>
+                                                <div class="form-group">
+                                                    <hr />
+                                                    <h2 class="form-text text-center text-danger"
+                                                        style="font-size:1.3em">
+                                                        Mohon dipastikan
+                                                        seluruh link google drive
+                                                        yang disampaikan tidak terkunci dan dapat diakses </h2>
                                                 </div>
                                             </div>
                                             <div class="col-md-1">
@@ -742,6 +758,8 @@
             hitungTotal();
             
         }   
+
+        
     </script>
 
 </body>
