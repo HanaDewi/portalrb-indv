@@ -121,7 +121,7 @@ class DokumenController extends Controller
             if ($request->hasFile('dokumen')) {
                 foreach ($request->file('dokumen') as $key => $dokumen_file) {
                     $ext = $dokumen_file->getClientOriginalExtension();
-                    if (!in_array($ext, exts())) {
+                    if (!in_array(strtolower($ext), exts())) {
                         $success = false;
                     } else {
                         $file = new DokumenFile();
