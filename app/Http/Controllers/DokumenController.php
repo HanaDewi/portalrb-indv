@@ -64,7 +64,7 @@ class DokumenController extends Controller
             $dokumen->filenya = '';
             foreach ($dokumen->files as $file) {
                 $ext = pathinfo($file->file, PATHINFO_EXTENSION);
-                if (in_array($ext, exts())) {
+                if (in_array(strtolower($ext), exts())) {
                     $src = asset('storage/dokumen/' . $file->file);
                     $dokumen->filenya .= '<a href="' . $src . '" target="_blank" title="' . $file->deskripsi . '" class="inline-block"><img src="' . asset('images') . '/'.exts($ext).'" style="width: 50px; margin-right: 5px; margin-top: 5px;"></a>';
                 }
@@ -83,7 +83,7 @@ class DokumenController extends Controller
         $dokumen->file_list = '';
         foreach ($dokumen->files as $file) {
             $ext = pathinfo($file->file, PATHINFO_EXTENSION);
-            if (in_array($ext, exts())) {
+            if (in_array(strtolower($ext), exts())) {
                 $src = exts(strtolower($ext));
                 $dokumen->dokumen_list .= '<div class="col-span-12 lg:col-span-4" id="dokumendiv'.$file->id.'" style="position:relative;">
                     <div style="height: 100px;">
