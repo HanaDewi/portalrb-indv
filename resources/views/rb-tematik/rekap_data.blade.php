@@ -15,9 +15,11 @@
                     <tr>
                         <td class="font-bold">Instansi</td>
                         <td>
-                            <select class="form-control tom-select mt-1" name="instansi_id[]" onchange="$('#filter-form').submit();" multiple>
+                            <select class="form-control tom-select mt-1" name="instansi_id[]"
+                                onchange="$('#filter-form').submit();" multiple>
                                 @foreach (instansis() as $idx=>$ins)
-                                <option value="{{ $idx }}" {{ in_array($idx, $finstansi) ? 'selected':'' }} >{{ $ins }}</option>
+                                <option value="{{ $idx }}" {{ in_array($idx, $finstansi) ? 'selected' :'' }}>{{ $ins }}
+                                </option>
                                 @endforeach
                             </select>
                         </td>
@@ -26,10 +28,12 @@
                     <tr>
                         <td class="font-bold" width="220">Tema</td>
                         <td>
-                            <select class="form-control tom-select mt-1" name="ftema[]" onchange="$('#filter-form').submit();" multiple>
+                            <select class="form-control tom-select mt-1" name="ftema[]"
+                                onchange="$('#filter-form').submit();" multiple>
                                 <option value=""> -- Pilih Tema -- </option>
                                 @foreach ($temas as $tema)
-                                <option value="{{ $tema->id }}" {{ in_array($tema->id, $ftema) ? 'selected':'' }} >{{ $tema->nama }}</option>
+                                <option value="{{ $tema->id }}" {{ in_array($tema->id, $ftema) ? 'selected':'' }} >{{
+                                    $tema->nama }}</option>
                                 @endforeach
                             </select>
                         </td>
@@ -37,7 +41,8 @@
                     <tr>
                         <td class="font-bold" width="220">Fokus Intervensi</td>
                         <td>
-                            <select class="form-control tom-select mt-1" name="fintervensi" onchange="$('#filter-form').submit();">
+                            <select class="form-control tom-select mt-1" name="fintervensi"
+                                onchange="$('#filter-form').submit();">
                                 <option value=""> -- Pilih Fokus Intervensi -- </option>
                                 @foreach (fokusIntervensi() as $fid=>$fnama)
                                 <option value="{{ $fid }}" {{ $fintervensi==$fid ?'selected':'' }}>{{ $fnama }}</option>
@@ -87,6 +92,9 @@
                 <thead class="table-dark font-bold">
                     <tr>
                         <th class="w-5" rowspan="2">No.</th>
+                        @if (in_array(auth()->user()->level, ['admin', 'tpn']))
+                        <th class="w-10" rowspan="2">Instansi</th>
+                        @endif
                         <th class="w-10" rowspan="2">Tema</th>
                         <th class="w-10" rowspan="2">Sasaran</th>
                         <th rowspan="2">Indikator_roadmap</th>
@@ -124,146 +132,208 @@
                     </tr>
                 </thead>
                 <tbody>
-                @php 
-                    $no = 0; 
-                    $nama = '';
-                @endphp
-                
-                @foreach ($datas as $data)
                     @php
-                        if ($nama != $data['sasaran_roadmap']->tema->nama) {
-                            $nama = $data['sasaran_roadmap']->tema->nama;
-                            $no++;
-                        }
+                    $no = 0;
+                    $nama = '';
                     @endphp
-                        <tr>
-                            <td class="font-bold">{{ $no }}</td>
-                            <td class="font-bold">{{ $data['sasaran_roadmap']->tema ? $data['sasaran_roadmap']->tema->nama:'' }}</td>
-                            <td>{{ $data['sasaran_roadmap']->nama }}</td>
-                            <td>
-                                {{ $data['indikator_roadmap']->nama }}
-                            </td>
-                            <td>
-                                {{ $data['indikator_roadmap']->target }}
-                            </td>
-                            <td>
-                                {{ $data['indikator_roadmap']->satuan }}
-                            </td>
-                            <td>{{ $data['indikator_roadmap']->realisasi_indikator }}</td>
-                            <td>{{ $data['indikator_roadmap']->capaian_indikator }}</td>
-                            <td>{{ $data['indikator_roadmap']->catatan }}</td>
-                            <td>
-                                {{ $data['indikator_roadmap']->catatan_evaluator }}
-                                @if (auth()->user()->level == 'tpn')
-                                <button onclick="catatan_evaluator({{ $data['indikator_roadmap']->id }});" class="mb-3 btn btn-warning btn-sm w-10"><svg xmlns="https://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" icon-name="edit" data-lucide="edit" class="lucide lucide-edit block mx-auto"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button><br>
-                                @endif
-                                
-                            </td>
-                            <td>
-                                {{ $data['permasalahan']->nama }}
-                            </td>
-                            <td>
-                                {{ $data['permasalahan']->sasaran_permasalahan }}
-                            </td>
-                            <td>
-                                {{ $data['indikator_permasalahan']->nama }}
-                            </td>
-                            <td>
-                                {{ $data['indikator_permasalahan']->target }}
-                            </td>
-                            <td>
-                                {{ $data['indikator_permasalahan']->satuan }}
-                            </td>
-                            <td>
-                                {{ $data['indikator_permasalahan']->realisasi_indikator }}
-                            </td>
-                            <td>
-                                {{ $data['indikator_permasalahan']->capaian_indikator }}
-                            </td>
-                            <td>
-                                {{ $data['indikator_permasalahan']->catatan }}
-                            </td>
-                            <td>
-                                {{ $data['indikator_permasalahan']->catatan_evaluator }}
-                            </td>   
-                            <td>
-                                {{ $data['rencana_aksi']->nama }}
-                            </td>
-                            <td>
-                                {{ $data['output']->indikator_output }}
-                            </td>
-                            <td>
-                                {{ $data['output']->satuan_output }}
-                            </td>
-                            <td>
-                                @if ($data['output']->target_total)
-                                <table class="table table-noborder">
-                                    <tr><th>TW 1 </th><td>: <i class="digit">{{$data['output']->target_tw1}}</i> </td></tr>
-                                    <tr><th>TW 2 </th><td>: <i class="digit">{{ $data['output']->target_tw2 }}</i></td></tr>
-                                    <tr><th>TW 3 </th><td>: <i class="digit">{{ $data['output']->target_tw3 }}</i></td></tr>
-                                    <tr><th>TW 4 </th><td>: <i class="digit">{{ $data['output']->target_tw4 }}</i></td></tr>
-                                    <tr><th>Total </th><td>: <i class="digit">{{$data['output']->target_total }}</i></td></tr>
-                                </table>
-                                @endif
-                            </td>
-                            <td>
-                                @if ($data['output']->anggaran_total)
-                                <table class="table table-noborder">
-                                    <tr><td>Rp. <i class="digit">{{ $data['output']->anggaran_total }}</i></td></tr>
-                                </table>
-                                @endif
-                            </td>
-                            <td>
-                                {{ $data['output']->get_intervensi ? $data['output']->get_intervensi->nama:'' }}
-                            </td>
-                            <td>
-                                {{ $data['output']->koordinator }}
-                            </td>
-                            <td>
-                                {{ $data['output']->pelaksana }}
-                            </td>
-                            <td>
-                                @if ($data['output']->realisasi_output_total)
-                                <table class="table table-noborder">
-                                    <tr><th>TW 1</th><td>: <i class="digit"> {{ $data['output']->realisasi_output_tw1 }}</i></td></tr>
-                                    <tr><th>TW 2</th><td>: <i class="digit"> {{ $data['output']->realisasi_output_tw2 }}</i></td></tr>
-                                    <tr><th>TW 3</th><td>: <i class="digit"> {{ $data['output']->realisasi_output_tw3 }}</i></td></tr>
-                                    <tr><th>TW 4</th><td>: <i class="digit"> {{ $data['output']->realisasi_output_tw4 }}</i></td></tr>
-                                    <tr><th>Total</th><td>: <i class="digit"> {{$data['output']->realisasi_output_total }}</i></td></tr>
-                                </table>
-                                @endif
-                            </td>
-                            <td>
-                                @if ($data['output']->realisasi_anggaran_total)
-                                <table class="table table-noborder">
-                                    <tr><td>Rp. <i class="digit"> {{ $data['output']->realisasi_anggaran_total }} </i></td></tr>
-                                </table>
-                                @endif
-                            </td>
-                            <td>
-                                @if ($data['output']->capaian_output_total)
-                                <table class="table table-noborder">
-                                    <tr><th>TW 1</th><td>: <i class="digit">{{ $data['output']->capaian_output_tw1 }}</i>%</td></tr>
-                                    <tr><th>TW 2</th><td>: <i class="digit">{{ $data['output']->capaian_output_tw2 }}</i>%</td></tr>
-                                    <tr><th>TW 3</th><td>: <i class="digit">{{ $data['output']->capaian_output_tw3 }}</i>%</td></tr>
-                                    <tr><th>TW 4</th><td>: <i class="digit">{{ $data['output']->capaian_output_tw4 }}</i>%</td></tr>
-                                    <tr><th>Total</th><td>: <i class="digit">{{$data['output']->capaian_output_total }}</i>%</td></tr>
-                                </table>
-                                @endif
-                            </td>
-                            <td>
-                                @if ($data['output']->capaian_anggaran_total)
-                                <table class="table table-noborder">
-                                    <tr><td><i class="digit">{{ $data['output']->capaian_anggaran_total, 2 }}</i>%</td></tr>
-                                </table>
-                                @endif
-                            </td>
-                            <td>
-                                @if ($data['output']->catatan)
-                                    {{ $data['output']->catatan }}
-                                @endif
-                            </td>
-                        </tr>
+
+                    @foreach ($datas as $data)
+                    @php
+                    if ($nama != $data['sasaran_roadmap']->tema->nama) {
+                    $nama = $data['sasaran_roadmap']->tema->nama;
+                    $no++;
+                    }
+                    @endphp
+                    <tr>
+                        <td class="font-bold">{{ $no }}</td>
+                        @if (in_array(auth()->user()->level, ['admin', 'tpn']))
+                        <td>{{ $nama_instansi }}</td>
+                        @endif
+                        <td class="font-bold">{{ $data['sasaran_roadmap']->tema ?
+                            $data['sasaran_roadmap']->tema->nama:'' }}</td>
+                        <td>{{ $data['sasaran_roadmap']->nama }}</td>
+                        <td>
+                            {{ $data['indikator_roadmap']->nama }}
+                        </td>
+                        <td>
+                            {{ $data['indikator_roadmap']->target }}
+                        </td>
+                        <td>
+                            {{ $data['indikator_roadmap']->satuan }}
+                        </td>
+                        <td>{{ $data['indikator_roadmap']->realisasi_indikator }}</td>
+                        <td>{{ $data['indikator_roadmap']->capaian_indikator }}</td>
+                        <td>{{ $data['indikator_roadmap']->catatan }}</td>
+                        <td>
+                            {{ $data['indikator_roadmap']->catatan_evaluator }}
+                            @if (auth()->user()->level == 'tpn')
+                            <button onclick="catatan_evaluator({{ $data['indikator_roadmap']->id }});"
+                                class="mb-3 btn btn-warning btn-sm w-10"><svg xmlns="https://www.w3.org/2000/svg"
+                                    width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round" icon-name="edit"
+                                    data-lucide="edit" class="lucide lucide-edit block mx-auto">
+                                    <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"></path>
+                                    <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                </svg></button><br>
+                            @endif
+
+                        </td>
+                        <td>
+                            {{ $data['permasalahan']->nama }}
+                        </td>
+                        <td>
+                            {{ $data['permasalahan']->sasaran_permasalahan }}
+                        </td>
+                        <td>
+                            {{ $data['indikator_permasalahan']->nama }}
+                        </td>
+                        <td>
+                            {{ $data['indikator_permasalahan']->target }}
+                        </td>
+                        <td>
+                            {{ $data['indikator_permasalahan']->satuan }}
+                        </td>
+                        <td>
+                            {{ $data['indikator_permasalahan']->realisasi_indikator }}
+                        </td>
+                        <td>
+                            {{ $data['indikator_permasalahan']->capaian_indikator }}
+                        </td>
+                        <td>
+                            {{ $data['indikator_permasalahan']->catatan }}
+                        </td>
+                        <td>
+                            {{ $data['indikator_permasalahan']->catatan_evaluator }}
+                        </td>
+                        <td>
+                            {{ $data['rencana_aksi']->nama }}
+                        </td>
+                        <td>
+                            {{ $data['output']->indikator_output }}
+                        </td>
+                        <td>
+                            {{ $data['output']->satuan_output }}
+                        </td>
+                        <td>
+                            @if ($data['output']->target_total)
+                            <table class="table table-noborder">
+                                <tr>
+                                    <th>TW 1 </th>
+                                    <td>: <i class="digit">{{$data['output']->target_tw1}}</i> </td>
+                                </tr>
+                                <tr>
+                                    <th>TW 2 </th>
+                                    <td>: <i class="digit">{{ $data['output']->target_tw2 }}</i></td>
+                                </tr>
+                                <tr>
+                                    <th>TW 3 </th>
+                                    <td>: <i class="digit">{{ $data['output']->target_tw3 }}</i></td>
+                                </tr>
+                                <tr>
+                                    <th>TW 4 </th>
+                                    <td>: <i class="digit">{{ $data['output']->target_tw4 }}</i></td>
+                                </tr>
+                                <tr>
+                                    <th>Total </th>
+                                    <td>: <i class="digit">{{$data['output']->target_total }}</i></td>
+                                </tr>
+                            </table>
+                            @endif
+                        </td>
+                        <td>
+                            @if ($data['output']->anggaran_total)
+                            <table class="table table-noborder">
+                                <tr>
+                                    <td>Rp. <i class="digit">{{ $data['output']->anggaran_total }}</i></td>
+                                </tr>
+                            </table>
+                            @endif
+                        </td>
+                        <td>
+                            {{ $data['output']->get_intervensi ? $data['output']->get_intervensi->nama:'' }}
+                        </td>
+                        <td>
+                            {{ $data['output']->koordinator }}
+                        </td>
+                        <td>
+                            {{ $data['output']->pelaksana }}
+                        </td>
+                        <td>
+                            @if ($data['output']->realisasi_output_total)
+                            <table class="table table-noborder">
+                                <tr>
+                                    <th>TW 1</th>
+                                    <td>: <i class="digit"> {{ $data['output']->realisasi_output_tw1 }}</i></td>
+                                </tr>
+                                <tr>
+                                    <th>TW 2</th>
+                                    <td>: <i class="digit"> {{ $data['output']->realisasi_output_tw2 }}</i></td>
+                                </tr>
+                                <tr>
+                                    <th>TW 3</th>
+                                    <td>: <i class="digit"> {{ $data['output']->realisasi_output_tw3 }}</i></td>
+                                </tr>
+                                <tr>
+                                    <th>TW 4</th>
+                                    <td>: <i class="digit"> {{ $data['output']->realisasi_output_tw4 }}</i></td>
+                                </tr>
+                                <tr>
+                                    <th>Total</th>
+                                    <td>: <i class="digit"> {{$data['output']->realisasi_output_total }}</i></td>
+                                </tr>
+                            </table>
+                            @endif
+                        </td>
+                        <td>
+                            @if ($data['output']->realisasi_anggaran_total)
+                            <table class="table table-noborder">
+                                <tr>
+                                    <td>Rp. <i class="digit"> {{ $data['output']->realisasi_anggaran_total }} </i></td>
+                                </tr>
+                            </table>
+                            @endif
+                        </td>
+                        <td>
+                            @if ($data['output']->capaian_output_total)
+                            <table class="table table-noborder">
+                                <tr>
+                                    <th>TW 1</th>
+                                    <td>: <i class="digit">{{ $data['output']->capaian_output_tw1 }}</i>%</td>
+                                </tr>
+                                <tr>
+                                    <th>TW 2</th>
+                                    <td>: <i class="digit">{{ $data['output']->capaian_output_tw2 }}</i>%</td>
+                                </tr>
+                                <tr>
+                                    <th>TW 3</th>
+                                    <td>: <i class="digit">{{ $data['output']->capaian_output_tw3 }}</i>%</td>
+                                </tr>
+                                <tr>
+                                    <th>TW 4</th>
+                                    <td>: <i class="digit">{{ $data['output']->capaian_output_tw4 }}</i>%</td>
+                                </tr>
+                                <tr>
+                                    <th>Total</th>
+                                    <td>: <i class="digit">{{$data['output']->capaian_output_total }}</i>%</td>
+                                </tr>
+                            </table>
+                            @endif
+                        </td>
+                        <td>
+                            @if ($data['output']->capaian_anggaran_total)
+                            <table class="table table-noborder">
+                                <tr>
+                                    <td><i class="digit">{{ $data['output']->capaian_anggaran_total, 2 }}</i>%</td>
+                                </tr>
+                            </table>
+                            @endif
+                        </td>
+                        <td>
+                            @if ($data['output']->catatan)
+                            {{ $data['output']->catatan }}
+                            @endif
+                        </td>
+                    </tr>
                     @endforeach
                 </tbody>
             </table>
@@ -281,7 +351,8 @@
                 <h2 class="font-bold fw-medium fs-base me-auto" id="title">Monitoring dan Evaluasi Perencanaan</h2>
             </div> <!-- END: Modal Header -->
             <!-- BEGIN: Modal Body -->
-            <form action="{{ url('rb-general/rekap_data/simpanCatatanEvaluator') }}" id="form-catatan_evaluator" method="post">
+            <form action="{{ url('rb-general/rekap_data/simpanCatatanEvaluator') }}" id="form-catatan_evaluator"
+                method="post">
                 @csrf
                 <input type="hidden" id="target_id" name="target_id">
                 <div class="modal-body grid columns-12 gap-4 gap-y-3">
@@ -290,16 +361,18 @@
                             <tr>
                                 <td class="font-bold">Catatan Evaluator</td>
                                 <td>
-                                    <textarea name="catatan_evaluator" id="catatan_evaluator" cols="30" rows="10" placeholder="Catatan" class="form-control mt-4"></textarea>
+                                    <textarea name="catatan_evaluator" id="catatan_evaluator" cols="30" rows="10"
+                                        placeholder="Catatan" class="form-control mt-4"></textarea>
                                 </td>
                             </tr>
                         </table>
                     </div>
                 </div> <!-- END: Modal Body -->
                 <!-- BEGIN: Modal Footer -->
-                <div class="modal-footer text-end"> 
-                    <button type="button" data-tw-dismiss="modal" class="btn btn-outline-secondary w-20 me-1">Cancel</button> 
-                    <button type="submit" class="btn btn-primary w-20 saveButton">Simpan</button> 
+                <div class="modal-footer text-end">
+                    <button type="button" data-tw-dismiss="modal"
+                        class="btn btn-outline-secondary w-20 me-1">Cancel</button>
+                    <button type="submit" class="btn btn-primary w-20 saveButton">Simpan</button>
                 </div> <!-- END: Modal Footer -->
             </form>
         </div>
@@ -323,7 +396,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.html5.min.js"></script>
 <script>
-$(document).ready(function(){
+    $(document).ready(function(){
     var empDataTable = $('#perencanaan').DataTable({
         dom: 'Blfrtip',
         buttons: [

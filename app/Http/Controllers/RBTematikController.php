@@ -893,8 +893,8 @@ class RBTematikController extends Controller
 
         $finstansi = $request->get('instansi_id');
         $ftema = $request->get('ftema');
-        if ($finstansi==null) {
-            $finstansi = [];
+        if ($finstansi==null && in_array($user->level, ['admin', 'tpn'])) {
+            $finstansi = [1];
         }
         if ($ftema==null) {
             $ftema = [];
