@@ -318,8 +318,8 @@
                                         <hr />
                                         <small class="form-text" {{ ($status_akhir==0 || $status_akhir==3
                                             )?"style=color:red ":"" }}>{{$keterangan}}.
-                                            Jika terdapat kesalahan pada data diatas mohon menghubungi
-                                            administrator</small>
+                                            Jika terdapat ketidaksesuaian pada data diatas harap menghubungi 
+                                            <a href='#'>PIC kementerian PANRB</a></small>
                                     </div>
 
                                     <div class=" col-md-1">
@@ -346,7 +346,7 @@
                                             </div>
                                             <div class="col-md-10 form-group" style="text-align: left">
                                                 <div class="form-group">
-                                                    <label>PIC</label>
+                                                    <label>PIC Instansi Pemerintah</label>
                                                     <input type="text" name="pic" class="form-control" required>
                                                 </div>
                                                 <div class="form-group">
@@ -359,13 +359,12 @@
                                                         required>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label>Surat Usulan Unit</label>
+                                                    <label>Surat Usulan</label>
                                                     <input type="text" name="surat_usulan" class="form-control"
                                                         required>
                                                     <small id="emailHelp" class="form-text text-muted">Input link Drive
-                                                        yang
-                                                        berisi surat usulan unit/satuan kerja
-                                                        pembangunan ZI</small>
+                                                        yang berisi surat usulan dari pimpinan instansi pemerintah
+                                                    </small>
                                                 </div>
 
                                                 <div class="form-group">
@@ -392,7 +391,14 @@
                                                         yang
                                                         berisi Laporan hasil pelaksanaan survei
                                                         mandiri yang memuat nilai SPAK dan SPKP</small>
-
+                                                </div>
+                                                <div class="form-group">
+                                                    <hr />
+                                                    <h2 class="form-text text-center text-danger"
+                                                        style="font-size:1.3em">
+                                                        Mohon dipastikan
+                                                        seluruh link google drive
+                                                        yang disampaikan tidak terkunci dan dapat diakses </h2>
                                                 </div>
                                             </div>
                                             <div class="col-md-1">

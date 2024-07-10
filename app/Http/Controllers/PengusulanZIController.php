@@ -257,7 +257,9 @@ class PengusulanZIController extends Controller
                 foreach($lkeTestTPLine as$tpLine){
                     if($tpLine->paramL4->name == "Opini BPK"){
                         ($tpLine->score)?$skor_opini_bpk = $tpLine->score: $skor_opini_bpk = 0 ; 
-                    }elseif($tpLine->paramL4->name == "Nilai Sistem Akuntabilitas Kinerja Instansi Pemerintah (SAKIP)" || $tpLine->paramL4->name == "Nilai Sistem Akuntabilitas Kinerja Instansi Pemerintah"){ // di database paramerter l4 nya ada dua
+                    }elseif($tpLine->paramL4->name == "Nilai Sistem Akuntabilitas Kinerja Instansi Pemerintah (SAKIP)" || 
+                            $tpLine->paramL4->name == "Nilai Sistem Akuntabilitas Kinerja Instansi Pemerintah" || 
+                            $tpLine->paramL4->name == "Nilai Sitem Akuntabilitas Kinerja Instansi Pemerintah (SAKIP)"){ // di database paramerter l4 nya ada dua
                         ($tpLine->score)?$skor_predikat_sakip = $tpLine->score:$skor_predikat_sakip =0;
                     }elseif($tpLine->paramL4->name == "Tingkat Maturitas Sistem Pengendalian Intern Pemerintah (SPIP)" || $tpLine->paramL4->name == "Tingkat Maturitas Sistem Pengendalian Intern Pemerintah"){
                         ($tpLine->score)?$skor_maturitas_spip = $tpLine->score: $skor_maturitas_spip;
