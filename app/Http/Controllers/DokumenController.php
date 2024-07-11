@@ -118,7 +118,16 @@ class DokumenController extends Controller
                 $dokumen->kategori_id = $kategori_id;
                 $dokumen->save();
             }
-            if ($request->hasFile('dokumen')) {
+            foreach ($dokumen->files as $file) {
+                if (!isset($request->file_existing[$file->id])) {
+                    Storage::disk('public')->delete('dokumen/' . $file->file);
+                    $file->delete();
+                } else {
+                    $file->deskripsi = $request->deskripsi_existing[$file->id];
+                    $file->save();
+                }
+            }
+            if ($request->dokumen) {
                 foreach ($request->file('dokumen') as $key => $dokumen_file) {
                     $ext = $dokumen_file->getClientOriginalExtension();
                     if (!in_array(strtolower($ext), exts())) {
@@ -134,17 +143,6 @@ class DokumenController extends Controller
                         if (!$file->save()) {
                             $success = false;
                         }
-                    }
-                }
-            }
-            if ($success) {
-                foreach ($dokumen->files as $file) {
-                    if (!isset($request->file_existing[$file->id])) {
-                        Storage::disk('public')->delete('dokumen/' . $file->file);
-                        $file->delete();
-                    } else {
-                        $file->deskripsi = $request->deskripsi_existing[$file->id];
-                        $file->save();
                     }
                 }
             }
