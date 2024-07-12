@@ -157,19 +157,21 @@
                     </tr>
                     <tr>
                         <td>Surat Usulan</td>
-                        <td>{{$instansi_ZI->surat_usulan}}</td>
+                        <td><a href="{{$instansi_ZI->surat_usulan}}" target="_blank">{{$instansi_ZI->surat_usulan}}</a>
+                        </td>
                     </tr>
                     <tr>
                         <td>SPTJM</td>
-                        <td>{{$instansi_ZI->sptjm}}</td>
+                        <td><a href="{{$instansi_ZI->sptjm}}" target="_blank">{{$instansi_ZI->sptjm}}</a></td>
                     </tr>
                     <tr>
                         <td>TLHP</td>
-                        <td>{{$instansi_ZI->tlhp}}</td>
+                        <td> <a href="{{$instansi_ZI->tlhp}}" target="_blank">{{$instansi_ZI->tlhp}}</a></td>
                     </tr>
                     <tr>
                         <td>Survei Mandiri</td>
-                        <td>{{$instansi_ZI->survei_mandiri}}</td>
+                        <td><a href="{{$instansi_ZI->survei_mandiri}}"
+                                target="_blank">{{$instansi_ZI->survei_mandiri}}</a></td>
                     </tr>
                     <tr>
                         <td>Jumlah Unit WBK </td>
@@ -186,7 +188,7 @@
                     @foreach ($instansi_ZI->unit_zi as $unit_zi )
                     <tr>
                         <td>{{$unit_zi->nama}} ({{($unit_zi->wbk)?"WBK":""}}{{($unit_zi->wbbm)?"WBBM":""}} )</td>
-                        <td>lke : <a href="#">{{$unit_zi->lke}}</a></td>
+                        <td><a href="{{$unit_zi->lke}}" target="_blank">lke : {{$unit_zi->lke}}</a></td>
                     </tr>
                     @endforeach
 
@@ -267,7 +269,7 @@
             scrollX: true,
             // 'orderFixed': [0, 'asc'],
             autoWidth: false,
-            paging: true,
+            paging: false,
             bInfo: false,
             ordering: false,
         });

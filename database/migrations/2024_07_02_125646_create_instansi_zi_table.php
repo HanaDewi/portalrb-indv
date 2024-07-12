@@ -43,6 +43,7 @@ return new class extends Migration
             $table->integer('jml_wbk')->nullable();
             $table->integer('jml_wbbm')->nullable();
             $table->boolean('final')->nullable();
+            $table->integer('update_by')->nullable();
             $table->timestamps();
         });
     }

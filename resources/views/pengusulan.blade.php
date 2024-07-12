@@ -208,7 +208,7 @@
                                     <thead>
                                         <tr>
                                             <th>Indikator</th>
-                                            <th>Skor</th>
+                                            <!--<th>Skor</th>-->
                                             <th>Predikat</th>
                                             <th class="text-center">WBK</th>
                                             <th class="text-center">WBBM</th>
@@ -216,7 +216,7 @@
                                     </thead>
                                     <tr>
                                         <td>Opini BPK</td>
-                                        <td> {{$skor_opini_bpk}} </td>
+                                        <!--<td> {{$skor_opini_bpk}} </td>-->
                                         <td>{{($opini_bpk)?$opini_bpk:"-"}} </td>
                                         <td class="text-center">
                                             @if($syarat_bpk=="LULUS")
@@ -235,7 +235,7 @@
                                     </tr>
                                     <tr>
                                         <td>Predikat SAKIP</td>
-                                        <td> {{$skor_predikat_sakip}}</td>
+                                        <!-- <td> {{$skor_predikat_sakip}}</td>-->
                                         <td>{{($predikat_sakip)?$predikat_sakip:"-"}} </td>
                                         <td class="text-center">
                                             @if($syarat_sakip_wbk=="LULUS")
@@ -254,7 +254,7 @@
                                     </tr>
                                     <tr>
                                         <td>Indeks RB</td>
-                                        <td> {{$skor_indeks_rb}}</td>
+                                        <!--<td> {{$skor_indeks_rb}}</td>-->
                                         <td>{{($indeks_rb)?$indeks_rb:"-"}} </td>
                                         <td class="text-center">
                                             @if($syarat_indeksrb_wbk=="LULUS")
@@ -273,7 +273,7 @@
                                     </tr>
                                     <tr>
                                         <td>Maturitas SPIP</td>
-                                        <td> {{$skor_maturitas_spip}}</td>
+                                        <!--<td> {{$skor_maturitas_spip}}</td>-->
                                         <td>{{($maturitas_spip)?$maturitas_spip:"-"}} </td>
                                         <td class="text-center">
                                             @if($syarat_maturitas_spip=="LULUS")
@@ -292,7 +292,7 @@
                                     </tr>
                                     <tfoot>
                                         <tr>
-                                            <td colspan="3" class="text-center">Kesimpulan</td>
+                                            <td colspan="2" class="text-center">Kesimpulan</td>
                                             <td class="text-center">
                                                 @if($syarat_akhir_wbk=="LULUS")
                                                 <i class="fa fa-check text-success"></i>
@@ -319,7 +319,25 @@
                                         <small class="form-text" {{ ($status_akhir==0 || $status_akhir==3
                                             )?"style=color:red ":"" }}>{{$keterangan}}.
                                             Jika terdapat ketidaksesuaian pada data diatas harap menghubungi 
-                                            <a href='#'>PIC kementerian PANRB</a></small>
+                                            PIC kementerian PANRB</small>
+                                    </div>
+
+                                    <div class=" col-md-1">
+                                    </div>
+                                </div>
+                                <div class="row ">
+                                    <div class="col-md-1">
+                                    </div>
+                                    <div class="col-md-10 form-group">
+                                        <hr />
+                                        <button class="btn btn-primary" id="infoAffirmasi">Info Unit Afirmasi</button>
+                                        <button class="btn btn-warning" id="infoCp">Info PIC Instansi</button>
+                                        <hr />
+                                        <img id="infoAffirmasiImg" src="assets/images/unit_kerja_affirmasi.jpeg"
+                                            style="display: none;" width="75%">
+                                        <hr />
+                                        <img id="infoCpImg" src="assets/images/cp_instansi.jpeg" style="display: none;">
+
                                     </div>
 
                                     <div class=" col-md-1">
@@ -394,11 +412,11 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <hr />
-                                                    <h2 class="form-text text-center text-danger"
+                                                    <h1 class="form-text text-center text-danger"
                                                         style="font-size:1.3em">
                                                         Mohon dipastikan
-                                                        seluruh link google drive
-                                                        yang disampaikan tidak terkunci dan dapat diakses </h2>
+                                                        seluruh link drive
+                                                        yang disampaikan tidak terkunci dan dapat diakses </h1>
                                                 </div>
                                             </div>
                                             <div class="col-md-1">
@@ -681,6 +699,8 @@
                         tambah_wbbm(pertama_kali = 1);
                     };
                 }
+                $('#jmlWBK').attr('disabled', 'disabled');
+                $('#jmlWBBM').attr('disabled', 'disabled');
             }
         }
 
@@ -758,6 +778,14 @@
             hitungTotal();
             
         }   
+
+        $("#infoAffirmasi").click(function(){
+            $("#infoAffirmasiImg").toggle();
+        });
+
+        $("#infoCp").click(function(){
+            $("#infoCpImg").toggle();
+        });
 
         
     </script>
