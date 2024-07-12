@@ -208,7 +208,7 @@
                                     <thead>
                                         <tr>
                                             <th>Indikator</th>
-                                            <th>Skor</th>
+                                            <!--<th>Skor</th>-->
                                             <th>Predikat</th>
                                             <th class="text-center">WBK</th>
                                             <th class="text-center">WBBM</th>
@@ -216,7 +216,7 @@
                                     </thead>
                                     <tr>
                                         <td>Opini BPK</td>
-                                        <td> {{$skor_opini_bpk}} </td>
+                                        <!--<td> {{$skor_opini_bpk}} </td>-->
                                         <td>{{($opini_bpk)?$opini_bpk:"-"}} </td>
                                         <td class="text-center">
                                             @if($syarat_bpk=="LULUS")
@@ -235,7 +235,7 @@
                                     </tr>
                                     <tr>
                                         <td>Predikat SAKIP</td>
-                                        <td> {{$skor_predikat_sakip}}</td>
+                                        <!-- <td> {{$skor_predikat_sakip}}</td>-->
                                         <td>{{($predikat_sakip)?$predikat_sakip:"-"}} </td>
                                         <td class="text-center">
                                             @if($syarat_sakip_wbk=="LULUS")
@@ -254,7 +254,7 @@
                                     </tr>
                                     <tr>
                                         <td>Indeks RB</td>
-                                        <td> {{$skor_indeks_rb}}</td>
+                                        <!--<td> {{$skor_indeks_rb}}</td>-->
                                         <td>{{($indeks_rb)?$indeks_rb:"-"}} </td>
                                         <td class="text-center">
                                             @if($syarat_indeksrb_wbk=="LULUS")
@@ -273,7 +273,7 @@
                                     </tr>
                                     <tr>
                                         <td>Maturitas SPIP</td>
-                                        <td> {{$skor_maturitas_spip}}</td>
+                                        <!--<td> {{$skor_maturitas_spip}}</td>-->
                                         <td>{{($maturitas_spip)?$maturitas_spip:"-"}} </td>
                                         <td class="text-center">
                                             @if($syarat_maturitas_spip=="LULUS")
@@ -292,7 +292,7 @@
                                     </tr>
                                     <tfoot>
                                         <tr>
-                                            <td colspan="3" class="text-center">Kesimpulan</td>
+                                            <td colspan="2" class="text-center">Kesimpulan</td>
                                             <td class="text-center">
                                                 @if($syarat_akhir_wbk=="LULUS")
                                                 <i class="fa fa-check text-success"></i>
