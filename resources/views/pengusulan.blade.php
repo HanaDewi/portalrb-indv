@@ -235,7 +235,7 @@
                                     </tr>
                                     <tr>
                                         <td>Predikat SAKIP</td>
-                                        <!-- <td> {{$skor_predikat_sakip}}</td>-->
+                                        <!--<td> {{$skor_predikat_sakip}}</td>-->
                                         <td>{{($predikat_sakip)?$predikat_sakip:"-"}} </td>
                                         <td class="text-center">
                                             @if($syarat_sakip_wbk=="LULUS")
@@ -254,7 +254,8 @@
                                     </tr>
                                     <tr>
                                         <td>Indeks RB</td>
-                                        <!--<td> {{$skor_indeks_rb}}</td>-->
+                                        <!-- <td> {{$skor_indeks_rb}}</td> -->
+
                                         <td>{{($indeks_rb)?$indeks_rb:"-"}} </td>
                                         <td class="text-center">
                                             @if($syarat_indeksrb_wbk=="LULUS")
@@ -273,7 +274,7 @@
                                     </tr>
                                     <tr>
                                         <td>Maturitas SPIP</td>
-                                        <!--<td> {{$skor_maturitas_spip}}</td>-->
+                                        <!-- <td> {{$skor_maturitas_spip}}</td> -->
                                         <td>{{($maturitas_spip)?$maturitas_spip:"-"}} </td>
                                         <td class="text-center">
                                             @if($syarat_maturitas_spip=="LULUS")
@@ -455,7 +456,7 @@
                                                             <input type="number" name="jml_wbbm" id="jmlWBBM"
                                                                 onkeyup="hitungTotal()" class="form-control"
                                                                 style="text-align: center;" @if($status_akhir==1 or
-                                                                $status_akhir==3) disabled @endif>
+                                                                $status_akhir==3 or $status_akhir==4 ) disabled @endif>
                                                         </div>
                                                         <div class=" col-md-4">
                                                             <label
@@ -510,7 +511,7 @@
                                                                 <label style="color:white; ">Nama Unit WBK</label>
                                                             </div>
                                                             <div class="col-md-4">
-                                                                <label style="color:white">Link LKE</label>
+                                                                <label style="color:white">Link File LKE</label>
                                                             </div>
                                                             @if($group_kld == "prov" || $group_kld == "kab")
                                                             <div class="col-md-2">
@@ -562,7 +563,7 @@
                                                                     <label style="color:white; ">Nama Unit WBBM</label>
                                                                 </div>
                                                                 <div class="col-md-5">
-                                                                    <label style="color:white">Link LKE</label>
+                                                                    <label style="color:white">Link File LKE</label>
                                                                 </div>
                                                                 <div class="col-md-2">
                                                                     <label style="color:white; ">Delete</label>
@@ -617,7 +618,8 @@
                                 </a>
                             </div>
                             <p>
-                                <i class="fas fa-building redw"></i> Deputi Bidang Reformasi Birokrasi, Akuntabilitas
+                                <i class="fas fa-building redw"></i> Deputi Bidang
+                                Reformasi Birokrasi, Akuntabilitas
                                 Aparatur dan Pengawasan
                             </p>
                         </div>
@@ -627,13 +629,16 @@
                             <h4 class="footer-title">Tentang Kami</h4>
                             <ul>
                                 <li>
-                                    <i class="fas fa-envelope redw"></i> E-mail: rbkunwas@gmail.com
+                                    <i class="fas fa-envelope redw"></i> E-mail:
+                                    rbkunwas@gmail.com
                                 </li>
                                 <li>
-                                    <i class="fas fa-phone redw"></i> Telp: (+6221) 7398381 - 89
+                                    <i class="fas fa-phone redw"></i> Telp: (+6221)
+                                    7398381 - 89
                                 </li>
                                 <li>
-                                    <i class="fas fa-map-marker-alt redw"></i> Jl. Jend. Sudirman Kav. 69 Jakarta
+                                    <i class="fas fa-map-marker-alt redw"></i> Jl.
+                                    Jend. Sudirman Kav. 69 Jakarta
                                     Selatan - 12190 Indonesia
                                 </li>
                             </ul>
@@ -664,7 +669,8 @@
         <div class="footer-bottom text-center py-30" style="background: #151516;">
             <div class="container">
                 <div class="copyright-text">
-                    <p>© Copyright 2023. Deputi Bidang Reformasi Birokrasi, Akuntabilitas Aparatur dan Pengawasan PANRB.
+                    <p>© Copyright 2023. Deputi Bidang Reformasi Birokrasi,
+                        Akuntabilitas Aparatur dan Pengawasan PANRB.
                         All rights reserved.</p>
                 </div>
             </div>
@@ -711,7 +717,7 @@
                         <input type="text" name="unit_wbk[]" class="form-control" style="text-align:center" placeholder="Nama Unit WBK " required> \
                     </div> \
                     <div class="col-md-4"> \
-                        <input type="text" name="lke_wbk[]" class="form-control" style="text-align:center" placeholder="link LKE" required> \
+                        <input type="text" name="lke_wbk[]" class="form-control" style="text-align:center" placeholder="Link File LKE" required> \
                     </div>';
 
                 @if($group_kld == "prov" || $group_kld == "kab")
@@ -757,7 +763,7 @@
                         <input type="text" name="unit_wbbm[]" class="form-control" style="text-align:center" placeholder="Nama Unit WBBM " required> \
                     </div> \
                     <div class="col-md-5"> \
-                        <input type="text" name="lke_wbbm[]" class="form-control" style="text-align:center" placeholder="link LKE" required> \
+                        <input type="text" name="lke_wbbm[]" class="form-control" style="text-align:center" placeholder="Link File LKE" required> \
                     </div> \
                     <div class="col-md-2"> \
                         <button  class="btn btn-danger" style=" margin-top:0.3em;\" onclick = "hapus_unit_wbbm(this)">X</button>\

@@ -17,7 +17,7 @@ class PengusulanZIController extends Controller
     {
         $date_now = new \DateTime();
         $date_buka_zi    = new \DateTime("2024/07/18");
-        if ($date_now >= $date_buka_zi) {
+       #if ($date_now >= $date_buka_zi) {
             $instansi_id = $request->get("instansi_id");
             if($instansi_id && (Auth::User()->level =="admin" || Auth::User()->level == "tpn") ){
                 $instansi_obj = KlpdInstansi::find($instansi_id);
@@ -27,9 +27,10 @@ class PengusulanZIController extends Controller
                         return redirect('zi-tinjau?instansi_id='.$instansi_id);
                     }
                 }
-            }elseif(Auth::User()->level == "tpn"){
-                $instansi_obj = KlpdInstansi::find(1);
-                $instansiZI = InstansiZI::where("instansi_id", $instansi_obj->id)->first();
+            }elseif(Auth::User()->level == "tpn" || Auth::User()->level =="admin" ){
+                #$instansi_obj = KlpdInstansi::find(1);
+                #$instansiZI = InstansiZI::where("instansi_id", $instansi_obj->id)->first();
+                return redirect()->route('dashboard_zi');
             }else{
                 $instansi_obj = Auth::User()->user_rel->instansi;
                 $instansi_id = $instansi_obj->id;
@@ -73,9 +74,9 @@ class PengusulanZIController extends Controller
             }else{
                 echo "mohon maaf instansi anda belum terdapat penilaian RB di tahun lalu";
             }
-        }else{
-            return view('zibelumbuka');
-        }
+        #}else{
+        #    return view('zibelumbuka');
+        #}
     }
 
     public function dashboard(Request $request)
@@ -98,7 +99,7 @@ class PengusulanZIController extends Controller
             $instansi_obj = Auth::User()->user_rel->instansi;
             $instansi_id = $instansi_obj->id;
         }
-        $instansi_id = $request->get("instansi_id"); 
+        
         $instansiZI = InstansiZI::firstOrCreate(array('instansi_id'=> $instansi_id));
         $instansiZI->pic = $request->get("pic"); 
         $instansiZI->email = $request->get("email"); 
@@ -239,6 +240,44 @@ class PengusulanZIController extends Controller
         return view('zi.rekap_pengusulan_detail', compact("instansi_ZI") );
         
     }
+
+    public function update_predikat(Request $request)
+    {   
+        if(Auth::User()->level =="admin" || in_array(Auth::User()->id, [10060, 10048])){
+            $instansi_ZIs = InstansiZI::get();
+            return view('zi.update_predikat', compact("instansi_ZIs") );
+        }else{
+            return redirect()->route("pengusulan_zi");
+        }
+    }
+
+    public function edit_predikat($id)
+    {   
+
+        if(Auth::User()->level =="admin" || in_array(Auth::User()->id, [10060, 10048])){
+            $instansi_ZI = InstansiZI::find($id);
+            return view('zi.edit_predikat', compact("instansi_ZI") );
+        }else{
+            return redirect()->route("pengusulan_zi");
+        }
+    }
+
+    public function store_predikat(Request $request){
+        if(Auth::User()->level =="admin" || in_array(Auth::User()->id, [10060, 10048])){
+            $instansiZI = InstansiZI::find($request->get("pic"));
+            $opini_bpk = $request->get("opini_bpk");
+            $skor_predikat_sakip = $request->get("skor_sakip");
+            $skor_indeks_rb = $request->get("skor_index_rb");
+            $skor_maturitas_spip = $request->get("skor_maturitas_spip");
+            
+            $instansiZI->update_predikat_by = Auth::User()->id; 
+            $instansiZI->save();
+        
+            return view('zi.edit_predikat', compact("instansi_ZI") );
+        }else{
+            return redirect()->route("pengusulan_zi");
+        }
+    }
     public function generate_rekap_instansi_skor(){
         $instansis = KlpdInstansi::get();
         foreach($instansis as $instansi){
@@ -259,11 +298,11 @@ class PengusulanZIController extends Controller
             $keterangan ="";
 
             if (isset($lkeTestTP)) {
-                $skor_indeks_rb = $lkeTestTP->index_rb;
+                $skor_indeks_rb = $lkeTestTP->index_rb_penyesuaian;
                 $lkeTestTPLine = LkeTestTpLine::where("test_tp_id", $lkeTestTP->id)->get();
                 foreach($lkeTestTPLine as$tpLine){
                     if($tpLine->paramL4->name == "Opini BPK"){
-                        ($tpLine->score)?$skor_opini_bpk = $tpLine->score: $skor_opini_bpk = 0 ; 
+                        ($tpLine->score)?$skor_opini_bpk = $tpLine->score_index: $skor_opini_bpk = 0 ; #khusus opini BPK nilai yang diambil adalah skor opini bpk
                     }elseif($tpLine->paramL4->name == "Nilai Sistem Akuntabilitas Kinerja Instansi Pemerintah (SAKIP)" || 
                             $tpLine->paramL4->name == "Nilai Sistem Akuntabilitas Kinerja Instansi Pemerintah" || 
                             $tpLine->paramL4->name == "Nilai Sitem Akuntabilitas Kinerja Instansi Pemerintah (SAKIP)"){ // di database paramerter l4 nya ada dua
@@ -319,30 +358,40 @@ class PengusulanZIController extends Controller
                                 $status_akhir = 2;
                                 $keterangan = $keterangan . " dan WBBM";
                             }else{
-                                $keterangan = $keterangan . "namun belum bisa mengajukan unit penerima WBBM";       
+                                $keterangan = $keterangan . " namun belum bisa mengajukan unit penerima WBBM";       
                             }
                         }else{
                             $keterangan = "Mohon Maaf Anda belum memenuhi persyaratan untuk mengusulkan unit penerima WBK maupun WBBM";
                         }
+                    }elseif(in_array($instansi->id , [628, 412, 551, 554, 555, 437, 607, 539, 541])){#Jika termasuk instansi wbk mandiri 
+                        $keterangan = "Anda tidak dapat mengajukan WBBM tapi anda dapat mengajukan WBK mandiri";
+                        $status_akhir = 4;
                     }else{
                         $keterangan = "Mohon Maaf Anda belum memenuhi persyaratan untuk mengusulkan unit penerima WBK maupun WBBM. ";
                         #cek kalau pemda afirmasi
                         if($group_kld == "prov" || $group_kld == "kab"){
-                            $keterangan = $keterangan . ". Anda hanya bisa mengajukan Unit Afirmasi untuk nominasi penerima WBK";
+                            $keterangan = $keterangan . ". Namun anda masih bisa mengajukan Unit Afirmasi untuk nominasi penerima WBK";
                             $status_akhir = 3;
                         }
                     }
                 }else{
-                    $keterangan = "Anda tidak dapat mengajukan ZI karena tidak memenuhi persyaratan ";
-                    $syarat_akhir_wbk = "GAGAL";
-                    $syarat_akhir_wbbm = "GAGAL";
-                    if($syarat_bpk != "LULUS"){
-                        $keterangan = $keterangan . " opini BPK " ;
-                        if($syarat_maturitas_spip != "LULUS" ){
-                            $keterangan = $keterangan . "dan maturitas SPIP" ;
+                    if(in_array($instansi->id , [628, 412, 551, 554, 555, 437, 607, 539, 541])){#Jika termasuk instansi wbk mandiri 
+                        $keterangan = "Anda tidak dapat mengajukan WBBM tapi anda dapat mengajukan WBK mandiri";
+                        $syarat_akhir_wbk = "GAGAL";
+                        $syarat_akhir_wbbm = "GAGAL";
+                        $status_akhir = 4;
+                    }else{
+                        $keterangan = "Anda tidak dapat mengajukan ZI karena tidak memenuhi persyaratan ";
+                        $syarat_akhir_wbk = "GAGAL";
+                        $syarat_akhir_wbbm = "GAGAL";
+                        if($syarat_bpk != "LULUS"){
+                            $keterangan = $keterangan . " opini BPK " ;
+                            if($syarat_maturitas_spip != "LULUS" ){
+                                $keterangan = $keterangan . "dan maturitas SPIP" ;
+                            }
+                        }elseif($syarat_maturitas_spip != "LULUS" ){
+                            $keterangan = $keterangan . " maturitas SPIP" ;
                         }
-                    }elseif($syarat_maturitas_spip != "LULUS" ){
-                        $keterangan = $keterangan . "maturitas SPIP" ;
                     }
                     #cek kalau pemda afirmasi
                     if($group_kld == "prov" || $group_kld == "kab"){
@@ -351,6 +400,9 @@ class PengusulanZIController extends Controller
                     }
                 }
                 $instansiZI = InstansiZI::firstOrCreate(array('instansi_id'=> $instansi_id));
+                if(in_array($instansi->id , [628, 412, 551, 554, 555, 437, 607, 539, 541])){#Jika termasuk instansi wbk mandiri 
+                    $instansiZI->instansi_wbk_mandiri = true; 
+                }
                 $instansiZI->tahun = "2024";
                 $instansiZI->skor_bpk = $skor_opini_bpk;
                 $instansiZI->skor_indeks_rb = $skor_indeks_rb;  
@@ -372,7 +424,6 @@ class PengusulanZIController extends Controller
                 $instansiZI->status_akhir = $status_akhir;
                 $instansiZI->save();
             }else{#belum ada penilaian RB tahun 2023
-                if($group_kld == "prov" || $group_kld == "kab"){
                     $instansiZI = InstansiZI::firstOrCreate(array('instansi_id'=> $instansi_id));
                     $instansiZI->tahun = "2024";
                     $instansiZI->skor_bpk = 0;
@@ -391,8 +442,13 @@ class PengusulanZIController extends Controller
                     $instansiZI->syarat_maturitas_spip = "GAGAL";
                     $instansiZI->syarat_akhir_wbk = "GAGAL";
                     $instansiZI->syarat_akhir_wbbm = "GAGAL";
-                    $instansiZI->keterangan = "Mohon Maaf anda belum melakukan evaluasi RB tahun 2023 sehingga anda hanya bisa mendaftarkan unit Afirmasi saja";
+                if($group_kld == "prov" || $group_kld == "kab"){
+                    $instansiZI->keterangan = "Mohon Maaf anda hanya bisa mendaftarkan unit Afirmasi saja";
                     $instansiZI->status_akhir = 3;
+                    $instansiZI->save();
+                }else{
+                    $instansiZI->keterangan = "Mohon Maaf anda belum melakukan evaluasi RB tahun 2023 sehingga belum bisa mengusulkan unit penerima WBK maupun WBBM";
+                    $instansiZI->status_akhir = 0;
                     $instansiZI->save();
                 }
             }

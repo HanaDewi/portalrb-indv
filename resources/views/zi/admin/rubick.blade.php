@@ -65,6 +65,14 @@
                         <div class="side-menu__title"> Rekap Pengusulan </div>
                     </a>
                 </li>
+                @if(Auth::User()->level =="admin" || in_array(Auth::User()->id, [10060, 10048]) )
+                <li>
+                    <a href="{{ route('update_predikat') }}" class="side-menu">
+                        <div class="side-menu__icon"><i data-lucide="clipboard-list"></i></div>
+                        <div class="side-menu__title"> Update Predikat </div>
+                    </a>
+                </li>
+                @endif
                 <li>
                     <a href="{{ route('logout') }}" onclick="event.preventDefault(); $('#logout').submit();"
                         class="side-menu">

@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->year('tahun')->nullable();
             $table->foreignId('instansi_id');
+            $table->boolean('instansi_wbk_mandiri')->nullable();
             $table->decimal('skor_bpk')->nullable();
             $table->decimal('skor_indeks_rb')->nullable();
             $table->decimal('skor_sakip')->nullable();
@@ -44,6 +45,7 @@ return new class extends Migration
             $table->integer('jml_wbbm')->nullable();
             $table->boolean('final')->nullable();
             $table->integer('update_by')->nullable();
+            $table->integer('update_predikat_by')->nullable();
             $table->timestamps();
         });
     }
