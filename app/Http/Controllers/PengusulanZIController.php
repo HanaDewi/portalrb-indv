@@ -131,6 +131,10 @@ class PengusulanZIController extends Controller
                 $i++;
             }
         }
+        #simpan jumlah unit wbk
+        $instansiZI->jml_wbk = $i;
+        
+
 
         $unit_wbbms = $request->get("unit_wbbm");
         $i=0;
@@ -146,6 +150,11 @@ class PengusulanZIController extends Controller
                 $i++;
             }
         }
+
+        #simpan jumlah unit wbk
+        $instansiZI->jml_wbbm = $i;
+        $instansiZI->save();
+
         if(Auth::User()->level =="admin" || Auth::User()->level == "tpn"){
             return redirect('zi-tinjau?instansi_id='.$instansi_id);
         }else{
