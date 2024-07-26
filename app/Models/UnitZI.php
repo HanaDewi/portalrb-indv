@@ -12,4 +12,9 @@ class UnitZI extends Model
     protected $guarded = [
         'id'
     ];
+
+    public function instansiZI()
+    {
+        return $this->belongsTo(InstansiZI::class, 'instansi_zi_id');
+    }
 }

@@ -18,9 +18,10 @@
                                 <div class="text-lg font-bold truncate">Jumlah Instansi</div>
                                 <div class="text-gray-800 mt-2 text-xl">
 
-                                    161<sup style="font-size: 0.5em">Non Mandiri</sup> |
-                                    39<sup style="font-size: 0.5em">Mandiri</sup> |
-                                    <b>200<sup style="font-size: 0.5em">Total</sup></b>
+                                    {{$instansi_non_mandiri_count}} <sup style="font-size: 0.5em">Non Mandiri</sup> |
+                                    {{$instansi_wbk_mandiri_count}} <sup style="font-size: 0.5em">Mandiri</sup> <br />
+                                    <b> {{$instansi_non_mandiri_count + $instansi_wbk_mandiri_count}} <sup
+                                            style="font-size: 0.5em">Total</sup></b>
 
 
 
@@ -56,7 +57,17 @@
                         <div class="flex items-center">
                             <div class="w-2/4 flex-none">
                                 <div class="text-lg font-bold truncate">Jumlah Unit</div>
-                                <div class="text-slate-500 mt-1">Rekap Pengusulan ZI setiap instansi</div>
+                                <div class="text-gray-800 mt-2 text-xl">
+
+                                    {{ $wbk_non_mandiri_count }} <sup style="font-size: 0.5em">WBK</sup>
+                                    |
+                                    {{$wbk_mandiri_count}} <sup style="font-size: 0.5em">WBK Mandiri</sup> |
+                                    {{$wbbm_count}} <sup style="font-size: 0.5em">WBBM</sup> <br />
+                                    <b> {{$total_unit}} <sup style="font-size: 0.5em">Total</sup></b>
+
+
+
+                                </div>
                             </div>
                             <div class="flex-none ml-auto relative">
                                 <div class="w-[90px] h-[90px]">
@@ -82,6 +93,7 @@
                     </a>
                 </div>
             </div>
+
         </div>
         <div class="lg:col-span-12 p-5 border-b border-slate-200/60">
 
