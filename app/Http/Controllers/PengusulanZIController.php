@@ -93,6 +93,8 @@ class PengusulanZIController extends Controller
     }
 
     public function store_bukti_dukung(Request $request){
+
+        
         if(Auth::User()->level =="admin" || Auth::User()->level == "tpn"){
             $instansi_id = $request->get("instansi_id");
         }else{
@@ -118,13 +120,13 @@ class PengusulanZIController extends Controller
         $unit_wbks = $request->get("unit_wbk");
         $i=0;
         if($unit_wbks){
-            foreach($unit_wbks as $unit_wbk){
+            foreach($unit_wbks as $key=>$unit_wbk){
                 $unit_zi = new UnitZI;
                 $unit_zi->instansi_zi_id = $instansiZI->id;
                 $unit_zi->nama = $unit_wbk;
-                $unit_zi->lke = 'http://' . preg_replace('#^.*://#', '', $request->get("lke_wbk")[$i]);  
+                $unit_zi->lke = 'http://' . preg_replace('#^.*://#', '', $request->get("lke_wbk")[$key]);  
                 if($request->get("afirmasi")){
-                    $unit_zi->afirmasi = $request->get("afirmasi")[$i];
+                    $unit_zi->afirmasi = $request->get("afirmasi")[$key];
                 }
                 $unit_zi->wbk = 1;
                 $unit_zi->save();
@@ -140,11 +142,11 @@ class PengusulanZIController extends Controller
         $i=0;
 
         if($unit_wbbms){
-            foreach($unit_wbbms as $unit_wbbm){
+            foreach($unit_wbbms as $key2=>$unit_wbbm){
                 $unit_zi = new UnitZI;
                 $unit_zi->instansi_zi_id = $instansiZI->id;
                 $unit_zi->nama = $unit_wbbm;
-                $unit_zi->lke = 'http://' . preg_replace('#^.*://#', '', $request->get("lke_wbbm")[$i]) ;
+                $unit_zi->lke = 'http://' . preg_replace('#^.*://#', '', $request->get("lke_wbbm")[$key2]) ;
                 $unit_zi->wbbm = 1;
                 $unit_zi->save();
                 $i++;
