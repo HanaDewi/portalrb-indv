@@ -12,14 +12,14 @@
         <div class="col-span-12 grid grid-cols-12 gap-6">
             <div class="col-span-12 sm:col-span-6 2xl:col-span-3 intro-y">
                 <div class="box p-5 zoom-in">
-                    <a href="{{ route('rekap_pengusulan') }}">
+                    <a href="#">
                         <div class="flex items-center">
                             <div class="w-2/4 flex-none">
                                 <div class="text-lg font-bold truncate">Jumlah Instansi</div>
                                 <div class="text-gray-800 mt-2 text-xl">
 
                                     {{$instansi_non_mandiri_count}} <sup style="font-size: 0.5em">Non Mandiri</sup> |
-                                    {{$instansi_wbk_mandiri_count}} <sup style="font-size: 0.5em">Mandiri</sup> <br />
+                                    {{$instansi_wbk_mandiri_count}} <sup style="font-size: 0.5em">Mandiri</sup> |
                                     <b> {{$instansi_non_mandiri_count + $instansi_wbk_mandiri_count}} <sup
                                             style="font-size: 0.5em">Total</sup></b>
 
@@ -53,16 +53,16 @@
             </div>
             <div class="col-span-12 sm:col-span-6 2xl:col-span-3 intro-y">
                 <div class="box p-5 zoom-in">
-                    <a href="{{ route('rekap_pengusulan') }}">
+                    <a href="#">
                         <div class="flex items-center">
-                            <div class="w-2/4 flex-none">
+                            <div class="w-3/4 flex-none">
                                 <div class="text-lg font-bold truncate">Jumlah Unit</div>
                                 <div class="text-gray-800 mt-2 text-xl">
 
                                     {{ $wbk_non_mandiri_count }} <sup style="font-size: 0.5em">WBK</sup>
                                     |
                                     {{$wbk_mandiri_count}} <sup style="font-size: 0.5em">WBK Mandiri</sup> |
-                                    {{$wbbm_count}} <sup style="font-size: 0.5em">WBBM</sup> <br />
+                                    {{$wbbm_count}} <sup style="font-size: 0.5em">WBBM</sup> |
                                     <b> {{$total_unit}} <sup style="font-size: 0.5em">Total</sup></b>
 
 
