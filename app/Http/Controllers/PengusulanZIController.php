@@ -126,7 +126,9 @@ class PengusulanZIController extends Controller
                 $unit_zi->nama = $unit_wbk;
                 $unit_zi->lke = 'http://' . preg_replace('#^.*://#', '', $request->get("lke_wbk")[$key]);  
                 if($request->get("afirmasi")){
-                    $unit_zi->afirmasi = $request->get("afirmasi")[$key];
+                    if(array_key_exists('$key',$request->get("afirmasi"))){
+                        $unit_zi->afirmasi = $request->get("afirmasi")[$key];
+                    }
                 }
                 $unit_zi->wbk = 1;
                 $unit_zi->save();
