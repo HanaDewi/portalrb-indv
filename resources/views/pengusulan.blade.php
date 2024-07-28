@@ -722,7 +722,8 @@
 
                 @if($group_kld == "prov" || $group_kld == "kab")
                     row_str = row_str + '<div class="col-md-2"> \
-                        <input type="checkbox" name="afirmasi[]" value=1 style=" margin-top:0.7em;\
+                        <input type="hidden" name="afirmasi[]" value="0" />\
+                        <input type="checkbox" class="checkbox"  value=1 style=" margin-top:0.7em;\
                         height: 25px;\
                         width: 25px;\
                         background-color: #eee;"' ;  
@@ -791,6 +792,12 @@
 
         $("#infoCp").click(function(){
             $("#infoCpImg").toggle();
+        });
+
+        $(document).on("change", "input.checkbox", function() {
+            var value = $(this).is(":checked") ? $(this).val() : 0;
+            $(this).siblings("input[name='afirmasi[]']").val(value);
+            alert($(this).siblings("input[name='afirmasi[]']").val());    
         });
 
         
