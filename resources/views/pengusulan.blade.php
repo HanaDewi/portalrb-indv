@@ -797,7 +797,6 @@
         $(document).on("change", "input.checkbox", function() {
             var value = $(this).is(":checked") ? $(this).val() : 0;
             $(this).siblings("input[name='afirmasi[]']").val(value);
-            alert($(this).siblings("input[name='afirmasi[]']").val());    
         });
 
         

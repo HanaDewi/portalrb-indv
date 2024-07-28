@@ -116,7 +116,15 @@
                     @foreach ($instansi_ZIs as $index => $instansi_ZI )
                     <tr>
                         <td>{{$index+1}}</td>
-                        <td>{{$instansi_ZI->klpd_instansi->name}}</td>
+                        <td @if($instansi_ZI->instansi_wbk_mandiri)
+                            class="text-red-500"
+                            @endif
+                            >
+                            {{$instansi_ZI->klpd_instansi->name}}
+                            @if($instansi_ZI->instansi_wbk_mandiri)
+                            (WBK Mandiri)
+                            @endif
+                        </td>
                         <td class="text-center">{{$instansi_ZI->jml_wbk}}</td>
                         <td class="text-center">{{$instansi_ZI->jml_wbbm}}</td>
                         <td class="text-center">{{$instansi_ZI->jml_wbk + $instansi_ZI->jml_wbbm}}</td>
