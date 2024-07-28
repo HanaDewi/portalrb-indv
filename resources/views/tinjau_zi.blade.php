@@ -176,14 +176,14 @@
                             Integritas</h2>
                         <span class="line"></span>
                     </div>
-                    <div class="col-lg-8 col-md-8">
+                    <div class="col-lg-10 col-md-10">
                         <div class="feature-item" style="background-color: white; border-radius: 25px;">
                             <div class="content">
 
                                 <br>
                                 <h5>{{ $instansi}}</h5>
                                 <h6>Berikut adalah data yang anda masukan</h6>
-                                <table style="text-align: left" class="table">
+                                <table style="text-align:  left; " class="table">
                                     <thead>
                                         <tr>
                                             <th>Data</th>
@@ -225,7 +225,9 @@
                                 <br />
 
                                 <h6>WBK</h6>
-                                <table style="text-align: left" class="table">
+                                <table style="text-align: left; display: block;
+                                    overflow: auto;
+                                    white-space: nowrap;" class="table">
                                     <thead style="background: #b42b2d;color:white; text-align:center; ">
                                         <tr>
                                             <th>No</th>

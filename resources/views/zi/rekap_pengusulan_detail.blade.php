@@ -7,6 +7,9 @@
     <div class="intro-y box">
         <div class="flex flex-col sm:flex-row items-center p-5 border-b border-slate-200/60">
             <h2 class="font-bold text-base mr-auto"> Rekap Data Pengusulan ZI - {{$instansi_ZI->klpd_instansi->name}}
+                @if($instansi_ZI->instansi_wbk_mandiri)
+                <b class="text-red-500">(WBK Mandiri)</b>
+                @endif
             </h2>
         </div>
         <div class="lg:col-span-12 p-5 border-b border-slate-200/60">
