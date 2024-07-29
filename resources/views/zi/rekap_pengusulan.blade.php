@@ -134,7 +134,7 @@
                         <td class="text-center">{{$instansi_ZI->email}}</td>
                         <td class="text-center"><a href="{{route('rekap_pengusulan_detail',$instansi_ZI->id)}}"
                                 class="btn btn-danger"><i class="fa fa-search"></i>
-                                &nbsp; Lihat</td>
+                                &nbsp;Lihat</td>
                     </tr>
                     @endforeach
 
