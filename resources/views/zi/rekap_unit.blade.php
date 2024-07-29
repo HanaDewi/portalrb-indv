@@ -6,66 +6,27 @@
     @include('common.status')
     <div class="intro-y box">
         <div class="flex flex-col sm:flex-row items-center p-5 border-b border-slate-200/60">
-            <h2 class="font-bold text-base mr-auto"> Rekap Data Pengusulan ZI - {{ auth()->user()->nama }}</h2>
+            <h2 class="font-bold text-base mr-auto"> Rekap Unit </h2>
         </div>
         <br />
         <div class="col-span-12 grid grid-cols-12 gap-6">
-            <div class="col-span-12 sm:col-span-6 2xl:col-span-3 intro-y">
-                <div class="box p-5 zoom-in">
 
-                    <div class="flex items-center">
-                        <div class="w-2/4 flex-none">
-                            <div class="text-lg font-bold truncate">Jumlah Instansi</div>
-                            <div class="text-gray-800 mt-2 text-xl">
-
-                                <a href="#" id="instansiNonMandiri">{{$instansi_non_mandiri_count}} <sup
-                                        style="font-size: 0.5em">Non
-                                        Mandiri</sup> </a>|
-
-                                <a href="#b" id="instansiMandiri">{{$instansi_wbk_mandiri_count}} <sup
-                                        style="font-size: 0.5em">Mandiri</sup>
-                                </a>|
-                                <a href="#c" id="instansiTotal"><b> {{$instansi_non_mandiri_count +
-                                        $instansi_wbk_mandiri_count}} <sup style="font-size: 0.5em">Total</sup></b></a>
-
-
-
-                            </div>
-                        </div>
-                        <div class="flex-none ml-auto relative">
-                            <div class="w-[90px] h-[90px]">
-                                <canvas id="report-donut-chart-2" width="90" height="90"
-                                    style="display: block; box-sizing: border-box; height: 90px; width: 90px;"></canvas>
-                            </div>
-                            <div
-                                class="font-medium absolute w-full h-full flex items-center justify-center top-0 left-0">
-                                <span><svg xmlns="http://www.w3.org/2000/svg" width="42" height="42" viewBox="0 0 24 24"
-                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                        stroke-linejoin="round" class="lucide lucide-file-bar-chart">
-                                        <path
-                                            d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
-                                        <polyline points="14 2 14 8 20 8" />
-                                        <path d="M12 18v-4" />
-                                        <path d="M8 18v-2" />
-                                        <path d="M16 18v-6" />
-                                    </svg> </span>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
             <div class="col-span-12 sm:col-span-6 2xl:col-span-3 intro-y">
                 <div class="box p-5 zoom-in">
                     <div class="flex items-center">
                         <div class="w-3/4 flex-none">
                             <div class="text-lg font-bold truncate">Jumlah Unit</div>
                             <div class="text-gray-800 mt-2 text-xl">
-                                <a href="{{route('rekap_unit')}}">
+                                <a href="#" id="unitNonMandiri">
                                     {{ $wbk_non_mandiri_count }} <sup style="font-size: 0.5em">WBK</sup>
-                                    |
-                                    {{$wbk_mandiri_count}} <sup style="font-size: 0.5em">WBK Mandiri</sup> |
-                                    {{$wbbm_count}} <sup style="font-size: 0.5em">WBBM</sup> |
+                                </a> |
+                                <a href="#b" id="unitMandiri">
+                                    {{$wbk_mandiri_count}} <sup style="font-size: 0.5em">WBK Mandiri</sup>
+                                </a>|
+                                <a href="#c" id="unitWbbm">
+                                    {{$wbbm_count}} <sup style="font-size: 0.5em">WBBM</sup>
+                                </a>|
+                                <a href="#c" id="unitTotal">
                                     <b> {{$total_unit}} <sup style="font-size: 0.5em">Total</sup></b>
                                 </a>
                             </div>
@@ -95,46 +56,52 @@
 
         </div>
         <div class="lg:col-span-12 p-5 border-b border-slate-200/60">
-
             <div class="separator mt-5"></div>
             <table id="rekap-zi" class="table table-bordered table-striped" cellspacing="0" width="100%">
                 <thead class="table-dark font-bold">
                     <tr>
                         <th>No</th>
                         <th>Instansi</th>
+                        <th>Unit</th>
                         <th>WBK</th>
                         <th>WBBM</th>
-                        <th>Total</th>
-                        <th>PIC</th>
-                        <th>Nomor Kontak</th>
-                        <th>Email</th>
-                        <th>detail</th>
+                        <th>LKE</th>
+
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($instansi_ZIs as $index => $instansi_ZI )
+                    @foreach ($unit_ZIs as $index => $unit_ZI )
                     <tr>
                         <td>{{$index+1}}</td>
-                        <td @if($instansi_ZI->instansi_wbk_mandiri)
+                        <td @if($unit_ZI->instansiZI->instansi_wbk_mandiri)
                             class="text-red-500"
                             @endif
                             >
-                            {{$instansi_ZI->klpd_instansi->name}}
-                            @if($instansi_ZI->instansi_wbk_mandiri)
+                            {{$unit_ZI->instansiZI->klpd_instansi->name}}
+                            @if($unit_ZI->instansiZI->instansi_wbk_mandiri)
                             (WBK Mandiri)
                             @else
                             <i style="opacity: 0;">(Non Mandiri) </i>
                             @endif
                         </td>
-                        <td class="text-center">{{$instansi_ZI->jml_wbk}}</td>
-                        <td class="text-center">{{$instansi_ZI->jml_wbbm}}</td>
-                        <td class="text-center">{{$instansi_ZI->jml_wbk + $instansi_ZI->jml_wbbm}}</td>
-                        <td>{{$instansi_ZI->pic}}</td>
-                        <td class="text-center">{{$instansi_ZI->nomor_kontak}}</td>
-                        <td class="text-center">{{$instansi_ZI->email}}</td>
-                        <td class="text-center"><a href="{{route('rekap_pengusulan_detail',$instansi_ZI->id)}}"
-                                class="btn btn-danger"><i class="fa fa-search"></i>
-                                &nbsp; Lihat</td>
+                        <td>{{$unit_ZI->nama}}</td>
+                        <td class="text-center">
+                            @if($unit_ZI->wbk)
+                            <i class="fa fa-check text-success"></i>
+                            @if($unit_ZI->instansiZI->instansi_wbk_mandiri)
+                            <i style="opacity: 0;">(uwbkm) </i> <!-- unit wbk mandiri -->
+                            @else
+                            <i style="opacity: 0;">(uwbkn) </i> <!-- unit wbk non mandiri -->
+                            @endif
+                            @endif
+                        </td>
+                        <td class="text-center">
+                            @if($unit_ZI->wbbm)
+                            <i class="fa fa-check text-success"></i>
+                            <i style="opacity: 0;">(uwbbm) </i> <!-- unit wbbm  -->
+                            @endif
+                        </td>
+                        <td><a href="{{$unit_ZI->lke}}" target="_blank">{{$unit_ZI->lke}}</a></td>
                     </tr>
                     @endforeach
 
@@ -221,24 +188,26 @@
         });
 
         
-        $('#instansiMandiri').on('click', function () {
-            empDataTable.search("WBK Mandiri").draw();
+        $('#unitMandiri').on('click', function () {
+            empDataTable.search("uwbkm").draw();
         });
 
-        $('#instansiNonMandiri').on('click', function () {
-            empDataTable.search("Non Mandiri", true, true, true).draw();
+        $('#unitNonMandiri').on('click', function () {
+            empDataTable.search("Non uwbkn", true, true, true).draw();
         });
-
-        $('#instansiTotal').on('click', function () {
+        $('#unitWbbm').on('click', function () {
+            empDataTable.search("uwbbm", true, true, true).draw();
+        });
+        $('#unitTotal').on('click', function () {
             empDataTable.search("").draw();
         });
 
-        empDataTable.on('order.dt search.dt', function () {
+        empDataTable.on( 'order.dt search.dt', function () {
             empDataTable.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
-            cell.innerHTML = i+1;
-        })
+                cell.innerHTML = i+1;
+            });
         }).draw();
-    
+            
     });
 
     

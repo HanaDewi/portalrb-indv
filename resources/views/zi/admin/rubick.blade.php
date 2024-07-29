@@ -65,6 +65,12 @@
                         <div class="side-menu__title"> Rekap Pengusulan </div>
                     </a>
                 </li>
+                <li>
+                    <a href="{{ route('rekap_unit') }}" class="side-menu">
+                        <div class="side-menu__icon"><i data-lucide="clipboard"></i></div>
+                        <div class="side-menu__title"> Rekap Unit </div>
+                    </a>
+                </li>
                 @if(Auth::User()->level =="admin" || in_array(Auth::User()->id, [10060, 10048]) )
                 <li>
                     <a href="{{ route('update_predikat') }}" class="side-menu">
