@@ -188,9 +188,19 @@
                         <td>Jumlah Unit</td>
                         <td>{{$instansi_ZI->jml_wbk + $instansi_ZI->jml_wbbm}}</td>
                     </tr>
-                    @foreach ($instansi_ZI->unit_zi as $unit_zi )
+                    @foreach ($unit_wbk_ZIs as $key => $unit_zi )
                     <tr>
-                        <td>{{$unit_zi->nama}} ({{($unit_zi->wbk)?"WBK":""}}{{($unit_zi->wbbm)?"WBBM":""}} )</td>
+                        <td>
+                            WBK {{$key + 1}} : {{$unit_zi->nama}}
+                        </td>
+                        <td><a href="{{$unit_zi->lke}}" target="_blank">lke : {{$unit_zi->lke}}</a></td>
+                    </tr>
+                    @endforeach
+                    @foreach ($unit_wbbm_ZIs as $key => $unit_zi )
+                    <tr style="color: #9e0d08">
+                        <td>
+                            WBBM {{$key + 1}} : {{$unit_zi->nama}}
+                        </td>
                         <td><a href="{{$unit_zi->lke}}" target="_blank">lke : {{$unit_zi->lke}}</a></td>
                     </tr>
                     @endforeach

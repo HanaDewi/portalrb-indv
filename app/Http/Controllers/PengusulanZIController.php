@@ -291,7 +291,9 @@ class PengusulanZIController extends Controller
     public function rekap_pengusulan_detail($id)
     {   
         $instansi_ZI = InstansiZI::find($id);
-        return view('zi.rekap_pengusulan_detail', compact("instansi_ZI") );
+        $unit_wbk_ZIs = UnitZI::where("instansi_zi_id", $id)->where("wbk",1)->get();
+        $unit_wbbm_ZIs = UnitZI::where("instansi_zi_id", $id)->where("wbbm",1)->get();
+        return view('zi.rekap_pengusulan_detail', compact("instansi_ZI","unit_wbk_ZIs","unit_wbbm_ZIs") );
         
     }
 
