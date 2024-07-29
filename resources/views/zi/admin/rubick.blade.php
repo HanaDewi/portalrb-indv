@@ -73,7 +73,7 @@
                 </li>
                 @if(Auth::User()->level =="admin" || in_array(Auth::User()->id, [10060, 10048]) )
                 <li>
-                    <a href="{{ route('update_predikat') }}" class="side-menu">
+                    <a href="#" class="side-menu">
                         <div class="side-menu__icon"><i data-lucide="clipboard-list"></i></div>
                         <div class="side-menu__title"> Update Predikat </div>
                     </a>
