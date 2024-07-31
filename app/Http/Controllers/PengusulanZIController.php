@@ -17,6 +17,10 @@ class PengusulanZIController extends Controller
     {
         $date_now = new \DateTime();
         $date_buka_zi    = new \DateTime("2024/07/18");
+        $date_tutup_zi    = new \DateTime("2024/08/31");
+        if ($date_now >= $date_tutup_zi) {
+            return redirect('zi-tinjau?instansi_id='.Auth::User()->user_rel->instansi->id);   
+        }
        #if ($date_now >= $date_buka_zi) {
             $instansi_id = $request->get("instansi_id");
             if($instansi_id && (Auth::User()->level =="admin" || Auth::User()->level == "tpn") ){

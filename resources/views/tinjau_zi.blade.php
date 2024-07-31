@@ -18,6 +18,94 @@
     <script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.js"></script>
     <style>
+        h1 {
+            text-align: center;
+            text-transform: uppercase;
+        }
+
+        table {
+            display: block;
+            overflow: auto;
+        }
+
+        table tbody,
+        thead {
+            display: table;
+            width: 100%;
+        }
+
+        .container-timeline {
+            width: 1200px;
+            margin: auto;
+        }
+
+        .timeline {
+            counter-reset: test 0;
+            position: relative;
+        }
+
+        .timeline li {
+            list-style: none;
+            float: left;
+            width: 16%;
+            position: relative;
+            text-align: center;
+            text-transform: uppercase;
+
+        }
+
+        ul:nth-child(1) {
+            color: #b42b2d;
+        }
+
+        .timeline li:before {
+            counter-increment: test;
+            content: counter(test);
+            width: 50px;
+            height: 50px;
+            border: 3px solid #b42b2d;
+            border-radius: 50%;
+            display: block;
+            text-align: center;
+            line-height: 50px;
+            margin: 0 auto 10px auto;
+            background: #fff;
+            color: #000;
+            z-index: 3;
+            transition: all ease-in-out .3s;
+            cursor: pointer;
+        }
+
+        .timeline li:after {
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 4px;
+            background-color: red;
+            top: 25px;
+            left: -50%;
+            z-index: -1;
+            transition: all ease-in-out .3s;
+        }
+
+        .timeline li:first-child:after {
+            content: none;
+        }
+
+        .timeline li.active-tl {
+            color: #555555;
+        }
+
+        .timeline li.active-tl:before {
+            background: #b42b2d;
+            color: #F1F1F1;
+        }
+
+        .timeline li.active-tl+li:after {
+            background: #b42b2d;
+        }
+
+
         #owl-demo .item img {
             display: block;
             width: 100%;
@@ -172,17 +260,42 @@
             <div class="container">
                 <div class="row justify-content-center">
                     <div class="section-title text-center pb-35 ">
-                        <h2 style="text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;">Pengusulan Zona
+                        <h2 style="text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;">
+                            Pengusulan Zona
                             Integritas</h2>
-                        <span class="line"></span>
                     </div>
-                    <div class="col-lg-10 col-md-10">
+                    <div class="col-lg-12col-md-12">
+                        <div class="feature-item" style="background-color: white; border-radius: 25px;">
+                            <div class="content">
+                                <div class="container-timeline">
+
+                                    <span class="line"></span>
+                                    <br />
+                                    <ul class="timeline">
+                                        <li class="  active-tl  ">
+                                            Pengusulan </li>
+                                        <li class="  ">Seleksi Administrasi</li>
+                                        <li class="  ">Hasil Sanggah</li>
+                                        <li class="  ">Desk Evaluasi</li>
+                                        <li class="  ">Verifikasi Lapangan</li>
+                                        <li class="  ">Hasil Akhir</li>
+                                    </ul>
+                                </div>
+                                <br /><br /><br /><br />
+
+                            </div>
+                        </div>
+                    </div>
+                    <hr />
+
+                    <div class="col-lg-12 col-md-12">
                         <div class="feature-item" style="background-color: white; border-radius: 25px;">
                             <div class="content">
 
                                 <br>
                                 <h5>{{ $instansi}}</h5>
                                 <h6>Berikut adalah data yang anda masukan</h6>
+                                <br />
                                 <table style="text-align:  left; " class="table">
                                     <thead>
                                         <tr>
@@ -225,9 +338,7 @@
                                 <br />
 
                                 <h6>WBK</h6>
-                                <table style="text-align: left; display: block;
-                                    overflow: auto;
-                                    white-space: nowrap;" class="table">
+                                <table class="table">
                                     <thead style="background: #b42b2d;color:white; text-align:center; ">
                                         <tr>
                                             <th>No</th>
@@ -236,7 +347,7 @@
                                             <th>Afirmasi</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
+                                    <tbody style="display: table; width: 100%;">
                                         @if($unit_wbks->count())
                                         @foreach ($unit_wbks as $index => $unit_wbk)
                                         <tr>
@@ -260,7 +371,7 @@
                                 <br />
                                 <h6>WBBM</h6>
                                 <table style="text-align: left" class="table">
-                                    <thead style="background: #ffcc08;color:black; text-align:center">
+                                    <thead style="background: #ffcc08;color:black;">
                                         <tr>
                                             <th>No</th>
                                             <th>Unit</th>
@@ -395,84 +506,7 @@
     </div>
 
     <script>
-        function hitungTotal() {
-            if ($('#jmlWBK').val() == '') {
-                $('#jmlWBK').val(0);
-            }
-            if ($('#jmlWBBM').val() == '') {
-                $('#jmlWBBM').val(0);
-            }
-            var total = parseInt($('#jmlWBK').val()) + parseInt($('#jmlWBBM').val())
-            $('#jmlUnit').val( total); 
-               
-        };
 
-        function tambah_input(){
-            if ($('#jmlWBK').val() >0 || $('#jmlWBBM').val() >0 ) {
-                $('#btn-tambah-unit').remove();
-                $("#row-submit").show();
-                if ($('#jmlWBK').val() >0 ) {
-                    $("#row-wbk").show();
-                    for (var i = 1; i <= $('#jmlWBK').val(); i++) {
-                        tambah_wbk();
-                    };
-                }
-                if ($('#jmlWBBM').val() >0 ) {
-                    $("#row-wbbm").show();
-                    for (var i = 1; i <= $('#jmlWBBM').val(); i++) {
-                        tambah_wbbm();
-                    };
-                }
-            }
-        }
-
-        function tambah_wbk(){
-            var row_str = '<br>\
-                <div class="row"> \
-                    <div class="col-md-4"> \
-                        <input type="text" name="unit_wbk[]" class="form-control" style="text-align:center" placeholder="Nama Unit WBK "> \
-                    </div> \
-                    <div class="col-md-4"> \
-                        <input type="text" name="lke_wbk[]" class="form-control" style="text-align:center" placeholder="link LKE"> \
-                    </div>';
-
-                @if($group_kld == "prov" || $group_kld == "kab")
-                    row_str = row_str + '<div class="col-md-2"> \
-                        <input type="checkbox" name="afirmasi[]" value=1 style=" margin-top:0.7em;\
-                        height: 25px;\
-                        width: 25px;\
-                        background-color: #eee;"' ;  
-                        
-                        @if($status_akhir ==3 )
-                        row_str = row_str + 'required';
-                        @endif
-                        
-                        row_str = row_str +    '>\
-                    </div> \
-                    <div class="col-md-2">'; 
-                @elseif ($group_kld == "kl")
-                    row_str = row_str + '<div class="col-md-4">';
-                @endif
-                    row_str = row_str + '<a href="#" class="btn btn-danger" style=" margin-top:0.3em;\">X</a>\
-                    </div> \
-                </div>';
-            $('#cont-tambah-unit-wbk').append(row_str);   
-        }
-        function tambah_wbbm(){
-            var row_str = '<br>\
-                <div class="row"> \
-                    <div class="col-md-5"> \
-                        <input type="text" name="unit_wbbm[]" class="form-control" style="text-align:center" placeholder="Nama Unit WBBM "> \
-                    </div> \
-                    <div class="col-md-5"> \
-                        <input type="text" name="lke_wbbm[]" class="form-control" style="text-align:center" placeholder="link LKE"> \
-                    </div> \
-                    <div class="col-md-2"> \
-                        <a href="#" class="btn btn-danger" style=" margin-top:0.3em;\">X</a>\
-                    </div> \
-                </div>';
-            $('#cont-tambah-unit-wbbm').append(row_str);      
-        }
     </script>
 </body>
 
