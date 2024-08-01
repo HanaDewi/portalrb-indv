@@ -18,9 +18,7 @@ class PengusulanZIController extends Controller
         $date_now = new \DateTime();
         $date_buka_zi    = new \DateTime("2024/07/18");
         $date_tutup_zi    = new \DateTime("2024/08/1");
-        if ($date_now >= $date_tutup_zi) {
-            return redirect('zi-tinjau?instansi_id='.Auth::User()->user_rel->instansi->id);   
-        }
+        
        #if ($date_now >= $date_buka_zi) {
             $instansi_id = $request->get("instansi_id");
             if($instansi_id && (Auth::User()->level =="admin" || Auth::User()->level == "tpn") ){
@@ -36,6 +34,9 @@ class PengusulanZIController extends Controller
                 #$instansiZI = InstansiZI::where("instansi_id", $instansi_obj->id)->first();
                 return redirect()->route('dashboard_zi');
             }else{
+                if ($date_now >= $date_tutup_zi) {
+                    return redirect('zi-tinjau?instansi_id='.Auth::User()->user_rel->instansi->id);   
+                }
                 $instansi_obj = Auth::User()->user_rel->instansi;
                 $instansi_id = $instansi_obj->id;
             } 
