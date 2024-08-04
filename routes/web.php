@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\DokumenController;
-use App\Http\Controllers\PengusulanZIController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RBGeneralController;
@@ -30,19 +29,6 @@ Route::get('/', function () {
 })->name('home');
 
 
-Route::middleware('auth')->group(function () {
-    Route::get('/zi', [PengusulanZIController::class, 'index'])->name('pengusulan_zi');
-    Route::post('/zi', [PengusulanZIController::class, 'store_bukti_dukung'])->name('pengusulan_zi_store');
-    Route::get('/zi-tinjau', [PengusulanZIController::class, 'tinjau'])->name('tinjau_zi');
-    #Route::get('/zi/generate_skor', [PengusulanZIController::class, 'generate_rekap_instansi_skor'])->name('pengusulan_zi');
-    Route::get('/zi/admin', [PengusulanZIController::class, 'dashboard'])->name('dashboard_zi');
-    Route::get('/zi/rekap-pengusulan', [PengusulanZIController::class, 'rekap_pengusulan'])->name('rekap_pengusulan');
-    Route::get('/zi/rekap-unit', [PengusulanZIController::class, 'rekap_unit'])->name('rekap_unit');
-    Route::get('/zi/update-predikat', [PengusulanZIController::class, 'update_predikat'])->name('update_predikat');
-    Route::get('/zi/edit-predikat/{id}', [PengusulanZIController::class, 'edit_predikat'])->name('edit_predikat');
-    Route::post('/zi/edit-predikat/', [PengusulanZIController::class, 'store_predikat'])->name('edit_predikat_store');
-    Route::get('/zi/rekap-pengusulan-detail/{id}', [PengusulanZIController::class, 'rekap_pengusulan_detail'])->name('rekap_pengusulan_detail');
-});
 
 Route::get('/emptyDT', function () {
     return response()->json(['data' => []]);
@@ -189,26 +175,5 @@ Route::middleware('auth')->group(function () {
     Route::post('/manage-user/hapus', [ManageUserController::class, 'manage_user_hapus']);
 });
 
-#########Ruang Belajar
-Route::group(['prefix' => 'ruang-belajar', 'as' => 'ruang-belajar.'], function () {
-    Route::get('/home', [DashboardController::class, 'index'])->name('home');
-    Route::get('/praktek-details/{slug}', [DashboardController::class, 'ShowPraktek'])->name('praktek-details');
-    /** Article Details Routes */
-    Route::get('article', [DashboardController::class, 'news'])->name('article');
-    /** Article Comment Routes */
-    Route::post('article-comment', [DashboardController::class, 'handleComment'])->name('article-comment');
-    Route::post('article-comment-replay', [DashboardController::class, 'handleReplay'])->name('article-comment-replay');
-
-    Route::middleware('auth')->group(function () {
-        /** Admin */
-        Route::get('admin-dashboard', [AdminController::class, 'index'])->name('admin-dashboard');
-        Route::get('category', [AdminController::class, 'category'])->name('admin-category');
-        Route::get('category-edit/{id}', [AdminController::class, 'category_edit'])->name('admin-category-edit');
-        Route::get('artikel', [AdminController::class, 'artikel'])->name('admin-artikel');
-        Route::get('artikel-pending', [AdminController::class, 'artikel_pending'])->name('admin-artikel-pending');
-        Route::get('social-media', [AdminController::class, 'social_media'])->name('admin-social-media');
-        Route::get('subscriber', [AdminController::class, 'subscriber'])->name('admin-subscriber');
-    });
-});
 
 require __DIR__ . '/auth.php';

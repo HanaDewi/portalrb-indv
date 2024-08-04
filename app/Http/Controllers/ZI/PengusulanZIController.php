@@ -1,10 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\ZI;
 
-
+use App\Http\Controllers\Controller;
 use App\Models\UnitZI;
-use App\Models\LkeTestTp;
 use App\Models\InstansiZI;
 use App\Models\KlpdInstansi;
 use Illuminate\Http\Request;
