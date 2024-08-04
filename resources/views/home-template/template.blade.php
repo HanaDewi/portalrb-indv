@@ -10,54 +10,17 @@
     <link rel="shortcut icon" href="{{ URL::to('/') }}/assets/images/favicon.png" type="image/x-icon">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css">
-    <link rel="stylesheet" href="{{ URL::to('/') }}/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ asset('/assets/css/bootstrap.min.css')}}">
 
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="{{ asset('assets/css/style.css')}}">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.theme.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/js/bootstrap-select.min.js"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/css/bootstrap-select.min.css"
-        rel="stylesheet" />
-
-
-
-    <style>
-        #owl-demo .item img {
-            display: block;
-            width: 100%;
-            height: auto;
-        }
-
-        .full-img img {
-            height: 100%;
-            width: 100%;
-            object-fit: contain;
-        }
-
-        .form-control {
-            padding: .775rem .75rem;
-            border-radius: 10px;
-        }
-
-        /* Chrome, Safari, Edge, Opera */
-        input::-webkit-outer-spin-button,
-        input::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-
-        /* Firefox */
-        input[type=number] {
-            -moz-appearance: textfield;
-        }
-    </style>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+    @yield('cssJsHere')
+
+
 </head>
 
 <body>
@@ -99,8 +62,8 @@
                     <div class="header-inner rel d-flex">
                         <div class="logo-outer align-self-center">
                             <div class="logo">
-                                <a href="{{ url('/') }}">
-                                    <img src="{{ URL::to('/') }}/assets/images/logoportalreformasibirokrasinasional.png"
+                                <a href="{{ route('home') }}">
+                                    <img src="{{ asset('/assets/images/logoportalreformasibirokrasinasional.png') }}"
                                         alt="Logo">
                                 </a>
                             </div>
@@ -109,8 +72,8 @@
                             <nav class="main-menu navbar-expand-lg">
                                 <div class="navbar-header py-10">
                                     <div class="mobile-logo">
-                                        <a href="{{ url('/') }}">
-                                            <img src="{{ URL::to('/') }}/assets/images/logoportalreformasibirokrasinasional.png"
+                                        <a href="{{ route('home') }}">
+                                            <img src="{{ asset('/assets/images/logoportalreformasibirokrasinasional.png')}}"
                                                 alt="Logo">
                                         </a>
                                     </div>
@@ -124,16 +87,16 @@
                                 <div class="navbar-collapse collapse clearfix">
                                     <ul class="navigation clearfix">
                                         <li>
-                                            <a href="{{ url('/') }}">Beranda</a>
+                                            <a href="{{ route('home') }}">Beranda</a>
                                         </li>
                                         <li>
-                                            <a href="{{ url('dashboard') }}">Evaluasi</a>
+                                            <a href="{{ route('dashboard') }}">Evaluasi</a>
                                         </li>
                                         <li>
-                                            <a href="{{ url('/ruang-belajar/home') }}">Ruang Belajar</a>
+                                            <a href="{{ route('ruang-belajar.home') }}">Ruang Belajar</a>
                                         </li>
                                         <li>
-                                            <a href="{{ url('/zi') }}">Zona Integritas</a>
+                                            <a href="{{ route('pengusulan_zi') }}">Zona Integritas</a>
                                         </li>
                                         <li>
                                             @if(Auth::User())
@@ -158,47 +121,7 @@
                 </div>
             </div>
         </header>
-        <div class="demo">
-
-        </div>
-        <section class="donate-area rel z-1">
-            <div class="container">
-                <div class="row no-gap">
-                    <img src="{{ URL::to('/') }}/assets/images/bg1.png">
-                </div>
-            </div>
-        </section>
-        <section class="features-area pt-50 pb-85 rel z-1"
-            style="background-image: url({{ URL::to('/') }}/assets/images/bg2.jpg); background-size: cover;">
-            <div class="container">
-                <div class="row justify-content-center">
-                    <div class="section-title text-center pb-35 ">
-                        <h2 style="text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;">Pengusulan Zona
-                            Integritas</h2>
-                        <span class="line"></span>
-                    </div>
-                    <div class="col-lg-8 col-md-8">
-                        <div class="feature-item" style="background-color: white; border-radius: 25px;">
-                            <div class="content">
-                                <img src="{{ URL::to('/') }}/assets/images/pembukaan_zi.jpg">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-        <!-- Features Area end -->
-        <!-- Meter Area start -->
-
-
-        <section class="pt-20"></section>
-        <section class="donate-area rel z-1">
-            <div class="container">
-                <div class="row no-gap">
-                    <img src="assets/images/gambar/bg1.png">
-                </div>
-            </div>
-        </section>
+        @yield('content')
         <footer class="main-footer pt-20  bgs-cover footer-white" style="background: #151516;">
             <div class="container">
                 <div class="row">
@@ -265,8 +188,7 @@
     </div>
 
 
-
 </body>
-
+@yield('jsHere')
 
 </html>

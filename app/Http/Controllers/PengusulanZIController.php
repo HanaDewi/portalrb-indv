@@ -68,7 +68,7 @@ class PengusulanZIController extends Controller
                 $keterangan = $instansiZI->keterangan;
                 $status_akhir = $instansiZI->status_akhir;
 
-                return view('pengusulan', compact(
+                return view('zi.pengusulan', compact(
                     'instansis', 'instansi_id', 'instansi', 'group_kld',
                     'skor_opini_bpk', 'skor_indeks_rb', 'skor_predikat_sakip', 'skor_maturitas_spip',
                     'opini_bpk', 'indeks_rb', 'predikat_sakip', 'maturitas_spip',
@@ -189,7 +189,7 @@ class PengusulanZIController extends Controller
             $status_akhir = $instansiZI->status_akhir;
             $unit_wbks = UnitZI::where("instansi_zi_id", $instansiZI->id)->where('wbk',1)->get();
             $unit_wbbms = UnitZI::where("instansi_zi_id", $instansiZI->id)->where('wbbm',1)->get();
-            return view('tinjau_zi', compact(
+            return view('zi.tinjau_zi', compact(
                  'instansi_id', 'instansi', 'group_kld', 'instansiZI',
                 'unit_wbks', 'unit_wbbms',
                 'syarat_akhir_wbk','syarat_akhir_wbbm', 'status_akhir'

@@ -27,7 +27,8 @@ use App\Http\Controllers\WebDashboardController;
 
 Route::get('/', function () {
     return view('home');
-});
+})->name('home');
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/zi', [PengusulanZIController::class, 'index'])->name('pengusulan_zi');
