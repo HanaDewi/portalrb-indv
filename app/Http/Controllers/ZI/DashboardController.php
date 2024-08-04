@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\ZI;
 
 use App\Http\Controllers\Controller;
-use App\Models\UnitZI;
-use App\Models\InstansiZI;
+use App\Models\ZI\UnitZI;
+use App\Models\ZI\InstansiZI;
 use App\Models\KlpdInstansi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -39,6 +39,7 @@ class DashboardController extends Controller
             })->where('wbk', 1)->count();
             $wbk_non_mandiri_count = $wbk_all_count-$wbk_mandiri_count;
             $total_unit = $wbk_all_count + $wbbm_count;
+            
 
             return view('zi.rekap_pengusulan', compact(
                 "instansi_ZIs","instansi_non_mandiri_count","instansi_wbk_mandiri_count", 

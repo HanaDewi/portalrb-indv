@@ -2,13 +2,15 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\ZI\InstansiZI;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class KlpdInstansi extends Model
 {
     use HasFactory;
+    protected $connection = 'mysql';
     protected $table = 'klpd_instansi';
     public $timestamps = false;
     protected $guarded = [

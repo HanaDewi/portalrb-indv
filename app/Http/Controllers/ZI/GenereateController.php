@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\ZI;
 
 use App\Http\Controllers\Controller;
-use App\Models\InstansiZI;
+use App\Models\ZI\InstansiZI;
 use App\Models\KlpdInstansi;
 use App\Models\LkeTestTpLine;
 

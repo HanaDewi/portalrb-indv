@@ -1,14 +1,16 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\ZI;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Models\KlpdInstansi;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class InstansiZI extends Model
 {
     use HasFactory;
+    protected $connection = 'zi_db';
     protected $table = 'instansi_zi';
     protected $guarded = [
         'id'

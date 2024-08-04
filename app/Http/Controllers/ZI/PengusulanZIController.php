@@ -3,11 +3,10 @@
 namespace App\Http\Controllers\ZI;
 
 use App\Http\Controllers\Controller;
-use App\Models\UnitZI;
-use App\Models\InstansiZI;
+use App\Models\ZI\UnitZI;
+use App\Models\ZI\InstansiZI;
 use App\Models\KlpdInstansi;
 use Illuminate\Http\Request;
-use App\Models\LkeTestTpLine;
 use Illuminate\Support\Facades\Auth;
 
 class PengusulanZIController extends Controller
