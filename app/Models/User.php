@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Models\ZI\AnggotaTimEvaluasi;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -17,6 +18,8 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
+
+    protected $connection = 'mysql';
     protected $fillable = [
         'name',
         'email',
@@ -56,5 +59,10 @@ class User extends Authenticatable
     public function penilai()
     {
         return $this->belongsTo(LkeTP::class, "penilai_id");
+    }
+
+    public function userTimZI()
+    {
+        return $this->hasMany(AnggotaTimEvaluasi::class, 'user_id');
     }
 }

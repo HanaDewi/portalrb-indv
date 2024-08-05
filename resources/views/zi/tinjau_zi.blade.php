@@ -35,7 +35,7 @@
     }
 
     ul:nth-child(1) {
-        color: #b42b2d;
+        color: white;
     }
 
     .timeline li:before {
@@ -108,6 +108,10 @@
         border-radius: 10px;
     }
 
+    .table-shad {
+        box-shadow: 0 0 30px #9ecaed;
+    }
+
     /* Chrome, Safari, Edge, Opera */
     input::-webkit-outer-spin-button,
     input::-webkit-inner-spin-button {
@@ -156,14 +160,14 @@
             <hr />
 
             <div class="col-lg-12 col-md-12">
-                <div class="feature-item" style="background-color: white; border-radius: 25px;">
+                <div class="feature-item" style="background-color: white; border-radius: 25px; padding: 20px 80px">
                     <div class="content">
 
                         <br>
                         <h5>{{ $instansi}}</h5>
                         <h6>Berikut adalah data yang anda masukan</h6>
                         <br />
-                        <table style="text-align:  left; " class="table table-striped table-bordered">
+                        <table style="text-align:  left; " class="table table-striped table-bordered table-shad">
                             <thead>
                                 <tr>
                                     <th>Data</th>
@@ -204,7 +208,7 @@
                         <br />
 
                         <h6>WBK</h6>
-                        <table class="table table-striped table-bordered">
+                        <table class="table table-striped table-bordered table-shad">
                             <thead style="background: #b42b2d;color:white; text-align:center; ">
                                 <tr>
                                     <th>No</th>
@@ -230,7 +234,7 @@
                         </table>
                         <br />
                         <h6>WBBM</h6>
-                        <table style="text-align: left" class="table table-striped table-bordered">
+                        <table style="text-align: left" class="table table-striped table-bordered table-shad">
                             <thead style="background: #ffcc08;color:black;">
                                 <tr>
                                     <th>No</th>

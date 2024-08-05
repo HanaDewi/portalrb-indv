@@ -11,6 +11,15 @@ use Illuminate\Support\Facades\Auth;
 
 class PengusulanZIController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(function ($request, $next) {
+            if(Auth::User()->level =="admin" || in_array(Auth::User()->id, [10060, 10048])){
+                    return $next($request);     
+            }
+            abort('403');
+        });
+    }
     public function index(Request $request)
     {
         $date_now = new \DateTime();

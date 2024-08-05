@@ -57,7 +57,6 @@
             <a href="" class="intro-x flex items-center pl-2 pt-4">
                 <img alt="LKE RB" src="{{ asset('template_lkerb') }}/dist/images/logo.jpg">
             </a>
-            <div class="side-nav__devider my-6"></div>
             <ul>
                 <li>
                     <a href="{{ route('rekap_pengusulan') }}" class="side-menu">
@@ -73,11 +72,76 @@
                 </li>
                 @if(Auth::User()->level =="admin" || in_array(Auth::User()->id, [10060, 10048]) )
                 <li>
+                    <a href="#" class="side-menu
+                    @if(in_array($title, ['Kelola Tim', 'Kelola Anggota Tim' ])) 
+                        class side-menu--active side-menu--open
+                    @endif
+                    ">
+                        <!-- class side-menu--active side-menu--open-->
+                        <div class="side-menu__icon"><i data-lucide="clipboard-list"></i></div>
+                        <div class="side-menu__title">
+                            Kelola Tim
+                            <div class="side-menu__sub-icon "> <i data-lucide="chevron-down"></i> </div>
+                        </div>
+                    </a>
+                    <ul class="
+                        @if(in_array($title, ['Kelola Tim', 'Kelola Anggota Tim' ])) 
+                            side-menu__sub-open
+                        @else
+                            side-menu__sub-close
+                        @endif
+                        ">
+                        <li>
+                            <a href="{{route('kelola_tim_zi')}}" class="side-menu 
+                            @if($title = 'Kelola Tim')
+                                side-menu--active 
+                            @endif
+                            ">
+                                <div class="side-menu__icon"><i data-lucide="user"></i></div>
+                                <div class="side-menu__title">
+                                    Tim
+                                    <div class="side-menu__sub-icon "> </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{route('kelola_anggota_tim_zi')}}" class="side-menu 
+                            @if($title = 'Kelola Anggota Tim')
+                            side-menu--active 
+                            @endif
+                            ">
+                                <div class="side-menu__icon"><i data-lucide="user-plus"></i></div>
+                                <div class="side-menu__title">
+                                    Anggota Tim
+                                    <div class="side-menu__sub-icon "> </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{route('kelola_unit_tim_zi')}}" class="side-menu 
+                            @if($title = 'Kelola Unit Tim')
+                            side-menu--active 
+                            @endif
+                            ">
+                                <div class="side-menu__icon"><i data-lucide="user-plus"></i></div>
+                                <div class="side-menu__title">
+                                    Unit Tim
+                                    <div class="side-menu__sub-icon "> </div>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                @endif
+                <!--
+                @if(Auth::User()->level =="admin" || in_array(Auth::User()->id, [10060, 10048]) )
+                <li>
                     <a href="#" class="side-menu">
                         <div class="side-menu__icon"><i data-lucide="clipboard-list"></i></div>
                         <div class="side-menu__title"> Update Predikat </div>
                     </a>
                 </li>
+                -->
                 @endif
                 <li>
                     <a href="{{ route('logout') }}" onclick="event.preventDefault(); $('#logout').submit();"

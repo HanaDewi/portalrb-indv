@@ -2,6 +2,7 @@
 
 namespace App\Models\ZI;
 
+use App\Models\ZI\UnitZI;
 use App\Models\KlpdInstansi;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
