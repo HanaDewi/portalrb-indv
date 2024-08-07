@@ -83,7 +83,7 @@
                     </a>
                 </li>
                 @if(Auth::User()->level =="admin" || in_array(Auth::User()->id, [10060, 10048, 10059, 10046, 10053,
-                10056]) )
+                10056, 10052]) )
                 <li>
                     <a href="#" class="side-menu
                     @if(in_array($title, ['Kelola Tim', 'Kelola Anggota Tim' ])) 
