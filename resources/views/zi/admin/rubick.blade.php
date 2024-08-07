@@ -148,11 +148,7 @@
                 @endif
                 <li>
                     <a href="https://docs.google.com/spreadsheets/d/1ns2C87_sw2uXyIqKqutjAZRiLdFN32S7kGPhTjkRhPk/edit?usp=sharing"
-                        target="_blank" class="side-menu
-                    @if($title == 'Seleksi Administrasi')
-                                side-menu--active 
-                    @endif
-                    ">
+                        target="_blank" class="side-menu">
                         <div class="side-menu__icon"><i data-lucide="clipboard"></i></div>
                         <div class="side-menu__title"> ZI 2014-2023 </div>
                     </a>
