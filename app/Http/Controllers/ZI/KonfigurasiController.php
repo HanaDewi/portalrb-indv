@@ -18,7 +18,8 @@ class KonfigurasiController extends Controller
     public function __construct()
     {
         $this->middleware(function ($request, $next) {
-            if(Auth::User()->level =="admin" || in_array(Auth::User()->id, [10060, 10048])){
+            if(Auth::User()->level =="admin" || in_array(Auth::User()->id, [10060, 10048, 10059, 10046, 10053,
+            10056])){
                     return $next($request);     
             }
             abort('403');
