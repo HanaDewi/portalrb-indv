@@ -145,7 +145,6 @@ class KonfigurasiController extends Controller
             $timEvaluasi = AnggotaTimEvaluasi::find($request->anggota_tim_id);
         }
         $userIds= $request->get("userIds"); #ini Untuk baru
-        $user= $request->get("userIds"); #ini untuk update
         if($userIds){ #pasti user baru
             foreach($userIds as $userId){
                 $anggotaTimEvaluasi = new AnggotaTimEvaluasi();
@@ -155,9 +154,6 @@ class KonfigurasiController extends Controller
                     $success = true;
                 };
             }
-        }elseif($user){#ini Untuk Update
-            $anggotaTimEvaluasi->tim_id = $request->timId;
-            $anggotaTimEvaluasi->user_id = $user;
         }
         return response()->json(['success' => $success]);
     }
@@ -237,7 +233,7 @@ class KonfigurasiController extends Controller
         $success = false;
         $unitTimEvaluasi = new UnitTimEvaluasi();
         if ($request->unit_tim_id) {
-            $timEvaluasi = UnitTimEvaluasi::find($request->anggota_tim_id);
+            $unitTimEvaluasi = UnitTimEvaluasi::find($request->anggota_tim_id);
         }
         
         $tim_id = $request->timId;

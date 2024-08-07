@@ -146,6 +146,17 @@
                     </ul>
                 </li>
                 @endif
+                <li>
+                    <a href="https://docs.google.com/spreadsheets/d/1ns2C87_sw2uXyIqKqutjAZRiLdFN32S7kGPhTjkRhPk/edit?usp=sharing"
+                        target="_blank" class="side-menu
+                    @if($title == 'Seleksi Administrasi')
+                                side-menu--active 
+                    @endif
+                    ">
+                        <div class="side-menu__icon"><i data-lucide="clipboard"></i></div>
+                        <div class="side-menu__title"> ZI 2014-2023 </div>
+                    </a>
+                </li>
                 <!--
                 @if(Auth::User()->level =="admin" || in_array(Auth::User()->id, [10060, 10048]) )
                 <li>
