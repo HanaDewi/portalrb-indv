@@ -22,6 +22,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css"
         integrity="sha512-10/jx2EXwxxWqCLX/hHth/vu2KY3jCF70dCQB8TSgNjbCVAC/8vai53GfMDrO2Emgwccf2pJqxct9ehpzG+MTw=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
 
 </head>
 
@@ -70,6 +72,16 @@
                         <div class="side-menu__title"> Rekap Unit </div>
                     </a>
                 </li>
+                <li>
+                    <a href="{{ route('seleksi_administrasi') }}" class="side-menu
+                    @if($title == 'Seleksi Administrasi')
+                                side-menu--active 
+                    @endif
+                    ">
+                        <div class="side-menu__icon"><i data-lucide="clipboard"></i></div>
+                        <div class="side-menu__title"> Seleksi Administrasi </div>
+                    </a>
+                </li>
                 @if(Auth::User()->level =="admin" || in_array(Auth::User()->id, [10060, 10048]) )
                 <li>
                     <a href="#" class="side-menu
@@ -93,7 +105,7 @@
                         ">
                         <li>
                             <a href="{{route('kelola_tim_zi')}}" class="side-menu 
-                            @if($title = 'Kelola Tim')
+                            @if($title == 'Kelola Tim')
                                 side-menu--active 
                             @endif
                             ">
@@ -106,7 +118,7 @@
                         </li>
                         <li>
                             <a href="{{route('kelola_anggota_tim_zi')}}" class="side-menu 
-                            @if($title = 'Kelola Anggota Tim')
+                            @if($title == 'Kelola Anggota Tim')
                             side-menu--active 
                             @endif
                             ">
@@ -119,7 +131,7 @@
                         </li>
                         <li>
                             <a href="{{route('kelola_unit_tim_zi')}}" class="side-menu 
-                            @if($title = 'Kelola Unit Tim')
+                            @if($title == 'Kelola Unit Tim')
                             side-menu--active 
                             @endif
                             ">
@@ -141,8 +153,9 @@
                         <div class="side-menu__title"> Update Predikat </div>
                     </a>
                 </li>
-                -->
+                
                 @endif
+                -->
                 <li>
                     <a href="{{ route('logout') }}" onclick="event.preventDefault(); $('#logout').submit();"
                         class="side-menu">

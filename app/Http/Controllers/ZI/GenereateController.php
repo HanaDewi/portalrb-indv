@@ -10,6 +10,12 @@ use App\Models\LkeTestTpLine;
 
 class GenerateController extends Controller
 {
+    $this->middleware(function ($request, $next) {
+        if(Auth::User()->level =="admin"){
+                return $next($request);     
+        }
+        abort('403');
+    });
     public function generate_rekap_instansi_skor(){
         $instansis = KlpdInstansi::get();
         foreach($instansis as $instansi){

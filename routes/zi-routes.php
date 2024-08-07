@@ -3,6 +3,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ZI\DashboardController;
 use App\Http\Controllers\ZI\KonfigurasiController;
+use App\Http\Controllers\ZI\AdministrasiController;
 use App\Http\Controllers\ZI\PengusulanZIController;
 
 
@@ -19,6 +20,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/zi/rekap-unit', [DashboardController::class, 'rekap_unit'])->name('rekap_unit');
     Route::get('/zi/rekap-pengusulan-detail/{id}', [DashboardController::class, 'rekap_pengusulan_detail'])->name('rekap_pengusulan_detail');
     #SeleksiAdministrasi
+    Route::get('/zi/seleksi-administrasi', [AdministrasiController::class, 'index'])->name('seleksi_administrasi');
+    Route::get('/zi/evaluasi-administrasi/{id}', [AdministrasiController::class, 'evaluasi_administrasi'])->name('evaluasi_administrasi');
+    Route::post('/zi/evaluasi-administrasi/simpan', [AdministrasiController::class, 'evaluasi_administrasi_simpan'])->name('evaluasi_administrasi_simpan');
 
     #===================Konfigurasi===================
     Route::get('/zi/update-predikat', [KonfigurasiController::class, 'update_predikat'])->name('update_predikat');

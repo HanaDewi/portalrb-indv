@@ -15,7 +15,7 @@ class DashboardController extends Controller
     public function __construct()
     {
         $this->middleware(function ($request, $next) {
-            if(Auth::User()->level =="admin" || in_array(Auth::User()->id, [10060, 10048])){
+            if(Auth::User()->level =="admin" || Auth::User()->level =="tpn"){
                     return $next($request);     
             }
             abort('403');
