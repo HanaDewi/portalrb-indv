@@ -179,7 +179,7 @@ class KonfigurasiController extends Controller
     public function kelola_unit_tim(Request $request)
     {   
         
-        $title = "Kelola Anggota Tim";
+        $title = "Kelola Unit Tim";
         $teams = TimEvaluasi::get(); 
         $instansiZIIDs = InstansiZI::where('final',1)->get()->pluck('instansi_id');
         #$userTimIds = UnitTimEvaluasi::get()->pluck('unit_id');
@@ -241,14 +241,23 @@ class KonfigurasiController extends Controller
         if($instansiIds){
             foreach($instansiIds as $instansi){
                 $instansiZI = InstansiZI::where("instansi_id", $instansi )->first();
+                $is_instansiMandiri = $instansiZI->instansi_wbk_mandiri;
                 $unitZIs = $instansiZI->unit_zi;
                 foreach($unitZIs as $unitZI){
                     $unitTimEvaluasi = new UnitTimEvaluasi();
                     $unitTimEvaluasi->tim_id = $tim_id;
                     $unitTimEvaluasi->unit_id = $unitZI->id;
-                    if ($unitTimEvaluasi->save()) {
-                        $success = true;
-                    };
+                    if($is_instansiMandiri){#hanya unit wbbm saja yang di assign ke tim
+                        if($unitZI->wbbm){
+                            if ($unitTimEvaluasi->save()) {
+                                $success = true;
+                            };
+                        }
+                    }else{
+                        if ($unitTimEvaluasi->save()) {
+                            $success = true;
+                        };
+                    }
                 }
             }
         }

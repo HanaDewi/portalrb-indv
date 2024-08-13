@@ -98,7 +98,7 @@
                         </div>
                     </a>
                     <ul class="
-                        @if(in_array($title, ['Kelola Tim', 'Kelola Anggota Tim' ])) 
+                        @if(in_array($title, ['Kelola Tim', 'Kelola Anggota Tim', 'Kelola Unit Tim' ])) 
                             side-menu__sub-open
                         @else
                             side-menu__sub-close
