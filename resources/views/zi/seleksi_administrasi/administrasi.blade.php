@@ -128,21 +128,38 @@
                             @endif
                         </td>
                         <td class="text-center">
+
                             @php
                             $nama_tim = [];
-                            foreach($instansi_ZI->unit_zi as $unit_zi){
-                            foreach ( $unit_zi->unit_tim as $unitTim){
-                            if(!in_array($unitTim->tim->nama, $nama_tim)){
-                            array_push($nama_tim, $unitTim->tim->nama);
-                            echo $unitTim->tim->nama . "&nbsp;";
-                            }
-                            }
-                            }
+                            $teams = $instansi_ZI->unit_zi->flatMap->unit_tim->map->tim->unique()->pluck('nama');
+                            foreach ($teams as $key => $tim) {
+                            echo $tim . " <br /> ";
+                            array_push($nama_tim, $tim);
+                            };
                             @endphp
+                            <!--
+                            $instansi->unitZis retrieves all unit_zi related to the instansi_zi.
+                            ->flatMap->timZis retrieves all tim_zi related to each unit_zi.
+                            ->map->tim retrieves the tim associated with each tim_zi.
+                            ->unique() removes duplicate tim entries.
+                            ->pluck('name') extracts the name from each tim object.
+                            -->
                         </td>
-                        <td class="text-center">{{$instansi_ZI->jml_wbk}}</td>
+                        <td class="text-center">
+                            @if($instansi_ZI->instansi_wbk_mandiri)
+                            mandiri
+                            @else
+                            {{$instansi_ZI->jml_wbk}}
+                            @endif
+                        </td>
                         <td class="text-center">{{$instansi_ZI->jml_wbbm}}</td>
-                        <td class="text-center">{{$instansi_ZI->jml_wbk + $instansi_ZI->jml_wbbm}}</td>
+                        <td class="text-center">
+                            @if($instansi_ZI->instansi_wbk_mandiri)
+                            {{$instansi_ZI->jml_wbbm}}
+                            @else
+                            {{$instansi_ZI->jml_wbk + $instansi_ZI->jml_wbbm}}
+                            @endif
+                        </td>
 
                         <td class="text-center">-</td>
                         <td class="text-center">-</td>
