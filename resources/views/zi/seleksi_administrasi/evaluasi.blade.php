@@ -254,24 +254,30 @@
                                 @endif
                             </td>
                         </tr>
+                        @if(!$instansi_ZI->instansi_wbk_mandiri)
                         <tr>
-                            <td>Jumlah Unit WBK </td>
+                            <td>Jumlah Unit WBK @if($instansi_ZI->instansi_wbk_mandiri) <p style="color:red"> MANDIRI
+                                </p> @endif </td>
                             <td>{{$instansi_ZI->jml_wbk}}</td>
                             <td></td>
                             <td></td>
                         </tr>
+                        @endif
                         <tr>
                             <td>Jumlah Unit WBBM</td>
                             <td>{{$instansi_ZI->jml_wbbm}}</td>
                             <td></td>
                             <td></td>
                         </tr>
+                        @if(!$instansi_ZI->instansi_wbk_mandiri)
                         <tr>
                             <td>Jumlah Unit</td>
                             <td>{{$instansi_ZI->jml_wbk + $instansi_ZI->jml_wbbm}}</td>
                             <td></td>
                             <td></td>
                         </tr>
+                        @endif
+                        @if(!$instansi_ZI->instansi_wbk_mandiri)
                         @foreach ($unit_wbk_ZIs as $key => $unit_zi )
                         <tr>
                             <td>
@@ -304,7 +310,10 @@
                                 @endif
                             </td>
                         </tr>
+                        <tr>
+                        </tr>
                         @endforeach
+                        @endif
                         @foreach ($unit_wbbm_ZIs as $key => $unit_zi )
                         <tr style="color: #9e0d08">
                             <td>
