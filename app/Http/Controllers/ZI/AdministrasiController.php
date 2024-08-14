@@ -120,8 +120,10 @@ class AdministrasiController extends Controller
                     $seleksiAdministrasiUnit = new SeleksiAdministrasiUnit();
                 }
                 $seleksiAdministrasiUnit->unit_zi_id = $unit_zi->id;
-                $seleksiAdministrasiUnit->status = $request->get('unit-'.$unit_zi->id ); 
-                $seleksiAdministrasiUnit->catatan_unit = $request->get('catatanUnit-'.$unit_zi->id );
+                $seleksiAdministrasiUnit->status_lke = $request->get('status-lke-'.$unit_zi->id ); 
+                $seleksiAdministrasiUnit->catatan_lke = $request->get('catatan-lke-'.$unit_zi->id );
+                $seleksiAdministrasiUnit->status_2wbk = $request->get('status-2wbk-'.$unit_zi->id ); 
+                $seleksiAdministrasiUnit->catatan_2wbk = $request->get('catatan-2wbk-'.$unit_zi->id );
                 $seleksiAdministrasiUnit->save();
             }
         };

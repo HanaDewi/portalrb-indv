@@ -286,17 +286,17 @@
                             <td><a href="{{$unit_zi->lke}}" class="openNew" target="_blank">lke : {{$unit_zi->lke}}</a>
                             </td>
                             <td>
-                                <select class="form-control kesesuaian" name="unit-{{$unit_zi->id}}"
-                                    data-id="{{$unit_zi->id}}" required>
+                                <select class="form-control kesesuaian" name="status-lke-{{$unit_zi->id}}"
+                                    data-id="{{$unit_zi->id}}">
                                     <option value="" disabled selected>Pilih Status</option>
                                     <option value="1" @if($unit_zi->seleksi_administrasi_unit)
-                                        @if($unit_zi->seleksi_administrasi_unit->status ==1)
+                                        @if($unit_zi->seleksi_administrasi_unit->status_lke ==1)
                                         selected
                                         @endif
                                         @endif
                                         >Sesuai</option>
                                     <option value="0" @if($unit_zi->seleksi_administrasi_unit)
-                                        @if($unit_zi->seleksi_administrasi_unit->status ===0)
+                                        @if($unit_zi->seleksi_administrasi_unit->status_lke ===0)
                                         selected
                                         @endif
                                         @endif
@@ -304,46 +304,68 @@
                                 </select>
                             </td>
                             <td class="catatan">
-                                @if(isset($unit_zi->seleksi_administrasi_unit->catatan_unit))
-                                <textarea rows='4' cols='30' class='glowing-border' name='catatanUnit-{{$unit_zi->id}}'
-                                    required>{{$unit_zi->seleksi_administrasi_unit->catatan_unit}}</textarea>
+                                @if(isset($unit_zi->seleksi_administrasi_unit->catatan_lke))
+                                <textarea rows='4' cols='30' class='glowing-border' name='catatan-lke-{{$unit_zi->id}}'
+                                    required>{{$unit_zi->seleksi_administrasi_unit->catatan_lke}}</textarea>
                                 @endif
                             </td>
-                        </tr>
-                        <tr>
                         </tr>
                         @endforeach
                         @endif
                         @foreach ($unit_wbbm_ZIs as $key => $unit_zi )
-                        <tr style="color: #9e0d08">
-                            <td>
+                        <tr>
+                            <td rowspan="2">
                                 WBBM {{$key + 1}} : {{$unit_zi->nama}}
                             </td>
                             <td><a href="{{$unit_zi->lke}}" class="openNew" target="_blank">lke : {{$unit_zi->lke}}</a>
                             </td>
                             <td>
-                                <select class="form-control kesesuaian" name="unit-{{$unit_zi->id}}"
-                                    data-id="{{$unit_zi->id}}" required>
+                                <select class="form-control kesesuaian" name="status-lke-{{$unit_zi->id}}"
+                                    data-id="{{$unit_zi->id}}">
                                     <option value="" disabled selected>Pilih Status</option>
                                     <option value="1" @if($unit_zi->seleksi_administrasi_unit)
-                                        @if($unit_zi->seleksi_administrasi_unit->status ==1)
+                                        @if($unit_zi->seleksi_administrasi_unit->status_lke ==1)
                                         selected
                                         @endif
                                         @endif> Sesuai</option>
                                     <option value="0" @if($unit_zi->seleksi_administrasi_unit)
-                                        @if($unit_zi->seleksi_administrasi_unit->status ===0)
+                                        @if($unit_zi->seleksi_administrasi_unit->status_lke ===0)
                                         selected
                                         @endif
                                         @endif>Tidak Sesuai</option>
                                 </select>
                             </td>
                             <td class="catatan">
-                                @if(isset($unit_zi->seleksi_administrasi_unit->catatan_unit))
-                                <textarea rows='4' cols='30' class='glowing-border' name='catatanUnit-{{$unit_zi->id}}'
-                                    required>{{$unit_zi->seleksi_administrasi_unit->catatan_unit}}</textarea>
+                                @if(isset($unit_zi->seleksi_administrasi_unit->catatan_lke))
+                                <textarea rows='4' cols='30' class='glowing-border' name='catatan-lke-{{$unit_zi->id}}'
+                                    required>{{$unit_zi->seleksi_administrasi_unit->catatan_lke}}</textarea>
                                 @endif
                             </td>
 
+                        </tr>
+                        <tr>
+                            <td><a href="https://docs.google.com/spreadsheets/d/1ns2C87_sw2uXyIqKqutjAZRiLdFN32S7kGPhTjkRhPk/edit?gid=0#gid=0"
+                                    target="_blank" class="openNew"> Syarat 2 tahun wbk | Lihat </a></td>
+                            <td><select class="form-control kesesuaian2wbk" name="status-2wbk-{{$unit_zi->id}}"
+                                    data-id="{{$unit_zi->id}}">
+                                    <option value="" disabled selected>Pilih Status</option>
+                                    <option value="1" @if($unit_zi->seleksi_administrasi_unit)
+                                        @if($unit_zi->seleksi_administrasi_unit->status_2wbk ==1)
+                                        selected
+                                        @endif
+                                        @endif> Sesuai</option>
+                                    <option value="0" @if($unit_zi->seleksi_administrasi_unit)
+                                        @if($unit_zi->seleksi_administrasi_unit->status_2wbk ===0)
+                                        selected
+                                        @endif
+                                        @endif>Tidak Sesuai</option>
+                                </select></td>
+                            <td class="catatan2wbk">
+                                @if(isset($unit_zi->seleksi_administrasi_unit->catatan_2wbk))
+                                <textarea rows='4' cols='30' class='glowing-border' name='catatan-2wbk-{{$unit_zi->id}}'
+                                    required>{{$unit_zi->seleksi_administrasi_unit->catatan_2wbk}}</textarea>
+                                @endif
+                            </td>
                         </tr>
                         @endforeach
                     </tbody>
@@ -395,31 +417,86 @@
         $('#suratUsulan').on('change',function() {
             if(this.value=="0"){
                 $(this).parent().siblings(".catatan").html("<textarea rows='4' cols='30' class='glowing-border' name='catatanSuratUsulan' required></textarea>");
+            }else if(this.value=="1"){
+                let text = "Apakah anda yakin akan mengubah status? Perubahan status akan menghapus catatan.";
+                if (confirm(text) == true) {
+                    $(this).parent().siblings(".catatan").html("");
+                } else {
+                    text = "You canceled!";
+                    alert(text);
+                }
             }
         });
 
         $('#sptjm').on('change',function() {
             if(this.value=="0"){
                 $(this).parent().siblings(".catatan").html("<textarea rows='4' cols='30' class='glowing-border' name='catatanSptjm' required></textarea>");
+            }else if(this.value=="1"){
+                let text = "Apakah anda yakin akan mengubah status? Perubahan status akan menghapus catatan.";
+                if (confirm(text) == true) {
+                    $(this).parent().siblings(".catatan").html("");
+                } else {
+                    text = "You canceled!";
+                    alert(text);
+                }
             }
         });
 
         $('#tlhp').on('change',function() {
             if(this.value=="0"){
                 $(this).parent().siblings(".catatan").html("<textarea rows='4' cols='30' class='glowing-border' name='catatanTlhp' required></textarea>");
+            }else if(this.value=="1"){
+                let text = "Apakah anda yakin akan mengubah status? Perubahan status akan menghapus catatan.";
+                if (confirm(text) == true) {
+                    $(this).parent().siblings(".catatan").html("");
+                } else {
+                    text = "You canceled!";
+                    alert(text);
+                }
             }
         });
 
         $('#surveiMandiri').on('change',function() {
             if(this.value=="0"){
                 $(this).parent().siblings(".catatan").html("<textarea rows='4' cols='30' class='glowing-border' name='catatanSurveiMandiri' required></textarea>");
+            }else if(this.value=="1"){
+                let text = "Apakah anda yakin akan mengubah status? Perubahan status akan menghapus catatan.";
+                if (confirm(text) == true) {
+                    $(this).parent().siblings(".catatan").html("");
+                } else {
+                    text = "You canceled!";
+                    alert(text);
+                }
             }
         });
 
         $('.kesesuaian').on('change',function() {
             if(this.value=="0"){
                 var idUnit = $(this).attr("data-id");
-                $(this).parent().siblings(".catatan").html("<textarea rows='4' cols='30' class='glowing-border' name='catatanUnit-"+ idUnit +"' required></textarea>");
+                $(this).parent().siblings(".catatan").html("<textarea rows='4' cols='30' class='glowing-border' name='catatan-lke-"+ idUnit +"' required></textarea>");
+            }else if(this.value=="1"){
+                let text = "Apakah anda yakin akan mengubah status? Perubahan status akan menghapus catatan.";
+                if (confirm(text) == true) {
+                    $(this).parent().siblings(".catatan").html("");
+                } else {
+                    text = "You canceled!";
+                    alert(text);
+                }
+            }
+        });
+
+        $('.kesesuaian2wbk').on('change',function() {
+            if(this.value=="0"){
+                var idUnit = $(this).attr("data-id");
+                $(this).parent().siblings(".catatan2wbk").html("<textarea rows='4' cols='30' class='glowing-border' name='catatan-2wbk-"+ idUnit +"' required></textarea>");
+            }else if(this.value=="1"){
+                let text = "Apakah anda yakin akan mengubah status? Perubahan status akan menghapus catatan.";
+                if (confirm(text) == true) {
+                    $(this).parent().siblings(".catatan2wbk").html("");
+                } else {
+                    text = "You canceled!";
+                    alert(text);
+                }
             }
         });
 
