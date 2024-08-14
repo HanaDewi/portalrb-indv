@@ -186,7 +186,8 @@
                                     target="_blank">{{$instansi_ZI->surat_usulan}}</a>
                             </td>
                             <td>
-                                <select class="form-control" id="suratUsulan" name="suratUsulan" required>
+                                <select class="form-control" id="suratUsulan" name="suratUsulan"
+                                    data-old="{{($valSuratUsulan)?$valSuratUsulan:'kosong'}}" required>
                                     <option value="" disabled selected>Pilih Status</option>
                                     <option value="1" @if($valSuratUsulan==1) selected @endif>Sesuai</option>
                                     <option value="0" @if($valSuratUsulan===0) selected @endif>Tidak Sesuai</option>
@@ -204,7 +205,8 @@
                             <td><a href="{{$instansi_ZI->sptjm}}" class="openNew"
                                     target="_blank">{{$instansi_ZI->sptjm}}</a></td>
                             <td>
-                                <select class="form-control" id="sptjm" name="sptjm" required>
+                                <select class="form-control" id="sptjm" name="sptjm"
+                                    data-old="{{($valSptjm)?$valSptjm:'kosong'}}" required>
                                     <option value="" disabled selected>Pilih Status</option>
                                     <option value="1" @if($valSptjm==1) selected @endif>Sesuai</option>
                                     <option value="0" @if($valSptjm===0) selected @endif>Tidak Sesuai</option>
@@ -223,7 +225,8 @@
                                     target="_blank">{{$instansi_ZI->tlhp}}</a>
                             </td>
                             <td>
-                                <select class="form-control" id="tlhp" name="tlhp" required>
+                                <select class="form-control" id="tlhp" name="tlhp"
+                                    data-old="{{($valTlhp)?$valTlhp:'kosong'}}" required>
                                     <option value="" disabled selected>Pilih Status</option>
                                     <option value="1" @if($valTlhp==1) selected @endif>Sesuai</option>
                                     <option value="0" @if($valTlhp===0) selected @endif>Tidak Sesuai</option>
@@ -241,7 +244,8 @@
                             <td><a href="{{$instansi_ZI->survei_mandiri}}" class="openNew"
                                     target="_blank">{{$instansi_ZI->survei_mandiri}}</a></td>
                             <td>
-                                <select class="form-control" id="surveiMandiri" name="surveiMandiri" required>
+                                <select class="form-control" id="surveiMandiri" name="surveiMandiri"
+                                    data-old="{{($valSurveiMandiri)?$valSurveiMandiri:'kosong'}}" required>
                                     <option value="" disabled selected>Pilih Status</option>
                                     <option value="1" @if($valSurveiMandiri==1) selected @endif>Sesuai</option>
                                     <option value="0" @if($valSurveiMandiri===0) selected @endif>Tidak Sesuai</option>
@@ -287,6 +291,7 @@
                             </td>
                             <td>
                                 <select class="form-control kesesuaian" name="status-lke-{{$unit_zi->id}}"
+                                    data-old="{{(isset($unit_zi->seleksi_administrasi_unit->status_lke))?$unit_zi->seleksi_administrasi_unit->status_lke:'kosong'}}"
                                     data-id="{{$unit_zi->id}}">
                                     <option value="" disabled selected>Pilih Status</option>
                                     <option value="1" @if($unit_zi->seleksi_administrasi_unit)
@@ -321,6 +326,7 @@
                             </td>
                             <td>
                                 <select class="form-control kesesuaian" name="status-lke-{{$unit_zi->id}}"
+                                    data-old="{{(isset($unit_zi->seleksi_administrasi_unit->status_lke))?$unit_zi->seleksi_administrasi_unit->status_lke:'kosong'}}"
                                     data-id="{{$unit_zi->id}}">
                                     <option value="" disabled selected>Pilih Status</option>
                                     <option value="1" @if($unit_zi->seleksi_administrasi_unit)
@@ -347,6 +353,7 @@
                             <td><a href="https://docs.google.com/spreadsheets/d/1ns2C87_sw2uXyIqKqutjAZRiLdFN32S7kGPhTjkRhPk/edit?gid=0#gid=0"
                                     target="_blank" class="openNew"> Syarat 2 tahun wbk | Lihat </a></td>
                             <td><select class="form-control kesesuaian2wbk" name="status-2wbk-{{$unit_zi->id}}"
+                                    data-old="{{(isset($unit_zi->seleksi_administrasi_unit->status_2wbk))?$unit_zi->seleksi_administrasi_unit->status_2wbk:'kosong'}}"
                                     data-id="{{$unit_zi->id}}">
                                     <option value="" disabled selected>Pilih Status</option>
                                     <option value="1" @if($unit_zi->seleksi_administrasi_unit)
@@ -418,56 +425,76 @@
             if(this.value=="0"){
                 $(this).parent().siblings(".catatan").html("<textarea rows='4' cols='30' class='glowing-border' name='catatanSuratUsulan' required></textarea>");
             }else if(this.value=="1"){
-                let text = "Apakah anda yakin akan mengubah status? Perubahan status akan menghapus catatan.";
-                if (confirm(text) == true) {
-                    $(this).parent().siblings(".catatan").html("");
-                } else {
-                    text = "You canceled!";
-                    alert(text);
+                var oldData = $(this).attr("data-old");
+                if(oldData != "kosong" ){
+                    let text = "Apakah anda yakin akan mengubah status? Perubahan status akan menghapus catatan sebelumnya.";
+                    if (confirm(text) == true) {
+                        $(this).parent().siblings(".catatan").html("");
+                    } else {
+                        text = "You canceled!";
+                        alert(text);
+                        this.value="0"
+                    }
                 }
             }
+            $(this).attr("data-old", this.value);
         });
 
         $('#sptjm').on('change',function() {
             if(this.value=="0"){
                 $(this).parent().siblings(".catatan").html("<textarea rows='4' cols='30' class='glowing-border' name='catatanSptjm' required></textarea>");
             }else if(this.value=="1"){
-                let text = "Apakah anda yakin akan mengubah status? Perubahan status akan menghapus catatan.";
-                if (confirm(text) == true) {
-                    $(this).parent().siblings(".catatan").html("");
-                } else {
-                    text = "You canceled!";
-                    alert(text);
+                var oldData = $(this).attr("data-old");
+                if(oldData != "kosong" ){
+                    let text = "Apakah anda yakin akan mengubah status? Perubahan status akan menghapus catatan sebelumnya.";
+                    if (confirm(text) == true) {
+                        $(this).parent().siblings(".catatan").html("");
+                    } else {
+                        text = "You canceled!";
+                        alert(text);
+                        this.value="0"
+                    }
                 }
             }
+            $(this).attr("data-old", this.value);
         });
 
         $('#tlhp').on('change',function() {
             if(this.value=="0"){
                 $(this).parent().siblings(".catatan").html("<textarea rows='4' cols='30' class='glowing-border' name='catatanTlhp' required></textarea>");
             }else if(this.value=="1"){
-                let text = "Apakah anda yakin akan mengubah status? Perubahan status akan menghapus catatan.";
-                if (confirm(text) == true) {
-                    $(this).parent().siblings(".catatan").html("");
-                } else {
-                    text = "You canceled!";
-                    alert(text);
+                var oldData = $(this).attr("data-old");
+                if(oldData != "kosong" ){
+                    let text = "Apakah anda yakin akan mengubah status? Perubahan status akan menghapus catatan sebelumnya.";
+                    if (confirm(text) == true) {
+                        $(this).parent().siblings(".catatan").html("");
+                    } else {
+                        text = "You canceled!";
+                        alert(text);
+                        this.value="0"
+                    }
                 }
             }
+            $(this).attr("data-old", this.value);
         });
 
         $('#surveiMandiri').on('change',function() {
             if(this.value=="0"){
                 $(this).parent().siblings(".catatan").html("<textarea rows='4' cols='30' class='glowing-border' name='catatanSurveiMandiri' required></textarea>");
             }else if(this.value=="1"){
-                let text = "Apakah anda yakin akan mengubah status? Perubahan status akan menghapus catatan.";
-                if (confirm(text) == true) {
-                    $(this).parent().siblings(".catatan").html("");
-                } else {
-                    text = "You canceled!";
-                    alert(text);
+                var oldData = $(this).attr("data-old");
+                if(oldData != "kosong" ){
+                    let text = "Apakah anda yakin akan mengubah status? Perubahan status akan menghapus catatan sebelumnya.";
+                    if (confirm(text) == true) {
+                        $(this).parent().siblings(".catatan").html("");
+                    } else {
+                        text = "You canceled!";
+                        alert(text);
+                        this.value="0"
+                    }
                 }
             }
+            $(this).attr("data-old", this.value);
         });
 
         $('.kesesuaian').on('change',function() {
@@ -475,14 +502,19 @@
                 var idUnit = $(this).attr("data-id");
                 $(this).parent().siblings(".catatan").html("<textarea rows='4' cols='30' class='glowing-border' name='catatan-lke-"+ idUnit +"' required></textarea>");
             }else if(this.value=="1"){
-                let text = "Apakah anda yakin akan mengubah status? Perubahan status akan menghapus catatan.";
-                if (confirm(text) == true) {
-                    $(this).parent().siblings(".catatan").html("");
-                } else {
-                    text = "You canceled!";
-                    alert(text);
+                var oldData = $(this).attr("data-old");
+                if(oldData != "kosong" ){
+                    let text = "Apakah anda yakin akan mengubah status? Perubahan status akan menghapus catatan sebelumnya.";
+                    if (confirm(text) == true) {
+                        $(this).parent().siblings(".catatan").html("");
+                    } else {
+                        text = "You canceled!";
+                        alert(text);
+                        this.value="0"
+                    }
                 }
             }
+            $(this).attr("data-old", this.value);
         });
 
         $('.kesesuaian2wbk').on('change',function() {
@@ -490,14 +522,19 @@
                 var idUnit = $(this).attr("data-id");
                 $(this).parent().siblings(".catatan2wbk").html("<textarea rows='4' cols='30' class='glowing-border' name='catatan-2wbk-"+ idUnit +"' required></textarea>");
             }else if(this.value=="1"){
-                let text = "Apakah anda yakin akan mengubah status? Perubahan status akan menghapus catatan.";
-                if (confirm(text) == true) {
-                    $(this).parent().siblings(".catatan2wbk").html("");
-                } else {
-                    text = "You canceled!";
-                    alert(text);
+                var oldData = $(this).attr("data-old");
+                if(oldData != "kosong" ){
+                let text = "Apakah anda yakin akan mengubah status? Perubahan status akan menghapus catatan sebelumnya.";
+                    if (confirm(text) == true) {
+                        $(this).parent().siblings(".catatan2wbk").html("");
+                    } else {
+                        text = "You canceled!";
+                        alert(text);
+                        this.value="0"
+                    }
                 }
             }
+            $(this).attr("data-old", this.value);
         });
 
            
