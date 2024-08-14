@@ -23,9 +23,16 @@
         </div>
         <div class="lg:col-span-12 p-5 border-b border-slate-200/60">
             <div class="row">
-                <div class=" col-md-4 col-md-offset-2 text-center" style="text-align: right">
-                    <img src="{{asset('assets/images/syarat_min_instansi.jpg')}}" width="50%">
-                </div>
+                <table>
+                    <tr>
+                        <td><img src="{{asset('assets/images/syarat_min_instansi.jpg')}}"></td>
+                        <td>&nbsp;&nbsp;&nbsp;</td>
+                        <td>&nbsp;&nbsp;&nbsp;</td>
+                        <td><img src="{{asset('assets/images/unit_kerja_affirmasi.jpeg')}}" width="80%"></td>
+
+
+                    </tr>
+                </table>
             </div>
             <br />
             <table style="text-align: left" class="table">
@@ -187,14 +194,15 @@
                             </td>
                             <td>
                                 <select class="form-control" id="suratUsulan" name="suratUsulan"
-                                    data-old="{{($valSuratUsulan)?$valSuratUsulan:'kosong'}}" required>
+                                    data-old=@if($valSuratUsulan==1) "1" @elseif($valSuratUsulan===0) "0" @else "kosong"
+                                    @endif required>
                                     <option value="" disabled selected>Pilih Status</option>
                                     <option value="1" @if($valSuratUsulan==1) selected @endif>Sesuai</option>
                                     <option value="0" @if($valSuratUsulan===0) selected @endif>Tidak Sesuai</option>
                                 </select>
                             </td>
                             <td class="catatan">
-                                @if($valCatatanSuratUsulan)
+                                @if($valSuratUsulan===0)
                                 <textarea rows='4' cols='30' class='glowing-border' name='catatanSuratUsulan'
                                     required>{{$valCatatanSuratUsulan}}</textarea>
                                 @endif
@@ -205,15 +213,15 @@
                             <td><a href="{{$instansi_ZI->sptjm}}" class="openNew"
                                     target="_blank">{{$instansi_ZI->sptjm}}</a></td>
                             <td>
-                                <select class="form-control" id="sptjm" name="sptjm"
-                                    data-old="{{($valSptjm)?$valSptjm:'kosong'}}" required>
+                                <select class="form-control" id="sptjm" name="sptjm" data-old=@if($valSptjm==1) "1"
+                                    @elseif($valSptjm==0) "0" @else "kosong" @endif required>
                                     <option value="" disabled selected>Pilih Status</option>
                                     <option value="1" @if($valSptjm==1) selected @endif>Sesuai</option>
                                     <option value="0" @if($valSptjm===0) selected @endif>Tidak Sesuai</option>
                                 </select>
                             </td>
                             <td class="catatan">
-                                @if($valCatatanSptjm)
+                                @if($valSptjm===0)
                                 <textarea rows='4' cols='30' class='glowing-border' name='catatanSptjm'
                                     required>{{$valCatatanSptjm}}</textarea>
                                 @endif
@@ -225,15 +233,15 @@
                                     target="_blank">{{$instansi_ZI->tlhp}}</a>
                             </td>
                             <td>
-                                <select class="form-control" id="tlhp" name="tlhp"
-                                    data-old="{{($valTlhp)?$valTlhp:'kosong'}}" required>
+                                <select class="form-control" id="tlhp" name="tlhp" data-old=@if($valTlhp==1) "1"
+                                    @elseif($valTlhp===0) "0" @else "kosong" @endif required>
                                     <option value="" disabled selected>Pilih Status</option>
                                     <option value="1" @if($valTlhp==1) selected @endif>Sesuai</option>
                                     <option value="0" @if($valTlhp===0) selected @endif>Tidak Sesuai</option>
                                 </select>
                             </td>
                             <td class="catatan">
-                                @if($valCatatanTlhp)
+                                @if($valTlhp===0)
                                 <textarea rows='4' cols='30' class='glowing-border' name='catatanTlhp'
                                     required>{{$valCatatanTlhp}}</textarea>
                                 @endif
@@ -245,14 +253,15 @@
                                     target="_blank">{{$instansi_ZI->survei_mandiri}}</a></td>
                             <td>
                                 <select class="form-control" id="surveiMandiri" name="surveiMandiri"
-                                    data-old="{{($valSurveiMandiri)?$valSurveiMandiri:'kosong'}}" required>
+                                    data-old=@if($valSurveiMandiri==1) "1" @elseif($valSurveiMandiri===0) "0"
+                                    @else "kosong" @endif required>
                                     <option value="" disabled selected>Pilih Status</option>
                                     <option value="1" @if($valSurveiMandiri==1) selected @endif>Sesuai</option>
                                     <option value="0" @if($valSurveiMandiri===0) selected @endif>Tidak Sesuai</option>
                                 </select>
                             </td>
                             <td class="catatan">
-                                @if($valCatatanSurveiMandiri)
+                                @if($valSurveiMandiri===0)
                                 <textarea rows='4' cols='30' class='glowing-border' name='catatanSurveiMandiri'
                                     required>{{$valCatatanSurveiMandiri}}</textarea>
                                 @endif
@@ -291,7 +300,9 @@
                             </td>
                             <td>
                                 <select class="form-control kesesuaian" name="status-lke-{{$unit_zi->id}}"
-                                    data-old="{{(isset($unit_zi->seleksi_administrasi_unit->status_lke))?$unit_zi->seleksi_administrasi_unit->status_lke:'kosong'}}"
+                                    data-old=@if($unit_zi->seleksi_administrasi_unit->status_lke==1) "1"
+                                    @elseif($unit_zi->seleksi_administrasi_unit->status_lke===0) "0"
+                                    @else "kosong" @endif
                                     data-id="{{$unit_zi->id}}">
                                     <option value="" disabled selected>Pilih Status</option>
                                     <option value="1" @if($unit_zi->seleksi_administrasi_unit)
@@ -309,7 +320,7 @@
                                 </select>
                             </td>
                             <td class="catatan">
-                                @if(isset($unit_zi->seleksi_administrasi_unit->catatan_lke))
+                                @if($unit_zi->seleksi_administrasi_unit->status_lke ===0)
                                 <textarea rows='4' cols='30' class='glowing-border' name='catatan-lke-{{$unit_zi->id}}'
                                     required>{{$unit_zi->seleksi_administrasi_unit->catatan_lke}}</textarea>
                                 @endif
@@ -326,7 +337,10 @@
                             </td>
                             <td>
                                 <select class="form-control kesesuaian" name="status-lke-{{$unit_zi->id}}"
-                                    data-old="{{(isset($unit_zi->seleksi_administrasi_unit->status_lke))?$unit_zi->seleksi_administrasi_unit->status_lke:'kosong'}}"
+                                    data-old=@if($unit_zi->seleksi_administrasi_unit->status_lke==1) "1"
+                                    @elseif($unit_zi->seleksi_administrasi_unit->status_lke===0) "0"
+                                    @else "kosong" @endif
+
                                     data-id="{{$unit_zi->id}}">
                                     <option value="" disabled selected>Pilih Status</option>
                                     <option value="1" @if($unit_zi->seleksi_administrasi_unit)
@@ -342,7 +356,7 @@
                                 </select>
                             </td>
                             <td class="catatan">
-                                @if(isset($unit_zi->seleksi_administrasi_unit->catatan_lke))
+                                @if($unit_zi->seleksi_administrasi_unit->status_lke ===0)
                                 <textarea rows='4' cols='30' class='glowing-border' name='catatan-lke-{{$unit_zi->id}}'
                                     required>{{$unit_zi->seleksi_administrasi_unit->catatan_lke}}</textarea>
                                 @endif
@@ -353,7 +367,10 @@
                             <td><a href="https://docs.google.com/spreadsheets/d/1ns2C87_sw2uXyIqKqutjAZRiLdFN32S7kGPhTjkRhPk/edit?gid=0#gid=0"
                                     target="_blank" class="openNew"> Syarat 2 tahun wbk | Lihat </a></td>
                             <td><select class="form-control kesesuaian2wbk" name="status-2wbk-{{$unit_zi->id}}"
-                                    data-old="{{(isset($unit_zi->seleksi_administrasi_unit->status_2wbk))?$unit_zi->seleksi_administrasi_unit->status_2wbk:'kosong'}}"
+                                    data-old=@if($unit_zi->seleksi_administrasi_unit->status_2wbk==1) "1"
+                                    @elseif($unit_zi->seleksi_administrasi_unit->status_2wbk===0) "0"
+                                    @else "kosong" @endif
+
                                     data-id="{{$unit_zi->id}}">
                                     <option value="" disabled selected>Pilih Status</option>
                                     <option value="1" @if($unit_zi->seleksi_administrasi_unit)
@@ -368,7 +385,7 @@
                                         @endif>Tidak Sesuai</option>
                                 </select></td>
                             <td class="catatan2wbk">
-                                @if(isset($unit_zi->seleksi_administrasi_unit->catatan_2wbk))
+                                @if($unit_zi->seleksi_administrasi_unit->status_2wbk ===0)
                                 <textarea rows='4' cols='30' class='glowing-border' name='catatan-2wbk-{{$unit_zi->id}}'
                                     required>{{$unit_zi->seleksi_administrasi_unit->catatan_2wbk}}</textarea>
                                 @endif
