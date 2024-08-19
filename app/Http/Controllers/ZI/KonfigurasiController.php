@@ -27,6 +27,9 @@ class KonfigurasiController extends Controller
         });
     }
 
+    
+       
+
     public function update_predikat(Request $request)
     {   
         $instansi_ZIs = InstansiZI::get();
@@ -49,6 +52,7 @@ class KonfigurasiController extends Controller
         $instansiZI->save();
         return view('zi.edit_predikat', compact("instansi_ZI") );
     }
+
 
     public function kelola_tim(Request $request)
     {   

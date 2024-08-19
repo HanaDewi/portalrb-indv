@@ -24,4 +24,10 @@ class InstansiZI extends Model
     public function unit_zi() {
         return $this->hasMany(UnitZI::class, 'instansi_zi_id')->orderBy('nama');
     }
+
+    public function administrasi_instansi() {
+        return $this->hasOne(SeleksiAdministrasiInstansi::class, 'instansi_zi_id');
+    }
+
+
 }

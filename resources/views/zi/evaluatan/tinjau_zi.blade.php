@@ -136,27 +136,7 @@
                     Pengusulan Zona
                     Integritas</h2>
             </div>
-            <div class="col-lg-12col-md-12">
-                <div class="feature-item" style="background-color: white; border-radius: 25px;">
-                    <div class="content" style="overflow-x: scroll;">
-                        <div class="container-timeline">
-
-                            <span class="line"></span>
-                            <br />
-                            <ul class="timeline">
-                                <li class="active-tl">Pengusulan </li>
-                                <li class="  ">Seleksi Administrasi</li>
-                                <li class="  ">Hasil Sanggah</li>
-                                <li class="  ">Desk Evaluasi</li>
-                                <li class="  ">Verifikasi Lapangan</li>
-                                <li class="  ">Hasil Akhir</li>
-                            </ul>
-                        </div>
-                        <br /><br /><br /><br />
-
-                    </div>
-                </div>
-            </div>
+            @include('zi.evaluatan.progress')
             <hr />
 
             <div class="col-lg-12 col-md-12">
@@ -164,7 +144,7 @@
                     <div class="content">
 
                         <br>
-                        <h5>{{ $instansi}}</h5>
+                        <h5>Pengusulan Zona Integritas <br /> {{ $instansi}}</h5>
                         <h6>Berikut adalah data yang anda masukan</h6>
                         <br />
                         <table style="text-align:  left; " class="table table-striped table-bordered table-shad">

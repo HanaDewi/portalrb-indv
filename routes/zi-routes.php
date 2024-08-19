@@ -1,28 +1,55 @@
 <?php
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ZI\LkeEvaluator;
+use App\Http\Controllers\ZI\ZIController;
+use App\Http\Controllers\ZI\SanggahController;
 use App\Http\Controllers\ZI\DashboardController;
+use App\Http\Controllers\ZI\EvaluatanController;
 use App\Http\Controllers\ZI\KonfigurasiController;
 use App\Http\Controllers\ZI\AdministrasiController;
+use App\Http\Controllers\ZI\LkeEvaluatorController;
 use App\Http\Controllers\ZI\PengusulanZIController;
 
 
 Route::middleware('auth')->group(function () {
     #evaluatan
-    Route::get('/zi', [PengusulanZIController::class, 'index'])->name('pengusulan_zi');
-    Route::post('/zi', [PengusulanZIController::class, 'store_bukti_dukung'])->name('pengusulan_zi_store');
+    Route::get('/zi', [ZIController::class, 'index'])->name('home_zi');
+    Route::get('/zi/pengusulan', [PengusulanZIController::class, 'index'])->name('pengusulan_zi');
+    Route::post('/zi/pengusulan', [PengusulanZIController::class, 'store_bukti_dukung'])->name('pengusulan_zi_store');
     Route::get('/zi-tinjau', [PengusulanZIController::class, 'tinjau'])->name('tinjau_zi');
+    Route::get('/zi-administrasi', [EvaluatanController::class, 'seleksi_administrasi'])->name('evaluatan_seleksi_administrasi');
+    Route::get('/zi-hasil-sanggah', [EvaluatanController::class, 'hasil_sanggah'])->name('evaluatan_hasil_sanggah');
+    Route::get('/zi-desk', [EvaluatanController::class, 'seleksi_desk'])->name('evaluatan_desk');
+    Route::get('/zi-verifikasi-lapangan', [EvaluatanController::class, 'seleksi_verifikasi_lapangan'])->name('evaluatan_verifikasi_lapangan');
+    Route::get('/zi-hasil-akhir', [EvaluatanController::class, 'hasil_akhir'])->name('evaluatan_hasil_akhir');
     #generate
     #Route::get('/zi/generate_skor', [GenerateController::class, 'generate_rekap_instansi_skor'])->name('pengusulan_zi');
     #Admin Pengusulan
     Route::get('/zi/admin', [DashboardController::class, 'index'])->name('dashboard_zi');
+    Route::get('/zi/rekap-total', [DashboardController::class, 'rekap_total'])->name('rekap_total');
     Route::get('/zi/rekap-pengusulan', [DashboardController::class, 'rekap_pengusulan'])->name('rekap_pengusulan');
     Route::get('/zi/rekap-unit', [DashboardController::class, 'rekap_unit'])->name('rekap_unit');
     Route::get('/zi/rekap-pengusulan-detail/{id}', [DashboardController::class, 'rekap_pengusulan_detail'])->name('rekap_pengusulan_detail');
-    #SeleksiAdministrasi
+    #Seleksi Administrasi
     Route::get('/zi/seleksi-administrasi', [AdministrasiController::class, 'index'])->name('seleksi_administrasi');
     Route::get('/zi/evaluasi-administrasi/{id}', [AdministrasiController::class, 'evaluasi_administrasi'])->name('evaluasi_administrasi');
     Route::post('/zi/evaluasi-administrasi/simpan', [AdministrasiController::class, 'evaluasi_administrasi_simpan'])->name('evaluasi_administrasi_simpan');
+    #Proses Sanggah
+    Route::get('/zi/proses-sanggah', [SanggahController::class, 'index'])->name('proses_sanggah');
+    #Seleksi Dokumen
+    Route::get('/zi/seleksi-dokumen', [DokumenController::class, 'index'])->name('seleksi_dokumen');
+    #Seleksi Wawancara
+    Route::get('/zi/seleksi-wawancara', [WawancaraController::class, 'index'])->name('seleksi_wawancara');
+    #Observasi Lapangan
+    Route::get('/zi/observasi-lapangan', [ObservasiController::class, 'index'])->name('observasi-lapangan');
+    #Seleksi Panel
+    Route::get('/zi/seleksi-panel', [PanelController::class, 'index'])->name('seleksi_panel');
+    #Tautkan LKE
+    Route::get('/zi/lke-evaluator', [LkeEvaluatorController::class, 'index'])->name('lke_evaluator');
+    Route::get('/zi/download-template-lke', [LkeEvaluatorController::class, 'download_template_lke'])->name('download_template_lke');
+
+    
 
     #===================Konfigurasi===================
     Route::get('/zi/update-predikat', [KonfigurasiController::class, 'update_predikat'])->name('update_predikat');

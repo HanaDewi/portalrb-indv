@@ -25,10 +25,8 @@
             <div class="row">
                 <table>
                     <tr>
-                        <td><img src="{{asset('assets/images/syarat_min_instansi.jpg')}}"></td>
-                        <td>&nbsp;&nbsp;&nbsp;</td>
-                        <td>&nbsp;&nbsp;&nbsp;</td>
-                        <td><img src="{{asset('assets/images/unit_kerja_affirmasi.jpeg')}}" width="80%"></td>
+                        <td><img src="{{asset('assets/images/syarat_unit.jpeg')}}" width="80%"></td>
+                        <td><img src="{{asset('assets/images/unit_kerja_affirmasi.jpeg')}}"></td>
 
 
                     </tr>
@@ -147,7 +145,9 @@
                 </tfoot>
             </table>
 
-
+            <br />
+            <br />
+            <br />
             <form action="{{ route('evaluasi_administrasi_simpan') }}" method="POST">
                 @csrf
                 <input type="hidden" id="instansiZIId" name="instansiZIId" value="{{$instansi_ZI->id}}">
@@ -157,35 +157,17 @@
                         <tr>
 
                             <th>#</th>
-                            <th>Isi</th>
+                            <th>Bukti Dukung</th>
                             <th>Status</th>
                             <th>Keterangan Tidak Lulus</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>Instansi</td>
-                            <td>{{$instansi_ZI->klpd_instansi->name}}</td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td>PIC</td>
-                            <td>{{$instansi_ZI->pic}}</td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td>Nomor Kontak</td>
-                            <td>{{$instansi_ZI->nomor_kontak}} </td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td>email</td>
-                            <td>{{$instansi_ZI->email}}</td>
-                            <td></td>
-                            <td></td>
+                        <tr style="background-color:#6EACDA">
+                            <td colspan=4 class="text-center">
+                                <b>Seleksi Administrasi Instansi {{$instansi_ZI->klpd_instansi->name}}
+                                </b>
+                            </td>
                         </tr>
                         <tr>
                             <td>Surat Usulan</td>
@@ -214,7 +196,7 @@
                                     target="_blank">{{$instansi_ZI->sptjm}}</a></td>
                             <td>
                                 <select class="form-control" id="sptjm" name="sptjm" data-old=@if($valSptjm==1) "1"
-                                    @elseif($valSptjm==0) "0" @else "kosong" @endif required>
+                                    @elseif($valSptjm===0) "0" @else "kosong" @endif required>
                                     <option value="" disabled selected>Pilih Status</option>
                                     <option value="1" @if($valSptjm==1) selected @endif>Sesuai</option>
                                     <option value="0" @if($valSptjm===0) selected @endif>Tidak Sesuai</option>
@@ -227,82 +209,49 @@
                                 @endif
                             </td>
                         </tr>
+
+                        <tr style="background-color:#6EACDA">
+                            <td colspan=4 class="text-center"><b>Seleksi Administrasi Unit
+                                    (
+                                    WBK : @if($instansi_ZI->instansi_wbk_mandiri) <p style="color:red"> MANDIRI </p>
+                                    @else
+                                    {{$instansi_ZI->jml_wbk}} @endif |
+                                    WBBM : {{$instansi_ZI->jml_wbbm}} )</b></td>
+                        </tr>
+
+                        @php
+                        $wbk_i = 0;
+                        $wbbm_i = 0;
+                        @endphp
+                        @foreach ($unit_ZIs as $key => $unit_zi )
                         <tr>
-                            <td>TLHP</td>
-                            <td> <a href="{{$instansi_ZI->tlhp}}" class="openNew"
-                                    target="_blank">{{$instansi_ZI->tlhp}}</a>
-                            </td>
-                            <td>
-                                <select class="form-control" id="tlhp" name="tlhp" data-old=@if($valTlhp==1) "1"
-                                    @elseif($valTlhp===0) "0" @else "kosong" @endif required>
-                                    <option value="" disabled selected>Pilih Status</option>
-                                    <option value="1" @if($valTlhp==1) selected @endif>Sesuai</option>
-                                    <option value="0" @if($valTlhp===0) selected @endif>Tidak Sesuai</option>
-                                </select>
-                            </td>
-                            <td class="catatan">
-                                @if($valTlhp===0)
-                                <textarea rows='4' cols='30' class='glowing-border' name='catatanTlhp'
-                                    required>{{$valCatatanTlhp}}</textarea>
+                            <td rowspan=@if($unit_zi->wbk==1)
+                                4
+                                @elseif($unit_zi->wbbm==1)
+                                5
                                 @endif
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Survei Mandiri</td>
-                            <td><a href="{{$instansi_ZI->survei_mandiri}}" class="openNew"
-                                    target="_blank">{{$instansi_ZI->survei_mandiri}}</a></td>
-                            <td>
-                                <select class="form-control" id="surveiMandiri" name="surveiMandiri"
-                                    data-old=@if($valSurveiMandiri==1) "1" @elseif($valSurveiMandiri===0) "0"
-                                    @else "kosong" @endif required>
-                                    <option value="" disabled selected>Pilih Status</option>
-                                    <option value="1" @if($valSurveiMandiri==1) selected @endif>Sesuai</option>
-                                    <option value="0" @if($valSurveiMandiri===0) selected @endif>Tidak Sesuai</option>
-                                </select>
-                            </td>
-                            <td class="catatan">
-                                @if($valSurveiMandiri===0)
-                                <textarea rows='4' cols='30' class='glowing-border' name='catatanSurveiMandiri'
-                                    required>{{$valCatatanSurveiMandiri}}</textarea>
+                                >
+                                @if($unit_zi->wbk==1)
+                                WBK {{++$wbk_i}}
+                                @elseif($unit_zi->wbbm==1)
+                                WBBM {{++$wbbm_i}}
                                 @endif
+                                :
+                                {{$unit_zi->nama}}
                             </td>
-                        </tr>
-                        @if(!$instansi_ZI->instansi_wbk_mandiri)
-                        <tr>
-                            <td>Jumlah Unit WBK @if($instansi_ZI->instansi_wbk_mandiri) <p style="color:red"> MANDIRI
-                                </p> @endif </td>
-                            <td>{{$instansi_ZI->jml_wbk}}</td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        @endif
-                        <tr>
-                            <td>Jumlah Unit WBBM</td>
-                            <td>{{$instansi_ZI->jml_wbbm}}</td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        @if(!$instansi_ZI->instansi_wbk_mandiri)
-                        <tr>
-                            <td>Jumlah Unit</td>
-                            <td>{{$instansi_ZI->jml_wbk + $instansi_ZI->jml_wbbm}}</td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        @endif
-                        @if(!$instansi_ZI->instansi_wbk_mandiri)
-                        @foreach ($unit_wbk_ZIs as $key => $unit_zi )
-                        <tr>
-                            <td>
-                                WBK {{$key + 1}} : {{$unit_zi->nama}}
-                            </td>
-                            <td><a href="{{$unit_zi->lke}}" class="openNew" target="_blank">lke : {{$unit_zi->lke}}</a>
+                            <td><a href="{{$unit_zi->lke}}" class="openNew" target="_blank"><b>LKE :</b><br />
+                                    {{$unit_zi->lke}}</a>
                             </td>
                             <td>
-                                <select class="form-control kesesuaian" name="status-lke-{{$unit_zi->id}}"
-                                    data-old=@if($unit_zi->seleksi_administrasi_unit->status_lke==1) "1"
+                                <select class="form-control lke" name="status-lke-{{$unit_zi->id}}"
+                                    data-old=@if(isset($unit_zi->seleksi_administrasi_unit->status_lke))
+                                    @if($unit_zi->seleksi_administrasi_unit->status_lke==1) "1"
                                     @elseif($unit_zi->seleksi_administrasi_unit->status_lke===0) "0"
-                                    @else "kosong" @endif
+                                    @else "kosong"
+                                    @endif
+                                    @else
+                                    "kosong"
+                                    @endif
                                     data-id="{{$unit_zi->id}}">
                                     <option value="" disabled selected>Pilih Status</option>
                                     <option value="1" @if($unit_zi->seleksi_administrasi_unit)
@@ -320,56 +269,149 @@
                                 </select>
                             </td>
                             <td class="catatan">
+                                @if(isset($unit_zi->seleksi_administrasi_unit->status_lke) )
                                 @if($unit_zi->seleksi_administrasi_unit->status_lke ===0)
                                 <textarea rows='4' cols='30' class='glowing-border' name='catatan-lke-{{$unit_zi->id}}'
                                     required>{{$unit_zi->seleksi_administrasi_unit->catatan_lke}}</textarea>
                                 @endif
+                                @endif
                             </td>
                         </tr>
-                        @endforeach
-                        @endif
-                        @foreach ($unit_wbbm_ZIs as $key => $unit_zi )
                         <tr>
-                            <td rowspan="2">
-                                WBBM {{$key + 1}} : {{$unit_zi->nama}}
-                            </td>
-                            <td><a href="{{$unit_zi->lke}}" class="openNew" target="_blank">lke : {{$unit_zi->lke}}</a>
+                            <td><a href="{{$instansi_ZI->tlhp}}" class="openNew" target="_blank"><b>TLHP :
+                                    </b><br />{{$instansi_ZI->tlhp}}</a>
                             </td>
                             <td>
-                                <select class="form-control kesesuaian" name="status-lke-{{$unit_zi->id}}"
-                                    data-old=@if($unit_zi->seleksi_administrasi_unit->status_lke==1) "1"
-                                    @elseif($unit_zi->seleksi_administrasi_unit->status_lke===0) "0"
+                                <select class="form-control tlhp" name="tlhp-{{$unit_zi->id}}"
+                                    data-old=@if(isset($unit_zi->seleksi_administrasi_unit->status_tlhp))
+                                    @if($unit_zi->seleksi_administrasi_unit->status_tlhp==1) "1"
+                                    @elseif($unit_zi->seleksi_administrasi_unit->status_tlhp===0) "0"
                                     @else "kosong" @endif
-
+                                    @else
+                                    "kosong"
+                                    @endif
                                     data-id="{{$unit_zi->id}}">
+                                    required>
                                     <option value="" disabled selected>Pilih Status</option>
-                                    <option value="1" @if($unit_zi->seleksi_administrasi_unit)
-                                        @if($unit_zi->seleksi_administrasi_unit->status_lke ==1)
-                                        selected
+                                    <option value="1" @if(isset($unit_zi->seleksi_administrasi_unit->status_tlhp))
+                                        @if($unit_zi->seleksi_administrasi_unit->status_tlhp==1) selected
                                         @endif
-                                        @endif> Sesuai</option>
-                                    <option value="0" @if($unit_zi->seleksi_administrasi_unit)
-                                        @if($unit_zi->seleksi_administrasi_unit->status_lke ===0)
-                                        selected
+                                        @endif
+                                        >Sesuai</option>
+                                    <option value="0" @if(isset($unit_zi->seleksi_administrasi_unit->status_tlhp))
+                                        @if($unit_zi->seleksi_administrasi_unit->status_tlhp===0) selected
                                         @endif
                                         @endif>Tidak Sesuai</option>
                                 </select>
                             </td>
                             <td class="catatan">
-                                @if($unit_zi->seleksi_administrasi_unit->status_lke ===0)
-                                <textarea rows='4' cols='30' class='glowing-border' name='catatan-lke-{{$unit_zi->id}}'
-                                    required>{{$unit_zi->seleksi_administrasi_unit->catatan_lke}}</textarea>
+                                @if(isset($unit_zi->seleksi_administrasi_unit->status_tlhp))
+                                @if($unit_zi->seleksi_administrasi_unit->status_tlhp===0)
+                                <textarea rows='4' cols='30' class='glowing-border' name='catatanTlhp-{{$unit_zi->id}}'
+                                    required>{{$unit_zi->seleksi_administrasi_unit->catatan_tlhp}}</textarea>
+                                @endif
                                 @endif
                             </td>
-
                         </tr>
                         <tr>
+                            <td><a href="{{$instansi_ZI->survei_mandiri}}" class="openNew" target="_blank"><b>Survei
+                                        Mandiri : </b><br />{{$instansi_ZI->survei_mandiri}}</a>
+                            </td>
+                            <td>
+                                <select class="form-control surveiMandiri" name="surveiMandiri-{{$unit_zi->id}}"
+                                    data-old=@if(isset($unit_zi->seleksi_administrasi_unit->status_survei_mandiri))
+                                    @if($unit_zi->seleksi_administrasi_unit->status_survei_mandiri==1) "1"
+                                    @elseif($unit_zi->seleksi_administrasi_unit->status_survei_mandiri===0) "0"
+                                    @else "kosong" @endif
+                                    @else
+                                    "kosong"
+                                    @endif
+                                    data-id="{{$unit_zi->id}}">
+                                    required>
+                                    <option value="" disabled selected>Pilih Status</option>
+                                    <option value="1" @if(isset($unit_zi->
+                                        seleksi_administrasi_unit->status_survei_mandiri))
+                                        @if($unit_zi->seleksi_administrasi_unit->status_survei_mandiri==1) selected
+                                        @endif
+                                        @endif
+                                        >Sesuai</option>
+                                    <option value="0" @if(isset($unit_zi->
+                                        seleksi_administrasi_unit->status_survei_mandiri))
+                                        @if($unit_zi->seleksi_administrasi_unit->status_survei_mandiri===0) selected
+                                        @endif
+                                        @endif
+                                        >Tidak Sesuai</option>
+                                </select>
+                            </td>
+                            <td class="catatan">
+                                @if(isset($unit_zi->
+                                seleksi_administrasi_unit->status_survei_mandiri))
+                                @if($unit_zi->seleksi_administrasi_unit->status_survei_mandiri===0)
+                                <textarea rows='4' cols='30' class='glowing-border'
+                                    name='catatanSurveiMandiri-{{$unit_zi->id}}'
+                                    required>{{$unit_zi->seleksi_administrasi_unit->catatan_survei_mandiri}}</textarea>
+                                @endif
+                                @endif
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <a href="#" class="openNew" target="_blank">
+                                    <b>LHKPN :</b><br />
+                                </a>
+                            </td>
+                            <td>
+                                <select class="form-control lhkpn" name="lhkpn-{{$unit_zi->id}}"
+                                    data-id="{{$unit_zi->id}}"
+                                    data-old=@if(isset($unit_zi->seleksi_administrasi_unit->status_lhkpn))
+                                    @if($unit_zi->seleksi_administrasi_unit->status_lhkpn==1)
+                                    "1"
+                                    @elseif($unit_zi->seleksi_administrasi_unit->status_lhkpn===0)
+                                    "0"
+                                    @else "kosong"
+                                    @endif
+                                    @else
+                                    "kosong"
+                                    @endif
+                                    >
+                                    required>
+                                    <option value="" disabled selected>Pilih Status</option>
+                                    <option value="1" @if(isset($unit_zi->
+                                        seleksi_administrasi_unit->status_lhkpn))
+                                        @if($unit_zi->seleksi_administrasi_unit->status_lhkpn==1) selected
+                                        @endif
+                                        @endif
+                                        >Sesuai</option>
+                                    <option value="0" @if(isset($unit_zi->
+                                        seleksi_administrasi_unit->status_lhkpn))
+                                        @if($unit_zi->seleksi_administrasi_unit->status_lhkpn===0) selected
+                                        @endif
+                                        @endif
+                                        >Tidak Sesuai</option>
+                                </select>
+                            </td>
+                            <td class="catatan">
+                                @if(isset($unit_zi->
+                                seleksi_administrasi_unit->status_lhkpn))
+                                @if($unit_zi->seleksi_administrasi_unit->status_lhkpn===0)
+                                <textarea rows='4' cols='30' class='glowing-border' name='catatanLhkpn-{{$unit_zi->id}}'
+                                    required>{{$unit_zi->seleksi_administrasi_unit->catatan_lhkpn}}</textarea>
+                                @endif
+                                @endif
+                            </td>
+                        </tr>
+                        @if($unit_zi->wbbm==1)
+                        <tr>
                             <td><a href="https://docs.google.com/spreadsheets/d/1ns2C87_sw2uXyIqKqutjAZRiLdFN32S7kGPhTjkRhPk/edit?gid=0#gid=0"
-                                    target="_blank" class="openNew"> Syarat 2 tahun wbk | Lihat </a></td>
+                                    target="_blank" class="openNew"> <b>Syarat 2 tahun wbk </b> <br /> Lihat </a></td>
                             <td><select class="form-control kesesuaian2wbk" name="status-2wbk-{{$unit_zi->id}}"
-                                    data-old=@if($unit_zi->seleksi_administrasi_unit->status_2wbk==1) "1"
+                                    data-old=@if(isset($unit_zi->seleksi_administrasi_unit->status_2wbk))
+                                    @if($unit_zi->seleksi_administrasi_unit->status_2wbk==1) "1"
                                     @elseif($unit_zi->seleksi_administrasi_unit->status_2wbk===0) "0"
                                     @else "kosong" @endif
+                                    @else
+                                    "kosong"
+                                    @endif
 
                                     data-id="{{$unit_zi->id}}">
                                     <option value="" disabled selected>Pilih Status</option>
@@ -384,15 +426,17 @@
                                         @endif
                                         @endif>Tidak Sesuai</option>
                                 </select></td>
-                            <td class="catatan2wbk">
+                            <td class="catatan">
+                                @if(isset($unit_zi->seleksi_administrasi_unit->status_2wbk))
                                 @if($unit_zi->seleksi_administrasi_unit->status_2wbk ===0)
                                 <textarea rows='4' cols='30' class='glowing-border' name='catatan-2wbk-{{$unit_zi->id}}'
                                     required>{{$unit_zi->seleksi_administrasi_unit->catatan_2wbk}}</textarea>
                                 @endif
+                                @endif
                             </td>
                         </tr>
+                        @endif
                         @endforeach
-                    </tbody>
                 </table>
                 <hr />
                 <br />
@@ -448,8 +492,6 @@
                     if (confirm(text) == true) {
                         $(this).parent().siblings(".catatan").html("");
                     } else {
-                        text = "You canceled!";
-                        alert(text);
                         this.value="0"
                     }
                 }
@@ -467,8 +509,6 @@
                     if (confirm(text) == true) {
                         $(this).parent().siblings(".catatan").html("");
                     } else {
-                        text = "You canceled!";
-                        alert(text);
                         this.value="0"
                     }
                 }
@@ -476,45 +516,9 @@
             $(this).attr("data-old", this.value);
         });
 
-        $('#tlhp').on('change',function() {
-            if(this.value=="0"){
-                $(this).parent().siblings(".catatan").html("<textarea rows='4' cols='30' class='glowing-border' name='catatanTlhp' required></textarea>");
-            }else if(this.value=="1"){
-                var oldData = $(this).attr("data-old");
-                if(oldData != "kosong" ){
-                    let text = "Apakah anda yakin akan mengubah status? Perubahan status akan menghapus catatan sebelumnya.";
-                    if (confirm(text) == true) {
-                        $(this).parent().siblings(".catatan").html("");
-                    } else {
-                        text = "You canceled!";
-                        alert(text);
-                        this.value="0"
-                    }
-                }
-            }
-            $(this).attr("data-old", this.value);
-        });
+        
 
-        $('#surveiMandiri').on('change',function() {
-            if(this.value=="0"){
-                $(this).parent().siblings(".catatan").html("<textarea rows='4' cols='30' class='glowing-border' name='catatanSurveiMandiri' required></textarea>");
-            }else if(this.value=="1"){
-                var oldData = $(this).attr("data-old");
-                if(oldData != "kosong" ){
-                    let text = "Apakah anda yakin akan mengubah status? Perubahan status akan menghapus catatan sebelumnya.";
-                    if (confirm(text) == true) {
-                        $(this).parent().siblings(".catatan").html("");
-                    } else {
-                        text = "You canceled!";
-                        alert(text);
-                        this.value="0"
-                    }
-                }
-            }
-            $(this).attr("data-old", this.value);
-        });
-
-        $('.kesesuaian').on('change',function() {
+        $('.lke').on('change',function() {
             if(this.value=="0"){
                 var idUnit = $(this).attr("data-id");
                 $(this).parent().siblings(".catatan").html("<textarea rows='4' cols='30' class='glowing-border' name='catatan-lke-"+ idUnit +"' required></textarea>");
@@ -525,8 +529,60 @@
                     if (confirm(text) == true) {
                         $(this).parent().siblings(".catatan").html("");
                     } else {
-                        text = "You canceled!";
-                        alert(text);
+                        this.value="0"
+                    }
+                }
+            }
+            $(this).attr("data-old", this.value);
+        });
+
+        $('.tlhp').on('change',function() {
+            if(this.value=="0"){
+                var idUnit = $(this).attr("data-id");
+                $(this).parent().siblings(".catatan").html("<textarea rows='4' cols='30' class='glowing-border' name='catatanTlhp-"+idUnit+"' required></textarea>");
+            }else if(this.value=="1"){
+                var oldData = $(this).attr("data-old");
+                if(oldData != "kosong" ){
+                    let text = "Apakah anda yakin akan mengubah status? Perubahan status akan menghapus catatan sebelumnya.";
+                    if (confirm(text) == true) {
+                        $(this).parent().siblings(".catatan").html("");
+                    } else {
+                        this.value="0"
+                    }
+                }
+            }
+            $(this).attr("data-old", this.value);
+        });
+
+        $('.surveiMandiri').on('change',function() {
+            if(this.value=="0"){
+                var idUnit = $(this).attr("data-id");
+                $(this).parent().siblings(".catatan").html("<textarea rows='4' cols='30' class='glowing-border' name='catatanSurveiMandiri-"+ idUnit +"' required></textarea>");
+            }else if(this.value=="1"){
+                var oldData = $(this).attr("data-old");
+                if(oldData != "kosong" ){
+                    let text = "Apakah anda yakin akan mengubah status? Perubahan status akan menghapus catatan sebelumnya.";
+                    if (confirm(text) == true) {
+                        $(this).parent().siblings(".catatan").html("");
+                    } else {
+                        this.value="0"
+                    }
+                }
+            }
+            $(this).attr("data-old", this.value);
+        });
+
+        $('.lhkpn').on('change',function() {
+            if(this.value=="0"){
+                var idUnit = $(this).attr("data-id");
+                $(this).parent().siblings(".catatan").html("<textarea rows='4' cols='30' class='glowing-border' name='catatanLkhpn-"+ idUnit +"' required></textarea>");
+            }else if(this.value=="1"){
+                var oldData = $(this).attr("data-old");
+                if(oldData != "kosong" ){
+                    let text = "Apakah anda yakin akan mengubah status? Perubahan status akan menghapus catatan sebelumnya.";
+                    if (confirm(text) == true) {
+                        $(this).parent().siblings(".catatan").html("");
+                    } else {
                         this.value="0"
                     }
                 }
@@ -537,16 +593,14 @@
         $('.kesesuaian2wbk').on('change',function() {
             if(this.value=="0"){
                 var idUnit = $(this).attr("data-id");
-                $(this).parent().siblings(".catatan2wbk").html("<textarea rows='4' cols='30' class='glowing-border' name='catatan-2wbk-"+ idUnit +"' required></textarea>");
+                $(this).parent().siblings(".catatan").html("<textarea rows='4' cols='30' class='glowing-border' name='catatan-2wbk-"+ idUnit +"' required></textarea>");
             }else if(this.value=="1"){
                 var oldData = $(this).attr("data-old");
                 if(oldData != "kosong" ){
                 let text = "Apakah anda yakin akan mengubah status? Perubahan status akan menghapus catatan sebelumnya.";
                     if (confirm(text) == true) {
-                        $(this).parent().siblings(".catatan2wbk").html("");
+                        $(this).parent().siblings(".catatan").html("");
                     } else {
-                        text = "You canceled!";
-                        alert(text);
                         this.value="0"
                     }
                 }
@@ -573,6 +627,8 @@
             bInfo: false,
             ordering: false,
         });
+
+
     });
 
 </script>

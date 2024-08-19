@@ -28,3 +28,4 @@ class UnitZI extends Model
         return $this->hasOne(SeleksiAdministrasiUnit::class, 'unit_zi_id');
     }
 }
+

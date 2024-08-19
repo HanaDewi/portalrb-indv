@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\ZI\SeleksiAdministrasiUnit;
 use App\Models\ZI\SeleksiAdministrasiInstansi;
 
-class AdministrasiController extends Controller
+class SanggahController extends Controller
 {
     public function __construct()
     {
@@ -24,7 +24,7 @@ class AdministrasiController extends Controller
     }
     public function index(Request $request)
     {
-        $title = "Seleksi Administrasi";
+        $title = "Proses Sanggah";
         $instansi_ZIs = InstansiZI::orderBy('updated_at','DESC')->get();
         $instansi_non_mandiri = InstansiZI::where("instansi_wbk_mandiri",'!=',1)->orWhereNull('instansi_wbk_mandiri')->where("final",1)->get();
         $instansi_non_mandiri_count = $instansi_non_mandiri->count();

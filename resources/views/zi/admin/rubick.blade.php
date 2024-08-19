@@ -61,16 +61,64 @@
             </a>
             <ul>
                 <li>
-                    <a href="{{ route('rekap_pengusulan') }}" class="side-menu">
-                        <div class="side-menu__icon"><i data-lucide="inbox"></i></div>
-                        <div class="side-menu__title"> Rekap Pengusulan </div>
+                    <a href="{{ route('rekap_total') }}" class="side-menu
+                    @if($title == 'Rekap Total')
+                                side-menu--active 
+                    @endif
+                    ">
+                        <div class="side-menu__icon"><i data-lucide="pie-chart"></i></div>
+                        <div class="side-menu__title"> Rekap Total </div>
                     </a>
                 </li>
+
+
                 <li>
-                    <a href="{{ route('rekap_unit') }}" class="side-menu">
-                        <div class="side-menu__icon"><i data-lucide="clipboard"></i></div>
-                        <div class="side-menu__title"> Rekap Unit </div>
+                    <a href="#" class="side-menu
+                    @if(in_array($title, ['Kelola Tim', 'Kelola Anggota Tim' ])) 
+                        class side-menu--active side-menu--open
+                    @endif
+                    ">
+                        <!-- class side-menu--active side-menu--open-->
+                        <div class="side-menu__icon"><i data-lucide="pie-chart"></i></div>
+                        <div class="side-menu__title">
+                            Rekap Pengusulan
+                            <div class="side-menu__sub-icon "> <i data-lucide="chevron-down"></i> </div>
+                        </div>
                     </a>
+                    <ul class="
+                        @if(in_array($title, ['Rekap Pengusulan Instansi', 'Rekap Pengusulan Unit' ])) 
+                            side-menu__sub-open
+                        @else
+                            side-menu__sub-close
+                        @endif
+                        ">
+                        <li>
+                            <a href="{{ route('rekap_pengusulan') }}" class="side-menu 
+                            @if($title == 'Rekap Pengusulan Instansi')
+                                side-menu--active 
+                            @endif
+                            ">
+                                <div class="side-menu__icon"><i data-lucide="clipboard"></i></div>
+                                <div class="side-menu__title">
+                                    Rekap Pengusulan Instansi
+                                    <div class="side-menu__sub-icon "> </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('rekap_unit') }}" class="side-menu 
+                            @if($title == 'Rekap Pengusulan Unit')
+                            side-menu--active 
+                            @endif
+                            ">
+                                <div class="side-menu__icon"><i data-lucide="clipboard"></i></div>
+                                <div class="side-menu__title">
+                                    Rekap Pengusulan Unit
+                                    <div class="side-menu__sub-icon "> </div>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
                 </li>
                 <li>
                     <a href="{{ route('seleksi_administrasi') }}" class="side-menu
@@ -82,6 +130,67 @@
                         <div class="side-menu__title"> Seleksi Administrasi </div>
                     </a>
                 </li>
+                <li>
+                    <a href="{{ route('proses_sanggah') }}" class="side-menu
+                    @if($title == 'Proses Sanggah')
+                                side-menu--active 
+                    @endif
+                    ">
+                        <div class="side-menu__icon"><i data-lucide="clipboard"></i></div>
+                        <div class="side-menu__title"> Proses Sanggah </div>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('seleksi_dokumen') }}" class="side-menu
+                    @if($title == 'Seleksi Dokumen')
+                                side-menu--active 
+                    @endif
+                    ">
+                        <div class="side-menu__icon"><i data-lucide="clipboard"></i></div>
+                        <div class="side-menu__title"> Seleksi Dokumen </div>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('seleksi_dokumen') }}" class="side-menu
+                    @if($title == 'Seleksi Dokumen')
+                                side-menu--active 
+                    @endif
+                    ">
+                        <div class="side-menu__icon"><i data-lucide="clipboard"></i></div>
+                        <div class="side-menu__title"> Seleksi Wawancara </div>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('seleksi_dokumen') }}" class="side-menu
+                    @if($title == 'Seleksi Dokumen')
+                                side-menu--active 
+                    @endif
+                    ">
+                        <div class="side-menu__icon"><i data-lucide="clipboard"></i></div>
+                        <div class="side-menu__title"> Observasi Lapangan </div>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('seleksi_dokumen') }}" class="side-menu
+                    @if($title == 'Seleksi Dokumen')
+                                side-menu--active 
+                    @endif
+                    ">
+                        <div class="side-menu__icon"><i data-lucide="clipboard"></i></div>
+                        <div class="side-menu__title"> Panel </div>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('lke_evaluator') }}" class="side-menu
+                    @if($title == 'LKE Evaluator')
+                                side-menu--active 
+                    @endif
+                    ">
+                        <div class="side-menu__icon"><i data-lucide="clipboard"></i></div>
+                        <div class="side-menu__title">LKE Evaluator</div>
+                    </a>
+                </li>
+
                 @if(Auth::User()->level =="admin" || in_array(Auth::User()->id, [10060, 10048, 10059, 10046, 10053,
                 10056, 10052]) )
                 <li>
@@ -146,24 +255,15 @@
                     </ul>
                 </li>
                 @endif
+
                 <li>
                     <a href="https://docs.google.com/spreadsheets/d/1ns2C87_sw2uXyIqKqutjAZRiLdFN32S7kGPhTjkRhPk/edit?usp=sharing"
                         target="_blank" class="side-menu">
-                        <div class="side-menu__icon"><i data-lucide="clipboard"></i></div>
+                        <div class="side-menu__icon"><i data-lucide="database"></i></div>
                         <div class="side-menu__title"> ZI 2014-2023 </div>
                     </a>
                 </li>
-                <!--
-                @if(Auth::User()->level =="admin" || in_array(Auth::User()->id, [10060, 10048]) )
-                <li>
-                    <a href="#" class="side-menu">
-                        <div class="side-menu__icon"><i data-lucide="clipboard-list"></i></div>
-                        <div class="side-menu__title"> Update Predikat </div>
-                    </a>
-                </li>
-                
-                @endif
-                -->
+
                 <li>
                     <a href="{{ route('logout') }}" onclick="event.preventDefault(); $('#logout').submit();"
                         class="side-menu">

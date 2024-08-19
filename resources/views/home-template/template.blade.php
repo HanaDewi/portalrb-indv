@@ -96,7 +96,7 @@
                                             <a href="{{ route('ruang-belajar.home') }}">Ruang Belajar</a>
                                         </li>
                                         <li>
-                                            <a href="{{ route('pengusulan_zi') }}">Zona Integritas</a>
+                                            <a href="{{ route('home_zi') }}">Zona Integritas</a>
                                         </li>
                                         <li>
                                             @if(Auth::User())
