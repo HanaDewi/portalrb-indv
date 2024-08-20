@@ -69,6 +69,7 @@
                                     <td><i class="fa fa-envelope-open text-menpan"></i> &nbsp; Surat Usulan</td>
                                     <td><a href="{{$instansiZI->surat_usulan}}" target="_blank">Lihat</a></td>
                                     <td>
+                                        @if(isset($instansiZI->administrasi_instansi))
                                         @if($instansiZI->administrasi_instansi->surat_usulan == 1)
                                         Sesuai
                                         @elseif($instansiZI->administrasi_instansi->surat_usulan === 0)
@@ -76,10 +77,13 @@
                                         @else
                                         Belum dinilai
                                         @endif
+                                        @endif
                                     </td>
                                     <td>
+                                        @if(isset($instansiZI->administrasi_instansi))
                                         @if($instansiZI->administrasi_instansi->surat_usulan === 0)
                                         {{$instansiZI->administrasi_instansi->catatan_surat_usulan}}
+                                        @endif
                                         @endif
                                     </td>
                                 </tr>
@@ -87,6 +91,7 @@
                                     <td><i class="fa fa-envelope-open text-menpan"> </i> &nbsp; SPTJM</td>
                                     <td><a href="{{$instansiZI->sptjm}}" target="_blank">Lihat</a></td>
                                     <td>
+                                        @if(isset($instansiZI->administrasi_instansi))
                                         @if($instansiZI->administrasi_instansi->sptjm == 1)
                                         Sesuai
                                         @elseif($instansiZI->administrasi_instansi->sptjm === 0)
@@ -94,10 +99,13 @@
                                         @else
                                         Belum dinilai
                                         @endif
+                                        @endif
                                     </td>
                                     <td>
+                                        @if(isset($instansiZI->administrasi_instansi))
                                         @if($instansiZI->administrasi_instansi->sptjm === 0)
                                         {{$instansiZI->administrasi_instansi->catatan_sptjm}}
+                                        @endif
                                         @endif
                                     </td>
                                 </tr>
@@ -130,6 +138,7 @@
                                     <td style="text-align: left">LKE</td>
                                     <td><a href="{{$unit_wbk->lke}}" target="_blank">Lihat</a></td>
                                     <td>
+                                        @if(isset($unit_wbk->seleksi_administrasi_unit))
                                         @if($unit_wbk->seleksi_administrasi_unit->status_lke == 1)
                                         Sesuai
                                         @elseif($unit_wbk->seleksi_administrasi_unit->status_lke === 0)
@@ -137,10 +146,13 @@
                                         @else
                                         Belum dinilai
                                         @endif
+                                        @endif
                                     </td>
                                     <td>
+                                        @if(isset($unit_wbk->seleksi_administrasi_unit))
                                         @if($unit_wbk->seleksi_administrasi_unit->status_lke === 0)
                                         {{$unit_wbk->seleksi_administrasi_unit->catatan_lke}}
+                                        @endif
                                         @endif
                                     </td>
                                 </tr>
@@ -148,6 +160,7 @@
                                     <td style="text-align: left">TLHP </td>
                                     <td><a href="{{$instansiZI->tlhp}}" target="_blank">Lihat</a></td>
                                     <td>
+                                        @if(isset($unit_wbk->seleksi_administrasi_unit))
                                         @if($unit_wbk->seleksi_administrasi_unit->status_tlhp == 1)
                                         Sesuai
                                         @elseif($unit_wbk->seleksi_administrasi_unit->status_tlhp === 0)
@@ -155,10 +168,13 @@
                                         @else
                                         Belum dinilai
                                         @endif
+                                        @endif
                                     </td>
                                     <td>
+                                        @if(isset($unit_wbk->seleksi_administrasi_unit))
                                         @if($unit_wbk->seleksi_administrasi_unit->status_tlhp === 0)
                                         {{$unit_wbk->seleksi_administrasi_unit->catatan_tlhp}}
+                                        @endif
                                         @endif
                                     </td>
 
@@ -169,6 +185,7 @@
                                         <a href="{{$instansiZI->survei_mandiri}}" target="_blank">Lihat</a>
                                     </td>
                                     <td>
+                                        @if(isset($unit_wbk->seleksi_administrasi_unit))
                                         @if($unit_wbk->seleksi_administrasi_unit->status_survei_mandiri == 1)
                                         Sesuai
                                         @elseif($unit_wbk->seleksi_administrasi_unit->status_survei_mandiri === 0)
@@ -176,10 +193,13 @@
                                         @else
                                         Belum dinilai
                                         @endif
+                                        @endif
                                     </td>
                                     <td>
+                                        @if(isset($unit_wbk->seleksi_administrasi_unit))
                                         @if($unit_wbk->seleksi_administrasi_unit->status_survei_mandiri === 0)
                                         {{$unit_wbk->seleksi_administrasi_unit->catatan_survei_mandiri}}
+                                        @endif
                                         @endif
                                     </td>
 
@@ -188,6 +208,7 @@
                                     <td style="text-align: left">LHKPN </td>
                                     <td>-</td>
                                     <td>
+                                        @if(isset($unit_wbk->seleksi_administrasi_unit))
                                         @if($unit_wbk->seleksi_administrasi_unit->status_lhkpn == 1)
                                         Sesuai
                                         @elseif($unit_wbk->seleksi_administrasi_unit->status_lhkpn === 0)
@@ -195,10 +216,13 @@
                                         @else
                                         Belum dinilai
                                         @endif
+                                        @endif
                                     </td>
                                     <td>
+                                        @if(isset($unit_wbk->seleksi_administrasi_unit))
                                         @if($unit_wbk->seleksi_administrasi_unit->status_lhkpn === 0)
                                         {{$unit_wbk->seleksi_administrasi_unit->catatan_lhkpn}}
+                                        @endif
                                         @endif
                                     </td>
 
