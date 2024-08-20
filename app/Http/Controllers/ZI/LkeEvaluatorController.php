@@ -46,6 +46,17 @@ class LkeEvaluatorController extends Controller
         }    
     }
 
+    public function lke_evaluator_update(Request $request)
+    {   
+        $success = false;
+        $unitZi = UnitZI::find($request->unit_id);
+        $unitZi->lke_evaluator = $request->link_lke_evaluator;
+        if ($unitZi->save()) {
+            $success = true;
+        };
+        return redirect()->route('lke_evaluator');
+    } 
+
     public function download_template_lke()
     {
         // Fetch all units with their associated instansi

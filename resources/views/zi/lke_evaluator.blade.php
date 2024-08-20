@@ -105,12 +105,13 @@
                             @elseif($unit_ZI->wbbm)
                             WBBM
                             @endif
-
                         </td>
 
                         <td><a href="{{$unit_ZI->lke}}" target="_blank">{{$unit_ZI->lke}}</a></td>
-                        <td>-</td>
-                        <td><button type="submit" class="btn btn-primary w-20 saveButton">Edit Link LKE</button></td>
+                        <td>{{$unit_ZI->lke_evaluator}}</td>
+                        <td><button type="submit" onclick="edit({{$unit_ZI->id}}, '{{$unit_ZI->lke_evaluator}}');"
+                                class="btn btn-primary w-20 saveButton"><i class="fa fa-edit"></i> &nbsp; Edit</button>
+                        </td>
                     </tr>
 
                     @endif
@@ -124,27 +125,26 @@
 </div>
 
 
-{{-- Modal Form Catatan Evaluator --}}
-<div id="modal-catatan" class="modal fade" tabindex="-1" aria-hidden="true">
+{{-- Modal Form LKE Evaluator --}}
+<div id="modal-lke" class="modal fade" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <!-- BEGIN: Modal Header -->
             <div class="darkbg modal-header">
-                <h2 class="font-bold fw-medium fs-base me-auto" id="title">Monitoring dan Evaluasi Perencanaan</h2>
+                <h2 class="font-bold fw-medium fs-base me-auto" id="title">Link LKE Evaluator</h2>
             </div> <!-- END: Modal Header -->
             <!-- BEGIN: Modal Body -->
-            <form action="{{ url('rb-general/rekap_data/simpanCatatanEvaluator') }}" id="form-catatan_evaluator"
-                method="post">
+            <form action="{{ route('lke_evaluator_update') }}" id="form-link-lke" method="post">
                 @csrf
-                <input type="hidden" id="target_id" name="target_id">
+                <input type="hidden" id="unit_id" name="unit_id">
                 <div class="modal-body grid columns-12 gap-4 gap-y-3">
                     <div class="g-col-12">
                         <table class="table table-noborder">
                             <tr>
-                                <td class="font-bold">Catatan Evaluator</td>
+                                <td class="font-bold">Link LKE Evaluator</td>
                                 <td>
-                                    <textarea name="catatan_evaluator" id="catatan_evaluator" cols="30" rows="10"
-                                        placeholder="Catatan" class="form-control mt-4"></textarea>
+                                    <textarea name="link_lke_evaluator" id="link-lke-evaluator" cols="30" rows="3"
+                                        placeholder="Link LKE Evaluator" class="form-control mt-4"></textarea>
                                 </td>
                             </tr>
                         </table>
@@ -180,6 +180,7 @@
 <script>
     $(document).ready(function(){
         
+        modal_lke = tailwind.Modal.getInstance(document.querySelector("#modal-lke"));
         var empDataTable = $('#rekap-zi').DataTable({
             dom: 'Blfrtip',
             buttons: [
@@ -191,7 +192,6 @@
                 } 
             ],
             scrollX: true,
-            // 'orderFixed': [0, 'asc'],
             autoWidth: false,
             paging: true,
             bInfo: false,
@@ -218,9 +218,21 @@
                 cell.innerHTML = i+1;
             });
         }).draw();
+
+
+        
             
     });
 
+    function edit(id, link_lke) {
+            $('#form-link-lke').trigger('reset');
+            $('.saveButton').prop('disabled', false);
+            $('#unit_id').val(id);
+            $('#link-lke-evaluator').val(link_lke);
+            modal_lke.show();
+            
+            
+        }
     
 
 </script>

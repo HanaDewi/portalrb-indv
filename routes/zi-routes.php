@@ -3,6 +3,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ZI\LkeEvaluator;
 use App\Http\Controllers\ZI\ZIController;
+use App\Http\Controllers\ZI\DokumenController;
 use App\Http\Controllers\ZI\SanggahController;
 use App\Http\Controllers\ZI\DashboardController;
 use App\Http\Controllers\ZI\EvaluatanController;
@@ -47,7 +48,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/zi/seleksi-panel', [PanelController::class, 'index'])->name('seleksi_panel');
     #Tautkan LKE
     Route::get('/zi/lke-evaluator', [LkeEvaluatorController::class, 'index'])->name('lke_evaluator');
+    Route::post('/zi/lke-evaluator-update', [LkeEvaluatorController::class, 'lke_evaluator_update'])->name('lke_evaluator_update');
     Route::get('/zi/download-template-lke', [LkeEvaluatorController::class, 'download_template_lke'])->name('download_template_lke');
+    
 
     
 
