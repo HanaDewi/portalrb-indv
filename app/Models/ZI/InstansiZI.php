@@ -29,5 +29,9 @@ class InstansiZI extends Model
         return $this->hasOne(SeleksiAdministrasiInstansi::class, 'instansi_zi_id');
     }
 
+    public function sanggah_instansi() {
+        return $this->hasOne(SanggahInstansi::class, 'instansi_zi_id');
+    }
+
 
 }

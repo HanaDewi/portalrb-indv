@@ -17,9 +17,10 @@ Route::middleware('auth')->group(function () {
     #evaluatan
     Route::get('/zi', [ZIController::class, 'index'])->name('home_zi');
     Route::get('/zi/pengusulan', [PengusulanZIController::class, 'index'])->name('pengusulan_zi');
-    Route::post('/zi/pengusulan', [PengusulanZIController::class, 'store_bukti_dukung'])->name('pengusulan_zi_store');
+    //Route::post('/zi/pengusulan/pengusulan', [PengusulanZIController::class, 'store_bukti_dukung'])->name('pengusulan_zi_store');
     Route::get('/zi-tinjau', [PengusulanZIController::class, 'tinjau'])->name('tinjau_zi');
     Route::get('/zi-administrasi', [EvaluatanController::class, 'seleksi_administrasi'])->name('evaluatan_seleksi_administrasi');
+    Route::post('/zi-simpan-sanggah', [EvaluatanController::class, 'sanggah_simpan'])->name('evaluatan_simpan_sanggah');
     Route::get('/zi-hasil-sanggah', [EvaluatanController::class, 'hasil_sanggah'])->name('evaluatan_hasil_sanggah');
     Route::get('/zi-desk', [EvaluatanController::class, 'seleksi_desk'])->name('evaluatan_desk');
     Route::get('/zi-verifikasi-lapangan', [EvaluatanController::class, 'seleksi_verifikasi_lapangan'])->name('evaluatan_verifikasi_lapangan');
@@ -37,7 +38,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/zi/evaluasi-administrasi/{id}', [AdministrasiController::class, 'evaluasi_administrasi'])->name('evaluasi_administrasi');
     Route::post('/zi/evaluasi-administrasi/simpan', [AdministrasiController::class, 'evaluasi_administrasi_simpan'])->name('evaluasi_administrasi_simpan');
     #Proses Sanggah
-    Route::get('/zi/proses-sanggah', [SanggahController::class, 'index'])->name('proses_sanggah');
+    Route::get('/zi/sanggah', [SanggahController::class, 'index'])->name('sanggah');
+    Route::get('/zi/proses-sanggah/{id}', [SanggahController::class, 'proses_sanggah'])->name('proses_sanggah');
+    Route::post('/zi/proses-sanggah/simpan', [SanggahController::class, 'proses_sanggah_simpan'])->name('proses_sanggah_simpan');
     #Seleksi Dokumen
     Route::get('/zi/seleksi-dokumen', [DokumenController::class, 'index'])->name('seleksi_dokumen');
     #Seleksi Wawancara

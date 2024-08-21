@@ -131,8 +131,8 @@
                     </a>
                 </li>
                 <li>
-                    <a href="{{ route('proses_sanggah') }}" class="side-menu
-                    @if($title == 'Proses Sanggah')
+                    <a href="{{ route('sanggah') }}" class="side-menu
+                    @if($title == 'Sanggah')
                                 side-menu--active 
                     @endif
                     ">

@@ -27,5 +27,9 @@ class UnitZI extends Model
     public function seleksi_administrasi_unit() {
         return $this->hasOne(SeleksiAdministrasiUnit::class, 'unit_zi_id');
     }
+
+    public function sanggah_unit() {
+        return $this->hasOne(SanggahUnit::class, 'unit_zi_id');
+    }
 }
 

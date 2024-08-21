@@ -124,7 +124,12 @@
                         <th class="w-5" rowspan="2" style="text-align: center;">Realisasi Anggaran</th>
                         <th class="w-5" rowspan="2" style="text-align: center;">Capaian Output</th>
                         <th class="w-5" rowspan="2" style="text-align: center;">Capaian Anggaran</th>
-                        <th class="w-5" rowspan="2" style="text-align: center;">Keterangan</th>
+                        <th class="w-5" rowspan="2" style="text-align: center; 
+                        width: 150px;
+                        word-wrap: break-word;
+                        overflow-wrap: break-word;
+                        white-space: normal;
+                        ">Keterangan</th>
                     </tr>
                     <tr>
                         <th>Koordinator</th>
@@ -328,11 +333,7 @@
                             </table>
                             @endif
                         </td>
-                        <td style=" 
-                        word-wrap: break-word;
-                        overflow-wrap: break-word;
-                        white-space: normal;
-                        ">
+                        <td>
                             @if ($data['output']->catatan)
                             {{ $data['output']->catatan }}
                             @endif

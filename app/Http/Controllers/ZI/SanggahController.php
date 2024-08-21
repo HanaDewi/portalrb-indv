@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\ZI;
 
+use App\Models\ZI\SanggahInstansi;
 use App\Models\ZI\UnitZI;
 use App\Models\KlpdInstansi;
 use Illuminate\Http\Request;
@@ -24,46 +25,38 @@ class SanggahController extends Controller
     }
     public function index(Request $request)
     {
-        $title = "Proses Sanggah";
-        $instansi_ZIs = InstansiZI::orderBy('updated_at','DESC')->get();
-        $instansi_non_mandiri = InstansiZI::where("instansi_wbk_mandiri",'!=',1)->orWhereNull('instansi_wbk_mandiri')->where("final",1)->get();
-        $instansi_non_mandiri_count = $instansi_non_mandiri->count();
-        $instansi_wbk_mandiri = InstansiZI::where("instansi_wbk_mandiri",1)->where("final",1)->get();
-        $instansi_wbk_mandiri_count = $instansi_wbk_mandiri->count();
-        $wbbm_count = UnitZI::where('wbbm', 1)->count();
-        $wbk_all_count = UnitZI::where('wbk', 1)->count();
-        $wbk_mandiri_count = UnitZI::whereHas('instansiZI', function ($query) {
-            $query->where('instansi_wbk_mandiri', 1);
-        })->where('wbk', 1)->count();
-        $wbk_non_mandiri_count = $wbk_all_count-$wbk_mandiri_count;
-        $total_unit = $wbk_all_count + $wbbm_count;
+        $title = "Sanggah";
+        $instansi_sanggahs = SanggahInstansi::get();
+        // $wbk_mandiri_count = UnitZI::whereHas('instansiZI', function ($query) {
+        //     $query->where('instansi_wbk_mandiri', 1);
+        // })->where('wbk', 1)->count();
         
 
-        return view('zi.seleksi_administrasi.administrasi', compact(
-            "title","instansi_ZIs","instansi_non_mandiri_count","instansi_wbk_mandiri_count", 
-            "wbbm_count","wbk_mandiri_count", "wbk_non_mandiri_count", 'total_unit'
+        return view('zi.proses_sanggah.sanggah', compact(
+            "title", "instansi_sanggahs"
         ));
                 
     }
 
-    public function evaluasi_administrasi($id)
+    public function proses_sanggah($id)
     {   
-        $title = "Seleksi Administrasi";
+        $title = "Sanggah";
         $instansi_ZI = InstansiZI::find($id);
         $unit_ZIs = UnitZI::where("instansi_zi_id", $id)->orderBy('wbk','desc')->get();
-        $seleksiAdministrasiInstansi = SeleksiAdministrasiInstansi::where('instansi_zi_id', $id)->first();
-        $valSuratUsulan = ($seleksiAdministrasiInstansi)?$seleksiAdministrasiInstansi->surat_usulan:Null;
-        $valCatatanSuratUsulan = ($seleksiAdministrasiInstansi)?$seleksiAdministrasiInstansi->catatan_surat_usulan:Null;
-        $valSptjm = ($seleksiAdministrasiInstansi)?$seleksiAdministrasiInstansi->sptjm:Null;
-        $valCatatanSptjm = ($seleksiAdministrasiInstansi)?$seleksiAdministrasiInstansi->catatan_sptjm:Null;
-        return view('zi.seleksi_administrasi.evaluasi', compact(
-            "title","instansi_ZI","unit_ZIs","seleksiAdministrasiInstansi",
+        
+        $sanggahInstansi = SanggahInstansi::where('instansi_zi_id', $id)->first();
+        $valSuratUsulan = ($sanggahInstansi)?$sanggahInstansi->surat_usulan:Null;
+        $valCatatanSuratUsulan = ($sanggahInstansi)?$sanggahInstansi->catatan_surat_usulan:Null;
+        $valSptjm = ($sanggahInstansi)?$sanggahInstansi->sptjm:Null;
+        $valCatatanSptjm = ($sanggahInstansi)?$sanggahInstansi->catatan_sptjm:Null;
+        return view('zi.proses_sanggah.evaluasi', compact(
+            "title","instansi_ZI","unit_ZIs","sanggahInstansi",
             "valSuratUsulan", "valCatatanSuratUsulan", "valSptjm","valCatatanSptjm",
             ));
-        
     }
 
-    public function evaluasi_administrasi_simpan(Request $request){
+    public function proses_sanggah_simpan(Request $request){
+        dd("belum beres, masih dalam pengerjaan, mohon bersabar yah");
         $instansiZIid = $request->get('instansiZIId');
         $instansi_ZI = InstansiZI::find($instansiZIid);
         $tim_ids = [];

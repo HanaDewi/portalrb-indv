@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\ZI;
 
-use App\Http\Controllers\Controller;
 use App\Models\ZI\UnitZI;
-use App\Models\ZI\InstansiZI;
 use App\Models\KlpdInstansi;
 use Illuminate\Http\Request;
+use App\Models\ZI\InstansiZI;
+use App\Models\ZI\SanggahUnit;
+use App\Models\ZI\SanggahInstansi;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
 class EvaluatanController extends Controller
@@ -43,6 +45,36 @@ class EvaluatanController extends Controller
         }else{
             echo "mohon maaf instansi anda belum terdapat penilaian RB di tahun lalu";
         }
+    }
+
+    public function sanggah_simpan(Request $request){
+        $instansiZIid = $request->get('instansi_id');
+        $instansi_ZI = InstansiZI::find($instansiZIid);
+        $suratUsulan = $request->get('surat_usulan');
+        $sptjm = $request->get('sptjm');
+        $seleksiSanggahInstansi = SanggahInstansi::where('instansi_zi_id', $instansiZIid)->first();
+        if (!$seleksiSanggahInstansi) {
+            $seleksiSanggahInstansi = new SanggahInstansi();
+        }
+        $seleksiSanggahInstansi->instansi_zi_id = $instansiZIid;
+        $seleksiSanggahInstansi->surat_usulan = $suratUsulan;
+        $seleksiSanggahInstansi->sptjm = $sptjm;
+        if ($seleksiSanggahInstansi->save()) {
+            foreach($instansi_ZI->unit_zi as $unit_zi){
+                $seleksiSanggahUnit = SanggahUnit::where('unit_zi_id', $unit_zi->id)->first();
+                if (!$seleksiSanggahUnit) {
+                    $seleksiSanggahUnit = new SanggahUnit();
+                }
+                $seleksiSanggahUnit->unit_zi_id = $unit_zi->id;
+                $seleksiSanggahUnit->lke = $request->get('lke_'.$unit_zi->id );
+                $seleksiSanggahUnit->th2wbk = $request->get('2wbk_'.$unit_zi->id );
+                $seleksiSanggahUnit->tlhp = $request->get('tlhp_'.$unit_zi->id );
+                $seleksiSanggahUnit->survei_mandiri = $request->get('survei_mandiri_'.$unit_zi->id );
+                $seleksiSanggahUnit->lhkpn = $request->get('lhkpn_'.$unit_zi->id );
+                $seleksiSanggahUnit->save();
+            }
+        };
+        return redirect()->route('evaluatan_seleksi_administrasi',$instansiZIid);
     }
 
     public function hasil_sanggah(Request $request)
