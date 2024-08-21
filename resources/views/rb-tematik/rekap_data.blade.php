@@ -328,7 +328,11 @@
                             </table>
                             @endif
                         </td>
-                        <td>
+                        <td style=" 
+                        word-wrap: break-word;
+                        overflow-wrap: break-word;
+                        white-space: normal;
+                        ">
                             @if ($data['output']->catatan)
                             {{ $data['output']->catatan }}
                             @endif

@@ -211,12 +211,12 @@
                         </tr>
 
                         <tr style="background-color:#6EACDA">
-                            <td colspan=4 class="text-center"><b>Seleksi Administrasi Unit
+                            <td colspan=4 class="text-center"><b>Seleksi Administrasi Unit <br />
                                     (
-                                    WBK : @if($instansi_ZI->instansi_wbk_mandiri) <p style="color:red"> MANDIRI </p>
+                                    WBK : @if($instansi_ZI->instansi_wbk_mandiri) <i style="color:red"> MANDIRI </i>
                                     @else
                                     {{$instansi_ZI->jml_wbk}} @endif |
-                                    WBBM : {{$instansi_ZI->jml_wbbm}} )</b></td>
+                                    WBBM : {{$instansi_ZI->jml_wbbm}} )</br></td>
                         </tr>
 
                         @php
@@ -224,7 +224,10 @@
                         $wbbm_i = 0;
                         @endphp
                         @foreach ($unit_ZIs as $key => $unit_zi )
+                        @if(!$instansi_ZI->instansi_wbk_mandiri OR ($instansi_ZI->instansi_wbk_mandiri AND
+                        $unit_zi->wbbm ))
                         <tr>
+
                             <td rowspan=@if($unit_zi->wbk==1)
                                 4
                                 @elseif($unit_zi->wbbm==1)
@@ -435,6 +438,7 @@
                                 @endif
                             </td>
                         </tr>
+                        @endif
                         @endif
                         @endforeach
                 </table>
