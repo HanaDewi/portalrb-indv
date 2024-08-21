@@ -196,16 +196,17 @@
                             <td>SPTJM</td>
                             <td>
                                 <a href="{{$instansi_ZI->sptjm}}" class="openNew"
-                                    target="_blank">{{$instansi_ZI->sptjm}}</a>
+                                    target="_blank">{{$instansi_ZI->sptjm}}
+                                </a>
                             </td>
-                            <td>
                             <td>-</td>
-                            <select class="form-control" id="sptjm" name="sptjm" data-old=@if($valSptjm==1) "1"
-                                @elseif($valSptjm===0) "0" @else "kosong" @endif required>
-                                <option value="" disabled selected>Pilih Status</option>
-                                <option value="1" @if($valSptjm==1) selected @endif>Sesuai</option>
-                                <option value="0" @if($valSptjm===0) selected @endif>Tidak Sesuai</option>
-                            </select>
+                            <td>
+                                <select class="form-control" id="sptjm" name="sptjm" data-old=@if($valSptjm==1) "1"
+                                    @elseif($valSptjm===0) "0" @else "kosong" @endif required>
+                                    <option value="" disabled selected>Pilih Status</option>
+                                    <option value="1" @if($valSptjm==1) selected @endif>Sesuai</option>
+                                    <option value="0" @if($valSptjm===0) selected @endif>Tidak Sesuai</option>
+                                </select>
                             </td>
                             <td class="catatan">
                                 @if($valSptjm===0)
