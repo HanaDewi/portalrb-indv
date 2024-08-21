@@ -24,12 +24,16 @@ class ZIController extends Controller
     public function index(Request $request)
     {
         if(Auth::User()->level == "tpn" || Auth::User()->level =="admin" ){
-            #$instansi_obj = KlpdInstansi::find(1); #jangan di delete ini untuk pengujian pengusulan via admin
-            #$instansiZI = InstansiZI::where("instansi_id", $instansi_obj->id)->first();
             return redirect()->route('dashboard_zi');
-        };
+        }
+        
+            
+         
+        
         $instansi_obj = Auth::User()->user_rel->instansi;
+        $instansi_id = $instansi_obj->id;
         $instansiZI = InstansiZI::where("instansi_id", $instansi_obj->id)->first();
+
         if($instansiZI->tahap_seleksi == 1){
             return redirect('zi-tinjau?instansi_id='.$instansi_id);
         }elseif($instansiZI->tahap_seleksi == 2){
