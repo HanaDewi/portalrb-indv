@@ -7,6 +7,10 @@
         border: 2px solid #b01133;
         border-radius: 7px;
     }
+
+    table .w-10 {
+        width: 5%;
+    }
 </style>
 @endpush
 
@@ -157,7 +161,7 @@
                         <tr>
 
                             <th>#</th>
-                            <th>Bukti Dukung</th>
+                            <th class="w-10">Bukti Dukung</th>
                             <th>Kriteria</th>
                             <th>Status</th>
                             <th>Keterangan Tidak Lulus</th>

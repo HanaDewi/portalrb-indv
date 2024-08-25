@@ -1,6 +1,8 @@
 @extends('zi.admin.rubick')
 @section('title', 'Rekap Data Pengusulan ZI - ' .auth()->user()->nama)
-
+@push('css')
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+@endpush
 @section('content')
 <div class="intro-y col-span-12 lg:col-span-12">
     @include('common.status')
@@ -15,19 +17,18 @@
 
                     <div class="flex items-center">
                         <div class="w-2/4 flex-none">
-                            <div class="text-lg font-bold truncate">Jumlah Instansi</div>
+                            <div class="text-lg font-bold truncate">Tahap Pengusulan</div>
                             <div class="text-gray-800 mt-2 text-xl">
 
-                                <a href="#" id="instansiNonMandiri">{{$instansi_non_mandiri_count}} <sup
-                                        style="font-size: 0.5em">Non
-                                        Mandiri</sup> </a>|
-
-                                <a href="#b" id="instansiMandiri">{{$instansi_wbk_mandiri_count}} <sup
-                                        style="font-size: 0.5em">Mandiri</sup>
+                                <a href="#" id="instansiNonMandiri">{{$jumlah_instansi}} <sup
+                                        style="font-size: 0.5em">Total Instansi</sup> </a> <br />
+                                <a href="#b" id="instansiMandiri" style="font-size: 0.8em">{{$jumlah_unit_wbk}} <sup
+                                        style="font-size: 0.5em">Unit WBK</sup>
                                 </a>|
-                                <a href="#c" id="instansiTotal"><b> {{$instansi_non_mandiri_count +
-                                        $instansi_wbk_mandiri_count}} <sup style="font-size: 0.5em">Total</sup></b></a>
-
+                                <a href="#c" id="instansiTotal" style="font-size: 0.8em"> {{$jumlah_unit_wbbm}} <sup
+                                        style="font-size: 0.5em">Unit WBBM</sup></a>|
+                                <a href="#c" id="instansiTotal" style="font-size: 0.8em"><b> {{$jumlah_unit_total}} <sup
+                                            style="font-size: 0.5em">Jumlah Unit Total</sup></b></a>
 
 
                             </div>
@@ -59,15 +60,19 @@
                 <div class="box p-5 zoom-in">
                     <div class="flex items-center">
                         <div class="w-3/4 flex-none">
-                            <div class="text-lg font-bold truncate">Jumlah Unit</div>
+                            <div class="text-lg font-bold truncate">Tahap Seleksi Administrasi</div>
                             <div class="text-gray-800 mt-2 text-xl">
-                                <a href="{{route('rekap_unit')}}">
-                                    {{ $wbk_non_mandiri_count }} <sup style="font-size: 0.5em">WBK</sup>
-                                    |
-                                    {{$wbk_mandiri_count}} <sup style="font-size: 0.5em">WBK Mandiri</sup> |
-                                    {{$wbbm_count}} <sup style="font-size: 0.5em">WBBM</sup> |
-                                    <b> {{$total_unit}} <sup style="font-size: 0.5em">Total</sup></b>
-                                </a>
+                                <!--
+                                <a href="#" id="instansiNonMandiri">0 <sup style="font-size: 0.5em">Total Instansi</sup>
+                                </a> <br />
+                                <a href="#b" id="instansiMandiri" style="font-size: 0.8em">0 <sup
+                                        style="font-size: 0.5em">Unit WBK</sup>
+                                </a>|
+                                <a href="#c" id="instansiTotal" style="font-size: 0.8em"> 0 <sup
+                                        style="font-size: 0.5em">Unit WBBM</sup></a>|
+                                <a href="#c" id="instansiTotal" style="font-size: 0.8em"><b> 0 <sup
+                                            style="font-size: 0.5em">Jumlah Unit Total</sup></b></a>
+                                -->
                             </div>
                         </div>
                         <div class="flex-none ml-auto relative">
@@ -105,7 +110,6 @@
                         <th>Tim Evalutor</th>
                         <th>WBK</th>
                         <th>WBBM</th>
-                        <th>Total</th>
                         <th>Progress Pengerjaan</th>
                         <th>Lulus WBK</th>
                         <th>Lulus WBBM</th>
@@ -113,62 +117,50 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($instansi_ZIs as $index => $instansi_ZI )
+                    @foreach ($datas as $index => $data )
                     <tr>
                         <td>{{$index+1}}</td>
-                        <td @if($instansi_ZI->instansi_wbk_mandiri)
-                            class="text-red-500"
-                            @endif
-                            >
-                            {{$instansi_ZI->klpd_instansi->name}}
-                            @if($instansi_ZI->instansi_wbk_mandiri)
+                        <td @if($data["instansi_wbk_mandiri"]) class="text-red-500" @endif>
+                            {{$data["instansi_nama"]}}
+                            @if($data["instansi_wbk_mandiri"])
                             (WBK Mandiri)
                             @else
                             <i style="opacity: 0;">(Non Mandiri) </i>
                             @endif
                         </td>
                         <td class="text-center">
-
-                            @php
-                            $nama_tim = [];
-                            $teams = $instansi_ZI->unit_zi->flatMap->unit_tim->map->tim->unique()->pluck('nama');
-                            foreach ($teams as $key => $tim) {
-                            echo $tim . " <br /> ";
-                            array_push($nama_tim, $tim);
-                            };
-                            @endphp
-                            <!--
-                            $instansi->unitZis retrieves all unit_zi related to the instansi_zi.
-                            ->flatMap->timZis retrieves all tim_zi related to each unit_zi.
-                            ->map->tim retrieves the tim associated with each tim_zi.
-                            ->unique() removes duplicate tim entries.
-                            ->pluck('name') extracts the name from each tim object.
-                            -->
+                            @foreach ( $data['nama_teams'] as $tim )
+                            {{$tim}}
+                            @endforeach
                         </td>
                         <td class="text-center">
-                            @if($instansi_ZI->instansi_wbk_mandiri)
+                            @if($data["instansi_wbk_mandiri"])
                             mandiri
                             @else
-                            {{$instansi_ZI->jml_wbk}}
+                            {{$data["wbk_count"]}}
                             @endif
                         </td>
-                        <td class="text-center">{{$instansi_ZI->jml_wbbm}}</td>
+                        <td class="text-center">{{$data["wbbm_count"]}}</td>
+
                         <td class="text-center">
-                            @if($instansi_ZI->instansi_wbk_mandiri)
-                            {{$instansi_ZI->jml_wbbm}}
-                            @else
-                            {{$instansi_ZI->jml_wbk + $instansi_ZI->jml_wbbm}}
-                            @endif
+                            {{$data['persentase']}} %
+                            <div class="w3-light-grey">
+                                <div class="w3-green" style="height:24px;width:{{$data['persentase']}}%"></div>
+                            </div>
+                        </td>
+                        <td class="text-center">
+                            {{$data["wbk_final_count"]}}
+                        </td>
+                        <td class="text-center">
+                            {{$data["wbbm_final_count"]}}
                         </td>
 
-                        <td class="text-center">-</td>
-                        <td class="text-center">-</td>
-                        <td class="text-center">-</td>
+
                         <td class="text-center">
                             @foreach(Auth::User()->userTimZI as $userTimZI)
-                            @if (in_array($userTimZI->tim->nama, $nama_tim))
-                            <a href="{{route('evaluasi_administrasi',$instansi_ZI->id)}}" class="btn btn-danger"><i
-                                    class="fa fa-search"></i>
+                            @if (in_array($userTimZI->tim->nama, $data["nama_teams"]))
+                            <a href="{{route('evaluasi_administrasi',$data['instansi_zi_id'])}}"
+                                class="btn btn-danger"><i class="fa fa-search"></i>
                                 &nbsp;Evaluasi
                             </a>
                             @break
@@ -253,7 +245,7 @@
                 } 
             ],
             scrollX: true,
-            'orderFixed': [9, 'desc'],
+            'orderFixed': [8, 'desc'],
             autoWidth: false,
             paging: true,
             bInfo: false,

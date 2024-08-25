@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\ZI\InstansiZI;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class KlpdInstansi extends Model
@@ -22,9 +23,9 @@ class KlpdInstansi extends Model
         return $this->hasOne(LkeTestTp::class,  "lke_instansi_id");
     }
 
-    public function instansi_zi(): HasOne
+    public function instansi_zi()
     {
-        return $this->hasOne(InstansiZI::class,  "instansi_id");
+        return $this->hasMany(InstansiZI::class,  "instansi_id");
     }
 
 

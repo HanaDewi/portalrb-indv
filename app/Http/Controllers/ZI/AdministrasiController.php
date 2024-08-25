@@ -25,25 +25,60 @@ class AdministrasiController extends Controller
     public function index(Request $request)
     {
         $title = "Seleksi Administrasi";
-        $instansi_ZIs = InstansiZI::orderBy('updated_at','DESC')->get();
-        $instansi_non_mandiri = InstansiZI::where("instansi_wbk_mandiri",'!=',1)->orWhereNull('instansi_wbk_mandiri')->where("final",1)->get();
-        $instansi_non_mandiri_count = $instansi_non_mandiri->count();
-        $instansi_wbk_mandiri = InstansiZI::where("instansi_wbk_mandiri",1)->where("final",1)->get();
-        $instansi_wbk_mandiri_count = $instansi_wbk_mandiri->count();
-        $wbbm_count = UnitZI::where('wbbm', 1)->count();
-        $wbk_all_count = UnitZI::where('wbk', 1)->count();
-        $wbk_mandiri_count = UnitZI::whereHas('instansiZI', function ($query) {
-            $query->where('instansi_wbk_mandiri', 1);
-        })->where('wbk', 1)->count();
-        $wbk_non_mandiri_count = $wbk_all_count-$wbk_mandiri_count;
-        $total_unit = $wbk_all_count + $wbbm_count;
-        
 
-        return view('zi.seleksi_administrasi.administrasi', compact(
-            "title","instansi_ZIs","instansi_non_mandiri_count","instansi_wbk_mandiri_count", 
-            "wbbm_count","wbk_mandiri_count", "wbk_non_mandiri_count", 'total_unit'
-        ));
-                
+        $instansiZis = InstansiZi::with(['unit_zi.seleksi_administrasi_unit'])
+        ->where('final', 1)
+        ->get();
+        $jumlah_instansi = $instansiZis->count();
+        $jumlah_unit_wbk = $instansiZis->where('instansi_wbk_mandiri','!=',1)->sum('jml_wbk');
+        $jumlah_unit_wbbm =$instansiZis->sum('jml_wbbm');
+        $jumlah_unit_total = $jumlah_unit_wbk + $jumlah_unit_wbbm;
+        $datas = $instansiZis
+                ->map(function($instansiZi) {
+                    $wbkCount = optional($instansiZi->unit_zi)->where('wbk', true)->count();
+                    $wbbmCount = optional($instansiZi->unit_zi)->where('wbbm', true)->count();
+
+                    $nama_teams = $instansiZi->unit_zi->flatMap->unit_tim->map->tim->unique()->pluck('nama')->toArray();
+
+                    $wbkFinalCount = $instansiZi->unit_zi->where('wbk', true)
+                    ->filter(function($unitZi) {
+                        return  optional($unitZi->seleksi_administrasi_unit)->status_final == 1;
+                    })->count();
+    
+                    $wbbmFinalCount = $instansiZi->unit_zi->where('wbbm', true)
+                    ->filter(function($unitZi) {
+                        return  optional($unitZi->seleksi_administrasi_unit)->status_final == 1;
+                    })->count();
+        
+                    $wbkCompletedCount = $instansiZi->unit_zi->where('wbk', true)
+                    ->filter(function($unitZi) {
+                        return  optional($unitZi->seleksi_administrasi_unit)->status_completed == 1;
+                    })->count();
+    
+                    $wbbmCompletedCount = $instansiZi->unit_zi->where('wbbm', true)
+                    ->filter(function($unitZi) {
+                        return  optional($unitZi->seleksi_administrasi_unit)->status_completed == 1;
+                    })->count();
+                    
+                    return [
+                        'instansi_nama' => $instansiZi->klpd_instansi->name,
+                        'instansi_zi_id' => $instansiZi->id,
+                        'instansi_wbk_mandiri' => $instansiZi->instansi_wbk_mandiri,
+                        'nama_teams' => $nama_teams,
+                        'wbk_count' => $wbkCount,
+                        'wbbm_count' => $wbbmCount,
+                        'total_unit' => $wbkCount + $wbbmCount,
+                        'wbk_final_count' => $wbkFinalCount,
+                        'wbbm_final_count' => $wbbmFinalCount,
+                        'total_unit_lulus' => $wbkFinalCount+$wbbmFinalCount,
+                        'persentase' => round(100*($wbkCompletedCount+$wbbmCompletedCount)/($wbkCount + $wbbmCount),0)
+                    ];
+                });
+        
+                return view('zi.seleksi_administrasi.administrasi', compact(
+                    "title","jumlah_instansi","jumlah_unit_wbk","jumlah_unit_wbbm", 
+                    "jumlah_unit_total","datas"
+                ));        
     }
 
     public function evaluasi_administrasi($id)
@@ -114,9 +149,43 @@ class AdministrasiController extends Controller
                 $seleksiAdministrasiUnit->catatan_tlhp = $request->get('catatanTlhp-'.$unit_zi->id );
                 $seleksiAdministrasiUnit->status_survei_mandiri = $request->get('surveiMandiri-'.$unit_zi->id );
                 $seleksiAdministrasiUnit->catatan_survei_mandiri = $request->get('catatanSurveiMandiri-'.$unit_zi->id );
-                $seleksiAdministrasiUnit->status_lhkpn = $request->get('lhkpn-'.$unit_zi->id );
-                $seleksiAdministrasiUnit->catatan_lhkpn = $request->get('catatanLhkpn-'.$unit_zi->id );
+                $seleksiAdministrasiUnit->updated_by = Auth::User()->id;
                 $seleksiAdministrasiUnit->save();
+                
+                
+                
+                if(!is_null($seleksiAdministrasiInstansi->surat_usulan)){
+                    $status_final = 1; 
+                    ($seleksiAdministrasiInstansi->surat_usulan == 0 )?$status_final = 0:Null;
+                    if(!is_null($seleksiAdministrasiInstansi->sptjm)){
+                        ($seleksiAdministrasiInstansi->sptjm ==0 )?$status_final = 0:Null;
+                        
+                        if(!is_null($seleksiAdministrasiUnit->status_lke)){
+                            ($seleksiAdministrasiUnit->status_lke == 0 )?$status_final = 0:Null;
+                            if(!is_null($seleksiAdministrasiUnit->status_tlhp)){
+                                ($seleksiAdministrasiUnit->status_tlhp == 0 )?$status_final = 0:Null;
+                                if(!is_null($seleksiAdministrasiUnit->status_survei_mandiri)){
+                                    ($seleksiAdministrasiUnit->status_survei_mandiri == 0 )?$status_final = 0:Null;
+                                    if($unit_zi->wbbm){
+                                        if(!is_null($seleksiAdministrasiUnit->status_2wbk)){
+                                            ($seleksiAdministrasiUnit->status_2wbk == 0 )?$status_final = 0:Null;
+                                            $seleksiAdministrasiUnit->status_final = $status_final;
+                                            $seleksiAdministrasiUnit->status_completed = 1;
+                                            $seleksiAdministrasiUnit->save();
+                                        }
+                                    }else{
+                                        $seleksiAdministrasiUnit->status_final = $status_final;
+                                        $seleksiAdministrasiUnit->status_completed = 1;
+                                        $seleksiAdministrasiUnit->save();
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                
+
             }
         };
         return redirect()->route('evaluasi_administrasi',$instansiZIid);
