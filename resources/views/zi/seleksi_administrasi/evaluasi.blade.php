@@ -14,11 +14,13 @@
     }
 
     select:has(option[value="1"]:checked) {
-        color: blue !important;
+        background-color: green !important;
+        color: white;
     }
 
     select:has(option[value="0"]:checked) {
-        color: red !important;
+        background-color: red !important;
+        color: white;
     }
 </style>
 @if($status !="Berhak")
