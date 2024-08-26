@@ -10,7 +10,8 @@
 </style>
 @if($status !="Berhak")
 <style>
-    .form-control {
+    .form-control,
+    .glowing-border {
         pointer-events: none;
     }
 
