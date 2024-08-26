@@ -17,7 +17,7 @@
 
                     <div class="flex items-center">
                         <div class="w-2/4 flex-none">
-                            <div class="text-lg font-bold truncate">Tahap Pengusulan</div>
+                            <div class="text-lg font-bold truncate">Tidak Lolos Seleksi Administrasi </div>
                             <div class="text-gray-800 mt-2 text-xl">
 
                                 <a href="#" id="instansiNonMandiri">{{$jumlah_instansi}} <sup
@@ -60,7 +60,7 @@
                 <div class="box p-5 zoom-in">
                     <div class="flex items-center">
                         <div class="w-3/4 flex-none">
-                            <div class="text-lg font-bold truncate">Lulus Tahap Seleksi Administrasi</div>
+                            <div class="text-lg font-bold truncate">Lulus Tahap Sanggah</div>
                             <div class="text-gray-800 mt-2 text-xl">
 
                                 <a href="#" id="instansiNonMandiri">{{$jumlah_instansi_lolos}} <sup
@@ -129,108 +129,97 @@
                                     <td>{{$tim['jumlah_wbbm']}}</td>
                                     <td>
                                         @php
-
-                                        $pembagi = $tim['jumlah_wbk'] + $tim['jumlah_wbbm'];
-                                        ($pembagi)?$pembagi:$pembagi=1;
-                                        $pembilang = $tim['jumlah_wbk_completed'] + $tim['jumlah_wbbm_completed'];
-                                        $persentase = floor(100*$pembilang/$pembagi);
-
-                                        @endphp
-                                        {{$persentase}} % ({{$pembilang}}/{{$pembagi}})
-                                        <div class="w3-light-grey">
-                                            <div class="w3-green" style="height:24px;width:{{$persentase }}%">
+                                        if($tim['jumlah_instansi']<1){ $pembagi=1 ; } @endphp {{floor(100*
+                                            $tim['jumlah_instansi_lulus'] / $pembagi) }} % <div class="w3-light-grey">
+                                            <div class="w3-green"
+                                                style="height:24px;width:{{ floor(100 * $tim['jumlah_instansi_lulus'] / $pembagi)}}%">
                                             </div>
-                                        </div>
-                                    </td>
-                                    <td>{{$tim['jumlah_instansi_lulus']}}</td>
-                                    <td>{{$tim['jumlah_wbk_final_total']}}</td>
-                                    <td>{{$tim['jumlah_wbbm_final_total']}}</td>
-
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
                     </div>
-                </div>
-            </div>
+                    </td>
+                    <td>{{$tim['jumlah_instansi_lulus']}}</td>
+                    <td>{{$tim['jumlah_wbk_final_total']}}</td>
+                    <td>{{$tim['jumlah_wbbm_final_total']}}</td>
 
-        </div>
-        <div class="lg:col-span-12 p-5 border-b border-slate-200/60">
-
-            <div class="separator mt-5"></div>
-            <table id="rekap-zi" class="table table-bordered table-striped" cellspacing="0" width="100%">
-                <thead class="table-dark font-bold">
-                    <tr>
-                        <th>No</th>
-                        <th>Instansi</th>
-                        <th>Tim Evalutor</th>
-                        <th>WBK</th>
-                        <th>WBBM</th>
-                        <th>Progress Pengerjaan</th>
-                        <th>Lulus WBK</th>
-                        <th>Lulus WBBM</th>
-                        <th>Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($datas as $index => $data )
-                    <tr>
-                        <td>{{$index+1}}</td>
-                        <td @if($data["instansi_wbk_mandiri"]) class="text-red-500" @endif>
-                            <a href="{{route('evaluasi_administrasi',$data['instansi_zi_id'])}}">
-                                {{$data["instansi_nama"]}}
-                                @if($data["instansi_wbk_mandiri"]) (WBK Mandiri) @else <i style="opacity: 0;">(Non
-                                    Mandiri) </i>
-                                @endif
-                            </a>
-                        </td>
-                        <td class="text-center">
-                            @foreach ( $data['nama_teams'] as $tim )
-                            {{$tim}}
-                            @endforeach
-                        </td>
-                        <td class="text-center">
-                            @if($data["instansi_wbk_mandiri"])
-                            mandiri
-                            @else
-                            {{$data["wbk_count"]}}
-                            @endif
-                        </td>
-                        <td class="text-center">{{$data["wbbm_count"]}}</td>
-
-                        <td class="text-center">
-                            {{$data['persentase']}} %
-                            <div class="w3-light-grey">
-                                <div class="w3-green" style="height:24px;width:{{$data['persentase']}}%"></div>
-                            </div>
-                        </td>
-                        <td class="text-center">
-                            {{$data["wbk_final_count"]}}
-                        </td>
-                        <td class="text-center">
-                            {{$data["wbbm_final_count"]}}
-                        </td>
-
-
-                        <td class="text-center">
-                            @foreach(Auth::User()->userTimZI as $userTimZI)
-                            @if (in_array($userTimZI->tim->nama, $data["nama_teams"]))
-                            <a href="{{route('evaluasi_administrasi',$data['instansi_zi_id'])}}"
-                                class="btn btn-danger"><i class="fa fa-search"></i>
-                                &nbsp;Evaluasi
-                            </a>
-                            @break
-                            @endif
-                            @endforeach
-                        </td>
                     </tr>
                     @endforeach
-
-                </tbody>
-
-            </table>
+                    </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
+
     </div>
+    <div class="lg:col-span-12 p-5 border-b border-slate-200/60">
+
+        <div class="separator mt-5"></div>
+        <table id="rekap-zi" class="table table-bordered table-striped" cellspacing="0" width="100%">
+            <thead class="table-dark font-bold">
+                <tr>
+                    <th>No</th>
+                    <th>Instansi</th>
+                    <th>Tim Evalutor</th>
+                    <th>WBK</th>
+                    <th>WBBM</th>
+                    <th>Progress Pengerjaan</th>
+                    <th>Lulus WBK</th>
+                    <th>Lulus WBBM</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($datas as $index => $data )
+                <tr>
+                    <td>{{$index+1}}</td>
+                    <td>
+                        <a href="">
+                            {{$data["instansi_nama"]}}
+
+                        </a>
+                    </td>
+                    <td class="text-center">
+                        @foreach ( $data['nama_teams'] as $tim )
+                        {{$tim}}
+                        @endforeach
+                    </td>
+                    <td class="text-center">
+
+                        {{$data["wbk_count"]}}
+
+                    </td>
+                    <td class="text-center">{{$data["wbbm_count"]}}</td>
+
+                    <td class="text-center">
+                        {{$data['persentase']}} %
+                        <div class="w3-light-grey">
+                            <div class="w3-green" style="height:24px;width:{{$data['persentase']}}%"></div>
+                        </div>
+                    </td>
+                    <td class="text-center">
+                        {{$data["wbk_final_count"]}}
+                    </td>
+                    <td class="text-center">
+                        {{$data["wbbm_final_count"]}}
+                    </td>
+
+
+                    <td class="text-center">
+                        @foreach(Auth::User()->userTimZI as $userTimZI)
+                        @if (in_array($userTimZI->tim->nama, $data["nama_teams"]))
+                        <a href="" class="btn btn-danger"><i class="fa fa-search"></i>
+                            &nbsp;Evaluasi
+                        </a>
+                        @break
+                        @endif
+                        @endforeach
+                    </td>
+                </tr>
+                @endforeach
+
+            </tbody>
+
+        </table>
+    </div>
+</div>
 </div>
 
 

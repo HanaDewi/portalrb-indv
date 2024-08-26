@@ -39,19 +39,18 @@ class AdministrasiController extends Controller
         $jumlah_instansi_lolos = 0;
         $teams = TimEvaluasi::get();
         $progress_teams = [];
-        foreach($teams as $tim){
-            
+        foreach($teams as $tim){       
             $progress_teams[$tim->nama] = [
                     "id" => $tim->id,
                     "jumlah_instansi" => 0,
                     "jumlah_wbk" => 0,
                     "jumlah_wbbm" =>0,
+                    "jumlah_wbk_completed" => 0,
+                    "jumlah_wbbm_completed" =>0,
                     "jumlah_instansi_lulus" => 0,
                     "jumlah_wbk_final_total" => 0,
                     "jumlah_wbbm_final_total" =>0
-                ] ;
-            
-            
+                ] ;     
         }
         
         
@@ -59,7 +58,7 @@ class AdministrasiController extends Controller
                 ->map(function($instansiZi) use(&$jumlah_lolos_wbk, &$jumlah_lolos_wbbm, &$jumlah_instansi_lolos, &$progress_teams) {
                     $wbkCount = optional($instansiZi->unit_zi)->where('wbk', true)->count();
                     $wbbmCount = optional($instansiZi->unit_zi)->where('wbbm', true)->count();
-
+                    
                     $nama_teams = $instansiZi->unit_zi->flatMap->unit_tim->map->tim->unique()->pluck('nama')->toArray();
 
                     $wbkFinalCount = $instansiZi->unit_zi->where('wbk', true)
@@ -99,11 +98,21 @@ class AdministrasiController extends Controller
                                     $progress_teams[$tim]["jumlah_wbk_final_total"] += $wbkFinalCount ;
                                 }
                                 
-                                
                                 if($wbbmFinalCount>0 ){  
                                     $progress_teams[$tim]["jumlah_wbbm_final_total"] += $wbbmFinalCount;
                                 }      
                             }
+
+                            if($wbkCompletedCount>0 || $wbbmCompletedCount>0 ){
+                                if($wbkFinalCount>0 ) {
+                                    $progress_teams[$tim]["jumlah_wbk_completed"] += $wbkCompletedCount ;
+                                }
+                                
+                                if($wbbmFinalCount>0 ){  
+                                    $progress_teams[$tim]["jumlah_wbbm_completed"] += $wbkCompletedCount;
+                                }      
+                            }
+                            
                         }
                     }
 
