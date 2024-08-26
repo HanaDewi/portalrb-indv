@@ -111,12 +111,12 @@
                                 <tr class="text-center">
                                     <th>Nama</th>
                                     <th>Jumlah Instansi </th>
-                                    <th>Jumlah Unit WBK </th>
-                                    <th>Jumlah Unit WBBM </th>
-                                    <th>Progress</th>
-                                    <th>Jumlah Instansi Lulus</th>
-                                    <th>Jumlah Unit WBK Lulus</th>
-                                    <th>Jumlah Unit WBBM Lulus</th>
+                                    <th>Unit WBK </th>
+                                    <th>Unit WBBM </th>
+                                    <th width="25%">Progress</th>
+                                    <th>Instansi Lulus</th>
+                                    <th>WBK Lulus</th>
+                                    <th>WBBM Lulus</th>
 
                                 </tr>
                             </thead>
