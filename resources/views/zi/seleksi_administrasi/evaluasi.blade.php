@@ -7,6 +7,11 @@
         border: 2px solid #b01133;
         border-radius: 7px;
     }
+
+    .link-wrap {
+        word-break: break-all;
+        word-break: break-word;
+    }
 </style>
 @if($status !="Berhak")
 <style>
@@ -169,8 +174,8 @@
                     <thead class="table-dark font-bold">
                         <tr>
 
-                            <th>#</th>
-                            <th class="w-10">Bukti Dukung</th>
+                            <th width="15%">#</th>
+                            <th width="20%">Bukti Dukung</th>
                             <th>Kriteria</th>
                             <th>Status</th>
                             <th>Keterangan Tidak Lulus</th>
@@ -185,7 +190,7 @@
                         </tr>
                         <tr>
                             <td>Surat Usulan</td>
-                            <td><a href="{{$instansi_ZI->surat_usulan}}" class="openNew"
+                            <td class="link-wrap"><a href="{{$instansi_ZI->surat_usulan}}" class="openNew"
                                     target="_blank">{{$instansi_ZI->surat_usulan}}</a>
                             </td>
                             <td>-</td>
@@ -207,7 +212,7 @@
                         </tr>
                         <tr>
                             <td>SPTJM</td>
-                            <td>
+                            <td class="link-wrap">
                                 <a href="{{$instansi_ZI->sptjm}}" class="openNew"
                                     target="_blank">{{$instansi_ZI->sptjm}}
                                 </a>
@@ -263,7 +268,8 @@
                                 :
                                 {{$unit_zi->nama}}
                             </td>
-                            <td><a href="{{$unit_zi->lke}}" class="openNew" target="_blank"><b>LKE :</b><br />
+                            <td class="link-wrap"><a href="{{$unit_zi->lke}}" class="openNew" target="_blank"><b>LKE
+                                        :</b><br />
                                     {{$unit_zi->lke}}</a>
                             </td>
                             <td>
@@ -315,7 +321,8 @@
                             </td>
                         </tr>
                         <tr>
-                            <td><a href="{{$instansi_ZI->tlhp}}" class="openNew" target="_blank"><b>TLHP :
+                            <td class="link-wrap"><a href="{{$instansi_ZI->tlhp}}" class="openNew"
+                                    target="_blank"><b>TLHP :
                                     </b><br />{{$instansi_ZI->tlhp}}</a>
                             </td>
                             <td>100% penyelesaian pemeriksaan dan pengawasan</td>
@@ -352,7 +359,8 @@
                             </td>
                         </tr>
                         <tr>
-                            <td><a href="{{$instansi_ZI->survei_mandiri}}" class="openNew" target="_blank"><b>Survei
+                            <td class="link-wrap"><a href="{{$instansi_ZI->survei_mandiri}}" class="openNew"
+                                    target="_blank"><b>Survei
                                         Mandiri : </b><br />{{$instansi_ZI->survei_mandiri}}</a>
                             </td>
                             <td>
@@ -400,7 +408,8 @@
 
                         @if($unit_zi->wbbm==1)
                         <tr>
-                            <td><a href="https://docs.google.com/spreadsheets/d/1ns2C87_sw2uXyIqKqutjAZRiLdFN32S7kGPhTjkRhPk/edit?gid=0#gid=0"
+                            <td class="link-wrap"><a
+                                    href="https://docs.google.com/spreadsheets/d/1ns2C87_sw2uXyIqKqutjAZRiLdFN32S7kGPhTjkRhPk/edit?gid=0#gid=0"
                                     target="_blank" class="openNew"> <b>Syarat 2 tahun wbk </b> <br /> Lihat </a>
                             </td>
                             <td>Minimal Telah 2 Tahun WBK</td>
