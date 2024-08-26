@@ -136,7 +136,7 @@
                                         $persentase = floor(100*$pembilang/$pembagi);
 
                                         @endphp
-                                        {{$persentase}} % ({{$pembilang}}/{{$pembagi}})
+                                        <div title="({{$pembilang}}/{{$pembagi}})">{{$persentase}} % </div>
                                         <div class="w3-light-grey">
                                             <div class="w3-green" style="height:24px;width:{{$persentase }}%">
                                             </div>

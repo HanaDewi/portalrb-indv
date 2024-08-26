@@ -46,6 +46,8 @@ class SanggahController extends Controller
                     "jumlah_instansi" => 0,
                     "jumlah_wbk" => 0,
                     "jumlah_wbbm" =>0,
+                    "jumlah_wbk_completed" => 0,
+                    "jumlah_wbbm_completed" =>0,
                     "jumlah_instansi_lulus" => 0,
                     "jumlah_wbk_final_total" => 0,
                     "jumlah_wbbm_final_total" =>0
@@ -110,6 +112,16 @@ class SanggahController extends Controller
                                     
                                     if($wbbmFinalCount>0 ){  
                                         $progress_teams[$tim]["jumlah_wbbm_final_total"] += $wbbmFinalCount;
+                                    }      
+                                }
+
+                                if($wbkCompletedCount>0 || $wbbmCompletedCount>0 ){
+                                    if($wbkFinalCount>0 ) {
+                                        $progress_teams[$tim]["jumlah_wbk_completed"] += $wbkCompletedCount ;
+                                    }
+                                    
+                                    if($wbbmFinalCount>0 ){  
+                                        $progress_teams[$tim]["jumlah_wbbm_completed"] += $wbkCompletedCount;
                                     }      
                                 }
                             }
