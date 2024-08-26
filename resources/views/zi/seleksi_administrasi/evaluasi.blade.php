@@ -8,6 +8,18 @@
         border-radius: 7px;
     }
 </style>
+@if($status !="Berhak")
+<style>
+    .form-control {
+        pointer-events: none;
+    }
+
+    #tombol-kirim {
+        display: none
+    }
+</style>
+
+@endif
 @endpush
 
 @section('content')
@@ -429,7 +441,7 @@
                 <hr />
                 <br />
                 <div class="text-right">
-                    <input type="submit" class="btn btn-primary" value="Simpan">
+                    <input type="submit" id="tombol-kirim" class="btn btn-primary" value="Simpan">
                 </div>
             </form>
         </div>

@@ -140,9 +140,25 @@ class AdministrasiController extends Controller
         $valCatatanSuratUsulan = ($seleksiAdministrasiInstansi)?$seleksiAdministrasiInstansi->catatan_surat_usulan:Null;
         $valSptjm = ($seleksiAdministrasiInstansi)?$seleksiAdministrasiInstansi->sptjm:Null;
         $valCatatanSptjm = ($seleksiAdministrasiInstansi)?$seleksiAdministrasiInstansi->catatan_sptjm:Null;
+        $tim_ids = [];
+        foreach($instansi_ZI->unit_zi as $unit_zi){
+            foreach ( $unit_zi->unit_tim as $unitTim){
+                if(!in_array($unitTim->tim_id, $tim_ids)){
+                    array_push($tim_ids, $unitTim->tim_id);                            
+                }
+            }
+        }
+        $status = "Tidak Berhak";
+        if(Auth::User()->userTimZI){                   
+            foreach(Auth::User()->userTimZI as $anggotaTim){
+                if(in_array($anggotaTim->tim_id,$tim_ids)){
+                    $status = "Berhak" ;
+                }
+            }
+        }
         return view('zi.seleksi_administrasi.evaluasi', compact(
             "title","instansi_ZI","unit_ZIs","seleksiAdministrasiInstansi",
-            "valSuratUsulan", "valCatatanSuratUsulan", "valSptjm","valCatatanSptjm",
+            "valSuratUsulan", "valCatatanSuratUsulan", "valSptjm","valCatatanSptjm","status"
             ));
         
     }

@@ -60,7 +60,7 @@
                 <div class="box p-5 zoom-in">
                     <div class="flex items-center">
                         <div class="w-3/4 flex-none">
-                            <div class="text-lg font-bold truncate">Tahap Seleksi Administrasi</div>
+                            <div class="text-lg font-bold truncate">Lulus Tahap Seleksi Administrasi</div>
                             <div class="text-gray-800 mt-2 text-xl">
 
                                 <a href="#" id="instansiNonMandiri">{{$jumlah_instansi_lolos}} <sup
@@ -123,7 +123,7 @@
                             <tbody>
                                 @foreach ($progress_teams as $key => $tim )
                                 <tr class="text-center">
-                                    <td>{{$key}}</td>
+                                    <td id="{{$key}}" class="teams">{{$key}}</td>
                                     <td>{{$tim['jumlah_instansi']}}</td>
                                     <td>{{$tim['jumlah_wbk']}}</td>
                                     <td>{{$tim['jumlah_wbbm']}}</td>
@@ -169,12 +169,12 @@
                     <tr>
                         <td>{{$index+1}}</td>
                         <td @if($data["instansi_wbk_mandiri"]) class="text-red-500" @endif>
-                            {{$data["instansi_nama"]}}
-                            @if($data["instansi_wbk_mandiri"])
-                            (WBK Mandiri)
-                            @else
-                            <i style="opacity: 0;">(Non Mandiri) </i>
-                            @endif
+                            <a href="{{route('evaluasi_administrasi',$data['instansi_zi_id'])}}">
+                                {{$data["instansi_nama"]}}
+                                @if($data["instansi_wbk_mandiri"]) (WBK Mandiri) @else <i style="opacity: 0;">(Non
+                                    Mandiri) </i>
+                                @endif
+                            </a>
                         </td>
                         <td class="text-center">
                             @foreach ( $data['nama_teams'] as $tim )
@@ -301,17 +301,11 @@
         });
 
         
-        $('#instansiMandiri').on('click', function () {
-            empDataTable.search("WBK Mandiri").draw();
+        $('.teams').on('click', function () {
+            empDataTable.search('"'+$(this).attr('id')+'"').draw();
         });
 
-        $('#instansiNonMandiri').on('click', function () {
-            empDataTable.search("Non Mandiri", true, true, true).draw();
-        });
-
-        $('#instansiTotal').on('click', function () {
-            empDataTable.search("").draw();
-        });
+        
 
         empDataTable.on('order.dt search.dt', function () {
             empDataTable.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
