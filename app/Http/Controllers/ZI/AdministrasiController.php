@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\ZI;
 
+use App\Models\ZI\TimEvaluasi;
 use App\Models\ZI\UnitZI;
 use App\Models\KlpdInstansi;
 use Illuminate\Http\Request;
@@ -33,8 +34,29 @@ class AdministrasiController extends Controller
         $jumlah_unit_wbk = $instansiZis->where('instansi_wbk_mandiri','!=',1)->sum('jml_wbk');
         $jumlah_unit_wbbm =$instansiZis->sum('jml_wbbm');
         $jumlah_unit_total = $jumlah_unit_wbk + $jumlah_unit_wbbm;
+        $jumlah_lolos_wbk = 0;
+        $jumlah_lolos_wbbm = 0;
+        $jumlah_instansi_lolos = 0;
+        $teams = TimEvaluasi::get();
+        $progress_teams = [];
+        foreach($teams as $tim){
+            
+            $progress_teams[$tim->nama] = [
+                    "id" => $tim->id,
+                    "jumlah_instansi" => 0,
+                    "jumlah_wbk" => 0,
+                    "jumlah_wbbm" =>0,
+                    "jumlah_instansi_lulus" => 0,
+                    "jumlah_wbk_final_total" => 0,
+                    "jumlah_wbbm_final_total" =>0
+                ] ;
+            
+            
+        }
+        
+        
         $datas = $instansiZis
-                ->map(function($instansiZi) {
+                ->map(function($instansiZi) use(&$jumlah_lolos_wbk, &$jumlah_lolos_wbbm, &$jumlah_instansi_lolos, &$progress_teams) {
                     $wbkCount = optional($instansiZi->unit_zi)->where('wbk', true)->count();
                     $wbbmCount = optional($instansiZi->unit_zi)->where('wbbm', true)->count();
 
@@ -44,12 +66,14 @@ class AdministrasiController extends Controller
                     ->filter(function($unitZi) {
                         return  optional($unitZi->seleksi_administrasi_unit)->status_final == 1;
                     })->count();
-    
+                    $jumlah_lolos_wbk += $wbkFinalCount;
+
                     $wbbmFinalCount = $instansiZi->unit_zi->where('wbbm', true)
                     ->filter(function($unitZi) {
                         return  optional($unitZi->seleksi_administrasi_unit)->status_final == 1;
                     })->count();
-        
+                    $jumlah_lolos_wbbm += $wbbmFinalCount;
+
                     $wbkCompletedCount = $instansiZi->unit_zi->where('wbk', true)
                     ->filter(function($unitZi) {
                         return  optional($unitZi->seleksi_administrasi_unit)->status_completed == 1;
@@ -59,6 +83,29 @@ class AdministrasiController extends Controller
                     ->filter(function($unitZi) {
                         return  optional($unitZi->seleksi_administrasi_unit)->status_completed == 1;
                     })->count();
+
+                    if($wbbmCompletedCount>0 || $wbkCompletedCount>0 ){
+                        $jumlah_instansi_lolos += 1;
+                    }
+
+                    foreach($nama_teams as $tim){   
+                        if (array_key_exists($tim, $progress_teams)) {
+                            $progress_teams[$tim]["jumlah_instansi"] +=1;
+                            $progress_teams[$tim]["jumlah_wbk"] += $wbkCount ;
+                            $progress_teams[$tim]["jumlah_wbbm"] += $wbbmCount ;
+                            if($wbbmCompletedCount>0 || $wbkCompletedCount>0 ){
+                                $jumlah_instansi_lolos += 1;
+                                $progress_teams[$tim]["jumlah_instansi_lulus"] +=1;
+                                if($wbbmCompletedCount>0 ) {
+                                    $progress_teams[$tim]["jumlah_wbk_final_total"] += $wbkCompletedCount ;
+                                }
+                                elseif($wbkCompletedCount>0 ){  
+                                    $progress_teams[$tim]["jumlah_wbbm_final_total"] += $wbbmCompletedCount;
+                                }      
+                            }
+                        }
+                    }
+
                     
                     return [
                         'instansi_nama' => $instansiZi->klpd_instansi->name,
@@ -74,10 +121,11 @@ class AdministrasiController extends Controller
                         'persentase' => round(100*($wbkCompletedCount+$wbbmCompletedCount)/($wbkCount + $wbbmCount),0)
                     ];
                 });
-        
+                
                 return view('zi.seleksi_administrasi.administrasi', compact(
                     "title","jumlah_instansi","jumlah_unit_wbk","jumlah_unit_wbbm", 
-                    "jumlah_unit_total","datas"
+                    'jumlah_lolos_wbk', 'jumlah_lolos_wbbm', 'progress_teams',
+                    "jumlah_unit_total","datas", "jumlah_instansi_lolos"
                 ));        
     }
 

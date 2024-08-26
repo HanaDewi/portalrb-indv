@@ -12,7 +12,7 @@
         </div>
         <br />
         <div class="col-span-12 grid grid-cols-12 gap-6">
-            <div class="col-span-12 sm:col-span-6 2xl:col-span-3 intro-y">
+            <div class="col-span-12 sm:col-span-6 2xl:col-span-6  intro-y">
                 <div class="box p-5 zoom-in">
 
                     <div class="flex items-center">
@@ -56,23 +56,25 @@
 
                 </div>
             </div>
-            <div class="col-span-12 sm:col-span-6 2xl:col-span-3 intro-y">
+            <div class="col-span-12 sm:col-span-6 2xl:col-span-6 intro-y">
                 <div class="box p-5 zoom-in">
                     <div class="flex items-center">
                         <div class="w-3/4 flex-none">
                             <div class="text-lg font-bold truncate">Tahap Seleksi Administrasi</div>
                             <div class="text-gray-800 mt-2 text-xl">
-                                <!--
-                                <a href="#" id="instansiNonMandiri">0 <sup style="font-size: 0.5em">Total Instansi</sup>
+
+                                <a href="#" id="instansiNonMandiri">{{$jumlah_instansi_lolos}} <sup
+                                        style="font-size: 0.5em">Total Instansi</sup>
                                 </a> <br />
-                                <a href="#b" id="instansiMandiri" style="font-size: 0.8em">0 <sup
+                                <a href="#b" id="instansiMandiri" style="font-size: 0.8em">{{$jumlah_lolos_wbk}} <sup
                                         style="font-size: 0.5em">Unit WBK</sup>
                                 </a>|
-                                <a href="#c" id="instansiTotal" style="font-size: 0.8em"> 0 <sup
+                                <a href="#c" id="instansiTotal" style="font-size: 0.8em"> {{$jumlah_lolos_wbbm}} <sup
                                         style="font-size: 0.5em">Unit WBBM</sup></a>|
-                                <a href="#c" id="instansiTotal" style="font-size: 0.8em"><b> 0 <sup
-                                            style="font-size: 0.5em">Jumlah Unit Total</sup></b></a>
-                                -->
+                                <a href="#c" id="instansiTotal" style="font-size: 0.8em"><b> {{$jumlah_lolos_wbk +
+                                        $jumlah_lolos_wbbm}} <sup style="font-size: 0.5em">Jumlah Unit
+                                            Total</sup></b></a>
+
                             </div>
                         </div>
                         <div class="flex-none ml-auto relative">
@@ -94,6 +96,52 @@
                                     </svg> </span>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br />
+
+        <div class="lg:col-span-12 p-5 border-b border-slate-200/60">
+            <div class="box p-12 zoom-in">
+                <div class="col-span-12 sm:col-span-12 2xl:col-span-12  intro-y">
+                    <div class="row ">
+                        <table id="" class=" table table-bordered table-striped" cellspacing="0">
+                            <thead class="table-dark font-bold">
+                                <tr class="text-center">
+                                    <th>Nama</th>
+                                    <th>Jumlah Instansi </th>
+                                    <th>Jumlah Unit WBK </th>
+                                    <th>Jumlah Unit WBBM </th>
+                                    <th>Progress</th>
+                                    <th>Jumlah Instansi Lulus</th>
+                                    <th>Jumlah Unit WBK Lulus</th>
+                                    <th>Jumlah Unit WBBM Lulus</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($progress_teams as $key => $tim )
+                                <tr class="text-center">
+                                    <td>{{$key}}</td>
+                                    <td>{{$tim['jumlah_instansi']}}</td>
+                                    <td>{{$tim['jumlah_wbk']}}</td>
+                                    <td>{{$tim['jumlah_wbbm']}}</td>
+                                    <td>{{round(100* $tim['jumlah_instansi_lulus'] / $tim['jumlah_instansi'],0) }} %
+                                        <div class="w3-light-grey">
+                                            <div class="w3-green"
+                                                style="height:24px;width:{{ round(100 * $tim['jumlah_instansi_lulus'] / $tim['jumlah_instansi'],0)}}%">
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>{{$tim['jumlah_instansi_lulus']}}</td>
+                                    <td>{{$tim['jumlah_wbk_final_total']}}</td>
+                                    <td>{{$tim['jumlah_wbbm_final_total']}}</td>
+
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
