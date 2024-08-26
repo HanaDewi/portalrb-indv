@@ -10,7 +10,15 @@
 
     .link-wrap {
         word-break: break-all;
-        word-break: break-word;
+
+    }
+
+    select:has(option[value="1"]:checked) {
+        color: blue !important;
+    }
+
+    select:has(option[value="0"]:checked) {
+        color: red !important;
     }
 </style>
 @if($status !="Berhak")
@@ -19,6 +27,7 @@
     .glowing-border {
         pointer-events: none;
     }
+
 
     #tombol-kirim {
         display: none
