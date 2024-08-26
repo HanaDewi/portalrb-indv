@@ -95,10 +95,10 @@ class AdministrasiController extends Controller
                             $progress_teams[$tim]["jumlah_wbbm"] += $wbbmCount ;
                             if($wbbmCompletedCount>0 || $wbkCompletedCount>0 ){
                                 $progress_teams[$tim]["jumlah_instansi_lulus"] +=1;
-                                if($wbbmCompletedCount>0 ) {
+                                if($wbkFinalCount>0 ) {
                                     $progress_teams[$tim]["jumlah_wbk_final_total"] += $wbkFinalCount ;
                                 }
-                                elseif($wbkCompletedCount>0 ){  
+                                elseif($wbbmFinalCount>0 ){  
                                     $progress_teams[$tim]["jumlah_wbbm_final_total"] += $wbbmFinalCount;
                                 }      
                             }
