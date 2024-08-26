@@ -84,7 +84,7 @@ class AdministrasiController extends Controller
                         return  optional($unitZi->seleksi_administrasi_unit)->status_completed == 1;
                     })->count();
 
-                    if($wbbmCompletedCount>0 || $wbkCompletedCount>0 ){
+                    if($wbkFinalCount>0 || $wbbmFinalCount>0 ){
                         $jumlah_instansi_lolos += 1;
                     }
 
@@ -93,7 +93,7 @@ class AdministrasiController extends Controller
                             $progress_teams[$tim]["jumlah_instansi"] +=1;
                             $progress_teams[$tim]["jumlah_wbk"] += $wbkCount ;
                             $progress_teams[$tim]["jumlah_wbbm"] += $wbbmCount ;
-                            if($wbbmCompletedCount>0 || $wbkCompletedCount>0 ){
+                            if($wbkFinalCount>0 || $wbbmFinalCount>0 ){
                                 $progress_teams[$tim]["jumlah_instansi_lulus"] +=1;
                                 if($wbkFinalCount>0 ) {
                                     $progress_teams[$tim]["jumlah_wbk_final_total"] += $wbkFinalCount ;
