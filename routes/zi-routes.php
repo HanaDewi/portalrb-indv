@@ -26,6 +26,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/zi-verifikasi-lapangan', [EvaluatanController::class, 'seleksi_verifikasi_lapangan'])->name('evaluatan_verifikasi_lapangan');
     Route::get('/zi-hasil-akhir', [EvaluatanController::class, 'hasil_akhir'])->name('evaluatan_hasil_akhir');
     #generate
+
+    
     #Route::get('/zi/generate_skor', [GenerateController::class, 'generate_rekap_instansi_skor'])->name('pengusulan_zi');
     #Admin Pengusulan
     Route::get('/zi/admin', [DashboardController::class, 'index'])->name('dashboard_zi');

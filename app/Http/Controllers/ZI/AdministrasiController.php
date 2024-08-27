@@ -109,7 +109,7 @@ class AdministrasiController extends Controller
                                 }
                                 
                                 if($wbbmFinalCount>0 ){  
-                                    $progress_teams[$tim]["jumlah_wbbm_completed"] += $wbkCompletedCount;
+                                    $progress_teams[$tim]["jumlah_wbbm_completed"] += $wbbmCompletedCount;
                                 }      
                             }
                             
@@ -128,7 +128,9 @@ class AdministrasiController extends Controller
                         'wbk_final_count' => $wbkFinalCount,
                         'wbbm_final_count' => $wbbmFinalCount,
                         'total_unit_lulus' => $wbkFinalCount+$wbbmFinalCount,
-                        'persentase' => round(100*($wbkCompletedCount+$wbbmCompletedCount)/($wbkCount + $wbbmCount),0)
+                        'wbk_completed_count' => $wbkCompletedCount,
+                        'wbbm_completed_count' => $wbbmCompletedCount,
+                        'persentase' => floor(100*($wbkCompletedCount+$wbbmCompletedCount)/($wbkCount + $wbbmCount))
                     ];
                 });
                 
@@ -228,38 +230,31 @@ class AdministrasiController extends Controller
                 
                 
                 
-                if(!is_null($seleksiAdministrasiInstansi->surat_usulan)){
+                if(!is_null($seleksiAdministrasiInstansi->surat_usulan) && 
+                !is_null($seleksiAdministrasiInstansi->sptjm) && 
+                !is_null($seleksiAdministrasiUnit->status_lke) &&
+                !is_null($seleksiAdministrasiUnit->status_tlhp) &&
+                !is_null($seleksiAdministrasiUnit->status_survei_mandiri) 
+                ){
                     $status_final = 1; 
                     ($seleksiAdministrasiInstansi->surat_usulan == 0 )?$status_final = 0:Null;
-                    if(!is_null($seleksiAdministrasiInstansi->sptjm)){
-                        ($seleksiAdministrasiInstansi->sptjm ==0 )?$status_final = 0:Null;
-                        
-                        if(!is_null($seleksiAdministrasiUnit->status_lke)){
-                            ($seleksiAdministrasiUnit->status_lke == 0 )?$status_final = 0:Null;
-                            if(!is_null($seleksiAdministrasiUnit->status_tlhp)){
-                                ($seleksiAdministrasiUnit->status_tlhp == 0 )?$status_final = 0:Null;
-                                if(!is_null($seleksiAdministrasiUnit->status_survei_mandiri)){
-                                    ($seleksiAdministrasiUnit->status_survei_mandiri == 0 )?$status_final = 0:Null;
-                                    if($unit_zi->wbbm){
-                                        if(!is_null($seleksiAdministrasiUnit->status_2wbk)){
-                                            ($seleksiAdministrasiUnit->status_2wbk == 0 )?$status_final = 0:Null;
-                                            $seleksiAdministrasiUnit->status_final = $status_final;
-                                            $seleksiAdministrasiUnit->status_completed = 1;
-                                            $seleksiAdministrasiUnit->save();
-                                        }
-                                    }else{
-                                        $seleksiAdministrasiUnit->status_final = $status_final;
-                                        $seleksiAdministrasiUnit->status_completed = 1;
-                                        $seleksiAdministrasiUnit->save();
-                                    }
-                                }
-                            }
+                    ($seleksiAdministrasiInstansi->sptjm ==0 )?$status_final = 0:Null;
+                    ($seleksiAdministrasiUnit->status_lke == 0 )?$status_final = 0:Null;
+                    ($seleksiAdministrasiUnit->status_tlhp == 0 )?$status_final = 0:Null;
+                    ($seleksiAdministrasiUnit->status_survei_mandiri == 0 )?$status_final = 0:Null;
+                    if($unit_zi->wbbm){
+                        if(!is_null($seleksiAdministrasiUnit->status_2wbk)){
+                            ($seleksiAdministrasiUnit->status_2wbk == 0 )?$status_final = 0:Null;
+                            $seleksiAdministrasiUnit->status_final = $status_final;
+                            $seleksiAdministrasiUnit->status_completed = 1;
+                            $seleksiAdministrasiUnit->save();
                         }
+                    }else{
+                        $seleksiAdministrasiUnit->status_final = $status_final;
+                        $seleksiAdministrasiUnit->status_completed = 1;
+                        $seleksiAdministrasiUnit->save();
                     }
                 }
-                
-                
-
             }
         };
         return redirect()->route('evaluasi_administrasi',$instansiZIid);
