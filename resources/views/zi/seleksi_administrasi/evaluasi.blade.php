@@ -294,6 +294,9 @@
                                     <li>
                                         Memenuhi nilai minimal total.
                                     </li>
+                                    <li>
+                                        Memenuhi minimal indeks SPAK dan SPKP
+                                    </li>
                                 </ul>
                             </td>
                             <td>
