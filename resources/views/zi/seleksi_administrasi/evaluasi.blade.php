@@ -292,10 +292,10 @@
                                         Memenuhi nilai minimal pengungkit,<br /><br />
                                     </li>
                                     <li>
-                                        Memenuhi nilai minimal total.
+                                        Memenuhi nilai minimal total,<br /><br />
                                     </li>
                                     <li>
-                                        Memenuhi minimal indeks SPAK dan SPKP
+                                        Memenuhi minimal indeks SPAK dan SPKP.
                                     </li>
                                 </ul>
                             </td>
