@@ -56,15 +56,23 @@ class AdministrasiController extends Controller
         
         $datas = $instansiZis
                 ->map(function($instansiZi) use(&$jumlah_lolos_wbk, &$jumlah_lolos_wbbm, &$jumlah_instansi_lolos, &$progress_teams) {
-                    $wbkCount = optional($instansiZi->unit_zi)->where('wbk', true)->count();
+                    if(!$instansiZi->instansi_wbk_mandiri){
+                        $wbkCount = optional($instansiZi->unit_zi)->where('wbk', true)->count();
+                    }else{
+                       $wbkCount = 0;
+                    }
                     $wbbmCount = optional($instansiZi->unit_zi)->where('wbbm', true)->count();
                     
                     $nama_teams = $instansiZi->unit_zi->flatMap->unit_tim->map->tim->unique()->pluck('nama')->toArray();
 
-                    $wbkFinalCount = $instansiZi->unit_zi->where('wbk', true)
-                    ->filter(function($unitZi) {
-                        return  optional($unitZi->seleksi_administrasi_unit)->status_final == 1;
-                    })->count();
+                    if(!$instansiZi->instansi_wbk_mandiri){
+                        $wbkFinalCount = $instansiZi->unit_zi->where('wbk', true)
+                        ->filter(function($unitZi) {
+                            return  optional($unitZi->seleksi_administrasi_unit)->status_final == 1;
+                        })->count();
+                    }else{
+                        $wbkFinalCount = 0;
+                    }
                     $jumlah_lolos_wbk += $wbkFinalCount;
 
                     $wbbmFinalCount = $instansiZi->unit_zi->where('wbbm', true)
@@ -115,8 +123,9 @@ class AdministrasiController extends Controller
                             
                         }
                     }
-
-                    
+                    $pembilang = $wbkCompletedCount+$wbbmCompletedCount;
+                    $penyebut = $wbkCount + $wbbmCount;
+                    ($penyebut==0)?$penyebut=1:Null;
                     return [
                         'instansi_nama' => $instansiZi->klpd_instansi->name,
                         'instansi_zi_id' => $instansiZi->id,
@@ -130,7 +139,7 @@ class AdministrasiController extends Controller
                         'total_unit_lulus' => $wbkFinalCount+$wbbmFinalCount,
                         'wbk_completed_count' => $wbkCompletedCount,
                         'wbbm_completed_count' => $wbbmCompletedCount,
-                        'persentase' => floor(100*($wbkCompletedCount+$wbbmCompletedCount)/($wbkCount + $wbbmCount))
+                        'persentase' => floor(100*($pembilang)/($penyebut))
                     ];
                 });
                 
