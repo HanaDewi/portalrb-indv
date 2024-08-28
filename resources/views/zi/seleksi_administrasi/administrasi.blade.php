@@ -136,7 +136,9 @@
                                         $persentase = floor(100*$pembilang/$pembagi);
 
                                         @endphp
-                                        <div title="({{$pembilang}}/{{$pembagi}})">{{$persentase}}%
+                                        <div
+                                            title="{{$tim['jumlah_wbk_completed']}} + {{$tim['jumlah_wbbm_completed']}} / {{$tim['jumlah_wbk']}}+{{$tim['jumlah_wbbm']}}">
+                                            {{$persentase}}%
                                         </div>
                                         <div class="w3-light-grey">
                                             <div class="w3-green" style="height:24px;width:{{$persentase }}%">
@@ -200,7 +202,8 @@
                         <td class="text-center">{{$data["wbbm_count"]}}</td>
 
                         <td class="text-center">
-                            <div title="{{$data['wbk_completed_count']}}/{{$data['wbbm_completed_count']}}">
+                            <div title="{{$data['wbk_completed_count']}}+{{$data['wbbm_completed_count']}}/
+                            {{$data['wbk_count']}}+{{$data['wbbm_count']}}">
                                 {{$data['persentase']}} %
                             </div>
                             <div class="w3-light-grey">
@@ -208,10 +211,10 @@
                             </div>
                         </td>
                         <td class="text-center">
-                            {{$data["wbk_final_count"]}}
+                            {{$data["wbk_completed_count"]}}
                         </td>
                         <td class="text-center">
-                            {{$data["wbbm_final_count"]}}
+                            {{$data["wbbm_completed_count"]}}
                         </td>
 
 
