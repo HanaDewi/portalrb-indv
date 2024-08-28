@@ -211,10 +211,10 @@
                             </div>
                         </td>
                         <td class="text-center">
-                            {{$data["wbk_completed_count"]}}
+                            {{$data["wbk_final_count"]}}
                         </td>
                         <td class="text-center">
-                            {{$data["wbbm_completed_count"]}}
+                            {{$data["wbbm_final_count"]}}
                         </td>
 
 
