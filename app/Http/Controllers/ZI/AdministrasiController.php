@@ -65,14 +65,12 @@ class AdministrasiController extends Controller
                     
                     $nama_teams = $instansiZi->unit_zi->flatMap->unit_tim->map->tim->unique()->pluck('nama')->toArray();
 
-                    if(!$instansiZi->instansi_wbk_mandiri){
-                        $wbkFinalCount = $instansiZi->unit_zi->where('wbk', true)
-                        ->filter(function($unitZi) {
-                            return  optional($unitZi->seleksi_administrasi_unit)->status_final == 1;
-                        })->count();
-                    }else{
-                        $wbkFinalCount = 0;
-                    }
+                    
+                    $wbkFinalCount = $instansiZi->unit_zi->where('wbk', true)
+                    ->filter(function($unitZi) {
+                        return  optional($unitZi->seleksi_administrasi_unit)->status_final == 1;
+                    })->count();
+                    
                     $jumlah_lolos_wbk += $wbkFinalCount;
 
                     $wbbmFinalCount = $instansiZi->unit_zi->where('wbbm', true)
