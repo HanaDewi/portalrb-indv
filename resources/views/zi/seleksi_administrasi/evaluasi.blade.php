@@ -270,8 +270,11 @@
                                 @endif
 
                                 style="vertical-align:top;"
+                                @if(isset($unit_zi->seleksi_administrasi_unit))
                                 title="status completed:{{$unit_zi->seleksi_administrasi_unit->status_completed}},
-                                status final:{{$unit_zi->seleksi_administrasi_unit->status_final}}"
+                                status final:{{$unit_zi->seleksi_administrasi_unit->status_final}}
+                                @endif
+                                "
                                 >
                                 @if($unit_zi->wbk==1)
                                 WBK {{++$wbk_i}}
