@@ -2,8 +2,9 @@
 
 namespace App\Models\ZI;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 
 class SeleksiAdministrasiUnit extends Model
@@ -14,4 +15,9 @@ class SeleksiAdministrasiUnit extends Model
     protected $guarded = [
         'id'
     ];
+
+    public function unitZI(): BelongsTo
+    {
+        return $this->belongsTo(UnitZI::class, 'unit_zi_id');
+    }
 }

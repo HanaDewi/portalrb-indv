@@ -2,20 +2,62 @@
 
 namespace App\Http\Controllers\ZI;
 
-use App\Http\Controllers\Controller;
-use App\Models\ZI\InstansiZI;
 use App\Models\KlpdInstansi;
+use Illuminate\Http\Request;
 use App\Models\LkeTestTpLine;
+use App\Models\ZI\InstansiZI;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use App\Models\ZI\SeleksiAdministrasiUnit;
+use App\Models\ZI\SeleksiAdministrasiInstansi;
 
 
-class GenerateController extends Controller
+class GenerateDataController extends Controller
 {
-    $this->middleware(function ($request, $next) {
-        if(Auth::User()->level =="admin"){
-                return $next($request);     
+    public function __construct()
+    {
+        $this->middleware(function ($request, $next) {
+            if(Auth::User()->level =="admin"){
+                    return $next($request);     
+            }
+            abort('403');
+        });
+    }
+    
+    public function sinkron_final_completed(){
+        $seleksi_administrasi_units = SeleksiAdministrasiUnit::all();
+        foreach($seleksi_administrasi_units as $unit_administrasi){
+            $instansi_zi_id = $unit_administrasi->unitZI->instansi_zi_id;
+            $seleksi_administrasi_instansi = SeleksiAdministrasiInstansi::where('instansi_zi_id', $instansi_zi_id)->first();
+            $unit_administrasi->status_completed = 0;
+            if( 
+                !is_null($seleksi_administrasi_instansi->surat_usulan) && 
+                !is_null($seleksi_administrasi_instansi->sptjm) && 
+                !is_null($unit_administrasi->status_lke) && 
+                !is_null($unit_administrasi->status_tlhp) && 
+                !is_null($unit_administrasi->status_survei_mandiri)){
+                    $status_final = 1;
+                    if($unit_administrasi->unitZI->wbbm){
+                        if(!is_null($unit_administrasi->status_2wbk)){
+                            $unit_administrasi->status_completed = 1;
+                            ($unit_administrasi->status_2wbk===0)?$status_final=0:null;        
+                        }
+                    }
+
+                    if($unit_administrasi->unitZI->wbk){
+                        $unit_administrasi->status_completed = 1;
+                    }
+
+                    ($unit_administrasi->status_lke===0)?$status_final=0:null;
+                    ($unit_administrasi->status_tlhp===0)?$status_final=0:null;
+                    ($unit_administrasi->status_survei_mandiri===0)?$status_final=0:null;
+                    $unit_administrasi->status_final = $status_final;
+            };
+            $unit_administrasi->save();
         }
-        abort('403');
-    });
+        echo "Sinkronisasi Selesai";
+    }
+    
     public function generate_rekap_instansi_skor(){
         $instansis = KlpdInstansi::get();
         foreach($instansis as $instansi){

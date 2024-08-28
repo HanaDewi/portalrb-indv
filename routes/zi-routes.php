@@ -3,6 +3,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ZI\LkeEvaluator;
 use App\Http\Controllers\ZI\ZIController;
+use App\Http\Controllers\ZI\GenerateDataController;
 use App\Http\Controllers\ZI\DokumenController;
 use App\Http\Controllers\ZI\SanggahController;
 use App\Http\Controllers\ZI\DashboardController;
@@ -25,10 +26,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/zi-desk', [EvaluatanController::class, 'seleksi_desk'])->name('evaluatan_desk');
     Route::get('/zi-verifikasi-lapangan', [EvaluatanController::class, 'seleksi_verifikasi_lapangan'])->name('evaluatan_verifikasi_lapangan');
     Route::get('/zi-hasil-akhir', [EvaluatanController::class, 'hasil_akhir'])->name('evaluatan_hasil_akhir');
-    #generate
-
     
-    #Route::get('/zi/generate_skor', [GenerateController::class, 'generate_rekap_instansi_skor'])->name('pengusulan_zi');
     #Admin Pengusulan
     Route::get('/zi/admin', [DashboardController::class, 'index'])->name('dashboard_zi');
     Route::get('/zi/rekap-total', [DashboardController::class, 'rekap_total'])->name('rekap_total');
@@ -81,5 +79,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/zi/kelola-unit-tim/getDatas', [KonfigurasiController::class, 'unit_tim_evaluasi_getDatas'])->name('getData_unitTimEvaluasi');
     Route::get('/zi/kelola-unit-tim/getData/{id}', [KonfigurasiController::class, 'unit_tim_evaluasi_getData']);
     Route::post('/zi/kelola-unit-tim/hapus', [KonfigurasiController::class, 'kelola_unit_tim_hapus'])->name('kelola_unit_tim_zi_hapus');
+    
+
+
+    #generate
+    //Route::get('/zi/generate_skor', [GenerateDataController::class, 'generate_rekap_instansi_skor'])->name('pengusulan_zi');
+    Route::get('/zi/sinkron_final_completed', [GenerateDataController::class, 'sinkron_final_completed']);
     
 });

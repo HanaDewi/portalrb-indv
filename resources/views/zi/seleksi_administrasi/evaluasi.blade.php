@@ -270,6 +270,8 @@
                                 @endif
 
                                 style="vertical-align:top;"
+                                title="status completed:{{$unit_zi->seleksi_administrasi_unit->status_completed}},
+                                status final:{{$unit_zi->seleksi_administrasi_unit->status_final}}"
                                 >
                                 @if($unit_zi->wbk==1)
                                 WBK {{++$wbk_i}}
@@ -278,6 +280,7 @@
                                 @endif
                                 :
                                 {{$unit_zi->nama}}
+
                             </td>
                             <td class="link-wrap"><a href="{{$unit_zi->lke}}" class="openNew" target="_blank"><b>LKE
                                         :</b><br />
