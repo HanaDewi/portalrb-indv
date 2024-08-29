@@ -81,7 +81,7 @@
                         <!-- class side-menu--active side-menu--open-->
                         <div class="side-menu__icon"><i data-lucide="pie-chart"></i></div>
                         <div class="side-menu__title">
-                            Rekap Pengusulan
+                            Rekap
                             <div class="side-menu__sub-icon "> <i data-lucide="chevron-down"></i> </div>
                         </div>
                     </a>
@@ -114,6 +114,19 @@
                                 <div class="side-menu__icon"><i data-lucide=""></i></div>
                                 <div class="side-menu__title">
                                     Rekap Pengusulan Unit
+                                    <div class="side-menu__sub-icon "> </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('rekap_administrasi') }}" class="side-menu 
+                            @if($title == 'Rekap Pengusulan Unit')
+                            side-menu--active 
+                            @endif
+                            ">
+                                <div class="side-menu__icon"><i data-lucide=""></i></div>
+                                <div class="side-menu__title">
+                                    Rekap Seleksi Administrasi
                                     <div class="side-menu__sub-icon "> </div>
                                 </div>
                             </a>

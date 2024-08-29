@@ -33,6 +33,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/zi/rekap-pengusulan', [DashboardController::class, 'rekap_pengusulan'])->name('rekap_pengusulan');
     Route::get('/zi/rekap-unit', [DashboardController::class, 'rekap_unit'])->name('rekap_unit');
     Route::get('/zi/rekap-pengusulan-detail/{id}', [DashboardController::class, 'rekap_pengusulan_detail'])->name('rekap_pengusulan_detail');
+    Route::get('/zi/rekap-administrasi', [DashboardController::class, 'rekap_administrasi'])->name('rekap_administrasi');
     #Seleksi Administrasi
     Route::get('/zi/seleksi-administrasi', [AdministrasiController::class, 'index'])->name('seleksi_administrasi');
     Route::get('/zi/evaluasi-administrasi/{id}', [AdministrasiController::class, 'evaluasi_administrasi'])->name('evaluasi_administrasi');
