@@ -23,7 +23,7 @@
 .timeline li {
     list-style: none;
     float: left;
-    width: 16%;
+    width: 18%;
     position: relative;
     text-align: center;
     text-transform: uppercase;
@@ -60,7 +60,7 @@ ul:nth-child(1) {
     height: 4px;
     background-color: #b42b2d;
     top: 25px;
-    left: -38%;
+    left: -39%;
     z-index: -1;
     transition: all ease-in-out 0.3s;
 }

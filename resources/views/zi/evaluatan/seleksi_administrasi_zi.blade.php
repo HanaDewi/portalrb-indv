@@ -53,7 +53,7 @@
                                         <th>Persyaratan</th>
                                         <th>Data</th>
                                         <th>Status</th>
-                                        <th>Keterangan</th>
+                                        <th width="25%">Keterangan</th>
                                         <th>Link Data Sanggah</th>
                                     </tr>
                                 </thead>
@@ -130,11 +130,11 @@
                                 <thead style="background: #b42b2d;color:white; text-align:center; ">
                                     <tr>
                                         <th>No</th>
-                                        <th width="25%">Unit</th>
+                                        <th width="23%">Unit</th>
                                         <th>Syarat</th>
-                                        <th>Data Pengusulan</th>
+                                        <th>Data</th>
                                         <th>Status</th>
-                                        <th>Keterangan</th>
+                                        <th width="20%">Keterangan</th>
                                         <th>Link Data Sanggah</th>
                                     </tr>
                                 </thead>

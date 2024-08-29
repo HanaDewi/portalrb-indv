@@ -15,11 +15,9 @@
                         <a href="{{ route('evaluatan_hasil_sanggah') }}">Hasil Sanggah</a>
                     </li>
                     <li class=@if($instansiZI->tahap_seleksi >= 4) "active-tl" @endif>
-                        <a href="{{ route('evaluatan_desk') }}">Desk Evaluasi</a>
+                        <a href="{{ route('evaluatan_desk') }}">Desk Evaluasi & Verlap</a>
                     </li>
-                    <li class=@if($instansiZI->tahap_seleksi >= 6) "active-tl" @endif>
-                        <a href="{{ route('evaluatan_verifikasi_lapangan') }}">Verifikasi Lapangan</a>
-                    </li>
+
                     <li class=@if($instansiZI->tahap_seleksi >= 7) "active-tl" @endif>
                         <a href="{{ route('evaluatan_hasil_akhir') }}">Hasil Akhir</a>
                     </li>
