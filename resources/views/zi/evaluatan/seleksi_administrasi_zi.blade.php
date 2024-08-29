@@ -82,7 +82,8 @@
                                         <td>
                                             @if(isset($instansiZI->administrasi_instansi))
                                             @if($instansiZI->administrasi_instansi->surat_usulan === 0)
-                                            <input type="text" name="surat_usulan" @if($instansiZI->sanggah_instansi)
+                                            <input type="text" class="glowing-border" name="surat_usulan"
+                                                @if($instansiZI->sanggah_instansi)
                                             value = "{{$instansiZI->sanggah_instansi->surat_usulan}}"
                                             @endif
                                             >
@@ -112,9 +113,14 @@
                                             @endif
                                         </td>
                                         <td>
-                                            <input type="text" name="sptjm" @if($instansiZI->sanggah_instansi)
-                                            value = "{{$instansiZI->sanggah_instansi->sptjm}}"
+                                            @if(isset($instansiZI->administrasi_instansi))
+                                            @if($instansiZI->administrasi_instansi->sptjm === 0)
+                                            <input type="text" class="glowing-border" name="sptjm"
+                                                @if($instansiZI->sanggah_instansi)
+                                            value = "{{$instansiZI->sanggah_instansi->sptjm}} asdasds"
                                             @endif>
+                                            @endif
+                                            @endif
                                         </td>
                                     </tr>
                                 </tbody>
@@ -143,8 +149,8 @@
                                     @foreach ($unit_wbks as $index => $unit_wbk)
                                     @if(isset($unit_wbk->seleksi_administrasi_unit))
                                     <tr class="@if(($index+1)%2) table-row-genap @else table-row-ganjil @endif">
-                                        <td rowspan=4>{{$index+1}}</td>
-                                        <td rowspan=4 style="text-align: left">{{$unit_wbk->nama}}</td>
+                                        <td rowspan=3>{{$index+1}}</td>
+                                        <td rowspan=3 style="text-align: left">{{$unit_wbk->nama}}</td>
                                         <td style="text-align: left">LKE</td>
                                         <td><a href="{{$unit_wbk->lke}}" target="_blank">Lihat</a></td>
                                         <td>
@@ -163,7 +169,8 @@
                                         </td>
                                         <td>
                                             @if($unit_wbk->seleksi_administrasi_unit->status_lke === 0)
-                                            <input type="text" name="lke_{{$unit_wbk->id}}" @if($unit_wbk->sanggah_unit)
+                                            <input type="text" class="glowing-border" name="lke_{{$unit_wbk->id}}"
+                                                @if($unit_wbk->sanggah_unit)
                                             value = "{{$unit_wbk->sanggah_unit->lke}}" @endif
                                             >
                                             @endif
@@ -191,7 +198,7 @@
                                         <td>
                                             @if(isset($unit_wbk->seleksi_administrasi_unit))
                                             @if($unit_wbk->seleksi_administrasi_unit->status_tlhp === 0)
-                                            <input type="text" name="tlhp_{{$unit_wbk->id}}"
+                                            <input type="text" class="glowing-border" name="tlhp_{{$unit_wbk->id}}"
                                                 @if($unit_wbk->sanggah_unit)
                                             value = "{{$unit_wbk->sanggah_unit->tlhp}}" @endif>
                                             @endif
@@ -221,40 +228,13 @@
                                         <td>
                                             @if(isset($unit_wbk->seleksi_administrasi_unit))
                                             @if($unit_wbk->seleksi_administrasi_unit->status_survei_mandiri === 0)
-                                            <input type="text" name="survei_mandiri_{{$unit_wbk->id}}"
-                                                @if($unit_wbk->sanggah_unit)
+                                            <input type="text" class="glowing-border"
+                                                name="survei_mandiri_{{$unit_wbk->id}}" @if($unit_wbk->sanggah_unit)
                                             value = "{{$unit_wbk->sanggah_unit->survei_mandiri}}" @endif
                                             >
                                             @endif
                                             @endif
                                         </td>
-                                    </tr>
-                                    <tr class="@if(($index+1)%2) table-row-genap @else table-row-ganjil @endif">
-                                        <td style="text-align: left">LHKPN </td>
-                                        <td>-</td>
-                                        <td>
-                                            @if($unit_wbk->seleksi_administrasi_unit->status_lhkpn == 1)
-                                            Sesuai
-                                            @elseif($unit_wbk->seleksi_administrasi_unit->status_lhkpn === 0)
-                                            <p style="color:red">Tidak Sesuai</p>
-                                            @else
-                                            Belum dinilai
-                                            @endif
-                                        </td>
-                                        <td>
-                                            @if($unit_wbk->seleksi_administrasi_unit->status_lhkpn === 0)
-                                            {{$unit_wbk->seleksi_administrasi_unit->catatan_lhkpn}}
-                                            @endif
-                                        </td>
-                                        <td>
-                                            @if($unit_wbk->seleksi_administrasi_unit->status_lhkpn === 0)
-                                            <input type="text" name="lhkpn_{{$unit_wbk->id}}"
-                                                @if($unit_wbk->sanggah_unit)
-                                            value = "{{$unit_wbk->sanggah_unit->lhkpn}}" @endif
-                                            >
-                                            @endif
-                                        </td>
-
                                     </tr>
                                     @endif
                                     @endforeach
@@ -285,8 +265,8 @@
                                     @foreach ($unit_wbbms as $index => $unit_wbbm)
                                     @if($unit_wbbm->seleksi_administrasi_unit)
                                     <tr class="@if(($index+1)%2) table-row-genap @else table-row-ganjil @endif">
-                                        <td rowspan=5>{{$index+1}}</td>
-                                        <td rowspan=5 style="text-align: left">{{$unit_wbbm->nama}}</td>
+                                        <td rowspan=4>{{$index+1}}</td>
+                                        <td rowspan=4 style="text-align: left">{{$unit_wbbm->nama}}</td>
                                         <td style="text-align: left">LKE </td>
                                         <td>
                                             <a href="{{$unit_wbbm->lke}}" target="_blank">Lihat</a>
@@ -307,7 +287,7 @@
                                         </td>
                                         <td>
                                             @if($unit_wbbm->seleksi_administrasi_unit->status_lke === 0)
-                                            <input type="text" name="lke_{{$unit_wbbm->id}}"
+                                            <input type="text" class="glowing-border" name="lke_{{$unit_wbbm->id}}"
                                                 @if($unit_wbbm->sanggah_unit)
                                             value = "{{$unit_wbbm->sanggah_unit->lke}}" @endif>
                                             @endif
@@ -332,7 +312,7 @@
                                         </td>
                                         <td>
                                             @if($unit_wbbm->seleksi_administrasi_unit->status_tlhp === 0)
-                                            <input type="text" name="tlhp_{{$unit_wbbm->id}}"
+                                            <input type="text" class="glowing-border" name="tlhp_{{$unit_wbbm->id}}"
                                                 @if($unit_wbbm->sanggah_unit)
                                             value = "{{$unit_wbbm->sanggah_unit->tlhp}}" @endif
                                             >
@@ -358,35 +338,9 @@
                                         </td>
                                         <td>
                                             @if($unit_wbbm->seleksi_administrasi_unit->status_survei_mandiri === 0)
-                                            <input type="text" name="survei_mandiri_{{$unit_wbbm->id}}"
-                                                @if($unit_wbbm->sanggah_unit)
+                                            <input type="text" class="glowing-border"
+                                                name="survei_mandiri_{{$unit_wbbm->id}}" @if($unit_wbbm->sanggah_unit)
                                             value = "{{$unit_wbbm->sanggah_unit->survei_mandiri}}" @endif
-                                            >
-                                            @endif
-                                        </td>
-                                    </tr>
-                                    <tr class="@if(($index+1)%2) table-row-genap @else table-row-ganjil @endif">
-                                        <td style="text-align: left">LHKPN</td>
-                                        <td>-</td>
-                                        <td>
-                                            @if($unit_wbbm->seleksi_administrasi_unit->status_lhkpn == 1)
-                                            Sesuai
-                                            @elseif($unit_wbbm->seleksi_administrasi_unit->status_lhkpn === 0)
-                                            <p style="color:red">Tidak Sesuai</p>
-                                            @else
-                                            Belum dinilai
-                                            @endif
-                                        </td>
-                                        <td>
-                                            @if($unit_wbbm->seleksi_administrasi_unit->status_lhkpn === 0)
-                                            {{$unit_wbbm->seleksi_administrasi_unit->catatan_lhkpn}}
-                                            @endif
-                                        </td>
-                                        <td>
-                                            @if($unit_wbbm->seleksi_administrasi_unit->status_lhkpn === 0)
-                                            <input type="text" name="lhkpn_{{$unit_wbbm->id}}"
-                                                @if($unit_wbbm->sanggah_unit)
-                                            value = "{{$unit_wbbm->sanggah_unit->lhkpn}}" @endif
                                             >
                                             @endif
                                         </td>
@@ -416,7 +370,7 @@
                                         </td>
                                         <td>
                                             @if($unit_wbbm->seleksi_administrasi_unit->status_2wbk === 0)
-                                            <input type="text" name="2wbk_{{$unit_wbbm->id}}"
+                                            <input type="text" class="glowing-border" name="2wbk_{{$unit_wbbm->id}}"
                                                 @if($unit_wbbm->sanggah_unit)
                                             value = "{{$unit_wbbm->sanggah_unit->th2wbk}}" @endif
                                             >

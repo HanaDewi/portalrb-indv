@@ -37,7 +37,7 @@ Route::middleware('auth')->group(function () {
     #Seleksi Administrasi
     Route::get('/zi/seleksi-administrasi', [AdministrasiController::class, 'index'])->name('seleksi_administrasi');
     Route::get('/zi/evaluasi-administrasi/{id}', [AdministrasiController::class, 'evaluasi_administrasi'])->name('evaluasi_administrasi');
-    Route::post('/zi/evaluasi-administrasi/simpan', [AdministrasiController::class, 'evaluasi_administrasi_simpan'])->name('evaluasi_administrasi_simpan');
+    //Route::post('/zi/evaluasi-administrasi/simpan', [AdministrasiController::class, 'evaluasi_administrasi_simpan'])->name('evaluasi_administrasi_simpan');
     #Proses Sanggah
     Route::get('/zi/sanggah', [SanggahController::class, 'index'])->name('sanggah');
     Route::get('/zi/proses-sanggah/{id}', [SanggahController::class, 'proses_sanggah'])->name('proses_sanggah');

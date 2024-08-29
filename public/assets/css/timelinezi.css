@@ -84,3 +84,15 @@ ul:nth-child(1) {
 .timeline li.active-tl + li:after {
     background: #b42b2d;
 }
+
+.glowing-border {
+    border: 2px solid #dadada;
+    border-radius: 7px;
+    box-shadow: 0 0 10px #9ecaed;
+}
+
+.glowing-border:focus {
+    outline: none;
+    border-color: #9ecaed;
+    box-shadow: 0 0 10px #9ecaed;
+}
