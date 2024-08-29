@@ -78,13 +78,14 @@ class AdministrasiController extends Controller
             }
         }
         $status = "Tidak Berhak";
-        if(Auth::User()->userTimZI){                   
-            foreach(Auth::User()->userTimZI as $anggotaTim){
-                if(in_array($anggotaTim->tim_id,$tim_ids)){
-                    $status = "Berhak" ;
-                }
-            }
-        }
+        // DI LOCK BIAR SEMUA ORANG TIDAK BISA SIMPAN
+        // if(Auth::User()->userTimZI){                   
+        //     foreach(Auth::User()->userTimZI as $anggotaTim){
+        //         if(in_array($anggotaTim->tim_id,$tim_ids)){
+        //             $status = "Berhak" ;
+        //         }
+        //     }
+        // }
         if($status == "Tidak Berhak"){
             abort('403');
         }
