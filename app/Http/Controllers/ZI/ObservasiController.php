@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\ZI;
 
+use App\Models\ZI\FilesUpload;
 use App\Models\ZI\UnitZI;
 use App\Models\KlpdInstansi;
 use Illuminate\Http\Request;
@@ -39,9 +40,11 @@ class AdministrasiController extends Controller
         $total_unit = $wbk_all_count + $wbbm_count;
         
 
+        $surat_sanggah = FilesUpload::find(1);
+
         return view('zi.seleksi_administrasi.administrasi', compact(
             "title","instansi_ZIs","instansi_non_mandiri_count","instansi_wbk_mandiri_count", 
-            "wbbm_count","wbk_mandiri_count", "wbk_non_mandiri_count", 'total_unit'
+            "wbbm_count","wbk_mandiri_count", "wbk_non_mandiri_count", 'total_unit', 'surat_sanggah'
         ));
                 
     }

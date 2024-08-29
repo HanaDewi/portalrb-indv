@@ -7,11 +7,13 @@ use App\Models\ZI\UnitZI;
 use App\Models\KlpdInstansi;
 use Illuminate\Http\Request;
 use App\Models\ZI\InstansiZI;
+use App\Models\ZI\FilesUpload;
 use App\Models\ZI\TimEvaluasi;
 use App\Models\ZI\UnitTimEvaluasi;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Models\ZI\AnggotaTimEvaluasi;
+use Illuminate\Support\Facades\Redirect;
 
 class KonfigurasiController extends Controller
 {
@@ -19,7 +21,7 @@ class KonfigurasiController extends Controller
     {
         $this->middleware(function ($request, $next) {
            // Gita 10059, Wahyu 10060 Rheza  10046 Arina 10053 Canggih 10056 Afif 10048 Auffi 10052
-            if(Auth::User()->level =="admin" || in_array(Auth::User()->id, [10060, 10048, 10059, 10046, 10053,
+            if(Auth::User()->level =="admin" || in_array(Auth::User()->id, [10060, 10209, 10060, 10048, 10059, 10046, 10053,
             10056, 10052])){
                     return $next($request);     
             }
@@ -53,7 +55,30 @@ class KonfigurasiController extends Controller
         return view('zi.edit_predikat', compact("instansi_ZI") );
     }
 
+    public function surat_sanggah_simpan(Request $request)
+    {   
+        $request->validate([
+            'file_upload' => 'required|mimes:pdf|max:12024|',
+        ]);
 
+        
+        if ($request->file('file_upload')) {
+            $request["file_upload"] = $request->file('file_upload')->store('public/files_surat');
+        }
+        
+        $upload_surat = new FilesUpload;
+        if($request->id_file){
+            $upload_surat = FilesUpload::where('id', $request->id_file)->first();    
+        }
+        
+        $upload_surat->file_upload = $request["file_upload"];
+        $upload_surat->keterangan =  "Surat sanggah dari deputi";
+        if($upload_surat->save()){
+            return  Redirect::back();
+        }else{
+            echo "upload gagal";
+        }
+    }
     public function kelola_tim(Request $request)
     {   
         $instansi_ZIs = InstansiZI::get();

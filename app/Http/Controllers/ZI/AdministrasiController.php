@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\ZI;
 
-use App\Models\ZI\TimEvaluasi;
 use App\Models\ZI\UnitZI;
 use App\Models\KlpdInstansi;
 use Illuminate\Http\Request;
 use App\Models\ZI\InstansiZI;
+use App\Models\ZI\FilesUpload;
+use App\Models\ZI\TimEvaluasi;
+use App\Models\ZI\UploadsFile;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Models\ZI\SeleksiAdministrasiUnit;
@@ -141,11 +143,13 @@ class AdministrasiController extends Controller
                         'persentase' => floor(100*($pembilang)/($penyebut))
                     ];
                 });
+
+                $surat_sanggah = FilesUpload::find(1);
                 
                 return view('zi.seleksi_administrasi.administrasi', compact(
                     "title","jumlah_instansi","jumlah_unit_wbk","jumlah_unit_wbbm", 
                     'jumlah_lolos_wbk', 'jumlah_lolos_wbbm', 'progress_teams',
-                    "jumlah_unit_total","datas", "jumlah_instansi_lolos"
+                    "jumlah_unit_total","datas", "jumlah_instansi_lolos", "surat_sanggah"
                 ));        
     }
 

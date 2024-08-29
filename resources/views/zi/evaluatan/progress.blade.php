@@ -4,6 +4,7 @@
             <div class="container-timeline">
                 <span class="line"></span>
                 <br />
+
                 <ul class="timeline">
                     <li class=@if($instansiZI->tahap_seleksi >= 1) "active-tl" @endif >
                         <a href="{{ route('pengusulan_zi') }}">Pengusulan </a>
@@ -15,7 +16,7 @@
                         <a href="{{ route('evaluatan_hasil_sanggah') }}">Hasil Sanggah</a>
                     </li>
                     <li class=@if($instansiZI->tahap_seleksi >= 4) "active-tl" @endif>
-                        <a href="{{ route('evaluatan_desk') }}">Desk Evaluasi & Verlap</a>
+                        <a href="{{ route('evaluatan_desk') }}">Desk Evaluasi & Observasi lapangan</a>
                     </li>
 
                     <li class=@if($instansiZI->tahap_seleksi >= 7) "active-tl" @endif>

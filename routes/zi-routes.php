@@ -61,6 +61,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/zi/update-predikat', [KonfigurasiController::class, 'update_predikat'])->name('update_predikat');
     Route::get('/zi/edit-predikat/{id}', [KonfigurasiController::class, 'edit_predikat'])->name('edit_predikat');
     Route::post('/zi/edit-predikat/', [KonfigurasiController::class, 'store_predikat'])->name('edit_predikat_store');
+    #Kelola File
+    Route::post('/zi/surat-sanggah/simpan', [KonfigurasiController::class, 'surat_sanggah_simpan'])->name('surat_sanggah_simpan');
     #Kelola Tim
     Route::get('/zi/kelola-tim', [KonfigurasiController::class, 'kelola_tim'])->name('kelola_tim_zi');
     Route::post('/zi/kelola-tim/simpan', [KonfigurasiController::class, 'kelola_tim_simpan'])->name('kelola_tim_zi_simpan');
