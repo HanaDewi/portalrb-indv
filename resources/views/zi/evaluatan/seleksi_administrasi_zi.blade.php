@@ -297,9 +297,9 @@
                                             @endif
                                         </td>
                                         <td rowspan=4>
-                                            @if($unit_wbk->seleksi_administrasi_unit->status_final == 1)
+                                            @if($unit_wbbm->seleksi_administrasi_unit->status_final == 1)
                                             Lulus
-                                            @elseif($unit_wbk->seleksi_administrasi_unit->status_final === 0)
+                                            @elseif($unit_wbbm->seleksi_administrasi_unit->status_final === 0)
                                             <p style="color:red">Tidak Lulus</p>
                                             @else
                                             Belum dinilai
