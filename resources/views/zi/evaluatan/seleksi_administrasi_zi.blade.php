@@ -147,6 +147,7 @@
                                         <th>Syarat</th>
                                         <th>Data</th>
                                         <th>Status</th>
+                                        <th>Hasil Seleksi Adm</th>
                                         <th width="20%">Keterangan</th>
                                         <th>Link Data Sanggah</th>
                                     </tr>
@@ -165,6 +166,15 @@
                                             Sesuai
                                             @elseif($unit_wbk->seleksi_administrasi_unit->status_lke === 0)
                                             <p style="color:red">Tidak Sesuai</p>
+                                            @else
+                                            Belum dinilai
+                                            @endif
+                                        </td>
+                                        <td rowspan=3>
+                                            @if($unit_wbk->seleksi_administrasi_unit->status_final == 1)
+                                            Lulus
+                                            @elseif($unit_wbk->seleksi_administrasi_unit->status_final === 0)
+                                            <p style="color:red">Tidak Lulus</p>
                                             @else
                                             Belum dinilai
                                             @endif
@@ -285,6 +295,15 @@
                                             <p style="color:red">Tidak Sesuai</p>
                                             @else
                                             LKE Belum dinilai
+                                            @endif
+                                        </td>
+                                        <td rowspan=4>
+                                            @if($unit_wbk->seleksi_administrasi_unit->status_final == 1)
+                                            Lulus
+                                            @elseif($unit_wbk->seleksi_administrasi_unit->status_final === 0)
+                                            <p style="color:red">Tidak Lulus</p>
+                                            @else
+                                            Belum dinilai
                                             @endif
                                         </td>
                                         <td>
