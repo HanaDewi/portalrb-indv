@@ -107,20 +107,6 @@
             <div class="box p-12 zoom-in">
                 <div class="col-span-12 sm:col-span-12 2xl:col-span-12  intro-y">
                     <div class="row ">
-                        @if(Auth::User()->level =="admin" || in_array(Auth::User()->id, [10059,10060, 10209]) )
-                        <form action="{{route('surat_sanggah_simpan')}}" method="post" enctype="multipart/form-data">
-                            @csrf
-                            @if($surat_sanggah )
-                            <input type="hidden" name="id_file" id="file_upload" value="{{$surat_sanggah->id}}">
-                            Surat : <a href="{{$surat_sanggah->file_upload}}">Surat Deputi</a> <br />
-                            Apakah mau diganti ?<br />
-                            @endif
-                            <input type="file" name="file_upload" id="file_upload">
-                            <input type="submit" value="Upload Surat" name="submit" class="btn btn-primary">
-                        </form>
-                        </form>
-                        <br /><br />
-                        @endif
                         <table id="" class=" table table-bordered table-striped" cellspacing="0">
                             <thead class="table-dark font-bold">
                                 <tr class="text-center">
