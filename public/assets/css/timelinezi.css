@@ -86,9 +86,9 @@ ul:nth-child(1) {
 }
 
 .glowing-border {
-    border: 2px solid #dadada;
+    border: 4px solid #dadada;
     border-radius: 7px;
-    box-shadow: 0 0 10px #9ecaed;
+    box-shadow: 0 0 14px #9ecaed;
 }
 
 .glowing-border:focus {
