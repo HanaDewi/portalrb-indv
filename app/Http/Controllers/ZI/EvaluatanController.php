@@ -38,8 +38,8 @@ class EvaluatanController extends Controller
             $status_akhir = $instansiZI->status_akhir;
             $unit_wbks = UnitZI::where("instansi_zi_id", $instansiZI->id)->where('wbk',1)->get();
             $unit_wbbms = UnitZI::where("instansi_zi_id", $instansiZI->id)->where('wbbm',1)->get();
-            //return view('zi.evaluatan.seleksi_administrasi_zi', compact(
-            return view('zi.evaluatan.seleksi_desk_zi', compact(
+            return view('zi.evaluatan.seleksi_administrasi_zi', compact(
+            //return view('zi.evaluatan.seleksi_desk_zi', compact(
                 'title',
                  'instansi_id', 'instansi', 'group_kld', 'instansiZI',
                 'unit_wbks', 'unit_wbbms',
