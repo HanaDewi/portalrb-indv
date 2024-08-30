@@ -48,7 +48,7 @@
                                         class="fa-lg fa fa-file-word" style="font-size: 3em; color:#b42b2d">
                                     </i> Pengumuman Hasil
                                     Seleksi
-                                    Administrasi</a></h5>
+                                    Administrasi (Donwload)</a></h5>
                         </div>
                         <br />
                         <form method="POST" action="{{route('evaluatan_simpan_sanggah')}}">
