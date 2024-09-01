@@ -227,18 +227,35 @@ class AdministrasiController extends Controller
         if ($seleksiAdministrasiInstansi->save()) {
             foreach($instansi_ZI->unit_zi as $unit_zi){
                 $seleksiAdministrasiUnit = SeleksiAdministrasiUnit::where('unit_zi_id', $unit_zi->id)->first();
+                //pakai if karena kalau ada beberapa user berbarengan ngisinya, biar yang masih kosong gak ngereplace yg sudah terisi sebelumnya
                 if (!$seleksiAdministrasiUnit) {
                     $seleksiAdministrasiUnit = new SeleksiAdministrasiUnit();
                 }
                 $seleksiAdministrasiUnit->unit_zi_id = $unit_zi->id;
-                $seleksiAdministrasiUnit->status_lke = $request->get('status-lke-'.$unit_zi->id ); 
-                $seleksiAdministrasiUnit->catatan_lke = $request->get('catatan-lke-'.$unit_zi->id );
-                $seleksiAdministrasiUnit->status_2wbk = $request->get('status-2wbk-'.$unit_zi->id ); 
-                $seleksiAdministrasiUnit->catatan_2wbk = $request->get('catatan-2wbk-'.$unit_zi->id );
-                $seleksiAdministrasiUnit->status_tlhp = $request->get('tlhp-'.$unit_zi->id );
-                $seleksiAdministrasiUnit->catatan_tlhp = $request->get('catatanTlhp-'.$unit_zi->id );
-                $seleksiAdministrasiUnit->status_survei_mandiri = $request->get('surveiMandiri-'.$unit_zi->id );
-                $seleksiAdministrasiUnit->catatan_survei_mandiri = $request->get('catatanSurveiMandiri-'.$unit_zi->id );
+                if($request->get('status-lke-'.$unit_zi->id )){
+                    $seleksiAdministrasiUnit->status_lke = $request->get('status-lke-'.$unit_zi->id ); 
+                }
+                if($request->get('catatan-lke-'.$unit_zi->id )){
+                    $seleksiAdministrasiUnit->catatan_lke = $request->get('catatan-lke-'.$unit_zi->id );
+                }
+                if($request->get('status-2wbk-'.$unit_zi->id)){
+                $seleksiAdministrasiUnit->status_2wbk = $request->get('status-2wbk-'.$unit_zi->id); 
+                }
+                if($request->get('catatan-2wbk-'.$unit_zi->id )){
+                    $seleksiAdministrasiUnit->catatan_2wbk = $request->get('catatan-2wbk-'.$unit_zi->id );
+                }
+                if($request->get('tlhp-'.$unit_zi->id )){
+                    $seleksiAdministrasiUnit->status_tlhp = $request->get('tlhp-'.$unit_zi->id );
+                }
+                if($request->get('catatanTlhp-'.$unit_zi->id )){
+                    $seleksiAdministrasiUnit->catatan_tlhp = $request->get('catatanTlhp-'.$unit_zi->id );
+                }
+                if($request->get('surveiMandiri-'.$unit_zi->id )){
+                    $seleksiAdministrasiUnit->status_survei_mandiri = $request->get('surveiMandiri-'.$unit_zi->id );
+                }
+                if($request->get('catatanSurveiMandiri-'.$unit_zi->id )){
+                    $seleksiAdministrasiUnit->catatan_survei_mandiri = $request->get('catatanSurveiMandiri-'.$unit_zi->id );
+                }
                 $seleksiAdministrasiUnit->updated_by = Auth::User()->id;
                 $seleksiAdministrasiUnit->save();
                 
