@@ -7,7 +7,36 @@
         border: 2px solid #b01133;
         border-radius: 7px;
     }
+
+    .link-wrap {
+        word-break: break-all;
+
+    }
+
+    select:has(option[value="1"]:checked) {
+        background-color: green !important;
+        color: white;
+    }
+
+    select:has(option[value="0"]:checked) {
+        background-color: red !important;
+        color: white;
+    }
 </style>
+@if($status !="Berhak")
+<style>
+    .form-control,
+    .glowing-border {
+        pointer-events: none;
+    }
+
+
+    #tombol-kirim {
+        display: none
+    }
+</style>
+
+@endif
 @endpush
 
 @section('content')
@@ -63,7 +92,7 @@
                             </td>
                         </tr>
                         @if($instansi_ZI->administrasi_instansi)
-                        @if($instansi_ZI->administrasi_instansi->status_surat_usulan ==0)
+                        @if($instansi_ZI->administrasi_instansi->surat_usulan ==0)
                         <tr>
                             <td>Surat Usulan</td>
                             <td>
@@ -77,7 +106,7 @@
                             </td>
                             <td>-</td>
                             <td>
-                                <select class="form-control" id="suratUsulan" name="suratUsulan"
+                                <select class="form-control" id="suratUsulan" name="status-surat-usulan"
                                     data-old=@if($valSuratUsulan==1) "1" @elseif($valSuratUsulan===0) "0" @else "kosong"
                                     @endif required>
                                     <option value="" disabled selected>Pilih Status</option>
@@ -107,8 +136,9 @@
                             </td>
                             <td>-</td>
                             <td>
-                                <select class="form-control" id="sptjm" name="sptjm" data-old=@if($valSptjm==1) "1"
-                                    @elseif($valSptjm===0) "0" @else "kosong" @endif required>
+                                <select class="form-control" id="sptjm" name="status-sptjm"
+                                    data-old=@if($valSptjm==1) "1" @elseif($valSptjm===0) "0" @else "kosong" @endif
+                                    required>
                                     <option value="" disabled selected>Pilih Status</option>
                                     <option value="1" @if($valSptjm==1) selected @endif>Sesuai</option>
                                     <option value="0" @if($valSptjm===0) selected @endif>Tidak Sesuai</option>
@@ -170,7 +200,7 @@
                             </td>
                             @endif
                             @php $nama_unit_sudah_ditampilkan = true; @endphp
-                            <td>
+                            <td class="link-wrap">
                                 @if($unit_zi->sanggah_unit)
                                 <a href="{{$unit_zi->sanggah_unit->lke}}" class="openNew" target="_blank"><b>LKE
                                         :</b><br />
@@ -188,7 +218,10 @@
                                         Memenuhi nilai minimal pengungkit,<br /><br />
                                     </li>
                                     <li>
-                                        Memenuhi nilai minimal total.
+                                        Memenuhi nilai minimal total,<br /><br />
+                                    </li>
+                                    <li>
+                                        Memenuhi minimal indeks SPAK dan SPKP.
                                     </li>
                                 </ul>
                             </td>
@@ -244,7 +277,7 @@
                             </td>
                             @endif
                             @php $nama_unit_sudah_ditampilkan = true; @endphp
-                            <td>
+                            <td class="link-wrap">
                                 @if($unit_zi->sanggah_unit)
                                 <a href="{{$unit_zi->sanggah_unit->tlhp}}" class="openNew" target="_blank"><b>TLHP
                                         :</b><br />
@@ -303,7 +336,7 @@
                             </td>
                             @endif
                             @php $nama_unit_sudah_ditampilkan = true; @endphp
-                            <td>
+                            <td class="link-wrap">
                                 @if($unit_zi->sanggah_unit)
                                 <a href="{{$unit_zi->sanggah_unit->survei_mandiri}}" class="openNew"
                                     target="_blank"><b>Survei Mandiri
@@ -371,7 +404,7 @@
                             </td>
                             @endif
                             @php $nama_unit_sudah_ditampilkan = true; @endphp
-                            <td>
+                            <td class="link-wrap">
                                 @if($unit_zi->sanggah_unit)
                                 <a href="{{$unit_zi->sanggah_unit->th2wbk}}" class="openNew" target="_blank"><b>2 Tahun
                                         WBK

@@ -6,6 +6,7 @@ use App\Models\ZI\UnitZI;
 use App\Models\KlpdInstansi;
 use Illuminate\Http\Request;
 use App\Models\ZI\InstansiZI;
+use App\Models\ZI\SanggahUnit;
 use App\Models\ZI\TimEvaluasi;
 use App\Models\ZI\SanggahInstansi;
 use App\Http\Controllers\Controller;
@@ -169,21 +170,39 @@ class SanggahController extends Controller
     {   
         $title = "Sanggah";
         $instansi_ZI = InstansiZI::find($id);
+        $tim_ids = [];
+        foreach($instansi_ZI->unit_zi as $unit_zi){
+            foreach ( $unit_zi->unit_tim as $unitTim){
+                if(!in_array($unitTim->tim_id, $tim_ids)){
+                    array_push($tim_ids, $unitTim->tim_id);                            
+                }
+            }
+        }
+        $status = "Tidak Berhak";
+        //DI LOCK BIAR SEMUA ORANGG TIDAK BISA SIMPAN
+        if(Auth::User()->userTimZI){                   
+            foreach(Auth::User()->userTimZI as $anggotaTim){
+                if(in_array($anggotaTim->tim_id,$tim_ids)){
+                    $status = "Berhak" ;
+                }
+            }
+        }
+        $status = "Berhak" ;
         $unit_ZIs = UnitZI::where("instansi_zi_id", $id)->orderBy('wbk','desc')->get();
         
         $sanggahInstansi = SanggahInstansi::where('instansi_zi_id', $id)->first();
-        $valSuratUsulan = ($sanggahInstansi)?$sanggahInstansi->surat_usulan:Null;
+        $valSuratUsulan = ($sanggahInstansi)?$sanggahInstansi->status_surat_usulan:Null;
         $valCatatanSuratUsulan = ($sanggahInstansi)?$sanggahInstansi->catatan_surat_usulan:Null;
-        $valSptjm = ($sanggahInstansi)?$sanggahInstansi->sptjm:Null;
+        $valSptjm = ($sanggahInstansi)?$sanggahInstansi->status_sptjm:Null;
         $valCatatanSptjm = ($sanggahInstansi)?$sanggahInstansi->catatan_sptjm:Null;
         return view('zi.proses_sanggah.evaluasi', compact(
             "title","instansi_ZI","unit_ZIs","sanggahInstansi",
-            "valSuratUsulan", "valCatatanSuratUsulan", "valSptjm","valCatatanSptjm",
+            "valSuratUsulan", "valCatatanSuratUsulan", "valSptjm","valCatatanSptjm","status"
             ));
     }
 
     public function proses_sanggah_simpan(Request $request){
-        dd("belum beres, masih dalam pengerjaan, mohon bersabar yah");
+        dd("Proses Evaluasi Sanggah Buat Evaluator Masih Belum Dibuka Yah, mau ke mana sih buru-buru amat, Jangan Ya Dek Ya !! :p");
         $instansiZIid = $request->get('instansiZIId');
         $instansi_ZI = InstansiZI::find($instansiZIid);
         $tim_ids = [];
@@ -205,41 +224,72 @@ class SanggahController extends Controller
         if($status == "Tidak Berhak"){
             abort('403');
         }
-
-        $suratUsulan = $request->get('suratUsulan');
-        $catatanSuratUsulan = $request->get('catatanSuratUsulan');
-        $sptjm = $request->get('sptjm');
-        $catatanSptjm = $request->get('catatanSptjm');
-        $seleksiAdministrasiInstansi = SeleksiAdministrasiInstansi::where('instansi_zi_id', $instansiZIid)->first();
-        if (!$seleksiAdministrasiInstansi) {
-            $seleksiAdministrasiInstansi = new SeleksiAdministrasiInstansi();
+        
+        
+        
+        
+        $seleksiSanggahInstansi = SanggahInstansi::where('instansi_zi_id', $instansiZIid)->first();
+        if (!$seleksiSanggahInstansi) {
+            $seleksiSanggahInstansi = new SanggahInstansi();
         }
-        $seleksiAdministrasiInstansi->instansi_zi_id = $instansiZIid;
-        $seleksiAdministrasiInstansi->surat_usulan = $suratUsulan;
-        $seleksiAdministrasiInstansi->catatan_surat_usulan = $catatanSuratUsulan;
-        $seleksiAdministrasiInstansi->sptjm = $sptjm;
-        $seleksiAdministrasiInstansi->catatan_sptjm = $catatanSptjm;
-        if ($seleksiAdministrasiInstansi->save()) {
+        $seleksiSanggahInstansi->instansi_zi_id = $instansiZIid;
+        
+        if(!is_null($request->get('status-surat-usulan'))){
+            
+            $suratUsulan = $request->get('status-surat-usulan');
+            $seleksiSanggahInstansi->status_surat_usulan = $suratUsulan;
+            
+        }
+        if(!is_null($request->get('catatanSuratUsulan'))){
+            $catatanSuratUsulan = $request->get('catatanSuratUsulan');
+            $seleksiSanggahInstansi->catatan_surat_usulan = $catatanSuratUsulan;    
+        }
+        
+        if(!is_null($request->get('status-sptjm'))){
+            $sptjm = $request->get('status-sptjm');
+            $seleksiSanggahInstansi->status_sptjm = $sptjm;
+        }
+        if(!is_null($request->get('catatanSptjm'))){
+            $catatanSptjm = $request->get('catatanSptjm');
+            $seleksiSanggahInstansi->catatan_sptjm = $catatanSptjm;
+        }
+        
+        if ($seleksiSanggahInstansi->save()) {
             foreach($instansi_ZI->unit_zi as $unit_zi){
-                $seleksiAdministrasiUnit = SeleksiAdministrasiUnit::where('unit_zi_id', $unit_zi->id)->first();
-                if (!$seleksiAdministrasiUnit) {
-                    $seleksiAdministrasiUnit = new SeleksiAdministrasiUnit();
+                $seleksiSanggahUnit = SanggahUnit::where('unit_zi_id', $unit_zi->id)->first();
+                if (!$seleksiSanggahUnit) {
+                    $seleksiSanggahUnit = new SanggahUnit();
                 }
-                $seleksiAdministrasiUnit->unit_zi_id = $unit_zi->id;
-                $seleksiAdministrasiUnit->status_lke = $request->get('status-lke-'.$unit_zi->id ); 
-                $seleksiAdministrasiUnit->catatan_lke = $request->get('catatan-lke-'.$unit_zi->id );
-                $seleksiAdministrasiUnit->status_2wbk = $request->get('status-2wbk-'.$unit_zi->id ); 
-                $seleksiAdministrasiUnit->catatan_2wbk = $request->get('catatan-2wbk-'.$unit_zi->id );
-                $seleksiAdministrasiUnit->status_tlhp = $request->get('tlhp-'.$unit_zi->id );
-                $seleksiAdministrasiUnit->catatan_tlhp = $request->get('catatanTlhp-'.$unit_zi->id );
-                $seleksiAdministrasiUnit->status_survei_mandiri = $request->get('surveiMandiri-'.$unit_zi->id );
-                $seleksiAdministrasiUnit->catatan_survei_mandiri = $request->get('catatanSurveiMandiri-'.$unit_zi->id );
-                $seleksiAdministrasiUnit->status_lhkpn = $request->get('lhkpn-'.$unit_zi->id );
-                $seleksiAdministrasiUnit->catatan_lhkpn = $request->get('catatanLhkpn-'.$unit_zi->id );
-                $seleksiAdministrasiUnit->save();
+                $seleksiSanggahUnit->unit_zi_id = $unit_zi->id;
+                if(!is_null($request->get('status-lke-'.$unit_zi->id ))){
+                    $seleksiSanggahUnit->status_lke = $request->get('status-lke-'.$unit_zi->id ); 
+                }
+                if(!is_null($request->get('catatan-lke-'.$unit_zi->id ))){
+                    $seleksiSanggahUnit->catatan_lke = $request->get('catatan-lke-'.$unit_zi->id );
+                }
+                if(!is_null($request->get('status-2wbk-'.$unit_zi->id ))){
+                    $seleksiSanggahUnit->status_2wbk = $request->get('status-2wbk-'.$unit_zi->id ); 
+                }
+                if(!is_null($request->get('catatan-2wbk-'.$unit_zi->id))){   
+                    $seleksiSanggahUnit->catatan_2wbk = $request->get('catatan-2wbk-'.$unit_zi->id );
+                }
+                if(!is_null($request->get('tlhp-'.$unit_zi->id ))){
+                    $seleksiSanggahUnit->status_tlhp = $request->get('tlhp-'.$unit_zi->id );
+                }
+                if(!is_null($request->get('catatanTlhp-'.$unit_zi->id ))){
+                    $seleksiSanggahUnit->catatan_tlhp = $request->get('catatanTlhp-'.$unit_zi->id );
+                }
+                if(!is_null($request->get('surveiMandiri-'.$unit_zi->id ))){
+                    $seleksiSanggahUnit->status_survei_mandiri = $request->get('surveiMandiri-'.$unit_zi->id );
+                }
+                if(!is_null($request->get('catatanSurveiMandiri-'.$unit_zi->id ))){
+                    $seleksiSanggahUnit->catatan_survei_mandiri = $request->get('catatanSurveiMandiri-'.$unit_zi->id );    
+                }
+                $seleksiSanggahUnit->updated_by = Auth::User()->id;
+                $seleksiSanggahUnit->save();
             }
         };
-        return redirect()->route('evaluasi_administrasi',$instansiZIid);
+        return redirect()->route('proses_sanggah',$instansiZIid);
     }
 
    

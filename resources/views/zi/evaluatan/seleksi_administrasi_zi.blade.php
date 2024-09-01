@@ -124,7 +124,7 @@
                                             @if($instansiZI->administrasi_instansi->sptjm === 0)
                                             <input type="text" class="glowing-border" name="sptjm"
                                                 @if($instansiZI->sanggah_instansi)
-                                            value = "{{$instansiZI->sanggah_instansi->sptjm}} asdasds"
+                                            value = "{{$instansiZI->sanggah_instansi->sptjm}}"
                                             @endif>
                                             @endif
                                             @endif
@@ -272,6 +272,7 @@
                                         <th>Syarat</th>
                                         <th>Data Pengusulan</th>
                                         <th>Status</th>
+                                        <th>Hasil Seleksi Adm</th>
                                         <th>Keterangan</th>
                                         <th>Link data sanggah</th>
                                     </tr>

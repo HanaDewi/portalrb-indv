@@ -73,7 +73,6 @@ class EvaluatanController extends Controller
                 $seleksiSanggahUnit->th2wbk = $request->get('2wbk_'.$unit_zi->id );
                 $seleksiSanggahUnit->tlhp = $request->get('tlhp_'.$unit_zi->id );
                 $seleksiSanggahUnit->survei_mandiri = $request->get('survei_mandiri_'.$unit_zi->id );
-                $seleksiSanggahUnit->lhkpn = $request->get('lhkpn_'.$unit_zi->id );
                 $seleksiSanggahUnit->save();
             }
         };

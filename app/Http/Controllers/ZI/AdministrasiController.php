@@ -232,28 +232,28 @@ class AdministrasiController extends Controller
                     $seleksiAdministrasiUnit = new SeleksiAdministrasiUnit();
                 }
                 $seleksiAdministrasiUnit->unit_zi_id = $unit_zi->id;
-                if($request->get('status-lke-'.$unit_zi->id )){
+                if(!is_null($request->get('status-lke-'.$unit_zi->id ))){
                     $seleksiAdministrasiUnit->status_lke = $request->get('status-lke-'.$unit_zi->id ); 
                 }
-                if($request->get('catatan-lke-'.$unit_zi->id )){
+                if(!is_null($request->get('catatan-lke-'.$unit_zi->id ))){
                     $seleksiAdministrasiUnit->catatan_lke = $request->get('catatan-lke-'.$unit_zi->id );
                 }
-                if($request->get('status-2wbk-'.$unit_zi->id)){
+                if(!is_null($request->get('status-2wbk-'.$unit_zi->id))){
                 $seleksiAdministrasiUnit->status_2wbk = $request->get('status-2wbk-'.$unit_zi->id); 
                 }
-                if($request->get('catatan-2wbk-'.$unit_zi->id )){
+                if!is_null($request->get('catatan-2wbk-'.$unit_zi->id ))){
                     $seleksiAdministrasiUnit->catatan_2wbk = $request->get('catatan-2wbk-'.$unit_zi->id );
                 }
-                if($request->get('tlhp-'.$unit_zi->id )){
+                if(!is_null($request->get('tlhp-'.$unit_zi->id ))){
                     $seleksiAdministrasiUnit->status_tlhp = $request->get('tlhp-'.$unit_zi->id );
                 }
-                if($request->get('catatanTlhp-'.$unit_zi->id )){
+                if(!is_null($request->get('catatanTlhp-'.$unit_zi->id ))){
                     $seleksiAdministrasiUnit->catatan_tlhp = $request->get('catatanTlhp-'.$unit_zi->id );
                 }
-                if($request->get('surveiMandiri-'.$unit_zi->id )){
+                if(!is_null($request->get('surveiMandiri-'.$unit_zi->id ))){
                     $seleksiAdministrasiUnit->status_survei_mandiri = $request->get('surveiMandiri-'.$unit_zi->id );
                 }
-                if($request->get('catatanSurveiMandiri-'.$unit_zi->id )){
+                if(!is_null($request->get('catatanSurveiMandiri-'.$unit_zi->id ))){
                     $seleksiAdministrasiUnit->catatan_survei_mandiri = $request->get('catatanSurveiMandiri-'.$unit_zi->id );
                 }
                 $seleksiAdministrasiUnit->updated_by = Auth::User()->id;
@@ -285,6 +285,9 @@ class AdministrasiController extends Controller
                         $seleksiAdministrasiUnit->status_completed = 1;
                         $seleksiAdministrasiUnit->save();
                     }
+                }else{
+                    $seleksiAdministrasiUnit->status_completed = 0;
+                    $seleksiAdministrasiUnit->save();
                 }
             }
         };
