@@ -241,7 +241,7 @@ class AdministrasiController extends Controller
                 if(!is_null($request->get('status-2wbk-'.$unit_zi->id))){
                 $seleksiAdministrasiUnit->status_2wbk = $request->get('status-2wbk-'.$unit_zi->id); 
                 }
-                if!is_null($request->get('catatan-2wbk-'.$unit_zi->id ))){
+                if(!is_null($request->get('catatan-2wbk-'.$unit_zi->id ))){
                     $seleksiAdministrasiUnit->catatan_2wbk = $request->get('catatan-2wbk-'.$unit_zi->id );
                 }
                 if(!is_null($request->get('tlhp-'.$unit_zi->id ))){
