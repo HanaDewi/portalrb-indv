@@ -14,4 +14,9 @@ class SanggahUnit extends Model
     protected $guarded = [
         'id'
     ];
+
+    public function unitZI()
+    {
+        return $this->belongsTo(UnitZI::class, 'unit_zi_id');
+    }
 }
