@@ -187,7 +187,7 @@ class SanggahController extends Controller
                 }
             }
         }
-        $status = "Berhak" ;
+        //$status = "Berhak"  //untuk kebutuhan testing;
         $unit_ZIs = UnitZI::where("instansi_zi_id", $id)->orderBy('wbk','desc')->get();
         
         $sanggahInstansi = SanggahInstansi::where('instansi_zi_id', $id)->first();
@@ -221,9 +221,9 @@ class SanggahController extends Controller
                 }
             }
         }
-        // if($status == "Tidak Berhak"){
-        //     abort('403');
-        // }
+        if($status == "Tidak Berhak"){
+            abort('403');
+        }
         
         
         
