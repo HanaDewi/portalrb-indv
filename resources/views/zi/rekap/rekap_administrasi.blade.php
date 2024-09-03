@@ -67,11 +67,17 @@
                         <th>Unit</th>
                         <th>WBK/WBBM</th>
                         <th>Surat Usulan</th>
+                        <th>Keterangan</th>
                         <th>Sptjm</th>
+                        <th>Keterangan</th>
                         <th>LKE</th>
+                        <th>Keterangan</th>
                         <th>TLHP</th>
+                        <th>Keterangan</th>
                         <th>Survei Mandiri</th>
+                        <th>Keterangan</th>
                         <th>2 Tahun WBK</th>
+                        <th>Keterangan</th>
                         <th>Status Completed</th>
                         <th>Status Final</th>
                     </tr>
@@ -106,7 +112,17 @@
                         </td>
                         <td>
                             @if($unit_ZI->instansiZI->administrasi_instansi)
+                            {{$unit_ZI->instansiZI->administrasi_instansi->catatan_surat_usulan}}
+                            @endif
+                        </td>
+                        <td>
+                            @if($unit_ZI->instansiZI->administrasi_instansi)
                             {{$unit_ZI->instansiZI->administrasi_instansi->sptjm}}
+                            @endif
+                        </td>
+                        <td>
+                            @if($unit_ZI->instansiZI->administrasi_instansi)
+                            {{$unit_ZI->instansiZI->administrasi_instansi->catatan_sptjm}}
                             @endif
                         </td>
                         <td>
@@ -116,7 +132,17 @@
                         </td>
                         <td>
                             @if($unit_ZI->seleksi_administrasi_unit)
+                            {{$unit_ZI->seleksi_administrasi_unit->catatan_lke}}
+                            @endif
+                        </td>
+                        <td>
+                            @if($unit_ZI->seleksi_administrasi_unit)
                             {{$unit_ZI->seleksi_administrasi_unit->status_tlhp}}
+                            @endif
+                        </td>
+                        <td>
+                            @if($unit_ZI->seleksi_administrasi_unit)
+                            {{$unit_ZI->seleksi_administrasi_unit->catatan_tlhp}}
                             @endif
                         </td>
                         <td>
@@ -126,7 +152,17 @@
                         </td>
                         <td>
                             @if($unit_ZI->seleksi_administrasi_unit)
+                            {{$unit_ZI->seleksi_administrasi_unit->catatan_survei_mandiri}}
+                            @endif
+                        </td>
+                        <td>
+                            @if($unit_ZI->seleksi_administrasi_unit)
                             {{$unit_ZI->seleksi_administrasi_unit->status_2wbk}}
+                            @endif
+                        </td>
+                        <td>
+                            @if($unit_ZI->seleksi_administrasi_unit)
+                            {{$unit_ZI->seleksi_administrasi_unit->catatan_2wbk}}
                             @endif
                         </td>
                         <td>

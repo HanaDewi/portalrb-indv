@@ -74,7 +74,7 @@
 
                 <li>
                     <a href="#" class="side-menu
-                    @if(in_array($title, ['Kelola Tim', 'Kelola Anggota Tim' ])) 
+                    @if(in_array($title, ['Rekap Pengusulan Instansi', 'Rekap Pengusulan Unit', 'Rekap Administrasi Unit','Rekap Sanggah Unit'  ])) 
                         class side-menu--active side-menu--open
                     @endif
                     ">
@@ -86,7 +86,7 @@
                         </div>
                     </a>
                     <ul class="
-                        @if(in_array($title, ['Rekap Pengusulan Instansi', 'Rekap Pengusulan Unit' ])) 
+                        @if(in_array($title, ['Rekap Pengusulan Instansi', 'Rekap Pengusulan Unit', 'Rekap Administrasi Unit','Rekap Sanggah Unit'  ])) 
                             side-menu__sub-open
                         @else
                             side-menu__sub-close
