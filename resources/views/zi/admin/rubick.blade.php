@@ -167,57 +167,14 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="side-menu
-                    @if(in_array($title, ['Seleksi Dokumen', 'Seleksi Wawancara', 'Observasi Lapangan' ])) 
-                        class side-menu--active side-menu--open
+                    <a href="{{ route('seleksi_dokumen') }}" class="side-menu
+                    @if($title == 'Seleksi Dokumen')
+                                side-menu--active 
                     @endif
                     ">
-                        <!-- class side-menu--active side-menu--open-->
-                        <div class="side-menu__icon"><i data-lucide="clipboard-list"></i></div>
-                        <div class="side-menu__title">
-                            Seleksi Desk
-                            <div class="side-menu__sub-icon "> <i data-lucide="chevron-down"></i> </div>
-                        </div>
+                        <div class="side-menu__icon"><i data-lucide="clipboard"></i></div>
+                        <div class="side-menu__title"> Seleksi Dokumen</div>
                     </a>
-                    <ul class="
-                        @if(in_array($title, ['Seleksi Dokumen', 'Seleksi Wawancara', 'Observasi Lapangan' ])) 
-                            side-menu__sub-open
-                        @else
-                            side-menu__sub-close
-                        @endif
-                        ">
-
-                        <li>
-                            <a href="{{ route('seleksi_dokumen') }}" class="side-menu
-                    @if($title == 'Seleksi Dokumen')
-                                side-menu--active 
-                    @endif
-                    ">
-                                <div class="side-menu__icon"><i data-lucide=""></i></div>
-                                <div class="side-menu__title"> Seleksi Dokumen </div>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{ route('seleksi_dokumen') }}" class="side-menu
-                    @if($title == 'Seleksi Dokumen')
-                                side-menu--active 
-                    @endif
-                    ">
-                                <div class="side-menu__icon"><i data-lucide=""></i></div>
-                                <div class="side-menu__title"> Seleksi Wawancara </div>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{ route('seleksi_dokumen') }}" class="side-menu
-                    @if($title == 'Seleksi Dokumen')
-                                side-menu--active 
-                    @endif
-                    ">
-                                <div class="side-menu__icon"><i data-lucide=""></i></div>
-                                <div class="side-menu__title"> Observasi Lapangan </div>
-                            </a>
-                        </li>
-                    </ul>
                 </li>
                 <li>
                     <a href="{{ route('seleksi_dokumen') }}" class="side-menu

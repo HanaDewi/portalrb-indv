@@ -8,7 +8,7 @@
     @include('common.status')
     <div class="intro-y box">
         <div class="flex flex-col sm:flex-row items-center p-5 border-b border-slate-200/60">
-            <h2 class="font-bold text-base mr-auto"> Seleksi Administrasi - {{ auth()->user()->nama }}</h2>
+            <h2 class="font-bold text-base mr-auto"> Seleksi Dokumen - {{ auth()->user()->nama }}</h2>
         </div>
         <br />
         <div class="col-span-12 grid grid-cols-12 gap-6">
@@ -17,9 +17,8 @@
 
                     <div class="flex items-center">
                         <div class="w-2/4 flex-none">
-                            <div class="text-lg font-bold truncate">Tidak Lolos Seleksi Administrasi </div>
+                            <div class="text-lg font-bold truncate">Lolos Administrasi & Sanggah </div>
                             <div class="text-gray-800 mt-2 text-xl">
-
                                 <a href="#" id="instansiNonMandiri">{{$jumlah_instansi}} <sup
                                         style="font-size: 0.5em">Total Instansi</sup> </a> <br />
                                 <a href="#b" id="instansiMandiri" style="font-size: 0.8em">{{$jumlah_unit_wbk}} <sup
@@ -29,8 +28,6 @@
                                         style="font-size: 0.5em">Unit WBBM</sup></a>|
                                 <a href="#c" id="instansiTotal" style="font-size: 0.8em"><b> {{$jumlah_unit_total}} <sup
                                             style="font-size: 0.5em">Jumlah Unit Total</sup></b></a>
-
-
                             </div>
                         </div>
                         <div class="flex-none ml-auto relative">
@@ -60,7 +57,7 @@
                 <div class="box p-5 zoom-in">
                     <div class="flex items-center">
                         <div class="w-3/4 flex-none">
-                            <div class="text-lg font-bold truncate">Lulus Tahap Sanggah</div>
+                            <div class="text-lg font-bold truncate">Lulus Seleksi Dokumen</div>
                             <div class="text-gray-800 mt-2 text-xl">
 
                                 <a href="#" id="instansiNonMandiri">{{$jumlah_instansi_lolos}} <sup
@@ -175,7 +172,7 @@
                     <tr>
                         <td>{{$index+1}}</td>
                         <td>
-                            <a href="{{route('proses_sanggah',$data['instansi_zi_id'])}}">
+                            <a href="{{route('proses_dokumen',$data['instansi_zi_id'])}}">
                                 {{$data["instansi_nama"]}}
 
                             </a>
@@ -209,7 +206,7 @@
                         <td class="text-center">
                             @foreach(Auth::User()->userTimZI as $userTimZI)
                             @if (in_array($userTimZI->tim->nama, $data["nama_teams"]))
-                            <a href="{{route('proses_sanggah', $data['instansi_zi_id'])}}" class="btn btn-danger"><i
+                            <a href="{{route('proses_dokumen', $data['instansi_zi_id'])}}" class="btn btn-danger"><i
                                     class="fa fa-search"></i>
                                 &nbsp;Evaluasi
                             </a>
@@ -228,7 +225,42 @@
 </div>
 
 
-
+{{-- Modal Form Catatan Evaluator --}}
+<div id="modal-catatan" class="modal fade" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <!-- BEGIN: Modal Header -->
+            <div class="darkbg modal-header">
+                <h2 class="font-bold fw-medium fs-base me-auto" id="title">Monitoring dan Evaluasi Perencanaan</h2>
+            </div> <!-- END: Modal Header -->
+            <!-- BEGIN: Modal Body -->
+            <form action="{{ url('rb-general/rekap_data/simpanCatatanEvaluator') }}" id="form-catatan_evaluator"
+                method="post">
+                @csrf
+                <input type="hidden" id="target_id" name="target_id">
+                <div class="modal-body grid columns-12 gap-4 gap-y-3">
+                    <div class="g-col-12">
+                        <table class="table table-noborder">
+                            <tr>
+                                <td class="font-bold">Catatan Evaluator</td>
+                                <td>
+                                    <textarea name="catatan_evaluator" id="catatan_evaluator" cols="30" rows="10"
+                                        placeholder="Catatan" class="form-control mt-4"></textarea>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div> <!-- END: Modal Body -->
+                <!-- BEGIN: Modal Footer -->
+                <div class="modal-footer text-end">
+                    <button type="button" data-tw-dismiss="modal"
+                        class="btn btn-outline-secondary w-20 me-1">Cancel</button>
+                    <button type="submit" class="btn btn-primary w-20 saveButton">Simpan</button>
+                </div> <!-- END: Modal Footer -->
+            </form>
+        </div>
+    </div>
+</div> <!-- END: Modal Content -->
 
 @endsection
 

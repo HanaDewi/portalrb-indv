@@ -45,6 +45,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/zi/proses-sanggah/simpan', [SanggahController::class, 'proses_sanggah_simpan'])->name('proses_sanggah_simpan');
     #Seleksi Dokumen
     Route::get('/zi/seleksi-dokumen', [DokumenController::class, 'index'])->name('seleksi_dokumen');
+    Route::get('/zi/proses-dokumen/{id}', [DokumenController::class, 'evaluasi_dokumen'])->name('proses_dokumen');
+    Route::post('/zi/proses-dokumen/simpan', [DokumenController::class, 'proses_dokumen_simpan'])->name('proses_dokumen_simpan');
     #Seleksi Wawancara
     Route::get('/zi/seleksi-wawancara', [WawancaraController::class, 'index'])->name('seleksi_wawancara');
     #Observasi Lapangan
