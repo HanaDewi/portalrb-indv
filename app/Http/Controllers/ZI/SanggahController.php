@@ -348,6 +348,6 @@ class SanggahController extends Controller
         return redirect()->route('proses_sanggah',$instansiZIid);
     }
 
-   
+    
     
 }

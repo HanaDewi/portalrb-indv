@@ -120,13 +120,26 @@
                         </li>
                         <li>
                             <a href="{{ route('rekap_administrasi') }}" class="side-menu 
-                            @if($title == 'Rekap Pengusulan Unit')
+                            @if($title == 'Rekap Administrasi Unit')
                             side-menu--active 
                             @endif
                             ">
                                 <div class="side-menu__icon"><i data-lucide=""></i></div>
                                 <div class="side-menu__title">
                                     Rekap Seleksi Administrasi
+                                    <div class="side-menu__sub-icon "> </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('rekap_sanggah') }}" class="side-menu 
+                            @if($title == 'Rekap Sanggah Unit')
+                            side-menu--active 
+                            @endif
+                            ">
+                                <div class="side-menu__icon"><i data-lucide=""></i></div>
+                                <div class="side-menu__title">
+                                    Rekap Sanggah
                                     <div class="side-menu__sub-icon "> </div>
                                 </div>
                             </a>
