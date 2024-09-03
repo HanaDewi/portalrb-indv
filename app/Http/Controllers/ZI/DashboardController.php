@@ -84,6 +84,16 @@ class DashboardController extends Controller
         }
     }
 
+    public function rekap_pengusulan_detail($id)
+    {   
+        $title = "Rekap Pengusulan";
+        $instansi_ZI = InstansiZI::find($id);
+        $unit_wbk_ZIs = UnitZI::where("instansi_zi_id", $id)->where("wbk",1)->get();
+        $unit_wbbm_ZIs = UnitZI::where("instansi_zi_id", $id)->where("wbbm",1)->get();
+        return view('zi.rekap.rekap_pengusulan_detail', compact("title","instansi_ZI","unit_wbk_ZIs","unit_wbbm_ZIs") );
+        
+    }
+
     public function rekap_unit(Request $request)
     {   
         $title = "Rekap Pengusulan Unit";
@@ -168,13 +178,5 @@ class DashboardController extends Controller
         }
     }
 
-    public function rekap_pengusulan_detail($id)
-    {   
-        $title = "Rekap Pengusulan";
-        $instansi_ZI = InstansiZI::find($id);
-        $unit_wbk_ZIs = UnitZI::where("instansi_zi_id", $id)->where("wbk",1)->get();
-        $unit_wbbm_ZIs = UnitZI::where("instansi_zi_id", $id)->where("wbbm",1)->get();
-        return view('zi.rekap_pengusulan_detail', compact("title","instansi_ZI","unit_wbk_ZIs","unit_wbbm_ZIs") );
-        
-    }
+    
 }
