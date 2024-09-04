@@ -46,6 +46,19 @@ class LkeEvaluatorController extends Controller
         }    
     }
 
+    public function template_lke()
+    {
+        $title = "Template LKE Evaluator";
+        if(Auth::User()->level =="admin" || Auth::User()->level == "tpn" ){
+          
+            return view('zi.template_lke_evaluator', compact(
+                "title"
+            ));
+        }else{
+            return(URL::to('/'));
+        }    
+    }
+
     public function lke_evaluator_update(Request $request)
     {   
         $success = false;

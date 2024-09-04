@@ -54,6 +54,7 @@ Route::middleware('auth')->group(function () {
     #Seleksi Panel
     Route::get('/zi/seleksi-panel', [PanelController::class, 'index'])->name('seleksi_panel');
     #Tautkan LKE
+    Route::get('/zi/template-lke-evaluator', [LkeEvaluatorController::class, 'template_lke'])->name('template_lke_evaluator');
     Route::get('/zi/lke-evaluator', [LkeEvaluatorController::class, 'index'])->name('lke_evaluator');
     Route::post('/zi/lke-evaluator-update', [LkeEvaluatorController::class, 'lke_evaluator_update'])->name('lke_evaluator_update');
     Route::get('/zi/download-template-lke', [LkeEvaluatorController::class, 'download_template_lke'])->name('download_template_lke');

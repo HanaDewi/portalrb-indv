@@ -202,7 +202,7 @@ class SanggahController extends Controller
     }
 
     public function proses_sanggah_simpan(Request $request){
-        //dd("Proses Evaluasi Sanggah Buat Evaluator Masih Belum Dibuka Yah, mau ke mana sih buru-buru amat, Jangan Ya Dek Ya !! :p");
+        dd("Proses Evaluasi Sanggah Buat Evaluator Masih Belum Dibuka Yah, mau ke mana sih buru-buru amat, Jangan Ya Dek Ya !! :p");
         $instansiZIid = $request->get('instansiZIId');
         $instansi_ZI = InstansiZI::find($instansiZIid);
         $tim_ids = [];

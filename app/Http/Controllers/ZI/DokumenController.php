@@ -26,7 +26,7 @@ class DokumenController extends Controller
   
     public function index(Request $request)
     {
-        $title = "Seleksi Dokumen";
+        $title = "Analisis Dokumen";
         
         $instansiZis = InstansiZi::with(['unit_zi.seleksi_administrasi_unit'])
         ->where('final', 1)
@@ -176,7 +176,7 @@ class DokumenController extends Controller
 
     public function evaluasi_dokumen($id)
     {   
-        $title = "Seleksi Dokumen";
+        $title = "Analisis Dokumen";
         $instansi_ZI = InstansiZI::find($id);
         $tim_ids = [];
         
