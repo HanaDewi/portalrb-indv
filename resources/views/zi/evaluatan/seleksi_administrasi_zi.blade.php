@@ -18,6 +18,20 @@
     }
 </style>
 
+@if($status_akses =="Tutup")
+<style>
+    .form-control,
+    .glowing-border {
+        pointer-events: none;
+    }
+
+
+    #tombol-kirim {
+        display: none
+    }
+</style>
+@endif
+
 @endsection
 
 @section('content')
@@ -412,10 +426,13 @@
                                     @endif
                                 </tbody>
                             </table>
-                            <button class="btn btn-lg btn-primary">Simpan</button><br>
+                            @if($status_akses =="Tutup")
+                            Data Anda Telah terkirim.
+                            @else
+                            <button class="btn btn-lg btn-primary" id="tombol-kirim">Simpan</button><br>
                             * Data Pada Formulir akan secara otomatis terkirim saat waktu penutupan sanggah telah
                             terlewati
-
+                            @endif
                         </form>
                         <div class="row ">
                             <div class="col-md-1">
