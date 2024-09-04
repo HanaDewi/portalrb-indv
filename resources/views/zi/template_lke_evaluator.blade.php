@@ -1,12 +1,12 @@
 @extends('zi.admin.rubick')
-@section('title', 'Rekap Data Pengusulan ZI - ' .auth()->user()->nama)
+@section('title', $title . ' - ' .auth()->user()->nama)
 
 @section('content')
 <div class="intro-y col-span-12 lg:col-span-12">
     @include('common.status')
     <div class="intro-y box">
         <div class="flex flex-col sm:flex-row items-center p-5 border-b border-slate-200/60">
-            <h2 class="font-bold text-base mr-auto"> Rekap Unit </h2>
+            <h2 class="font-bold text-base mr-auto"> {{$title}} </h2>
         </div>
         <br />
         <div class="col-span-12 grid grid-cols-12 " style="text-align:center;">
