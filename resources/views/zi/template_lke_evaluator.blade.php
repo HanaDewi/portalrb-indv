@@ -13,14 +13,14 @@
             <table class="table table-bordered table-striped" cellspacing="0" width="100%" style="align:center;   margin-left:55%; 
     margin-right:15">
                 <tr>
-                    <th>LKE Dokumen</th>
-                    <th>LKE Wawancara</th>
-                    <th>LKE Verlap</th>
+                    <th>Template LKE </th>
+                    <!-- <th>LKE Wawancara</th>
+                    <th>LKE Verlap</th>-->
                 </tr>
                 <tr>
                     <td><a href="#" class="btn btn-primary" target="_blank">Download</a></td>
-                    <th><a href="#" class="btn btn-primary" target="_blank">Download</a></th>
-                    <th><a href="#" class="btn btn-primary" target="_blank">Download</a></th>
+                    <!--<th><a href="#" class="btn btn-primary" target="_blank">Download</a></th>
+                    <th><a href="#" class="btn btn-primary" target="_blank">Download</a></th>-->
                 </tr>
             </table>
 
