@@ -88,12 +88,20 @@ class SanggahController extends Controller
 
                         $wbkCompletedCount = $instansiZi->unit_zi->where('wbk', true)
                         ->filter(function($unitZi) {
-                            return  optional($unitZi->sanggah_unit)->status_completed == 1;
+                            if(optional($unitZi->seleksi_administrasi_unit)->status_final === 0){
+                                return  optional($unitZi->sanggah_unit)->status_completed == 1;
+                            }else{
+                                return false;
+                            }
                         })->count();
         
                         $wbbmCompletedCount = $instansiZi->unit_zi->where('wbbm', true)
                         ->filter(function($unitZi) {
-                            return  optional($unitZi->sanggah_unit)->status_completed == 1;
+                            if(optional($unitZi->seleksi_administrasi_unit)->status_final === 0){
+                                return  optional($unitZi->sanggah_unit)->status_completed == 1;
+                            }else{
+                                return false;
+                            }
                         })->count();
 
                         if($wbkFinalCount>0 || $wbbmFinalCount>0 ){
@@ -122,7 +130,7 @@ class SanggahController extends Controller
                                     }
                                     
                                     if($wbbmFinalCount>0 ){  
-                                        $progress_teams[$tim]["jumlah_wbbm_completed"] += $wbkCompletedCount;
+                                        $progress_teams[$tim]["jumlah_wbbm_completed"] += $wbbmCompletedCount;
                                     }      
                                 }
                             }
