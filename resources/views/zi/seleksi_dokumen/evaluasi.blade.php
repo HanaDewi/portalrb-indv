@@ -68,7 +68,7 @@
                             <th width="15%">Unit</th>
                             <th width="20%">Link Lke</th>
                             <th>Status</th>
-                            <th>Keterangan Tidak Lulus</th>
+                            <th>Kondidi/Catatan</th>
                             <th>Rekomendasi</th>
                         </tr>
                     </thead>
@@ -96,8 +96,8 @@
                             <td>
                                 <select class="form-control" id="sptjm" name="sptjm" data-old="" required>
                                     <option value="" disabled selected>Pilih Status</option>
-                                    <option value="1">Sesuai</option>
-                                    <option value="0">Tidak Sesuai</option>
+                                    <option value="1">Lulus</option>
+                                    <option value="0">Tidak Lulus</option>
                                 </select>
                             </td>
                             <td class="catatan">
@@ -247,7 +247,6 @@
             }
             $(this).attr("data-old", this.value);
         });
-
         $('.lhkpn').on('change',function() {
             if(this.value=="0"){
                 var idUnit = $(this).attr("data-id");
