@@ -125,11 +125,11 @@ class SanggahController extends Controller
                                 }
 
                                 if($wbkCompletedCount>0 || $wbbmCompletedCount>0 ){
-                                    if($wbkFinalCount>0 ) {
+                                    if($wbkCompletedCount>0 ) {
                                         $progress_teams[$tim]["jumlah_wbk_completed"] += $wbkCompletedCount ;
                                     }
                                     
-                                    if($wbbmFinalCount>0 ){  
+                                    if($wbbmCompletedCount>0 ){  
                                         $progress_teams[$tim]["jumlah_wbbm_completed"] += $wbbmCompletedCount;
                                     }      
                                 }
