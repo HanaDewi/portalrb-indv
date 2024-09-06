@@ -18,7 +18,8 @@
                     <th>LKE Verlap</th>-->
                 </tr>
                 <tr>
-                    <td><a href="#" class="btn btn-primary" target="_blank">Download</a></td>
+                    <td><a href="https://docs.google.com/spreadsheets/d/1wORikHUI7_vpI-z_YeVKDKamz_IoHLyr/edit?gid=1385573407#gid=1385573407"
+                            class="btn btn-primary" target="_blank">Download</a></td>
                     <!--<th><a href="#" class="btn btn-primary" target="_blank">Download</a></th>
                     <th><a href="#" class="btn btn-primary" target="_blank">Download</a></th>-->
                 </tr>

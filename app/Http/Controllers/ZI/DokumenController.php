@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\ZI;
 
+use App\Models\ZI\AnalisisDokumen;
 use App\Models\ZI\UnitZI;
 use App\Models\KlpdInstansi;
 use Illuminate\Http\Request;
@@ -214,8 +215,48 @@ class DokumenController extends Controller
         
     }
 
-    public function proses_dokumen_simpan(){
+    public function proses_dokumen_simpan(Request $request){
         dd("Proses Seleksi Dokumen Buat Evaluator Masih Belum Dibuka Yah, mau ke mana sih buru-buru amat, Jangan Ya Dek Ya !! :p");
+        $instansiZIid = $request->get('instansiZIId');
+        $instansi_ZI = InstansiZI::find($instansiZIid);
+        $tim_ids = [];
+        foreach($instansi_ZI->unit_zi as $unit_zi){
+            foreach ( $unit_zi->unit_tim as $unitTim){
+                if(!in_array($unitTim->tim_id, $tim_ids)){
+                    array_push($tim_ids, $unitTim->tim_id);                            
+                }
+            }
+        }
+        $status = "Tidak Berhak";
+        if(Auth::User()->userTimZI){                   
+            foreach(Auth::User()->userTimZI as $anggotaTim){
+                if(in_array($anggotaTim->tim_id,$tim_ids)){
+                    $status = "Berhak" ;
+                }
+            }
+        }
+        if($status == "Tidak Berhak"){
+            abort('403');
+        }
+        
+        foreach($instansi_ZI->unit_zi as $unit_zi){
+            $analisisDokumenUnit = AnalisisDokumen::where('unit_zi_id', $unit_zi->id)->first();
+            if($unit_zi->seleksi_administrasi_unit->status_final ==1 || $unit_zi->sanggah_unit->status_final==1){
+                if (!$analisisDokumenUnit) {
+                    $analisisDokumenUnit = new AnalisisDokumen();
+                    $analisisDokumenUnit->unit_zi_id = $unit_zi->id;
+                }
+                if(!is_null($request->get('bukti-dukung-'.$unit_zi->id )))$analisisDokumenUnit->bukti_dukung = $request->get('bukti-dukung-'.$unit_zi->id ); 
+                if(!is_null($request->get('kondisi-'.$unit_zi->id )))$analisisDokumenUnit->kondisi = $request->get('kondisi-'.$unit_zi->id );
+                if(!is_null($request->get('rekomendasi-'.$unit_zi->id )))$analisisDokumenUnit->rekomendasi = $request->get('rekomendasi-'.$unit_zi->id ); 
+                $analisisDokumenUnit->updated_by = Auth::User()->id;
+                $analisisDokumenUnit->save();
+            };
+        };
+            
+        
+        
+        return redirect()->route('proses_dokumen',$instansiZIid);
     }
     
 }
