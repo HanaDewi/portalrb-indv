@@ -216,7 +216,7 @@ class DokumenController extends Controller
     }
 
     public function proses_dokumen_simpan(Request $request){
-        dd("Proses Seleksi Dokumen Buat Evaluator Masih Belum Dibuka Yah, mau ke mana sih buru-buru amat, Jangan Ya Dek Ya !! :p");
+        //dd("Proses Seleksi Dokumen Buat Evaluator Masih Belum Dibuka Yah, mau ke mana sih buru-buru amat, Jangan Ya Dek Ya !! :p");
         $instansiZIid = $request->get('instansiZIId');
         $instansi_ZI = InstansiZI::find($instansiZIid);
         $tim_ids = [];
@@ -249,6 +249,7 @@ class DokumenController extends Controller
                 if(!is_null($request->get('bukti-dukung-'.$unit_zi->id )))$analisisDokumenUnit->bukti_dukung = $request->get('bukti-dukung-'.$unit_zi->id ); 
                 if(!is_null($request->get('kondisi-'.$unit_zi->id )))$analisisDokumenUnit->kondisi = $request->get('kondisi-'.$unit_zi->id );
                 if(!is_null($request->get('rekomendasi-'.$unit_zi->id )))$analisisDokumenUnit->rekomendasi = $request->get('rekomendasi-'.$unit_zi->id ); 
+                if(!is_null($request->get('status-'.$unit_zi->id )))$analisisDokumenUnit->status = $request->get('status-'.$unit_zi->id ); 
                 $analisisDokumenUnit->updated_by = Auth::User()->id;
                 $analisisDokumenUnit->save();
             };

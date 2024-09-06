@@ -97,8 +97,8 @@
                                 @endif>
                             </td>
                             <td>
-                                <select class="form-control status" id="status" name="status"
-                                    data-old=@if(optional($unit_zi->analisis_dokumen)->status)
+                                <select class="form-control status" name="status-{{$unit_zi->id}}"
+                                    data-old=@if(isset($unit_zi->analisis_dokumen->status))
                                     @if($unit_zi->analisis_dokumen->status==1) "1"
                                     @elseif($unit_zi->analisis_dokumen->status===0) "0"
                                     @else "kosong"
@@ -108,23 +108,26 @@
                                     @endif
                                     data-id="{{$unit_zi->id}}">>
                                     <option value="" disabled selected>Pilih Status</option>
-                                    <option value="1">Lulus</option>
-                                    <option value="0">Tidak Lulus</option>
+                                    <option @if(isset($unit_zi->analisis_dokumen->status))
+                                        @if($unit_zi->analisis_dokumen->status==1) selected
+                                        @endif
+                                        @endif
+                                        value="1">Lulus</option>
+                                    <option @if(isset($unit_zi->analisis_dokumen->status))
+                                        @if($unit_zi->analisis_dokumen->status===0) selected
+                                        @endif
+                                        @endif
+                                        value="0">Tidak Lulus</option>
                                 </select>
                             </td>
                             <td class="kondisi">
                                 <textarea rows='4' cols='30' class='glowing-border' name='kondisi-{{$unit_zi->id}}'
-                                    placeholder="Kondisi / Catatan">@if(isset($unit_zi->analisis_dokumen))
-                                    {{$unit_zi->analisis_dokumen->kondisi}}
-                                    @endif</textarea>
+                                    placeholder="Kondisi / Catatan">@if(isset($unit_zi->analisis_dokumen)){{$unit_zi->analisis_dokumen->kondisi}}@endif</textarea>
                             </td>
                             <td class="rekomendasi">
-                                <textarea rows='4' cols='30' class='glowing-border' name='rekomendasi-{{$unit_zi->id}}'
-                                    placeholder="Rekomendasi">@if(isset($unit_zi->analisis_dokumen))
-                                    @if($unit_zi->analisis_dokumen->status ===0)
-                                    {{$unit_zi->analisis_dokumen->rekomendasi}}
-                                    @endif
-                                    @endif</textarea>
+                                <textarea rows='4' cols='30' class='glowing-border' data-old=""
+                                    name='rekomendasi-{{$unit_zi->id}}'
+                                    placeholder="Rekomendasi">@if(isset($unit_zi->analisis_dokumen))@if($unit_zi->analisis_dokumen->status ===0){{$unit_zi->analisis_dokumen->rekomendasi}}@endif @endif</textarea>
                             </td>
                         </tr>
                         @endif
@@ -177,17 +180,19 @@
         $('.status').on('change',function() {
             if(this.value=="0"){
                 $(this).parent().siblings(".rekomendasi").find("textarea").prop('required',true);
+                $(this).parent().siblings(".rekomendasi").find("textarea").prop('disabled',false);
                 $(this).parent().siblings(".kondisi").find("textarea").prop('required',true);
                 $(this).parent().siblings(".bukti_dukung").find("input").prop('required',true);
             }else if(this.value=="1"){
                 $(this).parent().siblings(".kondisi").find("textarea").prop('required',true);
                 $(this).parent().siblings(".bukti_dukung").find("input").prop('required',true);
+                $(this).parent().siblings(".rekomendasi").find("textarea").prop('disabled',true);
                 var oldData = $(this).attr("data-old");
                 if(oldData != "kosong" ){
                     let text = "Apakah anda yakin akan mengubah status? Perubahan status akan menghapus rekomendasi sebelumnya.";
                     if (confirm(text) == true) {
                         $(this).parent().siblings(".rekomendasi").find("textarea").prop('required',false);
-                        $(this).parent().siblings(".rekomendasi").find("textarea").html('');
+                        $(this).parent().siblings(".rekomendasi").find("textarea").val('');
                     } else {
                         this.value="0"
                     }
