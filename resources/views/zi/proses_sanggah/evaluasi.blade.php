@@ -314,7 +314,7 @@
                                 @if(isset($unit_zi->sanggah_unit))
                                 @if($unit_zi->sanggah_unit->status_tlhp===0)
                                 <textarea rows='4' cols='30' class='glowing-border' name='catatanTlhp-{{$unit_zi->id}}'
-                                    required>{{$unit_zi->seleksi_administrasi_unit->catatan_tlhp}}</textarea>
+                                    required>{{$unit_zi->seleksi_sanggah_unit->catatan_tlhp}}</textarea>
                                 @endif
                                 @endif
 

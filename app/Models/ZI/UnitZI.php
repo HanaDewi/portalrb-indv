@@ -31,5 +31,9 @@ class UnitZI extends Model
     public function sanggah_unit() {
         return $this->hasOne(SanggahUnit::class, 'unit_zi_id');
     }
+
+    public function analisis_dokumen() {
+        return $this->hasOne(AnalisisDokumen::class, 'unit_zi_id');
+    }
 }
 

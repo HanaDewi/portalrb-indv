@@ -68,7 +68,7 @@
                             <th width="15%">Unit</th>
                             <th width="20%">Link Lke</th>
                             <th>Status</th>
-                            <th>Kondidi/Catatan</th>
+                            <th>Kondisi / Catatan</th>
                             <th>Rekomendasi</th>
                         </tr>
                     </thead>
@@ -90,25 +90,41 @@
                                 :
                                 {{$unit_zi->nama}}
                             </td>
-                            <td>
-                                <input type="text" class="form-control">
+                            <td class="bukti_dukung">
+                                @if(isset($unit_zi->analsis_dokumen))
+                                <input type="text" name="bukti_dukung" class="form-control"
+                                    value="{{$unit_zi->analisis_dokumen->bukti_dukung}}" required>
+                                @endif
                             </td>
                             <td>
-                                <select class="form-control" id="sptjm" name="sptjm" data-old="" required>
+                                <select class="form-control status" id="status" name="status"
+                                    data-old=@if(optional($unit_zi->analisis_dokumen)->status)
+                                    @if($unit_zi->analisis_dokumen->status==1) "1"
+                                    @elseif($unit_zi->analisis_dokumen->status===0) "0"
+                                    @else "kosong"
+                                    @endif
+                                    @else
+                                    "kosong"
+                                    @endif
+                                    data-id="{{$unit_zi->id}}">>
                                     <option value="" disabled selected>Pilih Status</option>
                                     <option value="1">Lulus</option>
                                     <option value="0">Tidak Lulus</option>
                                 </select>
                             </td>
-                            <td class="catatan">
-
-                                <textarea rows='4' cols='30' class='glowing-border' required></textarea>
-
+                            <td class="kondisi">
+                                @if(isset($unit_zi->analsis_dokumen))
+                                <textarea rows='4' cols='30' class='glowing-border' name='kondisi-{{$unit_zi->id}}'
+                                    required>{{$unit_zi->analisis_dokumen->kondisi}}</textarea>
+                                @endif
                             </td>
-                            <td class="catatan">
-
-                                <textarea rows='4' cols='30' class='glowing-border' required></textarea>
-
+                            <td class="rekomendasi">
+                                @if(isset($unit_zi->analsis_dokumen))
+                                @if($unit_zi->analisis_dokumen->status ===0)
+                                <textarea rows='4' cols='30' class='glowing-border' name='rekomendasi-{{$unit_zi->id}}'
+                                    required>{{$unit_zi->analisis_dokumen->rekomendasi}}</textarea>
+                                @endif
+                                @endif
                             </td>
                         </tr>
                         @endif
@@ -158,132 +174,29 @@
 
         
 
-        $('#suratUsulan').on('change',function() {
+        $('.status').on('change',function() {
             if(this.value=="0"){
-                $(this).parent().siblings(".catatan").html("<textarea rows='4' cols='30' class='glowing-border' name='catatanSuratUsulan' required></textarea>");
+                $(this).parent().siblings(".rekomendasi").html("<textarea rows='4' cols='30' class='glowing-border' name='rekomendasi' placeholder='rekomendasi' required></textarea>");
+                $(this).parent().siblings(".kondisi").html("<textarea rows='4' cols='30' class='glowing-border' name='kondisi' placeholder='kondisi' required></textarea>");
+                $(this).parent().siblings(".bukti_dukung").html("<textarea rows='4' cols='30' class='glowing-border' name='bukti_dukung' placeholder='bukti dukung' required></textarea>");
             }else if(this.value=="1"){
                 var oldData = $(this).attr("data-old");
                 if(oldData != "kosong" ){
                     let text = "Apakah anda yakin akan mengubah status? Perubahan status akan menghapus catatan sebelumnya.";
                     if (confirm(text) == true) {
-                        $(this).parent().siblings(".catatan").html("");
+                        $(this).parent().siblings(".rekomendasi").html("<textarea rows='4' cols='30' class='glowing-border' name='rekomendasi' placeholder='rekomendasi' required></textarea>");
+                        $(this).parent().siblings(".kondisi").html("<textarea rows='4' cols='30' class='glowing-border' name='kondisi' placeholder='kondisi' required></textarea>");
                     } else {
                         this.value="0"
                     }
+                }else{
+                    $(this).parent().siblings(".kondisi").html("<textarea rows='4' cols='30' class='glowing-border' name='kondisi' placeholder='kondisi' required></textarea>");
+                    $(this).parent().siblings(".bukti_dukung").html("<textarea rows='4' cols='30' class='glowing-border' name='bukti_dukung' placeholder='bukti_dukung' required></textarea>");
                 }
             }
             $(this).attr("data-old", this.value);
         });
 
-        $('#sptjm').on('change',function() {
-            if(this.value=="0"){
-                $(this).parent().siblings(".catatan").html("<textarea rows='4' cols='30' class='glowing-border' name='catatanSptjm' required></textarea>");
-            }else if(this.value=="1"){
-                var oldData = $(this).attr("data-old");
-                if(oldData != "kosong" ){
-                    let text = "Apakah anda yakin akan mengubah status? Perubahan status akan menghapus catatan sebelumnya.";
-                    if (confirm(text) == true) {
-                        $(this).parent().siblings(".catatan").html("");
-                    } else {
-                        this.value="0"
-                    }
-                }
-            }
-            $(this).attr("data-old", this.value);
-        });
-
-        
-
-        $('.lke').on('change',function() {
-            if(this.value=="0"){
-                var idUnit = $(this).attr("data-id");
-                $(this).parent().siblings(".catatan").html("<textarea rows='4' cols='30' class='glowing-border' name='catatan-lke-"+ idUnit +"' required></textarea>");
-            }else if(this.value=="1"){
-                var oldData = $(this).attr("data-old");
-                if(oldData != "kosong" ){
-                    let text = "Apakah anda yakin akan mengubah status? Perubahan status akan menghapus catatan sebelumnya.";
-                    if (confirm(text) == true) {
-                        $(this).parent().siblings(".catatan").html("");
-                    } else {
-                        this.value="0"
-                    }
-                }
-            }
-            $(this).attr("data-old", this.value);
-        });
-
-        $('.tlhp').on('change',function() {
-            if(this.value=="0"){
-                var idUnit = $(this).attr("data-id");
-                $(this).parent().siblings(".catatan").html("<textarea rows='4' cols='30' class='glowing-border' name='catatanTlhp-"+idUnit+"' required></textarea>");
-            }else if(this.value=="1"){
-                var oldData = $(this).attr("data-old");
-                if(oldData != "kosong" ){
-                    let text = "Apakah anda yakin akan mengubah status? Perubahan status akan menghapus catatan sebelumnya.";
-                    if (confirm(text) == true) {
-                        $(this).parent().siblings(".catatan").html("");
-                    } else {
-                        this.value="0"
-                    }
-                }
-            }
-            $(this).attr("data-old", this.value);
-        });
-
-        $('.surveiMandiri').on('change',function() {
-            if(this.value=="0"){
-                var idUnit = $(this).attr("data-id");
-                $(this).parent().siblings(".catatan").html("<textarea rows='4' cols='30' class='glowing-border' name='catatanSurveiMandiri-"+ idUnit +"' required></textarea>");
-            }else if(this.value=="1"){
-                var oldData = $(this).attr("data-old");
-                if(oldData != "kosong" ){
-                    let text = "Apakah anda yakin akan mengubah status? Perubahan status akan menghapus catatan sebelumnya.";
-                    if (confirm(text) == true) {
-                        $(this).parent().siblings(".catatan").html("");
-                    } else {
-                        this.value="0"
-                    }
-                }
-            }
-            $(this).attr("data-old", this.value);
-        });
-        $('.lhkpn').on('change',function() {
-            if(this.value=="0"){
-                var idUnit = $(this).attr("data-id");
-                $(this).parent().siblings(".catatan").html("<textarea rows='4' cols='30' class='glowing-border' name='catatanLhkpn-"+ idUnit +"' required></textarea>");
-            }else if(this.value=="1"){
-                var oldData = $(this).attr("data-old");
-                if(oldData != "kosong" ){
-                    let text = "Apakah anda yakin akan mengubah status? Perubahan status akan menghapus catatan sebelumnya.";
-                    if (confirm(text) == true) {
-                        $(this).parent().siblings(".catatan").html("");
-                    } else {
-                        this.value="0"
-                    }
-                }
-            }
-            $(this).attr("data-old", this.value);
-        });
-
-        $('.kesesuaian2wbk').on('change',function() {
-            if(this.value=="0"){
-                var idUnit = $(this).attr("data-id");
-                $(this).parent().siblings(".catatan").html("<textarea rows='4' cols='30' class='glowing-border' name='catatan-2wbk-"+ idUnit +"' required></textarea>");
-            }else if(this.value=="1"){
-                var oldData = $(this).attr("data-old");
-                if(oldData != "kosong" ){
-                let text = "Apakah anda yakin akan mengubah status? Perubahan status akan menghapus catatan sebelumnya.";
-                    if (confirm(text) == true) {
-                        $(this).parent().siblings(".catatan").html("");
-                    } else {
-                        this.value="0"
-                    }
-                }
-            }
-            $(this).attr("data-old", this.value);
-        });
-
-           
         
         var empDataTable = $('#rekap-zi').DataTable({
             dom: 'Blfrtip',
