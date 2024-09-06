@@ -74,7 +74,7 @@
 
                 <li>
                     <a href="#" class="side-menu
-                    @if(in_array($title, ['Rekap Pengusulan Instansi', 'Rekap Pengusulan Unit', 'Rekap Administrasi Unit','Rekap Sanggah Unit'  ])) 
+                    @if(in_array($title, ['Rekap Pengusulan Instansi', 'Rekap Pengusulan Unit', 'Rekap Administrasi Unit','Rekap Sanggah Unit', 'Rekap Analisis Dokumen'  ])) 
                         class side-menu--active side-menu--open
                     @endif
                     ">
@@ -86,7 +86,7 @@
                         </div>
                     </a>
                     <ul class="
-                        @if(in_array($title, ['Rekap Pengusulan Instansi', 'Rekap Pengusulan Unit', 'Rekap Administrasi Unit','Rekap Sanggah Unit'  ])) 
+                        @if(in_array($title, ['Rekap Pengusulan Instansi', 'Rekap Pengusulan Unit', 'Rekap Administrasi Unit','Rekap Sanggah Unit', 'Rekap Analisis Dokumen'  ])) 
                             side-menu__sub-open
                         @else
                             side-menu__sub-close
@@ -140,6 +140,19 @@
                                 <div class="side-menu__icon"><i data-lucide=""></i></div>
                                 <div class="side-menu__title">
                                     Rekap Sanggah
+                                    <div class="side-menu__sub-icon "> </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('rekap_dokumen') }}" class="side-menu 
+                            @if($title == 'Rekap Analisis Dokumen')
+                            side-menu--active 
+                            @endif
+                            ">
+                                <div class="side-menu__icon"><i data-lucide=""></i></div>
+                                <div class="side-menu__title">
+                                    Rekap Analisis Dokumen
                                     <div class="side-menu__sub-icon "> </div>
                                 </div>
                             </a>
