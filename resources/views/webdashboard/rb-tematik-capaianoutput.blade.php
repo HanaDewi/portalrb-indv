@@ -34,8 +34,15 @@
                             case 'prov': echo "Provinsi"; break;
                         }
                         ?></td>
-                        <td></td><td></td><td></td><td></td>
-                        <td></td><td></td><td></td><td></td>
+                        <td align="center"><?= $mm->target['tw1']>0 ? (round($mm->realisasi['tw1'] / $mm->target['tw1']) * 100) . '%' : '' ?></td>
+                        <td align="center"><?= $mm->target['tw2']>0 ? (round($mm->realisasi['tw2'] / $mm->target['tw2']) * 100) . '%' : '' ?></td>
+                        <td align="center"><?= $mm->target['tw3']>0 ? (round($mm->realisasi['tw3'] / $mm->target['tw3']) * 100) . '%' : '' ?></td>
+                        <td align="center"><?= $mm->target['tw4']>0 ? (round($mm->realisasi['tw4'] / $mm->target['tw4']) * 100) . '%' : '' ?></td>
+
+                        <td align="center"><?= $mm->capaian_prosentase['tw1'] ?></td>
+                        <td align="center"><?= $mm->capaian_prosentase['tw2'] ?></td>
+                        <td align="center"><?= $mm->capaian_prosentase['tw3'] ?></td>
+                        <td align="center"><?= $mm->capaian_prosentase['tw4'] ?></td>
                     </tr>
                     <?php endforeach; ?>
                 </tbody>
@@ -55,5 +62,6 @@
     <script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.html5.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
+        $('#capaian-output').DataTable();
     </script>
 @endpush
