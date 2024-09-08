@@ -83,6 +83,8 @@ class EvaluatanController extends Controller
 
     public function hasil_sanggah(Request $request)
     {   
+        $title="Hasil Sanggah";
+        $status_akses="Tutup"; //tutup jika melebihi tanggal 4 September
         $instansi_obj = Auth::User()->user_rel->instansi;
         $instansi_id = $instansi_obj->id; 
         $instansi = $instansi_obj->name;
@@ -94,7 +96,9 @@ class EvaluatanController extends Controller
             $status_akhir = $instansiZI->status_akhir;
             $unit_wbks = UnitZI::where("instansi_zi_id", $instansiZI->id)->where('wbk',1)->get();
             $unit_wbbms = UnitZI::where("instansi_zi_id", $instansiZI->id)->where('wbbm',1)->get();
-            return view('zi.evaluatan.seleksi_sanggah_zi', compact(
+            return view('zi.evaluatan.seleksi_sanggah', compact(
+            //return view('zi.evaluatan.seleksi_desk_zi', compact(
+                'title', 'status_akses',
                  'instansi_id', 'instansi', 'group_kld', 'instansiZI',
                 'unit_wbks', 'unit_wbbms',
                 'syarat_akhir_wbk','syarat_akhir_wbbm', 'status_akhir'

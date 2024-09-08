@@ -38,6 +38,8 @@ class ZIController extends Controller
             return redirect('zi-tinjau?instansi_id='.$instansi_id);
         }elseif($instansiZI->tahap_seleksi == 2){
             return redirect('zi-administrasi');
+        }elseif($instansiZI->tahap_seleksi == 3){
+            return redirect()->route('evaluatan_hasil_sanggah');
         }
 
 
