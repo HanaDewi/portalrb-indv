@@ -13,6 +13,7 @@ use App\Http\Controllers\ManageUserController;
 use App\Http\Controllers\RuangBelajar\DashboardController;
 use App\Http\Controllers\RuangBelajar\AdminController;
 use App\Http\Controllers\WebDashboardController;
+use App\Http\Controllers\CapaianOutputController;
 
 /*
 |--------------------------------------------------------------------------
@@ -56,6 +57,7 @@ Route::middleware('auth')->group(function () {
     Route::middleware(['auth'])->group(function () {
     Route::get('webdashboard/rencana-aksi/rb-general', [WebDashboardController::class, 'rbGeneral'])->name('webdashboard.rb-general');
     Route::get('webdashboard/rencana-aksi/rb-tematik', [WebDashboardController::class, 'rbTematik'])->name('webdashboard.rb-tematik');
+    Route::get('webdashboard/capaian-output/rb-tematik', [CapaianOutputController::class, 'rbTematikCapaianOutput'])->name('webdashboard-capaian-output.rb-tematik');
     Route::get('webdashboard/hasil-evaluasi', [WebDashboardController::class, 'hasilEvaluasi'])->name('webdashboard.hasil-evaluasi');
     });
     // Kegiatan Utama

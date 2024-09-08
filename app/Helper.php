@@ -27,21 +27,41 @@ if(! function_exists('menus'))
                 'items' => [ 
                     [
                         'levels' => ['tpn', 'admin'],
-                        'title' => 'Rencana Aksi',
+                        'title' => 'RB General',
                         'icon' => 'inbox',
-                        'url' => 'webdashboard/rencana-aksi',
+                        'url' => '',
                         'items' => [
                             [
                                 'levels' => ['tpn', 'admin'],
-                                'title' => 'RB General',
+                                'title' => 'Rencana Aksi',
                                 'icon' => 'clipboard-list',
                                 'url' => 'webdashboard/rencana-aksi/rb-general',
                             ],
                             [
                                 'levels' => ['tpn', 'admin'],
-                                'title' => 'RB Tematik',
-                                'icon' => 'clipboard',
+                                'title' => 'Capaian Output',
+                                'icon' => 'clipboard-list',
+                                'url' => '',
+                            ],
+                        ]
+                    ],
+                    [
+                        'levels' => ['tpn', 'admin'],
+                        'title' => 'RB Tematik',
+                        'icon' => 'inbox',
+                        'url' => '',
+                        'items' => [
+                            [
+                                'levels' => ['tpn', 'admin'],
+                                'title' => 'Rencana Aksi',
+                                'icon' => 'clipboard-list',
                                 'url' => 'webdashboard/rencana-aksi/rb-tematik',
+                            ],
+                            [
+                                'levels' => ['tpn', 'admin'],
+                                'title' => 'Capaian Output',
+                                'icon' => 'clipboard-list',
+                                'url' => 'webdashboard/capaian-output/rb-tematik',
                             ],
                         ]
                     ],
