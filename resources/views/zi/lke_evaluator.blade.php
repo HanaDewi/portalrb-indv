@@ -55,9 +55,8 @@
         </div>
         <div class="lg:col-span-12 p-5 border-b border-slate-200/60">
             <div class="separator mt-5">
-                @if(Auth::User()->level =="admin" || in_array(Auth::User()->id, [10060, 10048, 10059, 10046, 10053,
-                10056, 10052]))
-                <a href="{{route('download_template_lke')}}" class="btn btn-primary">Donwload Template</a>
+                @if(Auth::User()->level =="admin" || in_array(Auth::User()->id, [10060,10209]))
+                <a href="{{route('download_template_lke')}}" class="btn btn-primary">Download Template</a>
                 @endif
             </div>
             <br />

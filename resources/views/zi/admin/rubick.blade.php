@@ -209,17 +209,18 @@
                         <div class="side-menu__title">Template LKE </div>
                     </a>
                 </li>
-                <!--<li>
+                @if(Auth::User()->level =="admin" || in_array(Auth::User()->id, [10060,10209]) )
+                <li>
                     <a href="{{ route('lke_evaluator') }}" class="side-menu
                     @if($title == 'LKE Evaluator')
                                 side-menu--active 
                     @endif
                     ">
                         <div class="side-menu__icon"><i data-lucide="clipboard"></i></div>
-                        <div class="side-menu__title">LKE Evaluator</div>
+                        <div class="side-menu__title">Generate LKE</div>
                     </a>
-                </li>-->
-
+                </li>
+                @endif
                 @if(Auth::User()->level =="admin" || in_array(Auth::User()->id, [10060, 10048, 10059, 10046, 10053,
                 10056, 10052]) )
                 <li>
