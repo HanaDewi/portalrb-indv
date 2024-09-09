@@ -77,7 +77,7 @@ class LkeEvaluatorController extends Controller
 
         // Path to the original file
         
-        $originalFilePath = storage_path('app/public/template-zi/LKEZI.xlsx');
+        $originalFilePath = storage_path('app/public/template-zi/LKEZI2024.xlsx');
         
         // Temporary directory to store copied files
         $tempDir = storage_path('app/temp-files/');
