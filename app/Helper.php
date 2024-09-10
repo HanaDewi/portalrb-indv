@@ -418,3 +418,18 @@ if(! function_exists('fiturs')) {
         return $fitur ? $fiturs[$fitur] : $fiturs;
     }
 }
+
+if(! function_exists('group_instansi')) {
+    function group_instansi($group = null)
+    {
+        $groups = [
+            'kl' => 'Kementrian',
+            'pemda' => 'PEMDA',
+            'kab' => 'Kabupaten',
+            'lain' => 'Lainnya',
+            'prov' => 'Provinsi'
+        ];
+        
+        return $group ? $groups[$group] : $groups;
+    }
+}

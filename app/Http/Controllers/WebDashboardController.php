@@ -7,6 +7,17 @@ use Illuminate\Support\Facades\Auth;
 
 class WebDashboardController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(function ($request, $next) {
+            foreach (allowed_url() as $allowed) {
+                if ($request->is($allowed)) {
+                    return $next($request);
+                }
+            }
+            abort('403');
+        });
+    }
 
     public function rbGeneral(Request $request)
     {

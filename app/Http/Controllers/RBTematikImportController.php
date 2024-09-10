@@ -22,7 +22,6 @@ use Maatwebsite\Excel\HeadingRowImport;
 
 class RBTematikImportController extends Controller
 {
-
     public function __construct()
     {
         $this->middleware(function ($request, $next) {
