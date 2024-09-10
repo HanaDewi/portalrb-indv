@@ -12,8 +12,8 @@
                         <th rowspan="2" class="w-5">No.</th>
                         <th rowspan="2">Instansi Pemerintah</th>
                         <th rowspan="2">Group Instansi</th>
-                        <th colspan="4">Prosenstase Realisasi</th>
-                        <th colspan="4">Rata-rata Prosentase Capaian Output</th>
+                        <th colspan="4">Tingkat Pengisian Output</th>
+                        <th colspan="4">Rata-rata Persentasi Capaian Output</th>
                     </tr>
                     <tr>
                         <th>TW1</th><th>TW2</th><th>TW3</th><th>TW4</th>
