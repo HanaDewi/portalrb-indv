@@ -12,6 +12,7 @@ use App\Http\Controllers\ManageUserController;
 use App\Http\Controllers\RuangBelajar\DashboardController;
 use App\Http\Controllers\RuangBelajar\AdminController;
 use App\Http\Controllers\WebDashboardController;
+use App\Http\Controllers\CapaianOutputController;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,8 +46,10 @@ Route::middleware('auth')->group(function () {
 
     // Web Dashboard
     Route::middleware(['auth'])->group(function () {
-    Route::get('webdashboard/rencana-aksi/rb-general', [WebDashboardController::class, 'rbGeneral'])->name('webdashboard.rb-general');
-    Route::get('webdashboard/rencana-aksi/rb-tematik', [WebDashboardController::class, 'rbTematik'])->name('webdashboard.rb-tematik');
+    Route::get('webdashboard/rb-general/rencana-aksi', [WebDashboardController::class, 'rbGeneral'])->name('webdashboard.rb-general');
+    Route::get('webdashboard/rb-general/capaian-output', [CapaianOutputController::class, 'rbGeneralCapaianOutput'])->name('webdashboard.rb-general.capaian-output');
+    Route::get('webdashboard/rb-tematik/rencana-aksi', [WebDashboardController::class, 'rbTematik'])->name('webdashboard.rb-tematik');
+    Route::get('webdashboard/rb-tematik/capaian-output', [CapaianOutputController::class, 'rbTematikCapaianOutput'])->name('webdashboard.rb-tematik.capaian-output');
     Route::get('webdashboard/hasil-evaluasi', [WebDashboardController::class, 'hasilEvaluasi'])->name('webdashboard.hasil-evaluasi');
     });
     // Kegiatan Utama

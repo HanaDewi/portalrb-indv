@@ -27,21 +27,41 @@ if(! function_exists('menus'))
                 'items' => [ 
                     [
                         'levels' => ['tpn', 'admin'],
-                        'title' => 'Rencana Aksi',
-                        'icon' => 'inbox',
-                        'url' => 'webdashboard/rencana-aksi',
+                        'title' => 'RB General',
+                        'icon' => 'clipboard-list',
+                        'url' => 'webdashboard/rb-general',
                         'items' => [
                             [
                                 'levels' => ['tpn', 'admin'],
-                                'title' => 'RB General',
-                                'icon' => 'clipboard-list',
-                                'url' => 'webdashboard/rencana-aksi/rb-general',
+                                'title' => 'Rencana Aksi',
+                                'icon' => 'inbox',
+                                'url' => 'webdashboard/rb-general/rencana-aksi',
                             ],
                             [
                                 'levels' => ['tpn', 'admin'],
-                                'title' => 'RB Tematik',
-                                'icon' => 'clipboard',
-                                'url' => 'webdashboard/rencana-aksi/rb-tematik',
+                                'title' => 'Capaian Output',
+                                'icon' => 'bar-chart',
+                                'url' => 'webdashboard/rb-general/capaian-output',
+                            ],
+                        ]
+                    ],
+                    [
+                        'levels' => ['tpn', 'admin'],
+                        'title' => 'RB Tematik',
+                        'icon' => 'clipboard',
+                        'url' => 'webdashboard/rb-tematik',
+                        'items' => [
+                            [
+                                'levels' => ['tpn', 'admin'],
+                                'title' => 'Rencana Aksi',
+                                'icon' => 'inbox',
+                                'url' => 'webdashboard/rb-tematik/rencana-aksi',
+                            ],
+                            [
+                                'levels' => ['tpn', 'admin'],
+                                'title' => 'Capaian Output',
+                                'icon' => 'bar-chart',
+                                'url' => 'webdashboard/rb-tematik/capaian-output',
                             ],
                         ]
                     ],
@@ -396,5 +416,20 @@ if(! function_exists('fiturs')) {
         ];
         
         return $fitur ? $fiturs[$fitur] : $fiturs;
+    }
+}
+
+if(! function_exists('group_instansi')) {
+    function group_instansi($group = null)
+    {
+        $groups = [
+            'kl' => 'Kementrian',
+            'pemda' => 'PEMDA',
+            'kab' => 'Kabupaten',
+            'lain' => 'Lainnya',
+            'prov' => 'Provinsi'
+        ];
+        
+        return $group ? $groups[$group] : $groups;
     }
 }
