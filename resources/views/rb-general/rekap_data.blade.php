@@ -117,7 +117,7 @@
                                 {{ $data['output']->indikator_output }}
                             </td>
                             <td>
-                                @if ($data['output']->target_total)
+                                @if (!empty($data['output']->target_total))
                                 <table class="table table-noborder">
                                     <tr><th>TW 1</th><td>: {{ fnumber2($data['output']->target_tw1, 2) }}</td></tr>
                                     <tr><th>TW 2</th><td>: {{ fnumber2($data['output']->target_tw2, 2) }}</td></tr>
@@ -128,7 +128,7 @@
                                 @endif
                             </td>
                             <td>
-                                @if ($data['output']->anggaran_total)
+                                @if (!empty($data['output']->anggaran_total))
                                 {{ currency($data['output']->anggaran_total) }}
                                 @endif
                             </td>
@@ -139,7 +139,7 @@
                                 {{ $data['output']->pelaksana }}
                             </td>
                             <td>
-                                @if ($data['output']->realisasi_output_total)
+                                @if (!empty($data['output']->realisasi_output_total))
                                 <table class="table table-noborder">
                                     <tr><th>TW 1</th><td>: {{ fnumber2($data['output']->realisasi_output_tw1, 2) }}</td></tr>
                                     <tr><th>TW 2</th><td>: {{ fnumber2($data['output']->realisasi_output_tw2, 2) }}</td></tr>
@@ -150,12 +150,12 @@
                                 @endif
                             </td>
                             <td>
-                                @if ($data['output']->realisasi_anggaran_total)
+                                @if (!empty($data['output']->realisasi_anggaran_total))
                                 {{ currency($data['output']->realisasi_anggaran_total) }}
                                 @endif
                             </td>
                             <td>
-                                @if ($data['output']->capaian_output_total)
+                                @if (!empty($data['output']->capaian_output_total))
                                 <table class="table table-noborder">
                                     <tr><th>TW 1</th><td>: {{ fnumber2($data['output']->capaian_output_tw1, 2) }} %</td></tr>
                                     <tr><th>TW 2</th><td>: {{ fnumber2($data['output']->capaian_output_tw2, 2) }} %</td></tr>
