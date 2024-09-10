@@ -59,10 +59,9 @@ class AdministrasiController extends Controller
         $datas = $instansiZis
                 ->map(function($instansiZi) use(&$jumlah_lolos_wbk, &$jumlah_lolos_wbbm, &$jumlah_instansi_lolos, &$progress_teams) {
                     if(!$instansiZi->instansi_wbk_mandiri){
-                        
                         $wbkCount = optional($instansiZi->unit_zi)->where('wbk', true)->count();
                     }else{
-                       $wbkCount = 0;
+                        $wbkCount = 0;
                     }
                     $wbbmCount = optional($instansiZi->unit_zi)->where('wbbm', true)->count();
                     

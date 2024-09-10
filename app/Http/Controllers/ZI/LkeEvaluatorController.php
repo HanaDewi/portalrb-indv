@@ -89,17 +89,28 @@ class LkeEvaluatorController extends Controller
         
         // Copy the file for each unit, grouped by instansi
         foreach ($units as $unit) {
-            $instansiName = $unit->instansiZI->klpd_instansi->name;
-            $instansiDir = $tempDir . $instansiName . '/';
+            // echo "Nama Unit : ". $unit->nama;
+            // echo "<br/>";
+            // echo "Instansi : ". $unit->instansiZI->klpd_instansi->name;
+            // echo "<hr>";
+            if($unit->seleksi_administrasi_unit)
+            {
+                if($unit->seleksi_administrasi_unit->status_final == 1 || $unit->sanggah_unit->status_final == 1)
+                {
+                    $instansiName = $unit->instansiZI->klpd_instansi->name;
+                    $instansiName = str_replace("/","-",$instansiName);
+                    $instansiDir = $tempDir . $instansiName . '/';
 
-            // Ensure the instansi directory exists
-            if (!File::exists($instansiDir)) {
-                File::makeDirectory($instansiDir, 0755, true);
+                    // Ensure the instansi directory exists
+                    if (!File::exists($instansiDir)) {
+                        File::makeDirectory($instansiDir, 0755, true);
+                    }
+                    $unit_nama = str_replace('/', "-", $unit->nama);
+                    $newFileName = $unit_nama . '-' . $unit->id . '.xlsx'; // Modify as needed
+                    $newFilePath = $instansiDir . $newFileName;
+                    File::copy($originalFilePath, $newFilePath);
+                }
             }
-            $unit_nama = str_replace('/', "-", $unit->nama);
-            $newFileName = $unit_nama . '-' . $unit->id . '.xlsx'; // Modify as needed
-            $newFilePath = $instansiDir . $newFileName;
-            File::copy($originalFilePath, $newFilePath);
         }
 
         // Create a zip file containing all the grouped files
