@@ -148,7 +148,7 @@ class CapaianOutputController extends Controller
             $capaian->output_tw2 = $capaian->jumlah_capaian_output_tw2 > 0 ? round($capaian->jumlah_capaian_output_tw2 / $capaian->jumlah_target_total) . '%' : '';
             $capaian->output_tw3 = $capaian->jumlah_capaian_output_tw3 > 0 ? round($capaian->jumlah_capaian_output_tw3 / $capaian->jumlah_target_total) . '%' : '';
             $capaian->output_tw4 = $capaian->jumlah_capaian_output_tw4 > 0 ? round($capaian->jumlah_capaian_output_tw4 / $capaian->jumlah_target_total) . '%' : '';
-            $capaian->output_total = $capaian->jumlah_capaian_output_total > 0 ? round($capaian->jumlah_capaian_output_total / $capaian->jumlah_target_total) . '%' : '';
+            $capaian->output_total = $capaian->jumlah_target_total > 0 ? round($capaian->jumlah_capaian_output_total / $capaian->jumlah_target_total) . '%' : '';
         }
         
         return view('webdashboard.rb-general-capaianoutput', compact('capaians'));
