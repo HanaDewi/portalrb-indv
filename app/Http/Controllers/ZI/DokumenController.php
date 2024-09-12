@@ -100,12 +100,12 @@ class DokumenController extends Controller
 
                         $wbkCompletedCount = $instansiZi->unit_zi->where('wbk', true)
                         ->filter(function($unitZi) {
-                            return  optional($unitZi->analisis_dokumen)->status == 1;
+                            return  optional($unitZi->analisis_dokumen)->status > -1;
                         })->count();
         
                         $wbbmCompletedCount = $instansiZi->unit_zi->where('wbbm', true)
                         ->filter(function($unitZi) {
-                            return  optional($unitZi->analisis_dokumen)->status == 1;
+                            return  optional($unitZi->analisis_dokumen)->status > -1;
                         })->count();
 
                         if($wbkFinalCount>0 || $wbbmFinalCount>0 ){
