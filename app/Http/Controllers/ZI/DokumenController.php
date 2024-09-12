@@ -88,24 +88,24 @@ class DokumenController extends Controller
 
                         $wbkFinalCount = $instansiZi->unit_zi->where('wbk', true)
                         ->filter(function($unitZi) {
-                            return  optional($unitZi->seleksi_dokumen)->status_final == 1;
+                            return  optional($unitZi->seleksi_dokumen)->status == 1;
                         })->count();
                         $jumlah_lolos_wbk += $wbkFinalCount;
 
                         $wbbmFinalCount = $instansiZi->unit_zi->where('wbbm', true)
                         ->filter(function($unitZi) {
-                            return  optional($unitZi->seleksi_dokumen)->status_final == 1;
+                            return  optional($unitZi->seleksi_dokumen)->status == 1;
                         })->count();
                         $jumlah_lolos_wbbm += $wbbmFinalCount;
 
                         $wbkCompletedCount = $instansiZi->unit_zi->where('wbk', true)
                         ->filter(function($unitZi) {
-                            return  optional($unitZi->seleksi_dokumen)->status_completed == 1;
+                            return  optional($unitZi->seleksi_dokumen)->status == 1;
                         })->count();
         
                         $wbbmCompletedCount = $instansiZi->unit_zi->where('wbbm', true)
                         ->filter(function($unitZi) {
-                            return  optional($unitZi->seleksi_dokumen)->status_completed == 1;
+                            return  optional($unitZi->seleksi_dokumen)->status == 1;
                         })->count();
 
                         if($wbkFinalCount>0 || $wbbmFinalCount>0 ){
