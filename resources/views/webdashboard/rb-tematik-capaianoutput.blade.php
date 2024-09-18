@@ -17,34 +17,26 @@
                     </tr>
                     <tr>
                         <th>TW1</th><th>TW2</th><th>TW3</th><th>TW4</th>
-                        <th>TW1</th><th>TW2</th><th>TW3</th><th>TW4</th>
+                        <th>TW1</th><th>TW2</th><th>TW3</th><th>TW4</th><th>Total</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($instansis as $num=>$mm): ?>
+                    @foreach ($capaians as $no=>$capaian)
                     <tr>
-                        <td><?= $num+1 ?></td>
-                        <td><?= $mm->name ?></td>
-                        <td align="center"><?php 
-                        switch ($mm->group) {
-                            case 'kl': echo "Kementrian"; break;
-                            case 'pemda': echo "PEMDA"; break;
-                            case 'kab': echo "Kabupaten"; break;
-                            case 'lain': echo "Lainnya"; break;
-                            case 'prov': echo "Provinsi"; break;
-                        }
-                        ?></td>
-                        <td align="center"><?= $mm->target['tw1']>0 ? (round($mm->realisasi['tw1'] / $mm->target['tw1']) * 100) . '%' : '' ?></td>
-                        <td align="center"><?= $mm->target['tw2']>0 ? (round($mm->realisasi['tw2'] / $mm->target['tw2']) * 100) . '%' : '' ?></td>
-                        <td align="center"><?= $mm->target['tw3']>0 ? (round($mm->realisasi['tw3'] / $mm->target['tw3']) * 100) . '%' : '' ?></td>
-                        <td align="center"><?= $mm->target['tw4']>0 ? (round($mm->realisasi['tw4'] / $mm->target['tw4']) * 100) . '%' : '' ?></td>
-
-                        <td align="center"><?= $mm->capaian_prosentase['tw1'] ?></td>
-                        <td align="center"><?= $mm->capaian_prosentase['tw2'] ?></td>
-                        <td align="center"><?= $mm->capaian_prosentase['tw3'] ?></td>
-                        <td align="center"><?= $mm->capaian_prosentase['tw4'] ?></td>
+                        <td>{{ $no+1 }}</td>
+                        <td>{{ $capaian->name }}</td>
+                        <td align="center">{{ group_instansi($capaian->group) }}</td>
+                        <td align="center">{{ $capaian->realisasi_tw1 }}</td>
+                        <td align="center">{{ $capaian->realisasi_tw2 }}</td>
+                        <td align="center">{{ $capaian->realisasi_tw3 }}</td>
+                        <td align="center">{{ $capaian->realisasi_tw4 }}</td>
+                        <td align="center">{{ $capaian->output_tw1>0 ? $capaian->output_tw1 . '%':'' }}</td>
+                        <td align="center">{{ $capaian->output_tw2>0 ? $capaian->output_tw2 . '%':'' }}</td>
+                        <td align="center">{{ $capaian->output_tw3>0 ? $capaian->output_tw3 . '%':'' }}</td>
+                        <td align="center">{{ $capaian->output_tw4>0 ? $capaian->output_tw4 . '%':'' }}</td>
+                        <td align="center">{{ $capaian->prosentase_capaian_output }}</td>
                     </tr>
-                    <?php endforeach; ?>
+                    @endforeach
                 </tbody>
             </table>
         </div>

@@ -807,6 +807,7 @@
             $('#capaian_anggaran_tw4').val(data.capaian_anggaran_tw4);
             $('#capaian_anggaran_total').val(data.capaian_anggaran_total);
             $('#catatan_output').val(data.catatan);
+            hitungTotal();
             $('.saveButton').prop('disabled', false);
         });
     }
