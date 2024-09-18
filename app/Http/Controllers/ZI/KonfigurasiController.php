@@ -229,7 +229,8 @@ class KonfigurasiController extends Controller
                 array_push($instansiTims[$unittim->tim_id], $nama_instansi );
             }
         }
-        $instansis = KlpdInstansi::whereIn('id', $instansiZIIDs )->whereNotIn('id', $instansiIds)->get();
+        //$instansis = KlpdInstansi::whereIn('id', $instansiZIIDs );->whereNotIn('id', $instansiIds)->get();
+        $instansis = KlpdInstansi::whereIn('id', $instansiZIIDs )->get();
         return view('zi.konfigurasi.kelola_unit_tim', compact(
             "instansis", "title", "teams", "instansiTims"
             ) 

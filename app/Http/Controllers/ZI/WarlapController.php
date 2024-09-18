@@ -5,7 +5,6 @@ namespace App\Http\Controllers\ZI;
 use App\Models\ZI\AnalisisDokumen;
 use App\Models\ZI\UnitZI;
 use App\Models\KlpdInstansi;
-use App\Models\ZI\Wawancara;
 use Illuminate\Http\Request;
 use App\Models\ZI\InstansiZI;
 use App\Models\ZI\TimEvaluasi;
@@ -14,7 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\ZI\SeleksiAdministrasiUnit;
 use App\Models\ZI\SeleksiAdministrasiInstansi;
 
-class WawancaraController extends Controller
+class WarlapController extends Controller
 {
     public function __construct()
     {
@@ -28,7 +27,7 @@ class WawancaraController extends Controller
   
     public function index(Request $request)
     {
-        $title = "Wawancara";
+        $title = "Wawancara dan Verifikasi Lapangan";
         
         $instansiZis = InstansiZi::with(['unit_zi.seleksi_administrasi_unit'])
         ->where('final', 1)
@@ -77,24 +76,24 @@ class WawancaraController extends Controller
 
                         $wbkFinalCount = $instansiZi->unit_zi->where('wbk', true)
                         ->filter(function($unitZi) {
-                            return  optional($unitZi->wawancara)->status == 1;
+                            return  optional($unitZi->warlap)->status == 1;
                         })->count();
                         $jumlah_lolos_wbk += $wbkFinalCount;
 
                         $wbbmFinalCount = $instansiZi->unit_zi->where('wbbm', true)
                         ->filter(function($unitZi) {
-                            return  optional($unitZi->wawancara)->status == 1;
+                            return  optional($unitZi->warlap)->status == 1;
                         })->count();
                         $jumlah_lolos_wbbm += $wbbmFinalCount;
 
                         $wbkCompletedCount = $instansiZi->unit_zi->where('wbk', true)
                         ->filter(function($unitZi) {
-                            return  optional($unitZi->wawancara)->status > -1;
+                            return  optional($unitZi->warlap)->status > -1;
                         })->count();
         
                         $wbbmCompletedCount = $instansiZi->unit_zi->where('wbbm', true)
                         ->filter(function($unitZi) {
-                            return  optional($unitZi->wawancara)->status > -1;
+                            return  optional($unitZi->warlap)->status > -1;
                         })->count();
 
                         if($wbkFinalCount>0 || $wbbmFinalCount>0 ){
@@ -157,14 +156,14 @@ class WawancaraController extends Controller
 
                 $jumlah_unit_total = $jumlah_unit_wbk + $jumlah_unit_wbbm;
 
-                return view('zi.seleksi_wawancara.administrasi', compact(
+                return view('zi.seleksi_warlap.administrasi', compact(
                     "title","jumlah_instansi","jumlah_unit_wbk","jumlah_unit_wbbm", 
                     'jumlah_lolos_wbk', 'jumlah_lolos_wbbm', 'progress_teams',
                     "jumlah_unit_total","datas", "jumlah_instansi_lolos"
                 ));        
     }
 
-    public function wawancara($id)
+    public function warlap($id)
     {   
         $title = "Wawancara dan Verifikasi Lapangan";
         $instansi_ZI = InstansiZI::find($id);
@@ -198,13 +197,13 @@ class WawancaraController extends Controller
         
         
         
-        return view('zi.seleksi_wawancara.evaluasi', compact("status",
+        return view('zi.seleksi_warlap.evaluasi', compact("status",
             "title","instansi_ZI","unit_ZIs",
             ));
         
     }
 
-    public function proses_wawancara_simpan(Request $request){
+    public function proses_dokumen_simpan(Request $request){
         //dd("Proses Seleksi Dokumen Buat Evaluator Masih Belum Dibuka Yah, mau ke mana sih buru-buru amat, Jangan Ya Dek Ya !! :p");
         $instansiZIid = $request->get('instansiZIId');
         $instansi_ZI = InstansiZI::find($instansiZIid);
@@ -229,26 +228,24 @@ class WawancaraController extends Controller
         }
         
         foreach($instansi_ZI->unit_zi as $unit_zi){
-            $wawancaraUnit = Wawancara::where('unit_zi_id', $unit_zi->id)->first();
+            $analisisDokumenUnit = AnalisisDokumen::where('unit_zi_id', $unit_zi->id)->first();
             if($unit_zi->seleksi_administrasi_unit->status_final ==1 || $unit_zi->sanggah_unit->status_final==1){
-                if (!$wawancaraUnit) {
-                    $wawancaraUnit = new Wawancara();
-                    $wawancaraUnit->unit_zi_id = $unit_zi->id;
+                if (!$analisisDokumenUnit) {
+                    $analisisDokumenUnit = new AnalisisDokumen();
+                    $analisisDokumenUnit->unit_zi_id = $unit_zi->id;
                 }
-                $wawancaraUnit->jadwal = $request->get('jadwal-'.$unit_zi->id ); 
-                $wawancaraUnit->link_zoom = $request->get('link-zoom-'.$unit_zi->id ); 
-                if(!is_null($request->get('bukti-dukung-'.$unit_zi->id )))$wawancaraUnit->bukti_dukung = $request->get('bukti-dukung-'.$unit_zi->id ); 
-                if(!is_null($request->get('kondisi-'.$unit_zi->id )))$wawancaraUnit->kondisi = $request->get('kondisi-'.$unit_zi->id );
-                if(!is_null($request->get('rekomendasi-'.$unit_zi->id )))$wawancaraUnit->rekomendasi = $request->get('rekomendasi-'.$unit_zi->id ); 
-                if(!is_null($request->get('status-'.$unit_zi->id )))$wawancaraUnit->status = $request->get('status-'.$unit_zi->id ); 
-                $wawancaraUnit->updated_by = Auth::User()->id;
-                $wawancaraUnit->save();
+                if(!is_null($request->get('bukti-dukung-'.$unit_zi->id )))$analisisDokumenUnit->bukti_dukung = $request->get('bukti-dukung-'.$unit_zi->id ); 
+                if(!is_null($request->get('kondisi-'.$unit_zi->id )))$analisisDokumenUnit->kondisi = $request->get('kondisi-'.$unit_zi->id );
+                if(!is_null($request->get('rekomendasi-'.$unit_zi->id )))$analisisDokumenUnit->rekomendasi = $request->get('rekomendasi-'.$unit_zi->id ); 
+                if(!is_null($request->get('status-'.$unit_zi->id )))$analisisDokumenUnit->status = $request->get('status-'.$unit_zi->id ); 
+                $analisisDokumenUnit->updated_by = Auth::User()->id;
+                $analisisDokumenUnit->save();
             };
         };
             
         
         
-        return redirect()->route('proses_wawancara',$instansiZIid);
+        return redirect()->route('proses_dokumen',$instansiZIid);
     }
     
 }

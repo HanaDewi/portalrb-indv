@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\ZI\SeleksiAdministrasiUnit;
 use App\Models\ZI\SeleksiAdministrasiInstansi;
 
-class AdministrasiController extends Controller
+class PanelController extends Controller
 {
     public function __construct()
     {

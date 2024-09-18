@@ -35,5 +35,17 @@ class UnitZI extends Model
     public function analisis_dokumen() {
         return $this->hasOne(AnalisisDokumen::class, 'unit_zi_id');
     }
+
+    public function wawancara() {
+        return $this->hasOne(Wawancara::class, 'unit_zi_id');
+    }
+
+    public function verifikasi_lapangan() {
+        return $this->hasOne(VerifikasiLapangan::class, 'unit_zi_id');
+    }
+
+    public function warlap() {
+        return $this->hasOne(Warlap::class, 'unit_zi_id');
+    }
 }
 

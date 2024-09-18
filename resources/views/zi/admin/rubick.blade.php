@@ -30,7 +30,7 @@
 <body class="py-5">
     <div class="mobile-menu md:hidden">
         <div class="mobile-menu-bar">
-            <a href="" class="flex mr-auto">
+            <a href="{{ route('dashboard_zi')}}" class="flex mr-auto">
                 <img alt="LKE RB" class="w-24" src="{{ asset('template_lkerb') }}/dist/images/logo.jpg">
             </a>
             <a href="javascript:;" class="mobile-menu-toggler">
@@ -79,7 +79,7 @@
                     @endif
                     ">
                         <!-- class side-menu--active side-menu--open-->
-                        <div class="side-menu__icon"><i data-lucide="pie-chart"></i></div>
+                        <div class="side-menu__icon"><i data-lucide="clipboard-list"></i></div>
                         <div class="side-menu__title">
                             Rekap
                             <div class="side-menu__sub-icon "> <i data-lucide="chevron-down"></i> </div>
@@ -175,7 +175,7 @@
                                 side-menu--active 
                     @endif
                     ">
-                        <div class="side-menu__icon"><i data-lucide="clipboard"></i></div>
+                        <div class="side-menu__icon"><i data-lucide="check-circle"></i></div>
                         <div class="side-menu__title"> Proses Sanggah </div>
                     </a>
                 </li>
@@ -185,17 +185,48 @@
                                 side-menu--active 
                     @endif
                     ">
-                        <div class="side-menu__icon"><i data-lucide="clipboard"></i></div>
+                        <div class="side-menu__icon"><i data-lucide="file-text"></i></div>
                         <div class="side-menu__title"> Analisis Dokumen</div>
                     </a>
                 </li>
+                <li>
+                    <a href="{{ route('seleksi_wawancara') }}" class="side-menu
+                    @if($title == 'Wawancara')
+                                side-menu--active 
+                    @endif
+                    ">
+                        <div class="side-menu__icon"><i data-lucide="activity"></i></div>
+                        <div class="side-menu__title"> Wawancara</div>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('verifikasi_lapangan') }}" class="side-menu
+                    @if($title == 'Verifikasi Lapangan')
+                                side-menu--active 
+                    @endif
+                    ">
+                        <div class="side-menu__icon"><i data-lucide="globe"></i></div>
+                        <div class="side-menu__title"> Verifikasi Lapangan</div>
+                    </a>
+                </li>
+                <!--<li>
+                    <a href=" route('seleksi_warlap') " class="side-menu
+                    @if($title == 'Wawancara dan Verifikasi Lapangan')
+                                side-menu--active 
+                    @endif
+                    ">
+                        <div class="side-menu__icon"><i data-lucide="clipboard"></i></div>
+                        <div class="side-menu__title"> Wawancara dan Verifikasi Lapangan</div>
+                    </a>
+                </li>
+                -->
                 <li>
                     <a href="{{ route('seleksi_dokumen') }}" class="side-menu
                     @if($title == 'Data Final')
                                 side-menu--active 
                     @endif
                     ">
-                        <div class="side-menu__icon"><i data-lucide="clipboard"></i></div>
+                        <div class="side-menu__icon"><i data-lucide="target"></i></div>
                         <div class="side-menu__title"> Final </div>
                     </a>
                 </li>
@@ -205,7 +236,7 @@
                                 side-menu--active 
                     @endif
                     ">
-                        <div class="side-menu__icon"><i data-lucide="clipboard"></i></div>
+                        <div class="side-menu__icon"><i data-lucide="bookmark"></i></div>
                         <div class="side-menu__title">Template LKE </div>
                     </a>
                 </li>
@@ -216,7 +247,7 @@
                                 side-menu--active 
                     @endif
                     ">
-                        <div class="side-menu__icon"><i data-lucide="clipboard"></i></div>
+                        <div class="side-menu__icon"><i data-lucide="bookmark"></i></div>
                         <div class="side-menu__title">Generate LKE</div>
                     </a>
                 </li>
