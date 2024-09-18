@@ -66,7 +66,7 @@
                         <tr>
 
                             <th width="15%">Unit</th>
-                            <th width="20%">Link Lke</th>
+                            <th width="20%">Link Lke TPN</th>
                             <th>Status</th>
                             <th>Kondisi / Catatan</th>
                             <th>Rekomendasi</th>
