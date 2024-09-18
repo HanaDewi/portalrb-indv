@@ -188,11 +188,8 @@ class VerlapController extends Controller
         }
         
         $unit_ZIs = UnitZI::where("instansi_zi_id", $id)->where(function ($q){
-            $q->whereHas('seleksi_administrasi_unit', function ($query) {
-                $query->where('status_final', 1);
-            })
-            ->orWhereHas('sanggah_unit', function ($query) {
-                $query->where('status_final', 1);
+            $q->whereHas('wawancara', function ($query) {
+                $query->where('status', 1);
             });
         })->orderBy('wbk','desc')->get();
         
@@ -230,7 +227,7 @@ class VerlapController extends Controller
         
         foreach($instansi_ZI->unit_zi as $unit_zi){
             $verlapUnit = VerifikasiLapangan::where('unit_zi_id', $unit_zi->id)->first();
-            if($unit_zi->seleksi_administrasi_unit->status_final ==1 || $unit_zi->sanggah_unit->status_final==1){
+            if($unit_zi->wawancara->status ==1 ){
                 if (!$verlapUnit) {
                     $verlapUnit = new VerifikasiLapangan();
                     $verlapUnit->unit_zi_id = $unit_zi->id;

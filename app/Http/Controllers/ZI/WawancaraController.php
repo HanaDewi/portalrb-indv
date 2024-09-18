@@ -188,15 +188,10 @@ class WawancaraController extends Controller
         }
         
         $unit_ZIs = UnitZI::where("instansi_zi_id", $id)->where(function ($q){
-            $q->whereHas('seleksi_administrasi_unit', function ($query) {
-                $query->where('status_final', 1);
-            })
-            ->orWhereHas('sanggah_unit', function ($query) {
-                $query->where('status_final', 1);
+            $q->whereHas('analisis_dokumen', function ($query) {
+                $query->where('status', 1);
             });
         })->orderBy('wbk','desc')->get();
-        
-        
         
         return view('zi.seleksi_wawancara.evaluasi', compact("status",
             "title","instansi_ZI","unit_ZIs",
@@ -230,7 +225,7 @@ class WawancaraController extends Controller
         
         foreach($instansi_ZI->unit_zi as $unit_zi){
             $wawancaraUnit = Wawancara::where('unit_zi_id', $unit_zi->id)->first();
-            if($unit_zi->seleksi_administrasi_unit->status_final ==1 || $unit_zi->sanggah_unit->status_final==1){
+            if($unit_zi->analisis_dokumen->status ==1 ){
                 if (!$wawancaraUnit) {
                     $wawancaraUnit = new Wawancara();
                     $wawancaraUnit->unit_zi_id = $unit_zi->id;
