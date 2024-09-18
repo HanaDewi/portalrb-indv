@@ -8,7 +8,7 @@
     @include('common.status')
     <div class="intro-y box">
         <div class="flex flex-col sm:flex-row items-center p-5 border-b border-slate-200/60">
-            <h2 class="font-bold text-base mr-auto"> Seleksi Dokumen - {{ auth()->user()->nama }}</h2>
+            <h2 class="font-bold text-base mr-auto"> Wawancara - {{ auth()->user()->nama }}</h2>
         </div>
         <br />
         <div class="col-span-12 grid grid-cols-12 gap-6">
@@ -17,7 +17,7 @@
 
                     <div class="flex items-center">
                         <div class="w-2/4 flex-none">
-                            <div class="text-lg font-bold truncate">Lolos Administrasi & Sanggah </div>
+                            <div class="text-lg font-bold truncate">Lolos Analisis Dokumen </div>
                             <div class="text-gray-800 mt-2 text-xl">
                                 <a href="#" id="instansiNonMandiri">{{$jumlah_instansi}} <sup
                                         style="font-size: 0.5em">Total Instansi</sup> </a> <br />
@@ -57,7 +57,7 @@
                 <div class="box p-5 zoom-in">
                     <div class="flex items-center">
                         <div class="w-3/4 flex-none">
-                            <div class="text-lg font-bold truncate">Lulus Seleksi Dokumen</div>
+                            <div class="text-lg font-bold truncate">Lulus Wawancara</div>
                             <div class="text-gray-800 mt-2 text-xl">
 
                                 <a href="#" id="instansiNonMandiri">{{$jumlah_instansi_lolos}} <sup

@@ -166,7 +166,7 @@ class WawancaraController extends Controller
 
     public function wawancara($id)
     {   
-        $title = "Wawancara dan Verifikasi Lapangan";
+        $title = "Wawancara";
         $instansi_ZI = InstansiZI::find($id);
         $tim_ids = [];
         
