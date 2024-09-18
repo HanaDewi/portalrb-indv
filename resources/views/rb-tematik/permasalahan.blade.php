@@ -20,20 +20,22 @@
                             <select class="form-control" name="ftema" onchange="$('#filter-form').submit();">
                                 <option value=""> -- Pilih tema -- </option>
                                 @foreach ($temas as $tema)
-                                <option value="{{ $tema->id }}" {{ $ftema==$tema->id ? 'selected':'' }} >{{ $tema->nama }}</option>
+                                <option value="{{ $tema->id }}" {{ $ftema==$tema->id ? 'selected':'' }} >{{ $tema->nama
+                                    }}</option>
                                 @endforeach
                             </select>
                         </td>
                     </tr>
                     <tr>
-                        <td class="font-bold">Sasaran Roadmap 
-                        
+                        <td class="font-bold">Sasaran Roadmap
+
                         </td>
                         <td>
                             <select class="form-control" name="fsasaranroadmap" onchange="$('#filter-form').submit();">
                                 <option value=""> -- Pilih sasaran roadmap -- </option>
                                 @foreach ($filterSasaranRoadmap as $froadmap)
-                                <option value="{{ $froadmap->id }}" {{ $fsasaranroadmap==$froadmap->id ? 'selected':'' }}>{{ $froadmap->nama }}</option>
+                                <option value="{{ $froadmap->id }}" {{ $fsasaranroadmap==$froadmap->id ? 'selected':''
+                                    }}>{{ $froadmap->nama }}</option>
                                 @endforeach
                             </select>
                         </td>
@@ -41,10 +43,12 @@
                     <tr>
                         <td class="font-bold">Indikator Roadmap</td>
                         <td>
-                            <select class="form-control" name="findikatorroadmap" onchange="$('#filter-form').submit();">
+                            <select class="form-control" name="findikatorroadmap"
+                                onchange="$('#filter-form').submit();">
                                 <option value=""> -- Pilih indikator roadmap -- </option>
                                 @foreach ($filterIndikatorRoadmap as $fir)
-                                <option value="{{ $fir->id }}" {{ $findikatorroadmap==$fir->id ? 'selected':'' }}>{{ $fir->nama }}</option>
+                                <option value="{{ $fir->id }}" {{ $findikatorroadmap==$fir->id ? 'selected':'' }}>{{
+                                    $fir->nama }}</option>
                                 @endforeach
                             </select>
                         </td>
@@ -66,8 +70,10 @@
                 <h2 class="font-bold text-base mr-auto flex items-center justify-center">
                     <i data-lucide="file-text" class="mr-1"></i> Data Permasalahan
                 </h2>
-                <p class="text-right">    
-                    <button class="btn btn-danger btn-sm shadow-md" onclick="tambah_permasalahan();" data-bs-toggle="modal" data-bs-target="#modal-kegiatan_utama"><i data-lucide="plus" class="mr-1" width="18px" height="18px"></i> Tambah Permasalahan</button>
+                <p class="text-right">
+                    <button class="btn btn-danger btn-sm shadow-md" onclick="tambah_permasalahan();"
+                        data-bs-toggle="modal" data-bs-target="#modal-kegiatan_utama"><i data-lucide="plus" class="mr-1"
+                            width="18px" height="18px"></i> Tambah Permasalahan</button>
                 </p>
             </div>
         </div>
@@ -80,8 +86,9 @@
                         <th class="w-5">Tema</th>
                         <th class="w-5">Sasaran & Indikator Roadmap</th>
                         <th class="w-5">Permasalahan (bottleneck)</th>
-                        <th class="w-5">Sasaran <br/>
-                            <p style="font-size: 0.7em; line-height: 1.3;">(Kondisi yang menggambarkan untuk penyelesaian permasalahan)</p>
+                        <th class="w-5">Sasaran <br />
+                            <p style="font-size: 0.7em; line-height: 1.3;">(Kondisi yang menggambarkan untuk
+                                penyelesaian permasalahan)</p>
                         </th>
                         <th class="w-5">Indikator</th>
                         <th class="w-5">Target</th>
@@ -106,31 +113,38 @@
                         <td>{{$no;}}</td>
                         <td>{{ $tematikData['tema_nama'] }}</td>
                         <td>
-                            <b>Sasaran Roadmap :</b><br/>
-                            {{ $tematikData['sasaran_nama'] }} <br/><br/>
-                            <b>Indikator Roadmap :</b><br/>
-                            {{ $tematikData['indikator_nama'] }} 
+                            <b>Sasaran Roadmap :</b><br />
+                            {{ $tematikData['sasaran_nama'] }} <br /><br />
+                            <b>Indikator Roadmap :</b><br />
+                            {{ $tematikData['indikator_nama'] }}
                         </td>
                         <td>
                             {{ $tematikData['permasalahan_nama'] }}
                             @if ($tematikData['permasalahan_nama'])
                             <a href="#" class="btn btn-pending btn-sm w-full mb-2"
-                            onclick="editPermasalahan('{{$tematikData['permasalahan_id']}}')" > 
+                                onclick="editPermasalahan('{{$tematikData['permasalahan_id']}}')">
                                 <i data-lucide="edit" class="w-4 h-4 mr-1"></i> Edit Permasalahan
-                                <span class="text-xs px-1 rounded-full bg-warning text-white badge"><!-- count($target->rencana_aksi) --></span>
+                                <span class="text-xs px-1 rounded-full bg-warning text-white badge">
+                                    <!-- count($target->rencana_aksi) -->
+                                </span>
                             </a>
-                            <br/>
+                            <br />
                             <a href="#" class="btn btn-danger btn-sm w-full mb-2"
-                            onclick="hapusPermasalahan('{{$tematikData['permasalahan_id']}}')" > 
+                                onclick="hapusPermasalahan('{{$tematikData['permasalahan_id']}}')">
                                 <i data-lucide="edit" class="w-4 h-4 mr-1"></i> Hapus Permasalahan
-                                <span class="text-xs px-1 rounded-full bg-warning text-white badge"><!-- count($target->rencana_aksi) --></span>
+                                <span class="text-xs px-1 rounded-full bg-warning text-white badge">
+                                    <!-- count($target->rencana_aksi) -->
+                                </span>
                             </a>
                             @endif
                         </td>
                         <td>
                             {{ $tematikData['permasalahan_sasaran'] }}
                             @if ($tematikData['permasalahan_nama'])
-                            <button onclick="tambah_indikator_permasalahan('{{ $tematikData['permasalahan_nama'] }}','{{ $tematikData['permasalahan_sasaran'] }}', '{{ $tematikData['permasalahan_id'] }}');" class="btn btn-success btn-sm w-full mb-2"><i data-lucide="edit" class="w-4 h-4 mr-1"></i>Tambah Indikator</button>
+                            <button
+                                onclick="tambah_indikator_permasalahan('{{ $tematikData['permasalahan_nama'] }}','{{ $tematikData['permasalahan_sasaran'] }}', '{{ $tematikData['permasalahan_id'] }}');"
+                                class="btn btn-success btn-sm w-full mb-2"><i data-lucide="edit"
+                                    class="w-4 h-4 mr-1"></i>Tambah Indikator</button>
                             @endif
                         </td>
                         <td>
@@ -145,29 +159,40 @@
                         </td>
                         <td>
                             @if ($tematikData['indikator_permasalahan_nama'])
-                            <a href="{{ url('rencana_aksi/rb-tematik/permasalahan/renaksi/' . $tematikData['indikator_permasalahan_id'])}}" class="btn btn-primary btn-sm w-full mb-2">
+                            <a href="{{ url('rencana_aksi/rb-tematik/permasalahan/renaksi/' . $tematikData['indikator_permasalahan_id'])}}"
+                                class="btn btn-primary btn-sm w-full mb-2">
                                 <i data-lucide="edit" class="w-4 h-4 mr-1"></i> Renaksi
-                                <span class="text-xs px-1 rounded-full bg-warning text-white badge"> <!-- count($indikator->rencana_aksi) --> </span>
+                                <span class="text-xs px-1 rounded-full bg-warning text-white badge">
+                                    <!-- count($indikator->rencana_aksi) -->
+                                </span>
                             </a>
                             <br>
-                            <a href="{{ url('rencana_aksi/rb-tematik/permasalahan/monev/' . $tematikData['indikator_permasalahan_id'])}}" class="btn btn-dark btn-sm w-full mb-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" icon-name="edit" data-lucide="edit" class="lucide lucide-edit w-4 h-4 mr-1">
+                            <a href="{{ url('rencana_aksi/rb-tematik/permasalahan/monev/' . $tematikData['indikator_permasalahan_id'])}}"
+                                class="btn btn-dark btn-sm w-full mb-2"><svg xmlns="http://www.w3.org/2000/svg"
+                                    width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round" icon-name="edit"
+                                    data-lucide="edit" class="lucide lucide-edit w-4 h-4 mr-1">
                                     <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"></path>
                                     <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                                 </svg>Monev
                             </a>
-                            <br/>
+                            <br />
                             <a href="#" class="btn btn-pending btn-sm w-full mb-2"
-                            onclick="edit('{{$tematikData['indikator_permasalahan_id']}}')" > 
+                                onclick="edit('{{$tematikData['indikator_permasalahan_id']}}')">
                                 <i data-lucide="edit" class="w-4 h-4 mr-1"></i> Edit Indikator
-                                <span class="text-xs px-1 rounded-full bg-warning text-white badge"><!-- count($target->rencana_aksi) --></span>
+                                <span class="text-xs px-1 rounded-full bg-warning text-white badge">
+                                    <!-- count($target->rencana_aksi) -->
+                                </span>
                             </a>
-                            <br/>
+                            <br />
                             <a href="#" class="btn btn-danger btn-sm w-full mb-2"
-                            onclick="hapus_indikator('{{$tematikData['indikator_permasalahan_id']}}')" > 
+                                onclick="hapus_indikator('{{$tematikData['indikator_permasalahan_id']}}')">
                                 <i data-lucide="edit" class="w-4 h-4 mr-1"></i> Hapus Indikator
-                                <span class="text-xs px-1 rounded-full bg-warning text-white badge"><!-- count($target->rencana_aksi) --></span>
+                                <span class="text-xs px-1 rounded-full bg-warning text-white badge">
+                                    <!-- count($target->rencana_aksi) -->
+                                </span>
                             </a>
-                            
+
                             @endif
                         </td>
                     </tr>
@@ -187,7 +212,8 @@
                 <h2 class="font-bold fw-medium  fs-base me-auto" id="title">Sasaran Roadmaps</h2>
             </div> <!-- END: Modal Header -->
             <!-- BEGIN: Modal Body -->
-            <form action="{{ url('rencana_aksi/rb-tematik/perencanaan/simpan-sasaran-roadmap') }}" id="form-sasaran-roadmap" method="post">
+            <form action="{{ url('rencana_aksi/rb-tematik/perencanaan/simpan-sasaran-roadmap') }}"
+                id="form-sasaran-roadmap" method="post">
                 @csrf
                 <input type="hidden" name="tema_id" id="tema_id">
                 <div class="modal-body grid columns-12 ">
@@ -199,7 +225,8 @@
                                         <tr>
                                             <td class="font-bold w-30">Tema </td>
                                             <td colspan="5">
-                                                <select class="form-select mt-2 sm:mr-2 form-control" name="tema_id[]" required>
+                                                <select class="form-select mt-2 sm:mr-2 form-control" name="tema_id[]"
+                                                    required>
                                                     @foreach ($temas as $tema)
                                                     <option value="{{ $tema->id }}">{{ $tema->nama }}
                                                     </option>
@@ -215,7 +242,8 @@
                                         <tr>
                                             <td class="font-bold w-30">Sasaran Tematik Roadmap</td>
                                             <td colspan="5">
-                                                <input type="text" name="nama[]" placeholder="Masukan Sasaran Roadmap" class="form-control" / required>
+                                                <input type="text" name="nama[]" placeholder="Masukan Sasaran Roadmap"
+                                                    class="form-control" / required>
                                             </td>
                                         </tr>
                                     </table>
@@ -224,12 +252,15 @@
                                 <div id="target_output_ext"></div>
                             </div>
                         </div>
-                        <button type="button" class="btn btn-outline-primary border-dashed w-full mt-4" onclick="tambah_input();" id="tambah_input_button"><i data-lucide="plus" class="w-4 h-4 mr-2"></i> Tambah Sasaran Tematik Roadmap</button>
+                        <button type="button" class="btn btn-outline-primary border-dashed w-full mt-4"
+                            onclick="tambah_input();" id="tambah_input_button"><i data-lucide="plus"
+                                class="w-4 h-4 mr-2"></i> Tambah Sasaran Tematik Roadmap</button>
                     </div>
                 </div> <!-- END: Modal Body -->
                 <!-- BEGIN: Modal Footer -->
                 <div class="modal-footer text-end">
-                    <button type="button" data-tw-dismiss="modal" class="btn btn-outline-secondary w-20 me-1">Cancel</button>
+                    <button type="button" data-tw-dismiss="modal"
+                        class="btn btn-outline-secondary w-20 me-1">Cancel</button>
                     <button type="submit" class="btn btn-primary w-20 saveButton">Simpan</button>
                 </div> <!-- END: Modal Footer -->
             </form>
@@ -248,7 +279,8 @@
                 <h2 class="font-bold fw-medium  fs-base me-auto" id="title">Permasalahan</h2>
             </div> <!-- END: Modal Header -->
             <!-- BEGIN: Modal Body -->
-            <form action="{{ url('rencana_aksi/rb-tematik/permasalahan/simpan-permasalahan') }}" id="form-permasalahan" method="post">
+            <form action="{{ url('rencana_aksi/rb-tematik/permasalahan/simpan-permasalahan') }}" id="form-permasalahan"
+                method="post">
                 @csrf
                 <input type="hidden" name="tematik_indikator_roadmap_id" id="indikator-roadmap-id-onPermasalahan">
                 <input type="hidden" name="permasalahan_id" id="permasalahan-id">
@@ -261,46 +293,56 @@
                                         <tr>
                                             <td class="font-bold w-30">Sasaran Roadmap</td>
                                             <td colspan="5">
-                                            <select class="form-select mt-2 sm:mr-2 form-control" id="sasaran-roadmap-onPermasalahan" name="sasaran_roadmap" required>
-                                                <option selected="true" disabled="disabled" value="">Pilih Sasaran Roadmap</option>    
-                                                @foreach ($sasaranRoadmaps as $sasaran)
-                                                <option value="{{ $sasaran->id }}">{{ $sasaran->nama }}
-                                                </option>
-                                                @endforeach
-                                            </select>
+                                                <select class="form-select mt-2 sm:mr-2 form-control"
+                                                    id="sasaran-roadmap-onPermasalahan" name="sasaran_roadmap" required>
+                                                    <option selected="true" disabled="disabled" value="">Pilih Sasaran
+                                                        Roadmap</option>
+                                                    @foreach ($sasaranRoadmaps as $sasaran)
+                                                    <option value="{{ $sasaran->id }}">{{ $sasaran->nama }}
+                                                    </option>
+                                                    @endforeach
+                                                </select>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="font-bold w-30">Indikator Roadmap</td>
                                             <td colspan="5">
-                                                <select class="form-select mt-2 sm:mr-2 form-control" id="indikator-roadmap-onPermasalahan" name="tematik_indikator_roadmap_id" required>
-                                                    <option selected="true" disabled="disabled" value="">Pilih Indikator Roadmap</option>    
+                                                <select class="form-select mt-2 sm:mr-2 form-control"
+                                                    id="indikator-roadmap-onPermasalahan"
+                                                    name="tematik_indikator_roadmap_id" required>
+                                                    <option selected="true" disabled="disabled" value="">Pilih Indikator
+                                                        Roadmap</option>
                                                 </select>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="font-bold w-30">Target Indikator </td>
                                             <td colspan="5">
-                                                <input type="text" id="target-roadmap-onPermasalahan" name="target_roadmap" class="form-control" disabled />
+                                                <input type="text" id="target-roadmap-onPermasalahan"
+                                                    name="target_roadmap" class="form-control" disabled />
                                             </td>
                                         </tr>
 
                                         <tr>
                                             <td class="font-bold w-30">Satuan Target </td>
                                             <td colspan="5">
-                                                <input type="text" id="target-satuan-onPermasalahan" name="target_satuan" class="form-control" disabled />
+                                                <input type="text" id="target-satuan-onPermasalahan"
+                                                    name="target_satuan" class="form-control" disabled />
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="font-bold w-30">Permasalahan</td>
                                             <td colspan="5">
-                                                <textarea id="modPermasalahan-permasalahan" name="permasalahan" class="form-control" rows="8" required></textarea>
+                                                <textarea id="modPermasalahan-permasalahan" name="permasalahan"
+                                                    class="form-control" rows="8" required></textarea>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="font-bold w-30">Sasaran Permasalahan</td>
                                             <td colspan="5">
-                                            <textarea id="modPermasalahan-sasaran-permasalahan" name="sasaran_permasalahan"  class="form-control" rows="4" required></textarea>
+                                                <textarea id="modPermasalahan-sasaran-permasalahan"
+                                                    name="sasaran_permasalahan" class="form-control" rows="4"
+                                                    required></textarea>
                                             </td>
                                         </tr>
                                     </table>
@@ -314,7 +356,8 @@
                 </div> <!-- END: Modal Body -->
                 <!-- BEGIN: Modal Footer -->
                 <div class="modal-footer text-end">
-                    <button type="button" data-tw-dismiss="modal" class="btn btn-outline-secondary w-20 me-1">Cancel</button>
+                    <button type="button" data-tw-dismiss="modal"
+                        class="btn btn-outline-secondary w-20 me-1">Cancel</button>
                     <button type="submit" class="btn btn-primary w-20 saveButton">Simpan</button>
                 </div> <!-- END: Modal Footer -->
             </form>
@@ -331,9 +374,11 @@
                 <h2 class="font-bold fw-medium  fs-base me-auto" id="title">Indikator Permasalahan</h2>
             </div> <!-- END: Modal Header -->
             <!-- BEGIN: Modal Body -->
-            <form action="{{ url('rencana_aksi/rb-tematik/permasalahan/simpan-indikator-permasalahan') }}" id="form-permasalahan" method="post">
+            <form action="{{ url('rencana_aksi/rb-tematik/permasalahan/simpan-indikator-permasalahan') }}"
+                id="form-permasalahan" method="post">
                 @csrf
-                <input type="hidden" name="tematik_permasalahan_id_onIndikatorPermasalahan" id="tematik-permasalahan-id-onIndikatorPermasalahan">
+                <input type="hidden" name="tematik_permasalahan_id_onIndikatorPermasalahan"
+                    id="tematik-permasalahan-id-onIndikatorPermasalahan">
                 <input type="hidden" name="tematik_indikator_permasalahan_id" id="tematik-indikator-permasalahan-id">
                 <div class="modal-body grid columns-12 ">
                     <div class="g-col-12">
@@ -344,31 +389,38 @@
                                         <tr>
                                             <td class="font-bold w-30">Permasalahan </td>
                                             <td colspan="5">
-                                                <input type="text" id="permasalahan-onIndikatorPermasalahan" name="permasalahan" class="form-control" disabled />
+                                                <input type="text" id="permasalahan-onIndikatorPermasalahan"
+                                                    name="permasalahan" class="form-control" disabled />
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="font-bold w-30">Sasaran</td>
                                             <td colspan="5">
-                                                <input type="text" id="sasaran-permasalahan-onIndikatorPermasalahan" name="permasalahan_sasaran" class="form-control" disabled />
+                                                <input type="text" id="sasaran-permasalahan-onIndikatorPermasalahan"
+                                                    name="permasalahan_sasaran" class="form-control" disabled />
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="font-bold w-30">Indikator </td>
                                             <td colspan="5">
-                                                <input type="text" id="indikator-permasalahan" name="indikator_permasalahan" placeholder="Masukan Indikator" class="form-control" required/>
+                                                <input type="text" id="indikator-permasalahan"
+                                                    name="indikator_permasalahan" placeholder="Masukan Indikator"
+                                                    class="form-control" required />
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="font-bold w-30">Target</td>
                                             <td colspan="5">
-                                                <input type="text" id="target-permasalahan" name="target_permasalahan" placeholder="Masukan Target" class="form-control" required/>
+                                                <input type="text" id="target-permasalahan" name="target_permasalahan"
+                                                    placeholder="Masukan Target" class="form-control" required />
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="font-bold w-30">Satuan</td>
                                             <td colspan="5">
-                                                <input type="text" id="satuan-target-permasalahan" name="satuan_target_permasalahan" placeholder="Masukan Target" class="form-control" required/>
+                                                <input type="text" id="satuan-target-permasalahan"
+                                                    name="satuan_target_permasalahan" placeholder="Masukan Target"
+                                                    class="form-control" required />
                                             </td>
                                         </tr>
                                     </table>
@@ -382,7 +434,8 @@
                 </div> <!-- END: Modal Body -->
                 <!-- BEGIN: Modal Footer -->
                 <div class="modal-footer text-end">
-                    <button type="button" data-tw-dismiss="modal" class="btn btn-outline-secondary w-20 me-1">Cancel</button>
+                    <button type="button" data-tw-dismiss="modal"
+                        class="btn btn-outline-secondary w-20 me-1">Cancel</button>
                     <button type="submit" class="btn btn-primary w-20 saveButton">Simpan</button>
                 </div> <!-- END: Modal Footer -->
             </form>

@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::table('tematik_indikator_permasalahan', function (Blueprint $table) {
             $table->string('satuan')->nullable();
-            $table->string('realisasi_indikator')->nullable();
-            $table->string('capaian_indikator')->nullable();
+            $table->text('realisasi_indikator')->nullable();
+            $table->text('capaian_indikator')->nullable();
             $table->text('catatan')->nullable();
             $table->text('catatan_evaluator')->nullable();
         });

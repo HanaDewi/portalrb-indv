@@ -22,13 +22,15 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css"
         integrity="sha512-10/jx2EXwxxWqCLX/hHth/vu2KY3jCF70dCQB8TSgNjbCVAC/8vai53GfMDrO2Emgwccf2pJqxct9ehpzG+MTw=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
 
 </head>
 
 <body class="py-5">
     <div class="mobile-menu md:hidden">
         <div class="mobile-menu-bar">
-            <a href="" class="flex mr-auto">
+            <a href="{{ route('dashboard_zi')}}" class="flex mr-auto">
                 <img alt="LKE RB" class="w-24" src="{{ asset('template_lkerb') }}/dist/images/logo.jpg">
             </a>
             <a href="javascript:;" class="mobile-menu-toggler">
@@ -57,14 +59,272 @@
             <a href="" class="intro-x flex items-center pl-2 pt-4">
                 <img alt="LKE RB" src="{{ asset('template_lkerb') }}/dist/images/logo.jpg">
             </a>
-            <div class="side-nav__devider my-6"></div>
             <ul>
                 <li>
-                    <a href="{{ route('rekap_pengusulan') }}" class="side-menu">
-                        <div class="side-menu__icon"><i data-lucide="inbox"></i></div>
-                        <div class="side-menu__title"> Rekap Pengusulan </div>
+                    <a href="{{ route('rekap_total') }}" class="side-menu
+                    @if($title == 'Rekap Total')
+                                side-menu--active 
+                    @endif
+                    ">
+                        <div class="side-menu__icon"><i data-lucide="pie-chart"></i></div>
+                        <div class="side-menu__title"> Rekap Total </div>
                     </a>
                 </li>
+
+
+                <li>
+                    <a href="#" class="side-menu
+                    @if(in_array($title, ['Rekap Pengusulan Instansi', 'Rekap Pengusulan Unit', 'Rekap Administrasi Unit','Rekap Sanggah Unit', 'Rekap Analisis Dokumen'  ])) 
+                        class side-menu--active side-menu--open
+                    @endif
+                    ">
+                        <!-- class side-menu--active side-menu--open-->
+                        <div class="side-menu__icon"><i data-lucide="clipboard-list"></i></div>
+                        <div class="side-menu__title">
+                            Rekap
+                            <div class="side-menu__sub-icon "> <i data-lucide="chevron-down"></i> </div>
+                        </div>
+                    </a>
+                    <ul class="
+                        @if(in_array($title, ['Rekap Pengusulan Instansi', 'Rekap Pengusulan Unit', 'Rekap Administrasi Unit','Rekap Sanggah Unit', 'Rekap Analisis Dokumen'  ])) 
+                            side-menu__sub-open
+                        @else
+                            side-menu__sub-close
+                        @endif
+                        ">
+                        <li>
+                            <a href="{{ route('rekap_pengusulan') }}" class="side-menu 
+                            @if($title == 'Rekap Pengusulan Instansi')
+                                side-menu--active 
+                            @endif
+                            ">
+                                <div class="side-menu__icon"><i data-lucide=""></i></div>
+                                <div class="side-menu__title">
+                                    Rekap Pengusulan Instansi
+                                    <div class="side-menu__sub-icon "> </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('rekap_unit') }}" class="side-menu 
+                            @if($title == 'Rekap Pengusulan Unit')
+                            side-menu--active 
+                            @endif
+                            ">
+                                <div class="side-menu__icon"><i data-lucide=""></i></div>
+                                <div class="side-menu__title">
+                                    Rekap Pengusulan Unit
+                                    <div class="side-menu__sub-icon "> </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('rekap_administrasi') }}" class="side-menu 
+                            @if($title == 'Rekap Administrasi Unit')
+                            side-menu--active 
+                            @endif
+                            ">
+                                <div class="side-menu__icon"><i data-lucide=""></i></div>
+                                <div class="side-menu__title">
+                                    Rekap Seleksi Administrasi
+                                    <div class="side-menu__sub-icon "> </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('rekap_sanggah') }}" class="side-menu 
+                            @if($title == 'Rekap Sanggah Unit')
+                            side-menu--active 
+                            @endif
+                            ">
+                                <div class="side-menu__icon"><i data-lucide=""></i></div>
+                                <div class="side-menu__title">
+                                    Rekap Sanggah
+                                    <div class="side-menu__sub-icon "> </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('rekap_dokumen') }}" class="side-menu 
+                            @if($title == 'Rekap Analisis Dokumen')
+                            side-menu--active 
+                            @endif
+                            ">
+                                <div class="side-menu__icon"><i data-lucide=""></i></div>
+                                <div class="side-menu__title">
+                                    Rekap Analisis Dokumen
+                                    <div class="side-menu__sub-icon "> </div>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="{{ route('seleksi_administrasi') }}" class="side-menu
+                    @if($title == 'Seleksi Administrasi')
+                                side-menu--active 
+                    @endif
+                    ">
+                        <div class="side-menu__icon"><i data-lucide="clipboard"></i></div>
+                        <div class="side-menu__title"> Seleksi Administrasi </div>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('sanggah') }}" class="side-menu
+                    @if($title == 'Sanggah')
+                                side-menu--active 
+                    @endif
+                    ">
+                        <div class="side-menu__icon"><i data-lucide="check-circle"></i></div>
+                        <div class="side-menu__title"> Proses Sanggah </div>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('seleksi_dokumen') }}" class="side-menu
+                    @if($title == 'Analisis Dokumen')
+                                side-menu--active 
+                    @endif
+                    ">
+                        <div class="side-menu__icon"><i data-lucide="file-text"></i></div>
+                        <div class="side-menu__title"> Analisis Dokumen</div>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('seleksi_wawancara') }}" class="side-menu
+                    @if($title == 'Wawancara')
+                                side-menu--active 
+                    @endif
+                    ">
+                        <div class="side-menu__icon"><i data-lucide="activity"></i></div>
+                        <div class="side-menu__title"> Wawancara</div>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('verifikasi_lapangan') }}" class="side-menu
+                    @if($title == 'Verifikasi Lapangan')
+                                side-menu--active 
+                    @endif
+                    ">
+                        <div class="side-menu__icon"><i data-lucide="globe"></i></div>
+                        <div class="side-menu__title"> Verifikasi Lapangan</div>
+                    </a>
+                </li>
+                <!--<li>
+                    <a href=" route('seleksi_warlap') " class="side-menu
+                    @if($title == 'Wawancara dan Verifikasi Lapangan')
+                                side-menu--active 
+                    @endif
+                    ">
+                        <div class="side-menu__icon"><i data-lucide="clipboard"></i></div>
+                        <div class="side-menu__title"> Wawancara dan Verifikasi Lapangan</div>
+                    </a>
+                </li>
+                -->
+                <li>
+                    <a href="{{ route('seleksi_dokumen') }}" class="side-menu
+                    @if($title == 'Data Final')
+                                side-menu--active 
+                    @endif
+                    ">
+                        <div class="side-menu__icon"><i data-lucide="target"></i></div>
+                        <div class="side-menu__title"> Final </div>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('template_lke_evaluator') }}" class="side-menu
+                    @if($title == 'Template LKE Evaluator')
+                                side-menu--active 
+                    @endif
+                    ">
+                        <div class="side-menu__icon"><i data-lucide="bookmark"></i></div>
+                        <div class="side-menu__title">Template LKE </div>
+                    </a>
+                </li>
+                @if(Auth::User()->level =="admin" || in_array(Auth::User()->id, [10060,10209]) )
+                <li>
+                    <a href="{{ route('lke_evaluator') }}" class="side-menu
+                    @if($title == 'LKE Evaluator')
+                                side-menu--active 
+                    @endif
+                    ">
+                        <div class="side-menu__icon"><i data-lucide="bookmark"></i></div>
+                        <div class="side-menu__title">Generate LKE</div>
+                    </a>
+                </li>
+                @endif
+                @if(Auth::User()->level =="admin" || in_array(Auth::User()->id, [10060, 10048, 10059, 10046, 10053,
+                10056, 10052]) )
+                <li>
+                    <a href="#" class="side-menu
+                    @if(in_array($title, ['Kelola Tim', 'Kelola Anggota Tim' ])) 
+                        class side-menu--active side-menu--open
+                    @endif
+                    ">
+                        <!-- class side-menu--active side-menu--open-->
+                        <div class="side-menu__icon"><i data-lucide="clipboard-list"></i></div>
+                        <div class="side-menu__title">
+                            Kelola Tim
+                            <div class="side-menu__sub-icon "> <i data-lucide="chevron-down"></i> </div>
+                        </div>
+                    </a>
+                    <ul class="
+                        @if(in_array($title, ['Kelola Tim', 'Kelola Anggota Tim', 'Kelola Unit Tim' ])) 
+                            side-menu__sub-open
+                        @else
+                            side-menu__sub-close
+                        @endif
+                        ">
+                        <li>
+                            <a href="{{route('kelola_tim_zi')}}" class="side-menu 
+                            @if($title == 'Kelola Tim')
+                                side-menu--active 
+                            @endif
+                            ">
+                                <div class="side-menu__icon"><i data-lucide="user"></i></div>
+                                <div class="side-menu__title">
+                                    Tim
+                                    <div class="side-menu__sub-icon "> </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{route('kelola_anggota_tim_zi')}}" class="side-menu 
+                            @if($title == 'Kelola Anggota Tim')
+                            side-menu--active 
+                            @endif
+                            ">
+                                <div class="side-menu__icon"><i data-lucide="user-plus"></i></div>
+                                <div class="side-menu__title">
+                                    Anggota Tim
+                                    <div class="side-menu__sub-icon "> </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{route('kelola_unit_tim_zi')}}" class="side-menu 
+                            @if($title == 'Kelola Unit Tim')
+                            side-menu--active 
+                            @endif
+                            ">
+                                <div class="side-menu__icon"><i data-lucide="user-plus"></i></div>
+                                <div class="side-menu__title">
+                                    Unit Tim
+                                    <div class="side-menu__sub-icon "> </div>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                @endif
+
+                <li>
+                    <a href="https://docs.google.com/spreadsheets/d/1ns2C87_sw2uXyIqKqutjAZRiLdFN32S7kGPhTjkRhPk/edit?usp=sharing"
+                        target="_blank" class="side-menu">
+                        <div class="side-menu__icon"><i data-lucide="database"></i></div>
+                        <div class="side-menu__title"> ZI 2014-2023 </div>
+                    </a>
+                </li>
+
                 <li>
                     <a href="{{ route('logout') }}" onclick="event.preventDefault(); $('#logout').submit();"
                         class="side-menu">
