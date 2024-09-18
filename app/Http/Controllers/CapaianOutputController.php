@@ -114,6 +114,6 @@ class CapaianOutputController extends Controller
         }
         
         return view('webdashboard.rb-general-capaianoutput', compact('capaians'));
-     }
+    }
 
 }
