@@ -49,7 +49,8 @@
                     </tr>
                     <tr>
                         <td>-</td>
-                        <td><button type="submit" class="btn btn-primary saveButton mt-10">Lihat Data</button></td>
+                        <td><button type="submit" class="btn btn-primary saveButton mt-10"><i class="fa fa-search"> </i>
+                                &nbsp; Lihat Data</button></td>
                     </tr>
                     <!-- <tr>
                         <td class="font-bold">Sasaran Roadmap 
