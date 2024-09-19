@@ -49,7 +49,7 @@
                     </tr>
                     <tr>
                         <td>-</td>
-                        <td><input type="submit" class="btn btn-primary" value="Lihat"></td>
+                        <td><button type="submit" class="btn btn-primary saveButton mt-10">Lihat Data</button></td>
                     </tr>
                     <!-- <tr>
                         <td class="font-bold">Sasaran Roadmap 
