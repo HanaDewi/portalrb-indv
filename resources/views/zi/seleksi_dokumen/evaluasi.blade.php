@@ -127,7 +127,7 @@
                             <td class="rekomendasi">
                                 <textarea rows='4' cols='30' class='glowing-border' data-old=""
                                     name='rekomendasi-{{$unit_zi->id}}'
-                                    placeholder="Rekomendasi">@if(isset($unit_zi->analisis_dokumen))@if($unit_zi->analisis_dokumen->status ===0){{$unit_zi->analisis_dokumen->rekomendasi}}@endif @endif</textarea>
+                                    placeholder="Rekomendasi">@if(isset($unit_zi->analisis_dokumen)){{$unit_zi->analisis_dokumen->rekomendasi}} @endif</textarea>
                             </td>
                         </tr>
                         @endif
