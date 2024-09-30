@@ -66,7 +66,8 @@
                         <tr>
 
                             <th width="15%">Unit</th>
-                            <th width="15%">Link Lke</th>
+                            <th width="10%">Link Lke</th>
+                            <th width="10%">Paparan Evaluatan</th>
                             <th>Jadwal Wawancara</th>
                             <th width="15%">Status</th>
                             <th>Kondisi / Catatan</th>
@@ -93,14 +94,24 @@
                             </td>
                             <td class="bukti_dukung">
                                 @if(isset($unit_zi->analisis_dokumen))
-                                {{$unit_zi->analisis_dokumen->bukti_dukung}}
+                                <a href="{{$unit_zi->analisis_dokumen->bukti_dukung}}"
+                                    target="_blank">{{$unit_zi->analisis_dokumen->bukti_dukung}}</a>
+                                @endif
+                            </td>
+                            <td>
+                                @if(isset($unit_zi->wawancara))
+                                <a href="{{$unit_zi->wawancara->link_paparan}}"
+                                    target="_blank">{{$unit_zi->wawancara->link_paparan}}</a>
                                 @endif
                             </td>
                             <td>
                                 @if(isset($unit_zi->wawancara))
                                 @if(isset($unit_zi->wawancara->jadwal))
-                                {{\Carbon\Carbon::parse($unit_zi->wawancara->jadwal)->isoFormat('dddd, D MMMM Y
-                                HH:mm');}}
+                                Hari : {{\Carbon\Carbon::parse($unit_zi->wawancara->jadwal)->isoFormat('dddd') }} <br>
+                                Tanggal :
+                                {{\Carbon\Carbon::parse($unit_zi->wawancara->jadwal)->isoFormat('D
+                                MMMM Y') }} <br />
+                                Jam : {{\Carbon\Carbon::parse($unit_zi->wawancara->jadwal)->isoFormat('HH:mm') ;}}
 
                                 <br />
                                 @endif
