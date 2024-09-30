@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\ZI\InstansiZI;
 use App\Models\ZI\SanggahUnit;
 use App\Models\ZI\SanggahInstansi;
+use App\Models\ZI\Wawancara;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
@@ -134,28 +135,15 @@ class EvaluatanController extends Controller
     public function link_paparan_simpan(Request $request){
         $instansiZIid = Auth::User()->user_rel->instansi->instansi_zi->first()->id;
         $instansi_ZI = Auth::User()->user_rel->instansi->instansi_zi->first();
-        $seleksiSanggahInstansi = SanggahInstansi::where('instansi_zi_id', $instansiZIid)->first();
-        if (!$seleksiSanggahInstansi) {
-            $seleksiSanggahInstansi = new SanggahInstansi();
-        }
-        $seleksiSanggahInstansi->instansi_zi_id = $instansiZIid;
-        $seleksiSanggahInstansi->surat_usulan = $suratUsulan;
-        $seleksiSanggahInstansi->sptjm = $sptjm;
-        if ($seleksiSanggahInstansi->save()) {
-            foreach($instansi_ZI->unit_zi as $unit_zi){
-                $seleksiSanggahUnit = SanggahUnit::where('unit_zi_id', $unit_zi->id)->first();
-                if (!$seleksiSanggahUnit) {
-                    $seleksiSanggahUnit = new SanggahUnit();
-                }
-                $seleksiSanggahUnit->unit_zi_id = $unit_zi->id;
-                $seleksiSanggahUnit->lke = $request->get('lke_'.$unit_zi->id );
-                $seleksiSanggahUnit->th2wbk = $request->get('2wbk_'.$unit_zi->id );
-                $seleksiSanggahUnit->tlhp = $request->get('tlhp_'.$unit_zi->id );
-                $seleksiSanggahUnit->survei_mandiri = $request->get('survei_mandiri_'.$unit_zi->id );
-                $seleksiSanggahUnit->save();
+        foreach($instansi_ZI->unit_zi as $unit_zi){
+            $wawancaraUnit = Wawancara::where('unit_zi_id', $unit_zi->id)->first();
+            if ($wawancaraUnit) {
+                $wawancaraUnit->link_paparan = $request->get('link_paparan_'.$unit_zi->id );
+                $wawancaraUnit->save();   
             }
-        };
-        return redirect()->route('evaluatan_seleksi_administrasi',$instansiZIid);
+        }
+        
+        return redirect()->route('evaluatan_desk',$instansiZIid);
     }
 
     public function seleksi_verifikasi_lapangan(Request $request)

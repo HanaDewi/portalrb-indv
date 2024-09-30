@@ -67,27 +67,32 @@
                                         <td>{{$index+1}}</td>
                                         <td style="text-align: left">{{$unit_wbk->nama}}</td>
                                         <td style="text-align: left">
-
+                                            <!--
                                             <i class="fa fa-calendar fa-lg text-danger" aria-hidden="true"></i>
                                             @if(isset($unit_wbk->wawancara->jadwal))
                                             {{\Carbon\Carbon::parse($unit_wbk->wawancara->jadwal)->isoFormat('dddd, D
                                             MMMM Y
                                             HH:mm');}}
                                             @endif
-
+                                            -->
                                         </td>
                                         <td>
-
+                                            <!--
                                             <i class="fa fa-play" aria-hidden="true"></i>
                                             @if(isset($unit_wbk->wawancara->link_zoom))
                                             {{$unit_wbk->wawancara->link_zoom}}
                                             @endif
-
+                                            -->
                                         </td>
                                         <td>
+                                            <!--
                                             @if(isset($unit_wbk->wawancara->jadwal))
-                                            <input type="text" name="link_paparan">
+                                            <input type="text" @if(isset($unit_wbk->wawancara->link_paparan))
+                                            value={{$unit_wbk->wawancara->link_paparan}}
                                             @endif
+                                            name="link_paparan_{{$unit_wbk->id}}">
+                                            @endif
+                                            -->
                                         </td>
                                         <td style="text-align: left">
                                             <!--
@@ -126,23 +131,32 @@
                                         <td>{{$index+1}}</td>
                                         <td style="text-align: left">{{$unit_wbbm->nama}}</td>
                                         <td style="text-align: left">
+                                            <!--
                                             @if(isset($unit_wbbm->wawancara->jadwal))
                                             {{$unit_wbbm->wawancara->jadwal}}
                                             @endif
-                                        </td>
-                                        <td>@if(isset($unit_wbk->wawancara->link_zoom))
-                                            {{$unit_wbbm->wawancara->link_zoom}}
-                                            @endif
+                                            -->
                                         </td>
                                         <td>
-                                            @if(isset($unit_wbk->wawancara->jadwal))
-                                            <input type="text" name="link_paparan">
+                                            <!--
+                                            @if(isset($unit_wbbm->wawancara->link_zoom))
+                                            {{$unit_wbbm->wawancara->link_zoom}}
                                             @endif
+                                            -->
+                                        </td>
+                                        <td>
+                                            <!--
+                                            @if(isset($unit_wbbm->wawancara->jadwal))
+                                            <input type="text" name="link_paparan_{{$unit_wbbm->id}}">
+                                            @endif
+                                            -->
                                         </td>
                                         <td style="text-align: left">
-                                            @if(isset($unit_wbk->verifikasi_lapangan))
+                                            <!--
+                                            @if(isset($unit_wbbm->verifikasi_lapangan))
                                             {{$unit_wbbm->verifikasi_lapangan->jadwal}}
                                             @endif
+                                            -->
                                         </td>
                                     </tr>
                                     @endforeach
@@ -165,6 +179,7 @@
                                 </div>
                             </div>
                         </div>
+                        <input type="submit" class="btn btn-primary" value="KIRIM">
                     </form>
                 </div>
             </div>
