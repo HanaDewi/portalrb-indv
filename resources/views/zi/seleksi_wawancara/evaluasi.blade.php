@@ -8,6 +8,10 @@
         border-radius: 7px;
     }
 
+    .bukti_dukung {
+        word-break: break-all;
+    }
+
     .link-wrap {
         word-break: break-all;
 
@@ -66,7 +70,7 @@
                         <tr>
 
                             <th width="15%">Unit</th>
-                            <th width="10%">Link Lke</th>
+                            <th width="10%">Link Lke Evaluator</th>
                             <th width="10%">Paparan Evaluatan</th>
                             <th>Jadwal Wawancara</th>
                             <th width="15%">Status</th>
@@ -92,13 +96,13 @@
                                 :
                                 {{$unit_zi->nama}}
                             </td>
-                            <td class="bukti_dukung">
+                            <td class="bukti_dukung" width="10%">
                                 @if(isset($unit_zi->analisis_dokumen))
                                 <a href="{{$unit_zi->analisis_dokumen->bukti_dukung}}"
                                     target="_blank">{{$unit_zi->analisis_dokumen->bukti_dukung}}</a>
                                 @endif
                             </td>
-                            <td>
+                            <td class="link-wrap">
                                 @if(isset($unit_zi->wawancara))
                                 <a href="{{$unit_zi->wawancara->link_paparan}}"
                                     target="_blank">{{$unit_zi->wawancara->link_paparan}}</a>
