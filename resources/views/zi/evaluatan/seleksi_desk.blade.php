@@ -64,6 +64,7 @@
                                 <tbody>
                                     @if($unit_wbks->count())
                                     @foreach ($unit_wbks as $index => $unit_wbk)
+                                    @if($unit_wbk->analisis_dokumen->status == 1)
                                     <tr>
                                         <td>{{$index+1}}</td>
                                         <td style="text-align: left">{{$unit_wbk->nama}}</td>
@@ -103,6 +104,7 @@
 
                                         </td>
                                     </tr>
+                                    @endif
                                     @endforeach
                                     @else
                                     <tr>
@@ -127,6 +129,8 @@
                                 <tbody>
                                     @if($unit_wbbms->count())
                                     @foreach ($unit_wbbms as $index => $unit_wbbm)
+
+                                    @if($unit_wbbm->analisis_dokumen->status == 1)
                                     <tr>
                                         <td>{{$index+1}}</td>
                                         <td style="text-align: left">{{$unit_wbbm->nama}}</td>
@@ -159,6 +163,7 @@
 
                                         </td>
                                     </tr>
+                                    @endif
                                     @endforeach
                                     @else
                                     <tr>
