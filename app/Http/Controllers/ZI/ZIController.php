@@ -28,9 +28,9 @@ class ZIController extends Controller
         }
         
             
-         
         
         $instansi_obj = Auth::User()->user_rel->instansi;
+        
         $instansi_id = $instansi_obj->id;
         $instansiZI = InstansiZI::where("instansi_id", $instansi_obj->id)->first();
 
