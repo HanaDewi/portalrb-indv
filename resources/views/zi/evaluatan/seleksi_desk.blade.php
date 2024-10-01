@@ -45,8 +45,9 @@
                                 (virtual)/observasi lapangan. <br />
                                 Mekanisme evaluasi pada setiap unit/satker bisa berbeda, tergantung kebutuhan evaluator
                                 dalam melakukan pendalaman/validasi/verifikasi hasil pembangunan ZI.</sub>
-                            <br />
-                            <br />
+                            <br /><br />
+                            <img src="{{ asset('/assets/images/teknis-wawancara-zi.png') }}">
+                            <br /><br /><br />
 
                             <h6>WBK</h6>
                             <table class="table table-striped table-bordered table-shad">
@@ -67,40 +68,40 @@
                                         <td>{{$index+1}}</td>
                                         <td style="text-align: left">{{$unit_wbk->nama}}</td>
                                         <td style="text-align: left">
-                                            <!--
+
                                             <i class="fa fa-calendar fa-lg text-danger" aria-hidden="true"></i>
                                             @if(isset($unit_wbk->wawancara->jadwal))
                                             {{\Carbon\Carbon::parse($unit_wbk->wawancara->jadwal)->isoFormat('dddd, D
                                             MMMM Y
                                             HH:mm');}}
                                             @endif
-                                            -->
+
                                         </td>
                                         <td>
-                                            <!--
+
                                             <i class="fa fa-play" aria-hidden="true"></i>
                                             @if(isset($unit_wbk->wawancara->link_zoom))
                                             {{$unit_wbk->wawancara->link_zoom}}
                                             @endif
-                                            -->
+
                                         </td>
                                         <td>
-                                            <!--
+
                                             @if(isset($unit_wbk->wawancara->jadwal))
                                             <input type="text" @if(isset($unit_wbk->wawancara->link_paparan))
                                             value={{$unit_wbk->wawancara->link_paparan}}
                                             @endif
                                             name="link_paparan_{{$unit_wbk->id}}">
                                             @endif
-                                            -->
+
                                         </td>
                                         <td style="text-align: left">
-                                            <!--
-                                        <i class="fa fa-calendar fa-lg text-danger" aria-hidden="true"></i>
-                                        @if(isset($unit_wbk->verifikasi_lapangan))
-                                        {{$unit_wbk->verifikasi_lapangan->jadwal}}
-                                        @endif
-                                        -->
+
+                                            <i class="fa fa-calendar fa-lg text-danger" aria-hidden="true"></i>
+                                            @if(isset($unit_wbk->verifikasi_lapangan))
+                                            {{$unit_wbk->verifikasi_lapangan->jadwal}}
+                                            @endif
+
                                         </td>
                                     </tr>
                                     @endforeach
@@ -131,32 +132,32 @@
                                         <td>{{$index+1}}</td>
                                         <td style="text-align: left">{{$unit_wbbm->nama}}</td>
                                         <td style="text-align: left">
-                                            <!--
+
                                             @if(isset($unit_wbbm->wawancara->jadwal))
                                             {{$unit_wbbm->wawancara->jadwal}}
                                             @endif
-                                            -->
+
                                         </td>
                                         <td>
-                                            <!--
+
                                             @if(isset($unit_wbbm->wawancara->link_zoom))
                                             {{$unit_wbbm->wawancara->link_zoom}}
                                             @endif
-                                            -->
+
                                         </td>
                                         <td>
-                                            <!--
+
                                             @if(isset($unit_wbbm->wawancara->jadwal))
                                             <input type="text" name="link_paparan_{{$unit_wbbm->id}}">
                                             @endif
-                                            -->
+
                                         </td>
                                         <td style="text-align: left">
-                                            <!--
+
                                             @if(isset($unit_wbbm->verifikasi_lapangan))
                                             {{$unit_wbbm->verifikasi_lapangan->jadwal}}
                                             @endif
-                                            -->
+
                                         </td>
                                     </tr>
                                     @endforeach
