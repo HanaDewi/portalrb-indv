@@ -93,6 +93,7 @@
                                             value={{$unit_wbk->wawancara->link_paparan}}
                                             @endif
                                             name="link_paparan_{{$unit_wbk->id}}">
+
                                             @endif
 
                                         </td>
@@ -153,7 +154,10 @@
                                         <td style="text-align: left">
 
                                             @if(isset($unit_wbbm->wawancara->jadwal))
-                                            <input type="text" name="link_paparan_{{$unit_wbbm->id}}">
+                                            <input type="text" @if(isset($unit_wbbm->wawancara->link_paparan))
+                                            value={{$unit_wbbm->wawancara->link_paparan}}
+                                            @endif
+                                            name="link_paparan_{{$unit_wbbm->id}}">
                                             @endif
 
                                         </td>
