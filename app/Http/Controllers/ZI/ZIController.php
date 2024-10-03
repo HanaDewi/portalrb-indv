@@ -28,7 +28,9 @@ class ZIController extends Controller
         }
         
             
-        
+        if(!isset(Auth::User()->user_rel->instansi)){
+            abort('403');
+        }
         $instansi_obj = Auth::User()->user_rel->instansi;
         
         $instansi_id = $instansi_obj->id;
