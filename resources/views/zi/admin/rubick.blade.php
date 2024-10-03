@@ -157,6 +157,19 @@
                                 </div>
                             </a>
                         </li>
+                        <li>
+                            <a href="{{ route('rekap_wawancara') }}" class="side-menu 
+                            @if($title == 'Rekap Wawancara')
+                            side-menu--active 
+                            @endif
+                            ">
+                                <div class="side-menu__icon"><i data-lucide=""></i></div>
+                                <div class="side-menu__title">
+                                    Rekap Wawancara
+                                    <div class="side-menu__sub-icon "> </div>
+                                </div>
+                            </a>
+                        </li>
                     </ul>
                 </li>
                 <li>

@@ -73,8 +73,7 @@
                                             <i class="fa fa-calendar fa-lg text-danger" aria-hidden="true"></i>
                                             @if(isset($unit_wbk->wawancara->jadwal))
                                             {{\Carbon\Carbon::parse($unit_wbk->wawancara->jadwal)->isoFormat('dddd, D
-                                            MMMM Y
-                                            HH:mm');}}
+                                            MMMM Y HH:mm');}}
                                             @endif
 
                                         </td>
@@ -140,7 +139,8 @@
                                         <td style="text-align: left">
                                             <i class="fa fa-calendar fa-lg text-danger" aria-hidden="true"></i>
                                             @if(isset($unit_wbbm->wawancara->jadwal))
-                                            {{$unit_wbbm->wawancara->jadwal}}
+                                            {{\Carbon\Carbon::parse($unit_wbbm->wawancara->jadwal)->isoFormat('dddd, D
+                                            MMMM Y HH:mm');}}
                                             @endif
 
                                         </td>
