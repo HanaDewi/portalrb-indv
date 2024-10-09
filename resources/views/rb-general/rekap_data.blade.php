@@ -155,7 +155,7 @@
                                 @endif
                             </td>
                             <td>
-                                @if ($data['output']->capaian_output_total >= 0)
+                                @if ($data['output']->capaian_output_total)
                                 <table class="table table-noborder">
                                     <tr><th>TW 1</th><td>: {{ fnumber2($data['output']->capaian_output_tw1, 2) }} %</td></tr>
                                     <tr><th>TW 2</th><td>: {{ fnumber2($data['output']->capaian_output_tw2, 2) }} %</td></tr>
