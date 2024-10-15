@@ -40,11 +40,17 @@
                         @csrf
                         <div class="content">
                             <br>
-                            <h5>{{$title}} <br /> {{ $instansi}}</h5>
-                            <sub>Proses evaluasi sedang berlangsung melalui mekanisme: analisa dokumen/wawancara
-                                (virtual)/observasi lapangan. <br />
-                                Mekanisme evaluasi pada setiap unit/satker bisa berbeda, tergantung kebutuhan evaluator
-                                dalam melakukan pendalaman/validasi/verifikasi hasil pembangunan ZI.</sub>
+                            <h5>{{$title}} <br /> {{ $instansi}}</h5><br />
+                            <hr />
+                            <h5 style="color:red">Proses evaluasi sedang berlangsung melalui mekanisme: analisa
+                                dokumen / wawancara
+                                (virtual) / observasi lapangan. <br />
+
+                                Mekanisme evaluasi pada setiap unit / satker bisa berbeda, tergantung kebutuhan
+                                evaluator
+                                dalam melakukan pendalaman / validasi / verifikasi hasil pembangunan ZI.
+                            </h5>
+                            <hr>
                             <br /><br />
                             <img src="{{ asset('/assets/images/teknis-wawancara-zi.png') }}">
                             <br /><br /><br />
