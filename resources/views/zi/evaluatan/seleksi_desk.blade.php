@@ -44,9 +44,8 @@
                             <hr />
                             <h5 style="color:red">Proses evaluasi sedang berlangsung melalui mekanisme: analisa
                                 dokumen / wawancara
-                                (virtual) / observasi lapangan. <br />
-
-                                Mekanisme evaluasi pada setiap unit / satker bisa berbeda, tergantung kebutuhan
+                                (virtual) / observasi lapangan. Mekanisme evaluasi pada setiap unit / satker bisa
+                                berbeda, tergantung kebutuhan
                                 evaluator
                                 dalam melakukan pendalaman / validasi / verifikasi hasil pembangunan ZI.
 
