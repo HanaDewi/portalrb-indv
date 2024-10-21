@@ -100,8 +100,13 @@
 
                                 @if(isset($unit_zi->verifikasi_lapangan))
                                 @if(isset($unit_zi->verifikasi_lapangan->jadwal))
+                                @if(\Carbon\Carbon::parse($unit_zi->verifikasi_lapangan->jadwal)->isoFormat('HH:mm')=='00:00')
                                 {{\Carbon\Carbon::parse($unit_zi->verifikasi_lapangan->jadwal)->isoFormat('dddd, D MMMM
-                                Y HH:mm');}}
+                                Y')}} --
+                                @else
+                                {{\Carbon\Carbon::parse($unit_zi->verifikasi_lapangan->jadwal)->isoFormat('dddd, D MMMM
+                                Y HH:MM')}}
+                                @endif
                                 <br />
                                 @endif
                                 @endif
