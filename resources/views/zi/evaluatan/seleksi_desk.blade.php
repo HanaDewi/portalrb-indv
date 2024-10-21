@@ -49,6 +49,9 @@
                                 Mekanisme evaluasi pada setiap unit / satker bisa berbeda, tergantung kebutuhan
                                 evaluator
                                 dalam melakukan pendalaman / validasi / verifikasi hasil pembangunan ZI.
+
+                                Hasil akhir evaluasi akan disampaikan melalui Lembar Hasil Evaluasi (LHE) kemungkinan
+                                pada Desember 2024.
                             </h5>
                             <hr>
                             <br /><br />
