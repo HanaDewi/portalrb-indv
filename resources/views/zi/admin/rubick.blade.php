@@ -234,8 +234,8 @@
                 </li>
                 -->
                 <li>
-                    <a href="{{ route('seleksi_dokumen') }}" class="side-menu
-                    @if($title == 'Data Final')
+                    <a href="{{ route('seleksi_panel') }}" class="side-menu
+                    @if($title == 'Seleksi Panel')
                                 side-menu--active 
                     @endif
                     ">

@@ -61,13 +61,14 @@
                 @csrf
                 <input type="hidden" id="instansiZIId" name="instansiZIId" value="{{$instansi_ZI->id}}">
 
-                <table id="rekap-zi" class="table table-bordered table-striped" cellspacing="0" width="100%">
+                <table id="rekap-zi" class="table table-bordered table-striped" cellspacing="0">
                     <thead class="table-dark font-bold">
                         <tr>
-
                             <th width="15%">Unit</th>
                             <th width="15%">Link Lke</th>
-                            <th>Jadwal verifikasi_lapangan</th>
+                            <th>Tahapan</th>
+                            <th>Catatan </th>
+                            <th>Rekomendasi </th>
                             <th width="15%">Status</th>
                             <th>Kondisi / Catatan</th>
                             <th>Rekomendasi</th>
@@ -82,7 +83,7 @@
                         @if(!$instansi_ZI->instansi_wbk_mandiri OR ($instansi_ZI->instansi_wbk_mandiri AND
                         $unit_zi->wbbm ))
                         <tr>
-                            <td>
+                            <td rowspan=3>
                                 @if($unit_zi->wbk==1)
                                 WBK {{++$wbk_i}}
                                 @elseif($unit_zi->wbbm==1)
@@ -91,38 +92,15 @@
                                 :
                                 {{$unit_zi->nama}}
                             </td>
-                            <td class="bukti_dukung">
+                            <td rowspan=3 class="bukti_dukung">
                                 @if(isset($unit_zi->analisis_dokumen))
                                 {{$unit_zi->analisis_dokumen->bukti_dukung}}
                                 @endif
                             </td>
-                            <td>
-
-                                @if(isset($unit_zi->verifikasi_lapangan))
-                                @if(isset($unit_zi->verifikasi_lapangan->jadwal))
-                                @if(\Carbon\Carbon::parse($unit_zi->verifikasi_lapangan->jadwal)->isoFormat('HH:mm')=='00:00')
-                                {{\Carbon\Carbon::parse($unit_zi->verifikasi_lapangan->jadwal)->isoFormat('dddd, D MMMM
-                                Y')}} --
-                                @else
-                                {{\Carbon\Carbon::parse($unit_zi->verifikasi_lapangan->jadwal)->isoFormat('dddd, D MMMM
-                                Y HH:mm')}}
-                                @endif
-                                <br />
-                                @endif
-                                @endif
-                                <br />
-
-                                Tanggal dan Waktu <br />
-                                <input type="datetime-local" id="jadwal" name="jadwal-{{$unit_zi->id}}"
-                                    @if(isset($unit_zi->verifikasi_lapangan))
-                                value="{{$unit_zi->verifikasi_lapangan->jadwal}}"
-                                @endif
-                                class="form-control">
-                                <hr>
-                                <br />
-
-                            </td>
-                            <td>
+                            <td>Analisis Dokumen</td>
+                            <td>Catatan</td>
+                            <td>Rekomendasi</td>
+                            <td rowspan=3>
                                 <select class="form-control status" name="status-{{$unit_zi->id}}"
                                     data-old=@if(isset($unit_zi->verifikasi_lapangan->status))
                                     @if($unit_zi->verifikasi_lapangan->status==1) "1"
@@ -146,15 +124,25 @@
                                         value="0">Tidak Lulus</option>
                                 </select>
                             </td>
-                            <td class="kondisi">
+                            <td class="kondisi" rowspan=3>
                                 <textarea rows='4' cols='30' class='glowing-border' name='kondisi-{{$unit_zi->id}}'
                                     placeholder="Kondisi / Catatan">@if(isset($unit_zi->verifikasi_lapangan)){{$unit_zi->verifikasi_lapangan->kondisi}}@endif</textarea>
                             </td>
-                            <td class="rekomendasi">
+                            <td class="rekomendasi" rowspan=3>
                                 <textarea rows='4' cols='30' class='glowing-border' data-old=""
                                     name='rekomendasi-{{$unit_zi->id}}'
                                     placeholder="Rekomendasi">@if(isset($unit_zi->verifikasi_lapangan))@if($unit_zi->verifikasi_lapangan->status ===0){{$unit_zi->verifikasi_lapangan->rekomendasi}}@endif @endif</textarea>
                             </td>
+                        </tr>
+                        <tr>
+                            <td>Tahapan Wawancara</td>
+                            <td>Catatan</td>
+                            <td>Rekomendasi</td>
+                        </tr>
+                        <tr>
+                            <td>Tahapan Verlap</td>
+                            <td>Catatan</td>
+                            <td>Rekomendasi</td>
                         </tr>
                         @endif
                         @endforeach

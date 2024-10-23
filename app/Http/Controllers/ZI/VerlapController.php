@@ -155,13 +155,13 @@ class VerlapController extends Controller
                     return $value === false;
                 });
 
-                $jumlah_unit_total = $jumlah_unit_wbk + $jumlah_unit_wbbm;
+        $jumlah_unit_total = $jumlah_unit_wbk + $jumlah_unit_wbbm;
 
-                return view('zi.verifikasi_lapangan.administrasi', compact(
-                    "title","jumlah_instansi","jumlah_unit_wbk","jumlah_unit_wbbm", 
-                    'jumlah_lolos_wbk', 'jumlah_lolos_wbbm', 'progress_teams',
-                    "jumlah_unit_total","datas", "jumlah_instansi_lolos"
-                ));        
+        return view('zi.verifikasi_lapangan.administrasi', compact(
+            "title","jumlah_instansi","jumlah_unit_wbk","jumlah_unit_wbbm", 
+            'jumlah_lolos_wbk', 'jumlah_lolos_wbbm', 'progress_teams',
+            "jumlah_unit_total","datas", "jumlah_instansi_lolos"
+        ));        
     }
 
     public function verlap($id)
@@ -233,8 +233,7 @@ class VerlapController extends Controller
                         $verlapUnit = new VerifikasiLapangan();
                         $verlapUnit->unit_zi_id = $unit_zi->id;
                     }
-                    $verlapUnit->jadwal = $request->get('jadwal-'.$unit_zi->id ); 
-                    $verlapUnit->link_zoom = $request->get('link-zoom-'.$unit_zi->id ); 
+                    if(!is_null($request->get('jadwal-'.$unit_zi->id)))$verlapUnit->jadwal = $request->get('jadwal-'.$unit_zi->id ); 
                     if(!is_null($request->get('bukti-dukung-'.$unit_zi->id )))$verlapUnit->bukti_dukung = $request->get('bukti-dukung-'.$unit_zi->id ); 
                     if(!is_null($request->get('kondisi-'.$unit_zi->id )))$verlapUnit->kondisi = $request->get('kondisi-'.$unit_zi->id );
                     if(!is_null($request->get('rekomendasi-'.$unit_zi->id )))$verlapUnit->rekomendasi = $request->get('rekomendasi-'.$unit_zi->id ); 

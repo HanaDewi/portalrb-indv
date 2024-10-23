@@ -71,6 +71,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/zi/proses-verifikasi-lapangan/simpan', [VerlapController::class, 'verlap_simpan'])->name('proses_verifikasi_lapangan_simpan');
     #Seleksi Panel
     Route::get('/zi/seleksi-panel', [PanelController::class, 'index'])->name('seleksi_panel');
+    Route::get('/zi/proses-panel/{id}', [PanelController::class, 'panel'])->name('proses_panel');
+    Route::post('/zi/proses-panel/simpan', [PanelController::class, 'panel_simpan'])->name('proses_panel_simpan');
+    
     #Tautkan LKE
     Route::get('/zi/template-lke-evaluator', [LkeEvaluatorController::class, 'template_lke'])->name('template_lke_evaluator');
     Route::get('/zi/lke-evaluator', [LkeEvaluatorController::class, 'index'])->name('lke_evaluator');
