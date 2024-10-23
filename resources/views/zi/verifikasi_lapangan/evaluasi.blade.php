@@ -13,6 +13,12 @@
 
     }
 
+    select:has(option[value="2"]:checked) {
+        background-color: blue !important;
+        color: white;
+    }
+
+
     select:has(option[value="1"]:checked) {
         background-color: green !important;
         color: white;
