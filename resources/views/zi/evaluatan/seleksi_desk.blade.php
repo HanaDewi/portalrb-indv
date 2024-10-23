@@ -133,7 +133,7 @@
                                     @endforeach
                                     @else
                                     <tr>
-                                        <td colspan="4" style="text-align: center">Tidak ada unit WBK</td>
+                                        <td colspan="5" style="text-align: center">Tidak ada unit WBK</td>
                                     </tr>
                                     @endif
                                 </tbody>
@@ -208,7 +208,7 @@
                                     @endforeach
                                     @else
                                     <tr>
-                                        <td colspan="3" style="text-align: center">Tidak ada unit WBBM</td>
+                                        <td colspan="5" style="text-align: center">Tidak ada unit WBBM</td>
                                     </tr>
 
                                     @endif
