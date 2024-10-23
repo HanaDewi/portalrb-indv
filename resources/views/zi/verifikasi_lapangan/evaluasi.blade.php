@@ -127,6 +127,7 @@
                                     data-old=@if(isset($unit_zi->verifikasi_lapangan->status))
                                     @if($unit_zi->verifikasi_lapangan->status==1) "1"
                                     @elseif($unit_zi->verifikasi_lapangan->status===0) "0"
+                                    @elseif($unit_zi->verifikasi_lapangan->status===2) "2"
                                     @else "kosong"
                                     @endif
                                     @else
@@ -134,6 +135,11 @@
                                     @endif
                                     data-id="{{$unit_zi->id}}">>
                                     <option value="" disabled selected>Pilih Status</option>
+                                    <option @if(isset($unit_zi->verifikasi_lapangan->status))
+                                        @if($unit_zi->verifikasi_lapangan->status==2) selected
+                                        @endif
+                                        @endif
+                                        value="2">Bawa Ke Panel</option>
                                     <option @if(isset($unit_zi->verifikasi_lapangan->status))
                                         @if($unit_zi->verifikasi_lapangan->status==1) selected
                                         @endif
