@@ -107,8 +107,14 @@
                                         <td style="text-align: left">
 
                                             <i class="fa fa-calendar fa-lg text-danger" aria-hidden="true"></i>
-                                            @if(isset($unit_wbk->verifikasi_lapangan))
-                                            {{$unit_wbk->verifikasi_lapangan->jadwal}}
+                                            @if(isset($unit_wbk->verifikasi_lapangan->jadwal))
+                                            @if(\Carbon\Carbon::parse($unit_wbk->wawancara->jadwal)->isoFormat('HH')!='00')
+                                            {{\Carbon\Carbon::parse($unit_wbk->wawancara->jadwal)->isoFormat('dddd, D
+                                            MMMM Y HH:mm');}} WIB
+                                            @else
+                                            {{\Carbon\Carbon::parse($unit_wbk->wawancara->jadwal)->isoFormat('dddd, D
+                                            MMMM Y');}}
+                                            @endif
                                             @endif
 
                                         </td>
