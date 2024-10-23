@@ -113,11 +113,13 @@
                                         <td style="text-align: left">
                                             @if(isset($unit_wbk->verifikasi_lapangan->jadwal))
                                             <i class="fa fa-calendar fa-lg text-danger" aria-hidden="true"></i>
-                                            @if(\Carbon\Carbon::parse($unit_wbk->wawancara->jadwal)->isoFormat('HH')!='00')
-                                            {{\Carbon\Carbon::parse($unit_wbk->wawancara->jadwal)->isoFormat('dddd, D
+                                            @if(\Carbon\Carbon::parse($unit_wbk->verifikasi_lapangan->jadwal)->isoFormat('HH')!='00')
+                                            {{\Carbon\Carbon::parse($unit_wbk->verifikasi_lapangan->jadwal)->isoFormat('dddd,
+                                            D
                                             MMMM Y HH:mm');}} WIB
                                             @else
-                                            {{\Carbon\Carbon::parse($unit_wbk->wawancara->jadwal)->isoFormat('dddd, D
+                                            {{\Carbon\Carbon::parse($unit_wbk->verifikasi_lapangan->jadwal)->isoFormat('dddd,
+                                            D
                                             MMMM Y');}}
                                             @endif
                                             @endif
@@ -183,11 +185,13 @@
                                         <td style="text-align: left">
                                             @if(isset($unit_wbbm->verifikasi_lapangan->jadwal))
                                             <i class="fa fa-calendar fa-lg text-danger" aria-hidden="true"></i>
-                                            @if(\Carbon\Carbon::parse($unit_wbbm->wawancara->jadwal)->isoFormat('HH')!='00')
-                                            {{\Carbon\Carbon::parse($unit_wbbm->wawancara->jadwal)->isoFormat('dddd, D
+                                            @if(\Carbon\Carbon::parse($unit_wbbm->verifikasi_lapangan->jadwal)->isoFormat('HH')!='00')
+                                            {{\Carbon\Carbon::parse($unit_wbbm->verifikasi_lapangan->jadwal)->isoFormat('dddd,
+                                            D
                                             MMMM Y HH:mm');}} WIB
                                             @else
-                                            {{\Carbon\Carbon::parse($unit_wbbm->wawancara->jadwal)->isoFormat('dddd, D
+                                            {{\Carbon\Carbon::parse($unit_wbbm->verifikasi_lapangan->jadwal)->isoFormat('dddd,
+                                            D
                                             MMMM Y');}}
                                             @endif
                                             @endif
