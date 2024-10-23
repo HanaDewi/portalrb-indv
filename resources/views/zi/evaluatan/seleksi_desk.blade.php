@@ -16,6 +16,11 @@
     .table-shad {
         box-shadow: 0 0 30px #9ecaed;
     }
+
+    .link-wrap {
+        word-break: break-all;
+
+    }
 </style>
 
 
@@ -64,7 +69,7 @@
                                         <th>No</th>
                                         <th>Unit</th>
                                         <th>Jadwal Wawancara</th>
-                                        <th>Link Zoom Wawancara</th>
+                                        <!-- <th>Link Zoom Wawancara</th> -->
                                         <th>Link Bahan Paparan Evaluatan</th>
                                         <th>Jadwal Verifikasi Lapangan</th>
                                     </tr>
@@ -85,6 +90,7 @@
                                             @endif
 
                                         </td>
+                                        <!--
                                         <td style="text-align: left">
 
                                             <i class="fa fa-play" aria-hidden="true"></i>
@@ -93,14 +99,17 @@
                                             @endif
 
                                         </td>
-                                        <td style="text-align: left">
+                                        -->
+                                        <td style="text-align: left" class="link-wrap">
 
                                             @if(isset($unit_wbk->wawancara->jadwal))
+                                            <!--
                                             <input type="text" @if(isset($unit_wbk->wawancara->link_paparan))
                                             value={{$unit_wbk->wawancara->link_paparan}}
                                             @endif
                                             name="link_paparan_{{$unit_wbk->id}}">
-
+                                            -->
+                                            {{$unit_wbk->wawancara->link_paparan}}
                                             @endif
 
                                         </td>
@@ -137,7 +146,7 @@
                                         <th>No</th>
                                         <th>Unit</th>
                                         <th>Jadwal Wawancara</th>
-                                        <th>Link Zoom Wawancara</th>
+                                        <!-- <th>Link Zoom Wawancara</th> -->
                                         <th>Link Bahan Paparan Evaluatan</th>
                                         <th>Jadwal Verifikasi Lapangan</th>
                                     </tr>
@@ -158,6 +167,7 @@
                                             @endif
 
                                         </td>
+                                        <!--
                                         <td style="text-align: left">
                                             <i class="fa fa-play" aria-hidden="true"></i>
                                             @if(isset($unit_wbbm->wawancara->link_zoom))
@@ -165,20 +175,30 @@
                                             @endif
 
                                         </td>
-                                        <td style="text-align: left">
+                                        -->
+                                        <td style="text-align: left" class="link-wrap">
 
                                             @if(isset($unit_wbbm->wawancara->jadwal))
+                                            <!--
                                             <input type="text" @if(isset($unit_wbbm->wawancara->link_paparan))
                                             value={{$unit_wbbm->wawancara->link_paparan}}
                                             @endif
                                             name="link_paparan_{{$unit_wbbm->id}}">
+                                            -->
+                                            {{$unit_wbbm->wawancara->link_paparan}}
                                             @endif
 
                                         </td>
                                         <td style="text-align: left">
                                             <i class="fa fa-calendar fa-lg text-danger" aria-hidden="true"></i>
-                                            @if(isset($unit_wbbm->verifikasi_lapangan))
-                                            {{$unit_wbbm->verifikasi_lapangan->jadwal}}
+                                            @if(isset($unit_wbbm->verifikasi_lapangan->jadwal))
+                                            @if(\Carbon\Carbon::parse($unit_wbbm->wawancara->jadwal)->isoFormat('HH')!='00')
+                                            {{\Carbon\Carbon::parse($unit_wbbm->wawancara->jadwal)->isoFormat('dddd, D
+                                            MMMM Y HH:mm');}} WIB
+                                            @else
+                                            {{\Carbon\Carbon::parse($unit_wbbm->wawancara->jadwal)->isoFormat('dddd, D
+                                            MMMM Y');}}
+                                            @endif
                                             @endif
 
                                         </td>
