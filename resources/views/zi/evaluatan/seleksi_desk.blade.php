@@ -83,8 +83,8 @@
                                         <td>{{$index+1}}</td>
                                         <td style="text-align: left">{{$unit_wbk->nama}}</td>
                                         <td style="text-align: left">
-                                            <i class="fa fa-calendar fa-lg text-danger" aria-hidden="true"></i>
                                             @if(isset($unit_wbk->wawancara->jadwal))
+                                            <i class="fa fa-calendar fa-lg text-danger" aria-hidden="true"></i>
                                             {{\Carbon\Carbon::parse($unit_wbk->wawancara->jadwal)->isoFormat('dddd, D
                                             MMMM Y HH:mm');}} WIB
                                             @endif
@@ -92,7 +92,6 @@
                                         </td>
                                         <!--
                                         <td style="text-align: left">
-
                                             <i class="fa fa-play" aria-hidden="true"></i>
                                             @if(isset($unit_wbk->wawancara->link_zoom))
                                             {{$unit_wbk->wawancara->link_zoom}}
@@ -101,7 +100,6 @@
                                         </td>
                                         -->
                                         <td style="text-align: left" class="link-wrap">
-
                                             @if(isset($unit_wbk->wawancara->jadwal))
                                             <!--
                                             <input type="text" @if(isset($unit_wbk->wawancara->link_paparan))
@@ -111,12 +109,10 @@
                                             -->
                                             {{$unit_wbk->wawancara->link_paparan}}
                                             @endif
-
                                         </td>
                                         <td style="text-align: left">
-
-                                            <i class="fa fa-calendar fa-lg text-danger" aria-hidden="true"></i>
                                             @if(isset($unit_wbk->verifikasi_lapangan->jadwal))
+                                            <i class="fa fa-calendar fa-lg text-danger" aria-hidden="true"></i>
                                             @if(\Carbon\Carbon::parse($unit_wbk->wawancara->jadwal)->isoFormat('HH')!='00')
                                             {{\Carbon\Carbon::parse($unit_wbk->wawancara->jadwal)->isoFormat('dddd, D
                                             MMMM Y HH:mm');}} WIB
@@ -125,7 +121,6 @@
                                             MMMM Y');}}
                                             @endif
                                             @endif
-
                                         </td>
                                     </tr>
                                     @endif
@@ -160,12 +155,11 @@
                                         <td>{{$index+1}}</td>
                                         <td style="text-align: left">{{$unit_wbbm->nama}}</td>
                                         <td style="text-align: left">
-                                            <i class="fa fa-calendar fa-lg text-danger" aria-hidden="true"></i>
                                             @if(isset($unit_wbbm->wawancara->jadwal))
+                                            <i class="fa fa-calendar fa-lg text-danger" aria-hidden="true"></i>
                                             {{\Carbon\Carbon::parse($unit_wbbm->wawancara->jadwal)->isoFormat('dddd, D
                                             MMMM Y HH:mm');}} WIB
                                             @endif
-
                                         </td>
                                         <!--
                                         <td style="text-align: left">
@@ -173,11 +167,9 @@
                                             @if(isset($unit_wbbm->wawancara->link_zoom))
                                             {{$unit_wbbm->wawancara->link_zoom}}
                                             @endif
-
                                         </td>
                                         -->
                                         <td style="text-align: left" class="link-wrap">
-
                                             @if(isset($unit_wbbm->wawancara->jadwal))
                                             <!--
                                             <input type="text" @if(isset($unit_wbbm->wawancara->link_paparan))
@@ -187,11 +179,10 @@
                                             -->
                                             {{$unit_wbbm->wawancara->link_paparan}}
                                             @endif
-
                                         </td>
                                         <td style="text-align: left">
-                                            <i class="fa fa-calendar fa-lg text-danger" aria-hidden="true"></i>
                                             @if(isset($unit_wbbm->verifikasi_lapangan->jadwal))
+                                            <i class="fa fa-calendar fa-lg text-danger" aria-hidden="true"></i>
                                             @if(\Carbon\Carbon::parse($unit_wbbm->wawancara->jadwal)->isoFormat('HH')!='00')
                                             {{\Carbon\Carbon::parse($unit_wbbm->wawancara->jadwal)->isoFormat('dddd, D
                                             MMMM Y HH:mm');}} WIB
@@ -200,7 +191,6 @@
                                             MMMM Y');}}
                                             @endif
                                             @endif
-
                                         </td>
                                     </tr>
                                     @endif
@@ -210,7 +200,6 @@
                                     <tr>
                                         <td colspan="5" style="text-align: center">Tidak ada unit WBBM</td>
                                     </tr>
-
                                     @endif
                                 </tbody>
                             </table>
@@ -218,14 +207,12 @@
                                 <div class="col-md-1">
                                 </div>
                                 <div class="col-md-10 form-group">
-
                                 </div>
-
                                 <div class=" col-md-1">
                                 </div>
                             </div>
                         </div>
-                        <input type="submit" class="btn btn-primary" value="KIRIM">
+                        <!--<input type="submit" class="btn btn-primary" value="KIRIM">-->
                     </form>
                 </div>
             </div>
