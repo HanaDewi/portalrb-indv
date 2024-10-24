@@ -1,0 +1,52 @@
+﻿id,nama,parent_id,level,penilai_id,rencana_aksi,tahun
+2124,RB General,,Komponen,14,,2023
+2125,RB Tematik,,Komponen,14,,2023
+2126,Strategi Pelaksanaan RB General,2124,Sub Komponen,14,1,2023
+2127,Capaian Pelaksanaan Kebijakan Reformasi Birokrasi,2124,Sub Komponen,14,,2023
+2128,Capaian Sasaran Strategis Reformasi Birokrasi,2124,Sub Komponen,14,,2023
+2129,Capaian RB Tematik,2125,Indikator,14,,2023
+2130,Rencana Aksi Pembangunan RB General,2126,Indikator,14,,2023
+2131,Tingkat Implementasi Rencana Aksi RB General,2126,Indikator,14,,2023
+2132,Persentase Penyederhanaan Struktur Organisasi,2127,Indikator,17,,2023
+2133,Tingkat Capaian Sistem Kerja untuk Penyederhanaan Birokrasi,2127,Indikator,17,,2023
+2134,Tingkat Maturitas SPIP,2127,Indikator,16,,2023
+2135,Tingkat Keberhasilan Pembangunan ZI,2127,Indikator,14,,2023
+2136,Nilai SAKIP,2127,Indikator,14,,2023
+2137,Indeks Perencanaan Pembangunan,2127,Indikator,26,,2023
+2138,Tingkat Implementasi Kebijakan Arsitektur SPBE,2127,Indikator,27,,2023
+2139,Tingkat Digitalisasi Arsip,2127,Indikator,22,,2023
+2140,Indikator Kinerja Pelaksanaan Anggaran,2127,Indikator,7,,2023
+2141,Indeks Pengelolaan Aset,2127,Indikator,25,,2023
+2142,Tingkat tindak lanjut pengaduan masyarakat (LAPOR) yang sudah diselesaikan,2127,Indikator,30,,2023
+2143,Indeks Kualitas Kebijakan,2127,Indikator,21,,2023
+2144,Indeks Reformasi Hukum,2127,Indikator,6,,2023
+2145,Indeks Pembangunan Statistik,2127,Indikator,3,,2023
+2146,Indeks Tata Kelola Pengadaan,2127,Indikator,8,,2023
+2147,Indeks Sistem Merit,2127,Indikator,4,,2023
+2148,Indeks Pelayanan Publik,2127,Indikator,29,,2023
+2149,Tingkat Kepatuhan Standar Pelayanan Publik,2127,Indikator,23,,2023
+2150,Indeks SPBE,2128,Indikator,27,,2023
+2151,Capaian Prioritas Nasional,2128,Indikator,5,,2023
+2152,Capaian IKU,2128,Indikator,14,,2023
+2154,Opini BPK,2128,Indikator,1,,2023
+2155,Tindak Lanjut Rekomendasi,2128,Indikator,1,,2023
+2156,Indeks BerAkhlak,2128,Indikator,20,,2023
+2157,Survei Penilaian Integritas,2128,Indikator,13,,2023
+2158,Survei Kepuasan Masyarakat,2128,Indikator,31,,2023
+2159,Pengentasan Kemiskinan,2129,Indikator,14,,2023
+2160,Realisasi Investasi,2129,Indikator,14,,2023
+2161,"Digitalisasi Administrasi Pemerintahan Fokus Penanganan Stunting	",2129,Indikator,14,,2023
+2162,Laju Inflasi,2129,Indikator,14,,2023
+2163,Penggunaan Produk Dalam Negeri,2129,Indikator,14,,2023
+3148,Capaian IKU Makro,2128,Indikator,14,,2023
+3149,Capaian IKU Non Makro,2128,Indikator,14,,2023
+3155,Pengentasan Kemiskinan (Strategi Pembangunan),2125,Indikator,14,,2023
+3156,Realisasi Investasi (Strategi Pembangunan),2125,Indikator,14,,2023
+3157,Digitalisasi Administrasi Pemerintahan Fokus Penanganan Stunting (Strategi Pembangunan),2125,Indikator,14,,2023
+3158,Penggunaan Produk Dalam Negeri (Strategi Pembangunan),2125,Indikator,14,,2023
+3159,Pengendalian Inflasi (Strategi Pembangunan),2125,Indikator,14,,2023
+3160,Pengentasan Kemiskinan (Capaian Dampak),2125,Indikator,14,,2023
+3161,Realisasi Investasi (Capaian Dampak),2125,Indikator,14,,2023
+3162,Digitalisasi Administrasi Pemerintahan Fokus Penanganan Stunting (Capaian Dampak),2125,Indikator,14,,2023
+3163,Penggunaan Produk Dalam Negeri (Capaian Dampak),2125,Indikator,14,,2023
+3164,Pengendalian Inflasi (Capaian Dampak),2125,Indikator,14,,2023

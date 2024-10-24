@@ -3,6 +3,7 @@ use App\Models\DokumenKategori;
 use App\Models\FokusIntervensi;
 use App\Models\KegiatanUtama;
 use App\Models\KlpdInstansi;
+use App\Models\LKE\LkeParameter;
 use App\Models\LkeTP;
 use App\Models\Tahun;
 use Carbon\Carbon;
@@ -171,6 +172,12 @@ if(! function_exists('menus'))
                         'title' => 'Dokumen',
                         'icon' => 'file-text',
                         'url' => 'master-data/dokumen',
+                    ],
+                    [
+                        'levels' => ['admin'],
+                        'title' => 'LKE Parameter',
+                        'icon' => 'list',
+                        'url' => 'master-data/lke_parameter',
                     ],
                 ]
             ],
@@ -424,12 +431,39 @@ if(! function_exists('group_instansi')) {
     {
         $groups = [
             'kl' => 'Kementrian',
-            'pemda' => 'PEMDA',
-            'kab' => 'Kabupaten',
+            'provinsi' => 'Provinsi',
+            'kabupaten' => 'Kabupaten/Kota',
             'lain' => 'Lainnya',
-            'prov' => 'Provinsi'
         ];
         
         return $group ? $groups[$group] : $groups;
+    }
+}
+
+if(! function_exists('level')) {
+    function level($level = null)
+    {
+        $levels = [
+            'Komponen' => 'Komponen',
+            'Sub Komponen' => 'Sub Komponen',
+            'Indikator' => 'Indikator',
+        ];
+        
+        return $level ? $levels[$level] : $levels;
+    }
+}
+
+if(! function_exists('parameter')) {
+    function parameter($level, $parent_id = null)
+    {
+        if ($level == 'komponen') {
+            return LkeParameter::where('level', 'Komponen')->pluck('nama', 'id');
+        }
+        if ($level == 'subkomponen') {
+            return LkeParameter::where('level', 'Sub Komponen')->where('parent_id', $parent_id)->pluck('nama', 'id');
+        }
+        if ($level == 'indikator') {
+            return LkeParameter::where('level', 'Indikator')->where('parent_id', $parent_id)->pluck('nama', 'id');
+        }
     }
 }

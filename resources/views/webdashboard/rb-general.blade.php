@@ -108,9 +108,7 @@
                 @foreach ($instansis as $instansi)
                 @php
                 $no++;
-                $group = $instansi->group == 'kl' ? 'Kementerian' :
-                        ($instansi->group == 'prov' ? 'Provinsi' :
-                        ($instansi->group == 'kab' ? 'Kabupaten' : 'Lainnya'));
+                $group = group_instansi($instansi->group);
 
                 $instansi_plans = $all_plans->get($instansi->id, collect());
                 $instansi_target = $all_targets->get($instansi->id);
@@ -134,13 +132,13 @@
                     } else {
                         $no_kl++;
                     }
-                } elseif ($instansi->group == 'prov') {
+                } elseif ($instansi->group == 'provinsi') {
                     if ($semua == 'yes') {
                         $yes_prov++;
                     } else {
                         $no_prov++;
                     }
-                } elseif ($instansi->group == 'kab') {
+                } elseif ($instansi->group == 'kabupaten') {
                     if ($semua == 'yes') {
                         $yes_kab++;
                     } else {

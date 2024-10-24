@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\DokumenKategori;
 use App\Models\Indikator;
 use App\Models\KegiatanUtama;
+use App\Models\LKE\LkeBobot;
+use App\Models\LKE\LkeParameter;
 use App\Models\Tahun;
 use App\Models\Tema;
 use Illuminate\Http\Request;
@@ -260,6 +262,145 @@ class MasterDataController extends Controller
     {
         $kategori = DokumenKategori::find($request->id);
         if ($kategori->delete()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function lke_parameter()
+    {
+        return view('master-data.lke_parameter');
+    }
+
+    public function lke_parameter_getDatas()
+    {
+        $datas = LkeParameter::orderBy('tahun')->get();
+        foreach ($datas as $data) {
+            $data->parent = $data->parent;
+            $data->bobot = '';
+            if ($data->bobots) {
+                $bobotnya = [];
+                foreach ($data->bobots as $key => $bobot) {
+                    $bobotnya[$key] = '<strong>Group : </strong>'.group_instansi($bobot->group).'<br>';
+                    $bobotnya[$key] .= '<strong>Target Baik : </strong>'.$bobot->target_baik.'<br>';
+                    $bobotnya[$key] .= '<strong>Min Value : </strong>'.$bobot->min_value.'<br>';
+                    $bobotnya[$key] .= '<strong>Max Value : </strong>'.$bobot->max_value.'<br>';
+                    $bobotnya[$key] .= '<strong>Bobot : </strong>'.$bobot->bobot.'<br>';
+                    $key++;
+                }
+                $data->bobot = implode('<hr>', $bobotnya);
+            }
+        }
+        return response()->json(['data' => $datas]);
+    }
+
+    public function lke_parameter_getData($id)
+    {
+        $data = LkeParameter::find($id);
+        $data->bobots = $data->bobots;
+        $data->subkomponens = '';
+        if ($data->level == 'Indikator') {
+            $data->komponen_id = $data->parent->parent_id;
+            $data->subkomponen_id = $data->parent_id;
+            $data->subkomponens = $this->lke_parameter_getSubKomponen($data->komponen_id);
+        } else if ($data->level == 'Sub Komponen') {
+            $data->komponen_id = $data->parent_id;
+        }
+        return response()->json($data);
+    }
+
+    public function lke_parameter_getSubKomponen($komponen)
+    {
+        $datas = parameter('subkomponen', $komponen);
+        $options = '';
+        foreach ($datas as $id => $nama) {
+            $options .= '<option value="'.$id.'">'.$nama.'</option>';
+        }
+        return $options;
+    }
+
+    public function lke_parameter_simpan(Request $request)
+    {
+        $success = true;
+        DB::beginTransaction();
+        try {
+            $lke_parameter = new LkeParameter();
+            if (isset($request->lke_parameter_id)) {
+                $lke_parameter = LkeParameter::find($request->lke_parameter_id);
+            }
+            $lke_parameter->nama = $request->nama;
+            $lke_parameter->tahun = $request->tahun;
+            $lke_parameter->level = $request->level;
+            if ($request->level == 'Sub Komponen') {
+                $lke_parameter->parent_id = $request->komponen;
+            } else if ($request->level == 'Indikator') {
+                $lke_parameter->parent_id = $request->subkomponen;
+            }
+            if ($lke_parameter->save()) {
+                if ($request->kl) {
+                    $lke_bobot = LkeBobot::where('lke_parameter_id', $lke_parameter->id)->where('group', 'kl')->first();
+                    if (!$lke_bobot) {
+                        $lke_bobot = new LkeBobot();
+                    }
+                    $lke_bobot->lke_parameter_id = $lke_parameter->id;
+                    $lke_bobot->group = 'kl';
+                    $lke_bobot->bobot = $request->kl_bobot ? str_replace(',', '.', $request->kl_bobot) : null;
+                    $lke_bobot->target_baik = $request->kl_target_baik ? str_replace(',', '.', $request->kl_target_baik) : null;
+                    $lke_bobot->min_value = $request->kl_min_value ? str_replace(',', '.', $request->kl_min_value) : null;
+                    $lke_bobot->max_value = $request->kl_max_value ? str_replace(',', '.', $request->kl_max_value) : null;
+                    if (!$lke_bobot->save()) {
+                        $success = false;
+                    }
+                }
+                if ($request->provinsi) {
+                    $lke_bobot = LkeBobot::where('lke_parameter_id', $lke_parameter->id)->where('group', 'provinsi')->first();
+                    if (!$lke_bobot) {
+                        $lke_bobot = new LkeBobot();
+                    }
+                    $lke_bobot->lke_parameter_id = $lke_parameter->id;
+                    $lke_bobot->group = 'provinsi';
+                    $lke_bobot->bobot = $request->provinsi_bobot ? str_replace(',', '.', $request->provinsi_bobot) : null;
+                    $lke_bobot->target_baik = $request->provinsi_target_baik ? str_replace(',', '.', $request->provinsi_target_baik) : null;
+                    $lke_bobot->min_value = $request->provinsi_min_value ? str_replace(',', '.', $request->provinsi_min_value) : null;
+                    $lke_bobot->max_value = $request->provinsi_max_value ? str_replace(',', '.', $request->provinsi_max_value) : null;
+                    if (!$lke_bobot->save()) {
+                        $success = false;
+                    }
+                }
+                if ($request->kabupaten) {
+                    $lke_bobot = LkeBobot::where('lke_parameter_id', $lke_parameter->id)->where('group', 'kabupaten')->first();
+                    if (!$lke_bobot) {
+                        $lke_bobot = new LkeBobot();
+                    }
+                    $lke_bobot->lke_parameter_id = $lke_parameter->id;
+                    $lke_bobot->group = 'kabupaten';
+                    $lke_bobot->bobot = $request->kabupaten_bobot ? str_replace(',', '.', $request->kabupaten_bobot) : null;
+                    $lke_bobot->target_baik = $request->kabupaten_target_baik ? str_replace(',', '.', $request->kabupaten_target_baik) : null;
+                    $lke_bobot->min_value = $request->kabupaten_min_value ? str_replace(',', '.', $request->kabupaten_min_value) : null;
+                    $lke_bobot->max_value = $request->kabupaten_max_value ? str_replace(',', '.', $request->kabupaten_max_value) : null;
+                    if (!$lke_bobot->save()) {
+                        $success = false;
+                    }
+                }
+            }
+        } catch (\Throwable $th) {
+            $success = false;
+            throw $th;
+        }
+        if ($success) {
+            DB::commit();
+        } else {
+            DB::rollBack();
+        }
+        return response()->json(['success' => $success]);
+    }
+
+    public function lke_parameter_hapus(Request $request)
+    {
+        $lke_parameter = LkeParameter::find($request->id);
+        if ($lke_parameter->delete()) {
+            LkeBobot::where('lke_parameter_id', $lke_parameter->id)->delete();
             return true;
         } else {
             return false;

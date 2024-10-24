@@ -79,6 +79,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/master-data/dokumen/getDataKategori/{id}', [MasterDataController::class, 'dokumen_getDataKategori']);
     Route::post('/master-data/dokumen/simpanKategori', [MasterDataController::class, 'dokumen_simpanKategori']);
     Route::post('/master-data/dokumen/hapusKategori', [MasterDataController::class, 'dokumen_hapusKategori']);
+    // LKE Parameter
+    Route::get('/master-data/lke_parameter', [MasterDataController::class, 'lke_parameter'])->name('lke_parameter');
+    Route::get('/master-data/lke_parameter/getDatas', [MasterDataController::class, 'lke_parameter_getDatas']);
+    Route::get('/master-data/lke_parameter/getData/{id}', [MasterDataController::class, 'lke_parameter_getData']);
+    Route::get('/master-data/lke_parameter/getSubKomponen/{komponen}', [MasterDataController::class, 'lke_parameter_getSubKomponen']);
+    Route::post('/master-data/lke_parameter/simpan', [MasterDataController::class, 'lke_parameter_simpan']);
+    Route::post('/master-data/lke_parameter/hapus', [MasterDataController::class, 'lke_parameter_hapus']);
 
 
     // Dokumen Upload

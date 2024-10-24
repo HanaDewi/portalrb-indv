@@ -279,7 +279,7 @@
                                 if ($tema) {
                                     if ($instansi->group == 'kl') {
                                         $tema_kl_counts[$key]++;
-                                    } elseif ($instansi->group == 'kab') {
+                                    } elseif ($instansi->group == 'kabupaten') {
                                         $tema_kab_counts[$key]++;
                                     } else {
                                         $tema_prov_counts[$key]++;
@@ -297,13 +297,13 @@
                                 } else {
                                     $no_kl++;
                                 }
-                            } elseif ($instansi->group == 'prov') {
+                            } elseif ($instansi->group == 'provinsi') {
                                 if ($semua == 'yes') {
                                     $yes_prov++;
                                 } else {
                                     $no_prov++;
                                 }
-                            } elseif ($instansi->group == 'kab') {
+                            } elseif ($instansi->group == 'kabupaten') {
                                 if ($semua == 'yes') {
                                     $yes_kab++;
                                 } else {
@@ -317,7 +317,7 @@
                                     href="{{ URL::to('/rencana_aksi/rb-tematik/rekap_data?instansi_id=' . $instansi->id) }}">{{ $instansi->name }}</a>
                             </td>
                             @php
-                                $group = $instansi->group == 'kl' ? 'Kementerian' : ($instansi->group == 'prov' ? 'Provinsi' : ($instansi->group == 'kab' ? 'Kabupaten' : 'Lainnya'));
+                                $group = group_instansi($instansi->group);
                             @endphp
                             <td> {{ $group }}</td>
                             <td> {{ $tema_id_count }}
