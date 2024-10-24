@@ -12,7 +12,7 @@ class LkeTestTp extends Model
 {
     use LogsActivity,
         HasFactory;
-    protected $table = 'lke_test_tp';
+    protected $table = 'old_lke_test_tp';
     public $timestamps = false;
 
     public function klpd_instansi(): BelongsTo

@@ -10,5 +10,5 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class LkeTestQuestion extends Model
 {
     use HasFactory;
-    protected $table = 'lke_test_question';
+    protected $table = 'old_lke_test_question';
 }

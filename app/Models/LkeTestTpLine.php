@@ -13,7 +13,7 @@ class LkeTestTpLine extends Model
 {
     use LogsActivity,
         HasFactory;
-    protected $table = 'lke_test_tp_line';
+    protected $table = 'old_lke_test_tp_line';
     public $timestamps = false;
 
     public function lke_test_tp(): BelongsTo

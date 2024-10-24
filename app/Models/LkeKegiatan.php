@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 class LkeKegiatan extends Model
 {
     use HasFactory;
-    protected $table = 'lke_kegiatan';
+    protected $table = 'old_lke_kegiatan';
     public $timestamps = false;
     protected $guarded = [
         'id'

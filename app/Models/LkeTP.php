@@ -10,5 +10,5 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class LkeTP extends Model
 {
     use HasFactory;
-    protected $table = 'lke_tp';
+    protected $table = 'old_lke_tp';
 }
