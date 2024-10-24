@@ -57,7 +57,7 @@
             <br />
             <br />
             <br />
-            <form action="{{ route('proses_verifikasi_lapangan_simpan') }}" method="POST">
+            <form action="" method="POST">
                 @csrf
                 <input type="hidden" id="instansiZIId" name="instansiZIId" value="{{$instansi_ZI->id}}">
 
@@ -67,9 +67,10 @@
                             <th width="15%">Unit</th>
                             <th width="15%">Link Lke</th>
                             <th>Tahapan</th>
+                            <th width="15%">Status Tahapan</th>
                             <th>Catatan </th>
                             <th>Rekomendasi </th>
-                            <th width="15%">Status</th>
+                            <th width="15%">Status Final</th>
                             <th>Kondisi / Catatan</th>
                             <th>Rekomendasi</th>
                         </tr>
@@ -92,14 +93,34 @@
                                 :
                                 {{$unit_zi->nama}}
                             </td>
-                            <td rowspan=3 class="bukti_dukung">
+                            <td rowspan=3 class="bukti_dukung link-wrap">
                                 @if(isset($unit_zi->analisis_dokumen))
-                                {{$unit_zi->analisis_dokumen->bukti_dukung}}
+                                <a href="{{$unit_zi->analisis_dokumen->bukti_dukung}}" target="_blank">Lihat</a>
                                 @endif
                             </td>
                             <td>Analisis Dokumen</td>
-                            <td>Catatan</td>
-                            <td>Rekomendasi</td>
+                            <td>
+                                @if(isset($unit_zi->analisis_dokumen))
+                                @if($unit_zi->analisis_dokumen->status==1)
+                                <p style="color:green">
+                                    LULUS
+                                </p>
+                                @elseif($unit_zi->analisis_dokumen->status===0)
+                                <p style="color:red">
+                                    TIDAK LULUS
+                                </p>
+                                @endif
+                                @endif
+                            </td>
+                            <td>
+                                @if(isset($unit_zi->analisis_dokumen))
+                                {{$unit_zi->analisis_dokumen->kondisi}}
+                                @endif
+                            </td>
+                            <td>@if(isset($unit_zi->analisis_dokumen))
+                                {{$unit_zi->analisis_dokumen->rekomendasi}}
+                                @endif
+                            </td>
                             <td rowspan=3>
                                 <select class="form-control status" name="status-{{$unit_zi->id}}"
                                     data-old=@if(isset($unit_zi->verifikasi_lapangan->status))
@@ -136,13 +157,55 @@
                         </tr>
                         <tr>
                             <td>Tahapan Wawancara</td>
-                            <td>Catatan</td>
-                            <td>Rekomendasi</td>
+                            <td>
+                                @if(isset($unit_zi->wawancara))
+                                @if($unit_zi->wawancara->status==1)
+                                <p style="color:green">
+                                    LULUS
+                                </p>
+                                @elseif($unit_zi->wawancara->status===0)
+                                <p style="color:red">
+                                    TIDAK LULUS
+                                </p>
+                                @endif
+                                @endif
+                            </td>
+                            <td>@if(isset($unit_zi->wawancara))
+                                {{$unit_zi->wawancara->catatan}}
+                                @endif
+                            </td>
+                            <td>@if(isset($unit_zi->wawancara))
+                                {{$unit_zi->wawancara->rekomendasi}}
+                                @endif
+                            </td>
                         </tr>
                         <tr>
                             <td>Tahapan Verlap</td>
-                            <td>Catatan</td>
-                            <td>Rekomendasi</td>
+                            <td>
+                                @if(isset($unit_zi->verifikasi_lapangan))
+                                {{$unit_zi->verifikasi_lapangan->status}}
+                                @if($unit_zi->verifikasi_lapangan->status==1)
+                                <p style="color:green">
+                                    LULUS
+                                </p>
+                                @elseif($unit_zi->verifikasi_lapangan->status===0)
+                                <p style="color:red">
+                                    TIDAK LULUS
+                                </p>
+                                @endif
+
+                                @endif
+                            </td>
+                            <td>
+                                @if(isset($unit_zi->verifikasi_lapangan))
+                                {{$unit_zi->verifikasi_lapangan->catatan}}
+                                @endif
+                            </td>
+                            <td>
+                                @if(isset($unit_zi->verifikasi_lapangan))
+                                {{$unit_zi->verifikasi_lapangan->rekomendasi}}
+                                @endif
+                            </td>
                         </tr>
                         @endif
                         @endforeach

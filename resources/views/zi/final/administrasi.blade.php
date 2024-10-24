@@ -206,8 +206,8 @@
                         <td class="text-center">
                             @foreach(Auth::User()->userTimZI as $userTimZI)
                             @if (in_array($userTimZI->tim->nama, $data["nama_teams"]))
-                            <a href="{{route('proses_verifikasi_lapangan', $data['instansi_zi_id'])}}"
-                                class="btn btn-danger"><i class="fa fa-search"></i>
+                            <a href="{{route('proses_panel', $data['instansi_zi_id'])}}" class="btn btn-danger"><i
+                                    class="fa fa-search"></i>
                                 &nbsp;Evaluasi
                             </a>
                             @break

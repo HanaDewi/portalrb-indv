@@ -56,11 +56,23 @@ class PanelController extends Controller
                 ->map(function($instansiZi) use(&$jumlah_unit_wbk, &$jumlah_unit_wbbm, &$jumlah_lolos_wbk, &$jumlah_lolos_wbbm, &$jumlah_instansi, &$jumlah_instansi_lolos, &$progress_teams) {
                     $wbkCount = $instansiZi->unit_zi->where('wbk', true)
                         ->filter(function($unitZi) {
-                            return optional($unitZi->wawancara)->status == 1;
+                            $status = false;
+                            if(optional($unitZi->seleksi_administrasi_unit)->status_final == 1){
+                                $status = true;
+                            }elseif(optional($unitZi->sanggah_unit)->status_final == 1){
+                                $status = true;
+                            }
+                             return $status;
                         })->count();
                     $wbbmCount = $instansiZi->unit_zi->where('wbbm', true)
                         ->filter(function($unitZi) {
-                            return optional($unitZi->wawancara)->status == 1;
+                            $status = false;
+                            if(optional($unitZi->seleksi_administrasi_unit)->status_final == 1){
+                                $status = true;
+                            }elseif(optional($unitZi->sanggah_unit)->status_final == 1){
+                                $status = true;
+                            }
+                             return $status;
                         })->count();
 
                     $total_unit = $wbkCount + $wbbmCount;
@@ -73,24 +85,24 @@ class PanelController extends Controller
 
                         $wbkFinalCount = $instansiZi->unit_zi->where('wbk', true)
                         ->filter(function($unitZi) {
-                            return  optional($unitZi->verifikasi_lapangan)->status == 1;
+                            return  optional($unitZi->panel)->status == 1;
                         })->count();
                         $jumlah_lolos_wbk += $wbkFinalCount;
 
                         $wbbmFinalCount = $instansiZi->unit_zi->where('wbbm', true)
                         ->filter(function($unitZi) {
-                            return  optional($unitZi->verifikasi_lapangan)->status == 1;
+                            return  optional($unitZi->panel)->status == 1;
                         })->count();
                         $jumlah_lolos_wbbm += $wbbmFinalCount;
 
                         $wbkCompletedCount = $instansiZi->unit_zi->where('wbk', true)
                         ->filter(function($unitZi) {
-                            return  optional($unitZi->verifikasi_lapangan)->status > -1;
+                            return  optional($unitZi->panel)->status > -1;
                         })->count();
         
                         $wbbmCompletedCount = $instansiZi->unit_zi->where('wbbm', true)
                         ->filter(function($unitZi) {
-                            return  optional($unitZi->verifikasi_lapangan)->status > -1;
+                            return  optional($unitZi->panel)->status > -1;
                         })->count();
 
                         if($wbkFinalCount>0 || $wbbmFinalCount>0 ){
@@ -184,8 +196,10 @@ class PanelController extends Controller
         }
         
         $unit_ZIs = UnitZI::where("instansi_zi_id", $id)->where(function ($q){
-            $q->whereHas('wawancara', function ($query) {
-                $query->where('status', 1);
+            $q->whereHas('seleksi_administrasi_unit', function ($query) {
+                $query->where('status_final', 1);
+            })->orWhereHas('sanggah_unit', function ($query) {
+                $query->where('status_final', 1);
             });
         })->orderBy('wbk','desc')->get();
         
