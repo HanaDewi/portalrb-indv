@@ -140,6 +140,20 @@ if(! function_exists('menus'))
                 'url' => 'hasil',
             ],
             [
+                'levels' => ['admin', 'tpn'],
+                'title' => 'Evaluasi',
+                'icon' => 'pencil',
+                'url' => 'evaluasi',
+                'items' => [ 
+                    [
+                        'levels' => ['admin', 'tpn'],
+                        'title' => 'Renaksi RB General',
+                        'icon' => 'activity',
+                        'url' => 'evaluasi/renaksi-rb-general'
+                    ]
+                ],
+            ],
+            [
                 'levels' => ['devider'],
             ],
             [
