@@ -150,6 +150,12 @@ if(! function_exists('menus'))
                         'title' => 'Renaksi RB General',
                         'icon' => 'activity',
                         'url' => 'evaluasi/renaksi-rb-general'
+                    ],
+                    [
+                        'levels' => ['admin', 'tpn'],
+                        'title' => 'Data LKE Renaksi',
+                        'icon' => 'clipboard-list',
+                        'url' => 'evaluasi/data-lke-renaksi'
                     ]
                 ],
             ],
