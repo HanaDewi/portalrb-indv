@@ -19,4 +19,9 @@ class LkeParameter extends Model
     {
         return $this->hasMany(LkeBobot::class, 'lke_parameter_id');
     }
+
+    public function penilai()
+    {
+        return $this->belongsTo(LkeTp::class, 'penilai_id');
+    }
 }

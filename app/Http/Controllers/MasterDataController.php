@@ -275,24 +275,25 @@ class MasterDataController extends Controller
 
     public function lke_parameter_getDatas()
     {
-        $datas = LkeParameter::orderBy('tahun')->get();
-        foreach ($datas as $data) {
-            $data->parent = $data->parent;
-            $data->bobot = '';
-            if ($data->bobots) {
+        $parameters = LkeParameter::orderBy('tahun')->get();
+        foreach ($parameters as $parameter) {
+            $parameter->parent = $parameter->parent;
+            $parameter->tim_penilai = $parameter->penilai_id ? '['.strtoupper($parameter->penilai->tipe).'] '.$parameter->penilai->nama.' ('.$parameter->penilai->kode.')' : '';
+            $parameter->bobot = '';
+            if ($parameter->bobots) {
                 $bobotnya = [];
-                foreach ($data->bobots as $key => $bobot) {
+                foreach ($parameter->bobots as $key => $bobot) {
+                    $penilai = $bobot->tim_penilai ? $bobot->tim_penilai->nama : '';
                     $bobotnya[$key] = '<strong>Group : </strong>'.group_instansi($bobot->group).'<br>';
                     $bobotnya[$key] .= '<strong>Target Baik : </strong>'.$bobot->target_baik.'<br>';
                     $bobotnya[$key] .= '<strong>Min Value : </strong>'.$bobot->min_value.'<br>';
                     $bobotnya[$key] .= '<strong>Max Value : </strong>'.$bobot->max_value.'<br>';
                     $bobotnya[$key] .= '<strong>Bobot : </strong>'.$bobot->bobot.'<br>';
-                    $key++;
                 }
-                $data->bobot = implode('<hr>', $bobotnya);
+                $parameter->bobot = implode('<hr>', $bobotnya);
             }
         }
-        return response()->json(['data' => $datas]);
+        return response()->json(['data' => $parameters]);
     }
 
     public function lke_parameter_getData($id)
@@ -332,6 +333,7 @@ class MasterDataController extends Controller
             $lke_parameter->nama = $request->nama;
             $lke_parameter->tahun = $request->tahun;
             $lke_parameter->level = $request->level;
+            $lke_parameter->penilai_id = $request->penilai_id;
             if ($request->level == 'Sub Komponen') {
                 $lke_parameter->parent_id = $request->komponen;
             } else if ($request->level == 'Indikator') {

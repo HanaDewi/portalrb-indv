@@ -18,6 +18,7 @@
                         <th class="w-20">Level</th>
                         <th class="w-20">Parent</th>
                         <th class="w-10">Tahun</th>
+                        <th>Tim Penilai</th>
                         <th>Bobot</th>
                         <th class="w-5">Aksi</th>
                     </tr>
@@ -62,6 +63,10 @@
                             <div class="form-group">
                                 <label for="nama" class="form-label mt-2">Nama Parameter <span class="text-danger">*</span></label> 
                                 <textarea id="nama" name="nama" class="form-control" placeholder="Nama Parameter" required></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="penilai_id" class="form-label mt-2">Tim Penilai <span class="text-danger required_penilai">*</span></label>
+                                {!! Form::select('penilai_id', timpenilai(), null, ['class' => 'w-full', 'id' => 'penilai_id', 'data-placeholder' => 'Pilih Tim Penilai']) !!}
                             </div>
                             <div class="mt-5">
                                 <hr class="mb-5">
@@ -236,6 +241,7 @@
             { data: 'level' },
             { data: 'parent.nama' },
             { data: 'tahun' },
+            { data: 'tim_penilai' },
             { data: 'bobot' },
             { 
                 sortable: false, 
@@ -294,6 +300,8 @@
         $('#subkomponen-form').hide();
         $('#komponen').prop('required', false);
         $('#subkomponen').prop('required', false);
+        $('#penilai_id').prop('required', false);
+        $('.required_penilai').hide();
         level = $('#level').val();
         if (level == 'Sub Komponen') {
             $('#komponen-form').show();
@@ -303,6 +311,8 @@
             $('#subkomponen-form').show();
             $('#komponen').prop('required', true);
             $('#subkomponen').prop('required', true);
+            $('#penilai_id').prop('required', true);
+            $('.required_penilai').show();
             getSubKomponen();
         }
     }
@@ -319,6 +329,8 @@
         $('#lke_parameter_id').val(id);
         $('#title').html('Edit LKE Parameter');
         $('.saveButton').prop('disabled', true);
+        $('#penilai_id').prop('required', false);
+        $('.required_penilai').hide();
         $.getJSON("{{url('master-data/lke_parameter/getData')}}/"+id, function(data) {
             $('#tahun').val(data.tahun);
             $('#level').val(data.level);
@@ -335,6 +347,9 @@
                 $('#subkomponen').val(data.subkomponen_id);
                 $('#komponen').prop('required', true);
                 $('#subkomponen').prop('required', true);
+                $('#penilai_id').prop('required', true);
+                $('#penilai_id').val(data.penilai_id);
+                $('.required_penilai').show();
             }
             data.bobots.forEach(bobot => {
                 if (bobot.group == 'kl') {
