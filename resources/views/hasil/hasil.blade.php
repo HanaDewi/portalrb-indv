@@ -244,7 +244,7 @@
 <script src="{{ asset('ext/jquery-validation/localization/messages_id.min.js') }}"></script>
 <script src="{{ asset('ext') }}/jquery-inputmask/jquery.inputmask.bundle.js"></script>
 <script>
-    @if (in_array(auth()->user()->level, ['admin', 'tpn']))
+    @if (in_array(auth()->user()->level, ['admin', 'tpn', 'tpm']))
     var idx = {{ $idx }};
     $(document).ready(function() {
         modal_score = tailwind.Modal.getInstance(document.querySelector("#modal-score"));

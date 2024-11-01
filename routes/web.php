@@ -13,6 +13,8 @@ use App\Http\Controllers\RuangBelajar\DashboardController;
 use App\Http\Controllers\RuangBelajar\AdminController;
 use App\Http\Controllers\WebDashboardController;
 use App\Http\Controllers\CapaianOutputController;
+use App\Http\Controllers\ERenaksiRBGeneralController;
+use App\Http\Controllers\DataLKERenaksiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -163,6 +165,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/rencana_aksi/rb-tematik/rekap_data', [RBTematikController::class, 'rekap_data']);
     Route::get('/rencana_aksi/rb-tematik/rekap_data/getPerencanaan/{id}', [RBTematikController::class, 'rekap_data_getPerencanaan']);
     Route::post('/rencana_aksi/rb-tematik/rekap_data/simpanCatatanEvaluator', [RBTematikController::class, 'rekap_data_simpanCatatanEvaluator']);
+
+    // Evaluasi
+    Route::get('/evaluasi/renaksi-rb-general', [ERenaksiRBGeneralController::class, 'index']);
+    Route::get('/evaluasi/data-lke-renaksi', [DataLKERenaksiController::class, 'index']);
+
     // Hasil
     Route::get('/hasil', [HasilController::class, 'hasil_seluruh'])->name('hasil_seluruh');
     Route::get('/hasil/{KlpdInstansi}', [HasilController::class, 'hasil'])->name('hasil');
