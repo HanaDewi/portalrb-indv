@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DataKonversiJawabanController;
 use App\Http\Controllers\DokumenController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
@@ -169,6 +170,8 @@ Route::middleware('auth')->group(function () {
     // Evaluasi
     Route::get('/evaluasi/renaksi-rb-general', [ERenaksiRBGeneralController::class, 'index']);
     Route::get('/evaluasi/data-lke-renaksi', [DataLKERenaksiController::class, 'index']);
+    Route::get('/evaluasi/data-konversi-jawaban', [DataKonversiJawabanController::class, 'index']);
+    Route::post('/evaluasi/data-konversi-jawaban/save', [DataKonversiJawabanController::class, 'save']);
 
     // Hasil
     Route::get('/hasil', [HasilController::class, 'hasil_seluruh'])->name('hasil_seluruh');

@@ -157,6 +157,12 @@ if(! function_exists('menus'))
                         'title' => 'Data LKE Renaksi',
                         'icon' => 'clipboard-list',
                         'url' => 'evaluasi/data-lke-renaksi'
+                    ],
+                    [
+                        'levels' => ['admin', 'tpn'],
+                        'title' => 'Data Konversi Jawaban',
+                        'icon' => 'clipboard-list',
+                        'url' => 'evaluasi/data-konversi-jawaban'
                     ]
                 ],
             ],

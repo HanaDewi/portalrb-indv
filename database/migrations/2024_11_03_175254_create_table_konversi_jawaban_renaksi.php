@@ -15,17 +15,18 @@ return new class extends Migration
             $table->id();
             $table->string('jawaban', 10)->nullable();
             $table->float('skor')->nullable();
+            $table->integer('tahun')->nullable();
             $table->timestamps();
         });
         DB::table('konversi_jawaban_renaksi')->truncate();
         DB::table('konversi_jawaban_renaksi')->insert(array(
-            [ 'jawaban'=> 'A', 'skor'=> 1.0 ],
-            [ 'jawaban'=> 'B', 'skor'=> 0.75 ],
-            [ 'jawaban'=> 'C', 'skor'=> 0.5 ],
-            [ 'jawaban'=> 'D', 'skor'=> 0.25 ],
-            [ 'jawaban'=> 'E', 'skor'=> 0.0 ],
-            [ 'jawaban'=> 'YA', 'skor'=> 1.0 ],
-            [ 'jawaban'=> 'TIDAK', 'skor'=> 0.0 ]
+            [ 'jawaban'=> 'A', 'skor'=> 1.0, 'tahun'=>2024 ],
+            [ 'jawaban'=> 'B', 'skor'=> 0.75, 'tahun'=>2024 ],
+            [ 'jawaban'=> 'C', 'skor'=> 0.5, 'tahun'=>2024 ],
+            [ 'jawaban'=> 'D', 'skor'=> 0.25, 'tahun'=>2024 ],
+            [ 'jawaban'=> 'E', 'skor'=> 0.0, 'tahun'=>2024 ],
+            [ 'jawaban'=> 'YA', 'skor'=> 1.0, 'tahun'=>2024 ],
+            [ 'jawaban'=> 'TIDAK', 'skor'=> 0.0, 'tahun'=>2024 ]
         ));
     }
 
