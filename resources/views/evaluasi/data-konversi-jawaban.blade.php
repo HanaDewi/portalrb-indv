@@ -47,8 +47,10 @@
                     @endforeach
                 </tbody>
             </table>
+            @if ($isadmin==true)
             <br/>
             <a class="btn btn-danger" onclick="showform(this)" data-bs-toggle="modal" data-bs-target="#modal-form-konversi-jawaban">Tambah Data</a>
+            @endif
         </div>
     </div>
 </div>
