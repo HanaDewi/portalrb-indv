@@ -62,11 +62,11 @@ class DataKonversiJawabanController extends Controller
     {
         $todelete = KonversiJawabanRenaksi::find($request->id);
         if ($todelete->delete()) {
-            // return true;
+            return response()->json(['success' => 'Sukses', 'result' => true]);
         } else {
-            // return false;
+            return response()->json(['success' => 'Gagal', 'result' => false]);
         }
-        return redirect('/evaluasi/data-konversi-jawaban');
+        // return redirect('/evaluasi/data-konversi-jawaban');
     }
 
 }

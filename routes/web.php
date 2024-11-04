@@ -171,7 +171,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/evaluasi/renaksi-rb-general', [ERenaksiRBGeneralController::class, 'index']);
     Route::get('/evaluasi/data-lke-renaksi', [DataLKERenaksiController::class, 'index']);
     Route::get('/evaluasi/data-konversi-jawaban', [DataKonversiJawabanController::class, 'index']);
-    Route::post('/evaluasi/data-konversi-jawaban/save', [DataKonversiJawabanController::class, 'save']);
+    Route::post('/evaluasi/data-konversi-jawaban/save', [DataKonversiJawabanController::class, 'dosave']);
+    Route::delete('/evaluasi/data-konversi-jawaban/delete', [DataKonversiJawabanController::class, 'dodelete']);
 
     // Hasil
     Route::get('/hasil', [HasilController::class, 'hasil_seluruh'])->name('hasil_seluruh');

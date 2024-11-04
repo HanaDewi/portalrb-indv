@@ -33,14 +33,14 @@
                 <tbody>
                     @foreach ($data as $nn=>$de)
                     <tr>
-                        <th>{{ $nn+1 }}</th>
+                        <th>{{ $de->id }}</th>
                         <th>{{ $de->jawaban }}</th>
                         <th>{{ $de->skor }}</th>
                         <th>{{ $de->tahun }}</th>
                         @if ($isadmin==true)
                         <th>
                             <a class="btn btn-warning btn-xs" data-id="{{ $de->id }}" onclick="showform(this)" data-bs-toggle="modal" data-bs-target="#modal-form-konversi-jawaban"><i class="nav-icon fas fa-edit"></i></a> &nbsp; 
-                            <a class="btn btn-danger btn-xs" data-id="{{ $de->id }}" ><i class="nav-icon fas fa-remove"></i></a> &nbsp; 
+                            <a class="btn btn-danger btn-xs" data-id="{{ $de->id }}" onclick="dodelete(this)" ><i class="nav-icon fas fa-remove"></i></a> &nbsp; 
                         </th>
                         @endif
                     </tr>
@@ -115,13 +115,62 @@ $(document).ready(function(){
 window.modal_konversi_jawaban = tailwind.Modal.getInstance(document.querySelector("#modal-form-konversi-jawaban"));
 window.showform = function(th) {
     const id = $(th).data('id');
+    let jawaban = '';
+    let skor = '';
+    let tahun = '';
     if (id!=undefined) {
         $('#modal-form-konversi-jawaban').find('input[name=konversi_jawaban_id]').val(id);
-        // console.log(window.rowdata.rows().length);
-        // const row = window.rowdata.rows().data().filter(mm => mm['id']==id);
-        // console.log(row);
+        const rows = window.rowdata.rows().data();
+        let selected;
+        for (let n=0; n<rows.length; n++) {
+            if (rows[n][0]==id) {
+                selected = rows[n];
+            }
+        }
+        if (selected!=undefined) {
+            jawaban = selected[1];
+            skor = selected[2];
+            tahun = selected[3];
+        }
     }
+    $('#modal-form-konversi-jawaban').find('select[name=tahun]').val(tahun);
+    $('#modal-form-konversi-jawaban').find('input[name=jawaban]').val(jawaban);
+    $('#modal-form-konversi-jawaban').find('input[name=skor]').val(skor);
     window.modal_konversi_jawaban.show();
+}
+window.dodelete = function(th) {
+    const id = $(th).data('id');
+    if (!id) {
+        return false;
+    }
+    Swal.fire({
+        title: "Yakin?",
+        text: "Hapus data ini?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "Ya, Hapus aja!"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: "{{url('evaluasi/data-konversi-jawaban/delete')}}",
+                type: "delete",
+                data: {_token: '{{csrf_token()}}', id: id},
+                dataType: "json",
+                success: function(res) {
+                    if (res.result) {
+                        Swal.fire('Selamat!', 'Data data berhasil dihapus!', 'success');
+                        location.reload();
+                    } else {
+                        Swal.fire('Aduh!', 'Data data gagal dihapus! Coba lagi nanti ya..', 'error');
+                    }
+                },
+                error: function(err) {
+                    Swal.fire('Error!', 'Terjadi kesalahan!', 'error');
+                }
+            });
+        }
+    });
 }
 </script>
 @endpush
