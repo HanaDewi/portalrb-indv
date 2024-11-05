@@ -1,12 +1,12 @@
 <?php
 namespace App\Http\Controllers;
 
-use App\Models\LKERenaksi;
+use App\Models\KonversiJawabanRenaksi;
 use DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class DataLKERenaksiController extends Controller
+class DataKonversiJawabanController extends Controller
 {
     public function __construct()
     {
@@ -26,23 +26,21 @@ class DataLKERenaksiController extends Controller
         $isadmin = in_array($user->level, ['admin']);
         $tahun = $request->input('tahun');
         $tahun = empty($tahun) ? date('Y'):$request->input('tahun');
-        $datalke = LKERenaksi::where('tahun', $tahun)->get();
-        return view('evaluasi.data-lke-renaksi', ['tahun'=>$tahun, 'datalke'=>$datalke, 'isadmin'=>$isadmin]);
+        $data = KonversiJawabanRenaksi::where('tahun', $tahun)->get();
+        return view('evaluasi.data-konversi-jawaban', ['tahun'=>$tahun, 'data'=>$data, 'isadmin'=>$isadmin]);
     }
-
 
     public function dosave(Request $request)
     {
         $success = true;
         DB::beginTransaction();
         try {
-            $tosave = new LKERenaksi();
-            if (isset($request->lke_renaksi_id)) {
-                $tosave = LKERenaksi::find($request->lke_renaksi_id);
+            $tosave = new KonversiJawabanRenaksi();
+            if (isset($request->konversi_jawaban_id)) {
+                $tosave = KonversiJawabanRenaksi::find($request->konversi_jawaban_id);
             }
-            $tosave->kriteria = $request->kriteria;
-            $tosave->parent_id = $request->parent_id;
-            $tosave->info = $request->info;
+            $tosave->jawaban = $request->jawaban;
+            $tosave->skor = $request->skor;
             $tosave->tahun = $request->tahun;
             if (!$tosave->save()) {
                 $success = false;
@@ -56,20 +54,19 @@ class DataLKERenaksiController extends Controller
         } else {
             DB::rollBack();
         }
-        return redirect('/evaluasi/data-lke-renaksi?tahun=' . $request->tahun);
+        // return response()->json(['success' => $success]);
+        return redirect('/evaluasi/data-konversi-jawaban');
     }
 
     public function dodelete(Request $request)
     {
-        $check = LKERenaksi::where('parent_id', '=', $request->id)->first();
-        if ($check!=NULL) {
-            return response()->json(['success' => 'Gagal', 'result' => false]);
-        }
-        $todelete = LKERenaksi::find($request->id);
+        $todelete = KonversiJawabanRenaksi::find($request->id);
         if ($todelete->delete()) {
             return response()->json(['success' => 'Sukses', 'result' => true]);
         } else {
             return response()->json(['success' => 'Gagal', 'result' => false]);
         }
+        // return redirect('/evaluasi/data-konversi-jawaban');
     }
+
 }

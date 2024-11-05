@@ -16,7 +16,10 @@
                     <option value="{{ $i }}" {{ ($i==$tahun) ? 'selected':'' }}>{{ $i }}</option>
                     @endfor
                 </select>
-                <a class="btn btn-danger" href="/evaluasi/data-lke-renaksi">Data LKE Renaksi</a>
+            </div>
+            <div class="row">
+                <a class="btn btn-danger" href="/evaluasi/data-lke-renaksi">Data LKE Renaksi</a> &nbsp; 
+                <a class="btn btn-danger" href="/evaluasi/data-konversi-jawaban">Data Konversi Jawaban</a>
             </div>
             <div class="separator mt-5"></div>
             <table id="perencanaan" class="table table-bordered table-striped" cellspacing="0" width="100%">
