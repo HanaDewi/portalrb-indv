@@ -23,70 +23,13 @@
 <div class="demo">
     <div id="owl-demo" class="owl-carousel">
         <div class="item">
-            <section class="hero-area bgs-cover pt-70 pb-15 rpt-130"
-                style="background-image: url({{ URL::to('/') }}/assets/images/bgslide1.jpg)">
+            <section class="hero-area bgs-cover pt-30 pb-15 rpt-130"
+                style="background-image: url({{ URL::to('/') }}/assets/images/bgportal.jpg)">
                 <div class="container container-1000">
                     <div class="row gap-80 align-items-center">
-                        <div class="col-lg-7 order-lg-2">
+                        <div class="col-lg-12">
                             <img class="one wow fadeInRight delay-0-2s"
-                                src="{{ URL::to('/') }}/assets/images/slide1.png" alt="Hero">
-                        </div>
-                        <div class="col-lg-5">
-                            <div class="hero-images">
-                                <img width="50%" class="one wow fadeInRight delay-0-2s"
-                                    src="{{ URL::to('/') }}/assets/images/presiden2.png" alt="Hero">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </div>
-        <div class="item">
-            <section class="hero-area bgs-cover pt-70 pb-15 rpt-130"
-                style="background-image: url({{ URL::to('/') }}/assets/images/bgslide2.jpg)">
-                <div class="container container-1000">
-                    <div class="row gap-80 align-items-center">
-                        <div class="col-lg-7">
-                            <img class="one wow fadeInRight delay-0-2s"
-                                src="{{ URL::to('/') }}/assets/images/slide2.png" alt="Hero">
-                        </div>
-                        <div class="col-lg-5">
-                            <div class="hero-images">
-                                <img width="50%" class="one wow fadeInRight delay-0-2s"
-                                    src="{{ URL::to('/') }}/assets/images/menteri.png" alt="Hero">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </div>
-        <div class="item">
-            <section class="hero-area bgs-cover pt-70 pb-15 rpt-130"
-                style="background-image: url({{ URL::to('/') }}/assets/images/bgslide3.jpg)">
-                <div class="container container-1000">
-                    <div class="row gap-80 align-items-center">
-                        <div class="col-lg-7 order-lg-2">
-                            <img class="one wow fadeInRight delay-0-2s"
-                                src="{{ URL::to('/') }}/assets/images/slide3.png" alt="Hero">
-                        </div>
-                        <div class="col-lg-5">
-                            <div class="hero-images">
-                                <img width="50%" class="one wow fadeInRight delay-0-2s"
-                                    src="{{ URL::to('/') }}/assets/images/presiden.png" alt="Hero">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </div>
-        <div class="item">
-            <section class="hero-area bgs-cover pt-70 pb-15 rpt-130"
-                style="background-image: url({{ URL::to('/') }}/assets/images/bgslide4.jpg)">
-                <div class="container container-1000">
-                    <div class="row gap-80 align-items-center">
-                        <div class="col-lg-12 ">
-                            <img class="one wow fadeInRight delay-0-2s"
-                                src="{{ URL::to('/') }}/assets/images/roadmap.png" alt="Hero">
+                                src="{{ URL::to('/') }}/assets/images/newportal.png" alt="Hero">
                         </div>
                     </div>
                 </div>

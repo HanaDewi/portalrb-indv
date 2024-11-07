@@ -18,6 +18,7 @@
     <script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+
     @yield('cssJsHere')
 
 
@@ -34,22 +35,22 @@
                         </ul>
                         <ul>
                             <li>
-                                <a href="#">
+                                <a href="https://www.instagram.com/rbkunwas/" target="_blank">
                                     <i class="fab fa-instagram"></i>
                                 </a>
                             </li>
                             <li>
-                                <a href="#">
+                                <a href="https://twitter.com/rbkunwas" target="_blank">
                                     <i class="fab fa-twitter"></i>
                                 </a>
                             </li>
                             <li>
-                                <a href="#">
+                                <a href="https://www.facebook.com/kempanrb/" target="_blank">
                                     <i class="fab fa-facebook"></i>
                                 </a>
                             </li>
                             <li>
-                                <a href="#">
+                                <a href="https://www.youtube.com/channel/UCbgLGOpvsj8Si0Bs6getx1g" target="_blank">
                                     <i class="fab fa-youtube"></i>
                                 </a>
                             </li>
