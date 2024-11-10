@@ -6,7 +6,11 @@
     @include('common.status')
     <div class="intro-y box">
         <div class="flex flex-col sm:flex-row items-center p-5 border-b border-slate-200/60">
-            <h2 class="font-bold text-base mr-auto"> Evaluasi Renaksi  RB General - {{ auth()->user()->nama }}</h2>
+            <h2 class="font-bold text-base mr-auto"> Evaluasi Renaksi  RB General
+                @if (isset($instansi))
+                    - {{ $instansi->name }}
+                @endif
+            </h2>
         </div>
         <div class="lg:col-span-12 p-5 border-b border-slate-200/60">
             <div class="row">
@@ -22,38 +26,67 @@
                 <a class="btn btn-danger" href="/evaluasi/data-konversi-jawaban">Data Konversi Jawaban</a>
             </div>
             <div class="separator mt-5"></div>
-            <table id="perencanaan" class="table table-bordered table-striped" cellspacing="0" width="100%">
+            @if($kembali==false)
+            <table id="table-instansi" class="table table-bordered table-striped" cellspacing="0" width="100%">
                 <thead class="table-dark font-bold">
                     <tr>
                         <th class="w-5">No.</th>
                         <th>Instansi</th>
-                        <th>Komponen/Kriteria</th>
-                        <th>Jawaban</th>
                         <th>Skor</th>
-                        <th>Catatan</th>
-                        <th>Rekomendasi</th>
-                        <th>Info</th>
-                        <th>Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($jawaban as $cc=>$jw)
+                    @foreach ($data as $cc=>$jw)
                     <tr>
                         <td>{{ $cc+1 }}</td>
-                        <td>{{ $jw->instansi_id }}</td>
-                        <td>{{ $jw->lke_renaksi_id }}</td>
-                        <td>{{ $jw->jawaban }}</td>
-                        <td>{{ $jw->jawaban }}</td>
-                        <td>{{ $jw->catatan }}</td>
-                        <td>{{ $jw->rekomendasi }}</td>
-                        <td>{{ $jw->rekomendasi }}</td>
-                        <td></td>
+                        @if ($istpn)
+                        <td><a href="?instansi={{ $jw->instansi_id }}" style="color:blue">{{ $jw->instansi->name }}</a></td>
+                        @else 
+                        <td><a href="?instansi={{ $jw->id }}" style="color:blue">{{ $jw->name }}</a></td>
+                        @endif
+                        <td>{{ $jw->skor }}</td>
                     </tr>
                     @endforeach
                 </tbody>
             </table>
-            <br/>
-            <a class="btn btn-danger">Tambah Data</a>
+            @else
+            <table id="table-instansi" class="table table-bordered table-striped" cellspacing="0" width="100%">
+                <thead class="table-dark font-bold">
+                    <tr>
+                        <th class="w-5">No.</th>
+                        <th>LKE Renaksi</th>
+                        <th>Jawaban</th>
+                        <th>Catatan</th>
+                        <th>Rekomendasi</th>
+                        @if($check==true)
+                        <th>Aksi</th>
+                        @endif
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($data as $cc=>$jw)
+                    <tr>
+                        <td>{{ $cc+1 }}</td>
+                        <td>{{ $cc+1 }}</td>
+                        <td>{{ $cc+1 }}</td>
+                        <td>{{ $cc+1 }}</td>
+                        <td>{{ $cc+1 }}</td>
+                        @if($check==true)
+                        <td>{{ $cc }}</td>
+                        @endif
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+            @endif
+            <div class="row mt-4">
+                @if($kembali==true)
+                <a href="/evaluasi/renaksi-rb-general" class="btn btn-warning">&lt; Kembali</a>
+                @endif
+                @if($check==true)
+                &nbsp; <a href="/evaluasi/renaksi-rb-general" class="btn btn-danger">Tambah</a>
+                @endif
+            </div>
         </div>
     </div>
 </div>
@@ -73,7 +106,7 @@
 <script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.html5.min.js"></script>
 <script>
 $(document).ready(function(){
-    
+    window.dttable = new DataTable('#table-instansi');
 });
 </script>
 @endpush
