@@ -84,9 +84,64 @@
                 <a href="/evaluasi/renaksi-rb-general" class="btn btn-warning">&lt; Kembali</a>
                 @endif
                 @if($check==true)
-                &nbsp; <a href="/evaluasi/renaksi-rb-general" class="btn btn-danger">Tambah</a>
+                &nbsp; <a  onclick="showform(this)" data-bs-toggle="modal" data-bs-target="#modal-form-jawaban-renaksi" class="btn btn-danger">Tambah</a>
                 @endif
             </div>
+        </div>
+    </div>
+</div>
+
+<div id="modal-form-jawaban-renaksi" class="modal fade" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="fw-medium fs-base me-auto" id="title">Data Jawaban Renaksi</h2>
+            </div>
+            <form action="{{ url('evaluasi/data-konversi-jawaban/save') }}" id="form-konversi-jawaban" method="post">
+                @csrf
+                <input type="hidden" name="jawaban_renaksi_id" id="jawaban_renaksi_id">
+                <div class="modal-body grid columns-12 gap-4 gap-y-3">
+                    <div class="g-col-12">
+                        <div class="form-group">
+                            <label for="tahun" class="form-label">Tahun <span class="text-danger">*</span></label> 
+                            <input type="text" value="{{ $tahun }}" class="form-control" readonly placeholder="Tahun"/>
+                        </div> 
+                    </div>
+                    <div class="g-col-12">
+                        <div class="form-group">
+                            <label for="tahun" class="form-label">LKE Renaksi <span class="text-danger">*</span></label> 
+                            <select id="tahun" name="tahun" class="form-control" required onchange="showInfo(this)">
+                                @foreach ($renaksi as $ren)
+                                <option value="{{ $ren->id }}" data-info="{{ urlencode($ren->info) }}">{{ $ren->kriteria }}</option>
+                                @endforeach
+                            </select>
+                            <textarea class="form-control" disabled id="renaksiinfo"></textarea>
+                        </div> 
+                    </div>
+                    <div class="g-col-12">
+                        <div class="form-group">
+                            <label for="jawaban" class="form-label">Jawaban  <span class="text-danger">*</span></label> 
+                            <input type="text" id="jawaban" name="jawaban" class="form-control" placeholder="Jawaban" required />
+                        </div> 
+                    </div>
+                    <div class="g-col-12">
+                        <div class="form-group">
+                            <label for="catatan" class="form-label">Catatan  </label> 
+                            <textarea id="catatan" name="catatan" class="form-control" placeholder="Catatan"></textarea>
+                        </div> 
+                    </div>
+                    <div class="g-col-12">
+                        <div class="form-group">
+                            <label for="rekomendasi" class="form-label">Rekomendasi  </label> 
+                            <textarea id="rekomendasi" name="rekomendasi" class="form-control" placeholder="Rekomendasi"></textarea>
+                        </div> 
+                    </div>
+                </div>
+                <div class="modal-footer text-end"> 
+                    <button type="button" data-tw-dismiss="modal" class="btn btn-outline-secondary w-20 me-1">Batal</button> &nbsp; 
+                    <button type="submit" class="btn btn-success w-20 saveButton">Simpan</button> 
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -108,5 +163,36 @@
 $(document).ready(function(){
     window.dttable = new DataTable('#table-instansi');
 });
+window.modal_jawaban_renaksi = tailwind.Modal.getInstance(document.querySelector("#modal-form-jawaban-renaksi"));
+window.showform = function(th) {
+    const id = $(th).data('id');
+    let jawaban = '';
+    let skor = '';
+    let tahun = '';
+    if (id!=undefined) {
+        $('#modal-form-jawaban-renaksi').find('input[name=konversi_jawaban_id]').val(id);
+        const rows = window.rowdata.rows().data();
+        let selected;
+        for (let n=0; n<rows.length; n++) {
+            if (rows[n][0]==id) {
+                selected = rows[n];
+            }
+        }
+        if (selected!=undefined) {
+            jawaban = selected[1];
+            skor = selected[2];
+            tahun = selected[3];
+        }
+    }
+    $('#modal-form-jawaban-renaksi').find('select[name=tahun]').val(tahun);
+    $('#modal-form-jawaban-renaksi').find('input[name=jawaban]').val(jawaban);
+    $('#modal-form-jawaban-renaksi').find('input[name=skor]').val(skor);
+    window.modal_jawaban_renaksi.show();
+}
+window.showInfo = function(th) {
+    const info = $(th).find('option:selected').data('info');
+    console.log(decodeURIComponent(info));
+    $('#renaksiinfo').val(decodeURIComponent(info));
+}
 </script>
 @endpush

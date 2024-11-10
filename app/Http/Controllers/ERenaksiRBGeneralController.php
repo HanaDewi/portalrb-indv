@@ -6,6 +6,7 @@ use App\Models\KlpdInstansi;
 use App\Models\ZI\AnggotaTimEvaluasi;
 use App\Models\ZI\InstansiTim;
 use App\Models\ZI\UnitTimEvaluasi;
+use DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -69,7 +70,10 @@ class ERenaksiRBGeneralController extends Controller
                 $atim = AnggotaTimEvaluasi::where('user_id', $user->id)->first();
                 $check = InstansiTim::where('tim_id', $atim->tim_id)->where('instansi_id', $ins_id)->first();
             }
-            return view('evaluasi.renaksi-rb-general', ['tahun'=>$tahun, 'isadmin'=>$isadmin, 'data'=>$jawaban, 'kembali'=>true, 'instansi'=>$instansi, 'check'=>$check]);
+
+            $renaksi = DB::select('SELECT id,kriteria,info,tahun FROM lke_renaksi lr WHERE (SELECT COUNT(*) FROM lke_renaksi lr_ WHERE lr_.parent_id=lr.id)=0 AND lr.tahun=?', [$tahun]);
+
+            return view('evaluasi.renaksi-rb-general', ['tahun'=>$tahun, 'isadmin'=>$isadmin, 'data'=>$jawaban, 'kembali'=>true, 'instansi'=>$instansi, 'check'=>$check, 'renaksi'=>$renaksi]);
 
         }
     }
