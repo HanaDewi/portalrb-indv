@@ -2,6 +2,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\JawabanRenaksi;
+use App\Models\KlpdInstansi;
+use App\Models\KonversiJawabanRenaksi;
+use App\Models\ZI\AnggotaTimEvaluasi;
+use App\Models\ZI\InstansiTim;
+use App\Models\ZI\UnitTimEvaluasi;
+use DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -23,10 +29,93 @@ class ERenaksiRBGeneralController extends Controller
     {
         $user = Auth::User();
         $isadmin = in_array($user->level, ['admin']);
+        $istpn = in_array($user->level, ['tpn']);
+
         $tahun = $request->input('tahun');
         $tahun = empty($tahun) ? date('Y'):$request->input('tahun');
-        $jawaban = JawabanRenaksi::where('tahun', $tahun)->get();
-        return view('evaluasi.renaksi-rb-general', ['tahun'=>$tahun, 'isadmin'=>$isadmin, 'jawaban'=>$jawaban]);
+
+        $ins_id = $request->input('instansi');
+
+        if (empty($ins_id)) {
+
+            if ($istpn) {
+                $atim = AnggotaTimEvaluasi::where('user_id', $user->id)->first();
+                $instansis = InstansiTim::where('tim_id', $atim->tim_id)->get();
+                foreach ($instansis as $jj=>&$nn) {
+                    $nn->skor = 100;
+                }
+            } else {
+                $instansis = KlpdInstansi::get();
+                foreach ($instansis as $jj=>&$nn) {
+                    $nn->skor = 100;
+                }
+            }
+
+            return view('evaluasi.renaksi-rb-general', ['tahun'=>$tahun, 'isadmin'=>$isadmin, 'data'=>$instansis, 'kembali'=>false, 'istpn'=>$istpn, 'check'=>false]);
+
+        } else {
+
+            $instansi = KlpdInstansi::where('id', $ins_id)->first();
+            $jawaban = JawabanRenaksi::where('tahun', $tahun)->where('instansi_id', $ins_id)->get();
+            $check = false;
+            if ($istpn) {
+                $atim = AnggotaTimEvaluasi::where('user_id', $user->id)->first();
+                $check = InstansiTim::where('tim_id', $atim->tim_id)->where('instansi_id', $ins_id)->first();
+            }
+
+            $renaksi = DB::select('SELECT id,kriteria,info,tahun FROM lke_renaksi lr WHERE (SELECT COUNT(*) FROM lke_renaksi lr_ WHERE lr_.parent_id=lr.id)=0 AND lr.tahun=?', [$tahun]);
+            $ljawaban = KonversiJawabanRenaksi::get();
+
+            return view('evaluasi.renaksi-rb-general', ['tahun'=>$tahun, 'isadmin'=>$isadmin, 'data'=>$jawaban, 'kembali'=>true, 'instansi'=>$instansi, 'check'=>$check, 'renaksi'=>$renaksi, 'list_jawaban'=>$ljawaban]);
+
+        }
     }
 
+    public function dosave(Request $request)
+    {
+        $user = Auth::User();
+        $success = true;
+        DB::beginTransaction();
+        try {
+            $tosave = new JawabanRenaksi();
+            if (isset($request->jawaban_renaksi_id)) {
+                $tosave = JawabanRenaksi::find($request->jawaban_renaksi_id);
+                $tosave->updated_by = $user->id;
+            } else {
+                $tosave->created_by = $user->id;
+            }
+            $tosave->instansi_id = $request->instansi_id;
+            $tosave->tahun = $request->tahun;
+            $tosave->lke_renaksi_id = $request->lke_renaksi_id;
+            $tosave->jawaban = $request->jawaban;
+            $tosave->catatan = $request->catatan;
+            $tosave->rekomendasi = $request->rekomendasi;
+            if (!$tosave->save()) {
+                $success = false;
+            }
+        } catch (\Throwable $th) {
+            $success = false;
+            throw $th;
+        }
+        if ($success) {
+            DB::commit();
+        } else {
+            DB::rollBack();
+        }
+        return redirect('/evaluasi/renaksi-rb-general?instansi=' . $request->instansi_id);
+    }
+
+    public function dodelete(Request $request)
+    {
+        $check = JawabanRenaksi::where('parent_id', '=', $request->id)->first();
+        if ($check!=NULL) {
+            return response()->json(['success' => 'Gagal', 'result' => false]);
+        }
+        $todelete = JawabanRenaksi::find($request->id);
+        if ($todelete->delete()) {
+            return response()->json(['success' => 'Sukses', 'result' => true]);
+        } else {
+            return response()->json(['success' => 'Gagal', 'result' => false]);
+        }
+    }
 }
