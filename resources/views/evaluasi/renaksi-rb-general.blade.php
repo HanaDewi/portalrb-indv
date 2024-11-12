@@ -23,7 +23,7 @@
             </div>
             <div class="row">
                 <a class="btn btn-danger" href="/evaluasi/data-lke-renaksi">Data LKE Renaksi</a> &nbsp; 
-                <a class="btn btn-danger" href="/evaluasi/data-konversi-jawaban">Data Konversi Jawaban</a>
+                <a class="btn btn-danger" href="/evaluasi/renaksi-rb-general">Data Konversi Jawaban</a>
             </div>
             <div class="separator mt-5"></div>
             @if($kembali==false)
@@ -67,12 +67,12 @@
                     @foreach ($data as $cc=>$jw)
                     <tr>
                         <td>{{ $cc+1 }}</td>
-                        <td>{{ $cc+1 }}</td>
-                        <td>{{ $cc+1 }}</td>
-                        <td>{{ $cc+1 }}</td>
-                        <td>{{ $cc+1 }}</td>
+                        <td>{{ $jw->lke->kriteria }}</td>
+                        <td>{{ $jw->jawaban }}</td>
+                        <td>{{ $jw->catatan }}</td>
+                        <td>{{ $jw->rekomendasi }}</td>
                         @if($check==true)
-                        <td>{{ $cc }}</td>
+                        <td></td>
                         @endif
                     </tr>
                     @endforeach
@@ -98,20 +98,22 @@
             <div class="modal-header">
                 <h2 class="fw-medium fs-base me-auto" id="title">Data Jawaban Renaksi</h2>
             </div>
-            <form action="{{ url('evaluasi/data-konversi-jawaban/save') }}" id="form-konversi-jawaban" method="post">
+            <form action="{{ url('evaluasi/renaksi-rb-general/save') }}" id="form-konversi-jawaban" method="post">
                 @csrf
+                <input type="hidden" name="instansi_id" id="instansi_id" value="{{ $instansi->id }}">
                 <input type="hidden" name="jawaban_renaksi_id" id="jawaban_renaksi_id">
                 <div class="modal-body grid columns-12 gap-4 gap-y-3">
                     <div class="g-col-12">
                         <div class="form-group">
                             <label for="tahun" class="form-label">Tahun <span class="text-danger">*</span></label> 
-                            <input type="text" value="{{ $tahun }}" class="form-control" readonly placeholder="Tahun"/>
+                            <input type="text" name="tahun" value="{{ $tahun }}" class="form-control" readonly placeholder="Tahun"/>
                         </div> 
                     </div>
                     <div class="g-col-12">
                         <div class="form-group">
-                            <label for="tahun" class="form-label">LKE Renaksi <span class="text-danger">*</span></label> 
-                            <select id="tahun" name="tahun" class="form-control" required onchange="showInfo(this)">
+                            <label for="lkerenaksi" class="form-label">LKE Renaksi <span class="text-danger">*</span></label> 
+                            <select id="lkerenaksi" name="lke_renaksi_id" class="form-control" required onchange="showInfo(this)">
+                                <option></option>
                                 @foreach ($renaksi as $ren)
                                 <option value="{{ $ren->id }}" data-info="{{ addslashes($ren->info) }}">{{ $ren->kriteria }}</option>
                                 @endforeach
@@ -125,7 +127,7 @@
                             <select id="jawbaan" name="jawaban" class="form-control" required placeholder="Pilih jawaban">
                                 <option></option>
                                 @foreach ($list_jawaban as $lj)
-                                <option value="{{ $lj->id }}">{{ $lj->jawaban }}</option>
+                                <option value="{{ $lj->jawaban }}">{{ $lj->jawaban }}</option>
                                 @endforeach
                             </select>
                         </div> 
@@ -170,6 +172,7 @@
 $(document).ready(function(){
     window.dttable = new DataTable('#table-instansi');
 });
+@if($check==true)
 window.modal_jawaban_renaksi = tailwind.Modal.getInstance(document.querySelector("#modal-form-jawaban-renaksi"));
 window.showform = function(th) {
     const id = $(th).data('id');
@@ -200,5 +203,6 @@ window.showInfo = function(th) {
     const info = $(th).find('option:selected').data('info');
     $('#renaksiinfo').val(info);
 }
+@endif
 </script>
 @endpush

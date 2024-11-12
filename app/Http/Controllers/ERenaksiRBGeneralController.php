@@ -25,16 +25,6 @@ class ERenaksiRBGeneralController extends Controller
         });
     }
 
-    public function index2(Request $request)
-    {
-        $user = Auth::User();
-        $isadmin = in_array($user->level, ['admin']);
-        $tahun = $request->input('tahun');
-        $tahun = empty($tahun) ? date('Y'):$request->input('tahun');
-        $jawaban = JawabanRenaksi::where('tahun', $tahun)->get();
-        return view('evaluasi.renaksi-rb-general', ['tahun'=>$tahun, 'isadmin'=>$isadmin, 'jawaban'=>$jawaban]);
-    }
-
     public function index(Request $request)
     {
         $user = Auth::User();
@@ -81,4 +71,51 @@ class ERenaksiRBGeneralController extends Controller
         }
     }
 
+    public function dosave(Request $request)
+    {
+        $user = Auth::User();
+        $success = true;
+        DB::beginTransaction();
+        try {
+            $tosave = new JawabanRenaksi();
+            if (isset($request->jawaban_renaksi_id)) {
+                $tosave = JawabanRenaksi::find($request->jawaban_renaksi_id);
+                $tosave->updated_by = $user->id;
+            } else {
+                $tosave->created_by = $user->id;
+            }
+            $tosave->instansi_id = $request->instansi_id;
+            $tosave->tahun = $request->tahun;
+            $tosave->lke_renaksi_id = $request->lke_renaksi_id;
+            $tosave->jawaban = $request->jawaban;
+            $tosave->catatan = $request->catatan;
+            $tosave->rekomendasi = $request->rekomendasi;
+            if (!$tosave->save()) {
+                $success = false;
+            }
+        } catch (\Throwable $th) {
+            $success = false;
+            throw $th;
+        }
+        if ($success) {
+            DB::commit();
+        } else {
+            DB::rollBack();
+        }
+        return redirect('/evaluasi/renaksi-rb-general?instansi=' . $request->instansi_id);
+    }
+
+    public function dodelete(Request $request)
+    {
+        $check = JawabanRenaksi::where('parent_id', '=', $request->id)->first();
+        if ($check!=NULL) {
+            return response()->json(['success' => 'Gagal', 'result' => false]);
+        }
+        $todelete = JawabanRenaksi::find($request->id);
+        if ($todelete->delete()) {
+            return response()->json(['success' => 'Sukses', 'result' => true]);
+        } else {
+            return response()->json(['success' => 'Gagal', 'result' => false]);
+        }
+    }
 }
