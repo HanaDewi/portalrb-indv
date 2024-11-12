@@ -15,31 +15,31 @@ if(! function_exists('menus'))
     {
         $menu = [
             [
-                'levels' => ['admin', 'provinsi', 'kabupaten', 'kl', 'tpn', 'tpm'],
+                'levels' => ['admin', 'provinsi', 'kabupaten', 'kl', 'tpn', 'tpm', 'viewer'],
                 'title' => 'Beranda',
                 'icon' => 'home',
                 'url' => 'dashboard',
             ],
             [
-                'levels' => ['tpn', 'admin'],
+                'levels' => ['tpn', 'admin', 'viewer'],
                 'title' => 'Dashboard',
                 'icon' => 'pie-chart',
                 'url' => 'webdashboard',
                 'items' => [ 
                     [
-                        'levels' => ['tpn', 'admin'],
+                        'levels' => ['tpn', 'admin', 'viewer'],
                         'title' => 'RB General',
                         'icon' => 'clipboard-list',
                         'url' => 'webdashboard/rb-general',
                         'items' => [
                             [
-                                'levels' => ['tpn', 'admin'],
+                                'levels' => ['tpn', 'admin', 'viewer'],
                                 'title' => 'Rencana Aksi',
                                 'icon' => 'inbox',
                                 'url' => 'webdashboard/rb-general/rencana-aksi',
                             ],
                             [
-                                'levels' => ['tpn', 'admin'],
+                                'levels' => ['tpn', 'admin', 'viewer'],
                                 'title' => 'Capaian Output',
                                 'icon' => 'bar-chart',
                                 'url' => 'webdashboard/rb-general/capaian-output',
@@ -47,19 +47,19 @@ if(! function_exists('menus'))
                         ]
                     ],
                     [
-                        'levels' => ['tpn', 'admin'],
+                        'levels' => ['tpn', 'admin', 'viewer'],
                         'title' => 'RB Tematik',
                         'icon' => 'clipboard',
                         'url' => 'webdashboard/rb-tematik',
                         'items' => [
                             [
-                                'levels' => ['tpn', 'admin'],
+                                'levels' => ['tpn', 'admin', 'viewer'],
                                 'title' => 'Rencana Aksi',
                                 'icon' => 'inbox',
                                 'url' => 'webdashboard/rb-tematik/rencana-aksi',
                             ],
                             [
-                                'levels' => ['tpn', 'admin'],
+                                'levels' => ['tpn', 'admin', 'viewer'],
                                 'title' => 'Capaian Output',
                                 'icon' => 'bar-chart',
                                 'url' => 'webdashboard/rb-tematik/capaian-output',
@@ -67,7 +67,7 @@ if(! function_exists('menus'))
                         ]
                     ],
                     [
-                        'levels' => ['tpn', 'admin'],
+                        'levels' => ['tpn', 'admin', 'viewer'],
                         'title' => 'Hasil Evaluasi',
                         'icon' => 'target',
                         'url' => 'webdashboard/hasil-evaluasi'
@@ -81,13 +81,13 @@ if(! function_exists('menus'))
                 'url' => 'dokumen',
             ],
             [
-                'levels' => ['admin', 'provinsi', 'kabupaten', 'kl', 'tpn'],
+                'levels' => ['admin', 'provinsi', 'kabupaten', 'kl', 'tpn',  'viewer'],
                 'title' => 'Rencana Aksi',
                 'icon' => 'inbox',
                 'url' => 'rencana_aksi',
                 'items' => [ 
                     [
-                        'levels' => ['admin', 'provinsi', 'kabupaten', 'kl', 'tpn'],
+                        'levels' => ['admin', 'provinsi', 'kabupaten', 'kl', 'tpn', 'viewer'],
                         'title' => 'RB General',
                         'icon' => 'activity',
                         'url' => 'rencana_aksi/rb-general',
@@ -99,7 +99,7 @@ if(! function_exists('menus'))
                                 'url' => 'rencana_aksi/rb-general/perencanaan',
                             ],
                             [
-                                'levels' => ['admin', 'provinsi', 'kabupaten', 'kl', 'tpn'],
+                                'levels' => ['admin', 'provinsi', 'kabupaten', 'kl', 'tpn', 'viewer'],
                                 'title' => 'Rekap Data',
                                 'icon' => 'clipboard',
                                 'url' => 'rencana_aksi/rb-general/rekap_data',
@@ -107,7 +107,7 @@ if(! function_exists('menus'))
                         ]
                     ],
                     [
-                        'levels' => ['admin', 'provinsi', 'kabupaten', 'kl', 'tpn'],
+                        'levels' => ['admin', 'provinsi', 'kabupaten', 'kl', 'tpn', 'viewer'],
                         'title' => 'RB Tematik',
                         'icon' => 'bookmark',
                         'url' => 'rencana_aksi/rb-tematik',
@@ -125,7 +125,7 @@ if(! function_exists('menus'))
                                 'url' => 'rencana_aksi/rb-tematik/permasalahan',
                             ],
                             [
-                                'levels' => ['admin', 'provinsi', 'kabupaten', 'kl', 'tpn'],
+                                'levels' => ['admin', 'provinsi', 'kabupaten', 'kl', 'tpn', 'viewer'],
                                 'title' => 'Rekap Data',
                                 'icon' => 'clipboard',
                                 'url' => 'rencana_aksi/rb-tematik/rekap_data',
@@ -460,6 +460,10 @@ if(! function_exists('group_instansi')) {
             'provinsi' => 'Provinsi',
             'kabupaten' => 'Kabupaten/Kota',
             'lain' => 'Lainnya',
+            'kab' => 'Kabupaten/Kota',
+            'prov' => 'Provinsi',
+            'provinsi' => 'Provinsi',
+            'pemda' => 'Kabupaten/Kota',
         ];
         
         return $group ? $groups[$group] : $groups;

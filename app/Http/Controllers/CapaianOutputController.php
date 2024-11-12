@@ -24,7 +24,7 @@ class CapaianOutputController extends Controller
     public function rbTematikCapaianOutput(Request $request)
     {
         $user = Auth::User();
-        if (in_array($user->level, ['admin', 'tpn'])) {
+        if (in_array($user->level, ['admin', 'tpn', 'viewer'])) {
             $capaians = DB::table('klpd_instansi as ki')
                 ->leftJoin('tematik_sasaran_roadmap as sasaran', 'sasaran.instansi_id', '=', 'ki.id')
                 ->leftJoin('tematik_indikator_roadmap as indikator', 'indikator.tematik_sasaran_roadmap_id', '=', 'sasaran.id')
