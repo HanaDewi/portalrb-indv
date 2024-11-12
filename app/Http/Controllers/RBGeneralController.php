@@ -638,7 +638,7 @@ class RBGeneralController extends Controller
                 }
             }
         }
-        if ($request->instansi_id && in_array($user->level, ['admin', 'tpn'])) {
+        if ($request->instansi_id && in_array($user->level, ['admin', 'tpn', 'viewer'])) {
             $instansi_ids = $request->instansi_id;
         } else if (isset($user->user_rel->instansi_id)) {
             $instansi_ids = [$user->user_rel->instansi_id];

@@ -893,7 +893,7 @@ class RBTematikController extends Controller
 
         $finstansi = $request->get('instansi_id');
         $ftema = $request->get('ftema');
-        if ($finstansi==null && in_array($user->level, ['admin', 'tpn'])) {
+        if ($finstansi==null && in_array($user->level, ['admin', 'tpn', 'viewer'])) {
             $finstansi = [1];
         }
         if ($ftema==null) {
@@ -910,10 +910,10 @@ class RBTematikController extends Controller
         $fpermasalahan = $request->get('fpermasalahan');
         $fintervensi = $request->get('fintervensi');
 
-        if (in_array($user->level, ['admin', 'tpn'])) {
+        if (in_array($user->level, ['admin', 'tpn', 'viewer'])) {
             $instansi_id = $finstansi;
         } else {
-            if ($request->instansi_id && in_array($user->level, ['admin', 'tpn'])) {
+            if ($request->instansi_id && in_array($user->level, ['admin', 'tpn', 'viewer'], )) {
                 $instansi_id = [$request->instansi_id];
             } else if ($user->user_rel->instansi_id) {
                 $instansi_id = [$user->user_rel->instansi_id];

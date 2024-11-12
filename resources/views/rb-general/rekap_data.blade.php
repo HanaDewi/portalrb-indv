@@ -12,13 +12,15 @@
             <form>
                 <div>
                     <label for="indikator_id" class="form-label font-bold">Indikator</label>
-                    {!! Form::select('indikator_id[]', indikators(), $indikator_id, ['class' => 'select2 w-full', 'id' => 'indikator_id', 'data-placeholder' => 'Pilih Indikator', 'multiple' => 'multiple']) !!}
+                    {!! Form::select('indikator_id[]', indikators(), $indikator_id, ['class' => 'select2 w-full', 'id'
+                    => 'indikator_id', 'data-placeholder' => 'Pilih Indikator', 'multiple' => 'multiple']) !!}
                 </div>
-                @if (in_array(auth()->user()->level, ['admin', 'tpn']))
+                @if (in_array(auth()->user()->level, ['admin', 'tpn', 'viewer']))
                 <div class="grid grid-cols-4">
                     <div class="col-span-3">
                         <label for="instansi_id" class="form-label mt-4 font-bold">Instansi</label>
-                        {!! Form::select('instansi_id[]', instansis(), $instansi_ids, ['class' => 'select2 mt-2 w-full', 'id' => 'instansi_id', 'data-placeholder' => 'Pilih Instansi', 'multiple' => 'multiple']) !!}
+                        {!! Form::select('instansi_id[]', instansis(), $instansi_ids, ['class' => 'select2 mt-2 w-full',
+                        'id' => 'instansi_id', 'data-placeholder' => 'Pilih Instansi', 'multiple' => 'multiple']) !!}
                     </div>
                     <div class="ml-5">
                         <button type="submit" class="btn btn-success saveButton mt-10">Lihat Data</button>
@@ -62,118 +64,170 @@
                     </tr>
                 </thead>
                 <tbody>
-                @php 
-                    $no = 0; 
+                    @php
+                    $no = 0;
                     $nama = '';
-                @endphp
-                @foreach ($datas as $data)
-                    @php 
-                        if ($nama != $data['perencanaan']->kegiatan_utama->nama) {
-                            $nama = $data['perencanaan']->kegiatan_utama->nama;
-                            $no++;
-                        }
                     @endphp
-                        <tr>
-                            <td class="font-bold">{{ $no }}</td>
-                            <td class="font-bold">{{ $data['perencanaan']->instansi->name }}</td>
-                            <td class="font-bold">{{ $data['perencanaan']->kegiatan_utama->nama }}</td>
-                            <td>{{ $data['perencanaan']->indikator ? $data['perencanaan']->indikator->nama : '' }}</td>
-                            <td>
-                                <table class="table table-noborder w-full">
-                                    <tr>
-                                        <td>Tahun: {{ $data['perencanaan']->baseline_tahun }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Target: {{ $data['perencanaan']->baseline_target }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Realisasi: {{ $data['perencanaan']->baseline_realisasi }}</td>
-                                    </tr>
-                                </table>
-                            </td>
-                            <td>
-                                @if ($data['target']->target)
-                                    <div class="flex items-center"><i data-lucide="bar-chart"
-                                            class="w-4 h-4 mr-1"></i><span class="font-bold mr-1">
-                                            {{ $data['target']->tahun }}: </span> {{ $data['target']->target }}</div>
-                                @endif
-                            </td>
-                            <td>{{ $data['target']->realisasi_indikator }}</td>
-                            <td>{{ number_format((float)$data['target']->capaian_indikator, 2, '.', '') }}</td>
-                            <td>{{ $data['target']->catatan }}</td>
-                            <td>
-                                @if (auth()->user()->level == 'tpn')
-                                <button onclick="catatan_evaluator({{ $data['target']->id }});" class="mb-3 btn btn-warning btn-sm w-10"><svg xmlns="https://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" icon-name="edit" data-lucide="edit" class="lucide lucide-edit block mx-auto"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button><br>
-                                @endif
-                                {{ $data['target']->catatan_evaluator }}
-                            </td>
-                            <td>
-                                {{ $data['rencana_aksi']->rencana_aksi }}
-                            </td>
-                            <td>
-                                {{ $data['output']->satuan_output }}
-                            </td>
-                            <td>
-                                {{ $data['output']->indikator_output }}
-                            </td>
-                            <td>
-                                @if ($data['output']->target_total)
-                                <table class="table table-noborder">
-                                    <tr><th>TW 1</th><td>: {{ fnumber2($data['output']->target_tw1, 2) }}</td></tr>
-                                    <tr><th>TW 2</th><td>: {{ fnumber2($data['output']->target_tw2, 2) }}</td></tr>
-                                    <tr><th>TW 3</th><td>: {{ fnumber2($data['output']->target_tw3, 2) }}</td></tr>
-                                    <tr><th>TW 4</th><td>: {{ fnumber2($data['output']->target_tw4, 2) }}</td></tr>
-                                    <tr><th>Total</th><td>: {{ fnumber2($data['output']->target_total, 2) }}</td></tr>
-                                </table>
-                                @endif
-                            </td>
-                            <td>
-                                @if ($data['output']->anggaran_total)
-                                {{ currency($data['output']->anggaran_total) }}
-                                @endif
-                            </td>
-                            <td>
-                                {{ $data['output']->koordinator }}
-                            </td>
-                            <td>
-                                {{ $data['output']->pelaksana }}
-                            </td>
-                            <td>
-                                @if ($data['output']->realisasi_output_total)
-                                <table class="table table-noborder">
-                                    <tr><th>TW 1</th><td>: {{ fnumber2($data['output']->realisasi_output_tw1, 2) }}</td></tr>
-                                    <tr><th>TW 2</th><td>: {{ fnumber2($data['output']->realisasi_output_tw2, 2) }}</td></tr>
-                                    <tr><th>TW 3</th><td>: {{ fnumber2($data['output']->realisasi_output_tw3, 2) }}</td></tr>
-                                    <tr><th>TW 4</th><td>: {{ fnumber2($data['output']->realisasi_output_tw4, 2) }}</td></tr>
-                                    <tr><th>Total</th><td>: {{ fnumber2($data['output']->realisasi_output_total, 2) }}</td></tr>
-                                </table>
-                                @endif
-                            </td>
-                            <td>
-                                @if ($data['output']->realisasi_anggaran_total)
-                                {{ currency($data['output']->realisasi_anggaran_total) }}
-                                @endif
-                            </td>
-                            <td>
-                                @if ($data['output']->capaian_output_total >= 0)
-                                <table class="table table-noborder">
-                                    <tr><th>TW 1</th><td>: {{ fnumber2($data['output']->capaian_output_tw1, 2) }} %</td></tr>
-                                    <tr><th>TW 2</th><td>: {{ fnumber2($data['output']->capaian_output_tw2, 2) }} %</td></tr>
-                                    <tr><th>TW 3</th><td>: {{ fnumber2($data['output']->capaian_output_tw3, 2) }} %</td></tr>
-                                    <tr><th>TW 4</th><td>: {{ fnumber2($data['output']->capaian_output_tw4, 2) }} %</td></tr>
-                                    <tr><th>Total</th><td>: {{ fnumber2($data['output']->capaian_output_total, 2) }} %</td></tr>
-                                </table>
-                                @endif
-                            </td>
-                            <td>
-                                @if ($data['output']->capaian_anggaran_total)
-                                {{ fnumber2($data['output']->capaian_anggaran_total, 2) }} %
-                                @endif
-                            </td>
-                            <td>
-                                {{ $data['output']->catatan }}
-                            </td>
-                        </tr>
+                    @foreach ($datas as $data)
+                    @php
+                    if ($nama != $data['perencanaan']->kegiatan_utama->nama) {
+                    $nama = $data['perencanaan']->kegiatan_utama->nama;
+                    $no++;
+                    }
+                    @endphp
+                    <tr>
+                        <td class="font-bold">{{ $no }}</td>
+                        <td class="font-bold">{{ $data['perencanaan']->instansi->name }}</td>
+                        <td class="font-bold">{{ $data['perencanaan']->kegiatan_utama->nama }}</td>
+                        <td>{{ $data['perencanaan']->indikator ? $data['perencanaan']->indikator->nama : '' }}</td>
+                        <td>
+                            <table class="table table-noborder w-full">
+                                <tr>
+                                    <td>Tahun: {{ $data['perencanaan']->baseline_tahun }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Target: {{ $data['perencanaan']->baseline_target }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Realisasi: {{ $data['perencanaan']->baseline_realisasi }}</td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td>
+                            @if ($data['target']->target)
+                            <div class="flex items-center"><i data-lucide="bar-chart" class="w-4 h-4 mr-1"></i><span
+                                    class="font-bold mr-1">
+                                    {{ $data['target']->tahun }}: </span> {{ $data['target']->target }}</div>
+                            @endif
+                        </td>
+                        <td>{{ $data['target']->realisasi_indikator }}</td>
+                        <td>{{ number_format((float)$data['target']->capaian_indikator, 2, '.', '') }}</td>
+                        <td>{{ $data['target']->catatan }}</td>
+                        <td>
+                            @if (auth()->user()->level == 'tpn')
+                            <button onclick="catatan_evaluator({{ $data['target']->id }});"
+                                class="mb-3 btn btn-warning btn-sm w-10"><svg xmlns="https://www.w3.org/2000/svg"
+                                    width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round" icon-name="edit"
+                                    data-lucide="edit" class="lucide lucide-edit block mx-auto">
+                                    <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"></path>
+                                    <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                </svg></button><br>
+                            @endif
+                            {{ $data['target']->catatan_evaluator }}
+                        </td>
+                        <td>
+                            {{ $data['rencana_aksi']->rencana_aksi }}
+                        </td>
+                        <td>
+                            {{ $data['output']->satuan_output }}
+                        </td>
+                        <td>
+                            {{ $data['output']->indikator_output }}
+                        </td>
+                        <td>
+                            @if ($data['output']->target_total)
+                            <table class="table table-noborder">
+                                <tr>
+                                    <th>TW 1</th>
+                                    <td>: {{ fnumber2($data['output']->target_tw1, 2) }}</td>
+                                </tr>
+                                <tr>
+                                    <th>TW 2</th>
+                                    <td>: {{ fnumber2($data['output']->target_tw2, 2) }}</td>
+                                </tr>
+                                <tr>
+                                    <th>TW 3</th>
+                                    <td>: {{ fnumber2($data['output']->target_tw3, 2) }}</td>
+                                </tr>
+                                <tr>
+                                    <th>TW 4</th>
+                                    <td>: {{ fnumber2($data['output']->target_tw4, 2) }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Total</th>
+                                    <td>: {{ fnumber2($data['output']->target_total, 2) }}</td>
+                                </tr>
+                            </table>
+                            @endif
+                        </td>
+                        <td>
+                            @if ($data['output']->anggaran_total)
+                            {{ currency($data['output']->anggaran_total) }}
+                            @endif
+                        </td>
+                        <td>
+                            {{ $data['output']->koordinator }}
+                        </td>
+                        <td>
+                            {{ $data['output']->pelaksana }}
+                        </td>
+                        <td>
+                            @if ($data['output']->realisasi_output_total)
+                            <table class="table table-noborder">
+                                <tr>
+                                    <th>TW 1</th>
+                                    <td>: {{ fnumber2($data['output']->realisasi_output_tw1, 2) }}</td>
+                                </tr>
+                                <tr>
+                                    <th>TW 2</th>
+                                    <td>: {{ fnumber2($data['output']->realisasi_output_tw2, 2) }}</td>
+                                </tr>
+                                <tr>
+                                    <th>TW 3</th>
+                                    <td>: {{ fnumber2($data['output']->realisasi_output_tw3, 2) }}</td>
+                                </tr>
+                                <tr>
+                                    <th>TW 4</th>
+                                    <td>: {{ fnumber2($data['output']->realisasi_output_tw4, 2) }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Total</th>
+                                    <td>: {{ fnumber2($data['output']->realisasi_output_total, 2) }}</td>
+                                </tr>
+                            </table>
+                            @endif
+                        </td>
+                        <td>
+                            @if ($data['output']->realisasi_anggaran_total)
+                            {{ currency($data['output']->realisasi_anggaran_total) }}
+                            @endif
+                        </td>
+                        <td>
+                            @if ($data['output']->capaian_output_total >= 0)
+                            <table class="table table-noborder">
+                                <tr>
+                                    <th>TW 1</th>
+                                    <td>: {{ fnumber2($data['output']->capaian_output_tw1, 2) }} %</td>
+                                </tr>
+                                <tr>
+                                    <th>TW 2</th>
+                                    <td>: {{ fnumber2($data['output']->capaian_output_tw2, 2) }} %</td>
+                                </tr>
+                                <tr>
+                                    <th>TW 3</th>
+                                    <td>: {{ fnumber2($data['output']->capaian_output_tw3, 2) }} %</td>
+                                </tr>
+                                <tr>
+                                    <th>TW 4</th>
+                                    <td>: {{ fnumber2($data['output']->capaian_output_tw4, 2) }} %</td>
+                                </tr>
+                                <tr>
+                                    <th>Total</th>
+                                    <td>: {{ fnumber2($data['output']->capaian_output_total, 2) }} %</td>
+                                </tr>
+                            </table>
+                            @endif
+                        </td>
+                        <td>
+                            @if ($data['output']->capaian_anggaran_total)
+                            {{ fnumber2($data['output']->capaian_anggaran_total, 2) }} %
+                            @endif
+                        </td>
+                        <td>
+                            {{ $data['output']->catatan }}
+                        </td>
+                    </tr>
                     @endforeach
                 </tbody>
             </table>
@@ -191,7 +245,8 @@
                 <h2 class="font-bold fw-medium fs-base me-auto" id="title">Monitoring dan Evaluasi Perencanaan</h2>
             </div> <!-- END: Modal Header -->
             <!-- BEGIN: Modal Body -->
-            <form action="{{ url('rencana_aksi/rb-general/rekap_data/simpanCatatanEvaluator') }}" id="form-catatan_evaluator" method="post">
+            <form action="{{ url('rencana_aksi/rb-general/rekap_data/simpanCatatanEvaluator') }}"
+                id="form-catatan_evaluator" method="post">
                 @csrf
                 <input type="hidden" id="target_id" name="target_id">
                 <div class="modal-body grid columns-12 gap-4 gap-y-3">
@@ -200,16 +255,18 @@
                             <tr>
                                 <td class="font-bold">Catatan Evaluator</td>
                                 <td>
-                                    <textarea name="catatan_evaluator" id="catatan_evaluator" cols="30" rows="10" placeholder="Catatan" class="form-control mt-4"></textarea>
+                                    <textarea name="catatan_evaluator" id="catatan_evaluator" cols="30" rows="10"
+                                        placeholder="Catatan" class="form-control mt-4"></textarea>
                                 </td>
                             </tr>
                         </table>
                     </div>
                 </div> <!-- END: Modal Body -->
                 <!-- BEGIN: Modal Footer -->
-                <div class="modal-footer text-end"> 
-                    <button type="button" data-tw-dismiss="modal" class="btn btn-outline-secondary w-20 me-1">Batal</button> 
-                    <button type="submit" class="btn btn-primary w-20 saveButton">Simpan</button> 
+                <div class="modal-footer text-end">
+                    <button type="button" data-tw-dismiss="modal"
+                        class="btn btn-outline-secondary w-20 me-1">Batal</button>
+                    <button type="submit" class="btn btn-primary w-20 saveButton">Simpan</button>
                 </div> <!-- END: Modal Footer -->
             </form>
         </div>
@@ -232,7 +289,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.html5.min.js"></script>
 <script>
-$(document).ready(function(){
+    $(document).ready(function(){
     $('.select2').select2();
 
     var empDataTable = $('#perencanaan').DataTable({
