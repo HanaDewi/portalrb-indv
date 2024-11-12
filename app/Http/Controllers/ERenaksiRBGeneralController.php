@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use App\Models\JawabanRenaksi;
 use App\Models\KlpdInstansi;
+use App\Models\KonversiJawabanRenaksi;
 use App\Models\ZI\AnggotaTimEvaluasi;
 use App\Models\ZI\InstansiTim;
 use App\Models\ZI\UnitTimEvaluasi;
@@ -59,6 +60,7 @@ class ERenaksiRBGeneralController extends Controller
                     $nn->skor = 100;
                 }
             }
+
             return view('evaluasi.renaksi-rb-general', ['tahun'=>$tahun, 'isadmin'=>$isadmin, 'data'=>$instansis, 'kembali'=>false, 'istpn'=>$istpn, 'check'=>false]);
 
         } else {
@@ -72,8 +74,9 @@ class ERenaksiRBGeneralController extends Controller
             }
 
             $renaksi = DB::select('SELECT id,kriteria,info,tahun FROM lke_renaksi lr WHERE (SELECT COUNT(*) FROM lke_renaksi lr_ WHERE lr_.parent_id=lr.id)=0 AND lr.tahun=?', [$tahun]);
+            $ljawaban = KonversiJawabanRenaksi::get();
 
-            return view('evaluasi.renaksi-rb-general', ['tahun'=>$tahun, 'isadmin'=>$isadmin, 'data'=>$jawaban, 'kembali'=>true, 'instansi'=>$instansi, 'check'=>$check, 'renaksi'=>$renaksi]);
+            return view('evaluasi.renaksi-rb-general', ['tahun'=>$tahun, 'isadmin'=>$isadmin, 'data'=>$jawaban, 'kembali'=>true, 'instansi'=>$instansi, 'check'=>$check, 'renaksi'=>$renaksi, 'list_jawaban'=>$ljawaban]);
 
         }
     }

@@ -91,6 +91,7 @@
     </div>
 </div>
 
+@if($check==true)
 <div id="modal-form-jawaban-renaksi" class="modal fade" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -112,16 +113,21 @@
                             <label for="tahun" class="form-label">LKE Renaksi <span class="text-danger">*</span></label> 
                             <select id="tahun" name="tahun" class="form-control" required onchange="showInfo(this)">
                                 @foreach ($renaksi as $ren)
-                                <option value="{{ $ren->id }}" data-info="{{ urlencode($ren->info) }}">{{ $ren->kriteria }}</option>
+                                <option value="{{ $ren->id }}" data-info="{{ addslashes($ren->info) }}">{{ $ren->kriteria }}</option>
                                 @endforeach
                             </select>
-                            <textarea class="form-control" disabled id="renaksiinfo"></textarea>
+                            <textarea class="form-control" disabled id="renaksiinfo" rows="10" style="font-size:9pt !important;"></textarea>
                         </div> 
                     </div>
                     <div class="g-col-12">
                         <div class="form-group">
                             <label for="jawaban" class="form-label">Jawaban  <span class="text-danger">*</span></label> 
-                            <input type="text" id="jawaban" name="jawaban" class="form-control" placeholder="Jawaban" required />
+                            <select id="jawbaan" name="jawaban" class="form-control" required placeholder="Pilih jawaban">
+                                <option></option>
+                                @foreach ($list_jawaban as $lj)
+                                <option value="{{ $lj->id }}">{{ $lj->jawaban }}</option>
+                                @endforeach
+                            </select>
                         </div> 
                     </div>
                     <div class="g-col-12">
@@ -145,6 +151,7 @@
         </div>
     </div>
 </div>
+@endif
 @endsection
 
 @push('css')
@@ -191,8 +198,7 @@ window.showform = function(th) {
 }
 window.showInfo = function(th) {
     const info = $(th).find('option:selected').data('info');
-    console.log(decodeURIComponent(info));
-    $('#renaksiinfo').val(decodeURIComponent(info));
+    $('#renaksiinfo').val(info);
 }
 </script>
 @endpush
