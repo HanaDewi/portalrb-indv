@@ -107,10 +107,6 @@ class ERenaksiRBGeneralController extends Controller
 
     public function dodelete(Request $request)
     {
-        $check = JawabanRenaksi::where('parent_id', '=', $request->id)->first();
-        if ($check!=NULL) {
-            return response()->json(['success' => 'Gagal', 'result' => false]);
-        }
         $todelete = JawabanRenaksi::find($request->id);
         if ($todelete->delete()) {
             return response()->json(['success' => 'Sukses', 'result' => true]);

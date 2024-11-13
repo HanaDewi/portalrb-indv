@@ -59,7 +59,7 @@
                         <th>Catatan</th>
                         <th>Rekomendasi</th>
                         @if($check==true)
-                        <th>Aksi</th>
+                        <th class="w-20">Aksi</th>
                         @endif
                     </tr>
                 </thead>
@@ -72,7 +72,10 @@
                         <td>{{ $jw->catatan }}</td>
                         <td>{{ $jw->rekomendasi }}</td>
                         @if($check==true)
-                        <td></td>
+                        <td class="text-center">
+                            <a class="btn btn-warning btn-xs" data-raw="{{ json_encode($jw) }}" data-id="{{ $jw->id }}" onclick="showform(this)" data-bs-toggle="modal" data-bs-target="#modal-form-jawaban-renaksi"><i class="nav-icon fas fa-edit"></i></a> &nbsp; 
+                            <a class="btn btn-danger btn-xs" data-id="{{ $jw->id }}" onclick="dodelete(this)" ><i class="nav-icon fas fa-remove"></i></a> &nbsp; 
+                        </td>
                         @endif
                     </tr>
                     @endforeach
@@ -170,38 +173,70 @@
 <script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.html5.min.js"></script>
 <script>
 $(document).ready(function(){
-    window.dttable = new DataTable('#table-instansi');
+    window.rowdata = new DataTable('#table-instansi');
 });
 @if($check==true)
 window.modal_jawaban_renaksi = tailwind.Modal.getInstance(document.querySelector("#modal-form-jawaban-renaksi"));
 window.showform = function(th) {
     const id = $(th).data('id');
+    let tahun = '{{ date('Y') }}';
+    let lkerenaksi_id = '';
     let jawaban = '';
-    let skor = '';
-    let tahun = '';
+    let catatan = '';
+    let rekomendasi = '';
     if (id!=undefined) {
-        $('#modal-form-jawaban-renaksi').find('input[name=konversi_jawaban_id]').val(id);
-        const rows = window.rowdata.rows().data();
-        let selected;
-        for (let n=0; n<rows.length; n++) {
-            if (rows[n][0]==id) {
-                selected = rows[n];
-            }
-        }
-        if (selected!=undefined) {
-            jawaban = selected[1];
-            skor = selected[2];
-            tahun = selected[3];
-        }
+        const raw = $(th).data('raw');
+        tahun = raw.tahun;
+        lkerenaksi_id = raw.lke_renaksi_id;
+        jawaban = raw.jawaban;
+        catatan = raw.catatan;
+        rekomendasi = raw.rekomendasi;
     }
-    $('#modal-form-jawaban-renaksi').find('select[name=tahun]').val(tahun);
-    $('#modal-form-jawaban-renaksi').find('input[name=jawaban]').val(jawaban);
-    $('#modal-form-jawaban-renaksi').find('input[name=skor]').val(skor);
+    $('#modal-form-jawaban-renaksi').find('input[name=jawaban_renaksi_id]').val(id);
+    $('#modal-form-jawaban-renaksi').find('input[name=tahun]').val(tahun);
+    $('#modal-form-jawaban-renaksi').find('select[name=lke_renaksi_id]').val(lkerenaksi_id).change();
+    $('#modal-form-jawaban-renaksi').find('select[name=jawaban]').val(jawaban);
+    $('#modal-form-jawaban-renaksi').find('textarea[name=catatan]').val(catatan);
+    $('#modal-form-jawaban-renaksi').find('textarea[name=rekomendasi]').val(rekomendasi);
     window.modal_jawaban_renaksi.show();
 }
 window.showInfo = function(th) {
     const info = $(th).find('option:selected').data('info');
     $('#renaksiinfo').val(info);
+}
+window.dodelete = function(th) {
+    const id = $(th).data('id');
+    if (!id) {
+        return false;
+    }
+    Swal.fire({
+        title: "Yakin?",
+        text: "Hapus data ini?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "Ya, Hapus aja!"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: "{{url('evaluasi/renaksi-rb-general/delete')}}",
+                type: "delete",
+                data: {_token: '{{csrf_token()}}', id: id},
+                dataType: "json",
+                success: function(res) {
+                    if (res.result) {
+                        Swal.fire('Selamat!', 'Data data berhasil dihapus!', 'success');
+                        location.reload();
+                    } else {
+                        Swal.fire('Aduh!', 'Data data gagal dihapus! Coba lagi nanti ya..', 'error');
+                    }
+                },
+                error: function(err) {
+                    Swal.fire('Error!', 'Terjadi kesalahan!', 'error');
+                }
+            });
+        }
+    });
 }
 @endif
 </script>
