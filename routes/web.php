@@ -86,7 +86,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/master-data/lke_parameter', [MasterDataController::class, 'lke_parameter'])->name('lke_parameter');
     Route::get('/master-data/lke_parameter/getDatas', [MasterDataController::class, 'lke_parameter_getDatas']);
     Route::get('/master-data/lke_parameter/getData/{id}', [MasterDataController::class, 'lke_parameter_getData']);
-    Route::get('/master-data/lke_parameter/getSubKomponen/{komponen}', [MasterDataController::class, 'lke_parameter_getSubKomponen']);
+    Route::get('/master-data/lke_parameter/getSubKomponen/{komponen_id}', [MasterDataController::class, 'lke_parameter_getSubKomponen']);
+    Route::get('/master-data/lke_parameter/getIndikatorPengali/{komponen_id}', [MasterDataController::class, 'lke_parameter_getIndikatorPengali']);
     Route::post('/master-data/lke_parameter/simpan', [MasterDataController::class, 'lke_parameter_simpan']);
     Route::post('/master-data/lke_parameter/hapus', [MasterDataController::class, 'lke_parameter_hapus']);
 

@@ -362,7 +362,7 @@ if(! function_exists('timpenilai')) {
     function timpenilai()
     {
         $ltp = LkeTP::orderBy('id')->pluck('name', 'id');
-        $result = ['-'=>' -- Pilih tim penilai -- '];
+        $result = ['-'=>' -- Pilih Tim Penilai -- '];
         foreach ($ltp as $kk=>$lst) {
             $result[$kk] = $lst;
         }
@@ -505,17 +505,25 @@ if(! function_exists('parameter')) {
     }
 }
 
+if(! function_exists('indikator')) {
+    function indikator($komponen_id, $indikator_id = null)
+    {
+        $subkomponen_ids = LkeParameter::where('level', 'Sub Komponen')->where('parent_id', $komponen_id)->pluck('id');
+        return LkeParameter::where('level', 'Indikator')->whereIn('parent_id', $subkomponen_ids)->where('id', '!=', $indikator_id)->pluck('nama', 'id');
+    }
+}
+
 if(! function_exists('kegiatan')) {
     function kegiatan()
     {
-        return LkeKegiatan::pluck('nama', 'id');
+        return LkeKegiatan::all()->pluck('nama_tahun', 'id');
     }
 }
 
 if(! function_exists('set_options')) {
-    function set_options($datas)
+    function set_options($datas, $placeholder = null)
     {
-        $options = '';
+        $options = $placeholder ? '<option value="">'.$placeholder.'</option>' : '';
         foreach ($datas as $id => $nama) {
             $options .= '<option value="'.$id.'">'.$nama.'</option>';
         }

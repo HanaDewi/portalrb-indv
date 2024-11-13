@@ -14,13 +14,13 @@
                 <thead class="table-dark">
                     <tr>
                         <th class="w-5">No.</th>
-                        <th>Tahun Kegiatan</th>
                         <th>Nama Kegiatan</th>
                         <th>Nama Parameter</th>
                         <th class="w-20">Level</th>
                         <th class="w-20">Parent</th>
                         <th>Tim Penilai</th>
-                        <th>Bobot</th>
+                        <th>Indikator Pengali</th>
+                        <th class="w-50">Bobot</th>
                         <th class="w-5">Aksi</th>
                     </tr>
                 </thead>
@@ -62,16 +62,20 @@
                         </div>
                         <div id="lke_parameter_input">
                             <div class="form-group">
-                                <label for="nama" class="form-label mt-2">Nama Parameter <span class="text-danger">*</span></label> 
+                                <label for="nama" class="form-label mt-2">Nama Indikator <span class="text-danger">*</span></label> 
                                 <textarea id="nama" name="nama" class="form-control" placeholder="Nama Parameter" required></textarea>
                             </div>
                             <div id="pengguna_lke_parameter">
+                                <div class="form-group"">
+                                    <label for="indikator_pengali_id" class="form-label mt-2">Indikator Pengali</label>
+                                    {!! Form::select('indikator_pengali_id', [], null, ['class' => 'w-full', 'id' => 'indikator_pengali_id', 'data-placeholder' => 'Pilih Indikator Pengali']) !!}
+                                </div>
                                 <div class="form-group">
                                     <label for="penilai_id" class="form-label mt-2">Tim Penilai <span class="text-danger required_penilai">*</span></label>
                                     {!! Form::select('penilai_id', timpenilai(), null, ['class' => 'w-full', 'id' => 'penilai_id', 'data-placeholder' => 'Pilih Tim Penilai']) !!}
                                 </div>
                                 <hr class="mb-5">
-                                <label>Pengguna LKE Parameter</label>
+                                <label>Pengguna LKE Indikator</label>
                                 <div class="form-check mt-2">
                                     <input id="kl" name="kl" class="form-check-input" type="checkbox" value="1" onchange="cekPengguna();">
                                     <label class="form-check-label" for="kl" name="kl">Kementrian / Lembaga</label>
@@ -237,12 +241,12 @@
                     return meta.row + meta.settings._iDisplayStart + 1;
                 }
             },
-            { data: 'kegiatan.tahun' },
-            { data: 'kegiatan.nama' },
+            { data: 'nama_kegiatan' },
             { data: 'nama' },
             { data: 'level' },
             { data: 'parent.nama' },
             { data: 'tim_penilai' },
+            { data: 'indikator_pengali.nama' },
             { data: 'bobot' },
             { 
                 sortable: false, 
@@ -317,13 +321,21 @@
             $('.required_penilai').show();
             $('#pengguna_lke_parameter').show();
             getSubKomponen();
+            getIndikatorPengali();
         }
     }
 
     function getSubKomponen() {
-        komponen = $('#komponen').val();
-        $.get("{{url('master-data/lke_parameter/getSubKomponen')}}/"+komponen, function(data) {
+        komponen_id = $('#komponen').val();
+        $.get("{{url('master-data/lke_parameter/getSubKomponen')}}/"+komponen_id, function(data) {
             $('#subkomponen').html(data);
+        });
+    }
+
+    function getIndikatorPengali() {
+        komponen_id = $('#komponen').val();
+        $.get("{{url('master-data/lke_parameter/getIndikatorPengali')}}/"+komponen_id, function(data) {
+            $('#indikator_pengali_id').html(data);
         });
     }
 
@@ -345,6 +357,8 @@
                 $('#komponen').val(data.komponen_id);
                 $('#subkomponen').html(data.subkomponens);
                 $('#subkomponen').val(data.subkomponen_id);
+                $('#indikator_pengali_id').html(data.indikators);
+                $('#indikator_pengali_id').val(data.indikator_pengali_id);
                 $('#penilai_id').html(data.tim_penilai);
                 $('#penilai_id').val(data.penilai_id);
             }

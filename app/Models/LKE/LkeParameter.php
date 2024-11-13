@@ -29,4 +29,9 @@ class LkeParameter extends Model
     {
         return $this->belongsTo(LkeKegiatan::class, 'lke_kegiatan_id');
     }
+
+    public function indikator_pengali()
+    {
+        return $this->belongsTo(LkeParameter::class, 'indikator_pengali_id');
+    }
 }

@@ -278,8 +278,9 @@ class MasterDataController extends Controller
         $parameters = LkeParameter::get();
         foreach ($parameters as $parameter) {
             $parameter->parent = $parameter->parent;
-            $parameter->kegiatan = $parameter->kegiatan;
+            $parameter->nama_kegiatan = '['.$parameter->kegiatan->tahun.'] '.$parameter->kegiatan->nama;
             $parameter->tim_penilai = $parameter->penilai_id ? '['.strtoupper($parameter->penilai->tipe).'] '.$parameter->penilai->nama.' ('.$parameter->penilai->kode.')' : '';
+            $parameter->indikator_pengali = $parameter->indikator_pengali;
             $parameter->bobot = '';
             if ($parameter->bobots) {
                 $bobotnya = [];
@@ -301,27 +302,27 @@ class MasterDataController extends Controller
     {
         $data = LkeParameter::find($id);
         $data->bobots = $data->bobots;
-        $data->kegiatan = $data->kegiatan;
         $data->subkomponens = '';
         if ($data->level == 'Indikator') {
             $data->komponen_id = $data->parent->parent_id;
             $data->subkomponen_id = $data->parent_id;
-            $data->subkomponens = set_options(parameter('subkomponen', $data->komponen_id));
+            $data->subkomponens = set_options(parameter('subkomponen', $data->komponen_id), '-- Pilih Sub Komponen --');
             $data->tim_penilai = set_options(timpenilai());
+            $data->indikators = set_options(indikator($data->parent->parent->id, $data->id), '-- Pilih Indikator Pengali --');
         } else if ($data->level == 'Sub Komponen') {
             $data->komponen_id = $data->parent_id;
         }
         return response()->json($data);
     }
 
-    public function lke_parameter_getSubKomponen($komponen)
+    public function lke_parameter_getSubKomponen($komponen_id)
     {
-        $datas = parameter('subkomponen', $komponen);
-        $options = '';
-        foreach ($datas as $id => $nama) {
-            $options .= '<option value="'.$id.'">'.$nama.'</option>';
-        }
-        return $options;
+        return set_options(parameter('subkomponen', $komponen_id), '-- Pilih Sub Komponen --');
+    }
+
+    public function lke_parameter_getIndikatorPengali($komponen_id)
+    {
+        return set_options(indikator($komponen_id), '-- Pilih Indikator Pengali --');
     }
 
     public function lke_parameter_simpan(Request $request)
@@ -334,9 +335,10 @@ class MasterDataController extends Controller
                 $lke_parameter = LkeParameter::find($request->lke_parameter_id);
             }
             $lke_parameter->nama = $request->nama;
-            $lke_parameter->kegiatan_id = $request->kegiatan_id;
+            $lke_parameter->lke_kegiatan_id = $request->kegiatan_id;
             $lke_parameter->level = $request->level;
             $lke_parameter->penilai_id = $request->penilai_id;
+            $lke_parameter->indikator_pengali_id = $request->indikator_pengali_id;
             if ($request->level == 'Sub Komponen') {
                 $lke_parameter->parent_id = $request->komponen;
             } else if ($request->level == 'Indikator') {

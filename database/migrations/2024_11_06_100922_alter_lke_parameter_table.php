@@ -16,6 +16,9 @@ return new class extends Migration
             $table->after('level', function(Blueprint $table) {
                 $table->foreignId('lke_kegiatan_id');
             });
+            $table->after('parent_id', function(Blueprint $table) {
+                $table->foreignId('indikator_pengali_id')->nullable();
+            });
         });
     }
 
@@ -26,6 +29,7 @@ return new class extends Migration
     {
         Schema::table('lke_parameter', function (Blueprint $table) {
             $table->dropColumn('lke_kegiatan_id');
+            $table->dropColumn('indikator_pengali_id');
             $table->after('level', function(Blueprint $table) {
                 $table->smallInteger('tahun');
             });
