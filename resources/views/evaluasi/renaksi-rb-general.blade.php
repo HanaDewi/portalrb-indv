@@ -44,7 +44,7 @@
                         @else 
                         <td><a href="?instansi={{ $jw->id }}" style="color:blue">{{ $jw->name }}</a></td>
                         @endif
-                        <td>{{ $jw->skor }}</td>
+                        <td class="text-center">{{ $jw->skor }}</td>
                     </tr>
                     @endforeach
                 </tbody>
