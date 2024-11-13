@@ -24,4 +24,9 @@ class LkeParameter extends Model
     {
         return $this->belongsTo(LkeTp::class, 'penilai_id');
     }
+
+    public function kegiatan()
+    {
+        return $this->belongsTo(LkeKegiatan::class, 'lke_kegiatan_id');
+    }
 }

@@ -14,10 +14,11 @@
                 <thead class="table-dark">
                     <tr>
                         <th class="w-5">No.</th>
+                        <th>Tahun Kegiatan</th>
+                        <th>Nama Kegiatan</th>
                         <th>Nama Parameter</th>
                         <th class="w-20">Level</th>
                         <th class="w-20">Parent</th>
-                        <th class="w-10">Tahun</th>
                         <th>Tim Penilai</th>
                         <th>Bobot</th>
                         <th class="w-5">Aksi</th>
@@ -44,8 +45,8 @@
                 <div class="modal-body grid columns-12 gap-4 gap-y-3">
                     <div class="g-col-12"> 
                         <div class="form-group">
-                            <label for="tahun" class="form-label mt-2">Tahun <span class="text-danger">*</span></label>
-                            <input type="text" name="tahun" id="tahun" placeholder="Tahun" class="form-control tahun" required>
+                            <label for="kegiatan_id" class="form-label mt-2">Kegiatan <span class="text-danger">*</span></label>
+                            {!! Form::select('kegiatan_id', kegiatan(), null, ['class' => 'w-full', 'id' => 'kegiatan_id', 'data-placeholder' => 'Pilih Kegiatan']) !!}
                         </div>
                         <div class="form-group">
                             <label for="level" class="form-label mt-2">Level <span class="text-danger">*</span></label>
@@ -64,11 +65,11 @@
                                 <label for="nama" class="form-label mt-2">Nama Parameter <span class="text-danger">*</span></label> 
                                 <textarea id="nama" name="nama" class="form-control" placeholder="Nama Parameter" required></textarea>
                             </div>
-                            <div class="form-group">
-                                <label for="penilai_id" class="form-label mt-2">Tim Penilai <span class="text-danger required_penilai">*</span></label>
-                                {!! Form::select('penilai_id', timpenilai(), null, ['class' => 'w-full', 'id' => 'penilai_id', 'data-placeholder' => 'Pilih Tim Penilai']) !!}
-                            </div>
-                            <div class="mt-5">
+                            <div id="pengguna_lke_parameter">
+                                <div class="form-group">
+                                    <label for="penilai_id" class="form-label mt-2">Tim Penilai <span class="text-danger required_penilai">*</span></label>
+                                    {!! Form::select('penilai_id', timpenilai(), null, ['class' => 'w-full', 'id' => 'penilai_id', 'data-placeholder' => 'Pilih Tim Penilai']) !!}
+                                </div>
                                 <hr class="mb-5">
                                 <label>Pengguna LKE Parameter</label>
                                 <div class="form-check mt-2">
@@ -227,7 +228,6 @@
         ajax: {
             url: "{{url('emptyDT')}}",
         },
-        rowsGroup: [1],
         columns: [
             {
                 data: null,
@@ -237,10 +237,11 @@
                     return meta.row + meta.settings._iDisplayStart + 1;
                 }
             },
+            { data: 'kegiatan.tahun' },
+            { data: 'kegiatan.nama' },
             { data: 'nama' },
             { data: 'level' },
             { data: 'parent.nama' },
-            { data: 'tahun' },
             { data: 'tim_penilai' },
             { data: 'bobot' },
             { 
@@ -301,6 +302,7 @@
         $('#komponen').prop('required', false);
         $('#subkomponen').prop('required', false);
         $('#penilai_id').prop('required', false);
+        $('#pengguna_lke_parameter').hide();
         $('.required_penilai').hide();
         level = $('#level').val();
         if (level == 'Sub Komponen') {
@@ -313,6 +315,7 @@
             $('#subkomponen').prop('required', true);
             $('#penilai_id').prop('required', true);
             $('.required_penilai').show();
+            $('#pengguna_lke_parameter').show();
             getSubKomponen();
         }
     }
@@ -335,21 +338,15 @@
             $('#tahun').val(data.tahun);
             $('#level').val(data.level);
             $('#nama').val(data.nama);
+            cekLevel();
             if (data.level == 'Sub Komponen') {
-                $('#komponen-form').show();
-                $('#komponen').prop('required', true);
                 $('#komponen').val(data.komponen_id);
             } else if (data.level == 'Indikator') {
-                $('#komponen-form').show();
                 $('#komponen').val(data.komponen_id);
-                $('#subkomponen-form').show();
                 $('#subkomponen').html(data.subkomponens);
                 $('#subkomponen').val(data.subkomponen_id);
-                $('#komponen').prop('required', true);
-                $('#subkomponen').prop('required', true);
-                $('#penilai_id').prop('required', true);
+                $('#penilai_id').html(data.tim_penilai);
                 $('#penilai_id').val(data.penilai_id);
-                $('.required_penilai').show();
             }
             data.bobots.forEach(bobot => {
                 if (bobot.group == 'kl') {

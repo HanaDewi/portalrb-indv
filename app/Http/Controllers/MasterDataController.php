@@ -275,9 +275,10 @@ class MasterDataController extends Controller
 
     public function lke_parameter_getDatas()
     {
-        $parameters = LkeParameter::orderBy('tahun')->get();
+        $parameters = LkeParameter::get();
         foreach ($parameters as $parameter) {
             $parameter->parent = $parameter->parent;
+            $parameter->kegiatan = $parameter->kegiatan;
             $parameter->tim_penilai = $parameter->penilai_id ? '['.strtoupper($parameter->penilai->tipe).'] '.$parameter->penilai->nama.' ('.$parameter->penilai->kode.')' : '';
             $parameter->bobot = '';
             if ($parameter->bobots) {
@@ -300,11 +301,13 @@ class MasterDataController extends Controller
     {
         $data = LkeParameter::find($id);
         $data->bobots = $data->bobots;
+        $data->kegiatan = $data->kegiatan;
         $data->subkomponens = '';
         if ($data->level == 'Indikator') {
             $data->komponen_id = $data->parent->parent_id;
             $data->subkomponen_id = $data->parent_id;
-            $data->subkomponens = $this->lke_parameter_getSubKomponen($data->komponen_id);
+            $data->subkomponens = set_options(parameter('subkomponen', $data->komponen_id));
+            $data->tim_penilai = set_options(timpenilai());
         } else if ($data->level == 'Sub Komponen') {
             $data->komponen_id = $data->parent_id;
         }
@@ -331,7 +334,7 @@ class MasterDataController extends Controller
                 $lke_parameter = LkeParameter::find($request->lke_parameter_id);
             }
             $lke_parameter->nama = $request->nama;
-            $lke_parameter->tahun = $request->tahun;
+            $lke_parameter->kegiatan_id = $request->kegiatan_id;
             $lke_parameter->level = $request->level;
             $lke_parameter->penilai_id = $request->penilai_id;
             if ($request->level == 'Sub Komponen') {

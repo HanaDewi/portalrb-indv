@@ -3,6 +3,7 @@ use App\Models\DokumenKategori;
 use App\Models\FokusIntervensi;
 use App\Models\KegiatanUtama;
 use App\Models\KlpdInstansi;
+use App\Models\LKE\LkeKegiatan;
 use App\Models\LKE\LkeParameter;
 use App\Models\LkeTP;
 use App\Models\Tahun;
@@ -198,6 +199,12 @@ if(! function_exists('menus'))
                         'title' => 'Dokumen',
                         'icon' => 'file-text',
                         'url' => 'master-data/dokumen',
+                    ],
+                    [
+                        'levels' => ['admin'],
+                        'title' => 'LKE Kegiatan',
+                        'icon' => 'list',
+                        'url' => 'master-data/lke_kegiatan',
                     ],
                     [
                         'levels' => ['admin'],
@@ -495,5 +502,23 @@ if(! function_exists('parameter')) {
         if ($level == 'indikator') {
             return LkeParameter::where('level', 'Indikator')->where('parent_id', $parent_id)->pluck('nama', 'id');
         }
+    }
+}
+
+if(! function_exists('kegiatan')) {
+    function kegiatan()
+    {
+        return LkeKegiatan::pluck('nama', 'id');
+    }
+}
+
+if(! function_exists('set_options')) {
+    function set_options($datas)
+    {
+        $options = '';
+        foreach ($datas as $id => $nama) {
+            $options .= '<option value="'.$id.'">'.$nama.'</option>';
+        }
+        return $options;
     }
 }
