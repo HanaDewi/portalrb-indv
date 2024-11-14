@@ -523,10 +523,12 @@ if(! function_exists('kegiatan')) {
 if(! function_exists('set_options')) {
     function set_options($datas, $placeholder = null)
     {
-        $options = $placeholder ? '<option value="">'.$placeholder.'</option>' : '';
-        foreach ($datas as $id => $nama) {
-            $options .= '<option value="'.$id.'">'.$nama.'</option>';
+        if (count($datas)) {
+            $options = $placeholder ? '<option value="">'.$placeholder.'</option>' : '';
+            foreach ($datas as $id => $nama) {
+                $options .= '<option value="'.$id.'">'.$nama.'</option>';
+            }
+            return $options;
         }
-        return $options;
     }
 }

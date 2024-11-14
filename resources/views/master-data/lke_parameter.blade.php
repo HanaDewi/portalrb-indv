@@ -71,7 +71,7 @@
                                     {!! Form::select('indikator_pengali_id', [], null, ['class' => 'w-full', 'id' => 'indikator_pengali_id', 'data-placeholder' => 'Pilih Indikator Pengali']) !!}
                                 </div>
                                 <div class="form-group">
-                                    <label for="penilai_id" class="form-label mt-2">Tim Penilai <span class="text-danger required_penilai">*</span></label>
+                                    <label for="penilai_id" class="form-label mt-2">Tim Penilai <span class="text-danger">*</span></label>
                                     {!! Form::select('penilai_id', timpenilai(), null, ['class' => 'w-full', 'id' => 'penilai_id', 'data-placeholder' => 'Pilih Tim Penilai']) !!}
                                 </div>
                                 <hr class="mb-5">
@@ -161,7 +161,7 @@
 <script src="{{ asset('ext/jquery-validation/jquery.validate.min.js') }}"></script>
 <script src="{{ asset('ext/jquery-validation/localization/messages_id.min.js') }}"></script>
 <script src="{{ asset('ext') }}/jquery-inputmask/jquery.inputmask.bundle.js"></script>
-<script src="http://cdn.rawgit.com/ashl1/datatables-rowsgroup/v1.0.0/dataTables.rowsGroup.js"></script>
+<script src="//cdn.rawgit.com/ashl1/datatables-rowsgroup/v1.0.0/dataTables.rowsGroup.js"></script>
 <script>
     var idx = 0;
     $(document).ready(function() {
@@ -307,7 +307,6 @@
         $('#subkomponen').prop('required', false);
         $('#penilai_id').prop('required', false);
         $('#pengguna_lke_parameter').hide();
-        $('.required_penilai').hide();
         level = $('#level').val();
         if (level == 'Sub Komponen') {
             $('#komponen-form').show();
@@ -318,7 +317,6 @@
             $('#komponen').prop('required', true);
             $('#subkomponen').prop('required', true);
             $('#penilai_id').prop('required', true);
-            $('.required_penilai').show();
             $('#pengguna_lke_parameter').show();
             getSubKomponen();
             getIndikatorPengali();
@@ -350,16 +348,23 @@
             $('#tahun').val(data.tahun);
             $('#level').val(data.level);
             $('#nama').val(data.nama);
-            cekLevel();
             if (data.level == 'Sub Komponen') {
+                $('#komponen-form').show();
+                $('#komponen').prop('required', true);
                 $('#komponen').val(data.komponen_id);
             } else if (data.level == 'Indikator') {
+                $('#komponen-form').show();
+                $('#subkomponen-form').show();
+                $('#komponen').prop('required', true);
+                $('#subkomponen').prop('required', true);
+                $('#penilai_id').prop('required', true);
+                $('#pengguna_lke_parameter').show();
                 $('#komponen').val(data.komponen_id);
-                $('#subkomponen').html(data.subkomponens);
+                $('#subkomponen').html(data.subkomponens)
                 $('#subkomponen').val(data.subkomponen_id);
-                $('#indikator_pengali_id').html(data.indikators);
+                $('#indikator_pengali_id').html(data.indikators)
                 $('#indikator_pengali_id').val(data.indikator_pengali_id);
-                $('#penilai_id').html(data.tim_penilai);
+                $('#penilai_id').html(data.tim_penilai)
                 $('#penilai_id').val(data.penilai_id);
             }
             data.bobots.forEach(bobot => {
