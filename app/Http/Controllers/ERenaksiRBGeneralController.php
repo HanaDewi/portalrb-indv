@@ -41,13 +41,15 @@ class ERenaksiRBGeneralController extends Controller
             if ($istpn) {
                 $atim = AnggotaTimEvaluasi::where('user_id', $user->id)->first();
                 $instansis = InstansiTim::where('tim_id', $atim->tim_id)->get();
-                foreach ($instansis as $jj=>&$nn) {
-                    $nn->skor = 100;
+                foreach ($instansis as $cc=>&$nn1) {
+                    $skor1 = DB::select('SELECT AVG(kjr.skor) rata FROM jawaban_renaksi jr JOIN konversi_jawaban_renaksi kjr ON kjr.jawaban=jr.jawaban WHERE jr.instansi_id=? AND jr.tahun=?', [$nn1->instansi_id, $tahun]);
+                    $nn1->skor = $skor1[0]->rata;
                 }
             } else {
                 $instansis = KlpdInstansi::get();
-                foreach ($instansis as $jj=>&$nn) {
-                    $nn->skor = 100;
+                foreach ($instansis as $dd=>&$nn2) {
+                    $skor2 = DB::select('SELECT AVG(kjr.skor) rata FROM jawaban_renaksi jr JOIN konversi_jawaban_renaksi kjr ON kjr.jawaban=jr.jawaban WHERE jr.instansi_id=? AND jr.tahun=?', [$nn2->id, $tahun]);
+                    $nn2->skor = $skor2[0]->rata;
                 }
             }
 
