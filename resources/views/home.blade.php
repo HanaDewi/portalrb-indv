@@ -145,7 +145,7 @@
                             <div class="row gap-80 align-items-center">
                                 <div class="col-lg-12 ">
                                     <img class="one wow fadeInRight delay-0-2s"
-                                        src="{{ URL::to('/') }}/assets/images/newportal.png" alt="Hero">
+                                        src="{{ URL::to('/') }}/assets/images/portalrbslider.png" alt="Hero">
                                 </div>
                             </div>
                         </div>
@@ -222,7 +222,7 @@
                         <span class="line"></span>
                     </div>
                     <div class="col-lg-4 col-md-6">
-                        <img class="fulw" src="{{ URL::to('/') }}/assets/images/post1.jpg">
+                        <img class="fulw" src="{{ URL::to('/') }}/assets/images/banner1.jpg">
                         <div class="feature-item">
                             <div class="content">
                                 <h5 class="redt">
@@ -239,7 +239,7 @@
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-6">
-                        <img class="fulw" src="{{ URL::to('/') }}/assets/images/post2.jpg">
+                        <img class="fulw" src="{{ URL::to('/') }}/assets/images/banner2.jpg">
                         <div class="feature-item">
                             <div class="content">
                                 <h5 class="redt">
@@ -255,7 +255,7 @@
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-6">
-                        <img class="fulw" src="{{ URL::to('/') }}/assets/images/post3.jpg">
+                        <img class="fulw" src="{{ URL::to('/') }}/assets/images/banner3.jpg">
                         <div class="feature-item">
                             <div class="content">
                                 <h5 class="redt">

@@ -7,7 +7,7 @@
             <div class="box">
                 <div class="p-5">
                     <div class="rounded-md">
-                        <img width="100%" alt="menpanrb" class="rounded-md" src="{{ asset('template_lkerb') }}/dist/images/dashboard1.jpg">
+                        <img width="100%" alt="menpanrb" class="rounded-md" src="{{ asset('template_lkerb') }}/dist/images/banner_dashboard.jpg">
                     </div>
                 </div>
             </div>
