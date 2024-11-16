@@ -152,18 +152,6 @@ if(! function_exists('menus'))
                         'title' => 'Renaksi RB General',
                         'icon' => 'activity',
                         'url' => 'evaluasi/renaksi-rb-general'
-                    ],
-                    [
-                        'levels' => ['admin', 'tpn'],
-                        'title' => 'Data LKE Renaksi',
-                        'icon' => 'clipboard-list',
-                        'url' => 'evaluasi/data-lke-renaksi'
-                    ],
-                    [
-                        'levels' => ['admin', 'tpn'],
-                        'title' => 'Data Konversi Jawaban',
-                        'icon' => 'clipboard-list',
-                        'url' => 'evaluasi/data-konversi-jawaban'
                     ]
                 ],
             ],
@@ -212,6 +200,18 @@ if(! function_exists('menus'))
                         'icon' => 'list',
                         'url' => 'master-data/lke_parameter',
                     ],
+                    [
+                        'levels' => ['admin'],
+                        'title' => 'Data LKE Renaksi',
+                        'icon' => 'clipboard-list',
+                        'url' => 'master-data/data-lke-renaksi'
+                    ],
+                    [
+                        'levels' => ['admin'],
+                        'title' => 'Data Konversi Jawaban',
+                        'icon' => 'clipboard-list',
+                        'url' => 'master-data/data-konversi-jawaban'
+                    ]
                 ]
             ],
             [

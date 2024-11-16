@@ -55,7 +55,7 @@ class DataKonversiJawabanController extends Controller
             DB::rollBack();
         }
         // return response()->json(['success' => $success]);
-        return redirect('/evaluasi/data-konversi-jawaban');
+        return redirect('/master-data/data-konversi-jawaban');
     }
 
     public function dodelete(Request $request)
@@ -66,7 +66,7 @@ class DataKonversiJawabanController extends Controller
         } else {
             return response()->json(['success' => 'Gagal', 'result' => false]);
         }
-        // return redirect('/evaluasi/data-konversi-jawaban');
+        // return redirect('/master-data/data-konversi-jawaban');
     }
 
 }

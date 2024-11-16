@@ -173,13 +173,13 @@ Route::middleware('auth')->group(function () {
     Route::post('/evaluasi/renaksi-rb-general/save', [ERenaksiRBGeneralController::class, 'dosave']);
     Route::delete('/evaluasi/renaksi-rb-general/delete', [ERenaksiRBGeneralController::class, 'dodelete']);
     
-    Route::get('/evaluasi/data-lke-renaksi', [DataLKERenaksiController::class, 'index']);
-    Route::post('/evaluasi/data-lke-renaksi/save', [DataLKERenaksiController::class, 'dosave']);
-    Route::delete('/evaluasi/data-lke-renaksi/delete', [DataLKERenaksiController::class, 'dodelete']);
+    Route::get('/master-data/data-lke-renaksi', [DataLKERenaksiController::class, 'index']);
+    Route::post('/master-data/data-lke-renaksi/save', [DataLKERenaksiController::class, 'dosave']);
+    Route::delete('/master-data/data-lke-renaksi/delete', [DataLKERenaksiController::class, 'dodelete']);
 
-    Route::get('/evaluasi/data-konversi-jawaban', [DataKonversiJawabanController::class, 'index']);
-    Route::post('/evaluasi/data-konversi-jawaban/save', [DataKonversiJawabanController::class, 'dosave']);
-    Route::delete('/evaluasi/data-konversi-jawaban/delete', [DataKonversiJawabanController::class, 'dodelete']);
+    Route::get('/master-data/data-konversi-jawaban', [DataKonversiJawabanController::class, 'index']);
+    Route::post('/master-data/data-konversi-jawaban/save', [DataKonversiJawabanController::class, 'dosave']);
+    Route::delete('/master-data/data-konversi-jawaban/delete', [DataKonversiJawabanController::class, 'dodelete']);
 
     // Hasil
     Route::get('/hasil', [HasilController::class, 'hasil_seluruh'])->name('hasil_seluruh');
