@@ -21,7 +21,7 @@
                     @endfor
                 </select>
             </div>
-            <div class="row">
+            <div class="row" hidden>
                 <a class="btn btn-danger" href="/evaluasi/data-lke-renaksi">Data LKE Renaksi</a> &nbsp; 
                 <a class="btn btn-danger" href="/evaluasi/renaksi-rb-general">Data Konversi Jawaban</a>
             </div>
@@ -53,29 +53,37 @@
             <table id="table-instansi" class="table table-bordered table-striped" cellspacing="0" width="100%">
                 <thead class="table-dark font-bold">
                     <tr>
-                        <th class="w-5">No.</th>
                         <th>LKE Renaksi</th>
                         <th>Jawaban</th>
                         <th>Catatan</th>
                         <th>Rekomendasi</th>
                         @if($check==true)
-                        <th class="w-20">Aksi</th>
+                        <th style="width:100px;">Aksi</th>
                         @endif
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($data as $cc=>$jw)
+                    @foreach ($lkerenaksi as $cc=>$jw)
                     <tr>
-                        <td>{{ $cc+1 }}</td>
-                        <td>{{ $jw->lke->kriteria }}</td>
-                        <td>{{ $jw->jawaban }}</td>
-                        <td>{{ $jw->catatan }}</td>
-                        <td>{{ $jw->rekomendasi }}</td>
-                        @if($check==true)
-                        <td class="text-center">
-                            <a class="btn btn-warning btn-xs" data-raw="{{ json_encode($jw) }}" data-id="{{ $jw->id }}" onclick="showform(this)" data-bs-toggle="modal" data-bs-target="#modal-form-jawaban-renaksi"><i class="nav-icon fas fa-edit"></i></a> &nbsp; 
-                            <a class="btn btn-danger btn-xs" data-id="{{ $jw->id }}" onclick="dodelete(this)" ><i class="nav-icon fas fa-remove"></i></a> &nbsp; 
+                        <td>
+                            <strong>{{ $jw->kriteria }}</strong><br/>
+                            <p>{{ $jw->info }}</p>
                         </td>
+                        @if (isset($fjawaban[$jw->id]))
+                            <td>{{ $fjawaban[$jw->id]->jawaban }}</td>
+                            <td>{{ $fjawaban[$jw->id]->catatan }}</td>
+                            <td>{{ $fjawaban[$jw->id]->rekomendasi }}</td>
+                            @if($check==true)
+                            <td class="text-center">
+                                <a class="btn btn-warning btn-xs" data-raw="{{ json_encode($fjawaban[$jw->id]) }}" data-id="{{ $jw->id }}" onclick="showform(this)" data-bs-toggle="modal" data-bs-target="#modal-form-jawaban-renaksi"><i class="nav-icon fas fa-edit"></i></a> &nbsp; 
+                                <a class="btn btn-danger btn-xs" data-id="{{ $jw->id }}" onclick="dodelete(this)" ><i class="nav-icon fas fa-remove"></i></a> &nbsp; 
+                            </td>
+                            @endif
+                        @else
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
                         @endif
                     </tr>
                     @endforeach
@@ -173,7 +181,10 @@
 <script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.html5.min.js"></script>
 <script>
 $(document).ready(function(){
-    window.rowdata = new DataTable('#table-instansi');
+    window.rowdata = new DataTable('#table-instansi', {
+        "ordering": false,
+        "pageLength": 100
+    });
 });
 @if($check==true)
 window.modal_jawaban_renaksi = tailwind.Modal.getInstance(document.querySelector("#modal-form-jawaban-renaksi"));
