@@ -109,6 +109,12 @@
                     <div class="row ">
                         <table id="" class=" table table-bordered table-striped" cellspacing="0">
                             <thead class="table-dark font-bold">
+                                <tr>
+                                    <th colspan=8>Data Jumlah instansi dan unit tidak valid untuk TIM 1 TIM 2 TIM 4 TIM
+                                        6
+                                        dikarenakan kementerian keuangan dikerjakan bersama sehingga seluruh unit
+                                        keuangan dimasukan ke tim-tim tersebut</th>
+                                </tr>
                                 <tr class="text-center">
                                     <th>Nama</th>
                                     <th>Jumlah Instansi </th>

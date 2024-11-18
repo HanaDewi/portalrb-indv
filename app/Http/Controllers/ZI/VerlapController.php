@@ -77,13 +77,13 @@ class VerlapController extends Controller
 
                         $wbkFinalCount = $instansiZi->unit_zi->where('wbk', true)
                         ->filter(function($unitZi) {
-                            return  optional($unitZi->verifikasi_lapangan)->status == 1;
+                            return  (optional($unitZi->verifikasi_lapangan)->status == 1)or(optional($unitZi->verifikasi_lapangan)->status == 2);
                         })->count();
                         $jumlah_lolos_wbk += $wbkFinalCount;
 
                         $wbbmFinalCount = $instansiZi->unit_zi->where('wbbm', true)
                         ->filter(function($unitZi) {
-                            return  optional($unitZi->verifikasi_lapangan)->status == 1;
+                            return  (optional($unitZi->verifikasi_lapangan)->status == 1) or (optional($unitZi->verifikasi_lapangan)->status == 2);
                         })->count();
                         $jumlah_lolos_wbbm += $wbbmFinalCount;
 

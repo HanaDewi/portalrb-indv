@@ -17,7 +17,7 @@
 
                     <div class="flex items-center">
                         <div class="w-2/4 flex-none">
-                            <div class="text-lg font-bold truncate">Lolos Administrasi & Sanggah </div>
+                            <div class="text-lg font-bold truncate">Lolos Wawancara</div>
                             <div class="text-gray-800 mt-2 text-xl">
                                 <a href="#" id="instansiNonMandiri">{{$jumlah_instansi}} <sup
                                         style="font-size: 0.5em">Total Instansi</sup> </a> <br />
@@ -57,7 +57,7 @@
                 <div class="box p-5 zoom-in">
                     <div class="flex items-center">
                         <div class="w-3/4 flex-none">
-                            <div class="text-lg font-bold truncate">Lulus Seleksi Dokumen</div>
+                            <div class="text-lg font-bold truncate">Masuk Tahap Final</div>
                             <div class="text-gray-800 mt-2 text-xl">
 
                                 <a href="#" id="instansiNonMandiri">{{$jumlah_instansi_lolos}} <sup
@@ -105,15 +105,21 @@
                     <div class="row ">
                         <table id="" class=" table table-bordered table-striped" cellspacing="0">
                             <thead class="table-dark font-bold">
+                                <tr>
+                                    <th colspan=8>Data Jumlah instansi dan unit tidak valid untuk TIM 1 TIM 2 TIM 4 TIM
+                                        6
+                                        dikarenakan kementerian keuangan dikerjakan bersama sehingga seluruh unit
+                                        keuangan dimasukan ke tim-tim tersebut</th>
+                                </tr>
                                 <tr class="text-center">
                                     <th>Nama</th>
                                     <th>Jumlah Instansi </th>
                                     <th>Unit WBK </th>
                                     <th>Unit WBBM </th>
                                     <th width="25%">Progress</th>
-                                    <th>Instansi Lulus</th>
-                                    <th>WBK Lulus</th>
-                                    <th>WBBM Lulus</th>
+                                    <th>Instansi Masuk Final</th>
+                                    <th>WBK Masuk Final</th>
+                                    <th>WBBM Masuk Final</th>
 
                                 </tr>
                             </thead>
@@ -155,6 +161,7 @@
             <div class="separator mt-5"></div>
             <table id="rekap-zi" class="table table-bordered table-striped" cellspacing="0" width="100%">
                 <thead class="table-dark font-bold">
+
                     <tr>
                         <th>No</th>
                         <th>Instansi</th>
@@ -162,8 +169,8 @@
                         <th>WBK</th>
                         <th>WBBM</th>
                         <th>Progress Pengerjaan</th>
-                        <th>Lulus WBK</th>
-                        <th>Lulus WBBM</th>
+                        <th>WBK Masuk Final</th>
+                        <th>WBBM Masuk Final</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>

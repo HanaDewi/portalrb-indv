@@ -2,8 +2,9 @@
 
 namespace App\Models\ZI;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\ZI\Panel;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 
 class UnitZI extends Model
@@ -44,8 +45,12 @@ class UnitZI extends Model
         return $this->hasOne(VerifikasiLapangan::class, 'unit_zi_id');
     }
 
-    public function warlap() {
-        return $this->hasOne(Warlap::class, 'unit_zi_id');
+    public function panel() {
+        return $this->hasOne(Panel::class, 'unit_zi_id');
     }
-}
+
+//     public function warlap() {
+//         return $this->hasOne(Warlap::class, 'unit_zi_id');
+//     }
+ }
 
