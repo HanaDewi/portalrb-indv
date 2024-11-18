@@ -141,11 +141,14 @@
                                     @endif
                                     data-id="{{$unit_zi->id}}">>
                                     <option value="" disabled selected>Pilih Status</option>
+                                    @if($unit_zi->wbk==1)
                                     <option @if(isset($unit_zi->verifikasi_lapangan->status))
                                         @if($unit_zi->verifikasi_lapangan->status==2) selected
                                         @endif
                                         @endif
-                                        value="2">Bawa Ke Panel</option>
+                                        value="2">Bawa Ke Panel
+                                    </option>
+                                    @endif
                                     <option @if(isset($unit_zi->verifikasi_lapangan->status))
                                         @if($unit_zi->verifikasi_lapangan->status==1) selected
                                         @endif
