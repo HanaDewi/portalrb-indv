@@ -11,7 +11,7 @@
         <div class="lg:col-span-12 p-5 border-b border-slate-200/60">
             <div class="row">
                 <label for="indikator_id" class="form-label font-bold">Tahun</label>
-                <select name="tahun" class="form-control" onchange="location.href='/evaluasi/data-lke-renaksi?tahun=' + this.value">
+                <select name="tahun" class="form-control" onchange="location.href='/master-data/data-lke-renaksi?tahun=' + this.value">
                     @for ($i=date('Y'); $i>2015; $i--)
                     <option value="{{ $i }}" {{ ($i==$tahun) ? 'selected':'' }}>{{ $i }}</option>
                     @endfor
@@ -63,7 +63,7 @@
             <div class="modal-header">
                 <h2 class="fw-medium fs-base me-auto" id="title">Data LKE Renaksi</h2>
             </div>
-            <form action="{{ url('evaluasi/data-lke-renaksi/save') }}" id="form-lke-renaksi" method="post">
+            <form action="{{ url('master-data/data-lke-renaksi/save') }}" id="form-lke-renaksi" method="post">
                 @csrf
                 <input type="hidden" name="lke_renaksi_id" id="lke_renaksi_id">
                 <div class="modal-body grid columns-12 gap-4 gap-y-3">
@@ -170,7 +170,7 @@ window.dodelete = function(th) {
     }).then((result) => {
         if (result.isConfirmed) {
             $.ajax({
-                url: "{{url('evaluasi/data-lke-renaksi/delete')}}",
+                url: "{{url('master-data/data-lke-renaksi/delete')}}",
                 type: "delete",
                 data: {_token: '{{csrf_token()}}', id: id},
                 dataType: "json",

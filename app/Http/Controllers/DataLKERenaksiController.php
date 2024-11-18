@@ -56,7 +56,7 @@ class DataLKERenaksiController extends Controller
         } else {
             DB::rollBack();
         }
-        return redirect('/evaluasi/data-lke-renaksi?tahun=' . $request->tahun);
+        return redirect('/master-data/data-lke-renaksi?tahun=' . $request->tahun);
     }
 
     public function dodelete(Request $request)
