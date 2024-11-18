@@ -282,17 +282,34 @@ class MasterDataController extends Controller
             $parameter->tim_penilai = $parameter->penilai_id ? '['.strtoupper($parameter->penilai->tipe).'] '.$parameter->penilai->nama.' ('.$parameter->penilai->kode.')' : '';
             $parameter->indikator_pengali = $parameter->indikator_pengali;
             $parameter->bobot = '';
-            if ($parameter->bobots) {
-                $bobotnya = [];
-                foreach ($parameter->bobots as $key => $bobot) {
-                    $penilai = $bobot->tim_penilai ? $bobot->tim_penilai->nama : '';
-                    $bobotnya[$key] = '<strong>Group : </strong>'.group_instansi($bobot->group).'<br>';
-                    $bobotnya[$key] .= '<strong>Target Baik : </strong>'.$bobot->target_baik.'<br>';
-                    $bobotnya[$key] .= '<strong>Min Value : </strong>'.$bobot->min_value.'<br>';
-                    $bobotnya[$key] .= '<strong>Max Value : </strong>'.$bobot->max_value.'<br>';
-                    $bobotnya[$key] .= '<strong>Bobot : </strong>'.$bobot->bobot.'<br>';
+            if ($parameter->level == 'Indikator') {
+                if ($parameter->bobots) {
+                    $bobotnya = [];
+                    foreach ($parameter->bobots as $key => $bobot) {
+                        $bobotnya[$key] = '<strong>Group : </strong>'.group_instansi($bobot->group).'<br>';
+                        $bobotnya[$key] .= '<strong>Target Baik : </strong>'.$bobot->target_baik.'<br>';
+                        $bobotnya[$key] .= '<strong>Min Value : </strong>'.$bobot->min_value.'<br>';
+                        $bobotnya[$key] .= '<strong>Max Value : </strong>'.$bobot->max_value.'<br>';
+                        $bobotnya[$key] .= '<strong>Bobot : </strong>'.$bobot->bobot.'<br>';
+                    }
+                    $parameter->bobot = implode('<hr>', $bobotnya);
                 }
-                $parameter->bobot = implode('<hr>', $bobotnya);
+            } else if ($parameter->level == 'Sub Komponen') {
+                $parameter_ids = LkeParameter::where('level', 'Indikator')->where('parent_id', $parameter->id)->pluck('id');
+                $bobot_kl = LkeBobot::whereIn('lke_parameter_id', $parameter_ids)->where('group', 'kl')->sum('bobot');
+                $parameter->bobot .= '<strong>'.group_instansi('kl').': </strong>'.$bobot_kl.'<br>';
+                $bobot_provinsi = LkeBobot::whereIn('lke_parameter_id', $parameter_ids)->where('group', 'provinsi')->sum('bobot');
+                $parameter->bobot .= '<strong>'.group_instansi('provinsi').': </strong>'.$bobot_provinsi.'<br>';
+                $bobot_kabupaten = LkeBobot::whereIn('lke_parameter_id', $parameter_ids)->where('group', 'kabupaten')->sum('bobot');
+                $parameter->bobot .= '<strong>'.group_instansi('kabupaten').': </strong>'.$bobot_kabupaten;
+            } else if ($parameter->level == 'Komponen') {
+                $parameter_ids = LkeParameter::where('level', 'Sub Komponen')->where('parent_id', $parameter->id)->pluck('id');
+                $bobot_kl = LkeBobot::whereIn('lke_parameter_id', $parameter_ids)->where('group', 'kl')->sum('bobot');
+                $parameter->bobot .= '<strong>'.group_instansi('kl').': </strong>'.$bobot_kl.'<br>';
+                $bobot_provinsi = LkeBobot::whereIn('lke_parameter_id', $parameter_ids)->where('group', 'provinsi')->sum('bobot');
+                $parameter->bobot .= '<strong>'.group_instansi('provinsi').': </strong>'.$bobot_provinsi.'<br>';
+                $bobot_kabupaten = LkeBobot::whereIn('lke_parameter_id', $parameter_ids)->where('group', 'kabupaten')->sum('bobot');
+                $parameter->bobot .= '<strong>'.group_instansi('kabupaten').': </strong>'.$bobot_kabupaten;
             }
         }
         return response()->json(['data' => $parameters]);
@@ -339,6 +356,10 @@ class MasterDataController extends Controller
             $lke_parameter->level = $request->level;
             $lke_parameter->penilai_id = $request->penilai_id;
             $lke_parameter->indikator_pengali_id = $request->indikator_pengali_id;
+            if ($request->rencana_aksi) {
+                LkeParameter::where('lke_kegiatan_id', $request->kegiatan_id)->update(['rencana_aksi' => 0]);
+                $lke_parameter->rencana_aksi = 1;
+            }
             if ($request->level == 'Sub Komponen') {
                 $lke_parameter->parent_id = $request->komponen;
             } else if ($request->level == 'Indikator') {

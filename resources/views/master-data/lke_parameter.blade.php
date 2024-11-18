@@ -20,7 +20,7 @@
                         <th class="w-20">Parent</th>
                         <th>Tim Penilai</th>
                         <th>Indikator Pengali</th>
-                        <th class="w-50">Bobot</th>
+                        <th class="w-40">Bobot</th>
                         <th class="w-5">Aksi</th>
                     </tr>
                 </thead>
@@ -66,6 +66,10 @@
                                 <textarea id="nama" name="nama" class="form-control" placeholder="Nama Parameter" required></textarea>
                             </div>
                             <div id="pengguna_lke_parameter">
+                                <div class="form-check mt-2">
+                                    <input id="rencana_aksi" name="rencana_aksi" class="form-check-input" type="checkbox" value="1">
+                                    <label class="form-check-label" for="rencana_aksi" name="rencana_aksi">Rencana Aksi</label>
+                                </div>
                                 <div class="form-group"">
                                     <label for="indikator_pengali_id" class="form-label mt-2">Indikator Pengali</label>
                                     {!! Form::select('indikator_pengali_id', [], null, ['class' => 'w-full', 'id' => 'indikator_pengali_id', 'data-placeholder' => 'Pilih Indikator Pengali']) !!}
@@ -265,11 +269,16 @@
     function clearForm() {
         $('#komponen-form').hide();
         $('#subkomponen-form').hide();
+        $('#komponen').prop('required', false);
+        $('#subkomponen').prop('required', false);
+        $('#penilai_id').prop('required', false);
+        $('#pengguna_lke_parameter').hide();
         $('#kl-form').hide();
         $('#provinsi-form').hide();
         $('#kabupaten-form').hide();
         $('#form-lke_parameter').trigger('reset');
         $('#lke_parameter_id').val('');
+        $('#rencana_aksi').prop('checked', false);
     }
 
     function tambah() {
@@ -301,12 +310,7 @@
     }
     
     function cekLevel() {
-        $('#komponen-form').hide();
-        $('#subkomponen-form').hide();
-        $('#komponen').prop('required', false);
-        $('#subkomponen').prop('required', false);
-        $('#penilai_id').prop('required', false);
-        $('#pengguna_lke_parameter').hide();
+        clearForm();
         level = $('#level').val();
         if (level == 'Sub Komponen') {
             $('#komponen-form').show();
@@ -366,6 +370,9 @@
                 $('#indikator_pengali_id').val(data.indikator_pengali_id);
                 $('#penilai_id').html(data.tim_penilai)
                 $('#penilai_id').val(data.penilai_id);
+                if (data.rencana_aksi == 1) {
+                    $('#rencana_aksi').prop('checked', true);
+                }
             }
             data.bobots.forEach(bobot => {
                 if (bobot.group == 'kl') {
