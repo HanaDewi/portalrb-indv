@@ -2,19 +2,19 @@
 
 namespace App\Http\Controllers\ZI;
 
-
+use App\Models\ZI\Panel;
 use App\Models\ZI\UnitZI;
 use App\Models\KlpdInstansi;
-use App\Models\ZI\VerifikasiLapangan;
 use Illuminate\Http\Request;
 use App\Models\ZI\InstansiZI;
 use App\Models\ZI\TimEvaluasi;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 use App\Models\ZI\SeleksiAdministrasiUnit;
 use App\Models\ZI\SeleksiAdministrasiInstansi;
 
-class PanelController extends Controller
+class FinalController extends Controller
 {
     public function __construct()
     {
@@ -25,11 +25,9 @@ class PanelController extends Controller
             abort('403');
         });
     }
-  
     public function index(Request $request)
     {
-        $title = "Panel";
-        
+        $title = "Seleksi Panel";
         $instansiZis = InstansiZi::with(['unit_zi.seleksi_administrasi_unit'])
         ->where('final', 1)
         ->get();
@@ -60,11 +58,23 @@ class PanelController extends Controller
                 ->map(function($instansiZi) use(&$jumlah_unit_wbk, &$jumlah_unit_wbbm, &$jumlah_lolos_wbk, &$jumlah_lolos_wbbm, &$jumlah_instansi, &$jumlah_instansi_lolos, &$progress_teams) {
                     $wbkCount = $instansiZi->unit_zi->where('wbk', true)
                         ->filter(function($unitZi) {
-                            return optional($unitZi->verifikasi_lapangan)->status >= 1;
+                            $status = false;
+                            if(optional($unitZi->seleksi_administrasi_unit)->status_final == 1){
+                                $status = true;
+                            }elseif(optional($unitZi->sanggah_unit)->status_final == 1){
+                                $status = true;
+                            }
+                             return $status;
                         })->count();
                     $wbbmCount = $instansiZi->unit_zi->where('wbbm', true)
                         ->filter(function($unitZi) {
-                            return optional($unitZi->verifikasi_lapangan)->status >= 1;
+                            $status = false;
+                            if(optional($unitZi->seleksi_administrasi_unit)->status_final == 1){
+                                $status = true;
+                            }elseif(optional($unitZi->sanggah_unit)->status_final == 1){
+                                $status = true;
+                            }
+                             return $status;
                         })->count();
 
                     $total_unit = $wbkCount + $wbbmCount;
@@ -77,13 +87,13 @@ class PanelController extends Controller
 
                         $wbkFinalCount = $instansiZi->unit_zi->where('wbk', true)
                         ->filter(function($unitZi) {
-                            return  (optional($unitZi->panel)->status == 1);
+                            return  optional($unitZi->panel)->status == 1;
                         })->count();
                         $jumlah_lolos_wbk += $wbkFinalCount;
 
                         $wbbmFinalCount = $instansiZi->unit_zi->where('wbbm', true)
                         ->filter(function($unitZi) {
-                            return  (optional($unitZi->panel)->status == 1) ;
+                            return  optional($unitZi->panel)->status == 1;
                         })->count();
                         $jumlah_lolos_wbbm += $wbbmFinalCount;
 
@@ -157,19 +167,20 @@ class PanelController extends Controller
 
         $jumlah_unit_total = $jumlah_unit_wbk + $jumlah_unit_wbbm;
 
-        return view('zi.panel.administrasi', compact(
+        return view('zi.final.administrasi', compact(
             "title","jumlah_instansi","jumlah_unit_wbk","jumlah_unit_wbbm", 
             'jumlah_lolos_wbk', 'jumlah_lolos_wbbm', 'progress_teams',
             "jumlah_unit_total","datas", "jumlah_instansi_lolos"
-        ));        
+        ));               
     }
 
     public function panel($id)
     {   
-        $title = "Panel";
+        $title = "Seleksi Panel";
         $instansi_ZI = InstansiZI::find($id);
         $tim_ids = [];
         
+    //-------upload LHE             
         foreach($instansi_ZI->unit_zi as $unit_zi){
             foreach ( $unit_zi->unit_tim as $unitTim){
                 if(!in_array($unitTim->tim_id, $tim_ids)){
@@ -188,14 +199,16 @@ class PanelController extends Controller
         }
         
         $unit_ZIs = UnitZI::where("instansi_zi_id", $id)->where(function ($q){
-            $q->whereHas('verifikasi_lapangan', function ($query) {
-                $query->where('status','>=', 1);
+            $q->whereHas('seleksi_administrasi_unit', function ($query) {
+                $query->where('status_final', 1);
+            })->orWhereHas('sanggah_unit', function ($query) {
+                $query->where('status_final', 1);
             });
         })->orderBy('wbk','desc')->get();
         
         
         
-        return view('zi.panel.evaluasi', compact("status",
+        return view('zi.final.evaluasi', compact("status",
             "title","instansi_ZI","unit_ZIs",
             ));
         
@@ -226,27 +239,85 @@ class PanelController extends Controller
         }
         
         foreach($instansi_ZI->unit_zi as $unit_zi){
-            $verlapUnit = VerifikasiLapangan::where('unit_zi_id', $unit_zi->id)->first();
-            if($unit_zi->wawancara){
-                if($unit_zi->wawancara->status ==1 ){
-                    if (!$verlapUnit) {
-                        $verlapUnit = new VerifikasiLapangan();
-                        $verlapUnit->unit_zi_id = $unit_zi->id;
+            $panelUnit = Panel::where('unit_zi_id', $unit_zi->id)->first();
+            
+                    if (!$panelUnit) {
+                        $panelUnit = new Panel();
+                        $panelUnit->unit_zi_id = $unit_zi->id;
                     }
-                    if(!is_null($request->get('jadwal-'.$unit_zi->id)))$verlapUnit->jadwal = $request->get('jadwal-'.$unit_zi->id ); 
-                    if(!is_null($request->get('bukti-dukung-'.$unit_zi->id )))$verlapUnit->bukti_dukung = $request->get('bukti-dukung-'.$unit_zi->id ); 
-                    if(!is_null($request->get('kondisi-'.$unit_zi->id )))$verlapUnit->kondisi = $request->get('kondisi-'.$unit_zi->id );
-                    if(!is_null($request->get('rekomendasi-'.$unit_zi->id )))$verlapUnit->rekomendasi = $request->get('rekomendasi-'.$unit_zi->id ); 
-                    if(!is_null($request->get('status-'.$unit_zi->id )))$verlapUnit->status = $request->get('status-'.$unit_zi->id ); 
-                    $verlapUnit->updated_by = Auth::User()->id;
-                    $verlapUnit->save();
-                };
-            };
+                    if(!is_null($request->get('jadwal-'.$unit_zi->id)))$panelUnit->jadwal = $request->get('jadwal-'.$unit_zi->id ); 
+                    if(!is_null($request->get('bukti-dukung-'.$unit_zi->id )))$panelUnit->bukti_dukung = $request->get('bukti-dukung-'.$unit_zi->id ); 
+                    if(!is_null($request->get('kondisi-'.$unit_zi->id )))$panelUnit->kondisi = $request->get('kondisi-'.$unit_zi->id );
+                    if(!is_null($request->get('rekomendasi-'.$unit_zi->id )))$panelUnit->rekomendasi = $request->get('rekomendasi-'.$unit_zi->id ); 
+                    if(!is_null($request->get('status-'.$unit_zi->id )))$panelUnit->status = $request->get('status-'.$unit_zi->id ); 
+                    $panelUnit->updated_by = Auth::User()->id;
+                    $panelUnit->save();  
         };
             
         
         
-        return redirect()->route('proses_verifikasi_lapangan',$instansiZIid);
+        return redirect()->route('proses_panel',$instansiZIid);
     }
+
+    public function lhe_simpan (Request $request)
+    {
+        $validated = $request->validate([
+            'berkas' => 'required|array',
+            'berkas.*' => 'file|mimes:jpg,png,pdf|max:2048', // Validate each file in the array
+        ]);
+
+        foreach ($request->file('files') as $file) {
+            $file->store('uploads'); // Save the file to the "uploads" directory
+        }
+
+        return response()->json(['message' => 'Files uploaded successfully!']);
+        // DB::beginTransaction();
+        // $success = false;
+        // try {
+        //     $tp = LkeTestTp::find($request->test_tp_id);
+        //     $tp->bobot_rb_general_penyesuaian = $request->bobot_rb_general_penyesuaian;
+        //     if ($tp->save()) {
+        //         $success = $this->hitung_score_index($tp->id);
+        //         foreach ($tp->files as $berkas) {
+        //             if (!isset($request->berkas_existing[$berkas->id])) {
+        //                 Storage::disk('public')->delete('berkas/' . $berkas->file);
+        //                 $berkas->delete();
+        //             } else {
+        //                 $berkas->deskripsi = $request->deskripsi_existing[$berkas->id];
+        //                 $berkas->save();
+        //             }
+        //         }
+        //         if ($request->hasFile('berkas')) {
+        //             foreach ($request->file('berkas') as $key => $file_berkas) {
+        //                 $berkas = new LkeTestTpFile();
+        //                 $berkas->test_tp_id = $tp->id;
+        //                 $berkas->deskripsi = $request->deskripsi[$key];
+        //                 $time = time();
+        //                 $filename = $berkas->deskripsi."_$time." . $file_berkas->getClientOriginalExtension();
+        //                 $file_berkas->storeAs('berkas', $filename, 'public');
+        //                 $berkas->file = $filename;
+        //                 if ($berkas->save()) {
+        //                     $success = true;
+        //                 } else {
+        //                     $success = false;
+        //                 }
+        //             }
+        //         }
+        //     }
+        // } catch (\Throwable $th) {
+        //     throw $th;
+        // }
+        // if ($success) {
+        //     DB::commit();
+        //     session()->flash('success', 'Data Test TP berhasil disimpan.');
+        // } else {
+        //     DB::rollBack();
+        //     session()->flash('error', 'Data Test TP gagal disimpan! Silahkan dicoba kembali.');
+        // }
+        // return redirect('hasil/'.$tp->lke_instansi_id);
+    }
+
+
+   
     
 }

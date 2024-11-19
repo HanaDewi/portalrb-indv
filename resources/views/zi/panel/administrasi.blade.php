@@ -17,7 +17,7 @@
 
                     <div class="flex items-center">
                         <div class="w-2/4 flex-none">
-                            <div class="text-lg font-bold truncate">Lolos Wawancara</div>
+                            <div class="text-lg font-bold truncate">Lolos Verifikasi Lapangan</div>
                             <div class="text-gray-800 mt-2 text-xl">
                                 <a href="#" id="instansiNonMandiri">{{$jumlah_instansi}} <sup
                                         style="font-size: 0.5em">Total Instansi</sup> </a> <br />
@@ -57,7 +57,7 @@
                 <div class="box p-5 zoom-in">
                     <div class="flex items-center">
                         <div class="w-3/4 flex-none">
-                            <div class="text-lg font-bold truncate">Masuk Tahap Panel</div>
+                            <div class="text-lg font-bold truncate">Masuk Tahap Final</div>
                             <div class="text-gray-800 mt-2 text-xl">
 
                                 <a href="#" id="instansiNonMandiri">{{$jumlah_instansi_lolos}} <sup
@@ -179,7 +179,7 @@
                     <tr>
                         <td>{{$index+1}}</td>
                         <td>
-                            <a href="{{route('proses_verifikasi_lapangan',$data['instansi_zi_id'])}}">
+                            <a href="{{route('proses_panel',$data['instansi_zi_id'])}}">
                                 {{$data["instansi_nama"]}}
 
                             </a>

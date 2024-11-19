@@ -3,6 +3,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ZI\LkeEvaluator;
 use App\Http\Controllers\ZI\ZIController;
+use App\Http\Controllers\ZI\FinalController;
 use App\Http\Controllers\ZI\PanelController;
 use App\Http\Controllers\ZI\VerlapController;
 use App\Http\Controllers\ZI\WarlapController;
@@ -71,10 +72,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/zi/proses-verifikasi-lapangan/{id}', [VerlapController::class, 'verlap'])->name('proses_verifikasi_lapangan');
     Route::post('/zi/proses-verifikasi-lapangan/simpan', [VerlapController::class, 'verlap_simpan'])->name('proses_verifikasi_lapangan_simpan');
     #Seleksi Panel
-    Route::get('/zi/seleksi-panel', [PanelController::class, 'index'])->name('seleksi_panel');
+    Route::get('/zi/seleksi-panel', [PanelController::class, 'index'])->name('panel');
     Route::get('/zi/proses-panel/{id}', [PanelController::class, 'panel'])->name('proses_panel');
     Route::post('/zi/proses-panel/simpan', [PanelController::class, 'panel_simpan'])->name('proses_panel_simpan');
-    Route::post('/zi/proses-panel/simpan_lhe', [PanelController::class, 'lhe_simpan'])->name('proses_upload_lhe_simpan');;
+    #Final
+    Route::get('/zi/final', [FinalController::class, 'index'])->name('final');
+    //Route::get('/zi/final/{id}', [FinalController::class, 'final'])->name('proses_final');
+    //Route::post('/zi/final/simpan', [FinalController::class, 'final_simpan'])->name('proses_final_simpan');
+    //Route::post('/zi/final/simpan_lhe', [FinalController::class, 'lhe_simpan'])->name('proses_upload_lhe_simpan');
     
 
     #Tautkan LKE

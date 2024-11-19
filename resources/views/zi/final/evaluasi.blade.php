@@ -62,7 +62,15 @@
             </h2>
         </div>
         <div class="lg:col-span-12 p-5 border-b border-slate-200/60">
-
+            @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+            @endif
             <button onclick="upload_lhe({{ $instansi_ZI->id }});" class="btn btn-warning btn-sm kirim-file"><i
                     data-lucide="edit" class="w-4 h-4 mr-1"></i> Upload LHE ZI</button>
 
@@ -259,7 +267,7 @@
                                 <td>
                                     <button type="button" class="btn btn-info btn-sm" onclick="pilih_berkas();"><i
                                             class="fa fa-plus"></i> Tambah Berkas</button>
-                                    <input type="file" id="berkas" style="display: none;">
+                                    <input type="file" id="berkas" style="display: none">
                                     <div id="berkas_list" class="intro-y grid grid-cols-12 gap-6 mt-5"></div>
                                 </td>
                             </tr>

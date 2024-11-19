@@ -247,8 +247,18 @@
                 </li>
                 -->
                 <li>
-                    <a href="{{ route('seleksi_panel') }}" class="side-menu
-                    @if($title == 'Seleksi Panel')
+                    <a href="{{ route('panel') }}" class="side-menu
+                    @if($title == 'Panel')
+                                side-menu--active 
+                    @endif
+                    ">
+                        <div class="side-menu__icon"><i data-lucide="users"></i></div>
+                        <div class="side-menu__title"> Panel </div>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('final') }}" class="side-menu
+                    @if($title == 'Final')
                                 side-menu--active 
                     @endif
                     ">
