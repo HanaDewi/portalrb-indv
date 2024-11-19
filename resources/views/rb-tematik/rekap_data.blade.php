@@ -11,7 +11,7 @@
         <div class="lg:col-span-12 p-5 border-b border-slate-200/60">
             <form id="filter-form" method="get">
                 <table class="table table-bordered table-striped mt-5">
-                    @if (in_array(auth()->user()->level, ['admin', 'tpn']))
+                    @if (in_array(auth()->user()->level, ['admin', 'tpn', 'viewer']))
                     <tr>
                         <td class="font-bold">Instansi</td>
                         <td>
@@ -94,7 +94,7 @@
                 <thead class="table-dark font-bold">
                     <tr>
                         <th class="w-5" rowspan="2">No.</th>
-                        @if (in_array(auth()->user()->level, ['admin', 'tpn']))
+                        @if (in_array(auth()->user()->level, ['admin', 'tpn', 'viewer']))
                         <th class="w-10" rowspan="2">Instansi</th>
                         @endif
                         <th class="w-10" rowspan="2">Tema</th>
@@ -153,7 +153,7 @@
                     @endphp
                     <tr>
                         <td class="font-bold">{{ $no }}</td>
-                        @if (in_array(auth()->user()->level, ['admin', 'tpn']))
+                        @if (in_array(auth()->user()->level, ['admin', 'tpn', 'viewer']))
                         <td>{{ $nama_instansi }}</td>
                         @endif
                         <td class="font-bold">{{ $data['sasaran_roadmap']->tema ?

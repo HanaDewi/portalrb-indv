@@ -82,7 +82,7 @@ if(! function_exists('menus'))
                 'url' => 'dokumen',
             ],
             [
-                'levels' => ['admin', 'provinsi', 'kabupaten', 'kl', 'tpn',  'viewer'],
+                'levels' => ['admin', 'provinsi', 'kabupaten', 'kl', 'tpn', 'viewer'],
                 'title' => 'Rencana Aksi',
                 'icon' => 'inbox',
                 'url' => 'rencana_aksi',
@@ -136,7 +136,7 @@ if(! function_exists('menus'))
                 ],
             ],
             [
-                'levels' => ['admin', 'provinsi', 'kabupaten', 'kl', 'tpn', 'tpm'],
+                'levels' => ['admin', 'provinsi', 'kabupaten', 'kl', 'tpn', 'tpm', 'viewer'],
                 'title' => 'Hasil',
                 'icon' => 'database',
                 'url' => 'hasil',

@@ -22,6 +22,16 @@
         background-color: red !important;
         color: white;
     }
+
+    td select {
+        min-width: 120px
+    }
+
+    /*#rekap-zi tbody tr:nth-child(3n+1) {
+        background-color: rgb(215, 213, 213);
+        /* Light gray for the first row in each group 
+    }
+    */
 </style>
 @if($status !="Berhak")
 <style>
@@ -52,25 +62,59 @@
         </div>
         <div class="lg:col-span-12 p-5 border-b border-slate-200/60">
 
+            <form action="{{ URL::to('/proses-kirim-surat') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                @if (session()->has('sukses'))
+                <div class="alert alert-success" role="alert">
+                    {{ session('sukses') }}
+                </div>
+                @endif
+                @if (session()->has('gagal'))
+                <div class="alert alert-danger" role="alert">
+                    {{ session('gagal') }}
+                </div>
+                @endif
+                @error('file_upload')
+                <div style="color:red">
+                    @if ($message == 'validation.required')
+                    Kolom ini wajib untuk diisi
+                    @elseif($message == 'validation.mimes')
+                    File yang diperbolehkan hanya PDF
+                    @else
+                    {{ $message }}
+                    @endif
+                </div>
+                @enderror
+                <div class="input-group">
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" id="file_upload" name="file_upload" required>
+                        <label class="custom-file-label" for="exampleInputFile">Upload Surat</label>
+                        <p id="label-file"></p>
+                    </div>
+                    <div class="input-group-append">
+                        <span class="input-group-text">Upload</span>
+                    </div>
+                </div>
+            </form>
+
+            <br />
 
 
-            <br />
-            <br />
-            <br />
-            <form action="" method="POST">
+
+            <form action="{{ route('proses_panel_simpan') }}" method="POST">
                 @csrf
                 <input type="hidden" id="instansiZIId" name="instansiZIId" value="{{$instansi_ZI->id}}">
 
-                <table id="rekap-zi" class="table table-bordered table-striped" cellspacing="0">
+                <table id="rekap-zi" class="table table-bordered table-striped" cellspacing="0" width="100%">
                     <thead class="table-dark font-bold">
                         <tr>
-                            <th width="15%">Unit</th>
-                            <th width="15%">Link Lke</th>
+                            <th>Unit</th>
+                            <th>Link Lke</th>
                             <th>Tahapan</th>
-                            <th width="15%">Status Tahapan</th>
+                            <th>Status Tahapan</th>
                             <th>Catatan </th>
                             <th>Rekomendasi </th>
-                            <th width="15%">Status Final</th>
+                            <th>Status Final</th>
                             <th>Kondisi / Catatan</th>
                             <th>Rekomendasi</th>
                         </tr>
@@ -123,36 +167,36 @@
                             </td>
                             <td rowspan=3>
                                 <select class="form-control status" name="status-{{$unit_zi->id}}"
-                                    data-old=@if(isset($unit_zi->verifikasi_lapangan->status))
-                                    @if($unit_zi->verifikasi_lapangan->status==1) "1"
-                                    @elseif($unit_zi->verifikasi_lapangan->status===0) "0"
+                                    data-old=@if(isset($unit_zi->final->status))
+                                    @if($unit_zi->final->status==1) "1"
+                                    @elseif($unit_zi->final->status===0) "0"
                                     @else "kosong"
                                     @endif
                                     @else
                                     "kosong"
                                     @endif
-                                    data-id="{{$unit_zi->id}}">>
+                                    data-id="{{$unit_zi->id}}">
                                     <option value="" disabled selected>Pilih Status</option>
-                                    <option @if(isset($unit_zi->verifikasi_lapangan->status))
-                                        @if($unit_zi->verifikasi_lapangan->status==1) selected
-                                        @endif
+                                    <option @if(optional($unit_zi->panel)->status==1) selected
+                                        @elseif(optional($unit_zi->verifikasi_lapangan)->status==1) selected
                                         @endif
                                         value="1">Lulus</option>
-                                    <option @if(isset($unit_zi->verifikasi_lapangan->status))
-                                        @if($unit_zi->verifikasi_lapangan->status===0) selected
+                                    <option @if(optional($unit_zi->analisis_dokumen)->status===0) selected
+                                        @elseif(optional($unit_zi->wawancara)->status===0) selected
+                                        @elseif(optional($unit_zi->verifikasi_lapangan)->status===0) selected
                                         @endif
-                                        @endif
+
                                         value="0">Tidak Lulus</option>
                                 </select>
                             </td>
                             <td class="kondisi" rowspan=3>
-                                <textarea rows='4' cols='30' class='glowing-border' name='kondisi-{{$unit_zi->id}}'
-                                    placeholder="Kondisi / Catatan">@if(isset($unit_zi->verifikasi_lapangan)){{$unit_zi->verifikasi_lapangan->kondisi}}@endif</textarea>
+                                <textarea rows='4' class='glowing-border' name='kondisi-{{$unit_zi->id}}'
+                                    placeholder="Kondisi / Catatan">{{optional($unit_zi->panel)->kondisi}}</textarea>
                             </td>
                             <td class="rekomendasi" rowspan=3>
-                                <textarea rows='4' cols='30' class='glowing-border' data-old=""
+                                <textarea rows='4' class='glowing-border' data-old=""
                                     name='rekomendasi-{{$unit_zi->id}}'
-                                    placeholder="Rekomendasi">@if(isset($unit_zi->verifikasi_lapangan))@if($unit_zi->verifikasi_lapangan->status ===0){{$unit_zi->verifikasi_lapangan->rekomendasi}}@endif @endif</textarea>
+                                    placeholder="Rekomendasi">@if(optional($unit_zi->panel)->status ===0){{optional($unit_zi->panel)->rekomendasi}}@endif</textarea>
                             </td>
                         </tr>
                         <tr>
@@ -192,8 +236,11 @@
                                 <p style="color:red">
                                     TIDAK LULUS
                                 </p>
+                                @elseif($unit_zi->verifikasi_lapangan->status==2)
+                                <p style="color:red">
+                                    Dibawa Ke Panel
+                                </p>
                                 @endif
-
                                 @endif
                             </td>
                             <td>
@@ -209,6 +256,7 @@
                         </tr>
                         @endif
                         @endforeach
+                    </tbody>
                 </table>
                 <hr />
                 <br />
@@ -239,6 +287,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.html5.min.js"></script>
+<script src="{{ asset('AdminLTE-3.2.0') }}/plugins/bs-custom-file-input/bs-custom-file-input.min.js"></script>
 <script>
     $(document).ready(function(){
 
@@ -251,8 +300,6 @@
             );
             return false;
         });
-
-        
 
         $('.status').on('change',function() {
             if(this.value=="0"){
