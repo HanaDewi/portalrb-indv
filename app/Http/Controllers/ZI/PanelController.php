@@ -3,14 +3,15 @@
 namespace App\Http\Controllers\ZI;
 
 
+use App\Models\ZI\Panel;
 use App\Models\ZI\UnitZI;
 use App\Models\KlpdInstansi;
-use App\Models\ZI\VerifikasiLapangan;
 use Illuminate\Http\Request;
 use App\Models\ZI\InstansiZI;
 use App\Models\ZI\TimEvaluasi;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use App\Models\ZI\VerifikasiLapangan;
 use App\Models\ZI\SeleksiAdministrasiUnit;
 use App\Models\ZI\SeleksiAdministrasiInstansi;
 
@@ -226,27 +227,27 @@ class PanelController extends Controller
         }
         
         foreach($instansi_ZI->unit_zi as $unit_zi){
-            $verlapUnit = VerifikasiLapangan::where('unit_zi_id', $unit_zi->id)->first();
-            if($unit_zi->wawancara){
-                if($unit_zi->wawancara->status ==1 ){
-                    if (!$verlapUnit) {
-                        $verlapUnit = new VerifikasiLapangan();
-                        $verlapUnit->unit_zi_id = $unit_zi->id;
+            $panel = Panel::where('unit_zi_id', $unit_zi->id)->first();
+            if($unit_zi->verifikasi_lapangan){
+                if($unit_zi->verifikasi_lapangan->status ==1 ){
+                    if (!$panel) {
+                        $panel = new Panel();
+                        $panel->unit_zi_id = $unit_zi->id;
                     }
-                    if(!is_null($request->get('jadwal-'.$unit_zi->id)))$verlapUnit->jadwal = $request->get('jadwal-'.$unit_zi->id ); 
-                    if(!is_null($request->get('bukti-dukung-'.$unit_zi->id )))$verlapUnit->bukti_dukung = $request->get('bukti-dukung-'.$unit_zi->id ); 
-                    if(!is_null($request->get('kondisi-'.$unit_zi->id )))$verlapUnit->kondisi = $request->get('kondisi-'.$unit_zi->id );
-                    if(!is_null($request->get('rekomendasi-'.$unit_zi->id )))$verlapUnit->rekomendasi = $request->get('rekomendasi-'.$unit_zi->id ); 
-                    if(!is_null($request->get('status-'.$unit_zi->id )))$verlapUnit->status = $request->get('status-'.$unit_zi->id ); 
-                    $verlapUnit->updated_by = Auth::User()->id;
-                    $verlapUnit->save();
+                    if(!is_null($request->get('jadwal-'.$unit_zi->id)))$panel->jadwal = $request->get('jadwal-'.$unit_zi->id ); 
+                    if(!is_null($request->get('bukti-dukung-'.$unit_zi->id )))$panel->bukti_dukung = $request->get('bukti-dukung-'.$unit_zi->id ); 
+                    if(!is_null($request->get('kondisi-'.$unit_zi->id )))$panel->kondisi = $request->get('kondisi-'.$unit_zi->id );
+                    if(!is_null($request->get('rekomendasi-'.$unit_zi->id )))$panel->rekomendasi = $request->get('rekomendasi-'.$unit_zi->id ); 
+                    if(!is_null($request->get('status-'.$unit_zi->id )))$panel->status = $request->get('status-'.$unit_zi->id ); 
+                    $panel->updated_by = Auth::User()->id;
+                    $panel->save();
                 };
             };
         };
             
         
         
-        return redirect()->route('proses_verifikasi_lapangan',$instansiZIid);
+        return redirect()->route('proses_panel',$instansiZIid);
     }
     
 }

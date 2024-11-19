@@ -63,7 +63,7 @@
             <br />
             <br />
             <br />
-            <form action="{{ route('proses_verifikasi_lapangan_simpan') }}" method="POST">
+            <form action="{{ route('proses_panel_simpan') }}" method="POST">
                 @csrf
                 <input type="hidden" id="instansiZIId" name="instansiZIId" value="{{$instansi_ZI->id}}">
 
