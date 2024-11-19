@@ -238,6 +238,32 @@ if(! function_exists('menus'))
                 'icon' => 'users',
                 'url' => 'manage-user'
             ],
+            [
+                'levels' => ['admin'],
+                'title' => 'Kelola Tim',
+                'icon' => 'clipboard-list',
+                'url' => 'kelola-tim',
+                'items' => [
+                    [
+                        'levels' => ['admin'],
+                        'title' => 'Nama Tim',
+                        'icon' => 'award',
+                        'url' => 'kelola-tim',
+                    ],
+                    [
+                        'levels' => ['admin'],
+                        'title' => 'Anggota Tim',
+                        'icon' => 'command',
+                        'url' => 'kelola-anggota-tim',
+                    ],
+                    [
+                        'levels' => ['admin'],
+                        'title' => 'Instansi',
+                        'icon' => 'bookmark',
+                        'url' => 'kelola-instansi-tim',
+                    ]
+                ]
+            ]
         ];
         return $menu;
     }

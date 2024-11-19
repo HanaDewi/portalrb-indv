@@ -294,6 +294,9 @@ class MasterDataController extends Controller
                     }
                     $parameter->bobot = implode('<hr>', $bobotnya);
                 }
+                if ($parameter->rencana_aksi) {
+                    $parameter->bobot .= '<hr><strong><i>Rencana Aksi</i></strong>';
+                }
             } else if ($parameter->level == 'Sub Komponen') {
                 $parameter_ids = LkeParameter::where('level', 'Indikator')->where('parent_id', $parameter->id)->pluck('id');
                 $bobot_kl = LkeBobot::whereIn('lke_parameter_id', $parameter_ids)->where('group', 'kl')->sum('bobot');
@@ -359,6 +362,8 @@ class MasterDataController extends Controller
             if ($request->rencana_aksi) {
                 LkeParameter::where('lke_kegiatan_id', $request->kegiatan_id)->update(['rencana_aksi' => 0]);
                 $lke_parameter->rencana_aksi = 1;
+            } else {
+                $lke_parameter->rencana_aksi = 0;
             }
             if ($request->level == 'Sub Komponen') {
                 $lke_parameter->parent_id = $request->komponen;

@@ -225,19 +225,21 @@ class WawancaraController extends Controller
         
         foreach($instansi_ZI->unit_zi as $unit_zi){
             $wawancaraUnit = Wawancara::where('unit_zi_id', $unit_zi->id)->first();
-            if($unit_zi->analisis_dokumen->status ==1 ){
-                if (!$wawancaraUnit) {
-                    $wawancaraUnit = new Wawancara();
-                    $wawancaraUnit->unit_zi_id = $unit_zi->id;
-                }
-                $wawancaraUnit->jadwal = $request->get('jadwal-'.$unit_zi->id ); 
-                $wawancaraUnit->link_zoom = $request->get('link-zoom-'.$unit_zi->id ); 
-                if(!is_null($request->get('bukti-dukung-'.$unit_zi->id )))$wawancaraUnit->bukti_dukung = $request->get('bukti-dukung-'.$unit_zi->id ); 
-                if(!is_null($request->get('kondisi-'.$unit_zi->id )))$wawancaraUnit->kondisi = $request->get('kondisi-'.$unit_zi->id );
-                if(!is_null($request->get('rekomendasi-'.$unit_zi->id )))$wawancaraUnit->rekomendasi = $request->get('rekomendasi-'.$unit_zi->id ); 
-                if(!is_null($request->get('status-'.$unit_zi->id )))$wawancaraUnit->status = $request->get('status-'.$unit_zi->id ); 
-                $wawancaraUnit->updated_by = Auth::User()->id;
-                $wawancaraUnit->save();
+            if($unit_zi->analisis_dokumen){
+                if($unit_zi->analisis_dokumen->status ==1 ){
+                    if (!$wawancaraUnit) {
+                        $wawancaraUnit = new Wawancara();
+                        $wawancaraUnit->unit_zi_id = $unit_zi->id;
+                    }
+                    if(!is_null($request->get('jadwal-'.$unit_zi->id)))$wawancaraUnit->jadwal = $request->get('jadwal-'.$unit_zi->id ); 
+                    if(!is_null($request->get('link-zoom-'.$unit_zi->id )))$wawancaraUnit->link_zoom = $request->get('link-zoom-'.$unit_zi->id ); 
+                    if(!is_null($request->get('bukti-dukung-'.$unit_zi->id )))$wawancaraUnit->bukti_dukung = $request->get('bukti-dukung-'.$unit_zi->id ); 
+                    if(!is_null($request->get('kondisi-'.$unit_zi->id )))$wawancaraUnit->kondisi = $request->get('kondisi-'.$unit_zi->id );
+                    if(!is_null($request->get('rekomendasi-'.$unit_zi->id )))$wawancaraUnit->rekomendasi = $request->get('rekomendasi-'.$unit_zi->id ); 
+                    if(!is_null($request->get('status-'.$unit_zi->id )))$wawancaraUnit->status = $request->get('status-'.$unit_zi->id ); 
+                    $wawancaraUnit->updated_by = Auth::User()->id;
+                    $wawancaraUnit->save();
+                };
             };
         };
             

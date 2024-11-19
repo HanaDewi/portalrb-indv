@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\ZI\InstansiZI;
 use App\Models\ZI\SanggahUnit;
 use App\Models\ZI\SanggahInstansi;
+use App\Models\ZI\Wawancara;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
@@ -129,6 +130,20 @@ class EvaluatanController extends Controller
         }else{
             echo "mohon maaf instansi anda belum terdapat penilaian RB di tahun lalu";
         }
+    }
+
+    public function link_paparan_simpan(Request $request){
+        $instansiZIid = Auth::User()->user_rel->instansi->instansi_zi->first()->id;
+        $instansi_ZI = Auth::User()->user_rel->instansi->instansi_zi->first();
+        foreach($instansi_ZI->unit_zi as $unit_zi){
+            $wawancaraUnit = Wawancara::where('unit_zi_id', $unit_zi->id)->first();
+            if ($wawancaraUnit) {
+                $wawancaraUnit->link_paparan = $request->get('link_paparan_'.$unit_zi->id );
+                $wawancaraUnit->save();   
+            }
+        }
+        
+        return redirect()->route('evaluatan_desk',$instansiZIid);
     }
 
     public function seleksi_verifikasi_lapangan(Request $request)

@@ -15,8 +15,7 @@
                     <tr>
                         <td class="font-bold">Instansi</td>
                         <td>
-                            <select class="form-control tom-select mt-1" name="instansi_id[]"
-                                onchange="$('#filter-form').submit();" multiple>
+                            <select class="form-control tom-select mt-1" name="instansi_id[]" multiple>
                                 @foreach (instansis() as $idx=>$ins)
                                 <option value="{{ $idx }}" {{ in_array($idx, $finstansi) ? 'selected' :'' }}>{{ $ins }}
                                 </option>
@@ -28,8 +27,7 @@
                     <tr>
                         <td class="font-bold" width="220">Tema</td>
                         <td>
-                            <select class="form-control tom-select mt-1" name="ftema[]"
-                                onchange="$('#filter-form').submit();" multiple>
+                            <select class="form-control tom-select mt-1" name="ftema[]" multiple>
                                 <option value=""> -- Pilih Tema -- </option>
                                 @foreach ($temas as $tema)
                                 <option value="{{ $tema->id }}" {{ in_array($tema->id, $ftema) ? 'selected':'' }} >{{
@@ -41,14 +39,18 @@
                     <tr>
                         <td class="font-bold" width="220">Fokus Intervensi</td>
                         <td>
-                            <select class="form-control tom-select mt-1" name="fintervensi"
-                                onchange="$('#filter-form').submit();">
+                            <select class="form-control tom-select mt-1" name="fintervensi">
                                 <option value=""> -- Pilih Fokus Intervensi -- </option>
                                 @foreach (fokusIntervensi() as $fid=>$fnama)
                                 <option value="{{ $fid }}" {{ $fintervensi==$fid ?'selected':'' }}>{{ $fnama }}</option>
                                 @endforeach
                             </select>
                         </td>
+                    </tr>
+                    <tr>
+                        <td>-</td>
+                        <td><button type="submit" class="btn btn-primary saveButton mt-10"><i class="fa fa-search"> </i>
+                                &nbsp; Lihat Data</button></td>
                     </tr>
                     <!-- <tr>
                         <td class="font-bold">Sasaran Roadmap 

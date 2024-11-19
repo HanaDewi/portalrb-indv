@@ -28,6 +28,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/zi-simpan-sanggah', [EvaluatanController::class, 'sanggah_simpan'])->name('evaluatan_simpan_sanggah');
     Route::get('/zi-hasil-sanggah', [EvaluatanController::class, 'hasil_sanggah'])->name('evaluatan_hasil_sanggah');
     Route::get('/zi-desk', [EvaluatanController::class, 'seleksi_desk'])->name('evaluatan_desk');
+    Route::post('/zi-simpan-desk', [EvaluatanController::class, 'link_paparan_simpan'])->name('evaluatan_simpan_desk');
     Route::get('/zi-verifikasi-lapangan', [EvaluatanController::class, 'seleksi_verifikasi_lapangan'])->name('evaluatan_verifikasi_lapangan');
     Route::get('/zi-hasil-akhir', [EvaluatanController::class, 'hasil_akhir'])->name('evaluatan_hasil_akhir');
     
@@ -40,6 +41,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/zi/rekap-administrasi', [DashboardController::class, 'rekap_administrasi'])->name('rekap_administrasi');
     Route::get('/zi/rekap-sanggah', [DashboardController::class, 'rekap_sanggah'])->name('rekap_sanggah');
     Route::get('/zi/rekap-dokumen', [DashboardController::class, 'rekap_dokumen'])->name('rekap_dokumen');
+    Route::get('/zi/rekap-wawancara', [DashboardController::class, 'rekap_wawancara'])->name('rekap_wawancara');
+    Route::get('/zi/rekap-verlap', [DashboardController::class, 'rekap_verlap'])->name('rekap_verlap');
     #Seleksi Administrasi
     Route::get('/zi/seleksi-administrasi', [AdministrasiController::class, 'index'])->name('seleksi_administrasi');
     Route::get('/zi/evaluasi-administrasi/{id}', [AdministrasiController::class, 'evaluasi_administrasi'])->name('evaluasi_administrasi');
@@ -69,6 +72,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/zi/proses-verifikasi-lapangan/simpan', [VerlapController::class, 'verlap_simpan'])->name('proses_verifikasi_lapangan_simpan');
     #Seleksi Panel
     Route::get('/zi/seleksi-panel', [PanelController::class, 'index'])->name('seleksi_panel');
+    Route::get('/zi/proses-panel/{id}', [PanelController::class, 'panel'])->name('proses_panel');
+    Route::post('/zi/proses-panel/simpan', [PanelController::class, 'panel_simpan'])->name('proses_panel_simpan');
+    
     #Tautkan LKE
     Route::get('/zi/template-lke-evaluator', [LkeEvaluatorController::class, 'template_lke'])->name('template_lke_evaluator');
     Route::get('/zi/lke-evaluator', [LkeEvaluatorController::class, 'index'])->name('lke_evaluator');

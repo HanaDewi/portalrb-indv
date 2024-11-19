@@ -157,6 +157,32 @@
                                 </div>
                             </a>
                         </li>
+                        <li>
+                            <a href="{{ route('rekap_wawancara') }}" class="side-menu 
+                            @if($title == 'Rekap Wawancara')
+                            side-menu--active 
+                            @endif
+                            ">
+                                <div class="side-menu__icon"><i data-lucide=""></i></div>
+                                <div class="side-menu__title">
+                                    Rekap Wawancara
+                                    <div class="side-menu__sub-icon "> </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('rekap_verlap') }}" class="side-menu 
+                            @if($title == 'Rekap Verlap')
+                            side-menu--active 
+                            @endif
+                            ">
+                                <div class="side-menu__icon"><i data-lucide=""></i></div>
+                                <div class="side-menu__title">
+                                    Rekap Verlap
+                                    <div class="side-menu__sub-icon "> </div>
+                                </div>
+                            </a>
+                        </li>
                     </ul>
                 </li>
                 <li>
@@ -221,8 +247,8 @@
                 </li>
                 -->
                 <li>
-                    <a href="{{ route('seleksi_dokumen') }}" class="side-menu
-                    @if($title == 'Data Final')
+                    <a href="{{ route('seleksi_panel') }}" class="side-menu
+                    @if($title == 'Seleksi Panel')
                                 side-menu--active 
                     @endif
                     ">

@@ -13,6 +13,12 @@
 
     }
 
+    select:has(option[value="2"]:checked) {
+        background-color: blue !important;
+        color: white;
+    }
+
+
     select:has(option[value="1"]:checked) {
         background-color: green !important;
         color: white;
@@ -100,8 +106,13 @@
 
                                 @if(isset($unit_zi->verifikasi_lapangan))
                                 @if(isset($unit_zi->verifikasi_lapangan->jadwal))
+                                @if(\Carbon\Carbon::parse($unit_zi->verifikasi_lapangan->jadwal)->isoFormat('HH:mm')=='00:00')
                                 {{\Carbon\Carbon::parse($unit_zi->verifikasi_lapangan->jadwal)->isoFormat('dddd, D MMMM
-                                Y HH:mm');}}
+                                Y')}} --
+                                @else
+                                {{\Carbon\Carbon::parse($unit_zi->verifikasi_lapangan->jadwal)->isoFormat('dddd, D MMMM
+                                Y HH:mm')}}
+                                @endif
                                 <br />
                                 @endif
                                 @endif
@@ -122,6 +133,7 @@
                                     data-old=@if(isset($unit_zi->verifikasi_lapangan->status))
                                     @if($unit_zi->verifikasi_lapangan->status==1) "1"
                                     @elseif($unit_zi->verifikasi_lapangan->status===0) "0"
+                                    @elseif($unit_zi->verifikasi_lapangan->status===2) "2"
                                     @else "kosong"
                                     @endif
                                     @else
@@ -129,6 +141,11 @@
                                     @endif
                                     data-id="{{$unit_zi->id}}">>
                                     <option value="" disabled selected>Pilih Status</option>
+                                    <option @if(isset($unit_zi->verifikasi_lapangan->status))
+                                        @if($unit_zi->verifikasi_lapangan->status==2) selected
+                                        @endif
+                                        @endif
+                                        value="2">Bawa Ke Panel</option>
                                     <option @if(isset($unit_zi->verifikasi_lapangan->status))
                                         @if($unit_zi->verifikasi_lapangan->status==1) selected
                                         @endif

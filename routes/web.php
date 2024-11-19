@@ -4,18 +4,19 @@ use App\Http\Controllers\DataKonversiJawabanController;
 use App\Http\Controllers\DokumenController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\HasilController;
+use App\Http\Controllers\ManageTimController;
 use App\Http\Controllers\RBGeneralController;
 use App\Http\Controllers\RBTematikController;
-use App\Http\Controllers\RBTematikImportController;
-use App\Http\Controllers\MasterDataController;
-use App\Http\Controllers\HasilController;
 use App\Http\Controllers\ManageUserController;
-use App\Http\Controllers\RuangBelajar\DashboardController;
-use App\Http\Controllers\RuangBelajar\AdminController;
+use App\Http\Controllers\MasterDataController;
 use App\Http\Controllers\WebDashboardController;
 use App\Http\Controllers\CapaianOutputController;
 use App\Http\Controllers\ERenaksiRBGeneralController;
 use App\Http\Controllers\DataLKERenaksiController;
+use App\Http\Controllers\RBTematikImportController;
+use App\Http\Controllers\RuangBelajar\AdminController;
+use App\Http\Controllers\RuangBelajar\DashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -201,6 +202,25 @@ Route::middleware('auth')->group(function () {
     Route::get('/manage-user/getData/{id}', [ManageUserController::class, 'manage_user_getData']);
     Route::post('/manage-user/simpan', [ManageUserController::class, 'manage_user_simpan']);
     Route::post('/manage-user/hapus', [ManageUserController::class, 'manage_user_hapus']);
+    // Kelola Tim
+    Route::get('/kelola-tim', [ManageTimController::class, 'kelola_tim'])->name('kelola_tim');
+    Route::post('/kelola-tim/simpan', [ManageTimController::class, 'kelola_tim_simpan'])->name('kelola_tim_simpan');
+    Route::get('/kelola-tim/getDatas', [ManageTimController::class, 'tim_evaluasi_getDatas'])->name('getData_tim');
+    Route::get('/kelola-tim/getData/{id}', [ManageTimController::class, 'tim_getData']);
+    Route::post('/kelola-tim/hapus', [ManageTimController::class, 'kelola_tim_hapus'])->name('kelola_tim_hapus');
+    #Kelola Anggota Tim
+    Route::get('/kelola-anggota-tim', [ManageTimController::class, 'kelola_anggota_tim'])->name('kelola_anggota_tim');
+    Route::post('/kelola-anggota-tim/simpan', [ManageTimController::class, 'kelola_anggota_tim_simpan'])->name('kelola_anggota_tim_simpan');
+    Route::get('/kelola-anggota-tim/getDatas', [ManageTimController::class, 'anggota_tim_evaluasi_getDatas'])->name('getData_anggotaTim');
+    Route::get('/kelola-anggota-tim/getData/{id}', [ManageTimController::class, 'anggota_tim_getData']);
+    Route::post('/kelola-anggota-tim/hapus', [ManageTimController::class, 'kelola_anggota_tim_hapus'])->name('kelola_anggota_tim_hapus');
+    #Kelola Unit Tim
+    Route::get('/kelola-instansi-tim', [ManageTimController::class, 'kelola_instansi_tim'])->name('kelola_instansi_tim');
+    Route::post('/kelola-instansi-tim/simpan', [ManageTimController::class, 'kelola_instansi_tim_simpan'])->name('kelola_instansi_tim_simpan');
+    Route::get('/kelola-instansi-tim/getDatas', [ManageTimController::class, 'instansi_tim_evaluasi_getDatas'])->name('getData_instansiTim');
+    Route::get('/kelola-instansi-tim/getData/{id}', [ManageTimController::class, 'instansi_tim_getData']);
+    Route::post('/kelola-instansi-tim/hapus', [ManageTimController::class, 'kelola_instansi_tim_hapus'])->name('kelola_instansi_tim_hapus');
+    
 });
 
 
