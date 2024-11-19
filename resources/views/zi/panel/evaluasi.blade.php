@@ -103,9 +103,8 @@
                             </td>
                             <td class="bukti_dukung text-center">
                                 @if(isset($unit_zi->analisis_dokumen))
-                                <a href="{{$unit_zi->analisis_dokumen->bukti_dukung}}" class="btn btn-warning"
-                                    target="_blank">Lihat
-                                    LKE</a>
+                                <a href="{{$unit_zi->analisis_dokumen->bukti_dukung}}" class="btn btn-primary"
+                                    target="_blank">LKE</a>
                                 @endif
                             </td>
                             <td>
