@@ -75,8 +75,8 @@
                             <td>{{ $fjawaban[$jw->id]->rekomendasi }}</td>
                             @if($check==true)
                             <td class="text-center">
-                                <a class="btn btn-warning btn-xs" data-raw="{{ json_encode($fjawaban[$jw->id]) }}" data-id="{{ $jw->id }}" onclick="showform(this)" data-bs-toggle="modal" data-bs-target="#modal-form-jawaban-renaksi"><i class="nav-icon fas fa-edit"></i></a> &nbsp; 
-                                <a class="btn btn-danger btn-xs" data-id="{{ $jw->id }}" onclick="dodelete(this)" ><i class="nav-icon fas fa-remove"></i></a> &nbsp; 
+                                <a class="btn btn-warning btn-xs" data-raw="{{ json_encode($fjawaban[$jw->id]) }}" data-id="{{ $fjawaban[$jw->id]->id }}" onclick="showform(this)" data-bs-toggle="modal" data-bs-target="#modal-form-jawaban-renaksi"><i class="nav-icon fas fa-edit"></i></a> &nbsp; 
+                                <a class="btn btn-danger btn-xs" data-id="{{ $fjawaban[$jw->id]->id }}" onclick="dodelete(this)" ><i class="nav-icon fas fa-remove"></i></a> &nbsp; 
                             </td>
                             @endif
                         @else

@@ -5,9 +5,9 @@ use App\Models\JawabanRenaksi;
 use App\Models\KlpdInstansi;
 use App\Models\KonversiJawabanRenaksi;
 use App\Models\LKERenaksi;
-use App\Models\ZI\AnggotaTimEvaluasi;
-use App\Models\ZI\InstansiTim;
-use App\Models\ZI\UnitTimEvaluasi;
+use App\Models\AnggotaTimEvaluasiRB as AnggotaTimEvaluasi;
+use App\Models\InstansiTimEvaluasi as InstansiTim;
+use App\Models\TimEvaluasiRB;
 use DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -71,6 +71,7 @@ class ERenaksiRBGeneralController extends Controller
             $fjawaban = [];
             foreach ($jawaban as $nn=>$oo) {
                 $fjawaban[$oo->lke_renaksi_id] = (object) array(
+                    'id'=>$oo->id,
                     'tahun'=>$oo->tahun,
                     'lke_renaksi_id'=>$oo->lke_renaksi_id,
                     'jawaban'=>$oo->jawaban,
