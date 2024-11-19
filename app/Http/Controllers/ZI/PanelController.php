@@ -10,6 +10,7 @@ use App\Models\ZI\InstansiZI;
 use App\Models\ZI\TimEvaluasi;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 use App\Models\ZI\SeleksiAdministrasiUnit;
 use App\Models\ZI\SeleksiAdministrasiInstansi;
 
@@ -208,7 +209,7 @@ class PanelController extends Controller
         
         
         
-        return view('zi.final .evaluasi', compact("status",
+        return view('zi.final.evaluasi', compact("status",
             "title","instansi_ZI","unit_ZIs",
             ));
         
@@ -251,13 +252,76 @@ class PanelController extends Controller
                     if(!is_null($request->get('rekomendasi-'.$unit_zi->id )))$panelUnit->rekomendasi = $request->get('rekomendasi-'.$unit_zi->id ); 
                     if(!is_null($request->get('status-'.$unit_zi->id )))$panelUnit->status = $request->get('status-'.$unit_zi->id ); 
                     $panelUnit->updated_by = Auth::User()->id;
-                    $panelUnit->save();
-            
+                    $panelUnit->save();  
         };
             
         
         
         return redirect()->route('proses_panel',$instansiZIid);
+    }
+
+    public function lhe_simpan (Request $request)
+    {
+        
+        $validator = Validator::make($request->all(), [
+            'deskripsi.*' => 'required|mimes:pdf|max:10024|'
+        ]);
+        dd($request);
+        if ($validator->fails()) {
+            dd($validator->errors());
+            dd("fail");
+        }
+        
+
+        //check if validation fails
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+
+        // DB::beginTransaction();
+        // $success = false;
+        // try {
+        //     $tp = LkeTestTp::find($request->test_tp_id);
+        //     $tp->bobot_rb_general_penyesuaian = $request->bobot_rb_general_penyesuaian;
+        //     if ($tp->save()) {
+        //         $success = $this->hitung_score_index($tp->id);
+        //         foreach ($tp->files as $berkas) {
+        //             if (!isset($request->berkas_existing[$berkas->id])) {
+        //                 Storage::disk('public')->delete('berkas/' . $berkas->file);
+        //                 $berkas->delete();
+        //             } else {
+        //                 $berkas->deskripsi = $request->deskripsi_existing[$berkas->id];
+        //                 $berkas->save();
+        //             }
+        //         }
+        //         if ($request->hasFile('berkas')) {
+        //             foreach ($request->file('berkas') as $key => $file_berkas) {
+        //                 $berkas = new LkeTestTpFile();
+        //                 $berkas->test_tp_id = $tp->id;
+        //                 $berkas->deskripsi = $request->deskripsi[$key];
+        //                 $time = time();
+        //                 $filename = $berkas->deskripsi."_$time." . $file_berkas->getClientOriginalExtension();
+        //                 $file_berkas->storeAs('berkas', $filename, 'public');
+        //                 $berkas->file = $filename;
+        //                 if ($berkas->save()) {
+        //                     $success = true;
+        //                 } else {
+        //                     $success = false;
+        //                 }
+        //             }
+        //         }
+        //     }
+        // } catch (\Throwable $th) {
+        //     throw $th;
+        // }
+        // if ($success) {
+        //     DB::commit();
+        //     session()->flash('success', 'Data Test TP berhasil disimpan.');
+        // } else {
+        //     DB::rollBack();
+        //     session()->flash('error', 'Data Test TP gagal disimpan! Silahkan dicoba kembali.');
+        // }
+        // return redirect('hasil/'.$tp->lke_instansi_id);
     }
 
 
