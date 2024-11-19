@@ -194,7 +194,7 @@
 
     <div class="col-span-12 sm:col-span-6 2xl:col-span-3 intro-y">
         <div class="box p-5 zoom-in">
-            <a href="{{ route('seleksi_panel') }}">
+            <a href="{{ route('panel') }}">
                 <div class="flex items-center">
                     <div class="w-2/4 flex-none">
                         <div class="text-lg font-bold truncate">Seleksi Panel </div>
