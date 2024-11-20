@@ -136,10 +136,12 @@
                                 <p>
                                     {{$unit_zi->analisis_dokumen->kondisi}}
                                 </p>
+                                <hr>
                                 <br /><strong>Wawancara :</strong><br>
                                 <p>
                                     {{$unit_zi->wawancara->kondisi}}
                                 </p>
+                                <hr>
                                 <br /><strong>Verifikasi Lapangan :</strong>
                                 <p>
                                     {{$unit_zi->verifikasi_lapangan->kondisi}}

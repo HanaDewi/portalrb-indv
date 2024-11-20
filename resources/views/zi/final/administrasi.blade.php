@@ -17,7 +17,7 @@
 
                     <div class="flex items-center">
                         <div class="w-2/4 flex-none">
-                            <div class="text-lg font-bold truncate">Lolos Administrasi & Sanggah </div>
+                            <div class="text-lg font-bold truncate">Pengusulan </div>
                             <div class="text-gray-800 mt-2 text-xl">
                                 <a href="#" id="instansiNonMandiri">{{$jumlah_instansi}} <sup
                                         style="font-size: 0.5em">Total Instansi</sup> </a> <br />

@@ -27,7 +27,7 @@ class FinalController extends Controller
     }
     public function index(Request $request)
     {
-        $title = "Seleksi Panel";
+        $title = "Final";
         $instansiZis = InstansiZi::with(['unit_zi.seleksi_administrasi_unit'])
         ->where('final', 1)
         ->get();
@@ -56,26 +56,8 @@ class FinalController extends Controller
         
         $datas = $instansiZis
                 ->map(function($instansiZi) use(&$jumlah_unit_wbk, &$jumlah_unit_wbbm, &$jumlah_lolos_wbk, &$jumlah_lolos_wbbm, &$jumlah_instansi, &$jumlah_instansi_lolos, &$progress_teams) {
-                    $wbkCount = $instansiZi->unit_zi->where('wbk', true)
-                        ->filter(function($unitZi) {
-                            $status = false;
-                            if(optional($unitZi->seleksi_administrasi_unit)->status_final == 1){
-                                $status = true;
-                            }elseif(optional($unitZi->sanggah_unit)->status_final == 1){
-                                $status = true;
-                            }
-                             return $status;
-                        })->count();
-                    $wbbmCount = $instansiZi->unit_zi->where('wbbm', true)
-                        ->filter(function($unitZi) {
-                            $status = false;
-                            if(optional($unitZi->seleksi_administrasi_unit)->status_final == 1){
-                                $status = true;
-                            }elseif(optional($unitZi->sanggah_unit)->status_final == 1){
-                                $status = true;
-                            }
-                             return $status;
-                        })->count();
+                    $wbkCount = $instansiZi->unit_zi->where('wbk', true)->count();
+                    $wbbmCount = $instansiZi->unit_zi->where('wbbm', true)->count();
 
                     $total_unit = $wbkCount + $wbbmCount;
 
