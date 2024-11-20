@@ -229,7 +229,7 @@ class PanelController extends Controller
         foreach($instansi_ZI->unit_zi as $unit_zi){
             $panel = Panel::where('unit_zi_id', $unit_zi->id)->first();
             if($unit_zi->verifikasi_lapangan){
-                if($unit_zi->verifikasi_lapangan->status ==1 ){
+                if($unit_zi->verifikasi_lapangan->status >=1 ){
                     if (!$panel) {
                         $panel = new Panel();
                         $panel->unit_zi_id = $unit_zi->id;
