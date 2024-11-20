@@ -57,7 +57,7 @@
                 <div class="box p-5 zoom-in">
                     <div class="flex items-center">
                         <div class="w-3/4 flex-none">
-                            <div class="text-lg font-bold truncate">Masuk Tahap Final</div>
+                            <div class="text-lg font-bold truncate">Lulus Panel</div>
                             <div class="text-gray-800 mt-2 text-xl">
 
                                 <a href="#" id="instansiNonMandiri">{{$jumlah_instansi_lolos}} <sup
