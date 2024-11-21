@@ -6,11 +6,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 
-class FilesUpload extends Model
+class UnggahFile extends Model
 {
     use HasFactory;
     protected $connection = 'zi_db';
-    protected $table = 'file_upload';
+    protected $table = 'upload_file';
     protected $guarded = [
         'id'
     ];

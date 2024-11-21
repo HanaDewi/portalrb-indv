@@ -62,6 +62,7 @@
             </h2>
         </div>
         <div class="lg:col-span-12 p-5 border-b border-slate-200/60">
+
             @if ($errors->any())
             <div class="alert alert-danger">
                 <ul>
@@ -71,7 +72,16 @@
                 </ul>
             </div>
             @endif
-            <button onclick="upload_lhe({{ $instansi_ZI->id }});" class="btn btn-warning btn-sm kirim-file"><i
+
+            @if ($instansi_ZI->unggah_file)
+            <a href="{{asset('uploads/LHEZI2024/'.$instansi_ZI->unggah_file->nama)}}" target="_blank"><img
+                    src="{{asset('images/pdf.png')}}" width="10%"></a>
+            <br />
+            <h5>LHE {{$instansi_ZI->klpd_instansi->name}}</h5>
+
+            @endif
+            <br />
+            <button onclick="upload_lhe({{ $instansi_ZI->id }});" class="btn btn-danger btn-sm kirim-file"><i
                     data-lucide="edit" class="w-4 h-4 mr-1"></i> Upload LHE ZI</button>
 
             <br />
@@ -259,6 +269,7 @@
             <form action="{{ route('proses_upload_lhe_simpan') }} " id="form-penyesuaian" method="post"
                 enctype="multipart/form-data">
                 @csrf
+                <input type="hidden" name="instansi_id" value="{{$instansi_ZI->id}}">
                 <div class="modal-body grid columns-12 gap-4 gap-y-3">
                     <div class="g-col-12">
                         <table class="table">

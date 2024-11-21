@@ -179,7 +179,7 @@
                     <tr>
                         <td>{{$index+1}}</td>
                         <td>
-                            <a href="{{route('proses_panel',$data['instansi_zi_id'])}}">
+                            <a href="{{route('proses_final',$data['instansi_zi_id'])}}">
                                 {{$data["instansi_nama"]}}
 
                             </a>
@@ -215,7 +215,7 @@
                         <td class="text-center">
                             @foreach(Auth::User()->userTimZI as $userTimZI)
                             @if (in_array($userTimZI->tim->nama, $data["nama_teams"]))
-                            <a href="{{route('proses_panel', $data['instansi_zi_id'])}}" class="btn btn-danger"><i
+                            <a href="{{route('proses_final', $data['instansi_zi_id'])}}" class="btn btn-danger"><i
                                     class="fa fa-search"></i>
                                 &nbsp;Evaluasi
                             </a>

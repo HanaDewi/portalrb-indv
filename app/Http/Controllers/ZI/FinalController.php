@@ -7,7 +7,9 @@ use App\Models\ZI\UnitZI;
 use App\Models\KlpdInstansi;
 use Illuminate\Http\Request;
 use App\Models\ZI\InstansiZI;
+use App\Models\ZI\UnggahFile;
 use App\Models\ZI\TimEvaluasi;
+use GuzzleHttp\Psr7\UploadedFile;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -156,7 +158,7 @@ class FinalController extends Controller
         ));               
     }
 
-    public function panel($id)
+    public function final($id)
     {   
         $title = "Seleksi Panel";
         $instansi_ZI = InstansiZI::find($id);
@@ -248,55 +250,42 @@ class FinalController extends Controller
             'berkas.*' => 'file|mimes:jpg,png,pdf|max:2048', // Validate each file in the array
         ]);
 
-        foreach ($request->file('files') as $file) {
-            $file->store('uploads'); // Save the file to the "uploads" directory
+        $success= false;
+        try{
+            if ($request->hasFile('berkas')) {
+                
+                foreach ($request->file('berkas') as $key => $file_berkas) {
+                    $uploadFile = UnggahFile::where('instansi_zi_id', $request->get('instansi_id'))->first();
+                        if (!$uploadFile) {
+                            $uploadFile = new UnggahFile();
+                            $uploadFile->instansi_zi_id = $request->get('instansi_id');
+                        }
+                        
+                    $deskripsi = $request->deskripsi[$key];
+                    $time = time();
+                    $filename = "_$time.". $deskripsi ."." .$file_berkas->getClientOriginalExtension();
+                    $uploadFile->deskripsi = $deskripsi;
+                    $uploadFile->nama = $filename;
+                    $uploadFile->updated_by = Auth::User()->id;
+                    $file_berkas->storeAs('uploads/LHEZI2024', $filename, 'public');
+                    
+                    if ($uploadFile->save()) {
+                        $success = true;
+                    } else {
+                        $success = false;
+                    }
+                    break;
+                }
+            }
+        } catch (\Throwable $th) {
+             throw $th;
         }
-
-        return response()->json(['message' => 'Files uploaded successfully!']);
-        // DB::beginTransaction();
-        // $success = false;
-        // try {
-        //     $tp = LkeTestTp::find($request->test_tp_id);
-        //     $tp->bobot_rb_general_penyesuaian = $request->bobot_rb_general_penyesuaian;
-        //     if ($tp->save()) {
-        //         $success = $this->hitung_score_index($tp->id);
-        //         foreach ($tp->files as $berkas) {
-        //             if (!isset($request->berkas_existing[$berkas->id])) {
-        //                 Storage::disk('public')->delete('berkas/' . $berkas->file);
-        //                 $berkas->delete();
-        //             } else {
-        //                 $berkas->deskripsi = $request->deskripsi_existing[$berkas->id];
-        //                 $berkas->save();
-        //             }
-        //         }
-        //         if ($request->hasFile('berkas')) {
-        //             foreach ($request->file('berkas') as $key => $file_berkas) {
-        //                 $berkas = new LkeTestTpFile();
-        //                 $berkas->test_tp_id = $tp->id;
-        //                 $berkas->deskripsi = $request->deskripsi[$key];
-        //                 $time = time();
-        //                 $filename = $berkas->deskripsi."_$time." . $file_berkas->getClientOriginalExtension();
-        //                 $file_berkas->storeAs('berkas', $filename, 'public');
-        //                 $berkas->file = $filename;
-        //                 if ($berkas->save()) {
-        //                     $success = true;
-        //                 } else {
-        //                     $success = false;
-        //                 }
-        //             }
-        //         }
-        //     }
-        // } catch (\Throwable $th) {
-        //     throw $th;
-        // }
-        // if ($success) {
-        //     DB::commit();
-        //     session()->flash('success', 'Data Test TP berhasil disimpan.');
-        // } else {
-        //     DB::rollBack();
-        //     session()->flash('error', 'Data Test TP gagal disimpan! Silahkan dicoba kembali.');
-        // }
-        // return redirect('hasil/'.$tp->lke_instansi_id);
+        if ($success) {
+             session()->flash('success', 'LHE berhasil disimpan.');
+        } else {
+             session()->flash('error', 'LHE gagal disimpan! Silahkan dicoba kembali.');
+        }
+        return redirect('/zi/final/'.$request->get('instansi_id'));
     }
 
 

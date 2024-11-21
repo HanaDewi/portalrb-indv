@@ -49,8 +49,8 @@ Route::middleware('auth')->group(function () {
     #Seleksi Administrasi
     Route::get('/zi/seleksi-administrasi', [AdministrasiController::class, 'index'])->name('seleksi_administrasi');
     Route::get('/zi/evaluasi-administrasi/{id}', [AdministrasiController::class, 'evaluasi_administrasi'])->name('evaluasi_administrasi');
-    //Route::post('/zi/evaluasi-administrasi/simpan', [AdministrasiController::class, 'evaluasi_administrasi_simpan'])->name('evaluasi_administrasi_simpan');
-    Route::post('/zi/evaluasi-administrasi/simpan', [TutupController::class, 'index'])->name('evaluasi_administrasi_simpan');
+    Route::post('/zi/evaluasi-administrasi/simpan', [AdministrasiController::class, 'evaluasi_administrasi_simpan'])->name('evaluasi_administrasi_simpan');
+    //Route::post('/zi/evaluasi-administrasi/simpan', [TutupController::class, 'index'])->name('evaluasi_administrasi_simpan');
     #Proses Sanggah
     Route::get('/zi/sanggah', [SanggahController::class, 'index'])->name('sanggah');
     Route::get('/zi/proses-sanggah/{id}', [SanggahController::class, 'proses_sanggah'])->name('proses_sanggah');
@@ -59,25 +59,19 @@ Route::middleware('auth')->group(function () {
     #Seleksi Dokumen
     Route::get('/zi/seleksi-dokumen', [DokumenController::class, 'index'])->name('seleksi_dokumen');
     Route::get('/zi/proses-dokumen/{id}', [DokumenController::class, 'evaluasi_dokumen'])->name('proses_dokumen');
-    //Route::post('/zi/proses-dokumen/simpan', [DokumenController::class, 'proses_dokumen_simpan'])->name('proses_dokumen_simpan');
-    Route::post('/zi/proses-dokumen/simpan', [TutupController::class, 'index'])->name('proses_dokumen_simpan');
-    
-    
-    #Seleksi Wawancara dan Verlap
-    // Route::get('/zi/seleksi-warlap', [WarlapController::class, 'index'])->name('seleksi_warlap');
-    // Route::get('/zi/proses-warlap/{id}', [WarlapController::class, 'warlap'])->name('proses_warlap');
-    // Route::post('/zi/proses-warlap/simpan', [WarlapController::class, 'warlap_simpan'])->name('proses_warlap_simpan');
+    Route::post('/zi/proses-dokumen/simpan', [DokumenController::class, 'proses_dokumen_simpan'])->name('proses_dokumen_simpan');
+    //Route::post('/zi/proses-dokumen/simpan', [TutupController::class, 'index'])->name('proses_dokumen_simpan');
     
     #Seleksi Wawancara
     Route::get('/zi/seleksi-wawancara', [WawancaraController::class, 'index'])->name('seleksi_wawancara');
     Route::get('/zi/proses-wawancara/{id}', [WawancaraController::class, 'wawancara'])->name('proses_wawancara');
-    //Route::post('/zi/proses-wawancara/simpan', [WawancaraController::class, 'proses_wawancara_simpan'])->name('proses_wawancara_simpan');
-    Route::post('/zi/proses-wawancara/simpan', [TutupController::class, 'index'])->name('proses_wawancara_simpan');
+    Route::post('/zi/proses-wawancara/simpan', [WawancaraController::class, 'proses_wawancara_simpan'])->name('proses_wawancara_simpan');
+    //Route::post('/zi/proses-wawancara/simpan', [TutupController::class, 'index'])->name('proses_wawancara_simpan');
     #Seleksi Verifikasi Lapangan
     Route::get('/zi/verifikasi-lapangan', [VerlapController::class, 'index'])->name('verifikasi_lapangan');
     Route::get('/zi/proses-verifikasi-lapangan/{id}', [VerlapController::class, 'verlap'])->name('proses_verifikasi_lapangan');
-    //Route::post('/zi/proses-verifikasi-lapangan/simpan', [VerlapController::class, 'verlap_simpan'])->name('proses_verifikasi_lapangan_simpan');
-    Route::post('/zi/proses-verifikasi-lapangan/simpan', [TutupController::class, 'index'])->name('proses_verifikasi_lapangan_simpan');
+    Route::post('/zi/proses-verifikasi-lapangan/simpan', [VerlapController::class, 'verlap_simpan'])->name('proses_verifikasi_lapangan_simpan');
+    //Route::post('/zi/proses-verifikasi-lapangan/simpan', [TutupController::class, 'index'])->name('proses_verifikasi_lapangan_simpan');
     #Seleksi Panel
     Route::get('/zi/seleksi-panel', [PanelController::class, 'index'])->name('panel');
     Route::get('/zi/proses-panel/{id}', [PanelController::class, 'panel'])->name('proses_panel');
@@ -87,6 +81,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/zi/final/{id}', [FinalController::class, 'final'])->name('proses_final');
     //Route::post('/zi/final/simpan', [FinalController::class, 'final_simpan'])->name('proses_final_simpan');
     Route::post('/zi/final/simpan', [TutupController::class, 'index'])->name('proses_final_simpan');
+    Route::post('/zi/final/simpan_lhe', [FinalController::class, 'lhe_simpan'])->name('proses_upload_lhe_simpan');
     
 
     #Tautkan LKE

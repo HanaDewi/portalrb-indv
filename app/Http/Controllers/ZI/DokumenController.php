@@ -246,10 +246,10 @@ class DokumenController extends Controller
                     $analisisDokumenUnit = new AnalisisDokumen();
                     $analisisDokumenUnit->unit_zi_id = $unit_zi->id;
                 }
-                if(!is_null($request->get('bukti-dukung-'.$unit_zi->id )))$analisisDokumenUnit->bukti_dukung = $request->get('bukti-dukung-'.$unit_zi->id ); 
+                //if(!is_null($request->get('bukti-dukung-'.$unit_zi->id )))$analisisDokumenUnit->bukti_dukung = $request->get('bukti-dukung-'.$unit_zi->id ); 
                 if(!is_null($request->get('kondisi-'.$unit_zi->id )))$analisisDokumenUnit->kondisi = $request->get('kondisi-'.$unit_zi->id );
                 if(!is_null($request->get('rekomendasi-'.$unit_zi->id )))$analisisDokumenUnit->rekomendasi = $request->get('rekomendasi-'.$unit_zi->id ); 
-                if(!is_null($request->get('status-'.$unit_zi->id )))$analisisDokumenUnit->status = $request->get('status-'.$unit_zi->id ); 
+                //if(!is_null($request->get('status-'.$unit_zi->id )))$analisisDokumenUnit->status = $request->get('status-'.$unit_zi->id ); 
                 $analisisDokumenUnit->updated_by = Auth::User()->id;
                 $analisisDokumenUnit->save();
             };

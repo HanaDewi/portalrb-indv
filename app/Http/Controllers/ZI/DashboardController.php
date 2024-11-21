@@ -271,7 +271,5 @@ class DashboardController extends Controller
         }else{
             return(URL::to('/'));
         }
-    }
-
-    
+    }    
 }
