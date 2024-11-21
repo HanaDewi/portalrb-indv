@@ -129,7 +129,7 @@
 
                             </td>
                             <td>
-                                <select class="form-control status" name="status-{{$unit_zi->id}}"
+                                <select disabled class="form-control status" name="status-{{$unit_zi->id}}"
                                     data-old=@if(isset($unit_zi->verifikasi_lapangan->status))
                                     @if($unit_zi->verifikasi_lapangan->status==1) "1"
                                     @elseif($unit_zi->verifikasi_lapangan->status===0) "0"
