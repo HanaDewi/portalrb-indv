@@ -14,6 +14,7 @@ use App\Http\Controllers\WebDashboardController;
 use App\Http\Controllers\CapaianOutputController;
 use App\Http\Controllers\ERenaksiRBGeneralController;
 use App\Http\Controllers\DataLKERenaksiController;
+use App\Http\Controllers\LKEController;
 use App\Http\Controllers\RBTematikImportController;
 use App\Http\Controllers\RuangBelajar\AdminController;
 use App\Http\Controllers\RuangBelajar\DashboardController;
@@ -181,6 +182,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/master-data/data-konversi-jawaban', [DataKonversiJawabanController::class, 'index']);
     Route::post('/master-data/data-konversi-jawaban/save', [DataKonversiJawabanController::class, 'dosave']);
     Route::delete('/master-data/data-konversi-jawaban/delete', [DataKonversiJawabanController::class, 'dodelete']);
+
+    Route::get('/evaluasi/lke-utama', [LKEController::class, 'lke_utama']);
+    Route::get('/evaluasi/lke-utama/getDatas', [LKEController::class, 'lke_utama_getDatas']);
+    Route::get('/evaluasi/lke-utama/{parameter_id}', [LKEController::class, 'lke_utama_score']);
+    Route::get('/evaluasi/lke-utama/{parameter_id}/getDatas', [LKEController::class, 'lke_utama_score_getDatas']);
+    Route::post('/evaluasi/lke-utama/{parameter_id}/simpan', [LKEController::class, 'lke_utama_score_simpan']);
+    Route::get('/evaluasi/lke-utama/{parameter_id}/getData/{instansi_id}/{lke_bobot_id}', [LKEController::class, 'lke_utama_score_getData']);
 
     // Hasil
     Route::get('/hasil', [HasilController::class, 'hasil_seluruh'])->name('hasil_seluruh');

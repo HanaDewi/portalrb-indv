@@ -2,6 +2,9 @@
 
 namespace App\Models;
 
+use App\Models\LKE\LkeTestTp;
+use App\Models\LKE\LkeTestTpLine;
+use App\Models\LkeTestTp as LkeTestTpOld;
 use App\Models\ZI\InstansiZI;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -18,9 +21,9 @@ class KlpdInstansi extends Model
         'id'
     ];
 
-    public function lke_test_tp(): HasOne
+    public function lke_test_tp_old(): HasOne
     {
-        return $this->hasOne(LkeTestTp::class,  "lke_instansi_id");
+        return $this->hasOne(LkeTestTpOld::class,  "lke_instansi_id");
     }
 
     public function instansi_zi()
@@ -28,5 +31,13 @@ class KlpdInstansi extends Model
         return $this->hasMany(InstansiZI::class,  "instansi_id");
     }
 
+    public function lke_test_tps()
+    {
+        return $this->hasMany(LkeTestTp::class, 'instansi_id');
+    }
 
+    public function lke_test_tp_lines()
+    {
+        return $this->hasMany(LkeTestTpLine::class, 'instansi_id');
+    }
 }

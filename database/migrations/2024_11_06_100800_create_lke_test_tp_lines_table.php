@@ -11,11 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('lke_test_tp_lines', function (Blueprint $table) {
+        Schema::create('lke_test_tp_line', function (Blueprint $table) {
             $table->id();
             $table->foreignId('instansi_id');
             $table->foreignId('lke_bobot_id');
-            $table->foreignId('penilai_id')->nullable();
+            $table->foreignId('penilai_user_id')->nullable();
+            $table->foreignId('update_user_id')->nullable();
             $table->float('score')->nullable();
             $table->float('score_index')->nullable();
             $table->text('catatan')->nullable();
@@ -29,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('lke_test_tp_lines');
+        Schema::dropIfExists('lke_test_tp_line');
     }
 };

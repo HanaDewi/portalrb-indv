@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('lke_test_tps', function (Blueprint $table) {
+        Schema::create('lke_test_tp', function (Blueprint $table) {
             $table->id();
             $table->foreignId('lke_kegiatan_id');
             $table->foreignId('instansi_id');
@@ -30,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('lke_test_tps');
+        Schema::dropIfExists('lke_test_tp');
     }
 };

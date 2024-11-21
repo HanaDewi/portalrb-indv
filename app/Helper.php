@@ -142,11 +142,17 @@ if(! function_exists('menus'))
                 'url' => 'hasil',
             ],
             [
-                'levels' => ['admin', 'tpn'],
+                'levels' => ['admin', 'tpn', 'tpm'],
                 'title' => 'Evaluasi',
                 'icon' => 'pencil',
                 'url' => 'evaluasi',
                 'items' => [ 
+                    [
+                        'levels' => ['admin', 'tpn', 'tpm'],
+                        'title' => 'LKE Utama',
+                        'icon' => 'book-open',
+                        'url' => 'evaluasi/lke-utama'
+                    ],
                     [
                         'levels' => ['admin', 'tpn'],
                         'title' => 'Renaksi RB General',
@@ -489,13 +495,12 @@ if(! function_exists('group_instansi')) {
     function group_instansi($group = null)
     {
         $groups = [
-            'kl' => 'Kementrian',
+            'kl' => 'Kementerian',
             'provinsi' => 'Provinsi',
             'kabupaten' => 'Kabupaten/Kota',
             'lain' => 'Lainnya',
             'kab' => 'Kabupaten/Kota',
             'prov' => 'Provinsi',
-            'provinsi' => 'Provinsi',
             'pemda' => 'Kabupaten/Kota',
         ];
         

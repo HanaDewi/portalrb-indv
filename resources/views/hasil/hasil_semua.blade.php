@@ -36,28 +36,28 @@
                             <td>{{ $no }}</td>
                             <td><a href="{{ URL::to('/hasil/' . $instansi->id) }}">{{ $instansi->name }}</a></td>
                             <td>
-                                {{ isset($instansi->lke_test_tp->lke_kegiatan) ? $instansi->lke_test_tp->lke_kegiatan->name : '' }}
+                                {{ isset($instansi->lke_test_tp_old->lke_kegiatan) ? $instansi->lke_test_tp_old->lke_kegiatan->name : '' }}
                             </td>
                             <td>
-                                {{ isset($instansi->lke_test_tp) ? round($instansi->lke_test_tp->rb_general, 2) : '' }}
+                                {{ isset($instansi->lke_test_tp_old) ? round($instansi->lke_test_tp_old->rb_general, 2) : '' }}
                             </td>
                             <td>
-                                {{ isset($instansi->lke_test_tp) ? round($instansi->lke_test_tp->rb_tematik, 2) : '' }}
+                                {{ isset($instansi->lke_test_tp_old) ? round($instansi->lke_test_tp_old->rb_tematik, 2) : '' }}
                             </td>
                             <td>
-                                {{ isset($instansi->lke_test_tp) ? round($instansi->lke_test_tp->index_rb, 2) : '' }}
+                                {{ isset($instansi->lke_test_tp_old) ? round($instansi->lke_test_tp_old->index_rb, 2) : '' }}
                             </td>
                             <td>
                                 100
                             </td>
                             <td>
-                                {{ isset($instansi->lke_test_tp) ? $instansi->lke_test_tp->bobot_rb_general_penyesuaian : '' }}
+                                {{ isset($instansi->lke_test_tp_old) ? $instansi->lke_test_tp_old->bobot_rb_general_penyesuaian : '' }}
                             </td>
                             <td>
-                                {{ isset($instansi->lke_test_tp) ? round($instansi->lke_test_tp->rb_general_penyesuaian, 2) : '' }}
+                                {{ isset($instansi->lke_test_tp_old) ? round($instansi->lke_test_tp_old->rb_general_penyesuaian, 2) : '' }}
                             </td>
                             <td>
-                                {{ isset($instansi->lke_test_tp) ? round($instansi->lke_test_tp->index_rb_penyesuaian, 2) : '' }}
+                                {{ isset($instansi->lke_test_tp_old) ? round($instansi->lke_test_tp_old->index_rb_penyesuaian, 2) : '' }}
                             </td>
                         </tr>
                     @endforeach

@@ -8,4 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class LkeTestTp extends Model
 {
     use HasFactory;
+    protected $table = 'lke_test_tp';
 }
