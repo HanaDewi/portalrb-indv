@@ -74,7 +74,7 @@
             @endif
 
             @if ($instansi_ZI->unggah_file)
-            <a href="{{asset('uploads/LHEZI2024/'.$instansi_ZI->unggah_file->nama)}}" target="_blank"><img
+            <a href="{{asset('storage/uploads/LHEZI2024/'.$instansi_ZI->unggah_file->nama)}}" target="_blank"><img
                     src="{{asset('images/pdf.png')}}" width="10%"></a>
             <br />
             <h5>LHE {{$instansi_ZI->klpd_instansi->name}}</h5>
