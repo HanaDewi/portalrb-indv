@@ -143,12 +143,12 @@ class AdministrasiController extends Controller
                     ];
                 });
 
-                $surat_sanggah = FilesUpload::find(1);
+                
                 
                 return view('zi.seleksi_administrasi.administrasi', compact(
                     "title","jumlah_instansi","jumlah_unit_wbk","jumlah_unit_wbbm", 
                     'jumlah_lolos_wbk', 'jumlah_lolos_wbbm', 'progress_teams',
-                    "jumlah_unit_total","datas", "jumlah_instansi_lolos", "surat_sanggah"
+                    "jumlah_unit_total","datas", "jumlah_instansi_lolos"
                 ));        
     }
 
