@@ -8,7 +8,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 
-class VerifikasiLapangan extends Model
+class HasilFinal extends Model
 {
     use HasFactory;
     use LogsActivity;

@@ -100,63 +100,6 @@
         <br />
 
         <div class="lg:col-span-12 p-5 border-b border-slate-200/60">
-            <div class="box p-12 zoom-in">
-                <div class="col-span-12 sm:col-span-12 2xl:col-span-12  intro-y">
-                    <div class="row ">
-                        <table id="" class=" table table-bordered table-striped" cellspacing="0">
-                            <thead class="table-dark font-bold">
-                                <tr>
-                                    <th colspan=8>Data Jumlah instansi dan unit tidak valid untuk TIM 1 TIM 2 TIM 4 TIM
-                                        6
-                                        dikarenakan kementerian keuangan dikerjakan bersama sehingga seluruh unit
-                                        keuangan dimasukan ke tim-tim tersebut</th>
-                                </tr>
-                                <tr class="text-center">
-                                    <th>Nama</th>
-                                    <th>Jumlah Instansi </th>
-                                    <th>Unit WBK </th>
-                                    <th>Unit WBBM </th>
-                                    <th width="25%">Progress</th>
-                                    <th>Instansi Lulus</th>
-                                    <th>WBK Lulus</th>
-                                    <th>WBBM Lulus</th>
-
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($progress_teams as $key => $tim )
-                                <tr class="text-center">
-                                    <td id="{{$key}}" class="teams">{{$key}}</td>
-                                    <td>{{$tim['jumlah_instansi']}}</td>
-                                    <td>{{$tim['jumlah_wbk']}}</td>
-                                    <td>{{$tim['jumlah_wbbm']}}</td>
-                                    <td>
-                                        @php
-                                        $pembagi = $tim['jumlah_wbk'] + $tim['jumlah_wbbm'];
-                                        ($pembagi)?$pembagi:$pembagi=1;
-                                        $pembilang = $tim['jumlah_wbk_completed'] + $tim['jumlah_wbbm_completed'];
-                                        $persentase = floor(100*$pembilang/$pembagi);
-                                        @endphp
-                                        <div title="({{$pembilang}}/{{$pembagi}})">{{$persentase}} % </div>
-                                        <div class="w3-light-grey">
-                                            <div class="w3-green" style="height:24px;width:{{$persentase }}%">
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>{{$tim['jumlah_instansi_lulus']}}</td>
-                                    <td>{{$tim['jumlah_wbk_final_total']}}</td>
-                                    <td>{{$tim['jumlah_wbbm_final_total']}}</td>
-
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-        <div class="lg:col-span-12 p-5 border-b border-slate-200/60">
 
             <div class="separator mt-5"></div>
             <table id="rekap-zi" class="table table-bordered table-striped" cellspacing="0" width="100%">
@@ -165,9 +108,8 @@
                         <th>No</th>
                         <th>Instansi</th>
                         <th>Tim Evalutor</th>
-                        <th>WBK</th>
-                        <th>WBBM</th>
-                        <th>Progress Pengerjaan</th>
+                        <th>Usulan WBK</th>
+                        <th>Usulan WBBM</th>
                         <th>Lulus WBK</th>
                         <th>Lulus WBBM</th>
                         <th>Rasio Keberhasilan</th>
@@ -196,12 +138,7 @@
                         </td>
                         <td class="text-center">{{$data["wbbm_count"]}}</td>
 
-                        <td class="text-center">
-                            {{$data['persentase']}} %
-                            <div class="w3-light-grey">
-                                <div class="w3-green" style="height:24px;width:{{$data['persentase']}}%"></div>
-                            </div>
-                        </td>
+
                         <td class="text-center">
                             {{$data["wbk_final_count"]}}
                         </td>
@@ -217,7 +154,7 @@
                             @if (in_array($userTimZI->tim->nama, $data["nama_teams"]))
                             <a href="{{route('proses_final', $data['instansi_zi_id'])}}" class="btn btn-danger"><i
                                     class="fa fa-search"></i>
-                                &nbsp;Evaluasi
+                                &nbsp;Lihat
                             </a>
                             @break
                             @endif

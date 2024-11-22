@@ -89,11 +89,11 @@
 
 
 
-            <form action="{{ route('proses_panel_simpan') }}" method="POST">
+            <form action="{{ route('proses_final_simpan') }}" method="POST">
                 @csrf
                 <input type="hidden" id="instansiZIId" name="instansiZIId" value="{{$instansi_ZI->id}}">
 
-                <table id="rekap-zi" class="table table-bordered table-striped" cellspacing="0" width="100%">
+                <table id="rekap-zi" class="table table-bordered " cellspacing="0" width="100%">
                     <thead class="table-dark font-bold">
                         <tr>
                             <th>Unit</th>
@@ -111,12 +111,16 @@
                         @php
                         $wbk_i = 0;
                         $wbbm_i = 0;
+                        $ganjil_genap=0;
                         @endphp
                         @foreach ($unit_ZIs as $key => $unit_zi )
                         @if(!$instansi_ZI->instansi_wbk_mandiri OR ($instansi_ZI->instansi_wbk_mandiri AND
                         $unit_zi->wbbm ))
-                        <tr>
-                            <td rowspan=3>
+                        @php
+                        $ganjil_genap++;
+                        @endphp
+                        <tr @if($ganjil_genap % 2==0) style="background-color: #f5f5f5" @endif>
+                            <td rowspan=4>
                                 @if($unit_zi->wbk==1)
                                 WBK {{++$wbk_i}}
                                 @elseif($unit_zi->wbbm==1)
@@ -125,9 +129,10 @@
                                 :
                                 {{$unit_zi->nama}}
                             </td>
-                            <td rowspan=3 class="bukti_dukung link-wrap">
+                            <td rowspan=4 class="bukti_dukung link-wrap">
                                 @if(isset($unit_zi->analisis_dokumen))
-                                <a href="{{$unit_zi->analisis_dokumen->bukti_dukung}}" target="_blank">Lihat</a>
+                                <a href="{{$unit_zi->analisis_dokumen->bukti_dukung}}" target="_blank"
+                                    class="btn btn-primary">Lihat</a>
                                 @endif
                             </td>
                             <td>Analisis Dokumen</td>
@@ -153,8 +158,8 @@
                                 {{$unit_zi->analisis_dokumen->rekomendasi}}
                                 @endif
                             </td>
-                            <td rowspan=3>
-                                <select class="form-control status" name="status-{{$unit_zi->id}}"
+                            <td rowspan=4>
+                                <select disabled class="form-control status" name="status-{{$unit_zi->id}}"
                                     data-old=@if(isset($unit_zi->final->status))
                                     @if($unit_zi->final->status==1) "1"
                                     @elseif($unit_zi->final->status===0) "0"
@@ -166,28 +171,24 @@
                                     data-id="{{$unit_zi->id}}">
                                     <option value="" disabled selected>Pilih Status</option>
                                     <option @if(optional($unit_zi->panel)->status==1) selected
-                                        @elseif(optional($unit_zi->verifikasi_lapangan)->status==1) selected
                                         @endif
                                         value="1">Lulus</option>
-                                    <option @if(optional($unit_zi->analisis_dokumen)->status===0) selected
-                                        @elseif(optional($unit_zi->wawancara)->status===0) selected
-                                        @elseif(optional($unit_zi->verifikasi_lapangan)->status===0) selected
+                                    <option @if(optional($unit_zi->panel)->status!=1) selected
                                         @endif
-
                                         value="0">Tidak Lulus</option>
                                 </select>
                             </td>
-                            <td class="kondisi" rowspan=3>
+                            <td class="kondisi" rowspan=4>
                                 <textarea rows='4' class='glowing-border' name='kondisi-{{$unit_zi->id}}'
-                                    placeholder="Kondisi / Catatan">{{optional($unit_zi->panel)->kondisi}}</textarea>
+                                    placeholder="Kondisi / Catatan">{{optional($unit_zi->final)->kondisi}}</textarea>
                             </td>
-                            <td class="rekomendasi" rowspan=3>
+                            <td class="rekomendasi" rowspan=4>
                                 <textarea rows='4' class='glowing-border' data-old=""
                                     name='rekomendasi-{{$unit_zi->id}}'
-                                    placeholder="Rekomendasi">@if(optional($unit_zi->panel)->status ===0){{optional($unit_zi->panel)->rekomendasi}}@endif</textarea>
+                                    placeholder="Rekomendasi">{{optional($unit_zi->final)->rekomendasi}}</textarea>
                             </td>
                         </tr>
-                        <tr>
+                        <tr @if($ganjil_genap % 2==0) style="background-color: #f5f5f5" @endif>
                             <td>Tahapan Wawancara</td>
                             <td>
                                 @if(isset($unit_zi->wawancara))
@@ -211,11 +212,10 @@
                                 @endif
                             </td>
                         </tr>
-                        <tr>
+                        <tr @if($ganjil_genap % 2==0) style="background-color: #f5f5f5" @endif>
                             <td>Tahapan Verlap</td>
                             <td>
                                 @if(isset($unit_zi->verifikasi_lapangan))
-                                {{$unit_zi->verifikasi_lapangan->status}}
                                 @if($unit_zi->verifikasi_lapangan->status==1)
                                 <p style="color:green">
                                     LULUS
@@ -225,6 +225,36 @@
                                     TIDAK LULUS
                                 </p>
                                 @elseif($unit_zi->verifikasi_lapangan->status==2)
+                                <p style="color:red">
+                                    Dibawa Ke Panel
+                                </p>
+                                @endif
+                                @endif
+                            </td>
+                            <td>
+                                @if(isset($unit_zi->verifikasi_lapangan))
+                                {{$unit_zi->verifikasi_lapangan->catatan}}
+                                @endif
+                            </td>
+                            <td>
+                                @if(isset($unit_zi->verifikasi_lapangan))
+                                {{$unit_zi->verifikasi_lapangan->rekomendasi}}
+                                @endif
+                            </td>
+                        </tr>
+                        <tr @if($ganjil_genap % 2==0) style="background-color: #f5f5f5" @endif>
+                            <td>Tahapan Panel</td>
+                            <td>
+                                @if(isset($unit_zi->panel))
+                                @if($unit_zi->panel->status==1)
+                                <p style="color:green">
+                                    LULUS
+                                </p>
+                                @elseif($unit_zi->panel->status===0)
+                                <p style="color:red">
+                                    TIDAK LULUS
+                                </p>
+                                @elseif($unit_zi->panel->status==2)
                                 <p style="color:red">
                                     Dibawa Ke Panel
                                 </p>

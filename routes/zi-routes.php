@@ -79,8 +79,8 @@ Route::middleware('auth')->group(function () {
     #Final
     Route::get('/zi/final', [FinalController::class, 'index'])->name('final');
     Route::get('/zi/final/{id}', [FinalController::class, 'final'])->name('proses_final');
-    //Route::post('/zi/final/simpan', [FinalController::class, 'final_simpan'])->name('proses_final_simpan');
-    Route::post('/zi/final/simpan', [TutupController::class, 'index'])->name('proses_final_simpan');
+    Route::post('/zi/final/simpan', [FinalController::class, 'final_simpan'])->name('proses_final_simpan');
+    //Route::post('/zi/final/simpan', [TutupController::class, 'index'])->name('proses_final_simpan');
     Route::post('/zi/final/simpan_lhe', [FinalController::class, 'lhe_simpan'])->name('proses_upload_lhe_simpan');
     
 

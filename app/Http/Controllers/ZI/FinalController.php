@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\ZI;
 
+use App\Models\ZI\Final;
 use App\Models\ZI\Panel;
 use App\Models\ZI\UnitZI;
 use App\Models\KlpdInstansi;
 use Illuminate\Http\Request;
+use App\Models\ZI\HasilFinal;
 use App\Models\ZI\InstansiZI;
 use App\Models\ZI\UnggahFile;
 use App\Models\ZI\TimEvaluasi;
@@ -198,7 +200,7 @@ class FinalController extends Controller
         
     }
 
-    public function panel_simpan(Request $request){
+    public function final_simpan(Request $request){
         //dd("Proses Seleksi Dokumen Buat Evaluator Masih Belum Dibuka Yah, mau ke mana sih buru-buru amat, Jangan Ya Dek Ya !! :p");
         $instansiZIid = $request->get('instansiZIId');
         $instansi_ZI = InstansiZI::find($instansiZIid);
@@ -223,24 +225,25 @@ class FinalController extends Controller
         }
         
         foreach($instansi_ZI->unit_zi as $unit_zi){
-            $panelUnit = Panel::where('unit_zi_id', $unit_zi->id)->first();
+            $finalUnit = HasilFinal::where('unit_zi_id', $unit_zi->id)->first();
+            if (!$finalUnit) {
+                $finalUnit = new HasilFinal();
+                $finalUnit->unit_zi_id = $unit_zi->id;
+            }
             
-                    if (!$panelUnit) {
-                        $panelUnit = new Panel();
-                        $panelUnit->unit_zi_id = $unit_zi->id;
-                    }
-                    if(!is_null($request->get('jadwal-'.$unit_zi->id)))$panelUnit->jadwal = $request->get('jadwal-'.$unit_zi->id ); 
-                    if(!is_null($request->get('bukti-dukung-'.$unit_zi->id )))$panelUnit->bukti_dukung = $request->get('bukti-dukung-'.$unit_zi->id ); 
-                    if(!is_null($request->get('kondisi-'.$unit_zi->id )))$panelUnit->kondisi = $request->get('kondisi-'.$unit_zi->id );
-                    if(!is_null($request->get('rekomendasi-'.$unit_zi->id )))$panelUnit->rekomendasi = $request->get('rekomendasi-'.$unit_zi->id ); 
-                    if(!is_null($request->get('status-'.$unit_zi->id )))$panelUnit->status = $request->get('status-'.$unit_zi->id ); 
-                    $panelUnit->updated_by = Auth::User()->id;
-                    $panelUnit->save();  
+            #if(!is_null($request->get('jadwal-'.$unit_zi->id)))$finalUnit->jadwal = $request->get('jadwal-'.$unit_zi->id ); 
+            #if(!is_null($request->get('bukti-dukung-'.$unit_zi->id )))$finalUnit->bukti_dukung = $request->get('bukti-dukung-'.$unit_zi->id ); 
+            if(!is_null($request->get('kondisi-'.$unit_zi->id )))$finalUnit->kondisi = $request->get('kondisi-'.$unit_zi->id );
+            if(!is_null($request->get('rekomendasi-'.$unit_zi->id )))$finalUnit->rekomendasi = $request->get('rekomendasi-'.$unit_zi->id ); 
+            #if(!is_null($request->get('status-'.$unit_zi->id )))$finalUnit->status = $request->get('status-'.$unit_zi->id ); 
+            $finalUnit->updated_by = Auth::User()->id;
+            
+            $finalUnit->save();  
         };
             
         
         
-        return redirect()->route('proses_panel',$instansiZIid);
+        return redirect()->route('proses_final',$instansiZIid);
     }
 
     public function lhe_simpan (Request $request)

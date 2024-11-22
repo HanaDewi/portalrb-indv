@@ -48,6 +48,9 @@ class UnitZI extends Model
     public function panel() {
         return $this->hasOne(Panel::class, 'unit_zi_id');
     }
+    public function final() {
+        return $this->hasOne(HasilFinal::class, 'unit_zi_id');
+    }
 
 //     public function warlap() {
 //         return $this->hasOne(Warlap::class, 'unit_zi_id');
