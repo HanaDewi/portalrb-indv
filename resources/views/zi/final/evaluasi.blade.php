@@ -262,13 +262,13 @@
                                 @endif
                             </td>
                             <td>
-                                @if(isset($unit_zi->verifikasi_lapangan))
-                                {{$unit_zi->verifikasi_lapangan->catatan}}
+                                @if(isset($unit_zi->panel))
+                                {{$unit_zi->panel->catatan}}
                                 @endif
                             </td>
                             <td>
-                                @if(isset($unit_zi->verifikasi_lapangan))
-                                {{$unit_zi->verifikasi_lapangan->rekomendasi}}
+                                @if(isset($unit_zi->panel))
+                                {{$unit_zi->panel->rekomendasi}}
                                 @endif
                             </td>
                         </tr>

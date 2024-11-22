@@ -139,7 +139,8 @@ class KonfigurasiController extends Controller
         $title = "Kelola Anggota Tim";
         $teams = TimEvaluasi::get(); 
         $userTimIds = AnggotaTimEvaluasi::get()->pluck('user_id');
-        $evaluators = User::where('level', 'tpn')->whereNotIn('id', $userTimIds)->get();
+        //$evaluators = User::where('level', 'tpn')->whereNotIn('id', $userTimIds)->get();
+        $evaluators = User::where('level', 'tpn')->get();
         return view('zi.konfigurasi.kelola_anggota_tim', compact(
             "instansi_ZIs", "title", "teams","evaluators"
             ) 
