@@ -58,7 +58,23 @@ class ERenaksiRBGeneralController extends Controller
 
         } else {
 
+            $ljawaban = KonversiJawabanRenaksi::get()->all();
+
+            $fjawaban = [];
+
             $lkerenaksi = LKERenaksi::orderBy('id', 'ASC')->get();
+
+            foreach ($lkerenaksi as $ss=>&$nn) {
+                $fjawaban[$nn->id] = (object) array(
+                    'id'=>'',
+                    'tahun'=>$tahun,
+                    'lke_renaksi_id'=>$nn->id,
+                    'jawaban'=>'',
+                    'skor'=>'',
+                    'catatan'=>'',
+                    'rekomendasi'=>''
+                );
+            }
 
             $instansi = KlpdInstansi::where('id', $ins_id)->first();
             $jawaban = JawabanRenaksi::where('tahun', $tahun)->where('instansi_id', $ins_id)->get();
@@ -68,20 +84,28 @@ class ERenaksiRBGeneralController extends Controller
                 $check = InstansiTim::where('tim_id', $atim->tim_id)->where('instansi_id', $ins_id)->first();
             }
 
-            $fjawaban = [];
             foreach ($jawaban as $nn=>$oo) {
+                $skor = '';
+                if ($oo->jawaban) {
+                    $checkskor = array_filter($ljawaban, function($lj) use ($oo) {
+                        return $lj->jawaban == $oo->jawaban;
+                    });
+                    foreach ($checkskor as $cc=>$pp) {
+                        $skor = $pp['skor'];
+                    }
+                }
                 $fjawaban[$oo->lke_renaksi_id] = (object) array(
                     'id'=>$oo->id,
                     'tahun'=>$oo->tahun,
                     'lke_renaksi_id'=>$oo->lke_renaksi_id,
                     'jawaban'=>$oo->jawaban,
+                    'skor'=>$skor,
                     'catatan'=>$oo->catatan,
                     'rekomendasi'=>$oo->rekomendasi
                 );
             }
 
             $renaksi = DB::select('SELECT id,kriteria,info,tahun FROM lke_renaksi lr WHERE (SELECT COUNT(*) FROM lke_renaksi lr_ WHERE lr_.parent_id=lr.id)=0 AND lr.tahun=?', [$tahun]);
-            $ljawaban = KonversiJawabanRenaksi::get();
 
             return view('evaluasi.renaksi-rb-general', ['tahun'=>$tahun, 'isadmin'=>$isadmin, 'data'=>$jawaban, 'kembali'=>true, 'instansi'=>$instansi, 'check'=>$check, 'renaksi'=>$renaksi, 'list_jawaban'=>$ljawaban, 'lkerenaksi'=>$lkerenaksi, 'fjawaban'=>$fjawaban]);
 

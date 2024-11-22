@@ -55,6 +55,7 @@
                     <tr>
                         <th>LKE Renaksi</th>
                         <th>Jawaban</th>
+                        <th>Skor</th>
                         <th>Catatan</th>
                         <th>Rekomendasi</th>
                         @if($check==true)
@@ -66,17 +67,28 @@
                     @foreach ($lkerenaksi as $cc=>$jw)
                     <tr>
                         <td>
-                            <strong>{{ $jw->kriteria }}</strong><br/>
-                            <p>{{ $jw->info }}</p>
+                            <strong>{{ $jw->kriteria }}</strong>
                         </td>
                         @if (isset($fjawaban[$jw->id]))
-                            <td>{{ $fjawaban[$jw->id]->jawaban }}</td>
-                            <td>{{ $fjawaban[$jw->id]->catatan }}</td>
-                            <td>{{ $fjawaban[$jw->id]->rekomendasi }}</td>
-                            @if($check==true)
+                            <td class="text-center">{{ $fjawaban[$jw->id]->jawaban }}</td>
+                            <td class="text-center">{{ $fjawaban[$jw->id]->skor }}</td>
+                            <td class="text-center">{{ $fjawaban[$jw->id]->catatan }}</td>
+                            <td class="text-center">{{ $fjawaban[$jw->id]->rekomendasi }}</td>
+                            @if($check==true && $fjawaban[$jw->id]->id!='')
                             <td class="text-center">
                                 <a class="btn btn-warning btn-xs" data-raw="{{ json_encode($fjawaban[$jw->id]) }}" data-id="{{ $fjawaban[$jw->id]->id }}" onclick="showform(this)" data-bs-toggle="modal" data-bs-target="#modal-form-jawaban-renaksi"><i class="nav-icon fas fa-edit"></i></a> &nbsp; 
                                 <a class="btn btn-danger btn-xs" data-id="{{ $fjawaban[$jw->id]->id }}" onclick="dodelete(this)" ><i class="nav-icon fas fa-remove"></i></a> &nbsp; 
+                            </td>
+                            @else
+                            <td class="text-center">
+                                @php 
+                                $checkjawab = array_filter($renaksi, function($ren) use ($jw) {
+                                    return $ren->id == $jw->id;
+                                });
+                                @endphp
+                                @if($checkjawab)
+                                <a class="btn btn-warning btn-xs" data-raw="{{ json_encode($fjawaban[$jw->id]) }}" data-id="{{ $fjawaban[$jw->id]->id }}" onclick="showform(this)" data-bs-toggle="modal" data-bs-target="#modal-form-jawaban-renaksi"> Jawab &nbsp; <i class="nav-icon fas fa-edit"></i></a> &nbsp; 
+                                @endif
                             </td>
                             @endif
                         @else
@@ -84,6 +96,16 @@
                             <td></td>
                             <td></td>
                             <td></td>
+                            <td class="text-center">
+                                @php 
+                                $checkjawab = array_filter($renaksi, function($ren) use ($jw) {
+                                    return $ren->id == $jw->id;
+                                });
+                                @endphp
+                                @if($checkjawab)
+                                <a class="btn btn-warning btn-xs" data-raw="{{ json_encode($fjawaban[$jw->id]) }}" data-id="{{ $fjawaban[$jw->id]->id }}" onclick="showform(this)" data-bs-toggle="modal" data-bs-target="#modal-form-jawaban-renaksi"> Jawab &nbsp; <i class="nav-icon fas fa-edit"></i></a> &nbsp; 
+                                @endif
+                            </td>
                         @endif
                     </tr>
                     @endforeach
@@ -93,9 +115,6 @@
             <div class="row mt-4">
                 @if($kembali==true)
                 <a href="/evaluasi/renaksi-rb-general" class="btn btn-warning">&lt; Kembali</a>
-                @endif
-                @if($check==true)
-                &nbsp; <a  onclick="showform(this)" data-bs-toggle="modal" data-bs-target="#modal-form-jawaban-renaksi" class="btn btn-danger">Tambah</a>
                 @endif
             </div>
         </div>
