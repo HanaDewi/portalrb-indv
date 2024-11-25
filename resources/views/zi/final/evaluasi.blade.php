@@ -123,27 +123,98 @@
                         $ganjil_genap=0;
                         @endphp
                         @foreach ($unit_ZIs as $key => $unit_zi )
-                        @if(!$instansi_ZI->instansi_wbk_mandiri OR ($instansi_ZI->instansi_wbk_mandiri AND
-                        $unit_zi->wbbm ))
                         @php
                         $ganjil_genap++;
                         @endphp
                         <tr @if($ganjil_genap % 2==0) style="background-color: #f5f5f5" @endif>
-                            <td rowspan=4>
+                            <td rowspan=5>
                                 @if($unit_zi->wbk==1)
                                 WBK {{++$wbk_i}}
+                                @if ($instansi_ZI->instansi_wbk_mandiri AND $unit_zi->wbk)
+                                <strong style="color:red">(MANDIRI)</strong>
+                                @endif
                                 @elseif($unit_zi->wbbm==1)
                                 WBBM {{++$wbbm_i}}
                                 @endif
                                 :
                                 {{$unit_zi->nama}}
                             </td>
-                            <td rowspan=4 class="bukti_dukung link-wrap">
+                            <td rowspan=5 class="bukti_dukung link-wrap">
                                 @if(isset($unit_zi->analisis_dokumen))
                                 <a href="{{$unit_zi->analisis_dokumen->bukti_dukung}}" target="_blank"
                                     class="btn btn-primary">Lihat</a>
                                 @endif
                             </td>
+                            <td>Seleksi Administrasi dan sanggah</td>
+                            <td>
+                                @if(isset($unit_zi->seleksi_administrasi_unit))
+                                @if($unit_zi->seleksi_administrasi_unit->status_final==1)
+                                <p style="color:green">
+                                    LULUS
+                                </p>
+                                @elseif($unit_zi->sanggah_unit->status_final==1)
+                                <p style="color:green">
+                                    LULUS
+                                </p>
+                                @elseif($unit_zi->sanggah_unit->status===0)
+                                <p style="color:red">
+                                    TIDAK LULUS
+                                </p>
+                                @endif
+                                @endif
+                            </td>
+                            <td>
+                                @if(isset($unit_zi->seleksi_administrasi_unit))
+                                {{$unit_zi->seleksi_administrasi_unit->catatan_lke}} <br />
+                                {{$unit_zi->seleksi_administrasi_unit->catatan_tlhp}} <br />
+                                {{$unit_zi->seleksi_administrasi_unit->catatan_survei_mandiri}}<br />
+                                {{$unit_zi->seleksi_administrasi_unit->catatan_2wbk}}<br />
+                                @endif
+                                @if(isset($unit_zi->sanggah_unit))
+                                {{$unit_zi->sanggah_unit->catatan_lke}}<br />
+                                {{$unit_zi->sanggah_unit->catatan_tlhp}}<br />
+                                {{$unit_zi->sanggah_unit->catatan_survei_mandiri}}<br />
+                                {{$unit_zi->sanggah_unit->catatan_2wbk}}<br />
+
+                                @endif
+                            </td>
+                            <td>
+                            </td>
+                            <td rowspan=5>
+                                <select disabled class="form-control status" name="status-{{$unit_zi->id}}"
+                                    data-old=@if(isset($unit_zi->final->status))
+                                    @if($unit_zi->final->status==1) "1"
+                                    @elseif($unit_zi->final->status===0) "0"
+                                    @else "kosong"
+                                    @endif
+                                    @else
+                                    "kosong"
+                                    @endif
+                                    data-id="{{$unit_zi->id}}">
+                                    <option value="" disabled selected>Pilih Status</option>
+                                    <option @if(optional($unit_zi->panel)->status==1) selected
+                                        @endif
+                                        value="1">Lulus</option>
+                                    <option @if(optional($unit_zi->panel)->status===0) selected
+                                        @elseif(optional($unit_zi->verifikasi_lapangan)->status===0) selected
+                                        @elseif(optional($unit_zi->wawancara)->status===0) selected
+                                        @elseif(optional($unit_zi->analisis_dokumen)->status===0) selected
+                                        @elseif(optional($unit_zi->sanggah_unit)->status_final===0) selected
+                                        @endif
+                                        value="0">Tidak Lulus</option>
+                                </select>
+                            </td>
+                            <td class="kondisi" rowspan=5>
+                                <textarea rows='4' class='glowing-border' name='kondisi-{{$unit_zi->id}}'
+                                    placeholder="Kondisi / Catatan">{{optional($unit_zi->final)->kondisi}}</textarea>
+                            </td>
+                            <td class="rekomendasi" rowspan=5>
+                                <textarea rows='4' class='glowing-border' data-old=""
+                                    name='rekomendasi-{{$unit_zi->id}}'
+                                    placeholder="Rekomendasi">{{optional($unit_zi->final)->rekomendasi}}</textarea>
+                            </td>
+                        </tr>
+                        <tr @if($ganjil_genap % 2==0) style="background-color: #f5f5f5" @endif>
                             <td>Analisis Dokumen</td>
                             <td>
                                 @if(isset($unit_zi->analisis_dokumen))
@@ -166,35 +237,6 @@
                             <td>@if(isset($unit_zi->analisis_dokumen))
                                 {{$unit_zi->analisis_dokumen->rekomendasi}}
                                 @endif
-                            </td>
-                            <td rowspan=4>
-                                <select disabled class="form-control status" name="status-{{$unit_zi->id}}"
-                                    data-old=@if(isset($unit_zi->final->status))
-                                    @if($unit_zi->final->status==1) "1"
-                                    @elseif($unit_zi->final->status===0) "0"
-                                    @else "kosong"
-                                    @endif
-                                    @else
-                                    "kosong"
-                                    @endif
-                                    data-id="{{$unit_zi->id}}">
-                                    <option value="" disabled selected>Pilih Status</option>
-                                    <option @if(optional($unit_zi->panel)->status==1) selected
-                                        @endif
-                                        value="1">Lulus</option>
-                                    <option @if(optional($unit_zi->panel)->status!=1) selected
-                                        @endif
-                                        value="0">Tidak Lulus</option>
-                                </select>
-                            </td>
-                            <td class="kondisi" rowspan=4>
-                                <textarea rows='4' class='glowing-border' name='kondisi-{{$unit_zi->id}}'
-                                    placeholder="Kondisi / Catatan">{{optional($unit_zi->final)->kondisi}}</textarea>
-                            </td>
-                            <td class="rekomendasi" rowspan=4>
-                                <textarea rows='4' class='glowing-border' data-old=""
-                                    name='rekomendasi-{{$unit_zi->id}}'
-                                    placeholder="Rekomendasi">{{optional($unit_zi->final)->rekomendasi}}</textarea>
                             </td>
                         </tr>
                         <tr @if($ganjil_genap % 2==0) style="background-color: #f5f5f5" @endif>
@@ -281,7 +323,6 @@
                                 @endif
                             </td>
                         </tr>
-                        @endif
                         @endforeach
                     </tbody>
                 </table>

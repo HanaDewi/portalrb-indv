@@ -184,13 +184,7 @@ class FinalController extends Controller
             }
         }
         
-        $unit_ZIs = UnitZI::where("instansi_zi_id", $id)->where(function ($q){
-            $q->whereHas('seleksi_administrasi_unit', function ($query) {
-                $query->where('status_final', 1);
-            })->orWhereHas('sanggah_unit', function ($query) {
-                $query->where('status_final', 1);
-            });
-        })->orderBy('wbk','desc')->get();
+        $unit_ZIs = UnitZI::where("instansi_zi_id", $id)->orderBy('wbbm','desc')->get();
         
         
         
