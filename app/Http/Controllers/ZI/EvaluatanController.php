@@ -125,7 +125,7 @@ class EvaluatanController extends Controller
                 'title',
                  'instansi_id', 'instansi', 'group_kld', 'instansiZI',
                 'unit_wbks', 'unit_wbbms',
-                'syarat_akhir_wbk','syarat_akhir_wbbm', 'status_akhir'
+                'syarat_akhir_wbk','syarat_akhir_wbbm', 'status_akhir', 'instansi_obj'
             ));
         }else{
             echo "mohon maaf instansi anda belum terdapat penilaian RB di tahun lalu";

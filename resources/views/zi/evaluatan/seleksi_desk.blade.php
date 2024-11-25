@@ -41,11 +41,30 @@
 
             <div class="col-lg-12 col-md-12">
                 <div class="feature-item" style="background-color: white; border-radius: 25px; padding: 20px 80px">
+                    <h5>{{$title}} <br /> {{ $instansi}}</h5><br />
+
+                    @if(optional($instansi_obj->instansi_zi[0])->instansi_wbk_mandiri)
+                    === Khusus Instansi yang Menyelenggarakan WBK Mandiri ===
+                    <form method="POST" action="{{route('simpan_hasil_wbk_mandiri')}}">
+                        @csrf
+                        <div class="row">
+                            <div class="col-md-12">
+                                <input type="text" class="glowing-border" name="link_hasil_wbk_mandiri"
+                                    placeholder="Masukan Link Hasil WBK Mandiri disini"
+                                    @if($instansi_obj->instansi_zi[0]->hasil_wbk_mandiri)value="{{$instansi_obj->instansi_zi[0]->hasil_wbk_mandiri}}"@endif>
+                            </div>
+                            <div class="col-md-12" style="vertical-align:middle">
+                                <input type="submit" class="btn btn-primary" style="background-color: #b42b2d"
+                                    value="Kirim">
+                            </div>
+                        </div>
+                    </form>
+                    @endif
                     <form method="POST" action="{{route('evaluatan_simpan_desk')}}">
                         @csrf
                         <div class="content">
                             <br>
-                            <h5>{{$title}} <br /> {{ $instansi}}</h5><br />
+
                             <hr />
                             <h5 style="color:red">Proses evaluasi sedang berlangsung melalui mekanisme: analisa
                                 dokumen / wawancara
@@ -54,7 +73,8 @@
                                 evaluator
                                 dalam melakukan pendalaman / validasi / verifikasi hasil pembangunan ZI.
 
-                                Hasil akhir evaluasi akan disampaikan melalui Lembar Hasil Evaluasi (LHE) kemungkinan
+                                Hasil akhir evaluasi akan disampaikan melalui Lembar Hasil Evaluasi (LHE)
+                                kemungkinan
                                 pada Desember 2024.
                             </h5>
                             <hr>
@@ -85,7 +105,8 @@
                                         <td style="text-align: left">
                                             @if(isset($unit_wbk->wawancara->jadwal))
                                             <i class="fa fa-calendar fa-lg text-danger" aria-hidden="true"></i>
-                                            {{\Carbon\Carbon::parse($unit_wbk->wawancara->jadwal)->isoFormat('dddd, D
+                                            {{\Carbon\Carbon::parse($unit_wbk->wawancara->jadwal)->isoFormat('dddd,
+                                            D
                                             MMMM Y HH:mm');}} WIB
                                             @endif
 
@@ -159,7 +180,8 @@
                                         <td style="text-align: left">
                                             @if(isset($unit_wbbm->wawancara->jadwal))
                                             <i class="fa fa-calendar fa-lg text-danger" aria-hidden="true"></i>
-                                            {{\Carbon\Carbon::parse($unit_wbbm->wawancara->jadwal)->isoFormat('dddd, D
+                                            {{\Carbon\Carbon::parse($unit_wbbm->wawancara->jadwal)->isoFormat('dddd,
+                                            D
                                             MMMM Y HH:mm');}} WIB
                                             @endif
                                         </td>

@@ -204,7 +204,7 @@
                                 @endif
                             </td>
                             <td>@if(isset($unit_zi->wawancara))
-                                {{$unit_zi->wawancara->catatan}}
+                                {{$unit_zi->wawancara->kondisi}}
                                 @endif
                             </td>
                             <td>@if(isset($unit_zi->wawancara))
@@ -233,7 +233,7 @@
                             </td>
                             <td>
                                 @if(isset($unit_zi->verifikasi_lapangan))
-                                {{$unit_zi->verifikasi_lapangan->catatan}}
+                                {{$unit_zi->verifikasi_lapangan->kondisi}}
                                 @endif
                             </td>
                             <td>
@@ -263,7 +263,7 @@
                             </td>
                             <td>
                                 @if(isset($unit_zi->panel))
-                                {{$unit_zi->panel->catatan}}
+                                {{$unit_zi->panel->kondisi}}
                                 @endif
                             </td>
                             <td>
