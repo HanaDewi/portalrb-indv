@@ -58,6 +58,13 @@
             <h2 class="font-bold text-base mr-auto"> {{$title}} - {{$instansi_ZI->klpd_instansi->name}}
                 @if($instansi_ZI->instansi_wbk_mandiri)
                 <b class="text-red-500">(WBK Mandiri)</b>
+                @if ($instansi_ZI->hasil_wbk_mandiri)
+                <a href="{{$instansi_ZI->hasil_wbk_mandiri}}" target="_blank" class="btn btn-secondary">Lihat Hasil WBK
+                    Mandiri</a>
+                @else
+                <a href="{{$instansi_ZI->hasil_wbk_mandiri}}" target="_blank" class="btn btn-secondary">Belum Mengunggah
+                    Hasil WBK Mandiri</a>
+                @endif
                 @endif
             </h2>
         </div>
@@ -72,6 +79,8 @@
                 </ul>
             </div>
             @endif
+
+
 
             @if ($instansi_ZI->unggah_file)
             <a href="{{asset('storage/uploads/LHEZI2024/'.$instansi_ZI->unggah_file->nama)}}" target="_blank"><img
