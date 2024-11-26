@@ -385,7 +385,7 @@ class RBGeneralController extends Controller
                 }
             } else {
                 $success = false;
-                session()->flash('error', 'File yang di upload tidak sesuai dengan template. Silahkan gunakan template yang telah disedikan!');
+                $pesan = 'File yang di upload tidak sesuai dengan template. Silahkan gunakan template yang telah disedikan!';
             }
         } catch (\Throwable $th) {
             $success = false;

@@ -563,3 +563,23 @@ if(! function_exists('set_options')) {
         }
     }
 }
+
+if(! function_exists('heading_template_lke')) {
+    function heading_template_lke()
+    {
+        return [
+            0 => 'instansi_id',
+            1 => 'lke_bobot_id',
+            2 => 'no',
+            3 => 'group_instansi',
+            4 => 'nama_instansi',
+            5 => 'bobot',
+            6 => 'min_value',
+            7 => 'max_value',
+            8 => 'target_baik',
+            9 => 'score',
+            10 => 'catatan',
+            11 => 'rekomendasi'
+        ];
+    }
+}

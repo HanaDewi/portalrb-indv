@@ -187,7 +187,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/evaluasi/lke-utama/getDatas', [LKEController::class, 'lke_utama_getDatas']);
     Route::get('/evaluasi/lke-utama/{parameter_id}', [LKEController::class, 'lke_utama_score']);
     Route::get('/evaluasi/lke-utama/{parameter_id}/getDatas', [LKEController::class, 'lke_utama_score_getDatas']);
+    Route::get('/evaluasi/lke-utama/{parameter_id}/downloadTemplate', [LKEController::class, 'lke_utama_score_downloadTemplate']);
     Route::post('/evaluasi/lke-utama/{parameter_id}/simpan', [LKEController::class, 'lke_utama_score_simpan']);
+    Route::post('/evaluasi/lke-utama/{parameter_id}/import', [LKEController::class, 'lke_utama_score_import']);
     Route::get('/evaluasi/lke-utama/{parameter_id}/getData/{instansi_id}/{lke_bobot_id}', [LKEController::class, 'lke_utama_score_getData']);
 
     // Hasil
