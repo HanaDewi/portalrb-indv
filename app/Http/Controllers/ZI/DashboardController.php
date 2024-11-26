@@ -34,23 +34,14 @@ class DashboardController extends Controller
     {   
         $title = "Rekap Total";
         if(Auth::User()->level =="admin" || Auth::User()->level == "tpn" ){
-            $instansi_ZIs = InstansiZI::orderBy('updated_at','DESC')->get();
-            $instansi_non_mandiri = InstansiZI::where("instansi_wbk_mandiri",'!=',1)->orWhereNull('instansi_wbk_mandiri')->where("final",1)->get();
-            $instansi_non_mandiri_count = $instansi_non_mandiri->count();
-            $instansi_wbk_mandiri = InstansiZI::where("instansi_wbk_mandiri",1)->where("final",1)->get();
-            $instansi_wbk_mandiri_count = $instansi_wbk_mandiri->count();
-            $wbbm_count = UnitZI::where('wbbm', 1)->count();
-            $wbk_all_count = UnitZI::where('wbk', 1)->count();
-            $wbk_mandiri_count = UnitZI::whereHas('instansiZI', function ($query) {
-                $query->where('instansi_wbk_mandiri', 1);
-            })->where('wbk', 1)->count();
-            $wbk_non_mandiri_count = $wbk_all_count-$wbk_mandiri_count;
-            $total_unit = $wbk_all_count + $wbbm_count;
-            
+            $instansi_ZIs = InstansiZI::where('final',1)->orderBy('updated_at','DESC')->get();
+            $total_instansi = $instansi_ZIs->count();
+            $total_wbk = UnitZI::where('wbk',1)->count();
+            $total_wbbm = UnitZI::where('wbbm',1)->count();
+            $total_wbk_final =  UnitZI::with(['panel'])->where('wbk', 1)->where('final', 1)->count();
 
             return view('zi.rekap.rekap_total', compact(
-                "title","instansi_ZIs","instansi_non_mandiri_count","instansi_wbk_mandiri_count", 
-                "wbbm_count","wbk_mandiri_count", "wbk_non_mandiri_count", 'total_unit'
+                "title","instansi_ZIs", "total_instansi", "total_wbk", "total_wbbm", "total_wbk_final"
             ));
         }else{
             return(URL::to('/'));

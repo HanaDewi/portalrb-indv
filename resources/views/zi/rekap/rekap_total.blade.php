@@ -148,27 +148,24 @@
         </div>
         <br />
         <div class="col-span-12 grid grid-cols-12 gap-6">
-            <div class="col-span-12 sm:col-span-6 2xl:col-span-3 intro-y">
+            <div class="col-span-12 sm:col-span-6 2xl:col-span-6  intro-y">
                 <div class="box p-5 zoom-in">
 
                     <div class="flex items-center">
                         <div class="w-2/4 flex-none">
-                            <div class="text-lg font-bold truncate">Jumlah Pengusulan Instansi</div>
+                            <div class="text-lg font-bold truncate">Tahap Pengusulan</div>
                             <div class="text-gray-800 mt-2 text-xl">
 
-                                <a href="#" id="instansiNonMandiri">{{$instansi_non_mandiri_count}} <sup
-                                        style="font-size: 0.5em">Non
-                                        Mandiri</sup> </a>|
-
-                                <a href="#b" id="instansiMandiri">{{$instansi_wbk_mandiri_count}} <sup
-                                        style="font-size: 0.5em">Mandiri</sup>
+                                <a href="#" id="instansiNonMandiri">{{$total_instansi}} <sup
+                                        style="font-size: 0.5em">Total Instansi</sup>
+                                </a> <br />
+                                <a href="#b" id="instansiMandiri" style="font-size: 0.8em">{{$total_wbk}} <sup
+                                        style="font-size: 0.5em">Unit WBK</sup>
                                 </a>|
-                                <a href="#c" id="instansiTotal"><b> {{$instansi_non_mandiri_count +
-                                        $instansi_wbk_mandiri_count}} <sup style="font-size: 0.5em">Total
-                                            Instansi</sup></b></a>
-
-
-
+                                <a href="#c" id="instansiTotal" style="font-size: 0.8em">{{$total_wbbm}} <sup
+                                        style="font-size: 0.5em">Unit WBBM</sup></a>|
+                                <a href="#c" id="instansiTotal" style="font-size: 0.8em"><b>{{$total_wbk + $total_wbbm}}
+                                        <sup style="font-size: 0.5em">Jumlah Unit Total</sup></b></a>
                             </div>
                         </div>
                         <div class="flex-none ml-auto relative">
@@ -194,19 +191,24 @@
 
                 </div>
             </div>
-            <div class="col-span-12 sm:col-span-6 2xl:col-span-3 intro-y">
+            <div class="col-span-12 sm:col-span-6 2xl:col-span-6 intro-y">
                 <div class="box p-5 zoom-in">
                     <div class="flex items-center">
                         <div class="w-3/4 flex-none">
-                            <div class="text-lg font-bold truncate">Jumlah Unit</div>
+                            <div class="text-lg font-bold truncate">Lulus Final</div>
                             <div class="text-gray-800 mt-2 text-xl">
-                                <a href="{{route('rekap_unit')}}">
-                                    {{ $wbk_non_mandiri_count }} <sup style="font-size: 0.5em">WBK</sup>
-                                    |
-                                    {{$wbk_mandiri_count}} <sup style="font-size: 0.5em">WBK Mandiri</sup> |
-                                    {{$wbbm_count}} <sup style="font-size: 0.5em">WBBM</sup> |
-                                    <b> {{$total_unit}} <sup style="font-size: 0.5em">Total</sup></b>
-                                </a>
+
+                                <a href="#" id="instansiNonMandiri"> <sup style="font-size: 0.5em">Total Instansi</sup>
+                                </a> <br />
+                                <a href="#b" id="instansiMandiri" style="font-size: 0.8em">{{$total_wbk_final}}<sup
+                                        style="font-size: 0.5em">Unit WBK</sup>
+                                </a>|
+                                <a href="#c" id="instansiTotal" style="font-size: 0.8em"> <sup
+                                        style="font-size: 0.5em">Unit WBBM</sup></a>|
+                                <a href="#c" id="instansiTotal" style="font-size: 0.8em"><b> <sup
+                                            style="font-size: 0.5em">Jumlah Unit
+                                            Total</sup></b></a>
+
                             </div>
                         </div>
                         <div class="flex-none ml-auto relative">
