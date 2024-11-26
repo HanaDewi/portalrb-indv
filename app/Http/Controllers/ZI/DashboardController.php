@@ -95,9 +95,9 @@ class DashboardController extends Controller
             //     $query->where('verifikasi_lapangan.status', 1)->orWhere('verifikasi_lapangan.status', 2)
             // })->count();
 
-            $total_instansi_verifikasi_lapangan = "";
-            $total_wbk_verifikasi_lapangan = "";
-            $total_wbbm_verifikasi_lapangan ="";
+            $total_instansi_verifikasi_lapangan = 0;
+            $total_wbk_verifikasi_lapangan = 0;
+            $total_wbbm_verifikasi_lapangan =0;
 
             //Final
             $total_instansi_final = $instansiZis = InstansiZi::with(['unit_zi.panel'])->whereHas('unit_zi.panel', function($query){
