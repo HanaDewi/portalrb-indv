@@ -56,49 +56,111 @@
                             WBBM
                             @endif
                         </td>
-                        <td>
-                            @if($unit_ZI->panel)
-                            {{$unit_ZI->panel->status}}
-                            @endif
-                        </td>
-                        <td>
+                        <td class="text-center">
 
                             @if(optional($unit_ZI->seleksi_administrasi_unit)->status_final == 1)
-                            {{$unit_ZI->seleksi_administrasi_unit->status_final}}
-                            @else
-                            {{$unit_ZI->sanggah_unit}}
+                            <div style="visibility: hidden">1</div>
+                            <i class="fa fa-check-circle" style="font-size: 2em; color:green"></i>
+                            @elseif(optional($unit_ZI->sanggah_unit)->status_final ==1)
+                            <div style="visibility: hidden">1</div>
+                            <i class="fa fa-check-circle" style="font-size: 2em; color:green"></i>
+                            @elseif(optional($unit_ZI->sanggah_unit)->status_final === 0)
+                            <div style="visibility: hidden">0</div>
+                            <i class="fa  fa-circle-xmark" style="font-size: 2em; color:red"></i>
                             @endif
 
+                        </td>
+                        <td class="text-center">
+                            @if(optional($unit_ZI->analisis_dokumen)->status == 1)
+                            <div style="visibility: hidden">1</div>
+                            <i class="fa fa-check-circle" style="font-size: 2em; color:green"></i>
+                            @elseif(optional($unit_ZI->analisis_dokumen)->status === 0)
+                            <div style="visibility: hidden">0</div>
+                            <i class="fa  fa-circle-xmark" style="font-size: 2em; color:red"></i>
+                            @endif
+                        </td>
+                        <td class="text-center">
+                            @if(optional($unit_ZI->wawancara)->status == 1)
+                            <div style="visibility: hidden">1</div>
+                            <i class="fa fa-check-circle" style="font-size: 2em; color:green"></i>
+                            @elseif(optional($unit_ZI->wawancara)->status === 0)
+                            <div style="visibility: hidden">0</div>
+                            <i class="fa  fa-circle-xmark" style="font-size: 2em; color:red"></i>
+                            @endif
+                        </td>
+                        <td class="text-center">
+                            @if(optional($unit_ZI->verifikasi_lapangan)->status == 1)
+                            <div style="visibility: hidden">1</div>
+                            <i class="fa fa-check-circle" style="font-size: 2em; color:green"></i>
+                            @elseif(optional($unit_ZI->verifikasi_lapangan)->status === 0)
+                            <div style="visibility: hidden">0</div>
+                            <i class="fa  fa-circle-xmark" style="font-size: 2em; color:red"></i>
+                            @endif
+                        </td>
+                        <td class="text-center">
+                            @if(optional($unit_ZI->panel)->status == 1)
+                            <div style="visibility: hidden">1</div>
+                            <i class="fa fa-check-circle" style="font-size: 2em; color:green"></i>
+                            @elseif(optional($unit_ZI->panel)->status === 0)
+                            <div style="visibility: hidden">0</div>
+                            <i class="fa  fa-circle-xmark" style="font-size: 2em; color:red"></i>
+                            @endif
                         </td>
                         <td>
                             @if($unit_ZI->analisis_dokumen)
-                            {{$unit_ZI->analisis_dokumen->status}}
+                            <a href="{{$unit_ZI->analisis_dokumen->bukti_dukung}}" class="btn btn-primary"
+                                target="_blank">Lihat</a>
                             @endif
                         </td>
                         <td>
-                            @if($unit_ZI->wawancara)
-                            {{$unit_ZI->wawancara->status}}
+                            <strong>Seleksi Administrasi :</strong><br />
+                            @if(isset($unit_ZI->seleksi_administrasi_unit))
+                            {{$unit_ZI->seleksi_administrasi_unit->catatan_lke}}
+                            {{$unit_ZI->seleksi_administrasi_unit->catatan_tlhp}}
+                            {{$unit_ZI->seleksi_administrasi_unit->catatan_survei_mandiri}}
+                            {{$unit_ZI->seleksi_administrasi_unit->catatan_2wbk}}
                             @endif
-                        </td>
-                        <td>
-                            @if($unit_ZI->verifikasi_lapangan)
-                            {{$unit_ZI->verifikasi_lapangan->status}}
+                            <br /><br />@if(isset($unit_ZI->sanggah_unit))<br />
+                            {{$unit_ZI->sanggah_unit->catatan_lke}}
+                            {{$unit_ZI->sanggah_unit->catatan_tlhp}}
+                            {{$unit_ZI->sanggah_unit->catatan_survei_mandiri}}
+                            {{$unit_ZI->sanggah_unit->catatan_2wbk}}
                             @endif
-                        </td>
-                        <td>
-                            @if($unit_ZI->panel)
-                            {{$unit_ZI->panel->bukti_dukung}}
+                            <br /><br /><strong>Analisis Dokumen</strong><br />
+                            @if(isset($unit_ZI->analisis_dokumen))
+                            {{$unit_ZI->analisis_dokumen->kondisi}}
                             @endif
-                        </td>
-                        <td>
-                            @if($unit_ZI->panel)
+                            <br /><br /><strong>Wawancara</strong><br />
+                            @if(isset($unit_ZI->wawancara))
+                            {{$unit_ZI->wawancara->kondisi}}
+                            @endif
+                            <br /><br /><strong>Verifikasi Lapangan</strong><br />
+                            @if(isset($unit_ZI->verifikasi_lapangan))
+                            {{$unit_ZI->verifikasi_lapangan->kondisi}}
+                            @endif
+                            <br /><br /><strong>Panel</strong><br />
+                            @if(isset($unit_ZI->panel))
                             {{$unit_ZI->panel->kondisi}}
                             @endif
                         </td>
                         <td>
-                            @if($unit_ZI->panel)
+                            <strong>Analisis Dokumen</strong><br />
+                            @if(isset($unit_ZI->analisis_dokumen))
+                            {{$unit_ZI->analisis_dokumen->rekomendasi}}
+                            @endif
+                            <br /><br /><strong>Wawancara</strong><br />
+                            @if(isset($unit_ZI->wawancara))
+                            {{$unit_ZI->wawancara->rekomendasi}}
+                            @endif
+                            <br /><br /><strong>Verifikasi Lapangan</strong><br />
+                            @if(isset($unit_ZI->verifikasi_lapangan))
+                            {{$unit_ZI->verifikasi_lapangan->rekomendasi}}
+                            @endif
+                            <br /><br /><strong>Panel</strong><br />
+                            @if(isset($unit_ZI->panel))
                             {{$unit_ZI->panel->rekomendasi}}
                             @endif
+
                         </td>
                     </tr>
                     @endforeach
