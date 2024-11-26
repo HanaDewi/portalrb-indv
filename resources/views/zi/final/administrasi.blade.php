@@ -105,15 +105,21 @@
             <table id="rekap-zi" class="table table-bordered table-striped" cellspacing="0" width="100%">
                 <thead class="table-dark font-bold">
                     <tr>
-                        <th>No</th>
-                        <th>Instansi</th>
-                        <th>Tim Evalutor</th>
-                        <th>Usulan WBK</th>
-                        <th>Usulan WBBM</th>
-                        <th>Lulus WBK</th>
-                        <th>Lulus WBBM</th>
-                        <th>Rasio Keberhasilan</th>
-                        <th>Aksi</th>
+                        <th rowspan=2>No</th>
+                        <th rowspan=2>Instansi</th>
+                        <th rowspan=2>Tim Evalutor</th>
+                        <th colspan=3>Usulan</th>
+                        <th colspan=3>Lulus</th>
+                        <th rowspan=2>Rasio Keberhasilan</th>
+                        <th rowspan=2>Aksi</th>
+                    </tr>
+                    <tr>
+                        <th>WBK</th>
+                        <th>WBBM</th>
+                        <th>Total</th>
+                        <th>WBK</th>
+                        <th>WBBM</th>
+                        <th>Total</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -131,20 +137,12 @@
                             {{$tim}}
                             @endforeach
                         </td>
-                        <td class="text-center">
-
-                            {{$data["wbk_count"]}}
-
-                        </td>
+                        <td class="text-center">{{$data["wbk_count"]}}</td>
                         <td class="text-center">{{$data["wbbm_count"]}}</td>
-
-
-                        <td class="text-center">
-                            {{$data["wbk_final_count"]}}
-                        </td>
-                        <td class="text-center">
-                            {{$data["wbbm_final_count"]}}
-                        </td>
+                        <td class="text-center">{{$data["wbk_count"]+$data["wbbm_count"]}}</td>
+                        <td class="text-center">{{$data["wbk_final_count"]}}</td>
+                        <td class="text-center">{{$data["wbbm_final_count"]}}</td>
+                        <td class="text-center">{{$data["wbk_final_count"]+$data["wbbm_final_count"]}}</td>
                         <td class="text-center">
                             {{number_format((float)(($data["wbk_final_count"]+$data["wbbm_final_count"])*100/($data["wbk_count"]+$data["wbbm_count"])),
                             1, ',', '')}}%
