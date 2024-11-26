@@ -33,6 +33,7 @@
                         <th class="w-32">Kelompok Instansi</th>
                         <th>Nama Instansi</th>
                         <th class="w-5">Bobot</th>
+                        <th class="w-5">Target Baik</th>
                         <th class="w-5">Skor</th>
                         <th class="w-5">Index</th>
                         <th>Catatan</th>
@@ -209,6 +210,7 @@
             { data: 'group_instansi' },
             { data: 'nama_instansi' },
             { data: 'bobot' },
+            { data: 'target_baik' },
             { data: 'score' },
             { data: 'score_index' },
             { data: 'catatan' },
@@ -225,6 +227,12 @@
                 },
             },
         ],
+		columnDefs: [
+			{
+				targets: [5, 6],
+				render: $.fn.dataTable.render.number('.', ',', 2, '')
+			}
+		]
     }); 
 
     function getData() {
@@ -243,7 +251,8 @@
             $('#rekomendasi').val(data.rekomendasi);
             $('#catatan').val(data.catatan);
             $("#score").inputmask("decimal",{
-                radixPoint:".",
+                radixPoint:",",
+                groupSeparator: ".",
                 digits: 2,
                 autoGroup: true,
                 rightAlign: false,

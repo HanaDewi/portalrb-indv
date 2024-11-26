@@ -63,6 +63,12 @@
             { data: 'terisi' },
             { data: 'rata_rata_score' },
         ],
+		columnDefs: [
+			{
+				targets: [5],
+				render: $.fn.dataTable.render.number('.', ',', 2, '')
+			}
+		]
     }); 
 
     function getData() {
