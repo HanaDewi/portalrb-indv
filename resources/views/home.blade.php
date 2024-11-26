@@ -1,40 +1,23 @@
-<!DOCTYPE html>
-<html lang="zxx">
+@extends('home-template.template')
 
-<head>
-    <meta charset="utf-8">
-    <meta name="description" content="">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Portal Reformasi Birokrasi Nasional PANRB</title>
-    <link rel="shortcut icon" href="{{ URL::to('/') }}/assets/images/favicon.png" type="image/x-icon">
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css">
-    <link rel="stylesheet" href="{{ URL::to('/') }}/assets/css/bootstrap.min.css">
-
-    <link rel="stylesheet" href="assets/css/style.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.theme.css" rel="stylesheet">
-    <script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.js"></script>
-    <style>
-        #owl-demo .item img {
-            display: block;
-            width: 100%;
-            height: auto;
-        }
-    </style>
-    <script>
-        $(document).ready(function() {
-            $("#owl-demo").owlCarousel({
-                pagination: false,
-                autoPlay: 5000,
-                singleItem: true
-            });
+@section('cssJsHere')
+<style>
+    #owl-demo .item img {
+        display: block;
+        width: 100%;
+        height: auto;
+    }
+</style>
+<script>
+    $(document).ready(function() {
+        $("#owl-demo").owlCarousel({
+            pagination: false,
+            autoPlay: 5000,
+            singleItem: true
         });
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
-</head>
+    });
+</script>
+@endsection
 
 @section('content')
 <div class="demo">
@@ -69,14 +52,16 @@
                 <h2>Portal Reformasi Birokrasi Nasional</h2>
                 <span class="line"></span>
             </div>
-        </section>
-        <section class="priorities-area pt-70 pb-75 rel z-1"
-            style="background-image: url({{ URL::to('/') }}/assets/images/bg4.jpg); background-size: cover;">
-            <div class="container">
-                <div class="section-title text-center pb-35 ">
-                    <h2> Data dan Statistik Birokrasi Nasional</h2>
-                    <span class="line"></span>
-                </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="feature-item">
+                    <div class="content">
+                        <div class="icon">
+                            <img src="{{ URL::to('/') }}/assets/images/icon1.png" alt="Icon">
+                        </div>
+                        <h5 class="redt">
+                            <a href="#">Dashboard</a>
+                        </h5>
+                        <p>Dashboard Perkembangan Reformasi Birokrasi Nasional</p>
 
                     </div>
                 </div>
@@ -144,17 +129,8 @@
                         <h5 class="redt">
                             <a href="#">Transformasi Profesionalisme ASN Berbasis Digital</a>
                         </h5>
-                        <h5>
-                            <i class="fas fa-genderless redq"></i> Kelompok Replikasi
-                        </h5>
-                        <h5>
-                            <i class="fas fa-genderless yl"></i> Kelompok Khusus
-                        </h5>
-                        <h5>
-                            <i class="fas fa-genderless greya"></i> Lainnya
-                        </h5>
-                        <br><br>
-
+                        <p>Transformasi manajemen aparatur sipil negara (ASN) perlu dilakukan secara menyeluruh
+                            atau holistik.</p>
                         <a href="#">
                             <span class="btnpan"> Selengkapnya <i class="fas fa-chevron-right ylw"></i>
                             </span>
@@ -178,81 +154,54 @@
                     </div>
                 </div>
             </div>
-        </section>
-        <section class="pt-20"></section>
-        <section class="donate-area rel z-1">
-            <div class="container">
-                <div class="row no-gap">
-                    <img src="assets/images/gambar/bg1.png">
-                </div>
+        </div>
+    </div>
+</section>
+<section class="priorities-area pt-70 pb-75 rel z-1"
+    style="background-image: url({{ URL::to('/') }}/assets/images/bg4.jpg); background-size: cover;">
+    <div class="container">
+        <div class="section-title text-center pb-35 ">
+            <h2> Data dan Statistik Birokrasi Nasional</h2>
+            <span class="line"></span>
+        </div>
+
+
+        <div class="row justify-content-center">
+            <div class="col-xl-6 col-lg-6 col-sm-6">
+                <h3 class="redt"> Inovasi Pelayanan Publik </h3>
+                <h5> di Lingkungan Kementrian/Lembaga, Pemerintah Daerah, BUMN, dan BUMD Tahun 2023 </h5>
+
+                <h5>
+                    <i class="fas fa-genderless redw"></i> Kelompok Umum
+                </h5>
+                <h5>
+                    <i class="fas fa-genderless redq"></i> Kelompok Replikasi
+                </h5>
+                <h5>
+                    <i class="fas fa-genderless yl"></i> Kelompok Khusus
+                </h5>
+                <h5>
+                    <i class="fas fa-genderless greya"></i> Lainnya
+                </h5>
+                <br><br>
+
+                <a href="#">
+                    <span class="btnpan"> Selengkapnya <i class="fas fa-chevron-right ylw"></i>
+                    </span>
+                </a>
             </div>
-        </section>
-        <footer class="main-footer pt-20  bgs-cover footer-white" style="background: #151516;">
-            <div class="container">
-                <div class="row">
-                    <div class="col-xl-4 col-sm-6">
-                        <div class="footer-widget widget_about wow fadeInUp delay-0-3s">
-                            <div class="footer-logo mb-25">
-                                <a href="{{ url('/') }}">
-                                    <img src="{{ URL::to('/') }}/assets/images/rbkunwas.jpg" alt="Logo">
-                                </a>
-                            </div>
-                            <p>
-                                <i class="fas fa-building redw"></i> Deputi Bidang Reformasi Birokrasi, Akuntabilitas
-                                Aparatur dan Pengawasan
-                            </p>
-                        </div>
-                    </div>
-                    <div class="col-xl-4 col-sm-6">
-                        <div class="footer-widget">
-                            <h4 class="footer-title">Tentang Kami</h4>
-                            <ul>
-                                <li>
-                                    <i class="fas fa-envelope redw"></i> E-mail: rbkunwas@gmail.com
-                                </li>
-                                <li>
-                                    <i class="fas fa-phone redw"></i> Telp: (+6221) 7398381 - 89
-                                </li>
-                                <li>
-                                    <i class="fas fa-map-marker-alt redw"></i> Jl. Jend. Sudirman Kav. 69 Jakarta
-                                    Selatan - 12190 Indonesia
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="col-xl-4 col-sm-6">
-                        <div class="footer-widget widget_menu wow fadeInUp delay-0-5s">
-                            <h4 class="footer-title">Tautan Portal</h4>
-                            <ul>
-                                <li>
-                                    <a href="#">Beranda</a>
-                                </li>
-                                <li>
-                                    <a href="#">Evaluasi</a>
-                                </li>
-                                <li>
-                                    <a href="#">Survey</a>
-                                </li>
-                                <li>
-                                    <a href="#">Ruang Belajar</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </footer>
-        <div class="footer-bottom text-center py-30" style="background: #151516;">
-            <div class="container">
-                <div class="copyright-text">
-                    <p>© Copyright 2023. Deputi Bidang Reformasi Birokrasi, Akuntabilitas Aparatur dan Pengawasan PANRB.
-                        All rights reserved.</p>
-                </div>
+            <div class="col-xl-5 col-lg-5 col-sm-5">
+                <img src="{{ URL::to('/') }}/assets/images/grafik.png">
             </div>
         </div>
     </div>
-
-
-</body>
-
-</html>
+</section>
+<section class="pt-20"></section>
+<section class="donate-area rel z-1">
+    <div class="container">
+        <div class="row no-gap">
+            <img src="assets/images/gambar/bg1.png">
+        </div>
+    </div>
+</section>
+@endsection
