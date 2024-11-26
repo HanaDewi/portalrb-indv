@@ -198,15 +198,16 @@
                             <div class="text-lg font-bold truncate">Lulus Final</div>
                             <div class="text-gray-800 mt-2 text-xl">
 
-                                <a href="#" id="instansiNonMandiri"> <sup style="font-size: 0.5em">Total Instansi</sup>
+                                <a href="#" id="instansiNonMandiri">{{$total_instansi_final}} <sup
+                                        style="font-size: 0.5em">Total Instansi</sup>
                                 </a> <br />
-                                <a href="#b" id="instansiMandiri" style="font-size: 0.8em">{{$total_wbk_final}}<sup
+                                <a href="#b" id="instansiMandiri" style="font-size: 0.8em">{{$total_wbk_final}} <sup
                                         style="font-size: 0.5em">Unit WBK</sup>
                                 </a>|
-                                <a href="#c" id="instansiTotal" style="font-size: 0.8em"> <sup
+                                <a href="#c" id="instansiTotal" style="font-size: 0.8em">{{$total_wbbm_final}} <sup
                                         style="font-size: 0.5em">Unit WBBM</sup></a>|
-                                <a href="#c" id="instansiTotal" style="font-size: 0.8em"><b> <sup
-                                            style="font-size: 0.5em">Jumlah Unit
+                                <a href="#c" id="instansiTotal" style="font-size: 0.8em"><b>{{$total_wbk_final +
+                                        $total_wbbm_final}} <sup style="font-size: 0.5em">Jumlah Unit
                                             Total</sup></b></a>
 
                             </div>
@@ -242,19 +243,17 @@
                 <div class="timeline-content">
                     <h1>Seleksi Administrasi</h1>
                     <div class="col-md-6">
-                        <a href="#" id="instansiNonMandiri">0 <sup style="font-size: 0.5em">Non
-                                Mandiri</sup> </a>|
 
-                        <a href="#b" id="instansiMandiri">0 <sup style="font-size: 0.5em">Mandiri</sup>
-                        </a>|
-                        <a href="#c" id="instansiTotal"><b> 0 <sup style="font-size: 0.5em">Total Instansi</sup></b></a>
+                        <a href="#c" id="instansiTotal"><b> {{$total_instansi_administrasi}} <sup
+                                    style="font-size: 0.5em">Total Instansi</sup></b></a>
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                         <a href="{{route('rekap_unit')}}">
-                            0 <sup style="font-size: 0.5em">WBK</sup>
+                            {{$total_wbk_administrasi}} <sup style="font-size: 0.5em">WBK</sup>
                             |
-                            0 <sup style="font-size: 0.5em">WBK Mandiri</sup> |
-                            0 <sup style="font-size: 0.5em">WBBM</sup> |
-                            <b> 0 <sup style="font-size: 0.5em">Total Unit</sup></b>
+                            ? <sup style="font-size: 0.5em">WBK Mandiri</sup> |
+                            {{$total_wbbm_administrasi}} <sup style="font-size: 0.5em">WBBM</sup> |
+                            <b> {{$total_wbk_administrasi + $total_wbbm_administrasi}} <sup
+                                    style="font-size: 0.5em">Total Unit</sup></b>
                         </a>
                     </div>
                 </div>
@@ -263,19 +262,16 @@
                 <div class="timeline-content">
                     <h1>Proses Sanggah</h1>
                     <div class="col-md-6">
-                        <a href="#" id="instansiNonMandiri">0 <sup style="font-size: 0.5em">Non
-                                Mandiri</sup> </a>|
-
-                        <a href="#b" id="instansiMandiri">0 <sup style="font-size: 0.5em">Mandiri</sup>
-                        </a>|
-                        <a href="#c" id="instansiTotal"><b> 0 <sup style="font-size: 0.5em">Total Instansi</sup></b></a>
+                        <a href="#c" id="instansiTotal"><b> {{$total_instansi_sanggah}} <sup
+                                    style="font-size: 0.5em">Total Instansi</sup></b></a>
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                         <a href="{{route('rekap_unit')}}">
-                            0 <sup style="font-size: 0.5em">WBK</sup>
+                            {{$total_wbk_sanggah}} <sup style="font-size: 0.5em">WBK</sup>
                             |
-                            0 <sup style="font-size: 0.5em">WBK Mandiri</sup> |
-                            0 <sup style="font-size: 0.5em">WBBM</sup> |
-                            <b> 0 <sup style="font-size: 0.5em">Total Unit</sup></b>
+                            ? <sup style="font-size: 0.5em">WBK Mandiri</sup> |
+                            {{$total_wbbm_sanggah}} <sup style="font-size: 0.5em">WBBM</sup> |
+                            <b> {{$total_wbk_sanggah + $total_wbbm_sanggah}} <sup style="font-size: 0.5em">Total
+                                    Unit</sup></b>
                         </a>
                     </div>
                 </div>
@@ -284,19 +280,16 @@
                 <div class="timeline-content">
                     <h1>Analisis Dokumen</h1>
                     <div class="col-md-6">
-                        <a href="#" id="instansiNonMandiri">0 <sup style="font-size: 0.5em">Non
-                                Mandiri</sup> </a>|
-
-                        <a href="#b" id="instansiMandiri">0 <sup style="font-size: 0.5em">Mandiri</sup>
-                        </a>|
-                        <a href="#c" id="instansiTotal"><b> 0 <sup style="font-size: 0.5em">Total Instansi</sup></b></a>
+                        <a href="#c" id="instansiTotal"><b> {{$total_instansi_analisis_dokumen}} <sup
+                                    style="font-size: 0.5em">Total Instansi</sup></b></a>
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                         <a href="{{route('rekap_unit')}}">
-                            0 <sup style="font-size: 0.5em">WBK</sup>
+                            {{$total_wbk_analisis_dokumen}} <sup style="font-size: 0.5em">WBK</sup>
                             |
-                            0 <sup style="font-size: 0.5em">WBK Mandiri</sup> |
-                            0 <sup style="font-size: 0.5em">WBBM</sup> |
-                            <b> 0 <sup style="font-size: 0.5em">Total Unit</sup></b>
+                            ? <sup style="font-size: 0.5em">WBK Mandiri</sup> |
+                            {{$total_wbbm_analisis_dokumen}} <sup style="font-size: 0.5em">WBBM</sup> |
+                            <b> {{$total_wbk_analisis_dokumen + $total_wbbm_analisis_dokumen}} <sup
+                                    style="font-size: 0.5em">Total Unit</sup></b>
                         </a>
                     </div>
                 </div>
@@ -305,19 +298,17 @@
                 <div class="timeline-content">
                     <h1>Wawancara</h1>
                     <div class="col-md-6">
-                        <a href="#" id="instansiNonMandiri">0 <sup style="font-size: 0.5em">Non
-                                Mandiri</sup> </a>|
 
-                        <a href="#b" id="instansiMandiri">0 <sup style="font-size: 0.5em">Mandiri</sup>
-                        </a>|
-                        <a href="#c" id="instansiTotal"><b> 0 <sup style="font-size: 0.5em">Total Instansi</sup></b></a>
+                        <a href="#c" id="instansiTotal"><b> {{$total_instansi_seleksi_wawancara}} <sup
+                                    style="font-size: 0.5em">Total Instansi</sup></b></a>
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                         <a href="{{route('rekap_unit')}}">
-                            0 <sup style="font-size: 0.5em">WBK</sup>
+                            {{$total_wbk_seleksi_wawancara}} <sup style="font-size: 0.5em">WBK</sup>
                             |
-                            0 <sup style="font-size: 0.5em">WBK Mandiri</sup> |
-                            0 <sup style="font-size: 0.5em">WBBM</sup> |
-                            <b> 0 <sup style="font-size: 0.5em">Total Unit</sup></b>
+                            ? <sup style="font-size: 0.5em">WBK Mandiri</sup> |
+                            {{$total_wbbm_seleksi_wawancara}} <sup style="font-size: 0.5em">WBBM</sup> |
+                            <b> {{$total_wbk_seleksi_wawancara + $total_wbbm_seleksi_wawancara}} <sup
+                                    style="font-size: 0.5em">Total Unit</sup></b>
                         </a>
                     </div>
                 </div>
@@ -326,19 +317,16 @@
                 <div class="timeline-content">
                     <h1>Observasi Lapangan</h1>
                     <div class="col-md-6">
-                        <a href="#" id="instansiNonMandiri">0 <sup style="font-size: 0.5em">Non
-                                Mandiri</sup> </a>|
-
-                        <a href="#b" id="instansiMandiri">0 <sup style="font-size: 0.5em">Mandiri</sup>
-                        </a>|
-                        <a href="#c" id="instansiTotal"><b> 0 <sup style="font-size: 0.5em">Total Instansi</sup></b></a>
+                        <a href="#c" id="instansiTotal"><b> {{$total_instansi_verifikasi_lapangan}} <sup
+                                    style="font-size: 0.5em">Total Instansi</sup></b></a>
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                         <a href="{{route('rekap_unit')}}">
-                            0 <sup style="font-size: 0.5em">WBK</sup>
+                            {{$total_wbk_verifikasi_lapangan}} <sup style="font-size: 0.5em">WBK</sup>
                             |
-                            0 <sup style="font-size: 0.5em">WBK Mandiri</sup> |
-                            0 <sup style="font-size: 0.5em">WBBM</sup> |
-                            <b> 0 <sup style="font-size: 0.5em">Total Unit</sup></b>
+                            ? <sup style="font-size: 0.5em">WBK Mandiri</sup> |
+                            {{$total_wbbm_verifikasi_lapangan}} <sup style="font-size: 0.5em">WBBM</sup> |
+                            <b> {{$total_wbk_verifikasi_lapangan + $total_wbbm_verifikasi_lapangan}} <sup
+                                    style="font-size: 0.5em">Total Unit</sup></b>
                         </a>
                     </div>
                 </div>
