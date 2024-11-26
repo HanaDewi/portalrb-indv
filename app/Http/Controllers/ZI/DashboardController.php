@@ -85,16 +85,19 @@ class DashboardController extends Controller
             })->count();
 
             //Verlap
-            $total_instansi_verifikasi_lapangan = $instansiZis = InstansiZi::with(['unit_zi.verifikasi_lapangan'])->whereHas('unit_zi.verifikasi_lapangan', function($query){
-                $query->where('verifikasi_lapangan.status', 1)->orWhere('verifikasi_lapangan.status', 2)
-            })->count();
-            $total_wbk_verifikasi_lapangan=  UnitZI::with(['verifikasi_lapangan'])->where('wbk', 1)->whereHas('verifikasi_lapangan', function ($query) {
-                $query->where('verifikasi_lapangan.status', 1)->orWhere()
-            })->count();
-            $total_wbbm_verifikasi_lapangan =  UnitZI::with(['verifikasi_lapangan'])->where('wbbm', 1)->whereHas('verifikasi_lapangan', function ($query) {
-                $query->where('verifikasi_lapangan.status', 1)->orWhere('verifikasi_lapangan.status', 2)
-            })->count();
+            // $total_instansi_verifikasi_lapangan = $instansiZis = InstansiZi::with(['unit_zi.verifikasi_lapangan'])->whereHas('unit_zi.verifikasi_lapangan', function($query){
+            //     $query->where('verifikasi_lapangan.status', 1)->orWhere('verifikasi_lapangan.status', 2)
+            // })->count();
+            // $total_wbk_verifikasi_lapangan=  UnitZI::with(['verifikasi_lapangan'])->where('wbk', 1)->whereHas('verifikasi_lapangan', function ($query) {
+            //     $query->where('verifikasi_lapangan.status', 1)->orWhere()
+            // })->count();
+            // $total_wbbm_verifikasi_lapangan =  UnitZI::with(['verifikasi_lapangan'])->where('wbbm', 1)->whereHas('verifikasi_lapangan', function ($query) {
+            //     $query->where('verifikasi_lapangan.status', 1)->orWhere('verifikasi_lapangan.status', 2)
+            // })->count();
 
+            $total_instansi_verifikasi_lapangan = "";
+            $total_wbk_verifikasi_lapangan = "";
+            $total_wbbm_verifikasi_lapangan ="";
 
             //Final
             $total_instansi_final = $instansiZis = InstansiZi::with(['unit_zi.panel'])->whereHas('unit_zi.panel', function($query){
