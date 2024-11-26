@@ -46,6 +46,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/zi/rekap-dokumen', [DashboardController::class, 'rekap_dokumen'])->name('rekap_dokumen');
     Route::get('/zi/rekap-wawancara', [DashboardController::class, 'rekap_wawancara'])->name('rekap_wawancara');
     Route::get('/zi/rekap-verlap', [DashboardController::class, 'rekap_verlap'])->name('rekap_verlap');
+    Route::get('/zi/rekap-panel', [DashboardController::class, 'rekap_panel'])->name('rekap_panel');
+    Route::get('/zi/rekap-final', [DashboardController::class, 'rekap_final'])->name('rekap_final');
     #Seleksi Administrasi
     Route::get('/zi/seleksi-administrasi', [AdministrasiController::class, 'index'])->name('seleksi_administrasi');
     Route::get('/zi/evaluasi-administrasi/{id}', [AdministrasiController::class, 'evaluasi_administrasi'])->name('evaluasi_administrasi');

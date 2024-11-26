@@ -183,6 +183,32 @@
                                 </div>
                             </a>
                         </li>
+                        <li>
+                            <a href="{{ route('rekap_panel') }}" class="side-menu 
+                            @if($title == 'Rekap Panel')
+                            side-menu--active 
+                            @endif
+                            ">
+                                <div class="side-menu__icon"><i data-lucide=""></i></div>
+                                <div class="side-menu__title">
+                                    Rekap Panel
+                                    <div class="side-menu__sub-icon "> </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('rekap_final') }}" class="side-menu 
+                            @if($title == 'Rekap Final')
+                            side-menu--active 
+                            @endif
+                            ">
+                                <div class="side-menu__icon"><i data-lucide=""></i></div>
+                                <div class="side-menu__title">
+                                    Rekap Final
+                                    <div class="side-menu__sub-icon "> </div>
+                                </div>
+                            </a>
+                        </li>
                     </ul>
                 </li>
                 <li>

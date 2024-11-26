@@ -271,5 +271,35 @@ class DashboardController extends Controller
         }else{
             return(URL::to('/'));
         }
+    } 
+    public function rekap_panel(Request $request)
+    {   
+        $title = "Rekap Panel";
+        if(Auth::User()->level =="admin" || Auth::User()->level == "tpn" ){
+            //$unit_ZIs = UnitZI::orderBy('instansi_zi_id','ASC')->get();
+            $unit_ZIs =  UnitZI::whereHas('verifikasi_lapangan',  function ($query){
+                $query->where('status', 1);
+            })->orderBy('instansi_zi_id','asc')->orderBy('wbk','desc')->get();
+            
+            return view('zi.rekap.rekap_panel', compact(
+                "title","unit_ZIs" 
+            ));
+        }else{
+            return(URL::to('/'));
+        }
+    }    
+
+    public function rekap_final(Request $request)
+    {   
+        $title = "Rekap Final";
+        if(Auth::User()->level =="admin" || Auth::User()->level == "tpn" ){
+            //$unit_ZIs = UnitZI::orderBy('instansi_zi_id','ASC')->get();
+            $unit_ZIs =  UnitZI::orderBy('instansi_zi_id','asc')->orderBy('wbk','desc')->get();
+            return view('zi.rekap.rekap_final', compact(
+                "title","unit_ZIs" 
+            ));
+        }else{
+            return(URL::to('/'));
+        }
     }    
 }
