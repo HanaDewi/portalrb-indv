@@ -129,9 +129,15 @@ class FinalController extends Controller
                             $total_unit = 1;
                         }
 
+                        if($instansiZi->instansi_wbk_mandiri == 1){
+                            $nama_instansi = $instansiZi->klpd_instansi->name . " (Wbk Mandiri)" ;
+                        }
+                        else{
+                            $nama_instansi = $instansiZi->klpd_instansi->name;
+                        }
                         
                         return [
-                            'instansi_nama' => $instansiZi->klpd_instansi->name,
+                            'instansi_nama' => $nama_instansi,
                             'instansi_zi_id' => $instansiZi->id,
                             'instansi_wbk_mandiri' => $instansiZi->instansi_wbk_mandiri,
                             'nama_teams' => $nama_teams,

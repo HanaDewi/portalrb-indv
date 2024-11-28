@@ -59,7 +59,7 @@
                 @if($instansi_ZI->instansi_wbk_mandiri)
                 <b class="text-red-500">(WBK Mandiri)</b>
                 @if ($instansi_ZI->hasil_wbk_mandiri)
-                <a href="{{$instansi_ZI->hasil_wbk_mandiri}}" target="_blank" class="btn btn-secondary">Lihat Hasil WBK
+                <a href="{{$instansi_ZI->hasil_wbk_mandiri}}" target="_blank" class="btn btn-primary">Lihat Hasil WBK
                     Mandiri</a>
                 @else
                 <a href="{{$instansi_ZI->hasil_wbk_mandiri}}" target="_blank" class="btn btn-secondary">Belum Mengunggah
@@ -69,43 +69,43 @@
             </h2>
         </div>
         <div class="lg:col-span-12 p-5 border-b border-slate-200/60">
+            <div class="row">
+                @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+                @endif
 
-            @if ($errors->any())
-            <div class="alert alert-danger">
-                <ul>
-                    @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
+
+
+                @if ($instansi_ZI->unggah_file)
+                <a href="{{asset('storage/uploads/LHEZI2024/'.$instansi_ZI->unggah_file->nama)}}" target="_blank"><img
+                        src="{{asset('images/pdf.png')}}" width="10%"></a>
+                <br />
+                <h5>LHE {{$instansi_ZI->klpd_instansi->name}}</h5>
+
+                @endif
+                <br />
+                <button onclick="upload_lhe({{ $instansi_ZI->id }});" class="btn btn-danger btn-sm kirim-file"><i
+                        data-lucide="edit" class="w-4 h-4 mr-1"></i> Upload LHE ZI</button>
+
+                <button onclick="upload_undangan({{ $instansi_ZI->id }});" class="btn btn-warning btn-sm kirim-file"><i
+                        data-lucide="edit" class="w-4 h-4 mr-1"></i> Upload Surat Undangan</button>
+
+                <br />
+                <br /><br />
+
             </div>
-            @endif
-
-
-
-            @if ($instansi_ZI->unggah_file)
-            <a href="{{asset('storage/uploads/LHEZI2024/'.$instansi_ZI->unggah_file->nama)}}" target="_blank"><img
-                    src="{{asset('images/pdf.png')}}" width="10%"></a>
-            <br />
-            <h5>LHE {{$instansi_ZI->klpd_instansi->name}}</h5>
-
-            @endif
-            <br />
-            <button onclick="upload_lhe({{ $instansi_ZI->id }});" class="btn btn-danger btn-sm kirim-file"><i
-                    data-lucide="edit" class="w-4 h-4 mr-1"></i> Upload LHE ZI</button>
-
-            <button onclick="upload_undangan({{ $instansi_ZI->id }});" class="btn btn-warning btn-sm kirim-file"><i
-                    data-lucide="edit" class="w-4 h-4 mr-1"></i> Upload Surat Undangan</button>
-
-            <br />
-            <br /><br />
-
-
 
             <form action="{{ route('proses_final_simpan') }}" method="POST">
                 @csrf
                 <input type="hidden" id="instansiZIId" name="instansiZIId" value="{{$instansi_ZI->id}}">
 
-                <table id="rekap-zi" class="table table-bordered " cellspacing="0" width="100%">
+                <table id="rekap-zi" class="table table-bordered">
                     <thead class="table-dark font-bold">
                         <tr>
                             <th>Unit</th>
@@ -133,7 +133,7 @@
                             <td rowspan=5>
                                 @if($unit_zi->wbk==1)
                                 WBK {{++$wbk_i}}
-                                @if ($instansi_ZI->instansi_wbk_mandiri AND $unit_zi->wbk)
+                                @if($instansi_ZI->instansi_wbk_mandiri AND $unit_zi->wbk)
                                 <strong style="color:red">(MANDIRI)</strong>
                                 @endif
                                 @elseif($unit_zi->wbbm==1)
@@ -159,14 +159,15 @@
                                 <p style="color:green">
                                     LULUS
                                 </p>
-                                @elseif($unit_zi->sanggah_unit->status===0)
+                                @elseif($unit_zi->sanggah_unit->status_final===0)
                                 <p style="color:red">
                                     TIDAK LULUS
                                 </p>
                                 @endif
                                 @endif
                             </td>
-                            <td>
+                            <td class="link-wrap">
+
                                 @if(isset($unit_zi->seleksi_administrasi_unit))
                                 {{$unit_zi->seleksi_administrasi_unit->catatan_lke}} <br />
                                 {{$unit_zi->seleksi_administrasi_unit->catatan_tlhp}} <br />
@@ -178,22 +179,14 @@
                                 {{$unit_zi->sanggah_unit->catatan_tlhp}}<br />
                                 {{$unit_zi->sanggah_unit->catatan_survei_mandiri}}<br />
                                 {{$unit_zi->sanggah_unit->catatan_2wbk}}<br />
-
                                 @endif
+
                             </td>
-                            <td>
+                            <td class="link-wrap">
+                                <!-- Rekomendasi -->
                             </td>
                             <td rowspan=5>
-                                <select disabled class="form-control status" name="status-{{$unit_zi->id}}"
-                                    data-old=@if(isset($unit_zi->final->status))
-                                    @if($unit_zi->final->status==1) "1"
-                                    @elseif($unit_zi->final->status===0) "0"
-                                    @else "kosong"
-                                    @endif
-                                    @else
-                                    "kosong"
-                                    @endif
-                                    data-id="{{$unit_zi->id}}">
+                                <select disabled class="form-control status" name="status-{{$unit_zi->id}}">
                                     <option value="" disabled selected>Pilih Status</option>
                                     <option @if(optional($unit_zi->panel)->status==1) selected
                                         @endif
@@ -207,11 +200,11 @@
                                         value="0">Tidak Lulus</option>
                                 </select>
                             </td>
-                            <td class="kondisi" rowspan=5>
+                            <td class="kondisi" rowspan=5 class="link-wrap">
                                 <textarea rows='4' class='glowing-border' name='kondisi-{{$unit_zi->id}}'
                                     placeholder="Kondisi / Catatan">{{optional($unit_zi->final)->kondisi}}</textarea>
                             </td>
-                            <td class="rekomendasi" rowspan=5>
+                            <td class="rekomendasi" rowspan=5 class="link-wrap">
                                 <textarea rows='4' class='glowing-border' data-old=""
                                     name='rekomendasi-{{$unit_zi->id}}'
                                     placeholder="Rekomendasi">{{optional($unit_zi->final)->rekomendasi}}</textarea>
@@ -232,12 +225,14 @@
                                 @endif
                                 @endif
                             </td>
-                            <td>
+                            <td class="link-wrap">
+
                                 @if(isset($unit_zi->analisis_dokumen))
                                 {{$unit_zi->analisis_dokumen->kondisi}}
                                 @endif
+
                             </td>
-                            <td>@if(isset($unit_zi->analisis_dokumen))
+                            <td class="link-wrap">@if(isset($unit_zi->analisis_dokumen))
                                 {{$unit_zi->analisis_dokumen->rekomendasi}}
                                 @endif
                             </td>
@@ -257,11 +252,15 @@
                                 @endif
                                 @endif
                             </td>
-                            <td>@if(isset($unit_zi->wawancara))
+
+                            <td class="link-wrap">
+
+                                @if(isset($unit_zi->wawancara))
                                 {{$unit_zi->wawancara->kondisi}}
                                 @endif
+
                             </td>
-                            <td>@if(isset($unit_zi->wawancara))
+                            <td class="link-wrap">@if(isset($unit_zi->wawancara))
                                 {{$unit_zi->wawancara->rekomendasi}}
                                 @endif
                             </td>
@@ -285,12 +284,14 @@
                                 @endif
                                 @endif
                             </td>
-                            <td>
+                            <td class="link-wrap">
+
                                 @if(isset($unit_zi->verifikasi_lapangan))
                                 {{$unit_zi->verifikasi_lapangan->kondisi}}
                                 @endif
+
                             </td>
-                            <td>
+                            <td class="link-wrap">
                                 @if(isset($unit_zi->verifikasi_lapangan))
                                 {{$unit_zi->verifikasi_lapangan->rekomendasi}}
                                 @endif
@@ -315,12 +316,14 @@
                                 @endif
                                 @endif
                             </td>
-                            <td>
+                            <td class="link-wrap">
+
                                 @if(isset($unit_zi->panel))
                                 {{$unit_zi->panel->kondisi}}
                                 @endif
+
                             </td>
-                            <td>
+                            <td class="link-wrap">
                                 @if(isset($unit_zi->panel))
                                 {{$unit_zi->panel->rekomendasi}}
                                 @endif

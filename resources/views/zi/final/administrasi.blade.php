@@ -129,7 +129,6 @@
                         <td>
                             <a href="{{route('proses_final',$data['instansi_zi_id'])}}">
                                 {{$data["instansi_nama"]}}
-
                             </a>
                         </td>
                         <td class="text-center">
