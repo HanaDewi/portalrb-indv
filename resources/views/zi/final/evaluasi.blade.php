@@ -93,6 +93,9 @@
             <button onclick="upload_lhe({{ $instansi_ZI->id }});" class="btn btn-danger btn-sm kirim-file"><i
                     data-lucide="edit" class="w-4 h-4 mr-1"></i> Upload LHE ZI</button>
 
+            <button onclick="upload_undangan({{ $instansi_ZI->id }});" class="btn btn-warning btn-sm kirim-file"><i
+                    data-lucide="edit" class="w-4 h-4 mr-1"></i> Upload Surat Undangan</button>
+
             <br />
             <br /><br />
 
@@ -376,6 +379,45 @@
     </div>
 </div> <!-- END: Modal Content -->
 
+{{-- Modal Upload LHE --}}
+<div id="modal-upload-undangan" class="modal fade" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <!-- BEGIN: Modal Header -->
+            <div class="darkbg modal-header">
+                <h2 class="font-bold fw-medium fs-base me-auto" id="title-penyesuaian">Upload Hasil LHE</h2>
+            </div> <!-- END: Modal Header -->
+            <!-- BEGIN: Modal Body -->
+            <form action="{{ route('proses_upload_undangan_simpan') }} " id="form-penyesuaian" method="post"
+                enctype="multipart/form-data">
+                @csrf
+                <input type="hidden" name="instansi_id" value="{{$instansi_ZI->id}}">
+                <div class="modal-body grid columns-12 gap-4 gap-y-3">
+                    <div class="g-col-12">
+                        <table class="table">
+                            <tr>
+                                <td class="font-bold w-44">Berkas <span class="text-danger">*</span></td>
+                                <td>
+                                    <button type="button" class="btn btn-info btn-sm" onclick="pilih_berkas();"><i
+                                            class="fa fa-plus"></i> Tambah Berkas</button>
+                                    <input type="file" id="berkas" style="display: none">
+                                    <div id="berkas_list" class="intro-y grid grid-cols-12 gap-6 mt-5"></div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div> <!-- END: Modal Body -->
+                <!-- BEGIN: Modal Footer -->
+                <div class="modal-footer text-end">
+                    <button type="button" data-tw-dismiss="modal"
+                        class="btn btn-outline-secondary w-20 me-1">Batal</button>
+                    <button type="submit" class="btn btn-primary w-20 saveButton">Simpan</button>
+                </div> <!-- END: Modal Footer -->
+            </form>
+        </div>
+    </div>
+</div> <!-- END: Modal Content -->
+
 
 @endsection
 
@@ -403,7 +445,16 @@
                 //     $('#berkas_list').html(data.berkas_list);
                 //     $('.saveButton').prop('disabled', false);
                 // });
-        }
+    }
+
+    function upload_undangan(id) {
+        modal_upload_udangan.show();
+                // $.getJSON("{{ url('hasil/get_test_tp') }}/" + id, function(data) {
+                //     $('#bobot_rb_general_penyesuaian').val(data.bobot_rb_general_penyesuaian);
+                //     $('#berkas_list').html(data.berkas_list);
+                //     $('.saveButton').prop('disabled', false);
+                // });
+    }
 
     function pilih_berkas() {
         $('#berkas').trigger('click');

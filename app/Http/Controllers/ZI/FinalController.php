@@ -285,6 +285,51 @@ class FinalController extends Controller
         return redirect('/zi/final/'.$request->get('instansi_id'));
     }
 
+    public function udangan_simpan (Request $request)
+    {
+        $validated = $request->validate([
+            'berkas' => 'required|array',
+            'berkas.*' => 'file|mimes:jpg,png,pdf|max:2048', // Validate each file in the array
+        ]);
+
+        $success= false;
+        try{
+            if ($request->hasFile('berkas')) {
+                
+                foreach ($request->file('berkas') as $key => $file_berkas) {
+                    $uploadFile = UnggahFile::where('instansi_zi_id', $request->get('instansi_id'))->first();
+                        if (!$uploadFile) {
+                            $uploadFile = new UnggahFile();
+                            $uploadFile->instansi_zi_id = $request->get('instansi_id');
+                        }
+                        
+                    $deskripsi = $request->deskripsi[$key];
+                    $time = time();
+                    $filename = "_$time.". $deskripsi ."." .$file_berkas->getClientOriginalExtension();
+                    $uploadFile->deskripsi = $deskripsi;
+                    $uploadFile->nama = $filename;
+                    $uploadFile->updated_by = Auth::User()->id;
+                    $file_berkas->storeAs('uploads/LHEZI2024', $filename, 'public');
+                    
+                    if ($uploadFile->save()) {
+                        $success = true;
+                    } else {
+                        $success = false;
+                    }
+                    break;
+                }
+            }
+        } catch (\Throwable $th) {
+             throw $th;
+        }
+        if ($success) {
+             session()->flash('success', 'LHE berhasil disimpan.');
+        } else {
+             session()->flash('error', 'LHE gagal disimpan! Silahkan dicoba kembali.');
+        }
+        return redirect('/zi/final/'.$request->get('instansi_id'));
+    }
+
 
    
     
