@@ -258,21 +258,13 @@ class FinalController extends Controller
             if ($request->hasFile('berkas')) {
                 
                 foreach ($request->file('berkas') as $key => $file_berkas) {
-                    $uploadFile = UnggahFile::where('instansi_zi_id', $request->get('instansi_id'))->first();
-                        if (!$uploadFile) {
-                            $uploadFile = new UnggahFile();
-                            $uploadFile->instansi_zi_id = $request->get('instansi_id');
-                        }
-                        
+                    $instansiZI = InstansiZI::where('id', $request->get('instansi_id'))->first();
                     $deskripsi = $request->deskripsi[$key];
                     $time = time();
                     $filename = "_$time.". $deskripsi ."." .$file_berkas->getClientOriginalExtension();
-                    $uploadFile->deskripsi = $deskripsi;
-                    $uploadFile->nama = $filename;
-                    $uploadFile->updated_by = Auth::User()->id;
+                    $instansiZI->lhe = $filename;
                     $file_berkas->storeAs('uploads/LHEZI2024', $filename, 'public');
-                    
-                    if ($uploadFile->save()) {
+                    if ($instansiZI->save()) {
                         $success = true;
                     } else {
                         $success = false;
@@ -303,26 +295,7 @@ class FinalController extends Controller
             if ($request->hasFile('berkas')) {
                 
                 foreach ($request->file('berkas') as $key => $file_berkas) {
-                    $uploadFile = UnggahFile::where('instansi_zi_id', $request->get('instansi_id'))->first();
-                        if (!$uploadFile) {
-                            $uploadFile = new UnggahFile();
-                            $uploadFile->instansi_zi_id = $request->get('instansi_id');
-                        }
-                        
-                    $deskripsi = $request->deskripsi[$key];
-                    $time = time();
-                    $filename = "_$time.". $deskripsi ."." .$file_berkas->getClientOriginalExtension();
-                    $uploadFile->deskripsi = $deskripsi;
-                    $uploadFile->nama = $filename;
-                    $uploadFile->updated_by = Auth::User()->id;
-                    $file_berkas->storeAs('uploads/LHEZI2024', $filename, 'public');
                     
-                    if ($uploadFile->save()) {
-                        $success = true;
-                    } else {
-                        $success = false;
-                    }
-                    break;
                 }
             }
         } catch (\Throwable $th) {
