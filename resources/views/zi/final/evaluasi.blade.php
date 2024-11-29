@@ -80,29 +80,44 @@
                 </div>
                 @endif
 
+                <div class="col-span-12 grid grid-cols-12 gap-6">
+                    <div class="col-span-12 sm:col-span-4 2xl:col-span-4 intro-y">
+                        @if ($instansi_ZI->lhe)
+                        <a href="{{asset('storage/uploads/LHEZI2024/'.$instansi_ZI->lhe)}}" target="_blank"><img
+                                src="{{asset('images/pdf.png')}}" width="10%"></a>
+                        <br />
+                        <h5>LHE {{$instansi_ZI->klpd_instansi->name}}</h5>
+                        @endif
+                        <br />
+                        <button onclick="upload_lhe({{ $instansi_ZI->id }});"
+                            class="btn btn-danger btn-sm kirim-file"><i data-lucide="edit" class="w-4 h-4 mr-1"></i>
+                            Upload LHE ZI</button>
+                    </div>
+                    <div class="col-span-12 sm:col-span-4 2xl:col-span-4 intro-y">
+                        @if ($instansi_ZI->surat_undangan)
+                        <a href="{{asset('storage/uploads/SuratUndangan2024/'.$instansi_ZI->surat_undangan)}}"
+                            target="_blank"><img src="{{asset('images/pdf.png')}}" width="10%"></a>
+                        <br />
+                        <h5>Surat Undangan {{$instansi_ZI->klpd_instansi->name}}</h5>
+                        @endif
+                        <br />
+                        <button onclick="upload_undangan({{ $instansi_ZI->id }});"
+                            class="btn btn-warning btn-sm kirim-file"><i data-lucide="edit" class="w-4 h-4 mr-1"></i>
+                            Upload Surat Undangan</button>
+                    </div>
+                    <div class="col-span-12 sm:col-span-4 2xl:col-span-4 intro-y">
+                        <br />
+                        <a href="{{route('evaluatan_hasil_akhir')}}?instansi_zi_id={{$instansi_ZI->id}}" target="_blank"
+                            class="btn btn-success btn-sm kirim-file">
+                            <i data-lucide="edit" class="w-4 h-4 mr-1"></i>
+                            Lihat Tampilan Evaluatan
+                        </a>
+                    </div>
+                </div>
 
 
-                @if ($instansi_ZI->lhe)
-                <a href="{{asset('storage/uploads/LHEZI2024/'.$instansi_ZI->lhe)}}" target="_blank"><img
-                        src="{{asset('images/pdf.png')}}" width="10%"></a>
-                <br />
-                <h5>LHE {{$instansi_ZI->klpd_instansi->name}}</h5>
-                @endif
-                <br />
-                <button onclick="upload_lhe({{ $instansi_ZI->id }});" class="btn btn-danger btn-sm kirim-file"><i
-                        data-lucide="edit" class="w-4 h-4 mr-1"></i> Upload LHE ZI</button>
                 <hr />
 
-                <br />
-                @if ($instansi_ZI->surat_undangan)
-                <a href="{{asset('storage/uploads/SuratUndangan2024/'.$instansi_ZI->surat_undangan)}}"
-                    target="_blank"><img src="{{asset('images/pdf.png')}}" width="10%"></a>
-                <br />
-                <h5>Surat Undangan {{$instansi_ZI->klpd_instansi->name}}</h5>
-                @endif
-                <br />
-                <button onclick="upload_undangan({{ $instansi_ZI->id }});" class="btn btn-warning btn-sm kirim-file"><i
-                        data-lucide="edit" class="w-4 h-4 mr-1"></i> Upload Surat Undangan</button>
 
                 <br />
                 <br /><br />

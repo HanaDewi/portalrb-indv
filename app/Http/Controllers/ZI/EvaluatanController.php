@@ -142,7 +142,6 @@ class EvaluatanController extends Controller
                 $wawancaraUnit->save();   
             }
         }
-        
         return redirect()->route('evaluatan_desk',$instansiZIid);
     }
 
@@ -171,24 +170,22 @@ class EvaluatanController extends Controller
 
     public function hasil_akhir(Request $request)
     {   
-        $instansi_obj = Auth::User()->user_rel->instansi;
-        $instansi_id = $instansi_obj->id; 
-        $instansi = $instansi_obj->name;
-        $group_kld =$instansi_obj->group; 
-        $instansiZI = InstansiZI::where("instansi_id", $instansi_obj->id)->first();
+        $title = "Hasil Akhir";
+        if(Auth::User()->level =="admin" || Auth::User()->level == "tpn" ){
+            $instansiZI = InstansiZI::where("id", $request->get("instansi_zi_id"))->first();
+        }else{
+            $instansiZI = InstansiZI::where("instansi_id", Auth::User()->user_rel->instansi->id)->first();
+            return redirect()->route('evaluatan_desk',$instansiZIid);
+        }
+
         if($instansiZI){
-            $syarat_akhir_wbk = $instansiZI->syarat_akhir_wbk;
-            $syarat_akhir_wbbm   = $instansiZI->syarat_akhir_wbbm;
-            $status_akhir = $instansiZI->status_akhir;
-            $unit_wbks = UnitZI::where("instansi_zi_id", $instansiZI->id)->where('wbk',1)->get();
-            $unit_wbbms = UnitZI::where("instansi_zi_id", $instansiZI->id)->where('wbbm',1)->get();
+            $units = UnitZI::where("instansi_zi_id", $instansiZI->id)->get();
+            
             return view('zi.evaluatan.hasil_akhir_zi', compact(
-                 'instansi_id', 'instansi', 'group_kld', 'instansiZI',
-                'unit_wbks', 'unit_wbbms',
-                'syarat_akhir_wbk','syarat_akhir_wbbm', 'status_akhir'
+                  'title','instansiZI', 'units', 
             ));
         }else{
-            echo "mohon maaf instansi anda belum terdapat penilaian RB di tahun lalu";
+            echo "mohon maaf Anda tidak terdaftar dalam orang yang berhak untuk melihat halaman ini";
         }
     }
     

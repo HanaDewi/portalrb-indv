@@ -236,22 +236,5 @@ class PengusulanZIController extends Controller
 
         return redirect('zi-tinjau');
     }
-
-    public function simpan_hasil_wbk_mandiri(Request $request){
-        if(Auth::User()->level =="admin" || Auth::User()->level == "tpn"){
-            $instansi_id = $request->get("instansi_id");
-        }
-        else{
-            $instansi_obj = Auth::User()->user_rel->instansi;
-            $instansi_id = $instansi_obj->id;
-        }
-        $instansiZI = InstansiZI::where ('instansi_id', $instansi_id)->first();
-        $instansiZI->hasil_wbk_mandiri = $request->get("link_hasil_wbk_mandiri");  
-        $instansiZI->save();
-
-        return redirect('/zi-desk');
-    }
-
-
     
 }
