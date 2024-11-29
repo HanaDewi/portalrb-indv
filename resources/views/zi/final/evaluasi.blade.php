@@ -487,12 +487,12 @@
 
     function isAllowed(ext) {
         switch (ext.toLowerCase()) {
-            case 'xlsx':
-            case 'xls':
-            case 'docx':
-            case 'doc':
-            case 'pptx':
-            case 'ppt':
+            //case 'xlsx':
+            //case 'xls':
+            //case 'docx':
+            //case 'doc':
+            //case 'pptx':
+            //case 'ppt':
             case 'pdf':
             return true;
         }
@@ -510,7 +510,7 @@
                 var desc = filename.replace("C:\\fakepath\\", "");
                 var desc = desc.replace("."+ext, "");
                 if (!isAllowed(ext)) {
-                    Swal.fire("Perhatian", "File yang di input tidak sesuai ketentuan (pdf, word, excel, power point).", "error");
+                    Swal.fire("Perhatian", "File yang di input tidak sesuai ketentuan (pdf).", "error");
                 } else {
                     src = ext.toLowerCase() == 'pdf' ? "{{asset('images/pdf.png')}}" : (ext.toLowerCase() == 'xls' || ext.toLowerCase() == 'xlsx' ? "{{asset('images/excel.png')}}" : (ext.toLowerCase() == 'doc' || ext.toLowerCase() == 'docx' ? "{{asset('images/word.png')}}" : (ext.toLowerCase() == 'ppt' || ext.toLowerCase() == 'pptx' ? "{{asset('images/ppt.png')}}" : e.target.result)));
                     console.log(src, ext.toLowerCase());
