@@ -256,7 +256,6 @@ class FinalController extends Controller
         $success= false;
         try{
             if ($request->hasFile('berkas')) {
-                
                 foreach ($request->file('berkas') as $key => $file_berkas) {
                     $instansiZI = InstansiZI::where('id', $request->get('instansi_id'))->first();
                     $deskripsi = $request->deskripsi[$key];
@@ -283,28 +282,41 @@ class FinalController extends Controller
         return redirect('/zi/final/'.$request->get('instansi_id'));
     }
 
-    public function udangan_simpan (Request $request)
+    public function undangan_simpan (Request $request)
     {
         $validated = $request->validate([
-            'berkas' => 'required|array',
-            'berkas.*' => 'file|mimes:jpg,png,pdf|max:2048', // Validate each file in the array
+            'berkas_undangan' => 'required|array',
+            'berkas_undangan.*' => 'file|mimes:jpg,png,pdf|max:2048', // Validate each file in the array
         ]);
 
         $success= false;
         try{
-            if ($request->hasFile('berkas')) {
+            if ($request->hasFile('berkas_undangan')) {
                 
-                foreach ($request->file('berkas') as $key => $file_berkas) {
+                foreach ($request->file('berkas_undangan') as $key => $file_berkas) {
+                    $instansiZI = InstansiZI::where('id', $request->get('instansi_id'))->first();
+                    $deskripsi = $request->deskripsi[$key];
+                    $time = time();
+                    $filename = "_$time.". $deskripsi ."." .$file_berkas->getClientOriginalExtension();
+                    $instansiZI->surat_undangan = $filename;
+                    $file_berkas->storeAs('uploads/SuratUndangan2024', $filename, 'public');
                     
+                    if ($instansiZI->save()) {
+                        $success = true;
+                    } else {
+                        $success = false;
+                    }
+                    break;
                 }
             }
         } catch (\Throwable $th) {
              throw $th;
+             
         }
         if ($success) {
-             session()->flash('success', 'LHE berhasil disimpan.');
+             session()->flash('success', 'Surat Undangan berhasil disimpan.');
         } else {
-             session()->flash('error', 'LHE gagal disimpan! Silahkan dicoba kembali.');
+             session()->flash('error', 'Surat Undangan gagal disimpan! Silahkan dicoba kembali.');
         }
         return redirect('/zi/final/'.$request->get('instansi_id'));
     }

@@ -84,7 +84,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/zi/final/simpan', [FinalController::class, 'final_simpan'])->name('proses_final_simpan');
     //Route::post('/zi/final/simpan', [TutupController::class, 'index'])->name('proses_final_simpan');
     Route::post('/zi/final/simpan_lhe', [FinalController::class, 'lhe_simpan'])->name('proses_upload_lhe_simpan');
-    Route::post('/zi/final/simpan_undangan', [FinalController::class, 'undangan_simpan'])->name('proses_upload_undangan_simpan');
+    Route::post('/zi/final/simpan_undangan', [FinalController::class, 'undangan_simpan'])->name('proses_upload_surat_undangan_simpan');
     #WBK MANDIRI
     Route::post('/zi/simpan-hasil-wbk-mandiri', [PengusulanZIController::class, 'simpan_hasil_wbk_mandiri'])->name('simpan_hasil_wbk_mandiri');
 

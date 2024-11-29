@@ -87,12 +87,20 @@
                         src="{{asset('images/pdf.png')}}" width="10%"></a>
                 <br />
                 <h5>LHE {{$instansi_ZI->klpd_instansi->name}}</h5>
-
                 @endif
                 <br />
                 <button onclick="upload_lhe({{ $instansi_ZI->id }});" class="btn btn-danger btn-sm kirim-file"><i
                         data-lucide="edit" class="w-4 h-4 mr-1"></i> Upload LHE ZI</button>
+                <hr />
 
+                <br />
+                @if ($instansi_ZI->lhe)
+                <a href="{{asset('storage/uploads/SuratUndangan2024/'.$instansi_ZI->surat_undangan)}}"
+                    target="_blank"><img src="{{asset('images/pdf.png')}}" width="10%"></a>
+                <br />
+                <h5>Surat Undangan {{$instansi_ZI->klpd_instansi->name}}</h5>
+                @endif
+                <br />
                 <button onclick="upload_undangan({{ $instansi_ZI->id }});" class="btn btn-warning btn-sm kirim-file"><i
                         data-lucide="edit" class="w-4 h-4 mr-1"></i> Upload Surat Undangan</button>
 
@@ -380,7 +388,49 @@
             </form>
         </div>
     </div>
-</div> <!-- END: Modal Content -->
+</div>
+<!-- END: Modal Content -->
+
+{{-- Modal Upload Surat Undangan --}}
+<div id="modal_upload_undangan" class="modal fade" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <!-- BEGIN: Modal Header -->
+            <div class="darkbg modal-header">
+                <h2 class="font-bold fw-medium fs-base me-auto">Upload Surat Undangan</h2>
+            </div> <!-- END: Modal Header -->
+            <!-- BEGIN: Modal Body -->
+            <form action="{{ route('proses_upload_surat_undangan_simpan') }}" method="post"
+                enctype="multipart/form-data">
+                @csrf
+                <input type="hidden" name="instansi_id" value="{{$instansi_ZI->id}}">
+                <div class="modal-body grid columns-12 gap-4 gap-y-3">
+                    <div class="g-col-12">
+                        <table class="table">
+                            <tr>
+                                <td class="font-bold w-44">Berkas <span class="text-danger">*</span></td>
+                                <td>
+                                    <button type="button" class="btn btn-info btn-sm"
+                                        onclick="pilih_berkas_undangan();"><i class="fa fa-plus"></i> Tambah
+                                        Berkas</button>
+                                    <input type="file" id="berkas_undangan" style="display: none">
+                                    <div id="berkas_undangan_list" class="intro-y grid grid-cols-12 gap-6 mt-5"></div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div> <!-- END: Modal Body -->
+                <!-- BEGIN: Modal Footer -->
+                <div class="modal-footer text-end">
+                    <button type="button" data-tw-dismiss="modal"
+                        class="btn btn-outline-secondary w-20 me-1">Batal</button>
+                    <button type="submit" class="btn btn-primary w-20 saveButton">Simpan</button>
+                </div> <!-- END: Modal Footer -->
+            </form>
+        </div>
+    </div>
+</div>
+<!-- END: Modal Content -->
 
 @endsection
 
@@ -411,7 +461,7 @@
     }
 
     function upload_undangan(id) {
-        modal_upload_udangan.show();
+        modal_upload_undangan.show();
                 // $.getJSON("{{ url('hasil/get_test_tp') }}/" + id, function(data) {
                 //     $('#bobot_rb_general_penyesuaian').val(data.bobot_rb_general_penyesuaian);
                 //     $('#berkas_list').html(data.berkas_list);
@@ -423,8 +473,16 @@
         $('#berkas').trigger('click');
     }
 
+    function pilih_berkas_undangan() {
+        $('#berkas_undangan').trigger('click');
+    }
+
     $('#berkas').change(function() {
         cek_berkas(this);
+    })
+
+    $('#berkas_undangan').change(function() {
+        cek_berkas_undangan(this);
     })
 
     function isAllowed(ext) {
@@ -479,9 +537,48 @@
         }
     }
 
+    function cek_berkas_undangan(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                filename = $('#berkas_undangan').val();
+                newVal = $('#berkas_undangan').next().val();
+                var parts = filename.split('.');
+                var ext = parts[parts.length - 1];
+                var desc = filename.replace("C:\\fakepath\\", "");
+                var desc = desc.replace("."+ext, "");
+                if (!isAllowed(ext)) {
+                    Swal.fire("Perhatian", "File yang di input tidak sesuai ketentuan (pdf, word, excel, power point).", "error");
+                } else {
+                    src = ext.toLowerCase() == 'pdf' ? "{{asset('images/pdf.png')}}" : (ext.toLowerCase() == 'xls' || ext.toLowerCase() == 'xlsx' ? "{{asset('images/excel.png')}}" : (ext.toLowerCase() == 'doc' || ext.toLowerCase() == 'docx' ? "{{asset('images/word.png')}}" : (ext.toLowerCase() == 'ppt' || ext.toLowerCase() == 'pptx' ? "{{asset('images/ppt.png')}}" : e.target.result)));
+                    console.log(src, ext.toLowerCase());
+                    berkas_undangan = $('#berkas_undangan').clone();
+                    berkas_undangan.attr('name', 'berkas_undangan['+idx+']');
+                    berkas_undangan.attr('id', 'berkas_undangan'+idx);
+                    berkas_undangan_div = '<div class="col-span-12 lg:col-span-4" id="berkasundangandiv'+idx+'" style="position:relative;">'+
+                            '<div style="height: 100px;">'+
+                                '<img class="img-fluid card-img-top" src="'+src+'" alt="BerkasUndangan'+idx+'" style="max-height: 100px; max-width:100%; padding: 5px 0;">'+
+                            '</div>'+
+                            '<div class="form-group mb-0">'+
+                                '<input type="text" name="deskripsi['+idx+']" class="form-control" id="deskripsi'+idx+'" placeholder="Deskripsi" value="'+desc+'" required>'+
+                            '</div>'+
+                            '<a href="javascript:void(0);" onclick="removeBerkasUndangan('+idx+')" class="remove-button text-danger">'+
+                                '<div class="tooltip w-5 h-5 flex items-center justify-center absolute rounded-full text-white bg-danger right-0 top-0 -mr-2 -mt-2"> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" icon-name="x" data-lucide="x" class="lucide lucide-x w-4 h-4"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg> </div>'
+                            '</a>'+
+                    '</div>';
+                    $('#berkas_undangan_list').append(berkas_undangan_div);
+                    $('#berkas_undangan_list').append(berkas_undangan);
+                    idx++;
+                }
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
     $(document).ready(function(){
 
         modal_upload_lhe = tailwind.Modal.getInstance(document.querySelector("#modal-upload-lhe"));
+        modal_upload_undangan = tailwind.Modal.getInstance(document.querySelector("#modal_upload_undangan"));
 
         $('.openNew').click(function(event) {
             event.preventDefault();
