@@ -94,7 +94,7 @@
                 <hr />
 
                 <br />
-                @if ($instansi_ZI->lhe)
+                @if ($instansi_ZI->surat_undangan)
                 <a href="{{asset('storage/uploads/SuratUndangan2024/'.$instansi_ZI->surat_undangan)}}"
                     target="_blank"><img src="{{asset('images/pdf.png')}}" width="10%"></a>
                 <br />
