@@ -27,6 +27,9 @@ class EvaluatanController extends Controller
 
     public function seleksi_administrasi(Request $request)
     {   
+        if(Auth::User()->level =="admin" || Auth::User()->level == "tpn" ){
+            return redirect()->route('dashboard_zi');
+        }
         $title="Seleksi Administrasi";
         $status_akses="Tutup"; //tutup jika melebihi tanggal 4 September
         $instansi_obj = Auth::User()->user_rel->instansi;
@@ -83,6 +86,9 @@ class EvaluatanController extends Controller
 
     public function hasil_sanggah(Request $request)
     {   
+        if(Auth::User()->level =="admin" || Auth::User()->level == "tpn" ){
+            return redirect()->route('dashboard_zi');
+        }
         $title="Hasil Sanggah";
         $status_akses="Tutup"; //tutup jika melebihi tanggal 4 September
         $instansi_obj = Auth::User()->user_rel->instansi;
@@ -109,6 +115,9 @@ class EvaluatanController extends Controller
 
     public function seleksi_desk(Request $request)
     {   
+        if(Auth::User()->level =="admin" || Auth::User()->level == "tpn" ){
+            return redirect()->route('dashboard_zi');
+        }
         $title="Seleksi Desk";
         $instansi_obj = Auth::User()->user_rel->instansi;
         $instansi_id = $instansi_obj->id; 
@@ -147,6 +156,9 @@ class EvaluatanController extends Controller
 
     public function seleksi_verifikasi_lapangan(Request $request)
     {   
+        if(Auth::User()->level =="admin" || Auth::User()->level == "tpn" ){
+            return redirect()->route('dashboard_zi');
+        }
         $instansi_obj = Auth::User()->user_rel->instansi;
         $instansi_id = $instansi_obj->id; 
         $instansi = $instansi_obj->name;
