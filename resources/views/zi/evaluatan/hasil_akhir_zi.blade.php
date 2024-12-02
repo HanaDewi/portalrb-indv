@@ -43,6 +43,7 @@
                         <hr />
                         <div class="row">
                             @if ($instansiZI->surat_undangan)
+                            @if(Auth::User()->level =="admin" || Auth::User()->level == "tpn" )
                             <div class="col-md-5">
                                 <br />
                                 <a href="{{asset('storage/uploads/SuratUndangan2024/'.$instansiZI->surat_undangan)}}"
@@ -50,6 +51,7 @@
                                 <br /><br />
                                 <p>Surat Undangan {{$instansiZI->klpd_instansi->name}}</p>
                             </div>
+                            @endif
                             @endif
                             @if(Auth::User()->level =="admin" || Auth::User()->level == "tpn" )
                             @if ($instansiZI->lhe)
