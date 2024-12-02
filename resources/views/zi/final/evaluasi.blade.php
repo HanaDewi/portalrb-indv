@@ -149,6 +149,8 @@
                         $ganjil_genap=0;
                         @endphp
                         @foreach ($unit_ZIs as $key => $unit_zi )
+                        @if(!$instansi_ZI->instansi_wbk_mandiri OR ($instansi_ZI->instansi_wbk_mandiri AND
+                        $unit_zi->wbbm ))
                         @php
                         $ganjil_genap++;
                         @endphp
@@ -352,6 +354,7 @@
                                 @endif
                             </td>
                         </tr>
+                        @endif
                         @endforeach
                     </tbody>
                 </table>

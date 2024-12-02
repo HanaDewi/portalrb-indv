@@ -136,15 +136,47 @@
                             {{$tim}}
                             @endforeach
                         </td>
-                        <td class="text-center">{{$data["wbk_count"]}}</td>
-                        <td class="text-center">{{$data["wbbm_count"]}}</td>
-                        <td class="text-center">{{$data["wbk_count"]+$data["wbbm_count"]}}</td>
-                        <td class="text-center">{{$data["wbk_final_count"]}}</td>
-                        <td class="text-center">{{$data["wbbm_final_count"]}}</td>
-                        <td class="text-center">{{$data["wbk_final_count"]+$data["wbbm_final_count"]}}</td>
                         <td class="text-center">
+                            @if($data['instansi_wbk_mandiri']) Mandiri
+                            @else {{$data["wbk_count"]}}
+                            @endif
+                        </td>
+                        <td class="text-center">{{$data["wbbm_count"]}}</td>
+                        <td class="text-center">
+                            @if($data['instansi_wbk_mandiri'])
+                            {{$data["wbbm_count"]}}
+                            @else
+                            {{$data["wbk_count"]+$data["wbbm_count"]}}
+                            @endif
+                        </td>
+                        <td class="text-center">
+
+                            @if($data['instansi_wbk_mandiri']) Mandiri
+                            @else {{$data["wbk_final_count"]}}
+                            @endif
+                        </td>
+                        <td class="text-center">{{$data["wbbm_final_count"]}}</td>
+                        <td class="text-center">
+                            @if($data['instansi_wbk_mandiri'])
+                            {{ $data["wbbm_final_count"] }}
+                            @else
+                            {{ $data["wbk_final_count"]+$data["wbbm_final_count"]}}
+                            @endif
+                        </td>
+                        <td class="text-center">
+                            @if($data['instansi_wbk_mandiri'])
+                            @if($data["wbbm_count"]>0)
+                            {{
+                            number_format(
+                            (float)($data["wbbm_final_count"]*100/$data["wbbm_count"])
+                            ,1, ',', '')}}%
+                            @else
+                            0%
+                            @endif
+                            @else
                             {{number_format((float)(($data["wbk_final_count"]+$data["wbbm_final_count"])*100/($data["wbk_count"]+$data["wbbm_count"])),
                             1, ',', '')}}%
+                            @endif
                         </td>
                         <td class="text-center">
                             @foreach(Auth::User()->userTimZI as $userTimZI)
