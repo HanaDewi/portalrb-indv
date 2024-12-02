@@ -186,7 +186,14 @@ class EvaluatanController extends Controller
         $instansi_ZI = Auth::User()->user_rel->instansi->instansi_zi->first();
         
         $instansi_ZI->hasil_wbk_mandiri = $request->get('link_hasil_wbk_mandiri');
-        $instansi_ZI->save();
+        if($instansi_ZI->save()){
+            session()->flash('message', 'Url berhasil disimpan');
+            session()->flash('sukses', '1');
+        }else{
+            session()->flash('message', 'Url Gagal Disimpan');
+            session()->flash('sukses', '0');
+        }
+
 
         return redirect()->route('evaluatan_desk',$instansiZIid);
     }

@@ -42,7 +42,12 @@
             <div class="col-lg-12 col-md-12">
                 <div class="feature-item" style="background-color: white; border-radius: 25px; padding: 20px 80px">
                     <h5>{{$title}} <br /> {{ $instansi}}</h5><br />
-
+                    @if (session()->has('message'))
+                    <div @if(session('sukses')==1) class="alert alert-success" @elseif(session('sukses')===0)
+                        class="alert alert-danger" @endif>
+                        {{ session('message') }}
+                    </div>
+                    @endif
                     @if(optional($instansi_obj->instansi_zi[0])->instansi_wbk_mandiri)
                     === Khusus Instansi yang Menyelenggarakan WBK Mandiri ===
                     <form method="POST" action="{{route('simpan_hasil_wbk_mandiri')}}">
