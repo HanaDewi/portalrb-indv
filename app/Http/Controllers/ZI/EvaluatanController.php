@@ -205,7 +205,7 @@ class EvaluatanController extends Controller
             $instansiZI = InstansiZI::where("id", $request->get("instansi_zi_id"))->first();
         }else{
             $instansiZI = InstansiZI::where("instansi_id", Auth::User()->user_rel->instansi->id)->first();
-            return redirect()->route('evaluatan_desk');
+            //return redirect()->route('evaluatan_desk');
         }
 
         if($instansiZI){

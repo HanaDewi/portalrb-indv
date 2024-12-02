@@ -42,15 +42,6 @@
                         <h5>{{$title}} <br /> {{ $instansiZI->klpd_instansi->name}}</h5>
                         <hr />
                         <div class="row">
-                            @if ($instansiZI->lhe)
-                            <div class="col-md-5">
-                                <br />
-                                <a href="{{asset('storage/uploads/LHEZI2024/'.$instansiZI->lhe)}}" target="_blank"><img
-                                        src="{{asset('images/pdf.png')}}" width="30%"></a>
-                                <br /><br />
-                                <p>LHE {{$instansiZI->klpd_instansi->name}}</p>
-                            </div>
-                            @endif
                             @if ($instansiZI->surat_undangan)
                             <div class="col-md-5">
                                 <br />
@@ -60,10 +51,24 @@
                                 <p>Surat Undangan {{$instansiZI->klpd_instansi->name}}</p>
                             </div>
                             @endif
+                            @if(Auth::User()->level =="admin" || Auth::User()->level == "tpn" )
+                            @if ($instansiZI->lhe)
+                            <div class="col-md-5">
+                                <br />
+                                <a href="{{asset('storage/uploads/LHEZI2024/'.$instansiZI->lhe)}}" target="_blank"><img
+                                        src="{{asset('images/pdf.png')}}" width="30%"></a>
+                                <br /><br />
+                                <p>LHE {{$instansiZI->klpd_instansi->name}}</p>
+                            </div>
+                            @endif
+                            @endif
                         </div>
                         <hr />
                         <div class="row">
                             <div class="col-12">
+
+
+
                                 <table id="rekap-zi" class="table table-bordered">
                                     <thead class="table-dark font-bold">
                                         <tr>
@@ -75,6 +80,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        @if(Auth::User()->level =="admin" || Auth::User()->level == "tpn" )
                                         @php
                                         $i=0;
                                         $wbk=0;
@@ -102,6 +108,15 @@
                                         </tr>
                                         @endif
                                         @endforeach
+                                        @else
+                                        <tr>
+                                            <td colspan=5 style="color:rgb(200, 45, 45)">Hasil Akan ditampilkan tanggal
+                                                11 Desember
+                                                Saat Acara
+                                                Penyerahan
+                                                diselenggarakan</td>
+                                        </tr>
+                                        @endif
                                     </tbody>
                                 </table>
                             </div>
