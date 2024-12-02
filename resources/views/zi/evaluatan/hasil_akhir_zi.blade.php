@@ -81,6 +81,9 @@
                                         $wbbm=0;
                                         @endphp
                                         @foreach ( $units as $unit )
+                                        @if(!$instansiZI->instansi_wbk_mandiri OR ($instansiZI->instansi_wbk_mandiri
+                                        AND
+                                        $unit->wbbm ))
                                         <tr class="text-left" style="text-align:left">
                                             <td>{{++$i}}</td>
                                             <td class=" text-left">@if($unit->wbk) (WBK {{++$wbk}}) @else
@@ -97,6 +100,7 @@
                                                 @endif
                                             </td>
                                         </tr>
+                                        @endif
                                         @endforeach
                                     </tbody>
                                 </table>
