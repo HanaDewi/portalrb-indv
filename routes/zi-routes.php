@@ -33,7 +33,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/zi-simpan-desk', [EvaluatanController::class, 'link_paparan_simpan'])->name('evaluatan_simpan_desk');
     Route::get('/zi-verifikasi-lapangan', [EvaluatanController::class, 'seleksi_verifikasi_lapangan'])->name('evaluatan_verifikasi_lapangan');
     Route::get('/zi-hasil-akhir', [EvaluatanController::class, 'hasil_akhir'])->name('evaluatan_hasil_akhir');
-    
+    #WBK MANDIRI
+    Route::post('/zi/simpan-hasil-wbk-mandiri', [EvaluatanController::class, 'simpan_hasil_wbk_mandiri'])->name('simpan_hasil_wbk_mandiri');
+
     #============================Admin 
     #Pengusulan
     Route::get('/zi/admin', [DashboardController::class, 'index'])->name('dashboard_zi');
@@ -85,9 +87,7 @@ Route::middleware('auth')->group(function () {
     //Route::post('/zi/final/simpan', [TutupController::class, 'index'])->name('proses_final_simpan');
     Route::post('/zi/final/simpan_lhe', [FinalController::class, 'lhe_simpan'])->name('proses_upload_lhe_simpan');
     Route::post('/zi/final/simpan_undangan', [FinalController::class, 'undangan_simpan'])->name('proses_upload_surat_undangan_simpan');
-    #WBK MANDIRI
-    Route::post('/zi/simpan-hasil-wbk-mandiri', [PengusulanZIController::class, 'simpan_hasil_wbk_mandiri'])->name('simpan_hasil_wbk_mandiri');
-
+    
 
     #Tautkan LKE
     Route::get('/zi/template-lke-evaluator', [LkeEvaluatorController::class, 'template_lke'])->name('template_lke_evaluator');

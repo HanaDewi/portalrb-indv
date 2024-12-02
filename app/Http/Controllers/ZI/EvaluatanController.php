@@ -180,6 +180,17 @@ class EvaluatanController extends Controller
         }
     }
 
+
+    public function simpan_hasil_wbk_mandiri(Request $request){
+        $instansiZIid = Auth::User()->user_rel->instansi->instansi_zi->first()->id;
+        $instansi_ZI = Auth::User()->user_rel->instansi->instansi_zi->first();
+        
+        $instansi_ZI->hasil_wbk_mandiri = $request->get('link_hasil_wbk_mandiri');
+        $instansi_ZI->save();
+
+        return redirect()->route('evaluatan_desk',$instansiZIid);
+    }
+
     public function hasil_akhir(Request $request)
     {   
         $title = "Hasil Akhir";
