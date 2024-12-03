@@ -99,8 +99,56 @@
         </div>
         <br />
 
-        <div class="lg:col-span-12 p-5 border-b border-slate-200/60">
 
+
+        <div class="lg:col-span-12 p-5 border-b border-slate-200/60">
+            <div class="box p-12 zoom-in">
+                <div class="col-span-12 sm:col-span-12 2xl:col-span-12  intro-y">
+                    <div class="row ">
+                        <table id="" class=" table table-bordered table-striped" cellspacing="0">
+                            <thead class="table-dark font-bold">
+                                <tr>
+                                    <th colspan=4>Data Jumlah instansi dan unit tidak valid untuk TIM 1 TIM 2 TIM 4 TIM
+                                        6
+                                        dikarenakan kementerian keuangan dikerjakan bersama sehingga seluruh unit
+                                        keuangan dimasukan ke tim-tim tersebut</th>
+                                </tr>
+                                <tr class="text-center">
+                                    <th>Nama</th>
+                                    <th>Jumlah Instansi </th>
+                                    <th width="25%">Progress input LHE</th>
+                                    <th>Jumlah LHE yang diupload </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($progress_teams as $key => $tim )
+                                <tr class="text-center">
+                                    <td id="{{$key}}" class="teams">{{$key}}</td>
+                                    <td>{{$tim['jumlah_instansi']}}</td>
+                                    <td>
+                                        @php
+                                        $pembagi = $tim['jumlah_wbk'] + $tim['jumlah_wbbm'];
+                                        ($pembagi)?$pembagi:$pembagi=1;
+                                        $pembilang = $tim['jumlah_wbk_completed'] + $tim['jumlah_wbbm_completed'];
+                                        $persentase = floor(100*$pembilang/$pembagi);
+                                        @endphp
+                                        <div title="({{$pembilang}}/{{$pembagi}})">{{$persentase}} % </div>
+                                        <div class="w3-light-grey">
+                                            <div class="w3-green" style="height:24px;width:{{$persentase }}%">
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>-</td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="lg:col-span-12 p-5 border-b border-slate-200/60">
             <div class="separator mt-5"></div>
             <table id="rekap-zi" class="table table-bordered table-striped" cellspacing="0" width="100%">
                 <thead class="table-dark font-bold">
