@@ -265,6 +265,7 @@
     }
 
     function clearForm() {
+        $('#form-lke_parameter').trigger('reset');
         $('#komponen-form').hide();
         $('#subkomponen-form').hide();
         $('#komponen').prop('required', false);
@@ -274,7 +275,6 @@
         $('#kl-form').hide();
         $('#provinsi-form').hide();
         $('#kabupaten-form').hide();
-        $('#form-lke_parameter').trigger('reset');
         $('#lke_parameter_id').val('');
         $('#rencana_aksi').prop('checked', false);
     }
@@ -293,22 +293,33 @@
         $('#kl-form').hide();
         $('#provinsi-form').hide();
         $('#kabupaten-form').hide();
+        $('#kl_max_value').prop('required', false);
+        $('#provinsi_max_value').prop('required', false);
+        $('#kabupaten_max_value').prop('required', false);
         kl = $('#kl').is(':checked');
         provinsi = $('#provinsi').is(':checked');
         kabupaten = $('#kabupaten').is(':checked');
         if (kl) {
             $('#kl-form').show();
+            $('#kl_max_value').prop('required', true);
         }
         if (provinsi) {
             $('#provinsi-form').show();
+            $('#provinsi_max_value').prop('required', true);
         }
         if (kabupaten) {
             $('#kabupaten-form').show();
+            $('#kabupaten_max_value').prop('required', true);
         }
     }
     
     function cekLevel() {
-        clearForm();
+        $('#komponen-form').hide();
+        $('#subkomponen-form').hide();
+        $('#komponen').prop('required', false);
+        $('#subkomponen').prop('required', false);
+        $('#penilai_id').prop('required', false);
+        $('#pengguna_lke_parameter').hide();
         level = $('#level').val();
         if (level == 'Sub Komponen') {
             $('#komponen-form').show();

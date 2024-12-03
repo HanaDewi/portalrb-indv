@@ -76,11 +76,11 @@
                         </div>
                         <div class="form-group">
                             <label for="catatan" class="form-label mt-2">Catatan</label> 
-                            <textarea id="catatan" name="catatan" class="form-control" placeholder="Catatan" required></textarea>
+                            <textarea id="catatan" name="catatan" class="form-control" placeholder="Catatan"></textarea>
                         </div>
                         <div class="form-group">
                             <label for="rekomendasi" class="form-label mt-2">Rekomendasi</label> 
-                            <textarea id="rekomendasi" name="rekomendasi" class="form-control" placeholder="Rekomendasi" required></textarea>
+                            <textarea id="rekomendasi" name="rekomendasi" class="form-control" placeholder="Rekomendasi"></textarea>
                         </div>
                     </div>
                 </div> <!-- END: Modal Body -->

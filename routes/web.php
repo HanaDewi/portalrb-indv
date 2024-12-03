@@ -183,6 +183,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/master-data/data-konversi-jawaban/save', [DataKonversiJawabanController::class, 'dosave']);
     Route::delete('/master-data/data-konversi-jawaban/delete', [DataKonversiJawabanController::class, 'dodelete']);
 
+    // LKE Utama
     Route::get('/evaluasi/lke-utama', [LKEController::class, 'lke_utama']);
     Route::get('/evaluasi/lke-utama/getDatas', [LKEController::class, 'lke_utama_getDatas']);
     Route::get('/evaluasi/lke-utama/{parameter_id}', [LKEController::class, 'lke_utama_score']);
@@ -191,6 +192,16 @@ Route::middleware('auth')->group(function () {
     Route::post('/evaluasi/lke-utama/{parameter_id}/simpan', [LKEController::class, 'lke_utama_score_simpan']);
     Route::post('/evaluasi/lke-utama/{parameter_id}/import', [LKEController::class, 'lke_utama_score_import']);
     Route::get('/evaluasi/lke-utama/{parameter_id}/getData/{instansi_id}/{lke_bobot_id}', [LKEController::class, 'lke_utama_score_getData']);
+
+    // Database
+    Route::get('/evaluasi/database', [LKEController::class, 'database']);
+    Route::get('/evaluasi/database/getDatas', [LKEController::class, 'database_getDatas']);
+
+    // Hasil Evaluasi
+    Route::get('/evaluasi/hasil-evaluasi', [LKEController::class, 'hasil_evaluasi']);
+    Route::get('/evaluasi/hasil-evaluasi/getDatas', [LKEController::class, 'hasil_evaluasi_getDatas']);
+    Route::get('/evaluasi/hasil-evaluasi/{instansi_id}/{kegiatan_id}', [LKEController::class, 'hasil_evaluasi_instansi']);
+    Route::post('/evaluasi/hasil-evaluasi/{instansi_id}/{kegiatan_id}/simpan', [LKEController::class, 'hasil_evaluasi_instansi_simpan']);
 
     // Hasil
     Route::get('/hasil', [HasilController::class, 'hasil_seluruh'])->name('hasil_seluruh');

@@ -19,4 +19,9 @@ class LkeKegiatan extends Model
     {
         return $this->hasMany(LkeParameter::class, 'lke_kegiatan_id');
     }
+
+    public function test_tp()
+    {
+        return $this->hasMany(LkeTestTp::class, 'lke_kegiatan_id');
+    }
 }

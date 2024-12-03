@@ -306,7 +306,8 @@ class MasterDataController extends Controller
                 $bobot_kabupaten = LkeBobot::whereIn('lke_parameter_id', $parameter_ids)->where('group', 'kabupaten')->sum('bobot');
                 $parameter->bobot .= '<strong>'.group_instansi('kabupaten').': </strong>'.$bobot_kabupaten;
             } else if ($parameter->level == 'Komponen') {
-                $parameter_ids = LkeParameter::where('level', 'Sub Komponen')->where('parent_id', $parameter->id)->pluck('id');
+                $sub_parameter_ids = LkeParameter::where('level', 'Sub Komponen')->where('parent_id', $parameter->id)->pluck('id');
+                $parameter_ids = LkeParameter::where('level', 'Indikator')->whereIn('parent_id', $sub_parameter_ids)->pluck('id');
                 $bobot_kl = LkeBobot::whereIn('lke_parameter_id', $parameter_ids)->where('group', 'kl')->sum('bobot');
                 $parameter->bobot .= '<strong>'.group_instansi('kl').': </strong>'.$bobot_kl.'<br>';
                 $bobot_provinsi = LkeBobot::whereIn('lke_parameter_id', $parameter_ids)->where('group', 'provinsi')->sum('bobot');
@@ -357,8 +358,6 @@ class MasterDataController extends Controller
             $lke_parameter->nama = $request->nama;
             $lke_parameter->lke_kegiatan_id = $request->kegiatan_id;
             $lke_parameter->level = $request->level;
-            $lke_parameter->penilai_id = $request->penilai_id;
-            $lke_parameter->indikator_pengali_id = $request->indikator_pengali_id;
             if ($request->rencana_aksi) {
                 LkeParameter::where('lke_kegiatan_id', $request->kegiatan_id)->update(['rencana_aksi' => 0]);
                 $lke_parameter->rencana_aksi = 1;
@@ -369,6 +368,8 @@ class MasterDataController extends Controller
                 $lke_parameter->parent_id = $request->komponen;
             } else if ($request->level == 'Indikator') {
                 $lke_parameter->parent_id = $request->subkomponen;
+                $lke_parameter->penilai_id = $request->penilai_id;
+                $lke_parameter->indikator_pengali_id = $request->indikator_pengali_id;
             }
             if ($lke_parameter->save()) {
                 if ($request->kl) {

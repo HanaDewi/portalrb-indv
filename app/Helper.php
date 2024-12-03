@@ -3,8 +3,11 @@ use App\Models\DokumenKategori;
 use App\Models\FokusIntervensi;
 use App\Models\KegiatanUtama;
 use App\Models\KlpdInstansi;
+use App\Models\LKE\LkeBobot;
 use App\Models\LKE\LkeKegiatan;
 use App\Models\LKE\LkeParameter;
+use App\Models\LKE\LkeTestTp;
+use App\Models\LKE\LkeTestTpLine;
 use App\Models\LkeTP;
 use App\Models\Tahun;
 use Carbon\Carbon;
@@ -135,18 +138,24 @@ if(! function_exists('menus'))
                     ],
                 ],
             ],
-            [
-                'levels' => ['admin', 'provinsi', 'kabupaten', 'kl', 'tpn', 'tpm', 'viewer'],
-                'title' => 'Hasil',
-                'icon' => 'database',
-                'url' => 'hasil',
-            ],
+            // [
+            //     'levels' => ['admin', 'provinsi', 'kabupaten', 'kl', 'tpn', 'tpm', 'viewer'],
+            //     'title' => 'Hasil',
+            //     'icon' => 'database',
+            //     'url' => 'hasil',
+            // ],
             [
                 'levels' => ['admin', 'tpn', 'tpm'],
                 'title' => 'Evaluasi',
                 'icon' => 'pencil',
                 'url' => 'evaluasi',
                 'items' => [ 
+                    [
+                        'levels' => ['admin', 'tpn'],
+                        'title' => 'Renaksi RB General',
+                        'icon' => 'activity',
+                        'url' => 'evaluasi/renaksi-rb-general'
+                    ],
                     [
                         'levels' => ['admin', 'tpn', 'tpm'],
                         'title' => 'LKE Utama',
@@ -155,10 +164,16 @@ if(! function_exists('menus'))
                     ],
                     [
                         'levels' => ['admin', 'tpn'],
-                        'title' => 'Renaksi RB General',
-                        'icon' => 'activity',
-                        'url' => 'evaluasi/renaksi-rb-general'
-                    ]
+                        'title' => 'Database Indikator',
+                        'icon' => 'database',
+                        'url' => 'evaluasi/database'
+                    ],
+                    [
+                        'levels' => ['admin', 'tpn'],
+                        'title' => 'Hasil Evaluasi',
+                        'icon' => 'layers',
+                        'url' => 'evaluasi/hasil-evaluasi'
+                    ],
                 ],
             ],
             [
@@ -581,5 +596,40 @@ if(! function_exists('heading_template_lke')) {
             10 => 'catatan',
             11 => 'rekomendasi'
         ];
+    }
+}
+
+if(! function_exists('calculateTestTp')) {
+    function calculateTestTp($instansi_id, $lke_kegiatan_id)
+    {
+        $testTp = LkeTestTp::where('instansi_id', $instansi_id)->where('lke_kegiatan_id', $lke_kegiatan_id)->first();
+        if (!$testTp) {
+            $testTp = new LkeTestTp();
+            $testTp->lke_kegiatan_id = $lke_kegiatan_id;
+            $testTp->instansi_id = $instansi_id;
+            $testTp->bobot_rb_general_penyesuaian = 100;
+        }
+        // perhitungan RB General
+        $rb_general_komponen_id = LkeParameter::where('lke_kegiatan_id', $lke_kegiatan_id)->where('level', 'Komponen')->where('nama', 'RB General')->first()->id;
+        $rb_general_parent_ids = LkeParameter::where('lke_kegiatan_id', $lke_kegiatan_id)->where('level', 'Sub Komponen')->where('parent_id', $rb_general_komponen_id)->pluck('id');
+        $testTp->rb_general = LkeTestTpLine::where('instansi_id', $instansi_id)->whereHas('lke_bobot', function($query) use ($rb_general_parent_ids) {
+                                    $query->whereHas('lke_parameter', function($query) use ($rb_general_parent_ids) {
+                                        $query->whereIn('parent_id', $rb_general_parent_ids);
+                                    });
+                                })->sum('score_index');
+        $rb_general = $testTp->rb_general + $testTp->koefisien;
+        $testTp->rb_general_penyesuaian = ($rb_general / $testTp->bobot_rb_general_penyesuaian) * 100;
+
+        // Perhitungan RB Tematik
+        $rb_tematik_komponen_id = LkeParameter::where('lke_kegiatan_id', $lke_kegiatan_id)->where('level', 'Komponen')->where('nama', 'RB Tematik')->first()->id;
+        $rb_tematik_parent_ids = LkeParameter::where('lke_kegiatan_id', $lke_kegiatan_id)->where('level', 'Sub Komponen')->where('parent_id', $rb_tematik_komponen_id)->pluck('id');
+        $testTp->rb_tematik = LkeTestTpLine::where('instansi_id', $instansi_id)->whereHas('lke_bobot', function($query) use ($rb_tematik_parent_ids) {
+                                    $query->whereHas('lke_parameter', function($query) use ($rb_tematik_parent_ids) {
+                                        $query->whereIn('parent_id', $rb_tematik_parent_ids);
+                                    });
+                                })->sum('score_index');
+        
+        $testTp->index_rb = $testTp->rb_general_penyesuaian + $testTp->rb_tematik;
+        $testTp->save();
     }
 }
