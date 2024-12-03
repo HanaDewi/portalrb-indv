@@ -72,6 +72,7 @@
                         $itemUrl = isset($item['items']) && count($item['items']) > 0 ? 'javascript:;' :
                         url($item['url']);
                         @endphp
+                        @if (in_array(auth()->user()->level, $item['levels']))
                         <li>
                             <a href="{{ $itemUrl }}" class="menu {{ $active }}">
                                 <div class="menu__icon"> <i data-lucide="{{ $item['icon'] }}"></i> </div>
@@ -84,16 +85,19 @@
                                 $active = request()->is($subitem['url']) || request()->is($subitem['url'] . '/*') ?
                                 'menu--active' : '';
                                 @endphp
+                                @if (in_array(auth()->user()->level, $subitem['levels']))
                                 <li>
                                     <a href="{{ url($subitem['url']) }}" class="menu {{ $active }}">
                                         <div class="menu__icon"> <i data-lucide="{{ $subitem['icon'] }}"></i> </div>
                                         <div class="menu__title"> {{ $subitem['title'] }} </div>
                                     </a>
                                 </li>
+                                @endif
                                 @endforeach
                             </ul>
                             @endisset
                         </li>
+                        @endif
                         @endforeach
                     </ul>
                     @endisset
@@ -151,6 +155,7 @@
                         $itemUrl = isset($item['items']) && count($item['items']) > 0 ? 'javascript:;' :
                         url($item['url']);
                         @endphp
+                        @if (in_array(auth()->user()->level, $item['levels']))
                         <li>
                             <a href="{{ $itemUrl }}" class="side-menu {{ $active }}">
                                 <div class="side-menu__icon"><i data-lucide="{{ $item['icon'] }}"></i></div>
@@ -177,6 +182,7 @@
                             </ul>
                             @endisset
                         </li>
+                        @endif
                         @endforeach
                     </ul>
                     @endisset

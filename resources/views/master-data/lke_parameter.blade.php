@@ -1,0 +1,446 @@
+@extends('layout.rubick')
+@section('title', 'LKE Parameter')
+
+@section('content')
+<div class="intro-y col-span-12 lg:col-span-12">
+    @include('common.status')
+    <div class="intro-y box">
+        <div class="flex flex-col sm:flex-row items-center p-5 border-b border-slate-200/60">
+            <h2 class="font-medium text-base mr-auto"> LKE Parameter</h2>
+            <button class="btn btn-danger shadow-md mr-2 float-right" onclick="tambah();" data-bs-toggle="modal" data-bs-target="#modal-lke_parameter">Tambah LKE Parameter</button>
+        </div>
+        <div class="lg:col-span-12 p-5 border-b border-slate-200/60">
+            <table id="lke_parameter" class="table table-bordered table-striped table-hover" cellspacing="0" width="100%">
+                <thead class="table-dark">
+                    <tr>
+                        <th class="w-5">No.</th>
+                        <th>Nama Kegiatan</th>
+                        <th>Nama Parameter</th>
+                        <th class="w-20">Level</th>
+                        <th class="w-20">Parent</th>
+                        <th>Tim Penilai</th>
+                        <th>Indikator Pengali</th>
+                        <th class="w-40">Bobot</th>
+                        <th class="w-5">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div id="modal-lke_parameter" class="modal fade" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <!-- BEGIN: Modal Header -->
+            <div class="modal-header">
+                <h2 class="fw-medium fs-base me-auto" id="title">Tambah LKE Parameter</h2>
+            </div> <!-- END: Modal Header -->
+            <!-- BEGIN: Modal Body -->
+            <form action="{{ url('master-data/lke_parameter/simpan') }}" id="form-lke_parameter" method="post">
+                @csrf
+                <input type="hidden" name="lke_parameter_id" id="lke_parameter_id">
+                <div class="modal-body grid columns-12 gap-4 gap-y-3">
+                    <div class="g-col-12"> 
+                        <div class="form-group">
+                            <label for="kegiatan_id" class="form-label mt-2">Kegiatan <span class="text-danger">*</span></label>
+                            {!! Form::select('kegiatan_id', kegiatan(), null, ['class' => 'w-full', 'id' => 'kegiatan_id', 'data-placeholder' => 'Pilih Kegiatan']) !!}
+                        </div>
+                        <div class="form-group">
+                            <label for="level" class="form-label mt-2">Level <span class="text-danger">*</span></label>
+                            {!! Form::select('level', level(), null, ['class' => 'w-full', 'id' => 'level', 'data-placeholder' => 'Pilih Level Parameter', 'required', 'onchange' => 'cekLevel();']) !!}
+                        </div>
+                        <div class="form-group" id="komponen-form">
+                            <label for="komponen" class="form-label mt-2">Komponen <span class="text-danger">*</span></label>
+                            {!! Form::select('komponen', parameter('komponen'), null, ['class' => 'w-full', 'id' => 'komponen', 'data-placeholder' => 'Pilih Komponen', 'onchange' => 'getSubKomponen();']) !!}
+                        </div>
+                        <div class="form-group" id="subkomponen-form">
+                            <label for="subkomponen" class="form-label mt-2">Sub Komponen <span class="text-danger">*</span></label>
+                            {!! Form::select('subkomponen', [], null, ['class' => 'w-full', 'id' => 'subkomponen', 'data-placeholder' => 'Pilih Komponen']) !!}
+                        </div>
+                        <div id="lke_parameter_input">
+                            <div class="form-group">
+                                <label for="nama" class="form-label mt-2">Nama Indikator <span class="text-danger">*</span></label> 
+                                <textarea id="nama" name="nama" class="form-control" placeholder="Nama Parameter" required></textarea>
+                            </div>
+                            <div id="pengguna_lke_parameter">
+                                <div class="form-check mt-2">
+                                    <input id="rencana_aksi" name="rencana_aksi" class="form-check-input" type="checkbox" value="1">
+                                    <label class="form-check-label" for="rencana_aksi" name="rencana_aksi">Rencana Aksi</label>
+                                </div>
+                                <div class="form-group"">
+                                    <label for="indikator_pengali_id" class="form-label mt-2">Indikator Pengali</label>
+                                    {!! Form::select('indikator_pengali_id', [], null, ['class' => 'w-full', 'id' => 'indikator_pengali_id', 'data-placeholder' => 'Pilih Indikator Pengali']) !!}
+                                </div>
+                                <div class="form-group">
+                                    <label for="penilai_id" class="form-label mt-2">Tim Penilai <span class="text-danger">*</span></label>
+                                    {!! Form::select('penilai_id', timpenilai(), null, ['class' => 'w-full', 'id' => 'penilai_id', 'data-placeholder' => 'Pilih Tim Penilai']) !!}
+                                </div>
+                                <hr class="mb-5">
+                                <label>Pengguna LKE Indikator</label>
+                                <div class="form-check mt-2">
+                                    <input id="kl" name="kl" class="form-check-input" type="checkbox" value="1" onchange="cekPengguna();">
+                                    <label class="form-check-label" for="kl" name="kl">Kementrian / Lembaga</label>
+                                </div>
+                                <div id="kl-form">
+                                    <div class="form-group">
+                                        <label for="kl_bobot" class="form-label mt-2">Bobot</label>
+                                        <input type="text" name="kl_bobot" id="kl_bobot" placeholder="Bobot" class="form-control digit">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="kl_target_baik" class="form-label mt-2">Target Baik</label>
+                                        <input type="text" name="kl_target_baik" id="kl_target_baik" placeholder="Target Baik" class="form-control digit">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="kl_min_value" class="form-label mt-2">Minimal</label>
+                                        <input type="text" name="kl_min_value" id="kl_min_value" placeholder="Minimal" class="form-control digit">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="kl_max_value" class="form-label mt-2">Maksimal</label>
+                                        <input type="text" name="kl_max_value" id="kl_max_value" placeholder="Maksimal" class="form-control digit">
+                                    </div>
+                                </div>
+                                <div class="form-check mt-2">
+                                    <input id="provinsi" name="provinsi" class="form-check-input" type="checkbox" value="1" onchange="cekPengguna();">
+                                    <label class="form-check-label" for="provinsi" name="provinsi">Provinsi</label>
+                                </div>
+                                <div id="provinsi-form">
+                                    <div class="form-group">
+                                        <label for="provinsi_bobot" class="form-label mt-2">Bobot</label>
+                                        <input type="text" name="provinsi_bobot" id="provinsi_bobot" placeholder="Bobot" class="form-control digit">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="provinsi_target_baik" class="form-label mt-2">Target Baik</label>
+                                        <input type="text" name="provinsi_target_baik" id="provinsi_target_baik" placeholder="Target Baik" class="form-control digit">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="provinsi_min_value" class="form-label mt-2">Minimal</label>
+                                        <input type="text" name="provinsi_min_value" id="provinsi_min_value" placeholder="Minimal" class="form-control digit">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="provinsi_max_value" class="form-label mt-2">Maksimal</label>
+                                        <input type="text" name="provinsi_max_value" id="provinsi_max_value" placeholder="Maksimal" class="form-control digit">
+                                    </div>
+                                </div>
+                                <div class="form-check mt-2">
+                                    <input id="kabupaten" name="kabupaten" class="form-check-input" type="checkbox" value="1" onchange="cekPengguna();">
+                                    <label class="form-check-label" for="kabupaten" name="kabupaten">Kabupaten / Kota</label>
+                                </div>
+                                <div id="kabupaten-form">
+                                    <div class="form-group">
+                                        <label for="kabupaten_bobot" class="form-label mt-2">Bobot</label>
+                                        <input type="text" name="kabupaten_bobot" id="kabupaten_bobot" placeholder="Bobot" class="form-control digit">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="kabupaten_target_baik" class="form-label mt-2">Target Baik</label>
+                                        <input type="text" name="kabupaten_target_baik" id="kabupaten_target_baik" placeholder="Target Baik" class="form-control digit">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="kabupaten_min_value" class="form-label mt-2">Minimal</label>
+                                        <input type="text" name="kabupaten_min_value" id="kabupaten_min_value" placeholder="Minimal" class="form-control digit">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="kabupaten_max_value" class="form-label mt-2">Maksimal</label>
+                                        <input type="text" name="kabupaten_max_value" id="kabupaten_max_value" placeholder="Maksimal" class="form-control digit">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div> <!-- END: Modal Body -->
+                <!-- BEGIN: Modal Footer -->
+                <div class="modal-footer text-end"> 
+                    <button type="button" data-tw-dismiss="modal" class="btn btn-outline-secondary w-20 me-1">Batal</button> 
+                    <button type="submit" class="btn btn-success w-20 saveButton">Simpan</button> 
+                </div> <!-- END: Modal Footer -->
+            </form>
+        </div>
+    </div>
+</div> <!-- END: Modal Content -->
+@endsection
+
+@push('js')
+<script src="{{ asset('ext/jquery-validation/jquery.validate.min.js') }}"></script>
+<script src="{{ asset('ext/jquery-validation/localization/messages_id.min.js') }}"></script>
+<script src="{{ asset('ext') }}/jquery-inputmask/jquery.inputmask.bundle.js"></script>
+<script>
+    $(document).ready(function() {
+        getData();
+        modal_lke_parameter = tailwind.Modal.getInstance(document.querySelector("#modal-lke_parameter"));
+        
+        $(".digit").inputmask("decimal",{
+            radixPoint:",",
+            groupSeparator: ".",
+            digits: 2,
+            autoGroup: true,
+            rightAlign: false,
+            min: 0,
+        });
+        
+        $(".tahun").inputmask("2029");
+
+        $('#form-lke_parameter').validate({
+            highlight: function (input) {
+                $(input).addClass('border-danger');
+            },
+            unhighlight: function (input) {
+                $(input).removeClass('border-danger');
+            },
+            errorPlacement: function( error, element ) {
+                var placement = element.closest('.form-group');
+                if (!placement.get(0)) {
+                    placement = element;
+                }
+                if (error.text() !== '') {
+                    placement.append(error);
+                }
+                console.log(error, placement);
+            },
+            submitHandler: function(form) {
+                $('.saveButton').prop('disabled', true);
+                $.ajax({
+                    url: form.action,
+                    type: form.method,
+                    data: new FormData(form),
+                    processData: false,
+                    contentType: false,
+                    dataType: "json",
+                    success: function(data) {
+                        $('.saveButton').prop('disabled', false);
+                        if (data.success) {
+                            Swal.fire('Selamat!', 'Data LKE Parameter berhasil disimpan!', 'success');
+                            modal_lke_parameter.hide();
+                        } else {
+                            Swal.fire('Aduh!', 'Data LKE Parameter gagal disimpan! Coba lagi nanti ya..', 'error');
+                            modal_lke_parameter.hide();
+                        }
+                        getData();
+                    },
+                    error: function(err) {
+                        Swal.fire('Error!', 'Terjadi kesalahan!', 'error');
+                        $('.saveButton').prop('disabled', false);
+                    }
+                });
+            }
+        });
+    });
+
+    var lke_parameter = $('#lke_parameter').DataTable( {
+        responsive: true,
+        processing: true,
+        ordering: false,
+        ajax: {
+            url: "{{url('emptyDT')}}",
+        },
+        columns: [
+            {
+                data: null,
+                sortable: false, 
+                searchable: false,
+                render: function (data, type, row, meta) {
+                    return meta.row + meta.settings._iDisplayStart + 1;
+                }
+            },
+            { data: 'nama_kegiatan' },
+            { data: 'nama' },
+            { data: 'level' },
+            { data: 'parent.nama' },
+            { data: 'tim_penilai' },
+            { data: 'indikator_pengali.nama' },
+            { data: 'bobot' },
+            { 
+                sortable: false, 
+                searchable: false,
+                render: function (data, type, row, meta) {
+                    return '<button onclick="edit('+row.id+');" class="btn btn-warning btn-sm w-10">Edit</button><button onclick="hapus('+row.id+');" class="btn btn-danger btn-sm w-10">Hapus</button>';
+                },
+            },
+        ],
+    }); 
+
+    function getData() {
+        lke_parameter.ajax.url("{{url('master-data/lke_parameter/getDatas')}}").load(null, false);
+    }
+
+    function clearForm() {
+        $('#form-lke_parameter').trigger('reset');
+        $('#komponen-form').hide();
+        $('#subkomponen-form').hide();
+        $('#komponen').prop('required', false);
+        $('#subkomponen').prop('required', false);
+        $('#penilai_id').prop('required', false);
+        $('#pengguna_lke_parameter').hide();
+        $('#kl-form').hide();
+        $('#provinsi-form').hide();
+        $('#kabupaten-form').hide();
+        $('#lke_parameter_id').val('');
+        $('#rencana_aksi').prop('checked', false);
+    }
+
+    function tambah() {
+        clearForm();
+        tahun = {{ date('Y') }};
+        $("#tahun").val(tahun);
+        $('.saveButton').prop('disabled', false);
+        cekLevel();
+        cekPengguna();
+        modal_lke_parameter.show();
+    }
+
+    function cekPengguna() {
+        $('#kl-form').hide();
+        $('#provinsi-form').hide();
+        $('#kabupaten-form').hide();
+        $('#kl_max_value').prop('required', false);
+        $('#provinsi_max_value').prop('required', false);
+        $('#kabupaten_max_value').prop('required', false);
+        kl = $('#kl').is(':checked');
+        provinsi = $('#provinsi').is(':checked');
+        kabupaten = $('#kabupaten').is(':checked');
+        if (kl) {
+            $('#kl-form').show();
+            $('#kl_max_value').prop('required', true);
+        }
+        if (provinsi) {
+            $('#provinsi-form').show();
+            $('#provinsi_max_value').prop('required', true);
+        }
+        if (kabupaten) {
+            $('#kabupaten-form').show();
+            $('#kabupaten_max_value').prop('required', true);
+        }
+    }
+    
+    function cekLevel() {
+        $('#komponen-form').hide();
+        $('#subkomponen-form').hide();
+        $('#komponen').prop('required', false);
+        $('#subkomponen').prop('required', false);
+        $('#penilai_id').prop('required', false);
+        $('#pengguna_lke_parameter').hide();
+        level = $('#level').val();
+        if (level == 'Sub Komponen') {
+            $('#komponen-form').show();
+            $('#komponen').prop('required', true);
+        } else if (level == 'Indikator') {
+            $('#komponen-form').show();
+            $('#subkomponen-form').show();
+            $('#komponen').prop('required', true);
+            $('#subkomponen').prop('required', true);
+            $('#penilai_id').prop('required', true);
+            $('#pengguna_lke_parameter').show();
+            getSubKomponen();
+            getIndikatorPengali();
+        }
+    }
+
+    function getSubKomponen() {
+        komponen_id = $('#komponen').val();
+        $.get("{{url('master-data/lke_parameter/getSubKomponen')}}/"+komponen_id, function(data) {
+            $('#subkomponen').html(data);
+        });
+    }
+
+    function getIndikatorPengali() {
+        komponen_id = $('#komponen').val();
+        $.get("{{url('master-data/lke_parameter/getIndikatorPengali')}}/"+komponen_id, function(data) {
+            $('#indikator_pengali_id').html(data);
+        });
+    }
+
+    function edit(id) {
+        clearForm();
+        $('#lke_parameter_id').val(id);
+        $('#title').html('Edit LKE Parameter');
+        $('.saveButton').prop('disabled', true);
+        $('#penilai_id').prop('required', false);
+        $('.required_penilai').hide();
+        $.getJSON("{{url('master-data/lke_parameter/getData')}}/"+id, function(data) {
+            $('#tahun').val(data.tahun);
+            $('#level').val(data.level);
+            $('#nama').val(data.nama);
+            if (data.level == 'Sub Komponen') {
+                $('#komponen-form').show();
+                $('#komponen').prop('required', true);
+                $('#komponen').val(data.komponen_id);
+            } else if (data.level == 'Indikator') {
+                $('#komponen-form').show();
+                $('#subkomponen-form').show();
+                $('#komponen').prop('required', true);
+                $('#subkomponen').prop('required', true);
+                $('#penilai_id').prop('required', true);
+                $('#pengguna_lke_parameter').show();
+                $('#komponen').val(data.komponen_id);
+                $('#subkomponen').html(data.subkomponens)
+                $('#subkomponen').val(data.subkomponen_id);
+                $('#indikator_pengali_id').html(data.indikators)
+                $('#indikator_pengali_id').val(data.indikator_pengali_id);
+                $('#penilai_id').html(data.tim_penilai)
+                $('#penilai_id').val(data.penilai_id);
+                if (data.rencana_aksi == 1) {
+                    $('#rencana_aksi').prop('checked', true);
+                }
+            }
+            data.bobots.forEach(bobot => {
+                if (bobot.group == 'kl') {
+                    $('#kl').prop('checked', true);
+                    $('#kl_bobot').val(bobot.bobot);
+                    $('#kl_target_baik').val(bobot.target_baik);
+                    $('#kl_min_value').val(bobot.min_value);
+                    $('#kl_max_value').val(bobot.max_value);
+                }
+                if (bobot.group == 'provinsi') {
+                    $('#provinsi').prop('checked', true);
+                    $('#provinsi_bobot').val(bobot.bobot);
+                    $('#provinsi_target_baik').val(bobot.target_baik);
+                    $('#provinsi_min_value').val(bobot.min_value);
+                    $('#provinsi_max_value').val(bobot.max_value);
+                }
+                if (bobot.group == 'kabupaten') {
+                    $('#kabupaten').prop('checked', true);
+                    $('#kabupaten_bobot').val(bobot.bobot);
+                    $('#kabupaten_target_baik').val(bobot.target_baik);
+                    $('#kabupaten_min_value').val(bobot.min_value);
+                    $('#kabupaten_max_value').val(bobot.max_value);
+                }
+                cekPengguna();
+            });
+            $('.saveButton').prop('disabled', false);
+            modal_lke_parameter.show();
+        });
+    }
+
+    function hapus(id) {
+        Swal.fire({
+            title: "Yakin?",
+            text: "Hapus LKE Parameter ini?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Ya, Hapus aja!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: "{{url('master-data/lke_parameter/hapus')}}",
+                    type: "post",
+                    data: {_token: '{{csrf_token()}}', id: id},
+                    dataType: "json",
+                    success: function(terhapus) {
+                        if (terhapus) {
+                            Swal.fire('Selamat!', 'Data LKE Parameter berhasil dihapus!', 'success');
+                        } else {
+                            Swal.fire('Aduh!', 'Data LKE Parameter gagal dihapus! Coba lagi nanti ya..', 'error');
+                        }
+                        getData();
+                    },
+                    error: function(err) {
+                        Swal.fire('Error!', 'Terjadi kesalahan!', 'error');
+                    }
+                });
+            }
+        });
+    }
+</script>
+@endpush

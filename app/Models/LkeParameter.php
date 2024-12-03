@@ -10,5 +10,5 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class LkeParameter extends Model
 {
     use HasFactory;
-    protected $table = 'lke_parameter';
+    protected $table = 'old_lke_parameter';
 }
