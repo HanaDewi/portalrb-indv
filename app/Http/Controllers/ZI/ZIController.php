@@ -44,6 +44,8 @@ class ZIController extends Controller
             return redirect()->route('evaluatan_hasil_sanggah');
         }elseif($instansiZI->tahap_seleksi == 4){
             return redirect()->route('evaluatan_desk');
+        }elseif($instansiZI->tahap_seleksi == 5){
+            return redirect()->route('evaluatan_hasil_akhir');
         }
 
 
