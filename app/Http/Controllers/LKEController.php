@@ -403,7 +403,10 @@ class LKEController extends Controller
             $parameter->subkomponen = $parameter->lke_parameter->parent->nama;
             $parameter->indikator = $parameter->lke_parameter->nama;
             $parameter->bobot = $parameter->bobot;
-            $tp_line = $parameter->lke_test_tp_line ? $parameter->lke_test_tp_line->where('instansi_id', $instansi_id)->first() : new LkeTestTpLine();
+            $tp_line = LkeTestTpLine::where('lke_bobot_id', $parameter->id)->where('instansi_id', $instansi_id)->first();
+            if (!$tp_line) {
+                $tp_line = new LkeTestTpLine();
+            }
             $parameter->score = $tp_line->score;
             $parameter->score_index = $tp_line->score_index;
             $parameter->catatan = $tp_line->catatan;

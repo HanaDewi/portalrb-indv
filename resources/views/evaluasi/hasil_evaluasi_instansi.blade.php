@@ -1,5 +1,5 @@
 @extends('layout.rubick')
-@section('title', 'Database Indikator')
+@section('title', 'Hasil Evaluasi '.$instansi->name)
 
 @section('content')
 <div class="intro-y col-span-12 lg:col-span-12">
