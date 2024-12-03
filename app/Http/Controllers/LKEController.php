@@ -434,6 +434,7 @@ class LKEController extends Controller
             $test_tp->koefisien = $request->koefisien;
             $test_tp->bobot_rb_general_penyesuaian = $request->bobot_rb_general_penyesuaian;
             if ($test_tp->save()) {
+                calculateTestTp($instansi_id, $kegiatan_id);
                 $success = true;
                 foreach ($test_tp->files as $berkas) {
                     if (!isset($request->berkas_existing[$berkas->id])) {
