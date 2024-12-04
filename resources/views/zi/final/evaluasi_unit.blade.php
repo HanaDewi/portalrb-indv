@@ -95,7 +95,11 @@
                             @if(isset($unit_zi->analisis_dokumen))
                             {!!$unit_zi->analisis_dokumen->kondisi!!}
                             @endif</td>
-                        <td>{!!$unit_zi->analisis_dokumen->rekomendasi!!}</td>
+                        <td>
+                            @if(isset($unit_zi->analisis_dokumen))
+                            {!!$unit_zi->analisis_dokumen->rekomendasi!!}
+                            @endif
+                        </td>
                     </tr>
                     <tr>
                         <th class="text-left">Wawancara</th>
