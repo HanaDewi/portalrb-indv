@@ -43,7 +43,6 @@
                         <hr />
                         <div class="row">
                             @if ($instansiZI->surat_undangan)
-                            @if(Auth::User()->level =="admin" || Auth::User()->level == "tpn" )
                             <div class="col-md-5">
                                 <br />
                                 <a href="{{asset('storage/uploads/SuratUndangan2024/'.$instansiZI->surat_undangan)}}"
@@ -51,7 +50,6 @@
                                 <br /><br />
                                 <p>Surat Undangan {{$instansiZI->klpd_instansi->name}}</p>
                             </div>
-                            @endif
                             @endif
                             @if(Auth::User()->level =="admin" || Auth::User()->level == "tpn" )
                             @if ($instansiZI->lhe)
@@ -68,9 +66,6 @@
                         <hr />
                         <div class="row">
                             <div class="col-12">
-
-
-
                                 <table id="rekap-zi" class="table table-bordered">
                                     <thead class="table-dark font-bold">
                                         <tr>
@@ -112,7 +107,8 @@
                                         @endforeach
                                         @else
                                         <tr>
-                                            <td colspan=5 style="color:rgb(200, 45, 45)">Hasil Akan ditampilkan tanggal
+                                            <td colspan=5 style="color:rgb(200, 45, 45)">Hasil Akan ditampilkan
+                                                tanggal
                                                 11 Desember
                                                 Saat Acara
                                                 Penyerahan

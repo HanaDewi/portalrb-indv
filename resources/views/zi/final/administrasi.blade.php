@@ -99,8 +99,55 @@
         </div>
         <br />
 
-        <div class="lg:col-span-12 p-5 border-b border-slate-200/60">
 
+
+        <div class="lg:col-span-12 p-5 border-b border-slate-200/60">
+            <div class="box p-12 zoom-in">
+                <div class="col-span-12 sm:col-span-12 2xl:col-span-12  intro-y">
+                    <div class="row ">
+                        <table id="" class=" table table-bordered table-striped" cellspacing="0">
+                            <thead class="table-dark font-bold">
+                                <tr>
+                                    <th colspan=4>Data Jumlah instansi dan unit tidak valid untuk TIM 1 TIM 2 TIM 4 TIM
+                                        6
+                                        dikarenakan kementerian keuangan dikerjakan bersama sehingga seluruh unit
+                                        keuangan dimasukan ke tim-tim tersebut</th>
+                                </tr>
+                                <tr class="text-center">
+                                    <th>Nama</th>
+                                    <th>Jumlah Instansi </th>
+                                    <th width="25%">Progress input LHE</th>
+                                    <th>Jumlah LHE yang diupload </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($progress_teams as $key => $tim )
+                                <tr class="text-center">
+                                    <td id="{{$key}}" class="teams">{{$key}}</td>
+                                    <td>{{$tim['jumlah_instansi']}}</td>
+                                    <td>
+                                        @php
+                                        $pembagi = $tim['jumlah_instansi'] ;
+                                        $pembilang = $tim['jumlah_lhe_completed'];
+                                        $persentase = floor(100*$pembilang/$pembagi);
+                                        @endphp
+                                        <div title="({{$pembilang}}/{{$pembagi}})">{{$persentase}} % </div>
+                                        <div class="w3-light-grey">
+                                            <div class="w3-green" style="height:24px;width:{{$persentase }}%">
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>{{$tim['jumlah_lhe_completed']}}</td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="lg:col-span-12 p-5 border-b border-slate-200/60">
             <div class="separator mt-5"></div>
             <table id="rekap-zi" class="table table-bordered table-striped" cellspacing="0" width="100%">
                 <thead class="table-dark font-bold">
@@ -108,6 +155,7 @@
                         <th rowspan=2>No</th>
                         <th rowspan=2>Instansi</th>
                         <th rowspan=2>Tim Evalutor</th>
+                        <th rowspan=2>LHE DiUpload</th>
                         <th colspan=3>Usulan</th>
                         <th colspan=3>Lulus</th>
                         <th rowspan=2>Rasio Keberhasilan</th>
@@ -137,6 +185,11 @@
                             @endforeach
                         </td>
                         <td class="text-center">
+                            @if($data['lhe_telah_diupload'])
+                            <i class="fa fa-check-circle fa-xl" style="color:green">
+                                @endif
+                        </td>
+                        <td class="text-center">
                             @if($data['instansi_wbk_mandiri']) Mandiri
                             @else {{$data["wbk_count"]}}
                             @endif
@@ -150,7 +203,6 @@
                             @endif
                         </td>
                         <td class="text-center">
-
                             @if($data['instansi_wbk_mandiri']) Mandiri
                             @else {{$data["wbk_final_count"]}}
                             @endif
@@ -268,7 +320,6 @@
                 } 
             ],
             scrollX: true,
-            'orderFixed': [8, 'desc'],
             autoWidth: false,
             paging: true,
             bInfo: false,
