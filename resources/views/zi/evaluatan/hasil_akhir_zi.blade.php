@@ -31,7 +31,7 @@
                         <div class="row">
                             <div class="card">
                                 <div class="card-header" style="text-align: left; background: #b42b2d; color:#F2F9FF">
-                                    Pengusulan dan Hasil Akhir
+                                    Pengumuman Akhir Zona Integritas
                                 </div>
                                 <div class="card-body">
                                     <div class="row">
@@ -115,6 +115,7 @@
                                     </div>
                                 </div>
                             </div>
+                            <br /><br /><br /><br />
                             <hr />
                             <div class="row">
                                 <div class="col-12">
