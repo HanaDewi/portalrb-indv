@@ -150,7 +150,7 @@ class FinalController extends Controller
 
     public function final($id)
     {   
-        $title = "Seleksi Panel";
+        $title = "Final";
         $instansi_ZI = InstansiZI::find($id);
         $tim_ids = [];
         
@@ -182,6 +182,33 @@ class FinalController extends Controller
         
     }
 
+    public function final_unit($id){
+        $title = "Final";
+        $unit_zi = UnitZI::where("id", $id)->first();
+        $tim_ids = [];
+        
+    
+        foreach ( $unit_zi->unit_tim as $unitTim){
+            if(!in_array($unitTim->tim_id, $tim_ids)){
+                array_push($tim_ids, $unitTim->tim_id);                            
+            }
+        }
+
+        $status = "Tidak Berhak";
+        //DI LOCK BIAR SEMUA ORANGG TIDAK BISA SIMPAN
+        if(Auth::User()->userTimZI){                   
+            foreach(Auth::User()->userTimZI as $anggotaTim){
+                if(in_array($anggotaTim->tim_id,$tim_ids)){
+                    $status = "Berhak" ;
+                }
+            }
+        }
+        
+        return view('zi.final.evaluasi_unit', compact("status",
+            "title","unit_zi",
+            ));
+        
+    }
     public function final_simpan(Request $request){
         //dd("Proses Seleksi Dokumen Buat Evaluator Masih Belum Dibuka Yah, mau ke mana sih buru-buru amat, Jangan Ya Dek Ya !! :p");
         $instansiZIid = $request->get('instansiZIId');
@@ -226,6 +253,46 @@ class FinalController extends Controller
         
         
         return redirect()->route('proses_final',$instansiZIid);
+    }
+
+    public function final_unit_simpan(Request $request){
+        //dd("Proses Seleksi Dokumen Buat Evaluator Masih Belum Dibuka Yah, mau ke mana sih buru-buru amat, Jangan Ya Dek Ya !! :p");
+        
+        $unit_zi = UnitZI::find($request->get('unit_id'));
+        $tim_ids = [];
+    
+        
+        foreach ( $unit_zi->unit_tim as $unitTim){
+            if(!in_array($unitTim->tim_id, $tim_ids)){
+                array_push($tim_ids, $unitTim->tim_id);                            
+            }
+        }
+    
+        $status = "Tidak Berhak";
+        if(Auth::User()->userTimZI){                   
+            foreach(Auth::User()->userTimZI as $anggotaTim){
+                if(in_array($anggotaTim->tim_id,$tim_ids)){
+                    $status = "Berhak" ;
+                }
+            }
+        }
+        if($status == "Tidak Berhak"){
+            abort('403');
+        }
+        
+        
+        $finalUnit = HasilFinal::where('unit_zi_id', $unit_zi->id)->first();
+        if (!$finalUnit) {
+            $finalUnit = new HasilFinal();
+            $finalUnit->unit_zi_id = $unit_zi->id;
+        }
+        
+        $finalUnit->kondisi = $request->get('catatan');
+        $finalUnit->rekomendasi = $request->get('rekomendasi'); 
+        $finalUnit->updated_by = Auth::User()->id;
+        $finalUnit->save();  
+            
+        return redirect()->route('proses_final',$unit_zi->instansiZI->id);
     }
 
     public function lhe_simpan (Request $request)

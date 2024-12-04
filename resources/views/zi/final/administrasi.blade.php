@@ -14,7 +14,6 @@
         <div class="col-span-12 grid grid-cols-12 gap-6">
             <div class="col-span-12 sm:col-span-6 2xl:col-span-6  intro-y">
                 <div class="box p-5 zoom-in">
-
                     <div class="flex items-center">
                         <div class="w-2/4 flex-none">
                             <div class="text-lg font-bold truncate">Pengusulan </div>
@@ -59,7 +58,6 @@
                         <div class="w-3/4 flex-none">
                             <div class="text-lg font-bold truncate">Lulus Final</div>
                             <div class="text-gray-800 mt-2 text-xl">
-
                                 <a href="#" id="instansiNonMandiri">{{$jumlah_instansi_lolos}} <sup
                                         style="font-size: 0.5em">Total Instansi</sup>
                                 </a> <br />
