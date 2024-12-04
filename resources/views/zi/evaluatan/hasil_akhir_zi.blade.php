@@ -2,25 +2,9 @@
 @section('cssJsHere')
 <link rel="stylesheet" href="{{ asset('assets/css/timelinezi.css') }}" />
 <style>
-    .form-control {
-        padding: .775rem .75rem;
-        border-radius: 10px;
-    }
-
-    .table-shad {
-        box-shadow: 0 0 30px #9ecaed;
-    }
-
-    /* Chrome, Safari, Edge, Opera */
-    input::-webkit-outer-spin-button,
-    input::-webkit-inner-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-    }
-
-    /* Firefox */
-    input[type=number] {
-        -moz-appearance: textfield;
+    select,
+    input {
+        width: auto;
     }
 </style>
 @endsection
@@ -42,88 +26,156 @@
                         <h5>{{$title}} <br /> {{ $instansiZI->klpd_instansi->name}}</h5>
                         <hr />
                         <div class="row">
-                            @if ($instansiZI->surat_undangan)
-                            <div class="col-md-5">
-                                <br />
-                                <a href="{{asset('storage/uploads/SuratUndangan2024/'.$instansiZI->surat_undangan)}}"
-                                    target="_blank"><img src="{{asset('images/pdf.png')}}" width="30%"></a>
-                                <br /><br />
-                                <p>Surat Undangan {{$instansiZI->klpd_instansi->name}}</p>
-                            </div>
-                            @endif
-                            @if(Auth::User()->level =="admin" || Auth::User()->level == "tpn" )
-                            @if ($instansiZI->lhe)
-                            <div class="col-md-5">
-                                <br />
-                                <a href="{{asset('storage/uploads/LHEZI2024/'.$instansiZI->lhe)}}" target="_blank"><img
-                                        src="{{asset('images/pdf.png')}}" width="30%"></a>
-                                <br /><br />
-                                <p>LHE {{$instansiZI->klpd_instansi->name}}</p>
-                            </div>
-                            @endif
-                            @endif
                         </div>
                         <hr />
                         <div class="row">
-                            <div class="col-12">
-                                <table id="rekap-zi" class="table table-bordered">
-                                    <thead class="table-dark font-bold">
-                                        <tr>
-                                            <th>No</th>
-                                            <th>Unit</th>
-                                            <th>Catatan</th>
-                                            <th>Rekomendasi</th>
-                                            <th>Status </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @if(Auth::User()->level =="admin" || Auth::User()->level == "tpn" )
-                                        @php
-                                        $i=0;
-                                        $wbk=0;
-                                        $wbbm=0;
-                                        @endphp
-                                        @foreach ( $units as $unit )
-                                        @if(!$instansiZI->instansi_wbk_mandiri OR ($instansiZI->instansi_wbk_mandiri
-                                        AND
-                                        $unit->wbbm ))
-                                        <tr class="text-left" style="text-align:left">
-                                            <td>{{++$i}}</td>
-                                            <td class=" text-left">@if($unit->wbk) (WBK {{++$wbk}}) @else
-                                                (WBBM {{++$wbbm}}) @endif
-                                                {{$unit->nama}}
-                                            </td>
-                                            <td>{{optional($unit->final)->kondisi}}</td>
-                                            <td>{{optional($unit->final)->rekomendasi}}</td>
-                                            <td>
-                                                @if(optional($unit->panel)->status==1)
-                                                Lulus
-                                                @else
-                                                Tidak Lulus
-                                                @endif
-                                            </td>
-                                        </tr>
-                                        @endif
-                                        @endforeach
-                                        @else
-                                        <tr>
-                                            <td colspan=5 style="color:rgb(200, 45, 45)">Hasil Akan ditampilkan
-                                                tanggal
-                                                11 Desember
-                                                Saat Acara
-                                                Penyerahan
-                                                diselenggarakan</td>
-                                        </tr>
-                                        @endif
-                                    </tbody>
-                                </table>
+                            <div class="card">
+                                <div class="card-header" style="text-align: left; background: #b42b2d; color:#F2F9FF">
+                                    Pengusulan dan Hasil Akhir
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <div class="card">
+                                                <div class="card-header" style=" background: #B1F0F7; color:black">
+                                                    Pengusulan & Hasil Akhir
+                                                </div>
+                                                <div class="card-body" style="text-align: left; font-size:12px">
+                                                    <table class="table ">
+                                                        <thead>
+                                                            <tr>
+                                                                <td>Unit</td>
+                                                                <td class="text-center">Pengusulan</td>
+                                                                <td class="text-center">Hasil Akhir</td>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>WBK</td>
+                                                                <td class="text-center">{{$instansiZI->jml_wbk}}</td>
+                                                                <td class="text-center" </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>WBBM</td>
+                                                                <td class="text-center">{{$instansiZI->jml_wbbm}}</td>
+                                                                <td class="text-center"></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Total</td>
+                                                                <td class="text-center">{{$instansiZI->jml_wbk +
+                                                                    $instansiZI->jml_wbbm}}
+                                                                </td>
+                                                                <td class="text-center"></td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="card">
+                                                <div class="card-header" style=" background: #81BFDA; color:black">
+                                                    Surat Undangan
+                                                </div>
+                                                <div class="card-body">
+                                                    @if ($instansiZI->surat_undangan)
+
+                                                    <br />
+                                                    <a href="{{asset('storage/uploads/SuratUndangan2024/'.$instansiZI->surat_undangan)}}"
+                                                        target="_blank"><img src="{{asset('images/pdf.png')}}"
+                                                            width="30%"></a>
+                                                    <br /><br />
+                                                    <p>Surat Undangan {{$instansiZI->klpd_instansi->name}}</p>
+
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="card">
+                                                <div class="card-header" style=" background: #F5F0CD; color:black">
+                                                    LHE
+                                                </div>
+                                                <div class="card-body">
+                                                    @if(Auth::User()->level =="admin" || Auth::User()->level == "tpn" )
+                                                    @if ($instansiZI->lhe)
+                                                    <div class="col-md-5">
+                                                        <br />
+                                                        <a href="{{asset('storage/uploads/LHEZI2024/'.$instansiZI->lhe)}}"
+                                                            target="_blank"><img src="{{asset('images/pdf.png')}}"
+                                                                width="30%"></a>
+                                                        <br /><br />
+                                                        <p>LHE {{$instansiZI->klpd_instansi->name}}</p>
+                                                    </div>
+                                                    @endif
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr />
+                            <div class="row">
+                                <div class="col-12">
+                                    <table id="rekap-zi" class="table table-striped">
+                                        <thead class="table-dark font-bold">
+                                            <tr>
+                                                <th>No</th>
+                                                <th>Unit</th>
+                                                <th>Catatan</th>
+                                                <th>Rekomendasi</th>
+                                                <th>Status </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @if(Auth::User()->level =="admin" || Auth::User()->level == "tpn" )
+                                            @php
+                                            $i=0;
+                                            $wbk=0;
+                                            $wbbm=0;
+                                            @endphp
+                                            @foreach ( $units as $unit )
+                                            @if(!$instansiZI->instansi_wbk_mandiri OR ($instansiZI->instansi_wbk_mandiri
+                                            AND
+                                            $unit->wbbm ))
+                                            <tr class="text-left" style="text-align:left">
+                                                <td>{{++$i}}</td>
+                                                <td class=" text-left">@if($unit->wbk) (WBK {{++$wbk}}) @else
+                                                    (WBBM {{++$wbbm}}) @endif
+                                                    {{$unit->nama}}
+                                                </td>
+                                                <td>{{optional($unit->final)->kondisi}}</td>
+                                                <td>{{optional($unit->final)->rekomendasi}}</td>
+                                                <td>
+                                                    @if(optional($unit->panel)->status==1)
+                                                    Lulus
+                                                    @else
+                                                    Tidak Lulus
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                            @endif
+                                            @endforeach
+                                            @else
+                                            <tr>
+                                                <td colspan=5 style="color:rgb(200, 45, 45)">Hasil Akan ditampilkan
+                                                    tanggal
+                                                    11 Desember
+                                                    Saat Acara
+                                                    Penyerahan
+                                                    diselenggarakan</td>
+                                            </tr>
+                                            @endif
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 </section>
 @endsection
 
@@ -145,11 +197,10 @@
                 } 
             ],
             scrollX: true,
-            // 'orderFixed': [0, 'asc'],
             autoWidth: false,
-            paging: false,
+            paging: true,
             bInfo: false,
-            ordering: false,
+            ordering: true,
         });
 </script>
 @endsection
