@@ -39,38 +39,38 @@ class FinalController extends Controller
         $jumlah_unit_wbk = 0;
         $jumlah_unit_wbbm = 0;
         
+        
         $jumlah_lolos_wbk = 0;
         $jumlah_lolos_wbbm = 0;
         $jumlah_instansi_lolos = 0;
+        $uploaded_lhe = 0 ;
         $teams = TimEvaluasi::get();
         $progress_teams = [];
         foreach($teams as $tim){       
             $progress_teams[$tim->nama] = [
                     "id" => $tim->id,
                     "jumlah_instansi" => 0,
-                    "jumlah_wbk" => 0,
-                    "jumlah_wbbm" =>0,
-                    "jumlah_wbk_completed" => 0,
-                    "jumlah_wbbm_completed" =>0,
-                    "jumlah_instansi_lulus" => 0,
-                    "jumlah_wbk_final_total" => 0,
-                    "jumlah_wbbm_final_total" =>0
+                    "jumlah_lhe_completed" => 0
                 ] ;
         }
         
         $datas = $instansiZis
-                ->map(function($instansiZi) use(&$jumlah_unit_wbk, &$jumlah_unit_wbbm, &$jumlah_lolos_wbk, &$jumlah_lolos_wbbm, &$jumlah_instansi, &$jumlah_instansi_lolos, &$progress_teams) {
+                ->map(function($instansiZi) use(&$jumlah_unit_wbk, &$jumlah_unit_wbbm, &$jumlah_lolos_wbk, &$jumlah_lolos_wbbm, &$jumlah_instansi, &$jumlah_instansi_lolos, &$progress_teams, &$uploaded_lhe) {
                     $wbkCount = $instansiZi->unit_zi->where('wbk', true)->count();
                     $wbbmCount = $instansiZi->unit_zi->where('wbbm', true)->count();
 
                     $total_unit = $wbkCount + $wbbmCount;
-
+                    
+                    $lhe_telah_diupload = false;
+                    if($instansiZi->lhe){
+                        $uploaded_lhe++ ;
+                        $lhe_telah_diupload = true;
+                    }
                     if($total_unit>0){
                         $jumlah_instansi += 1;
                         $jumlah_unit_wbk += $wbkCount; 
                         $jumlah_unit_wbbm += $wbbmCount; 
                         $nama_teams = $instansiZi->unit_zi->flatMap->unit_tim->map->tim->unique()->pluck('nama')->toArray();
-
                         $wbkFinalCount = $instansiZi->unit_zi->where('wbk', true)
                         ->filter(function($unitZi) {
                             return  optional($unitZi->panel)->status == 1;
@@ -100,27 +100,8 @@ class FinalController extends Controller
                         foreach($nama_teams as $tim){   
                             if (array_key_exists($tim, $progress_teams)) {
                                 $progress_teams[$tim]["jumlah_instansi"] +=1;
-                                $progress_teams[$tim]["jumlah_wbk"] += $wbkCount ;
-                                $progress_teams[$tim]["jumlah_wbbm"] += $wbbmCount ;
-                                if($wbkFinalCount>0 || $wbbmFinalCount>0 ){
-                                    $progress_teams[$tim]["jumlah_instansi_lulus"] +=1;
-                                    if($wbkFinalCount>0 ) {
-                                        $progress_teams[$tim]["jumlah_wbk_final_total"] += $wbkFinalCount ;
-                                    }
-                                    
-                                    if($wbbmFinalCount>0 ){  
-                                        $progress_teams[$tim]["jumlah_wbbm_final_total"] += $wbbmFinalCount;
-                                    }      
-                                }
-
-                                if($wbkCompletedCount>0 || $wbbmCompletedCount>0 ){
-                                    if($wbkCompletedCount>0 ) {
-                                        $progress_teams[$tim]["jumlah_wbk_completed"] += $wbkCompletedCount ;
-                                    }
-                                    
-                                    if($wbbmCompletedCount>0 ){  
-                                        $progress_teams[$tim]["jumlah_wbbm_completed"] += $wbbmCompletedCount;
-                                    }      
+                                if($lhe_telah_diupload){
+                                $progress_teams[$tim]["jumlah_lhe_completed"]++;  
                                 }
                             }
                         }
@@ -143,6 +124,7 @@ class FinalController extends Controller
                             'nama_teams' => $nama_teams,
                             'wbk_count' => $wbkCount,
                             'wbbm_count' => $wbbmCount,
+                            'lhe_telah_diupload' => $lhe_telah_diupload,
                             'total_unit' => $wbkCount + $wbbmCount,
                             'wbk_final_count' => $wbkFinalCount,
                             'wbbm_final_count' => $wbbmFinalCount,
@@ -162,7 +144,7 @@ class FinalController extends Controller
         return view('zi.final.administrasi', compact(
             "title","jumlah_instansi","jumlah_unit_wbk","jumlah_unit_wbbm", 
             'jumlah_lolos_wbk', 'jumlah_lolos_wbbm', 'progress_teams',
-            "jumlah_unit_total","datas", "jumlah_instansi_lolos"
+            "jumlah_unit_total","datas", "jumlah_instansi_lolos", 'uploaded_lhe'
         ));               
     }
 

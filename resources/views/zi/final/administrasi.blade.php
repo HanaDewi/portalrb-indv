@@ -127,9 +127,8 @@
                                     <td>{{$tim['jumlah_instansi']}}</td>
                                     <td>
                                         @php
-                                        $pembagi = $tim['jumlah_wbk'] + $tim['jumlah_wbbm'];
-                                        ($pembagi)?$pembagi:$pembagi=1;
-                                        $pembilang = $tim['jumlah_wbk_completed'] + $tim['jumlah_wbbm_completed'];
+                                        $pembagi = $tim['jumlah_instansi'] ;
+                                        $pembilang = $tim['jumlah_lhe_completed'];
                                         $persentase = floor(100*$pembilang/$pembagi);
                                         @endphp
                                         <div title="({{$pembilang}}/{{$pembagi}})">{{$persentase}} % </div>
@@ -138,7 +137,7 @@
                                             </div>
                                         </div>
                                     </td>
-                                    <td>-</td>
+                                    <td>{{$tim['jumlah_lhe_completed']}}</td>
                                 </tr>
                                 @endforeach
                             </tbody>
@@ -156,6 +155,7 @@
                         <th rowspan=2>No</th>
                         <th rowspan=2>Instansi</th>
                         <th rowspan=2>Tim Evalutor</th>
+                        <th rowspan=2>LHE DiUpload</th>
                         <th colspan=3>Usulan</th>
                         <th colspan=3>Lulus</th>
                         <th rowspan=2>Rasio Keberhasilan</th>
@@ -185,6 +185,11 @@
                             @endforeach
                         </td>
                         <td class="text-center">
+                            @if($data['lhe_telah_diupload'])
+                            <i class="fa fa-check-circle fa-xl" style="color:green">
+                                @endif
+                        </td>
+                        <td class="text-center">
                             @if($data['instansi_wbk_mandiri']) Mandiri
                             @else {{$data["wbk_count"]}}
                             @endif
@@ -198,7 +203,6 @@
                             @endif
                         </td>
                         <td class="text-center">
-
                             @if($data['instansi_wbk_mandiri']) Mandiri
                             @else {{$data["wbk_final_count"]}}
                             @endif
@@ -316,7 +320,6 @@
                 } 
             ],
             scrollX: true,
-            'orderFixed': [8, 'desc'],
             autoWidth: false,
             paging: true,
             bInfo: false,

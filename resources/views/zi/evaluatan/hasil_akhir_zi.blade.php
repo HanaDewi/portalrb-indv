@@ -66,9 +66,6 @@
                         <hr />
                         <div class="row">
                             <div class="col-12">
-
-
-
                                 <table id="rekap-zi" class="table table-bordered">
                                     <thead class="table-dark font-bold">
                                         <tr>
@@ -110,7 +107,8 @@
                                         @endforeach
                                         @else
                                         <tr>
-                                            <td colspan=5 style="color:rgb(200, 45, 45)">Hasil Akan ditampilkan tanggal
+                                            <td colspan=5 style="color:rgb(200, 45, 45)">Hasil Akan ditampilkan
+                                                tanggal
                                                 11 Desember
                                                 Saat Acara
                                                 Penyerahan
