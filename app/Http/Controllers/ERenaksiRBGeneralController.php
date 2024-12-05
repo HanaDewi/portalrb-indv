@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\JawabanRenaksi;
@@ -33,7 +34,7 @@ class ERenaksiRBGeneralController extends Controller
         $istpn = in_array($user->level, ['tpn']);
 
         $tahun = $request->input('tahun');
-        $tahun = empty($tahun) ? date('Y'):$request->input('tahun');
+        $tahun = empty($tahun) ? date('Y') : $request->input('tahun');
 
         $ins_id = $request->input('instansi');
 
@@ -49,34 +50,34 @@ class ERenaksiRBGeneralController extends Controller
 
             if ($istpn) {
                 $atim = AnggotaTimEvaluasi::where('user_id', $user->id)->first();
-		if ($atim!=null) {
-                	$instansis = InstansiTim::where('tim_id', $atim->tim_id)->get();
-                	foreach ($instansis as $cc=>&$nn1) {
-                    	$skora1 = DB::select('SELECT SUM(kjr.skor) skor FROM jawaban_renaksi jr JOIN konversi_jawaban_renaksi kjr ON kjr.jawaban=jr.jawaban WHERE jr.instansi_id=? AND jr.tahun=? AND jr.lke_renaksi_id=?', [$nn1->instansi_id, $tahun, $lke_penetapan_kegiatan_id]);
-                    	$skora2 = DB::select('SELECT SUM(kjr.skor) skor FROM jawaban_renaksi jr JOIN konversi_jawaban_renaksi kjr ON kjr.jawaban=jr.jawaban WHERE jr.instansi_id=? AND jr.tahun=? AND jr.lke_renaksi_id=?', [$nn1->instansi_id, $tahun, $lke_penetapan_target_id]);
-                    	$skora3 = DB::select('SELECT SUM(kjr.skor) skor FROM jawaban_renaksi jr JOIN konversi_jawaban_renaksi kjr ON kjr.jawaban=jr.jawaban WHERE jr.instansi_id=? AND jr.tahun=? AND jr.lke_renaksi_id=?', [$nn1->instansi_id, $tahun, $lke_keabsahan_rencana_id]);
-                    	$skorb1 = DB::select('SELECT SUM(kjr.skor) skor FROM jawaban_renaksi jr JOIN konversi_jawaban_renaksi kjr ON kjr.jawaban=jr.jawaban WHERE jr.instansi_id=? AND jr.tahun=? AND jr.lke_renaksi_id=?', [$nn1->instansi_id, $tahun, $lke_kelogisan_rencana_id]);
-                    	$skorb2 = DB::select('SELECT SUM(kjr.skor) skor FROM jawaban_renaksi jr JOIN konversi_jawaban_renaksi kjr ON kjr.jawaban=jr.jawaban WHERE jr.instansi_id=? AND jr.tahun=? AND jr.lke_renaksi_id=?', [$nn1->instansi_id, $tahun, $lke_relevansi_id]);
-                    	$skorb3 = DB::select('SELECT SUM(kjr.skor) skor FROM jawaban_renaksi jr JOIN konversi_jawaban_renaksi kjr ON kjr.jawaban=jr.jawaban WHERE jr.instansi_id=? AND jr.tahun=? AND jr.lke_renaksi_id=?', [$nn1->instansi_id, $tahun, $lke_ketetapan_id]);
-                    	$skorb4 = DB::select('SELECT SUM(kjr.skor) skor FROM jawaban_renaksi jr JOIN konversi_jawaban_renaksi kjr ON kjr.jawaban=jr.jawaban WHERE jr.instansi_id=? AND jr.tahun=? AND jr.lke_renaksi_id=?', [$nn1->instansi_id, $tahun, $lke_anggaran_id]);
-                    	$skor1 = ((floatval($skora1[0]->skor) + floatval($skora2[0]->skor) + floatval($skora3[0]->skor)) / 3) * 1.5;
-                    	$skor2 = ((floatval($skorb1[0]->skor) + floatval($skorb2[0]->skor) + floatval($skorb3[0]->skor) + floatval($skorb4[0]->skor)) / 4) * 1.5;
-                    	$total = $skor1 + $skor2;
-                    	$nn1->skor = number_format($total, 2, ',', ' ');
+                if ($atim != null) {
+                    $instansis = InstansiTim::where('tim_id', $atim->tim_id)->get();
+                    foreach ($instansis as $cc => &$nn1) {
+                        $skora1 = DB::select('SELECT SUM(kjr.skor) skor FROM jawaban_renaksi jr JOIN konversi_jawaban_renaksi kjr ON kjr.jawaban=jr.jawaban WHERE jr.instansi_id=? AND jr.tahun=? AND jr.lke_renaksi_id=?', [$nn1->instansi_id, $tahun, $lke_penetapan_kegiatan_id]);
+                        $skora2 = DB::select('SELECT SUM(kjr.skor) skor FROM jawaban_renaksi jr JOIN konversi_jawaban_renaksi kjr ON kjr.jawaban=jr.jawaban WHERE jr.instansi_id=? AND jr.tahun=? AND jr.lke_renaksi_id=?', [$nn1->instansi_id, $tahun, $lke_penetapan_target_id]);
+                        $skora3 = DB::select('SELECT SUM(kjr.skor) skor FROM jawaban_renaksi jr JOIN konversi_jawaban_renaksi kjr ON kjr.jawaban=jr.jawaban WHERE jr.instansi_id=? AND jr.tahun=? AND jr.lke_renaksi_id=?', [$nn1->instansi_id, $tahun, $lke_keabsahan_rencana_id]);
+                        $skorb1 = DB::select('SELECT SUM(kjr.skor) skor FROM jawaban_renaksi jr JOIN konversi_jawaban_renaksi kjr ON kjr.jawaban=jr.jawaban WHERE jr.instansi_id=? AND jr.tahun=? AND jr.lke_renaksi_id=?', [$nn1->instansi_id, $tahun, $lke_kelogisan_rencana_id]);
+                        $skorb2 = DB::select('SELECT SUM(kjr.skor) skor FROM jawaban_renaksi jr JOIN konversi_jawaban_renaksi kjr ON kjr.jawaban=jr.jawaban WHERE jr.instansi_id=? AND jr.tahun=? AND jr.lke_renaksi_id=?', [$nn1->instansi_id, $tahun, $lke_relevansi_id]);
+                        $skorb3 = DB::select('SELECT SUM(kjr.skor) skor FROM jawaban_renaksi jr JOIN konversi_jawaban_renaksi kjr ON kjr.jawaban=jr.jawaban WHERE jr.instansi_id=? AND jr.tahun=? AND jr.lke_renaksi_id=?', [$nn1->instansi_id, $tahun, $lke_ketetapan_id]);
+                        $skorb4 = DB::select('SELECT SUM(kjr.skor) skor FROM jawaban_renaksi jr JOIN konversi_jawaban_renaksi kjr ON kjr.jawaban=jr.jawaban WHERE jr.instansi_id=? AND jr.tahun=? AND jr.lke_renaksi_id=?', [$nn1->instansi_id, $tahun, $lke_anggaran_id]);
+                        $skor1 = ((floatval($skora1[0]->skor) + floatval($skora2[0]->skor) + floatval($skora3[0]->skor)) / 3) * 1.5;
+                        $skor2 = ((floatval($skorb1[0]->skor) + floatval($skorb2[0]->skor) + floatval($skorb3[0]->skor) + floatval($skorb4[0]->skor)) / 4) * 1.5;
+                        $total = $skor1 + $skor2;
+                        $nn1->skor = number_format($total, 2, ',', ' ');
                     }
-		} else {
-		    $instansis = [];
-		}
+                } else {
+                    $instansis = [];
+                }
             } else {
                 $instansis = KlpdInstansi::get();
-                foreach ($instansis as $dd=>&$nn2) {
-                    $skora1 = DB::select('SELECT SUM(kjr.skor) skor FROM jawaban_renaksi jr JOIN konversi_jawaban_renaksi kjr ON kjr.jawaban=jr.jawaban WHERE jr.instansi_id=? AND jr.tahun=? AND jr.lke_renaksi_id=?', [$nn1->instansi_id, $tahun, $lke_penetapan_kegiatan_id]);
-                    $skora2 = DB::select('SELECT SUM(kjr.skor) skor FROM jawaban_renaksi jr JOIN konversi_jawaban_renaksi kjr ON kjr.jawaban=jr.jawaban WHERE jr.instansi_id=? AND jr.tahun=? AND jr.lke_renaksi_id=?', [$nn1->instansi_id, $tahun, $lke_penetapan_target_id]);
-                    $skora3 = DB::select('SELECT SUM(kjr.skor) skor FROM jawaban_renaksi jr JOIN konversi_jawaban_renaksi kjr ON kjr.jawaban=jr.jawaban WHERE jr.instansi_id=? AND jr.tahun=? AND jr.lke_renaksi_id=?', [$nn1->instansi_id, $tahun, $lke_keabsahan_rencana_id]);
-                    $skorb1 = DB::select('SELECT SUM(kjr.skor) skor FROM jawaban_renaksi jr JOIN konversi_jawaban_renaksi kjr ON kjr.jawaban=jr.jawaban WHERE jr.instansi_id=? AND jr.tahun=? AND jr.lke_renaksi_id=?', [$nn1->instansi_id, $tahun, $lke_kelogisan_rencana_id]);
-                    $skorb2 = DB::select('SELECT SUM(kjr.skor) skor FROM jawaban_renaksi jr JOIN konversi_jawaban_renaksi kjr ON kjr.jawaban=jr.jawaban WHERE jr.instansi_id=? AND jr.tahun=? AND jr.lke_renaksi_id=?', [$nn1->instansi_id, $tahun, $lke_relevansi_id]);
-                    $skorb3 = DB::select('SELECT SUM(kjr.skor) skor FROM jawaban_renaksi jr JOIN konversi_jawaban_renaksi kjr ON kjr.jawaban=jr.jawaban WHERE jr.instansi_id=? AND jr.tahun=? AND jr.lke_renaksi_id=?', [$nn1->instansi_id, $tahun, $lke_ketetapan_id]);
-                    $skorb4 = DB::select('SELECT SUM(kjr.skor) skor FROM jawaban_renaksi jr JOIN konversi_jawaban_renaksi kjr ON kjr.jawaban=jr.jawaban WHERE jr.instansi_id=? AND jr.tahun=? AND jr.lke_renaksi_id=?', [$nn1->instansi_id, $tahun, $lke_anggaran_id]);
+                foreach ($instansis as $dd => &$nn2) {
+                    $skora1 = DB::select('SELECT SUM(kjr.skor) skor FROM jawaban_renaksi jr JOIN konversi_jawaban_renaksi kjr ON kjr.jawaban=jr.jawaban WHERE jr.instansi_id=? AND jr.tahun=? AND jr.lke_renaksi_id=?', [$nn2->instansi_id, $tahun, $lke_penetapan_kegiatan_id]);
+                    $skora2 = DB::select('SELECT SUM(kjr.skor) skor FROM jawaban_renaksi jr JOIN konversi_jawaban_renaksi kjr ON kjr.jawaban=jr.jawaban WHERE jr.instansi_id=? AND jr.tahun=? AND jr.lke_renaksi_id=?', [$nn2->instansi_id, $tahun, $lke_penetapan_target_id]);
+                    $skora3 = DB::select('SELECT SUM(kjr.skor) skor FROM jawaban_renaksi jr JOIN konversi_jawaban_renaksi kjr ON kjr.jawaban=jr.jawaban WHERE jr.instansi_id=? AND jr.tahun=? AND jr.lke_renaksi_id=?', [$nn2->instansi_id, $tahun, $lke_keabsahan_rencana_id]);
+                    $skorb1 = DB::select('SELECT SUM(kjr.skor) skor FROM jawaban_renaksi jr JOIN konversi_jawaban_renaksi kjr ON kjr.jawaban=jr.jawaban WHERE jr.instansi_id=? AND jr.tahun=? AND jr.lke_renaksi_id=?', [$nn2->instansi_id, $tahun, $lke_kelogisan_rencana_id]);
+                    $skorb2 = DB::select('SELECT SUM(kjr.skor) skor FROM jawaban_renaksi jr JOIN konversi_jawaban_renaksi kjr ON kjr.jawaban=jr.jawaban WHERE jr.instansi_id=? AND jr.tahun=? AND jr.lke_renaksi_id=?', [$nn2->instansi_id, $tahun, $lke_relevansi_id]);
+                    $skorb3 = DB::select('SELECT SUM(kjr.skor) skor FROM jawaban_renaksi jr JOIN konversi_jawaban_renaksi kjr ON kjr.jawaban=jr.jawaban WHERE jr.instansi_id=? AND jr.tahun=? AND jr.lke_renaksi_id=?', [$nn2->instansi_id, $tahun, $lke_ketetapan_id]);
+                    $skorb4 = DB::select('SELECT SUM(kjr.skor) skor FROM jawaban_renaksi jr JOIN konversi_jawaban_renaksi kjr ON kjr.jawaban=jr.jawaban WHERE jr.instansi_id=? AND jr.tahun=? AND jr.lke_renaksi_id=?', [$nn2->instansi_id, $tahun, $lke_anggaran_id]);
                     $skor1 = ((floatval($skora1[0]->skor) + floatval($skora2[0]->skor) + floatval($skora3[0]->skor)) / 3) * 1.5;
                     $skor2 = ((floatval($skorb1[0]->skor) + floatval($skorb2[0]->skor) + floatval($skorb3[0]->skor) + floatval($skorb4[0]->skor)) / 4) * 1.5;
                     $total = $skor1 + $skor2;
@@ -84,8 +85,7 @@ class ERenaksiRBGeneralController extends Controller
                 }
             }
 
-            return view('evaluasi.renaksi-rb-general', ['tahun'=>$tahun, 'isadmin'=>$isadmin, 'data'=>$instansis, 'kembali'=>false, 'istpn'=>$istpn, 'check'=>false]);
-
+            return view('evaluasi.renaksi-rb-general', ['tahun' => $tahun, 'isadmin' => $isadmin, 'data' => $instansis, 'kembali' => false, 'istpn' => $istpn, 'check' => false]);
         } else {
 
             $ljawaban = KonversiJawabanRenaksi::get()->all();
@@ -94,15 +94,15 @@ class ERenaksiRBGeneralController extends Controller
 
             $lkerenaksi = LKERenaksi::orderBy('id', 'ASC')->get();
 
-            foreach ($lkerenaksi as $ss=>&$nn) {
+            foreach ($lkerenaksi as $ss => &$nn) {
                 $fjawaban[$nn->id] = (object) array(
-                    'id'=>'',
-                    'tahun'=>$tahun,
-                    'lke_renaksi_id'=>$nn->id,
-                    'jawaban'=>'',
-                    'skor'=>'',
-                    'catatan'=>'',
-                    'rekomendasi'=>''
+                    'id' => '',
+                    'tahun' => $tahun,
+                    'lke_renaksi_id' => $nn->id,
+                    'jawaban' => '',
+                    'skor' => '',
+                    'catatan' => '',
+                    'rekomendasi' => ''
                 );
             }
 
@@ -114,31 +114,30 @@ class ERenaksiRBGeneralController extends Controller
                 $check = InstansiTim::where('tim_id', $atim->tim_id)->where('instansi_id', $ins_id)->first();
             }
 
-            foreach ($jawaban as $nn=>$oo) {
+            foreach ($jawaban as $nn => $oo) {
                 $skor = '';
                 if ($oo->jawaban) {
-                    $checkskor = array_filter($ljawaban, function($lj) use ($oo) {
+                    $checkskor = array_filter($ljawaban, function ($lj) use ($oo) {
                         return $lj->jawaban == $oo->jawaban;
                     });
-                    foreach ($checkskor as $cc=>$pp) {
+                    foreach ($checkskor as $cc => $pp) {
                         $skor = $pp['skor'];
                     }
                 }
                 $fjawaban[$oo->lke_renaksi_id] = (object) array(
-                    'id'=>$oo->id,
-                    'tahun'=>$oo->tahun,
-                    'lke_renaksi_id'=>$oo->lke_renaksi_id,
-                    'jawaban'=>$oo->jawaban,
-                    'skor'=>$skor,
-                    'catatan'=>$oo->catatan,
-                    'rekomendasi'=>$oo->rekomendasi
+                    'id' => $oo->id,
+                    'tahun' => $oo->tahun,
+                    'lke_renaksi_id' => $oo->lke_renaksi_id,
+                    'jawaban' => $oo->jawaban,
+                    'skor' => $skor,
+                    'catatan' => $oo->catatan,
+                    'rekomendasi' => $oo->rekomendasi
                 );
             }
 
             $renaksi = DB::select('SELECT id,kriteria,info,tahun FROM lke_renaksi lr WHERE (SELECT COUNT(*) FROM lke_renaksi lr_ WHERE lr_.parent_id=lr.id)=0 AND lr.tahun=?', [$tahun]);
 
-            return view('evaluasi.renaksi-rb-general', ['tahun'=>$tahun, 'isadmin'=>$isadmin, 'data'=>$jawaban, 'kembali'=>true, 'instansi'=>$instansi, 'check'=>$check, 'renaksi'=>$renaksi, 'list_jawaban'=>$ljawaban, 'lkerenaksi'=>$lkerenaksi, 'fjawaban'=>$fjawaban]);
-
+            return view('evaluasi.renaksi-rb-general', ['tahun' => $tahun, 'isadmin' => $isadmin, 'data' => $jawaban, 'kembali' => true, 'instansi' => $instansi, 'check' => $check, 'renaksi' => $renaksi, 'list_jawaban' => $ljawaban, 'lkerenaksi' => $lkerenaksi, 'fjawaban' => $fjawaban]);
         }
     }
 
