@@ -103,14 +103,14 @@
                                                 <div class="card-body">
                                                     @if(Auth::User()->level =="admin" || Auth::User()->level == "tpn" )
                                                     @if ($instansiZI->lhe)
-                                                    <div class="col-md-5">
-                                                        <br />
-                                                        <a href="{{asset('storage/uploads/LHEZI2024/'.$instansiZI->lhe)}}"
-                                                            target="_blank"><img src="{{asset('images/pdf.png')}}"
-                                                                width="30%"></a>
-                                                        <br /><br />
-                                                        <p>LHE {{$instansiZI->klpd_instansi->name}}</p>
-                                                    </div>
+
+                                                    <br />
+                                                    <a href="{{asset('storage/uploads/LHEZI2024/'.$instansiZI->lhe)}}"
+                                                        target="_blank"><img src="{{asset('images/pdf.png')}}"
+                                                            width="30%"></a>
+                                                    <br /><br />
+                                                    <p>LHE {{$instansiZI->klpd_instansi->name}}</p>
+
                                                     @endif
                                                     @endif
                                                 </div>
