@@ -210,7 +210,7 @@
                 {
                      extend: 'pdfHtml5',
                      download: 'open',
-                     text: '<button class="btn btn-warning btn-sm w-32 mr-2 mb-2"> <i class="fa fa-file-pdf" style="font-size:18px"></i>  &nbsp;Download PDF </button>',
+                     text: '<button class="btn btn-danger btn-sm w-32 mr-2 mb-2"> <i class="fa fa-file-pdf" style="font-size:18px"></i>  &nbsp;Download PDF </button>',
                             titleAttr: 'Download PDF'
                 }
             ],
