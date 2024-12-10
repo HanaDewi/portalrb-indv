@@ -230,8 +230,10 @@
                             {{optional($unit_zi->final)->rekomendasi}}
                         </td>
                         <td class="rekomendasi" rowspan=5 class="link-wrap">
+                            @if($status == "Berhak")
                             <a href="{{route('proses_final_unit',$unit_zi->id)}}" class="btn btn-primary">Isi
                                 Catatan dan Rekomendasi Final</a>
+                            @endif
                         </td>
 
                     </tr>
