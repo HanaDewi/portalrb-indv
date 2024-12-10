@@ -174,6 +174,12 @@ if(! function_exists('menus'))
                         'icon' => 'layers',
                         'url' => 'evaluasi/hasil-evaluasi'
                     ],
+                    [
+                        'levels' => ['admin', 'tpn'],
+                        'title' => 'Hasil Evaluasi 2023',
+                        'icon' => 'layers',
+                        'url' => 'evaluasi/hasil-2023'
+                    ],
                 ],
             ],
             [

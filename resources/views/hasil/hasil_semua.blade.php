@@ -34,7 +34,7 @@
                         @endphp
                         <tr>
                             <td>{{ $no }}</td>
-                            <td><a href="{{ URL::to('/hasil/' . $instansi->id) }}">{{ $instansi->name }}</a></td>
+                            <td><a href="{{ URL::to('/evaluasi/hasil-2023/' . $instansi->id) }}" style="color: blue;">{{ $instansi->name }}</a></td>
                             <td>
                                 {{ isset($instansi->lke_test_tp_old->lke_kegiatan) ? $instansi->lke_test_tp_old->lke_kegiatan->name : '' }}
                             </td>

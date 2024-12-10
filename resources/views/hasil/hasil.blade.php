@@ -135,7 +135,7 @@
                 </h2>
             </div> <!-- END: Modal Header -->
             <!-- BEGIN: Modal Body -->
-            <form action="{{ url('hasil/simpan_test_tp_line') }}" id="form-score" method="post">
+            <form action="{{ url('evaluasi/hasil-2023/simpan_test_tp_line') }}" id="form-score" method="post">
                 @csrf
                 <input type="hidden" name="test_tp_line_id" id="test_tp_line_id">
                 <div class="modal-body grid columns-12 gap-4 gap-y-3">
@@ -192,7 +192,7 @@
                 </h2>
             </div> <!-- END: Modal Header -->
             <!-- BEGIN: Modal Body -->
-            <form action="{{ url('hasil/simpan_test_tp') }}" id="form-penyesuaian" method="post" enctype="multipart/form-data">
+            <form action="{{ url('evaluasi/hasil-2023/simpan_test_tp') }}" id="form-penyesuaian" method="post" enctype="multipart/form-data">
                 @csrf
                 <input type="hidden" name="test_tp_id" id="test_tp_id">
                 <div class="modal-body grid columns-12 gap-4 gap-y-3">
@@ -314,7 +314,7 @@
         $('#test_tp_id').val(id);
         $('.saveButton').prop('disabled', true);
         modal_penyesuaian.show();
-        $.getJSON("{{ url('hasil/get_test_tp') }}/" + id, function(data) {
+        $.getJSON("{{ url('evaluasi/hasil-2023/get_test_tp') }}/" + id, function(data) {
             $('#bobot_rb_general_penyesuaian').val(data.bobot_rb_general_penyesuaian);
             $('#berkas_list').html(data.berkas_list);
             $('.saveButton').prop('disabled', false);
@@ -399,7 +399,7 @@
         $('#test_tp_line_id').val(id);
         $('.saveButton').prop('disabled', true);
         modal_score.show();
-        $.getJSON("{{ url('hasil/get_test_tp_line') }}/" + id, function(data) {
+        $.getJSON("{{ url('evaluasi/hasil-2023/get_test_tp_line') }}/" + id, function(data) {
             $("#score").inputmask("decimal",{
                 radixPoint:".",
                 digits: 2,

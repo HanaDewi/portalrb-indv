@@ -204,12 +204,12 @@ Route::middleware('auth')->group(function () {
     Route::post('/evaluasi/hasil-evaluasi/{instansi_id}/{kegiatan_id}/simpan', [LKEController::class, 'hasil_evaluasi_instansi_simpan']);
 
     // Hasil
-    Route::get('/hasil', [HasilController::class, 'hasil_seluruh'])->name('hasil_seluruh');
-    Route::get('/hasil/{KlpdInstansi}', [HasilController::class, 'hasil'])->name('hasil');
-    Route::get('/hasil/get_test_tp_line/{id}', [HasilController::class, 'get_test_tp_line']);
-    Route::get('/hasil/get_test_tp/{id}', [HasilController::class, 'get_test_tp']);
-    Route::post('/hasil/simpan_test_tp_line', [HasilController::class, 'simpan_test_tp_line']);
-    Route::post('/hasil/simpan_test_tp', [HasilController::class, 'simpan_test_tp']);
+    Route::get('/evaluasi/hasil-2023', [HasilController::class, 'hasil_seluruh'])->name('hasil_seluruh');
+    Route::get('/evaluasi/hasil-2023/{KlpdInstansi}', [HasilController::class, 'hasil'])->name('hasil');
+    Route::get('/evaluasi/hasil-2023/get_test_tp_line/{id}', [HasilController::class, 'get_test_tp_line']);
+    Route::get('/evaluasi/hasil-2023/get_test_tp/{id}', [HasilController::class, 'get_test_tp']);
+    Route::post('/evaluasi/hasil-2023/simpan_test_tp_line', [HasilController::class, 'simpan_test_tp_line']);
+    Route::post('/evaluasi/hasil-2023/simpan_test_tp', [HasilController::class, 'simpan_test_tp']);
     // Access
     Route::get('/access', [HasilController::class, 'access'])->name('access');
     Route::post('/access/simpan', [HasilController::class, 'access_simpan']);
