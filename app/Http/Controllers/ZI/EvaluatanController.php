@@ -210,9 +210,19 @@ class EvaluatanController extends Controller
 
         if($instansiZI){
             $units = UnitZI::where("instansi_zi_id", $instansiZI->id)->get();
-            
+            $unit_wbk_lulus= UnitZI::where("instansi_zi_id", $instansiZI->id)->where('wbk', 1)
+                      ->whereHas('panel', function ($query) {
+                          $query->where('status', 1);
+                      })->count();
+
+                      $unit_wbbm_lulus= UnitZI::where("instansi_zi_id", $instansiZI->id)->where('wbbm', 1)
+                      ->whereHas('panel', function ($query) {
+                          $query->where('status', 1);
+                      })->count();
+
+
             return view('zi.evaluatan.hasil_akhir_zi', compact(
-                  'title','instansiZI', 'units', 
+                  'title','instansiZI', 'units', 'unit_wbk_lulus', 'unit_wbbm_lulus'
             ));
         }else{
             echo "mohon maaf Anda tidak terdaftar dalam orang yang berhak untuk melihat halaman ini";

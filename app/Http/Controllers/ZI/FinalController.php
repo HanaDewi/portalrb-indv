@@ -163,14 +163,14 @@ class FinalController extends Controller
             }
         }
         $status = "Tidak Berhak";
-        //DI LOCK BIAR SEMUA ORANGG TIDAK BISA SIMPAN
-        if(Auth::User()->userTimZI){                   
-            foreach(Auth::User()->userTimZI as $anggotaTim){
-                if(in_array($anggotaTim->tim_id,$tim_ids)){
-                    $status = "Berhak" ;
-                }
-            }
-        }
+        // DI LOCK BIAR SEMUA ORANGG TIDAK BISA SIMPAN
+        // if(Auth::User()->userTimZI){                   
+        //     foreach(Auth::User()->userTimZI as $anggotaTim){
+        //         if(in_array($anggotaTim->tim_id,$tim_ids)){
+        //             $status = "Berhak" ;
+        //         }
+        //     }
+        // }
         
         $unit_ZIs = UnitZI::where("instansi_zi_id", $id)->orderBy('wbbm','desc')->get();
         
@@ -196,13 +196,13 @@ class FinalController extends Controller
 
         $status = "Tidak Berhak";
         //DI LOCK BIAR SEMUA ORANGG TIDAK BISA SIMPAN
-        if(Auth::User()->userTimZI){                   
-            foreach(Auth::User()->userTimZI as $anggotaTim){
-                if(in_array($anggotaTim->tim_id,$tim_ids)){
-                    $status = "Berhak" ;
-                }
-            }
-        }
+        // if(Auth::User()->userTimZI){                   
+        //     foreach(Auth::User()->userTimZI as $anggotaTim){
+        //         if(in_array($anggotaTim->tim_id,$tim_ids)){
+        //             $status = "Berhak" ;
+        //         }
+        //     }
+        // }
         
         return view('zi.final.evaluasi_unit', compact("status",
             "title","unit_zi",
@@ -222,13 +222,13 @@ class FinalController extends Controller
             }
         }
         $status = "Tidak Berhak";
-        if(Auth::User()->userTimZI){                   
-            foreach(Auth::User()->userTimZI as $anggotaTim){
-                if(in_array($anggotaTim->tim_id,$tim_ids)){
-                    $status = "Berhak" ;
-                }
-            }
-        }
+        // if(Auth::User()->userTimZI){                   
+        //     foreach(Auth::User()->userTimZI as $anggotaTim){
+        //         if(in_array($anggotaTim->tim_id,$tim_ids)){
+        //             $status = "Berhak" ;
+        //         }
+        //     }
+        // }
         if($status == "Tidak Berhak"){
             abort('403');
         }
@@ -269,13 +269,13 @@ class FinalController extends Controller
         }
     
         $status = "Tidak Berhak";
-        if(Auth::User()->userTimZI){                   
-            foreach(Auth::User()->userTimZI as $anggotaTim){
-                if(in_array($anggotaTim->tim_id,$tim_ids)){
-                    $status = "Berhak" ;
-                }
-            }
-        }
+        // if(Auth::User()->userTimZI){                   
+        //     foreach(Auth::User()->userTimZI as $anggotaTim){
+        //         if(in_array($anggotaTim->tim_id,$tim_ids)){
+        //             $status = "Berhak" ;
+        //         }
+        //     }
+        // }
         if($status == "Tidak Berhak"){
             abort('403');
         }
@@ -303,6 +303,17 @@ class FinalController extends Controller
         ]);
 
         $success= false;
+        $status = "Tidak Berhak";
+        // if(Auth::User()->userTimZI){                   
+        //     foreach(Auth::User()->userTimZI as $anggotaTim){
+        //         if(in_array($anggotaTim->tim_id,$tim_ids)){
+        //             $status = "Berhak" ;
+        //         }
+        //     }
+        // }
+        if($status == "Tidak Berhak"){
+            abort('403');
+        }
         try{
             if ($request->hasFile('berkas')) {
                 foreach ($request->file('berkas') as $key => $file_berkas) {
@@ -339,6 +350,15 @@ class FinalController extends Controller
         ]);
 
         $success= false;
+        
+        $status = "Tidak Berhak";
+        // if(Auth::User()->userTimZI){                   
+        //     foreach(Auth::User()->userTimZI as $anggotaTim){
+        //         if(in_array($anggotaTim->tim_id,$tim_ids)){
+        //             $status = "Berhak" ;
+        //         }
+        //     }
+        // }
         try{
             if ($request->hasFile('berkas_undangan')) {
                 

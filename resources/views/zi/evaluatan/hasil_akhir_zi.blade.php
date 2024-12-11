@@ -57,19 +57,23 @@
                                                             <tr>
                                                                 <td>WBK</td>
                                                                 <td class="text-center">{{$instansiZI->jml_wbk}}</td>
-                                                                <td class="text-center" </td>
+                                                                <td class="text-center">
+                                                                    {{$unit_wbk_lulus}}
+                                                                </td>
+                                                                </td>
                                                             </tr>
                                                             <tr>
                                                                 <td>WBBM</td>
                                                                 <td class="text-center">{{$instansiZI->jml_wbbm}}</td>
-                                                                <td class="text-center"></td>
+                                                                <td class="text-center">{{$unit_wbbm_lulus}}</td>
                                                             </tr>
                                                             <tr>
                                                                 <td>Total</td>
                                                                 <td class="text-center">{{$instansiZI->jml_wbk +
                                                                     $instansiZI->jml_wbbm}}
                                                                 </td>
-                                                                <td class="text-center"></td>
+                                                                <td class="text-center">
+                                                                    {{$unit_wbk_lulus+$unit_wbbm_lulus}}</td>
                                                             </tr>
                                                         </tbody>
                                                     </table>
@@ -101,17 +105,13 @@
                                                     LHE
                                                 </div>
                                                 <div class="card-body">
-                                                    @if(Auth::User()->level =="admin" || Auth::User()->level == "tpn" )
                                                     @if ($instansiZI->lhe)
-
                                                     <br />
                                                     <a href="{{asset('storage/uploads/LHEZI2024/'.$instansiZI->lhe)}}"
                                                         target="_blank"><img src="{{asset('images/pdf.png')}}"
                                                             width="30%"></a>
                                                     <br /><br />
                                                     <p>LHE {{$instansiZI->klpd_instansi->name}}</p>
-
-                                                    @endif
                                                     @endif
                                                 </div>
                                             </div>
@@ -135,7 +135,6 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @if(Auth::User()->level =="admin" || Auth::User()->level == "tpn" )
                                             @php
                                             $i=0;
                                             $wbk=0;
@@ -160,20 +159,9 @@
                                                 </td>
                                                 <td>{{optional($unit->final)->kondisi}}</td>
                                                 <td>{{optional($unit->final)->rekomendasi}}</td>
-
                                             </tr>
                                             @endif
                                             @endforeach
-                                            @else
-                                            <tr>
-                                                <td colspan=5 style="color:rgb(200, 45, 45)">Hasil Akan ditampilkan
-                                                    tanggal
-                                                    11 Desember
-                                                    Saat Acara
-                                                    Penyerahan
-                                                    diselenggarakan</td>
-                                            </tr>
-                                            @endif
                                         </tbody>
                                     </table>
                                 </div>
