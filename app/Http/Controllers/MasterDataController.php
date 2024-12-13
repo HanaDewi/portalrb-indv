@@ -386,6 +386,8 @@ class MasterDataController extends Controller
                     if (!$lke_bobot->save()) {
                         $success = false;
                     }
+                } else {
+                    LkeBobot::where('lke_parameter_id', $lke_parameter->id)->where('group', 'kl')->delete();
                 }
                 if ($request->provinsi) {
                     $lke_bobot = LkeBobot::where('lke_parameter_id', $lke_parameter->id)->where('group', 'provinsi')->first();
@@ -401,6 +403,8 @@ class MasterDataController extends Controller
                     if (!$lke_bobot->save()) {
                         $success = false;
                     }
+                } else {
+                    LkeBobot::where('lke_parameter_id', $lke_parameter->id)->where('group', 'provinsi')->delete();
                 }
                 if ($request->kabupaten) {
                     $lke_bobot = LkeBobot::where('lke_parameter_id', $lke_parameter->id)->where('group', 'kabupaten')->first();
@@ -416,6 +420,8 @@ class MasterDataController extends Controller
                     if (!$lke_bobot->save()) {
                         $success = false;
                     }
+                } else {
+                    LkeBobot::where('lke_parameter_id', $lke_parameter->id)->where('group', 'kabupaten')->delete();
                 }
             }
         } catch (\Throwable $th) {
