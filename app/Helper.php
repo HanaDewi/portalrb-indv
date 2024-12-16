@@ -145,7 +145,7 @@ if(! function_exists('menus'))
             //     'url' => 'hasil',
             // ],
             [
-                'levels' => ['admin', 'tpn', 'tpm'],
+                'levels' => ['admin', 'tpn', 'tpm', 'kl', 'provinsi', 'kabupaten'],
                 'title' => 'Evaluasi',
                 'icon' => 'pencil',
                 'url' => 'evaluasi',
@@ -169,13 +169,13 @@ if(! function_exists('menus'))
                         'url' => 'evaluasi/database'
                     ],
                     [
-                        'levels' => ['admin', 'tpn'],
+                        'levels' => ['admin', 'tpn', 'kl', 'provinsi', 'kabupaten'],
                         'title' => 'Hasil Evaluasi',
                         'icon' => 'layers',
                         'url' => 'evaluasi/hasil-evaluasi'
                     ],
                     [
-                        'levels' => ['admin', 'tpn'],
+                        'levels' => ['admin', 'tpn', 'kl', 'provinsi', 'kabupaten'],
                         'title' => 'Hasil Evaluasi 2023',
                         'icon' => 'layers',
                         'url' => 'evaluasi/hasil-2023'

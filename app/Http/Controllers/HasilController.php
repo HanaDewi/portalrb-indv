@@ -31,7 +31,7 @@ class HasilController extends Controller
     public function hasil_seluruh()
     {
         $user = Auth::User();
-        if (in_array($user->level, ['kabupaten', 'provinsi', 'kl', 'viewer'])) {
+        if (in_array($user->level, ['kabupaten', 'provinsi', 'kl', 'tpn', 'tpm'])) {
             $access = OpenAccessSetting::where('user_level', $user->level)->where('fitur', 'hasil_evaluasi')->first();
             if ($access) {
                 $today = date('Y-m-d');
@@ -40,18 +40,18 @@ class HasilController extends Controller
                 }
             }
         }
-        if (in_array($user->level, ['admin', 'tpn', 'tpm', 'viewer'])) {
+        if (in_array($user->level, ['admin', 'tpn', 'tpm'])) {
             $instansis = KlpdInstansi::all();
             return view('hasil.hasil_semua', compact('instansis'));
         } else {
-            return redirect('hasil/'.$user->user_rel->instansi_id);
+            return redirect('evaluasi/hasil-2023/'.$user->user_rel->instansi_id);
         }
     }
 
     public function hasil($instansi_id)
     {
         $user = Auth::User();
-        if (in_array($user->level, ['kabupaten', 'provinsi', 'kl', 'viewer'])) {
+        if (in_array($user->level, ['kabupaten', 'provinsi', 'kl', 'tpn', 'tpm'])) {
             $access = OpenAccessSetting::where('user_level', $user->level)->where('fitur', 'hasil_evaluasi')->first();
             if ($access) {
                 $today = date('Y-m-d');
@@ -60,7 +60,7 @@ class HasilController extends Controller
                 }
             }
         }
-        if (!in_array($user->level, ['admin', 'tpn', 'tpm', 'viewer'])) {
+        if (!in_array($user->level, ['admin', 'tpn', 'tpm'])) {
             if ($user->user_rel->instansi_id != $instansi_id) {
                 abort(403);
             }

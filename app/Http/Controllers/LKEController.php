@@ -36,7 +36,7 @@ class LKEController extends Controller
     public function lke_utama()
     {
         $user = Auth::User();
-        if (in_array($user->level, ['tpn', 'tpm'])) {
+        if (in_array($user->level, ['kabupaten', 'provinsi', 'kl', 'tpn', 'tpm'])) {
             $access = OpenAccessSetting::where('user_level', $user->level)->where('fitur', 'hasil_evaluasi')->first();
             if ($access) {
                 $today = date('Y-m-d');
@@ -70,7 +70,7 @@ class LKEController extends Controller
     public function lke_utama_score($parameter_id)
     {
         $user = Auth::User();
-        if (in_array($user->level, ['tpn', 'tpm'])) {
+        if (in_array($user->level, ['kabupaten', 'provinsi', 'kl', 'tpn', 'tpm'])) {
             $access = OpenAccessSetting::where('user_level', $user->level)->where('fitur', 'hasil_evaluasi')->first();
             if ($access) {
                 $today = date('Y-m-d');
@@ -140,7 +140,7 @@ class LKEController extends Controller
         if (!$bobot) {
             return response()->json(['success' => $success, 'message' => $message]);
         }
-        if ($bobot->lke_parameter_id != $parameter_id || (in_array($user->level, ['tpn', 'tpm']) && $parameter->penilai_id != $user->penilai_id)) {
+        if ($bobot->lke_parameter_id != $parameter_id || (in_array($user->level, ['kabupaten', 'provinsi', 'kl', 'tpn', 'tpm']) && $parameter->penilai_id != $user->penilai_id)) {
             return response()->json(['success' => $success, 'message' => $message]);
         }
         $test_tp_line = LkeTestTpLine::where('lke_bobot_id', $request->lke_bobot_id)->where('instansi_id', $request->instansi_id)->first();
@@ -191,7 +191,7 @@ class LKEController extends Controller
         if (!$parameter) {
             abort(404);
         }
-        if (in_array($user->level, ['tpn', 'tpm']) && $parameter->penilai_id != $user->penilai_id) {
+        if (in_array($user->level, ['kabupaten', 'provinsi', 'kl', 'tpn', 'tpm']) && $parameter->penilai_id != $user->penilai_id) {
             abort(403);
         }
         $success = true;
@@ -275,7 +275,7 @@ class LKEController extends Controller
     public function database()
     {
         $user = Auth::User();
-        if (in_array($user->level, ['tpn', 'tpm'])) {
+        if (in_array($user->level, ['kabupaten', 'provinsi', 'kl', 'tpn', 'tpm'])) {
             $access = OpenAccessSetting::where('user_level', $user->level)->where('fitur', 'hasil_evaluasi')->first();
             if ($access) {
                 $today = date('Y-m-d');
@@ -304,7 +304,7 @@ class LKEController extends Controller
     public function hasil_evaluasi()
     {
         $user = Auth::User();
-        if (in_array($user->level, ['tpn', 'tpm'])) {
+        if (in_array($user->level, ['kabupaten', 'provinsi', 'kl', 'tpn', 'tpm'])) {
             $access = OpenAccessSetting::where('user_level', $user->level)->where('fitur', 'hasil_evaluasi')->first();
             if ($access) {
                 $today = date('Y-m-d');
@@ -313,7 +313,21 @@ class LKEController extends Controller
                 }
             }
         }
-        return view('evaluasi.hasil_evaluasi');
+        if (!in_array($user->level, ['admin', 'tpn', 'tpm'])) {
+            return view('evaluasi.lke_kegiatan');
+        } else {
+            return view('evaluasi.hasil_evaluasi');
+        }
+    }
+
+    public function hasil_evaluasi_getKegiatan()
+    {
+        $user = Auth::User();
+        $kegiatans = LkeKegiatan::all();
+        foreach ($kegiatans as $kegiatan) {
+            $kegiatan->nama_kegiatan = '<a href="'.url('evaluasi/hasil-evaluasi/'.$user->user_rel->instansi_id.'/'.$kegiatan->id).'" style="color:blue;">'.$kegiatan->nama_tahun.'</a>';
+        }
+        return response()->json(['data' => $kegiatans]);
     }
 
     public function hasil_evaluasi_getDatas(Request $request)
@@ -362,6 +376,12 @@ class LKEController extends Controller
                 if ($access->waktu_awal > $today || $access->waktu_akhir < $today) {
                     return view('belumbuka');
                 }
+            }
+        }
+
+        if (!in_array($user->level, ['admin', 'tpn', 'tpm'])) {
+            if ($user->user_rel->instansi_id != $instansi_id) {
+                abort(403);
             }
         }
 

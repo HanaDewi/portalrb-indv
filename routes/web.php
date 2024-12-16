@@ -200,6 +200,7 @@ Route::middleware('auth')->group(function () {
     // Hasil Evaluasi
     Route::get('/evaluasi/hasil-evaluasi', [LKEController::class, 'hasil_evaluasi']);
     Route::get('/evaluasi/hasil-evaluasi/getDatas', [LKEController::class, 'hasil_evaluasi_getDatas']);
+    Route::get('/evaluasi/hasil-evaluasi/getKegiatan', [LKEController::class, 'hasil_evaluasi_getKegiatan']);
     Route::get('/evaluasi/hasil-evaluasi/{instansi_id}/{kegiatan_id}', [LKEController::class, 'hasil_evaluasi_instansi']);
     Route::post('/evaluasi/hasil-evaluasi/{instansi_id}/{kegiatan_id}/simpan', [LKEController::class, 'hasil_evaluasi_instansi_simpan']);
 
