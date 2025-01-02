@@ -34,7 +34,8 @@ class ERenaksiRBGeneralController extends Controller
         $istpn = in_array($user->level, ['tpn']);
 
         $tahun = $request->input('tahun');
-        $tahun = empty($tahun) ? date('Y') : $request->input('tahun');
+        //$tahun = empty($tahun) ? date('Y') : $request->input('tahun');
+        $tahun = empty($tahun) ?  2024 : $request->input('tahun');
 
         $ins_id = $request->input('instansi');
 
