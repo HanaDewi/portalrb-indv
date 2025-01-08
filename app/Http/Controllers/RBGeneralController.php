@@ -473,11 +473,11 @@ class RBGeneralController extends Controller
                     $rencana_aksi_output->general_rencana_aksi_id = $rencana_aksi->id;
                     $rencana_aksi_output->satuan_output = $target_output['satuan_output'];
                     $rencana_aksi_output->indikator_output = $target_output['indikator_output'];
-                    $rencana_aksi_output->target_tw1 = str_replace(',', '.', str_replace('.', '', $target_output['target_tw1']));
-                    $rencana_aksi_output->target_tw2 = str_replace(',', '.', str_replace('.', '', $target_output['target_tw2']));
-                    $rencana_aksi_output->target_tw3 = str_replace(',', '.', str_replace('.', '', $target_output['target_tw3']));
-                    $rencana_aksi_output->target_tw4 = str_replace(',', '.', str_replace('.', '', $target_output['target_tw4']));
-                    $rencana_aksi_output->target_total = str_replace(',', '.', str_replace('.', '', $target_output['target_total']));
+                    $rencana_aksi_output->target_tw1 = $target_output['target_tw1'];
+                    $rencana_aksi_output->target_tw2 = $target_output['target_tw2'];
+                    $rencana_aksi_output->target_tw3 = $target_output['target_tw3'];
+                    $rencana_aksi_output->target_tw4 = $target_output['target_tw4'];
+                    $rencana_aksi_output->target_total = $target_output['target_total'];
                     $rencana_aksi_output->anggaran_tw1 = 0;
                     $rencana_aksi_output->anggaran_tw2 = 0;
                     $rencana_aksi_output->anggaran_tw3 = 0;
@@ -607,17 +607,17 @@ class RBGeneralController extends Controller
         if (!$output) {
             abort(404);
         }
-        $output->realisasi_output_tw1 = str_replace(',', '.', str_replace('.', '', $request->realisasi_output_tw1));
-        $output->realisasi_output_tw2 = str_replace(',', '.', str_replace('.', '', $request->realisasi_output_tw2));
-        $output->realisasi_output_tw3 = str_replace(',', '.', str_replace('.', '', $request->realisasi_output_tw3));
-        $output->realisasi_output_tw4 = str_replace(',', '.', str_replace('.', '', $request->realisasi_output_tw4));
-        $output->realisasi_output_total = str_replace(',', '.', str_replace('.', '', $request->realisasi_output_total));
+        $output->realisasi_output_tw1 = $request->realisasi_output_tw1;
+        $output->realisasi_output_tw2 = $request->realisasi_output_tw2;
+        $output->realisasi_output_tw3 = $request->realisasi_output_tw3;
+        $output->realisasi_output_tw4 = $request->realisasi_output_tw4;
+        $output->realisasi_output_total = $request->realisasi_output_total;
         $output->realisasi_anggaran_total = str_replace('.', '', $request->realisasi_anggaran_total);
-        $output->capaian_output_tw1 = str_replace(',', '.', str_replace('.', '', $request->capaian_output_tw1));
-        $output->capaian_output_tw2 = str_replace(',', '.', str_replace('.', '', $request->capaian_output_tw2));
-        $output->capaian_output_tw3 = str_replace(',', '.', str_replace('.', '', $request->capaian_output_tw3));
-        $output->capaian_output_tw4 = str_replace(',', '.', str_replace('.', '', $request->capaian_output_tw4));
-        $output->capaian_output_total = str_replace(',', '.', str_replace('.', '', $request->capaian_output_total));
+        $output->capaian_output_tw1 = $request->capaian_output_tw1;
+        $output->capaian_output_tw2 = $request->capaian_output_tw2;
+        $output->capaian_output_tw3 = $request->capaian_output_tw3;
+        $output->capaian_output_tw4 = $request->capaian_output_tw4;
+        $output->capaian_output_total = $request->capaian_output_total;
         $output->capaian_anggaran_total = str_replace('.', '', $request->capaian_anggaran_total);
         $output->catatan = $request->catatan;
         if ($output->save()) {

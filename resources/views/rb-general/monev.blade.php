@@ -541,9 +541,7 @@
     function hitungCapaian() {
         target = $('#target_indikator').val();
         realisasi = $('#realisasi_indikator').val();
-        console.log(target)
         capaian = (realisasi / target) * 100;
-        console.log(target, realisasi, capaian);
         $('#capaian_indikator').val(capaian);
     }
 
@@ -666,10 +664,10 @@
         if ($('#realisasi_output_tw4').val() == '') {
             $('#realisasi_output_tw4').val(0);
         }
-        ro1 = $('#realisasi_output_tw1').val().replaceAll('.', '').replaceAll(',', '.');
-        ro4 = $('#realisasi_output_tw4').val().replaceAll('.', '').replaceAll(',', '.');
-        ro2 = $('#realisasi_output_tw2').val().replaceAll('.', '').replaceAll(',', '.');
-        ro3 = $('#realisasi_output_tw3').val().replaceAll('.', '').replaceAll(',', '.');
+        ro1 = $('#realisasi_output_tw1').val();
+        ro4 = $('#realisasi_output_tw4').val();
+        ro2 = $('#realisasi_output_tw2').val();
+        ro3 = $('#realisasi_output_tw3').val();
         // ro_total = parseFloat(ro1) + parseFloat(ro2) + parseFloat(ro3) + parseFloat(ro4);
         // $('#realisasi_output_total').val(ro_total);
         co1 = t1 > 0 ? (ro1 / t1) * 100 : 0;
@@ -694,9 +692,10 @@
         if (co4 > 0) {
             co_pembagi += 1;
         }
-        ro_total = $('#realisasi_output_total').val().replaceAll('.', '').replaceAll(',', '.');
-        to_total = $('#target_total').val().replaceAll('.', '').replaceAll(',', '.');
+        ro_total = $('#realisasi_output_total').val();
+        to_total = $('#target_total').val();
         co_total = (ro_total / to_total) * 100;
+        console.log(co_total);
         $('#capaian_output_total').val(co_total);
         
         // Hitung Total Anggaran
