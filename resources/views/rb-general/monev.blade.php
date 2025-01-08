@@ -185,7 +185,7 @@
                                 <td colspan="5">
                                     <div class="input-group mt-4 mr-2">
                                         <div class="input-group-text">Total</div>
-                                        <input type="text" name="anggaran_total" id="anggaran_total" placeholder="Total" class="form-control digit2" readonly>
+                                        <input type="text" name="anggaran_total" id="anggaran_total" placeholder="Total" class="form-control currency" readonly>
                                     </div>
                                 </td>
                             </tr>
@@ -263,7 +263,7 @@
                                 <td colspan="5">
                                     <div class="input-group mt-4">
                                         <div class="input-group-text">Total</div>
-                                        <input type="text" name="realisasi_anggaran_total" id="realisasi_anggaran_total" placeholder="Total" class="form-control digit2" onkeyup="hitungTotal();" required>
+                                        <input type="text" name="realisasi_anggaran_total" id="realisasi_anggaran_total" placeholder="Total" class="form-control currency" onkeyup="hitungTotal();" required>
                                     </div>
                                 </td>
                             </tr>
@@ -428,15 +428,14 @@
         modal_monev_perencanaan = tailwind.Modal.getInstance(document.querySelector("#modal-monev_perencanaan"));
 
         $(".digit").inputmask("decimal",{
-            radixPoint:",",
-            groupSeparator: ".",
+            radixPoint:".",
             digits: 2,
             autoGroup: true,
             rightAlign: false,
             min: 0,
         });
 
-        $(".digit2").inputmask("decimal",{
+        $(".currency").inputmask("decimal",{
             radixPoint:",",
             groupSeparator: ".",
             digits: 0,
@@ -542,6 +541,7 @@
     function hitungCapaian() {
         target = $('#target_indikator').val();
         realisasi = $('#realisasi_indikator').val();
+        console.log(target)
         capaian = (realisasi / target) * 100;
         console.log(target, realisasi, capaian);
         $('#capaian_indikator').val(capaian);

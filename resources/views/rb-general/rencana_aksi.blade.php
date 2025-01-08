@@ -182,7 +182,7 @@
                                 <td colspan="5">
                                     <div class="input-group mt-4">
                                         <div class="input-group-text">Total</div>
-                                        <input type="text" name="target_output[0][anggaran_total]" id="anggaran_total0" placeholder="Total" class="form-control digit2" required>
+                                        <input type="text" name="target_output[0][anggaran_total]" id="anggaran_total0" placeholder="Total" class="form-control currency" required>
                                     </div>
                                 </td>
                             </tr>
@@ -266,15 +266,14 @@
         modal_import_rencana_aksi = tailwind.Modal.getInstance(document.querySelector("#modal-import_rencana_aksi"));
 
         $(".digit").inputmask("decimal",{
-            radixPoint:",",
-            groupSeparator: ".",
+            radixPoint:".",
             digits: 2,
             autoGroup: true,
             rightAlign: false,
             min: 0,
         });
 
-        $(".digit2").inputmask("decimal",{
+        $(".currency").inputmask("decimal",{
             radixPoint:",",
             groupSeparator: ".",
             digits: 0,
@@ -443,10 +442,10 @@
         if ($('#target_tw4'+idx).val() == '') {
             $('#target_tw4'+idx).val(0);
         }
-        tw1 = $('#target_tw1'+idx).val().replaceAll('.', '');
-        tw2 = $('#target_tw2'+idx).val().replaceAll('.', '');
-        tw3 = $('#target_tw3'+idx).val().replaceAll('.', '');
-        tw4 = $('#target_tw4'+idx).val().replaceAll('.', '');
+        tw1 = $('#target_tw1'+idx).val();
+        tw2 = $('#target_tw2'+idx).val();
+        tw3 = $('#target_tw3'+idx).val();
+        tw4 = $('#target_tw4'+idx).val();
         total = parseFloat(tw1) + parseFloat(tw2) + parseFloat(tw3) + parseFloat(tw4);
         $('#target_total'+idx).val(total);
     }
@@ -511,7 +510,7 @@
                     '<tr>'+
                         '<td class="font-bold">Anggaran <span class="text-danger">*</span></td>'+
                         '<td colspan="5">'+
-                            '<div class="input-group mt-4"><div class="input-group-text">Total</div><input type="text" name="target_output['+idx+'][anggaran_total]" id="anggaran_total'+idx+'" placeholder="Total" class="form-control digit2" required></div>'+
+                            '<div class="input-group mt-4"><div class="input-group-text">Total</div><input type="text" name="target_output['+idx+'][anggaran_total]" id="anggaran_total'+idx+'" placeholder="Total" class="form-control currency" required></div>'+
                         '</td>'+
                     '</tr>'+
                     '<tr>'+
@@ -537,15 +536,14 @@
         $('#target_output_ext').append(output_form(idx));
 
         $(".digit").inputmask("decimal",{
-            radixPoint:",",
-            groupSeparator: ".",
+            radixPoint:".",
             digits: 2,
             autoGroup: true,
             rightAlign: false,
             min: 0,
         });
 
-        $(".digit2").inputmask("decimal",{
+        $(".currency").inputmask("decimal",{
             radixPoint:",",
             groupSeparator: ".",
             digits: 0,
