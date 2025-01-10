@@ -148,245 +148,242 @@
         </div>
         <br />
         <div class="col-span-12 grid grid-cols-12 gap-6">
-            <div class="col-span-12 sm:col-span-6 2xl:col-span-3 intro-y">
+            <div class="col-span-12 sm:col-span-6 2xl:col-span-6  intro-y">
                 <div class="box p-5 zoom-in">
+                    <a href="{{route('rekap_unit')}}">
+                        <div class="flex items-center">
+                            <div class="w-2/4 flex-none">
+                                <div class="text-lg font-bold truncate">Tahap Pengusulan</div>
+                                <div class="text-gray-800 mt-2 text-xl">
 
-                    <div class="flex items-center">
-                        <div class="w-2/4 flex-none">
-                            <div class="text-lg font-bold truncate">Jumlah Pengusulan Instansi</div>
-                            <div class="text-gray-800 mt-2 text-xl">
-
-                                <a href="#" id="instansiNonMandiri">{{$instansi_non_mandiri_count}} <sup
-                                        style="font-size: 0.5em">Non
-                                        Mandiri</sup> </a>|
-
-                                <a href="#b" id="instansiMandiri">{{$instansi_wbk_mandiri_count}} <sup
-                                        style="font-size: 0.5em">Mandiri</sup>
-                                </a>|
-                                <a href="#c" id="instansiTotal"><b> {{$instansi_non_mandiri_count +
-                                        $instansi_wbk_mandiri_count}} <sup style="font-size: 0.5em">Total
-                                            Instansi</sup></b></a>
-
-
-
+                                    {{$total_instansi}} <sup style="font-size: 0.5em">Total Instansi</sup>
+                                    <br />
+                                    {{$total_wbk}} <sup style="font-size: 0.5em">Unit WBK</sup>
+                                    |
+                                    {{$total_wbbm}} <sup style="font-size: 0.5em">Unit WBBM</sup>|
+                                    <b>{{$total_wbk +
+                                        $total_wbbm}}
+                                        <sup style="font-size: 0.5em">Jumlah Unit Total</sup></b>
+                                </div>
+                            </div>
+                            <div class="flex-none ml-auto relative">
+                                <div class="w-[90px] h-[90px]">
+                                    <canvas id="report-donut-chart-2" width="90" height="90"
+                                        style="display: block; box-sizing: border-box; height: 90px; width: 90px;"></canvas>
+                                </div>
+                                <div
+                                    class="font-medium absolute w-full h-full flex items-center justify-center top-0 left-0">
+                                    <span><svg xmlns="http://www.w3.org/2000/svg" width="42" height="42"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round"
+                                            class="lucide lucide-file-bar-chart">
+                                            <path
+                                                d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
+                                            <polyline points="14 2 14 8 20 8" />
+                                            <path d="M12 18v-4" />
+                                            <path d="M8 18v-2" />
+                                            <path d="M16 18v-6" />
+                                        </svg> </span>
+                                </div>
                             </div>
                         </div>
-                        <div class="flex-none ml-auto relative">
-                            <div class="w-[90px] h-[90px]">
-                                <canvas id="report-donut-chart-2" width="90" height="90"
-                                    style="display: block; box-sizing: border-box; height: 90px; width: 90px;"></canvas>
-                            </div>
-                            <div
-                                class="font-medium absolute w-full h-full flex items-center justify-center top-0 left-0">
-                                <span><svg xmlns="http://www.w3.org/2000/svg" width="42" height="42" viewBox="0 0 24 24"
-                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                        stroke-linejoin="round" class="lucide lucide-file-bar-chart">
-                                        <path
-                                            d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
-                                        <polyline points="14 2 14 8 20 8" />
-                                        <path d="M12 18v-4" />
-                                        <path d="M8 18v-2" />
-                                        <path d="M16 18v-6" />
-                                    </svg> </span>
+                    </a>
+                </div>
+            </div>
+            <div class="col-span-12 sm:col-span-6 2xl:col-span-6 intro-y">
+                <a href="{{route('rekap_final')}}">
+                    <div class="box p-5 zoom-in">
+                        <div class="flex items-center">
+                            <div class="w-3/4 flex-none">
+                                <div class="text-lg font-bold truncate">Lulus Final</div>
+                                <div class="text-gray-800 mt-2 text-xl">
+
+                                    {{$total_instansi_final}} <sup style="font-size: 0.5em">Total Instansi</sup>
+                                    <br />
+                                    {{$total_wbk_final}} <sup style="font-size: 0.5em">Unit WBK</sup>
+                                    |
+                                    {{$total_wbbm_final}} <sup style="font-size: 0.5em">Unit WBBM</sup>|
+                                    <b>{{$total_wbk_final +
+                                        $total_wbbm_final}} <sup style="font-size: 0.5em">Jumlah Unit
+                                            Total</sup></b>
+                                    < </div>
+                                </div>
+                                <div class="flex-none ml-auto relative">
+                                    <div class="w-[90px] h-[90px]">
+                                        <canvas id="report-donut-chart-2" width="90" height="90"
+                                            style="display: block; box-sizing: border-box; height: 90px; width: 90px;"></canvas>
+                                    </div>
+                                    <div
+                                        class="font-medium absolute w-full h-full flex items-center justify-center top-0 left-0">
+                                        <span><svg xmlns="http://www.w3.org/2000/svg" width="42" height="42"
+                                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                                stroke-linecap="round" stroke-linejoin="round"
+                                                class="lucide lucide-file-bar-chart">
+                                                <path
+                                                    d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
+                                                <polyline points="14 2 14 8 20 8" />
+                                                <path d="M12 18v-4" />
+                                                <path d="M8 18v-2" />
+                                                <path d="M16 18v-6" />
+                                            </svg> </span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-
-                </div>
+                </a>
             </div>
-            <div class="col-span-12 sm:col-span-6 2xl:col-span-3 intro-y">
-                <div class="box p-5 zoom-in">
-                    <div class="flex items-center">
-                        <div class="w-3/4 flex-none">
-                            <div class="text-lg font-bold truncate">Jumlah Unit</div>
-                            <div class="text-gray-800 mt-2 text-xl">
+            <br /><br />
+
+            <!-- Timeline -->
+            <div class="timeline">
+                <div class="container right">
+                    <a href="{{ route('seleksi_administrasi') }}">
+                        <div class="timeline-content">
+                            <h1>Seleksi Administrasi</h1>
+                            <div class="col-md-6">
+
+                                <a href="#c" id="instansiTotal"><b> {{$total_instansi_administrasi}} <sup
+                                            style="font-size: 0.5em">Total Instansi</sup></b></a>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 <a href="{{route('rekap_unit')}}">
-                                    {{ $wbk_non_mandiri_count }} <sup style="font-size: 0.5em">WBK</sup>
+                                    {{$total_wbk_administrasi}} <sup style="font-size: 0.5em">WBK</sup>
                                     |
-                                    {{$wbk_mandiri_count}} <sup style="font-size: 0.5em">WBK Mandiri</sup> |
-                                    {{$wbbm_count}} <sup style="font-size: 0.5em">WBBM</sup> |
-                                    <b> {{$total_unit}} <sup style="font-size: 0.5em">Total</sup></b>
+                                    ? <sup style="font-size: 0.5em">WBK Mandiri</sup> |
+                                    {{$total_wbbm_administrasi}} <sup style="font-size: 0.5em">WBBM</sup> |
+                                    <b> {{$total_wbk_administrasi + $total_wbbm_administrasi}} <sup
+                                            style="font-size: 0.5em">Total Unit</sup></b>
                                 </a>
                             </div>
                         </div>
-                        <div class="flex-none ml-auto relative">
-                            <div class="w-[90px] h-[90px]">
-                                <canvas id="report-donut-chart-2" width="90" height="90"
-                                    style="display: block; box-sizing: border-box; height: 90px; width: 90px;"></canvas>
-                            </div>
-                            <div
-                                class="font-medium absolute w-full h-full flex items-center justify-center top-0 left-0">
-                                <span><svg xmlns="http://www.w3.org/2000/svg" width="42" height="42" viewBox="0 0 24 24"
-                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                        stroke-linejoin="round" class="lucide lucide-file-bar-chart">
-                                        <path
-                                            d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
-                                        <polyline points="14 2 14 8 20 8" />
-                                        <path d="M12 18v-4" />
-                                        <path d="M8 18v-2" />
-                                        <path d="M16 18v-6" />
-                                    </svg> </span>
+                    </a>
+                </div>
+                <div class="container right">
+                    <a href="{{ route('sanggah') }}">
+                        <div class="timeline-content">
+                            <h1>Proses Sanggah</h1>
+                            <div class="col-md-6">
+                                <a href="#c" id="instansiTotal"><b> {{$total_instansi_sanggah}} <sup
+                                            style="font-size: 0.5em">Total Instansi</sup></b></a>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <a href="{{route('rekap_unit')}}">
+                                    {{$total_wbk_sanggah}} <sup style="font-size: 0.5em">WBK</sup>
+                                    |
+                                    ? <sup style="font-size: 0.5em">WBK Mandiri</sup> |
+                                    {{$total_wbbm_sanggah}} <sup style="font-size: 0.5em">WBBM</sup> |
+                                    <b> {{$total_wbk_sanggah + $total_wbbm_sanggah}} <sup style="font-size: 0.5em">Total
+                                            Unit</sup></b>
+                                </a>
                             </div>
                         </div>
-                    </div>
+                    </a>
                 </div>
-            </div>
-        </div>
-        <br /><br />
-
-        <!-- Timeline -->
-        <div class="timeline">
-            <div class="container right">
-                <div class="timeline-content">
-                    <h1>Seleksi Administrasi</h1>
-                    <div class="col-md-6">
-                        <a href="#" id="instansiNonMandiri">0 <sup style="font-size: 0.5em">Non
-                                Mandiri</sup> </a>|
-
-                        <a href="#b" id="instansiMandiri">0 <sup style="font-size: 0.5em">Mandiri</sup>
-                        </a>|
-                        <a href="#c" id="instansiTotal"><b> 0 <sup style="font-size: 0.5em">Total Instansi</sup></b></a>
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        <a href="{{route('rekap_unit')}}">
-                            0 <sup style="font-size: 0.5em">WBK</sup>
-                            |
-                            0 <sup style="font-size: 0.5em">WBK Mandiri</sup> |
-                            0 <sup style="font-size: 0.5em">WBBM</sup> |
-                            <b> 0 <sup style="font-size: 0.5em">Total Unit</sup></b>
-                        </a>
-                    </div>
+                <div class="container right">
+                    <a href="{{ route('seleksi_dokumen') }}">
+                        <div class="timeline-content">
+                            <h1>Analisis Dokumen</h1>
+                            <div class="col-md-6">
+                                <a href="#c" id="instansiTotal"><b> {{$total_instansi_analisis_dokumen}} <sup
+                                            style="font-size: 0.5em">Total Instansi</sup></b></a>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <a href="{{route('rekap_unit')}}">
+                                    {{$total_wbk_analisis_dokumen}} <sup style="font-size: 0.5em">WBK</sup>
+                                    |
+                                    ? <sup style="font-size: 0.5em">WBK Mandiri</sup> |
+                                    {{$total_wbbm_analisis_dokumen}} <sup style="font-size: 0.5em">WBBM</sup> |
+                                    <b> {{$total_wbk_analisis_dokumen + $total_wbbm_analisis_dokumen}} <sup
+                                            style="font-size: 0.5em">Total Unit</sup></b>
+                                </a>
+                            </div>
+                        </div>
+                    </a>
                 </div>
-            </div>
-            <div class="container right">
-                <div class="timeline-content">
-                    <h1>Proses Sanggah</h1>
-                    <div class="col-md-6">
-                        <a href="#" id="instansiNonMandiri">0 <sup style="font-size: 0.5em">Non
-                                Mandiri</sup> </a>|
+                <div class="container right">
+                    <a href="{{ route('seleksi_wawancara') }}?">
+                        <div class="timeline-content">
+                            <h1>Wawancara</h1>
+                            <div class="col-md-6">
 
-                        <a href="#b" id="instansiMandiri">0 <sup style="font-size: 0.5em">Mandiri</sup>
-                        </a>|
-                        <a href="#c" id="instansiTotal"><b> 0 <sup style="font-size: 0.5em">Total Instansi</sup></b></a>
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        <a href="{{route('rekap_unit')}}">
-                            0 <sup style="font-size: 0.5em">WBK</sup>
-                            |
-                            0 <sup style="font-size: 0.5em">WBK Mandiri</sup> |
-                            0 <sup style="font-size: 0.5em">WBBM</sup> |
-                            <b> 0 <sup style="font-size: 0.5em">Total Unit</sup></b>
-                        </a>
-                    </div>
+                                <a href="#c" id="instansiTotal"><b> {{$total_instansi_seleksi_wawancara}} <sup
+                                            style="font-size: 0.5em">Total Instansi</sup></b></a>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <a href="{{route('rekap_unit')}}">
+                                    {{$total_wbk_seleksi_wawancara}} <sup style="font-size: 0.5em">WBK</sup>
+                                    |
+                                    ? <sup style="font-size: 0.5em">WBK Mandiri</sup> |
+                                    {{$total_wbbm_seleksi_wawancara}} <sup style="font-size: 0.5em">WBBM</sup> |
+                                    <b> {{$total_wbk_seleksi_wawancara + $total_wbbm_seleksi_wawancara}} <sup
+                                            style="font-size: 0.5em">Total Unit</sup></b>
+                                </a>
+                            </div>
+                        </div>
+                    </a>
                 </div>
-            </div>
-            <div class="container right">
-                <div class="timeline-content">
-                    <h1>Analisis Dokumen</h1>
-                    <div class="col-md-6">
-                        <a href="#" id="instansiNonMandiri">0 <sup style="font-size: 0.5em">Non
-                                Mandiri</sup> </a>|
-
-                        <a href="#b" id="instansiMandiri">0 <sup style="font-size: 0.5em">Mandiri</sup>
-                        </a>|
-                        <a href="#c" id="instansiTotal"><b> 0 <sup style="font-size: 0.5em">Total Instansi</sup></b></a>
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        <a href="{{route('rekap_unit')}}">
-                            0 <sup style="font-size: 0.5em">WBK</sup>
-                            |
-                            0 <sup style="font-size: 0.5em">WBK Mandiri</sup> |
-                            0 <sup style="font-size: 0.5em">WBBM</sup> |
-                            <b> 0 <sup style="font-size: 0.5em">Total Unit</sup></b>
-                        </a>
-                    </div>
+                <div class="container right">
+                    <a href="{{ route('verifikasi_lapangan') }}">
+                        <div class="timeline-content">
+                            <h1>Observasi Lapangan</h1>
+                            <div class="col-md-6">
+                                <a href="#c" id="instansiTotal"><b> {{$total_instansi_verifikasi_lapangan}} <sup
+                                            style="font-size: 0.5em">Total Instansi</sup></b></a>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <a href="{{route('rekap_unit')}}">
+                                    {{$total_wbk_verifikasi_lapangan}} <sup style="font-size: 0.5em">WBK</sup>
+                                    |
+                                    ? <sup style="font-size: 0.5em">WBK Mandiri</sup> |
+                                    {{$total_wbbm_verifikasi_lapangan}} <sup style="font-size: 0.5em">WBBM</sup> |
+                                    <b> {{$total_wbk_verifikasi_lapangan + $total_wbbm_verifikasi_lapangan}} <sup
+                                            style="font-size: 0.5em">Total Unit</sup></b>
+                                </a>
+                            </div>
+                        </div>
+                    </a>
                 </div>
-            </div>
-            <div class="container right">
-                <div class="timeline-content">
-                    <h1>Wawancara</h1>
-                    <div class="col-md-6">
-                        <a href="#" id="instansiNonMandiri">0 <sup style="font-size: 0.5em">Non
-                                Mandiri</sup> </a>|
-
-                        <a href="#b" id="instansiMandiri">0 <sup style="font-size: 0.5em">Mandiri</sup>
-                        </a>|
-                        <a href="#c" id="instansiTotal"><b> 0 <sup style="font-size: 0.5em">Total Instansi</sup></b></a>
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        <a href="{{route('rekap_unit')}}">
-                            0 <sup style="font-size: 0.5em">WBK</sup>
-                            |
-                            0 <sup style="font-size: 0.5em">WBK Mandiri</sup> |
-                            0 <sup style="font-size: 0.5em">WBBM</sup> |
-                            <b> 0 <sup style="font-size: 0.5em">Total Unit</sup></b>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div class="container right">
-                <div class="timeline-content">
-                    <h1>Observasi Lapangan</h1>
-                    <div class="col-md-6">
-                        <a href="#" id="instansiNonMandiri">0 <sup style="font-size: 0.5em">Non
-                                Mandiri</sup> </a>|
-
-                        <a href="#b" id="instansiMandiri">0 <sup style="font-size: 0.5em">Mandiri</sup>
-                        </a>|
-                        <a href="#c" id="instansiTotal"><b> 0 <sup style="font-size: 0.5em">Total Instansi</sup></b></a>
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        <a href="{{route('rekap_unit')}}">
-                            0 <sup style="font-size: 0.5em">WBK</sup>
-                            |
-                            0 <sup style="font-size: 0.5em">WBK Mandiri</sup> |
-                            0 <sup style="font-size: 0.5em">WBBM</sup> |
-                            <b> 0 <sup style="font-size: 0.5em">Total Unit</sup></b>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div class="container right">
-                <div class="timeline-content">
-                    <h1>Panel</h1>
-                    <div class="col-md-6">
-                        <a href="#" id="instansiNonMandiri">0 <sup style="font-size: 0.5em">Non
-                                Mandiri</sup> </a>|
-
-                        <a href="#b" id="instansiMandiri">0 <sup style="font-size: 0.5em">Mandiri</sup>
-                        </a>|
-                        <a href="#c" id="instansiTotal"><b> 0 <sup style="font-size: 0.5em">Total Instansi</sup></b></a>
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        <a href="{{route('rekap_unit')}}">
-                            0 <sup style="font-size: 0.5em">WBK</sup>
-                            |
-                            0 <sup style="font-size: 0.5em">WBK Mandiri</sup> |
-                            0 <sup style="font-size: 0.5em">WBBM</sup> |
-                            <b> 0 <sup style="font-size: 0.5em">Total Unit</sup></b>
-                        </a>
-                    </div>
+                <div class="container right">
+                    <a href="{{ route('panel') }}">
+                        <div class="timeline-content">
+                            <h1>Panel</h1>
+                            <div class="col-md-6">
+                                <a href="#c" id="instansiTotal"><b> {{$total_instansi_panel}} <sup
+                                            style="font-size: 0.5em">Total Instansi</sup></b></a>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <a href="{{route('rekap_unit')}}">
+                                    {{$total_wbk_panel}} <sup style="font-size: 0.5em">WBK</sup>
+                                    |
+                                    ? <sup style="font-size: 0.5em">WBK Mandiri</sup> |
+                                    {{$total_wbbm_panel}} <sup style="font-size: 0.5em">WBBM</sup> |
+                                    <b> {{$total_wbk_panel + $total_wbbm_panel}} <sup style="font-size: 0.5em">Total
+                                            Unit</sup></b>
+                                </a>
+                            </div>
+                        </div>
+                    </a>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
 
 
 
-@endsection
+    @endsection
 
-@push('css')
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-@endpush
+    @push('css')
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    @endpush
 
-@push('js')
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-<script src="https://cdn.rawgit.com/ashl1/datatables-rowsgroup/v1.0.0/dataTables.rowsGroup.js"></script>
-<script src="https://cdn.rawgit.com/ashl1/datatables-rowsgroup/v1.0.0/dataTables.rowsGroup.js"></script>
-<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.2.3/js/dataTables.buttons.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.html5.min.js"></script>
-<script>
-    $(document).ready(function(){
+    @push('js')
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="https://cdn.rawgit.com/ashl1/datatables-rowsgroup/v1.0.0/dataTables.rowsGroup.js"></script>
+    <script src="https://cdn.rawgit.com/ashl1/datatables-rowsgroup/v1.0.0/dataTables.rowsGroup.js"></script>
+    <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.3/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.html5.min.js"></script>
+    <script>
+        $(document).ready(function(){
         
         var empDataTable = $('#rekap-zi').DataTable({
             dom: 'Blfrtip',
@@ -429,5 +426,5 @@
 
     
 
-</script>
-@endpush
+    </script>
+    @endpush

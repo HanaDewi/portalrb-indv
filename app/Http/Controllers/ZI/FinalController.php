@@ -39,38 +39,38 @@ class FinalController extends Controller
         $jumlah_unit_wbk = 0;
         $jumlah_unit_wbbm = 0;
         
+        
         $jumlah_lolos_wbk = 0;
         $jumlah_lolos_wbbm = 0;
         $jumlah_instansi_lolos = 0;
+        $uploaded_lhe = 0 ;
         $teams = TimEvaluasi::get();
         $progress_teams = [];
         foreach($teams as $tim){       
             $progress_teams[$tim->nama] = [
                     "id" => $tim->id,
                     "jumlah_instansi" => 0,
-                    "jumlah_wbk" => 0,
-                    "jumlah_wbbm" =>0,
-                    "jumlah_wbk_completed" => 0,
-                    "jumlah_wbbm_completed" =>0,
-                    "jumlah_instansi_lulus" => 0,
-                    "jumlah_wbk_final_total" => 0,
-                    "jumlah_wbbm_final_total" =>0
+                    "jumlah_lhe_completed" => 0
                 ] ;
         }
         
         $datas = $instansiZis
-                ->map(function($instansiZi) use(&$jumlah_unit_wbk, &$jumlah_unit_wbbm, &$jumlah_lolos_wbk, &$jumlah_lolos_wbbm, &$jumlah_instansi, &$jumlah_instansi_lolos, &$progress_teams) {
+                ->map(function($instansiZi) use(&$jumlah_unit_wbk, &$jumlah_unit_wbbm, &$jumlah_lolos_wbk, &$jumlah_lolos_wbbm, &$jumlah_instansi, &$jumlah_instansi_lolos, &$progress_teams, &$uploaded_lhe) {
                     $wbkCount = $instansiZi->unit_zi->where('wbk', true)->count();
                     $wbbmCount = $instansiZi->unit_zi->where('wbbm', true)->count();
 
                     $total_unit = $wbkCount + $wbbmCount;
-
+                    
+                    $lhe_telah_diupload = false;
+                    if($instansiZi->lhe){
+                        $uploaded_lhe++ ;
+                        $lhe_telah_diupload = true;
+                    }
                     if($total_unit>0){
                         $jumlah_instansi += 1;
                         $jumlah_unit_wbk += $wbkCount; 
                         $jumlah_unit_wbbm += $wbbmCount; 
                         $nama_teams = $instansiZi->unit_zi->flatMap->unit_tim->map->tim->unique()->pluck('nama')->toArray();
-
                         $wbkFinalCount = $instansiZi->unit_zi->where('wbk', true)
                         ->filter(function($unitZi) {
                             return  optional($unitZi->panel)->status == 1;
@@ -100,27 +100,8 @@ class FinalController extends Controller
                         foreach($nama_teams as $tim){   
                             if (array_key_exists($tim, $progress_teams)) {
                                 $progress_teams[$tim]["jumlah_instansi"] +=1;
-                                $progress_teams[$tim]["jumlah_wbk"] += $wbkCount ;
-                                $progress_teams[$tim]["jumlah_wbbm"] += $wbbmCount ;
-                                if($wbkFinalCount>0 || $wbbmFinalCount>0 ){
-                                    $progress_teams[$tim]["jumlah_instansi_lulus"] +=1;
-                                    if($wbkFinalCount>0 ) {
-                                        $progress_teams[$tim]["jumlah_wbk_final_total"] += $wbkFinalCount ;
-                                    }
-                                    
-                                    if($wbbmFinalCount>0 ){  
-                                        $progress_teams[$tim]["jumlah_wbbm_final_total"] += $wbbmFinalCount;
-                                    }      
-                                }
-
-                                if($wbkCompletedCount>0 || $wbbmCompletedCount>0 ){
-                                    if($wbkCompletedCount>0 ) {
-                                        $progress_teams[$tim]["jumlah_wbk_completed"] += $wbkCompletedCount ;
-                                    }
-                                    
-                                    if($wbbmCompletedCount>0 ){  
-                                        $progress_teams[$tim]["jumlah_wbbm_completed"] += $wbbmCompletedCount;
-                                    }      
+                                if($lhe_telah_diupload){
+                                $progress_teams[$tim]["jumlah_lhe_completed"]++;  
                                 }
                             }
                         }
@@ -129,14 +110,21 @@ class FinalController extends Controller
                             $total_unit = 1;
                         }
 
+                        if($instansiZi->instansi_wbk_mandiri == 1){
+                            $nama_instansi = $instansiZi->klpd_instansi->name . " (Wbk Mandiri)" ;
+                        }
+                        else{
+                            $nama_instansi = $instansiZi->klpd_instansi->name;
+                        }
                         
                         return [
-                            'instansi_nama' => $instansiZi->klpd_instansi->name,
+                            'instansi_nama' => $nama_instansi,
                             'instansi_zi_id' => $instansiZi->id,
                             'instansi_wbk_mandiri' => $instansiZi->instansi_wbk_mandiri,
                             'nama_teams' => $nama_teams,
                             'wbk_count' => $wbkCount,
                             'wbbm_count' => $wbbmCount,
+                            'lhe_telah_diupload' => $lhe_telah_diupload,
                             'total_unit' => $wbkCount + $wbbmCount,
                             'wbk_final_count' => $wbkFinalCount,
                             'wbbm_final_count' => $wbbmFinalCount,
@@ -156,13 +144,13 @@ class FinalController extends Controller
         return view('zi.final.administrasi', compact(
             "title","jumlah_instansi","jumlah_unit_wbk","jumlah_unit_wbbm", 
             'jumlah_lolos_wbk', 'jumlah_lolos_wbbm', 'progress_teams',
-            "jumlah_unit_total","datas", "jumlah_instansi_lolos"
+            "jumlah_unit_total","datas", "jumlah_instansi_lolos", 'uploaded_lhe'
         ));               
     }
 
     public function final($id)
     {   
-        $title = "Seleksi Panel";
+        $title = "Final";
         $instansi_ZI = InstansiZI::find($id);
         $tim_ids = [];
         
@@ -175,7 +163,7 @@ class FinalController extends Controller
             }
         }
         $status = "Tidak Berhak";
-        //DI LOCK BIAR SEMUA ORANGG TIDAK BISA SIMPAN
+        // DI LOCK BIAR SEMUA ORANGG TIDAK BISA SIMPAN
         if(Auth::User()->userTimZI){                   
             foreach(Auth::User()->userTimZI as $anggotaTim){
                 if(in_array($anggotaTim->tim_id,$tim_ids)){
@@ -184,13 +172,7 @@ class FinalController extends Controller
             }
         }
         
-        $unit_ZIs = UnitZI::where("instansi_zi_id", $id)->where(function ($q){
-            $q->whereHas('seleksi_administrasi_unit', function ($query) {
-                $query->where('status_final', 1);
-            })->orWhereHas('sanggah_unit', function ($query) {
-                $query->where('status_final', 1);
-            });
-        })->orderBy('wbk','desc')->get();
+        $unit_ZIs = UnitZI::where("instansi_zi_id", $id)->orderBy('wbbm','desc')->get();
         
         
         
@@ -200,6 +182,33 @@ class FinalController extends Controller
         
     }
 
+    public function final_unit($id){
+        $title = "Final";
+        $unit_zi = UnitZI::where("id", $id)->first();
+        $tim_ids = [];
+        
+    
+        foreach ( $unit_zi->unit_tim as $unitTim){
+            if(!in_array($unitTim->tim_id, $tim_ids)){
+                array_push($tim_ids, $unitTim->tim_id);                            
+            }
+        }
+
+        $status = "Tidak Berhak";
+        //DI LOCK BIAR SEMUA ORANGG TIDAK BISA SIMPAN
+        if(Auth::User()->userTimZI){                   
+            foreach(Auth::User()->userTimZI as $anggotaTim){
+                if(in_array($anggotaTim->tim_id,$tim_ids)){
+                    $status = "Berhak" ;
+                }
+            }
+        }
+        
+        return view('zi.final.evaluasi_unit', compact("status",
+            "title","unit_zi",
+            ));
+        
+    }
     public function final_simpan(Request $request){
         //dd("Proses Seleksi Dokumen Buat Evaluator Masih Belum Dibuka Yah, mau ke mana sih buru-buru amat, Jangan Ya Dek Ya !! :p");
         $instansiZIid = $request->get('instansiZIId');
@@ -213,13 +222,13 @@ class FinalController extends Controller
             }
         }
         $status = "Tidak Berhak";
-        if(Auth::User()->userTimZI){                   
-            foreach(Auth::User()->userTimZI as $anggotaTim){
-                if(in_array($anggotaTim->tim_id,$tim_ids)){
-                    $status = "Berhak" ;
-                }
-            }
-        }
+        // if(Auth::User()->userTimZI){                   
+        //     foreach(Auth::User()->userTimZI as $anggotaTim){
+        //         if(in_array($anggotaTim->tim_id,$tim_ids)){
+        //             $status = "Berhak" ;
+        //         }
+        //     }
+        // }
         if($status == "Tidak Berhak"){
             abort('403');
         }
@@ -246,6 +255,46 @@ class FinalController extends Controller
         return redirect()->route('proses_final',$instansiZIid);
     }
 
+    public function final_unit_simpan(Request $request){
+        //dd("Proses Seleksi Dokumen Buat Evaluator Masih Belum Dibuka Yah, mau ke mana sih buru-buru amat, Jangan Ya Dek Ya !! :p");
+        
+        $unit_zi = UnitZI::find($request->get('unit_id'));
+        $tim_ids = [];
+    
+        
+        foreach ( $unit_zi->unit_tim as $unitTim){
+            if(!in_array($unitTim->tim_id, $tim_ids)){
+                array_push($tim_ids, $unitTim->tim_id);                            
+            }
+        }
+    
+        $status = "Tidak Berhak";
+        if(Auth::User()->userTimZI){                   
+            foreach(Auth::User()->userTimZI as $anggotaTim){
+                if(in_array($anggotaTim->tim_id,$tim_ids)){
+                    $status = "Berhak" ;
+                }
+            }
+        }
+        if($status == "Tidak Berhak"){
+            abort('403');
+        }
+        
+        
+        $finalUnit = HasilFinal::where('unit_zi_id', $unit_zi->id)->first();
+        if (!$finalUnit) {
+            $finalUnit = new HasilFinal();
+            $finalUnit->unit_zi_id = $unit_zi->id;
+        }
+        
+        $finalUnit->kondisi = $request->get('catatan');
+        $finalUnit->rekomendasi = $request->get('rekomendasi'); 
+        $finalUnit->updated_by = Auth::User()->id;
+        $finalUnit->save();  
+            
+        return redirect()->route('proses_final',$unit_zi->instansiZI->id);
+    }
+
     public function lhe_simpan (Request $request)
     {
         $validated = $request->validate([
@@ -254,25 +303,27 @@ class FinalController extends Controller
         ]);
 
         $success= false;
+        $status = "Tidak Berhak";
+        // if(Auth::User()->userTimZI){                   
+        //     foreach(Auth::User()->userTimZI as $anggotaTim){
+        //         if(in_array($anggotaTim->tim_id,$tim_ids)){
+        //             $status = "Berhak" ;
+        //         }
+        //     }
+        // }
+        if($status == "Tidak Berhak"){
+            abort('403');
+        }
         try{
             if ($request->hasFile('berkas')) {
-                
                 foreach ($request->file('berkas') as $key => $file_berkas) {
-                    $uploadFile = UnggahFile::where('instansi_zi_id', $request->get('instansi_id'))->first();
-                        if (!$uploadFile) {
-                            $uploadFile = new UnggahFile();
-                            $uploadFile->instansi_zi_id = $request->get('instansi_id');
-                        }
-                        
+                    $instansiZI = InstansiZI::where('id', $request->get('instansi_id'))->first();
                     $deskripsi = $request->deskripsi[$key];
                     $time = time();
                     $filename = "_$time.". $deskripsi ."." .$file_berkas->getClientOriginalExtension();
-                    $uploadFile->deskripsi = $deskripsi;
-                    $uploadFile->nama = $filename;
-                    $uploadFile->updated_by = Auth::User()->id;
+                    $instansiZI->lhe = $filename;
                     $file_berkas->storeAs('uploads/LHEZI2024', $filename, 'public');
-                    
-                    if ($uploadFile->save()) {
+                    if ($instansiZI->save()) {
                         $success = true;
                     } else {
                         $success = false;
@@ -287,6 +338,54 @@ class FinalController extends Controller
              session()->flash('success', 'LHE berhasil disimpan.');
         } else {
              session()->flash('error', 'LHE gagal disimpan! Silahkan dicoba kembali.');
+        }
+        return redirect('/zi/final/'.$request->get('instansi_id'));
+    }
+
+    public function undangan_simpan (Request $request)
+    {
+        $validated = $request->validate([
+            'berkas_undangan' => 'required|array',
+            'berkas_undangan.*' => 'file|mimes:jpg,png,pdf|max:2048', // Validate each file in the array
+        ]);
+
+        $success= false;
+        
+        $status = "Tidak Berhak";
+        // if(Auth::User()->userTimZI){                   
+        //     foreach(Auth::User()->userTimZI as $anggotaTim){
+        //         if(in_array($anggotaTim->tim_id,$tim_ids)){
+        //             $status = "Berhak" ;
+        //         }
+        //     }
+        // }
+        try{
+            if ($request->hasFile('berkas_undangan')) {
+                
+                foreach ($request->file('berkas_undangan') as $key => $file_berkas) {
+                    $instansiZI = InstansiZI::where('id', $request->get('instansi_id'))->first();
+                    $deskripsi = $request->deskripsi[$key];
+                    $time = time();
+                    $filename = "_$time.". $deskripsi ."." .$file_berkas->getClientOriginalExtension();
+                    $instansiZI->surat_undangan = $filename;
+                    $file_berkas->storeAs('uploads/SuratUndangan2024', $filename, 'public');
+                    
+                    if ($instansiZI->save()) {
+                        $success = true;
+                    } else {
+                        $success = false;
+                    }
+                    break;
+                }
+            }
+        } catch (\Throwable $th) {
+             throw $th;
+             
+        }
+        if ($success) {
+             session()->flash('success', 'Surat Undangan berhasil disimpan.');
+        } else {
+             session()->flash('error', 'Surat Undangan gagal disimpan! Silahkan dicoba kembali.');
         }
         return redirect('/zi/final/'.$request->get('instansi_id'));
     }

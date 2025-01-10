@@ -58,230 +58,310 @@
             <h2 class="font-bold text-base mr-auto"> {{$title}} - {{$instansi_ZI->klpd_instansi->name}}
                 @if($instansi_ZI->instansi_wbk_mandiri)
                 <b class="text-red-500">(WBK Mandiri)</b>
+                @if ($instansi_ZI->hasil_wbk_mandiri)
+                <a href="{{$instansi_ZI->hasil_wbk_mandiri}}" target="_blank" class="btn btn-primary">Lihat Hasil WBK
+                    Mandiri</a>
+                @else
+                <a href="{{$instansi_ZI->hasil_wbk_mandiri}}" target="_blank" class="btn btn-secondary">Belum Mengunggah
+                    Hasil WBK Mandiri</a>
+                @endif
                 @endif
             </h2>
         </div>
         <div class="lg:col-span-12 p-5 border-b border-slate-200/60">
-
-            @if ($errors->any())
-            <div class="alert alert-danger">
-                <ul>
-                    @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-            @endif
-
-            @if ($instansi_ZI->unggah_file)
-            <a href="{{asset('storage/uploads/LHEZI2024/'.$instansi_ZI->unggah_file->nama)}}" target="_blank"><img
-                    src="{{asset('images/pdf.png')}}" width="10%"></a>
-            <br />
-            <h5>LHE {{$instansi_ZI->klpd_instansi->name}}</h5>
-
-            @endif
-            <br />
-            <button onclick="upload_lhe({{ $instansi_ZI->id }});" class="btn btn-danger btn-sm kirim-file"><i
-                    data-lucide="edit" class="w-4 h-4 mr-1"></i> Upload LHE ZI</button>
-
-            <br />
-            <br /><br />
-
-
-
-            <form action="{{ route('proses_final_simpan') }}" method="POST">
-                @csrf
-                <input type="hidden" id="instansiZIId" name="instansiZIId" value="{{$instansi_ZI->id}}">
-
-                <table id="rekap-zi" class="table table-bordered " cellspacing="0" width="100%">
-                    <thead class="table-dark font-bold">
-                        <tr>
-                            <th>Unit</th>
-                            <th>Link Lke</th>
-                            <th>Tahapan</th>
-                            <th>Status Tahapan</th>
-                            <th>Catatan </th>
-                            <th>Rekomendasi </th>
-                            <th>Status Final</th>
-                            <th>Kondisi / Catatan</th>
-                            <th>Rekomendasi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @php
-                        $wbk_i = 0;
-                        $wbbm_i = 0;
-                        $ganjil_genap=0;
-                        @endphp
-                        @foreach ($unit_ZIs as $key => $unit_zi )
-                        @if(!$instansi_ZI->instansi_wbk_mandiri OR ($instansi_ZI->instansi_wbk_mandiri AND
-                        $unit_zi->wbbm ))
-                        @php
-                        $ganjil_genap++;
-                        @endphp
-                        <tr @if($ganjil_genap % 2==0) style="background-color: #f5f5f5" @endif>
-                            <td rowspan=4>
-                                @if($unit_zi->wbk==1)
-                                WBK {{++$wbk_i}}
-                                @elseif($unit_zi->wbbm==1)
-                                WBBM {{++$wbbm_i}}
-                                @endif
-                                :
-                                {{$unit_zi->nama}}
-                            </td>
-                            <td rowspan=4 class="bukti_dukung link-wrap">
-                                @if(isset($unit_zi->analisis_dokumen))
-                                <a href="{{$unit_zi->analisis_dokumen->bukti_dukung}}" target="_blank"
-                                    class="btn btn-primary">Lihat</a>
-                                @endif
-                            </td>
-                            <td>Analisis Dokumen</td>
-                            <td>
-                                @if(isset($unit_zi->analisis_dokumen))
-                                @if($unit_zi->analisis_dokumen->status==1)
-                                <p style="color:green">
-                                    LULUS
-                                </p>
-                                @elseif($unit_zi->analisis_dokumen->status===0)
-                                <p style="color:red">
-                                    TIDAK LULUS
-                                </p>
-                                @endif
-                                @endif
-                            </td>
-                            <td>
-                                @if(isset($unit_zi->analisis_dokumen))
-                                {{$unit_zi->analisis_dokumen->kondisi}}
-                                @endif
-                            </td>
-                            <td>@if(isset($unit_zi->analisis_dokumen))
-                                {{$unit_zi->analisis_dokumen->rekomendasi}}
-                                @endif
-                            </td>
-                            <td rowspan=4>
-                                <select disabled class="form-control status" name="status-{{$unit_zi->id}}"
-                                    data-old=@if(isset($unit_zi->final->status))
-                                    @if($unit_zi->final->status==1) "1"
-                                    @elseif($unit_zi->final->status===0) "0"
-                                    @else "kosong"
-                                    @endif
-                                    @else
-                                    "kosong"
-                                    @endif
-                                    data-id="{{$unit_zi->id}}">
-                                    <option value="" disabled selected>Pilih Status</option>
-                                    <option @if(optional($unit_zi->panel)->status==1) selected
-                                        @endif
-                                        value="1">Lulus</option>
-                                    <option @if(optional($unit_zi->panel)->status!=1) selected
-                                        @endif
-                                        value="0">Tidak Lulus</option>
-                                </select>
-                            </td>
-                            <td class="kondisi" rowspan=4>
-                                <textarea rows='4' class='glowing-border' name='kondisi-{{$unit_zi->id}}'
-                                    placeholder="Kondisi / Catatan">{{optional($unit_zi->final)->kondisi}}</textarea>
-                            </td>
-                            <td class="rekomendasi" rowspan=4>
-                                <textarea rows='4' class='glowing-border' data-old=""
-                                    name='rekomendasi-{{$unit_zi->id}}'
-                                    placeholder="Rekomendasi">{{optional($unit_zi->final)->rekomendasi}}</textarea>
-                            </td>
-                        </tr>
-                        <tr @if($ganjil_genap % 2==0) style="background-color: #f5f5f5" @endif>
-                            <td>Tahapan Wawancara</td>
-                            <td>
-                                @if(isset($unit_zi->wawancara))
-                                @if($unit_zi->wawancara->status==1)
-                                <p style="color:green">
-                                    LULUS
-                                </p>
-                                @elseif($unit_zi->wawancara->status===0)
-                                <p style="color:red">
-                                    TIDAK LULUS
-                                </p>
-                                @endif
-                                @endif
-                            </td>
-                            <td>@if(isset($unit_zi->wawancara))
-                                {{$unit_zi->wawancara->catatan}}
-                                @endif
-                            </td>
-                            <td>@if(isset($unit_zi->wawancara))
-                                {{$unit_zi->wawancara->rekomendasi}}
-                                @endif
-                            </td>
-                        </tr>
-                        <tr @if($ganjil_genap % 2==0) style="background-color: #f5f5f5" @endif>
-                            <td>Tahapan Verlap</td>
-                            <td>
-                                @if(isset($unit_zi->verifikasi_lapangan))
-                                @if($unit_zi->verifikasi_lapangan->status==1)
-                                <p style="color:green">
-                                    LULUS
-                                </p>
-                                @elseif($unit_zi->verifikasi_lapangan->status===0)
-                                <p style="color:red">
-                                    TIDAK LULUS
-                                </p>
-                                @elseif($unit_zi->verifikasi_lapangan->status==2)
-                                <p style="color:red">
-                                    Dibawa Ke Panel
-                                </p>
-                                @endif
-                                @endif
-                            </td>
-                            <td>
-                                @if(isset($unit_zi->verifikasi_lapangan))
-                                {{$unit_zi->verifikasi_lapangan->catatan}}
-                                @endif
-                            </td>
-                            <td>
-                                @if(isset($unit_zi->verifikasi_lapangan))
-                                {{$unit_zi->verifikasi_lapangan->rekomendasi}}
-                                @endif
-                            </td>
-                        </tr>
-                        <tr @if($ganjil_genap % 2==0) style="background-color: #f5f5f5" @endif>
-                            <td>Tahapan Panel</td>
-                            <td>
-                                @if(isset($unit_zi->panel))
-                                @if($unit_zi->panel->status==1)
-                                <p style="color:green">
-                                    LULUS
-                                </p>
-                                @elseif($unit_zi->panel->status===0)
-                                <p style="color:red">
-                                    TIDAK LULUS
-                                </p>
-                                @elseif($unit_zi->panel->status==2)
-                                <p style="color:red">
-                                    Dibawa Ke Panel
-                                </p>
-                                @endif
-                                @endif
-                            </td>
-                            <td>
-                                @if(isset($unit_zi->panel))
-                                {{$unit_zi->panel->catatan}}
-                                @endif
-                            </td>
-                            <td>
-                                @if(isset($unit_zi->panel))
-                                {{$unit_zi->panel->rekomendasi}}
-                                @endif
-                            </td>
-                        </tr>
-                        @endif
+            <div class="row">
+                @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
                         @endforeach
-                    </tbody>
-                </table>
-                <hr />
-                <br />
-                <div class="text-right">
-                    <input type="submit" id="tombol-kirim" class="btn btn-primary" value="Simpan">
+                    </ul>
                 </div>
-            </form>
+                @endif
+
+                <div class="col-span-12 grid grid-cols-12 gap-6">
+                    <div class="col-span-12 sm:col-span-4 2xl:col-span-4 intro-y">
+                        @if ($instansi_ZI->lhe)
+                        <a href="{{asset('storage/uploads/LHEZI2024/'.$instansi_ZI->lhe)}}" target="_blank"><img
+                                src="{{asset('images/pdf.png')}}" width="10%"></a>
+                        <br />
+                        <h5>LHE {{$instansi_ZI->klpd_instansi->name}}</h5>
+                        @endif
+                        <br />
+                        <button onclick="upload_lhe({{ $instansi_ZI->id }});"
+                            class="btn btn-danger btn-sm kirim-file"><i data-lucide="edit" class="w-4 h-4 mr-1"></i>
+                            Upload LHE ZI</button>
+                    </div>
+                    <div class="col-span-12 sm:col-span-4 2xl:col-span-4 intro-y">
+                        @if ($instansi_ZI->surat_undangan)
+                        <a href="{{asset('storage/uploads/SuratUndangan2024/'.$instansi_ZI->surat_undangan)}}"
+                            target="_blank"><img src="{{asset('images/pdf.png')}}" width="10%"></a>
+                        <br />
+                        <h5>Surat Undangan {{$instansi_ZI->klpd_instansi->name}}</h5>
+                        @endif
+                        <br />
+                        <button onclick="upload_undangan({{ $instansi_ZI->id }});"
+                            class="btn btn-warning btn-sm kirim-file"><i data-lucide="edit" class="w-4 h-4 mr-1"></i>
+                            Upload Surat Undangan</button>
+                    </div>
+                    <div class="col-span-12 sm:col-span-4 2xl:col-span-4 intro-y">
+                        <br />
+                        <a href="{{route('evaluatan_hasil_akhir')}}?instansi_zi_id={{$instansi_ZI->id}}" target="_blank"
+                            class="btn btn-success btn-sm kirim-file">
+                            <i data-lucide="edit" class="w-4 h-4 mr-1"></i>
+                            Lihat Tampilan Evaluatan
+                        </a>
+                    </div>
+                </div>
+
+
+                <hr />
+
+
+                <br />
+                <br /><br />
+
+            </div>
+
+
+            <table id="rekap-zi" class="table table-bordered">
+                <thead class="table-dark font-bold">
+                    <tr>
+                        <th>Unit</th>
+                        <th>Link Lke</th>
+                        <th>Tahapan</th>
+                        <th>Status Tahapan</th>
+                        <th>Catatan </th>
+                        <th>Rekomendasi </th>
+                        <th>Status Final</th>
+                        <th>Kondisi / Catatan</th>
+                        <th>Rekomendasi</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @php
+                    $wbk_i = 0;
+                    $wbbm_i = 0;
+                    $ganjil_genap=0;
+                    @endphp
+                    @foreach ($unit_ZIs as $key => $unit_zi )
+                    @if(!$instansi_ZI->instansi_wbk_mandiri OR ($instansi_ZI->instansi_wbk_mandiri AND
+                    $unit_zi->wbbm ))
+                    @php
+                    $ganjil_genap++;
+                    @endphp
+                    <tr @if($ganjil_genap % 2==0) style="background-color: #f5f5f5" @endif>
+                        <td rowspan=5>
+                            @if($unit_zi->wbk==1)
+                            WBK {{++$wbk_i}}
+                            @if($instansi_ZI->instansi_wbk_mandiri AND $unit_zi->wbk)
+                            <strong style="color:red">(MANDIRI)</strong>
+                            @endif
+                            @elseif($unit_zi->wbbm==1)
+                            WBBM {{++$wbbm_i}}
+                            @endif
+                            :
+                            {{$unit_zi->nama}}
+                        </td>
+                        <td rowspan=5 class="bukti_dukung link-wrap">
+                            @if(isset($unit_zi->analisis_dokumen))
+                            <a href="{{$unit_zi->analisis_dokumen->bukti_dukung}}" target="_blank"
+                                class="btn btn-primary">Lihat</a>
+                            @endif
+                        </td>
+                        <td>Seleksi Administrasi dan sanggah</td>
+                        <td>
+                            @if(isset($unit_zi->seleksi_administrasi_unit))
+                            @if($unit_zi->seleksi_administrasi_unit->status_final==1)
+                            <p style="color:green">
+                                LULUS
+                            </p>
+                            @elseif($unit_zi->sanggah_unit->status_final==1)
+                            <p style="color:green">
+                                LULUS
+                            </p>
+                            @elseif($unit_zi->sanggah_unit->status_final===0)
+                            <p style="color:red">
+                                TIDAK LULUS
+                            </p>
+                            @endif
+                            @endif
+                        </td>
+                        <td class="link-wrap">
+
+                            @if(isset($unit_zi->seleksi_administrasi_unit))
+                            {{$unit_zi->seleksi_administrasi_unit->catatan_lke}} <br />
+                            {{$unit_zi->seleksi_administrasi_unit->catatan_tlhp}} <br />
+                            {{$unit_zi->seleksi_administrasi_unit->catatan_survei_mandiri}}<br />
+                            {{$unit_zi->seleksi_administrasi_unit->catatan_2wbk}}<br />
+                            @endif
+                            @if(isset($unit_zi->sanggah_unit))
+                            {{$unit_zi->sanggah_unit->catatan_lke}}<br />
+                            {{$unit_zi->sanggah_unit->catatan_tlhp}}<br />
+                            {{$unit_zi->sanggah_unit->catatan_survei_mandiri}}<br />
+                            {{$unit_zi->sanggah_unit->catatan_2wbk}}<br />
+                            @endif
+
+                        </td>
+                        <td class="link-wrap">
+                            <!-- Rekomendasi -->
+                        </td>
+                        <td rowspan=5>
+                            <select disabled class="form-control status" name="status-{{$unit_zi->id}}">
+                                <option value="" disabled selected>Pilih Status</option>
+                                <option @if(optional($unit_zi->panel)->status==1) selected
+                                    @endif
+                                    value="1">Lulus</option>
+                                <option @if(optional($unit_zi->panel)->status===0) selected
+                                    @elseif(optional($unit_zi->verifikasi_lapangan)->status===0) selected
+                                    @elseif(optional($unit_zi->wawancara)->status===0) selected
+                                    @elseif(optional($unit_zi->analisis_dokumen)->status===0) selected
+                                    @elseif(optional($unit_zi->sanggah_unit)->status_final===0) selected
+                                    @endif
+                                    value="0">Tidak Lulus</option>
+                            </select>
+                        </td>
+                        <td class="kondisi" rowspan=5 class="link-wrap">
+                            {{optional($unit_zi->final)->kondisi}}
+                        </td>
+                        <td class="rekomendasi" rowspan=5 class="link-wrap">
+                            {{optional($unit_zi->final)->rekomendasi}}
+                        </td>
+                        <td class="rekomendasi" rowspan=5 class="link-wrap">
+                            @if($status == "Berhak")
+                            <a href="{{route('proses_final_unit',$unit_zi->id)}}" class="btn btn-primary">Isi
+                                Catatan dan Rekomendasi Final</a>
+                            @endif
+                        </td>
+
+                    </tr>
+                    <tr @if($ganjil_genap % 2==0) style="background-color: #f5f5f5" @endif>
+                        <td>Analisis Dokumen</td>
+                        <td>
+                            @if(isset($unit_zi->analisis_dokumen))
+                            @if($unit_zi->analisis_dokumen->status==1)
+                            <p style="color:green">
+                                LULUS
+                            </p>
+                            @elseif($unit_zi->analisis_dokumen->status===0)
+                            <p style="color:red">
+                                TIDAK LULUS
+                            </p>
+                            @endif
+                            @endif
+                        </td>
+                        <td class="link-wrap">
+
+                            @if(isset($unit_zi->analisis_dokumen))
+                            {{$unit_zi->analisis_dokumen->kondisi}}
+                            @endif
+
+                        </td>
+                        <td class="link-wrap">@if(isset($unit_zi->analisis_dokumen))
+                            {{$unit_zi->analisis_dokumen->rekomendasi}}
+                            @endif
+                        </td>
+                    </tr>
+                    <tr @if($ganjil_genap % 2==0) style="background-color: #f5f5f5" @endif>
+                        <td>Tahapan Wawancara</td>
+                        <td>
+                            @if(isset($unit_zi->wawancara))
+                            @if($unit_zi->wawancara->status==1)
+                            <p style="color:green">
+                                LULUS
+                            </p>
+                            @elseif($unit_zi->wawancara->status===0)
+                            <p style="color:red">
+                                TIDAK LULUS
+                            </p>
+                            @endif
+                            @endif
+                        </td>
+
+                        <td class="link-wrap">
+
+                            @if(isset($unit_zi->wawancara))
+                            {{$unit_zi->wawancara->kondisi}}
+                            @endif
+
+                        </td>
+                        <td class="link-wrap">@if(isset($unit_zi->wawancara))
+                            {{$unit_zi->wawancara->rekomendasi}}
+                            @endif
+                        </td>
+                    </tr>
+                    <tr @if($ganjil_genap % 2==0) style="background-color: #f5f5f5" @endif>
+                        <td>Tahapan Verlap</td>
+                        <td>
+                            @if(isset($unit_zi->verifikasi_lapangan))
+                            @if($unit_zi->verifikasi_lapangan->status==1)
+                            <p style="color:green">
+                                LULUS
+                            </p>
+                            @elseif($unit_zi->verifikasi_lapangan->status===0)
+                            <p style="color:red">
+                                TIDAK LULUS
+                            </p>
+                            @elseif($unit_zi->verifikasi_lapangan->status==2)
+                            <p style="color:red">
+                                Dibawa Ke Panel
+                            </p>
+                            @endif
+                            @endif
+                        </td>
+                        <td class="link-wrap">
+
+                            @if(isset($unit_zi->verifikasi_lapangan))
+                            {{$unit_zi->verifikasi_lapangan->kondisi}}
+                            @endif
+
+                        </td>
+                        <td class="link-wrap">
+                            @if(isset($unit_zi->verifikasi_lapangan))
+                            {{$unit_zi->verifikasi_lapangan->rekomendasi}}
+                            @endif
+                        </td>
+                    </tr>
+                    <tr @if($ganjil_genap % 2==0) style="background-color: #f5f5f5" @endif>
+                        <td>Tahapan Panel</td>
+                        <td>
+                            @if(isset($unit_zi->panel))
+                            @if($unit_zi->panel->status==1)
+                            <p style="color:green">
+                                LULUS
+                            </p>
+                            @elseif($unit_zi->panel->status===0)
+                            <p style="color:red">
+                                TIDAK LULUS
+                            </p>
+                            @elseif($unit_zi->panel->status==2)
+                            <p style="color:red">
+                                Dibawa Ke Panel
+                            </p>
+                            @endif
+                            @endif
+                        </td>
+                        <td class="link-wrap">
+
+                            @if(isset($unit_zi->panel))
+                            {{$unit_zi->panel->kondisi}}
+                            @endif
+
+                        </td>
+                        <td class="link-wrap">
+                            @if(isset($unit_zi->panel))
+                            {{$unit_zi->panel->rekomendasi}}
+                            @endif
+                        </td>
+                    </tr>
+                    @endif
+                    @endforeach
+                </tbody>
+            </table>
+            <hr />
+            <br />
         </div>
     </div>
 </div>
@@ -324,8 +404,49 @@
             </form>
         </div>
     </div>
-</div> <!-- END: Modal Content -->
+</div>
+<!-- END: Modal Content -->
 
+{{-- Modal Upload Surat Undangan --}}
+<div id="modal_upload_undangan" class="modal fade" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <!-- BEGIN: Modal Header -->
+            <div class="darkbg modal-header">
+                <h2 class="font-bold fw-medium fs-base me-auto">Upload Surat Undangan</h2>
+            </div> <!-- END: Modal Header -->
+            <!-- BEGIN: Modal Body -->
+            <form action="{{ route('proses_upload_surat_undangan_simpan') }}" method="post"
+                enctype="multipart/form-data">
+                @csrf
+                <input type="hidden" name="instansi_id" value="{{$instansi_ZI->id}}">
+                <div class="modal-body grid columns-12 gap-4 gap-y-3">
+                    <div class="g-col-12">
+                        <table class="table">
+                            <tr>
+                                <td class="font-bold w-44">Berkas <span class="text-danger">*</span></td>
+                                <td>
+                                    <button type="button" class="btn btn-info btn-sm"
+                                        onclick="pilih_berkas_undangan();"><i class="fa fa-plus"></i> Tambah
+                                        Berkas</button>
+                                    <input type="file" id="berkas_undangan" style="display: none">
+                                    <div id="berkas_undangan_list" class="intro-y grid grid-cols-12 gap-6 mt-5"></div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div> <!-- END: Modal Body -->
+                <!-- BEGIN: Modal Footer -->
+                <div class="modal-footer text-end">
+                    <button type="button" data-tw-dismiss="modal"
+                        class="btn btn-outline-secondary w-20 me-1">Batal</button>
+                    <button type="submit" class="btn btn-primary w-20 saveButton">Simpan</button>
+                </div> <!-- END: Modal Footer -->
+            </form>
+        </div>
+    </div>
+</div>
+<!-- END: Modal Content -->
 
 @endsection
 
@@ -353,24 +474,41 @@
                 //     $('#berkas_list').html(data.berkas_list);
                 //     $('.saveButton').prop('disabled', false);
                 // });
-        }
+    }
+
+    function upload_undangan(id) {
+        modal_upload_undangan.show();
+                // $.getJSON("{{ url('hasil/get_test_tp') }}/" + id, function(data) {
+                //     $('#bobot_rb_general_penyesuaian').val(data.bobot_rb_general_penyesuaian);
+                //     $('#berkas_list').html(data.berkas_list);
+                //     $('.saveButton').prop('disabled', false);
+                // });
+    }
 
     function pilih_berkas() {
         $('#berkas').trigger('click');
+    }
+
+    function pilih_berkas_undangan() {
+        $('#berkas_undangan').trigger('click');
     }
 
     $('#berkas').change(function() {
         cek_berkas(this);
     })
 
+    $('#berkas_undangan').change(function() {
+        cek_berkas_undangan(this);
+    })
+
     function isAllowed(ext) {
         switch (ext.toLowerCase()) {
-            case 'xlsx':
-            case 'xls':
-            case 'docx':
-            case 'doc':
-            case 'pptx':
-            case 'ppt':
+            //case 'xlsx':
+            //case 'xls':
+            //case 'docx':
+            //case 'doc':
+            //case 'pptx':
+            //case 'ppt':
             case 'pdf':
             return true;
         }
@@ -388,7 +526,7 @@
                 var desc = filename.replace("C:\\fakepath\\", "");
                 var desc = desc.replace("."+ext, "");
                 if (!isAllowed(ext)) {
-                    Swal.fire("Perhatian", "File yang di input tidak sesuai ketentuan (pdf, word, excel, power point).", "error");
+                    Swal.fire("Perhatian", "File yang di input tidak sesuai ketentuan (pdf).", "error");
                 } else {
                     src = ext.toLowerCase() == 'pdf' ? "{{asset('images/pdf.png')}}" : (ext.toLowerCase() == 'xls' || ext.toLowerCase() == 'xlsx' ? "{{asset('images/excel.png')}}" : (ext.toLowerCase() == 'doc' || ext.toLowerCase() == 'docx' ? "{{asset('images/word.png')}}" : (ext.toLowerCase() == 'ppt' || ext.toLowerCase() == 'pptx' ? "{{asset('images/ppt.png')}}" : e.target.result)));
                     console.log(src, ext.toLowerCase());
@@ -415,9 +553,48 @@
         }
     }
 
+    function cek_berkas_undangan(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                filename = $('#berkas_undangan').val();
+                newVal = $('#berkas_undangan').next().val();
+                var parts = filename.split('.');
+                var ext = parts[parts.length - 1];
+                var desc = filename.replace("C:\\fakepath\\", "");
+                var desc = desc.replace("."+ext, "");
+                if (!isAllowed(ext)) {
+                    Swal.fire("Perhatian", "File yang di input tidak sesuai ketentuan (pdf, word, excel, power point).", "error");
+                } else {
+                    src = ext.toLowerCase() == 'pdf' ? "{{asset('images/pdf.png')}}" : (ext.toLowerCase() == 'xls' || ext.toLowerCase() == 'xlsx' ? "{{asset('images/excel.png')}}" : (ext.toLowerCase() == 'doc' || ext.toLowerCase() == 'docx' ? "{{asset('images/word.png')}}" : (ext.toLowerCase() == 'ppt' || ext.toLowerCase() == 'pptx' ? "{{asset('images/ppt.png')}}" : e.target.result)));
+                    console.log(src, ext.toLowerCase());
+                    berkas_undangan = $('#berkas_undangan').clone();
+                    berkas_undangan.attr('name', 'berkas_undangan['+idx+']');
+                    berkas_undangan.attr('id', 'berkas_undangan'+idx);
+                    berkas_undangan_div = '<div class="col-span-12 lg:col-span-4" id="berkasundangandiv'+idx+'" style="position:relative;">'+
+                            '<div style="height: 100px;">'+
+                                '<img class="img-fluid card-img-top" src="'+src+'" alt="BerkasUndangan'+idx+'" style="max-height: 100px; max-width:100%; padding: 5px 0;">'+
+                            '</div>'+
+                            '<div class="form-group mb-0">'+
+                                '<input type="text" name="deskripsi['+idx+']" class="form-control" id="deskripsi'+idx+'" placeholder="Deskripsi" value="'+desc+'" required>'+
+                            '</div>'+
+                            '<a href="javascript:void(0);" onclick="removeBerkasUndangan('+idx+')" class="remove-button text-danger">'+
+                                '<div class="tooltip w-5 h-5 flex items-center justify-center absolute rounded-full text-white bg-danger right-0 top-0 -mr-2 -mt-2"> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" icon-name="x" data-lucide="x" class="lucide lucide-x w-4 h-4"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg> </div>'
+                            '</a>'+
+                    '</div>';
+                    $('#berkas_undangan_list').append(berkas_undangan_div);
+                    $('#berkas_undangan_list').append(berkas_undangan);
+                    idx++;
+                }
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
     $(document).ready(function(){
 
         modal_upload_lhe = tailwind.Modal.getInstance(document.querySelector("#modal-upload-lhe"));
+        modal_upload_undangan = tailwind.Modal.getInstance(document.querySelector("#modal_upload_undangan"));
 
         $('.openNew').click(function(event) {
             event.preventDefault();

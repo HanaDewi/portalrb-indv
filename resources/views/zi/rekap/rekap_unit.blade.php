@@ -10,8 +10,7 @@
         </div>
         <br />
         <div class="col-span-12 grid grid-cols-12 gap-6">
-
-            <div class="col-span-12 sm:col-span-6 2xl:col-span-3 intro-y">
+            <div class="col-span-12 sm:col-span-6 2xl:col-span-6  intro-y">
                 <div class="box p-5 zoom-in">
                     <div class="flex items-center">
                         <div class="w-3/4 flex-none">

@@ -8,20 +8,20 @@
         <div class="flex flex-col sm:flex-row items-center p-5 border-b border-slate-200/60">
             <h2 class="font-bold text-base mr-auto"> Hasil {{ $instansi->name }}</h2>
         </div>
-        @isset($instansi->lke_test_tp)
+        @isset($instansi->lke_test_tp_old)
         <div class="lg:col-span-12 p-5 border-b border-slate-200/60">
             <table class="table table-bordered table-striped mt-5">
                 <tr>
                     <td class="font-bold" width="220">RB General</td>
-                    <td>{{ round($instansi->lke_test_tp->rb_general, 2) }}</td>
+                    <td>{{ round($instansi->lke_test_tp_old->rb_general, 2) }}</td>
                 </tr>
                 <tr>
                     <td class="font-bold">RB Tematik</td>
-                    <td>{{ round($instansi->lke_test_tp->rb_tematik, 2) }}</td>
+                    <td>{{ round($instansi->lke_test_tp_old->rb_tematik, 2) }}</td>
                 </tr>
                 <tr>
                     <td class="font-bold">Total Nilai</td>
-                    <td>{{ round($instansi->lke_test_tp->index_rb, 2) }}</td>
+                    <td>{{ round($instansi->lke_test_tp_old->index_rb, 2) }}</td>
                 </tr>
                 <tr>
                     <td class="font-bold">Total Bobot RB General</td>
@@ -29,15 +29,15 @@
                 </tr>
                 <tr>
                     <td class="font-bold">Bobot RB General Penyesuaian</td>
-                    <td>{{ $instansi->lke_test_tp->bobot_rb_general_penyesuaian }}</td>
+                    <td>{{ $instansi->lke_test_tp_old->bobot_rb_general_penyesuaian }}</td>
                 </tr>
                 <tr>
                     <td class="font-bold">RB General Penyesuaian</td>
-                    <td>{{ round($instansi->lke_test_tp->rb_general_penyesuaian, 2) }}</td>
+                    <td>{{ round($instansi->lke_test_tp_old->rb_general_penyesuaian, 2) }}</td>
                 </tr>
                 <tr>
                     <td class="font-bold">Index RB</td>
-                    <td>{{ round($instansi->lke_test_tp->index_rb_penyesuaian, 2) }}</td>
+                    <td>{{ round($instansi->lke_test_tp_old->index_rb_penyesuaian, 2) }}</td>
                 </tr>
                 @php
                 $idx = 0;
@@ -47,7 +47,7 @@
                     <td class="font-bold">File Berkas</td>
                     <td>
                         @php
-                        $test_tp = $instansi->lke_test_tp;
+                        $test_tp = $instansi->lke_test_tp_old;
                         $idx = $test_tp->files ? $test_tp->files->max('id') + 1 : 0;
                         $berkas_list = '';
                         if ($test_tp->files) {
@@ -66,7 +66,7 @@
                 <tr>
                     <td class="font-bold">Aksi</td>
                     <td>
-                        <button onclick="edit_test_tp({{ $instansi->lke_test_tp->id }});" class="btn btn-warning btn-sm"><i data-lucide="edit" class="w-4 h-4 mr-1"></i> Perbaharui Data TP</button>
+                        <button onclick="edit_test_tp({{ $instansi->lke_test_tp_old->id }});" class="btn btn-warning btn-sm"><i data-lucide="edit" class="w-4 h-4 mr-1"></i> Perbaharui Data TP</button>
                     </td>
                 </tr>
                 @endif
@@ -135,7 +135,7 @@
                 </h2>
             </div> <!-- END: Modal Header -->
             <!-- BEGIN: Modal Body -->
-            <form action="{{ url('hasil/simpan_test_tp_line') }}" id="form-score" method="post">
+            <form action="{{ url('evaluasi/hasil-2023/simpan_test_tp_line') }}" id="form-score" method="post">
                 @csrf
                 <input type="hidden" name="test_tp_line_id" id="test_tp_line_id">
                 <div class="modal-body grid columns-12 gap-4 gap-y-3">
@@ -192,7 +192,7 @@
                 </h2>
             </div> <!-- END: Modal Header -->
             <!-- BEGIN: Modal Body -->
-            <form action="{{ url('hasil/simpan_test_tp') }}" id="form-penyesuaian" method="post" enctype="multipart/form-data">
+            <form action="{{ url('evaluasi/hasil-2023/simpan_test_tp') }}" id="form-penyesuaian" method="post" enctype="multipart/form-data">
                 @csrf
                 <input type="hidden" name="test_tp_id" id="test_tp_id">
                 <div class="modal-body grid columns-12 gap-4 gap-y-3">
@@ -314,7 +314,7 @@
         $('#test_tp_id').val(id);
         $('.saveButton').prop('disabled', true);
         modal_penyesuaian.show();
-        $.getJSON("{{ url('hasil/get_test_tp') }}/" + id, function(data) {
+        $.getJSON("{{ url('evaluasi/hasil-2023/get_test_tp') }}/" + id, function(data) {
             $('#bobot_rb_general_penyesuaian').val(data.bobot_rb_general_penyesuaian);
             $('#berkas_list').html(data.berkas_list);
             $('.saveButton').prop('disabled', false);
@@ -399,7 +399,7 @@
         $('#test_tp_line_id').val(id);
         $('.saveButton').prop('disabled', true);
         modal_score.show();
-        $.getJSON("{{ url('hasil/get_test_tp_line') }}/" + id, function(data) {
+        $.getJSON("{{ url('evaluasi/hasil-2023/get_test_tp_line') }}/" + id, function(data) {
             $("#score").inputmask("decimal",{
                 radixPoint:".",
                 digits: 2,

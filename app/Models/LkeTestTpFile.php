@@ -11,7 +11,7 @@ class LkeTestTpFile extends Model
 {
     use LogsActivity,
         HasFactory;
-    protected $table = 'lke_test_tp_files';
+    protected $table = 'old_lke_test_tp_files';
 
     public function lke_test_tp()
     {

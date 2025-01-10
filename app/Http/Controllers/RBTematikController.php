@@ -1,8 +1,6 @@
 <?php
 
 namespace App\Http\Controllers;
-
-
 use App\Exports\ExportRBTematikTemplate;
 use App\Imports\ImportRBTematik;
 use App\Models\FokusIntervensi;
@@ -913,7 +911,7 @@ class RBTematikController extends Controller
         if (in_array($user->level, ['admin', 'tpn', 'viewer'])) {
             $instansi_id = $finstansi;
         } else {
-            if ($request->instansi_id && in_array($user->level, ['admin', 'tpn', 'viewer'], )) {
+            if ($request->instansi_id && in_array($user->level, ['admin', 'tpn', 'viewer'])) {
                 $instansi_id = [$request->instansi_id];
             } else if ($user->user_rel->instansi_id) {
                 $instansi_id = [$user->user_rel->instansi_id];

@@ -19,7 +19,7 @@
                         <a href="{{ route('evaluatan_desk') }}">Desk Evaluasi & Observasi lapangan</a>
                     </li>
 
-                    <li class=@if($instansiZI->tahap_seleksi >= 7) "active-tl" @endif>
+                    <li class=@if($instansiZI->tahap_seleksi >= 5) "active-tl" @endif>
                         <a href="{{ route('evaluatan_hasil_akhir') }}">Hasil Akhir</a>
                     </li>
                 </ul>

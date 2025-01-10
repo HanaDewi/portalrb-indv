@@ -1,9 +1,10 @@
 <?php
 
+use App\Http\Controllers\DataKonversiJawabanController;
+use App\Http\Controllers\DokumenController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\HasilController;
-use App\Http\Controllers\DokumenController;
 use App\Http\Controllers\ManageTimController;
 use App\Http\Controllers\RBGeneralController;
 use App\Http\Controllers\RBTematikController;
@@ -11,6 +12,9 @@ use App\Http\Controllers\ManageUserController;
 use App\Http\Controllers\MasterDataController;
 use App\Http\Controllers\WebDashboardController;
 use App\Http\Controllers\CapaianOutputController;
+use App\Http\Controllers\ERenaksiRBGeneralController;
+use App\Http\Controllers\DataLKERenaksiController;
+use App\Http\Controllers\LKEController;
 use App\Http\Controllers\RBTematikImportController;
 use App\Http\Controllers\RuangBelajar\AdminController;
 use App\Http\Controllers\RuangBelajar\DashboardController;
@@ -80,6 +84,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/master-data/dokumen/getDataKategori/{id}', [MasterDataController::class, 'dokumen_getDataKategori']);
     Route::post('/master-data/dokumen/simpanKategori', [MasterDataController::class, 'dokumen_simpanKategori']);
     Route::post('/master-data/dokumen/hapusKategori', [MasterDataController::class, 'dokumen_hapusKategori']);
+    // LKE Parameter
+    Route::get('/master-data/lke_parameter', [MasterDataController::class, 'lke_parameter'])->name('lke_parameter');
+    Route::get('/master-data/lke_parameter/getDatas', [MasterDataController::class, 'lke_parameter_getDatas']);
+    Route::get('/master-data/lke_parameter/getData/{id}', [MasterDataController::class, 'lke_parameter_getData']);
+    Route::get('/master-data/lke_parameter/getSubKomponen/{komponen_id}', [MasterDataController::class, 'lke_parameter_getSubKomponen']);
+    Route::get('/master-data/lke_parameter/getIndikatorPengali/{komponen_id}', [MasterDataController::class, 'lke_parameter_getIndikatorPengali']);
+    Route::post('/master-data/lke_parameter/simpan', [MasterDataController::class, 'lke_parameter_simpan']);
+    Route::post('/master-data/lke_parameter/hapus', [MasterDataController::class, 'lke_parameter_hapus']);
 
 
     // Dokumen Upload
@@ -157,13 +169,48 @@ Route::middleware('auth')->group(function () {
     Route::get('/rencana_aksi/rb-tematik/rekap_data', [RBTematikController::class, 'rekap_data']);
     Route::get('/rencana_aksi/rb-tematik/rekap_data/getPerencanaan/{id}', [RBTematikController::class, 'rekap_data_getPerencanaan']);
     Route::post('/rencana_aksi/rb-tematik/rekap_data/simpanCatatanEvaluator', [RBTematikController::class, 'rekap_data_simpanCatatanEvaluator']);
+
+    // Evaluasi
+    Route::get('/evaluasi/renaksi-rb-general', [ERenaksiRBGeneralController::class, 'index']);
+    Route::post('/evaluasi/renaksi-rb-general/save', [ERenaksiRBGeneralController::class, 'dosave']);
+    Route::delete('/evaluasi/renaksi-rb-general/delete', [ERenaksiRBGeneralController::class, 'dodelete']);
+    
+    Route::get('/master-data/data-lke-renaksi', [DataLKERenaksiController::class, 'index']);
+    Route::post('/master-data/data-lke-renaksi/save', [DataLKERenaksiController::class, 'dosave']);
+    Route::delete('/master-data/data-lke-renaksi/delete', [DataLKERenaksiController::class, 'dodelete']);
+
+    Route::get('/master-data/data-konversi-jawaban', [DataKonversiJawabanController::class, 'index']);
+    Route::post('/master-data/data-konversi-jawaban/save', [DataKonversiJawabanController::class, 'dosave']);
+    Route::delete('/master-data/data-konversi-jawaban/delete', [DataKonversiJawabanController::class, 'dodelete']);
+
+    // LKE Utama
+    Route::get('/evaluasi/lke-utama', [LKEController::class, 'lke_utama']);
+    Route::get('/evaluasi/lke-utama/getDatas', [LKEController::class, 'lke_utama_getDatas']);
+    Route::get('/evaluasi/lke-utama/{parameter_id}', [LKEController::class, 'lke_utama_score']);
+    Route::get('/evaluasi/lke-utama/{parameter_id}/getDatas', [LKEController::class, 'lke_utama_score_getDatas']);
+    Route::get('/evaluasi/lke-utama/{parameter_id}/downloadTemplate', [LKEController::class, 'lke_utama_score_downloadTemplate']);
+    Route::post('/evaluasi/lke-utama/{parameter_id}/simpan', [LKEController::class, 'lke_utama_score_simpan']);
+    Route::post('/evaluasi/lke-utama/{parameter_id}/import', [LKEController::class, 'lke_utama_score_import']);
+    Route::get('/evaluasi/lke-utama/{parameter_id}/getData/{instansi_id}/{lke_bobot_id}', [LKEController::class, 'lke_utama_score_getData']);
+
+    // Database
+    Route::get('/evaluasi/database', [LKEController::class, 'database']);
+    Route::get('/evaluasi/database/getDatas', [LKEController::class, 'database_getDatas']);
+
+    // Hasil Evaluasi
+    Route::get('/evaluasi/hasil-evaluasi', [LKEController::class, 'hasil_evaluasi']);
+    Route::get('/evaluasi/hasil-evaluasi/getDatas', [LKEController::class, 'hasil_evaluasi_getDatas']);
+    Route::get('/evaluasi/hasil-evaluasi/getKegiatan', [LKEController::class, 'hasil_evaluasi_getKegiatan']);
+    Route::get('/evaluasi/hasil-evaluasi/{instansi_id}/{kegiatan_id}', [LKEController::class, 'hasil_evaluasi_instansi']);
+    Route::post('/evaluasi/hasil-evaluasi/{instansi_id}/{kegiatan_id}/simpan', [LKEController::class, 'hasil_evaluasi_instansi_simpan']);
+
     // Hasil
-    Route::get('/hasil', [HasilController::class, 'hasil_seluruh'])->name('hasil_seluruh');
-    Route::get('/hasil/{KlpdInstansi}', [HasilController::class, 'hasil'])->name('hasil');
-    Route::get('/hasil/get_test_tp_line/{id}', [HasilController::class, 'get_test_tp_line']);
-    Route::get('/hasil/get_test_tp/{id}', [HasilController::class, 'get_test_tp']);
-    Route::post('/hasil/simpan_test_tp_line', [HasilController::class, 'simpan_test_tp_line']);
-    Route::post('/hasil/simpan_test_tp', [HasilController::class, 'simpan_test_tp']);
+    Route::get('/evaluasi/hasil-2023', [HasilController::class, 'hasil_seluruh'])->name('hasil_seluruh');
+    Route::get('/evaluasi/hasil-2023/{KlpdInstansi}', [HasilController::class, 'hasil'])->name('hasil');
+    Route::get('/evaluasi/hasil-2023/get_test_tp_line/{id}', [HasilController::class, 'get_test_tp_line']);
+    Route::get('/evaluasi/hasil-2023/get_test_tp/{id}', [HasilController::class, 'get_test_tp']);
+    Route::post('/evaluasi/hasil-2023/simpan_test_tp_line', [HasilController::class, 'simpan_test_tp_line']);
+    Route::post('/evaluasi/hasil-2023/simpan_test_tp', [HasilController::class, 'simpan_test_tp']);
     // Access
     Route::get('/access', [HasilController::class, 'access'])->name('access');
     Route::post('/access/simpan', [HasilController::class, 'access_simpan']);

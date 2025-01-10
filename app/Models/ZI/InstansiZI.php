@@ -34,7 +34,7 @@ class InstansiZI extends Model
     }
 
     public function unggah_file() {
-        return $this->hasOne(UnggahFile::class, 'instansi_zi_id');
+        return $this->hasMany(UnggahFile::class, 'instansi_zi_id');
     }
 
 

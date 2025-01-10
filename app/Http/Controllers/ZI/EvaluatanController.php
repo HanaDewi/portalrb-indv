@@ -27,6 +27,9 @@ class EvaluatanController extends Controller
 
     public function seleksi_administrasi(Request $request)
     {   
+        if(Auth::User()->level =="admin" || Auth::User()->level == "tpn" ){
+            return redirect()->route('dashboard_zi');
+        }
         $title="Seleksi Administrasi";
         $status_akses="Tutup"; //tutup jika melebihi tanggal 4 September
         $instansi_obj = Auth::User()->user_rel->instansi;
@@ -83,6 +86,9 @@ class EvaluatanController extends Controller
 
     public function hasil_sanggah(Request $request)
     {   
+        if(Auth::User()->level =="admin" || Auth::User()->level == "tpn" ){
+            return redirect()->route('dashboard_zi');
+        }
         $title="Hasil Sanggah";
         $status_akses="Tutup"; //tutup jika melebihi tanggal 4 September
         $instansi_obj = Auth::User()->user_rel->instansi;
@@ -109,6 +115,9 @@ class EvaluatanController extends Controller
 
     public function seleksi_desk(Request $request)
     {   
+        if(Auth::User()->level =="admin" || Auth::User()->level == "tpn" ){
+            return redirect()->route('dashboard_zi');
+        }
         $title="Seleksi Desk";
         $instansi_obj = Auth::User()->user_rel->instansi;
         $instansi_id = $instansi_obj->id; 
@@ -125,7 +134,7 @@ class EvaluatanController extends Controller
                 'title',
                  'instansi_id', 'instansi', 'group_kld', 'instansiZI',
                 'unit_wbks', 'unit_wbbms',
-                'syarat_akhir_wbk','syarat_akhir_wbbm', 'status_akhir'
+                'syarat_akhir_wbk','syarat_akhir_wbbm', 'status_akhir', 'instansi_obj'
             ));
         }else{
             echo "mohon maaf instansi anda belum terdapat penilaian RB di tahun lalu";
@@ -142,12 +151,14 @@ class EvaluatanController extends Controller
                 $wawancaraUnit->save();   
             }
         }
-        
         return redirect()->route('evaluatan_desk',$instansiZIid);
     }
 
     public function seleksi_verifikasi_lapangan(Request $request)
     {   
+        if(Auth::User()->level =="admin" || Auth::User()->level == "tpn" ){
+            return redirect()->route('dashboard_zi');
+        }
         $instansi_obj = Auth::User()->user_rel->instansi;
         $instansi_id = $instansi_obj->id; 
         $instansi = $instansi_obj->name;
@@ -169,26 +180,52 @@ class EvaluatanController extends Controller
         }
     }
 
+
+    public function simpan_hasil_wbk_mandiri(Request $request){
+        $instansiZIid = Auth::User()->user_rel->instansi->instansi_zi->first()->id;
+        $instansi_ZI = Auth::User()->user_rel->instansi->instansi_zi->first();
+        
+        $instansi_ZI->hasil_wbk_mandiri = $request->get('link_hasil_wbk_mandiri');
+        if($instansi_ZI->save()){
+            session()->flash('message', 'Url berhasil disimpan');
+            session()->flash('sukses', '1');
+        }else{
+            session()->flash('message', 'Url Gagal Disimpan');
+            session()->flash('sukses', '0');
+        }
+
+
+        return redirect()->route('evaluatan_desk',$instansiZIid);
+    }
+
     public function hasil_akhir(Request $request)
     {   
-        $instansi_obj = Auth::User()->user_rel->instansi;
-        $instansi_id = $instansi_obj->id; 
-        $instansi = $instansi_obj->name;
-        $group_kld =$instansi_obj->group; 
-        $instansiZI = InstansiZI::where("instansi_id", $instansi_obj->id)->first();
+        $title = "Hasil Akhir";
+        if(Auth::User()->level =="admin" || Auth::User()->level == "tpn" ){
+            $instansiZI = InstansiZI::where("id", $request->get("instansi_zi_id"))->first();
+        }else{
+            $instansiZI = InstansiZI::where("instansi_id", Auth::User()->user_rel->instansi->id)->first();
+            //return redirect()->route('evaluatan_desk');
+        }
+
         if($instansiZI){
-            $syarat_akhir_wbk = $instansiZI->syarat_akhir_wbk;
-            $syarat_akhir_wbbm   = $instansiZI->syarat_akhir_wbbm;
-            $status_akhir = $instansiZI->status_akhir;
-            $unit_wbks = UnitZI::where("instansi_zi_id", $instansiZI->id)->where('wbk',1)->get();
-            $unit_wbbms = UnitZI::where("instansi_zi_id", $instansiZI->id)->where('wbbm',1)->get();
+            $units = UnitZI::where("instansi_zi_id", $instansiZI->id)->get();
+            $unit_wbk_lulus= UnitZI::where("instansi_zi_id", $instansiZI->id)->where('wbk', 1)
+                      ->whereHas('panel', function ($query) {
+                          $query->where('status', 1);
+                      })->count();
+
+                      $unit_wbbm_lulus= UnitZI::where("instansi_zi_id", $instansiZI->id)->where('wbbm', 1)
+                      ->whereHas('panel', function ($query) {
+                          $query->where('status', 1);
+                      })->count();
+
+
             return view('zi.evaluatan.hasil_akhir_zi', compact(
-                 'instansi_id', 'instansi', 'group_kld', 'instansiZI',
-                'unit_wbks', 'unit_wbbms',
-                'syarat_akhir_wbk','syarat_akhir_wbbm', 'status_akhir'
+                  'title','instansiZI', 'units', 'unit_wbk_lulus', 'unit_wbbm_lulus'
             ));
         }else{
-            echo "mohon maaf instansi anda belum terdapat penilaian RB di tahun lalu";
+            echo "mohon maaf Anda tidak terdaftar dalam orang yang berhak untuk melihat halaman ini";
         }
     }
     

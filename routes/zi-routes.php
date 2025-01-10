@@ -33,7 +33,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/zi-simpan-desk', [EvaluatanController::class, 'link_paparan_simpan'])->name('evaluatan_simpan_desk');
     Route::get('/zi-verifikasi-lapangan', [EvaluatanController::class, 'seleksi_verifikasi_lapangan'])->name('evaluatan_verifikasi_lapangan');
     Route::get('/zi-hasil-akhir', [EvaluatanController::class, 'hasil_akhir'])->name('evaluatan_hasil_akhir');
-    
+    #WBK MANDIRI
+    Route::post('/zi/simpan-hasil-wbk-mandiri', [EvaluatanController::class, 'simpan_hasil_wbk_mandiri'])->name('simpan_hasil_wbk_mandiri');
+
     #============================Admin 
     #Pengusulan
     Route::get('/zi/admin', [DashboardController::class, 'index'])->name('dashboard_zi');
@@ -46,6 +48,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/zi/rekap-dokumen', [DashboardController::class, 'rekap_dokumen'])->name('rekap_dokumen');
     Route::get('/zi/rekap-wawancara', [DashboardController::class, 'rekap_wawancara'])->name('rekap_wawancara');
     Route::get('/zi/rekap-verlap', [DashboardController::class, 'rekap_verlap'])->name('rekap_verlap');
+    Route::get('/zi/rekap-panel', [DashboardController::class, 'rekap_panel'])->name('rekap_panel');
+    Route::get('/zi/rekap-final', [DashboardController::class, 'rekap_final'])->name('rekap_final');
     #Seleksi Administrasi
     Route::get('/zi/seleksi-administrasi', [AdministrasiController::class, 'index'])->name('seleksi_administrasi');
     Route::get('/zi/evaluasi-administrasi/{id}', [AdministrasiController::class, 'evaluasi_administrasi'])->name('evaluasi_administrasi');
@@ -80,8 +84,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/zi/final', [FinalController::class, 'index'])->name('final');
     Route::get('/zi/final/{id}', [FinalController::class, 'final'])->name('proses_final');
     Route::post('/zi/final/simpan', [FinalController::class, 'final_simpan'])->name('proses_final_simpan');
+    Route::get('/zi/final/unit/{id}', [FinalController::class, 'final_unit'])->name('proses_final_unit');
+    Route::post('/zi/final/unit/simpan', [FinalController::class, 'final_unit_simpan'])->name('proses_final_unit_simpan');
+    
     //Route::post('/zi/final/simpan', [TutupController::class, 'index'])->name('proses_final_simpan');
     Route::post('/zi/final/simpan_lhe', [FinalController::class, 'lhe_simpan'])->name('proses_upload_lhe_simpan');
+    Route::post('/zi/final/simpan_undangan', [FinalController::class, 'undangan_simpan'])->name('proses_upload_surat_undangan_simpan');
     
 
     #Tautkan LKE

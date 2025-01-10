@@ -17,8 +17,8 @@
                 <div class="grid grid-cols-12 gap-6 p-5">
                     <div class="intro-y col-span-12 lg:col-span-3">
                         <div class="form-group">
-                            <label for="user_level" class="form-label">Instansi <span class="text-danger">*</span></label>
-                            {!! Form::select('user_level', ['kabupaten' => 'Kabupaten', 'provinsi' => 'Provinsi', 'kl' => 'Kementrian Lain'], null, ['class' => 'w-full', 'id' => 'user_level', 'data-placeholder' => 'Pilih User Level', 'required']) !!}
+                            <label for="user_level" class="form-label">Level User <span class="text-danger">*</span></label>
+                            {!! Form::select('user_level', ['kabupaten' => 'Kabupaten', 'provinsi' => 'Provinsi', 'kl' => 'Kementrian Lain', 'tpn' => 'Tim Penilai Nasional', 'tpm' => 'Tim Penilai Meso'], null, ['class' => 'w-full', 'id' => 'user_level', 'data-placeholder' => 'Pilih User Level', 'required']) !!}
                         </div>
                     </div>
                     <div class="intro-y col-span-12 lg:col-span-3">
