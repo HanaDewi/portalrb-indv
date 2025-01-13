@@ -91,6 +91,11 @@
                         <td class="text-center">{{ $fjawaban[$jw->id]->catatan }}</td>
                         <td class="text-center">{{ $fjawaban[$jw->id]->rekomendasi }}</td>
                         @if($check==true && $fjawaban[$jw->id]->id!='')
+                        @if($jw->kriteria=="Penilaian Kegiatan Utama Road Map Reformasi Birokrasi" or
+                        $jw->kriteria=="Kriteria Penilaian Penetapan Rencana Aksi" or
+                        $jw->kriteria=="Strategi Pelaksanaan RB General")
+                        <td class="text-center"></td>
+                        @else
                         <td class="text-center">
                             <a class="btn btn-warning btn-xs" data-raw="{{ json_encode($fjawaban[$jw->id]) }}"
                                 data-id="{{ $fjawaban[$jw->id]->id }}" onclick="showform(this)" data-bs-toggle="modal"
@@ -99,6 +104,7 @@
                             <a class="btn btn-danger btn-xs" data-id="{{ $fjawaban[$jw->id]->id }}"
                                 onclick="dodelete(this)"><i class="nav-icon fas fa-remove"></i></a> &nbsp;
                         </td>
+                        @endif
                         @else
                         <td class="text-center">
                             @php
