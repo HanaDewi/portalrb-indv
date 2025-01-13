@@ -57,7 +57,7 @@ class ERenaksiRBGeneralController extends Controller
                     $instansis = [];
                 }
             } else {
-                $instansis = KlpdInstansi::get();
+                $instansis = InstansiTim::get();
                 
             }
 

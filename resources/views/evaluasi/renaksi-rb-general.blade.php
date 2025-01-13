@@ -40,12 +40,8 @@
                     @foreach ($data as $cc=>$jw)
                     <tr>
                         <td>{{ $cc+1 }}</td>
-                        @if ($istpn)
                         <td><a href="?instansi={{ $jw->instansi_id }}" style="color:blue">{{ $jw->instansi->name }}</a>
                         </td>
-                        @else
-                        <td><a href="?instansi={{ $jw->id }}" style="color:blue">{{ $jw->name }}</a></td>
-                        @endif
                         <td class="text-center">{{
                             $jw->instansi->jawaban_renaksi->where('tahun',$tahun)->where('lke_renaksi_id',2)->first()->jawaban
                             ??
