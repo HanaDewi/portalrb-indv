@@ -155,7 +155,7 @@ class ERenaksiRBGeneralController extends Controller
             $penetapanKU =  JawabanRenaksi::where('instansi_id', $request->instansi_id)->where('lke_renaksi_id',4)->where('tahun', $request->tahun)->first();
             $penetapanTargetIndikatorKU =  JawabanRenaksi::where('instansi_id', $request->instansi_id)->where('lke_renaksi_id',5)->where('tahun', $request->tahun)->first();
             $keabsahanRencanaAksi =  JawabanRenaksi::where('instansi_id', $request->instansi_id)->where('lke_renaksi_id',6)->where('tahun', $request->tahun)->first();
-            $penilaianKU->jawaban = 2 * ($penetapanKU->konversi_jawaban_renaksi->skor?? 0 + $penetapanTargetIndikatorKU->konversi_jawaban_renaksi->skor?? 0 + $keabsahanRencanaAksi->konversi_jawaban_renaksi->skor?? 0);
+            $penilaianKU->jawaban =  round(($penetapanKU->konversi_jawaban_renaksi->skor?? 0 + $penetapanTargetIndikatorKU->konversi_jawaban_renaksi->skor?? 0 + $keabsahanRencanaAksi->konversi_jawaban_renaksi->skor?? 0) / 3,  2);
             $penilaianKU->save();
 
             //Kriteria Penilaian Penetapan Rencana Aksi
@@ -175,7 +175,7 @@ class ERenaksiRBGeneralController extends Controller
             $skorKetetapanPenetapanTargetIndikatorOutput = ($ketetapanPenetapanTargetIndikatorOutput)?$ketetapanPenetapanTargetIndikatorOutput->konversi_jawaban_renaksi->skor: 0;
             $anggaran =  JawabanRenaksi::where('instansi_id', $request->instansi_id)->where('lke_renaksi_id',11)->where('tahun', $request->tahun)->first(); 
             $skorAnggaran = ($anggaran)?$anggaran->konversi_jawaban_renaksi->skor: 0;
-            $penetapanRencanaAksi->jawaban = $skorKelogisanRencanaAksi + $skorRelevansiKecukupanIndikatorOutput + $skorKetetapanPenetapanTargetIndikatorOutput + $skorAnggaran;
+            $penetapanRencanaAksi->jawaban = round(2* ($skorKelogisanRencanaAksi + $skorRelevansiKecukupanIndikatorOutput + $skorKetetapanPenetapanTargetIndikatorOutput + $skorAnggaran)/4, 2);
             $penetapanRencanaAksi->save();
             
             
