@@ -155,7 +155,10 @@ class ERenaksiRBGeneralController extends Controller
             $penetapanKU =  JawabanRenaksi::where('instansi_id', $request->instansi_id)->where('lke_renaksi_id',4)->where('tahun', $request->tahun)->first();
             $penetapanTargetIndikatorKU =  JawabanRenaksi::where('instansi_id', $request->instansi_id)->where('lke_renaksi_id',5)->where('tahun', $request->tahun)->first();
             $keabsahanRencanaAksi =  JawabanRenaksi::where('instansi_id', $request->instansi_id)->where('lke_renaksi_id',6)->where('tahun', $request->tahun)->first();
-            $penilaianKU->jawaban =  round(($penetapanKU->konversi_jawaban_renaksi->skor?? 0 + $penetapanTargetIndikatorKU->konversi_jawaban_renaksi->skor?? 0 + $keabsahanRencanaAksi->konversi_jawaban_renaksi->skor?? 0) / 3,  2);
+            $skorPenetapanKU = ($penetapanKU)?$penetapanKU->konversi_jawaban_renaksi->skor:0;
+            $skorPenetapanTargetIndikatorKU = ($penetapanTargetIndikatorKU)?$penetapanTargetIndikatorKU->konversi_jawaban_renaksi->skor:0;
+            $skorKeabsahanRencanaAksi = ($keabsahanRencanaAksi)?$keabsahanRencanaAksi->konversi_jawaban_renaksi->skor:0;
+            $penilaianKU->jawaban =  round( ($skorPenetapanKU + $skorPenetapanTargetIndikatorKU + $skorKeabsahanRencanaAksi ) / 3,  2);
             $penilaianKU->save();
 
             //Kriteria Penilaian Penetapan Rencana Aksi
@@ -168,12 +171,12 @@ class ERenaksiRBGeneralController extends Controller
             $penetapanRencanaAksi->lke_renaksi_id = 7;
             //getchild
             $kelogisanRencanaAksi=  JawabanRenaksi::where('instansi_id', $request->instansi_id)->where('lke_renaksi_id',8)->where('tahun', $request->tahun)->first();
-            $skorKelogisanRencanaAksi = ($kelogisanRencanaAksi)?$kelogisanRencanaAksi->konversi_jawaban_renaksi->skor:0;
             $relevansiKecukupanIndikatorOutput =  JawabanRenaksi::where('instansi_id', $request->instansi_id)->where('lke_renaksi_id',9)->where('tahun', $request->tahun)->first();
-            $skorRelevansiKecukupanIndikatorOutput = ($relevansiKecukupanIndikatorOutput)? $relevansiKecukupanIndikatorOutput->konversi_jawaban_renaksi->skor:0;
             $ketetapanPenetapanTargetIndikatorOutput =  JawabanRenaksi::where('instansi_id', $request->instansi_id)->where('lke_renaksi_id',10)->where('tahun', $request->tahun)->first();
-            $skorKetetapanPenetapanTargetIndikatorOutput = ($ketetapanPenetapanTargetIndikatorOutput)?$ketetapanPenetapanTargetIndikatorOutput->konversi_jawaban_renaksi->skor: 0;
             $anggaran =  JawabanRenaksi::where('instansi_id', $request->instansi_id)->where('lke_renaksi_id',11)->where('tahun', $request->tahun)->first(); 
+            $skorKelogisanRencanaAksi = ($kelogisanRencanaAksi)?$kelogisanRencanaAksi->konversi_jawaban_renaksi->skor:0;
+            $skorRelevansiKecukupanIndikatorOutput = ($relevansiKecukupanIndikatorOutput)? $relevansiKecukupanIndikatorOutput->konversi_jawaban_renaksi->skor:0;
+            $skorKetetapanPenetapanTargetIndikatorOutput = ($ketetapanPenetapanTargetIndikatorOutput)?$ketetapanPenetapanTargetIndikatorOutput->konversi_jawaban_renaksi->skor: 0;
             $skorAnggaran = ($anggaran)?$anggaran->konversi_jawaban_renaksi->skor: 0;
             $penetapanRencanaAksi->jawaban = round(2* ($skorKelogisanRencanaAksi + $skorRelevansiKecukupanIndikatorOutput + $skorKetetapanPenetapanTargetIndikatorOutput + $skorAnggaran)/4, 2);
             $penetapanRencanaAksi->save();
