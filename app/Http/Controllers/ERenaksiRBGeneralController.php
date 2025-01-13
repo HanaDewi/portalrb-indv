@@ -53,37 +53,12 @@ class ERenaksiRBGeneralController extends Controller
                 $atim = AnggotaTimEvaluasi::where('user_id', $user->id)->first();
                 if ($atim != null) {
                     $instansis = InstansiTim::where('tim_id', $atim->tim_id)->get();
-                    foreach ($instansis as $cc => &$nn1) {
-                        $skora1 = DB::select('SELECT SUM(kjr.skor) skor FROM jawaban_renaksi jr JOIN konversi_jawaban_renaksi kjr ON kjr.jawaban=jr.jawaban WHERE jr.instansi_id=? AND jr.tahun=? AND jr.lke_renaksi_id=?', [$nn1->instansi_id, $tahun, $lke_penetapan_kegiatan_id]);
-                        $skora2 = DB::select('SELECT SUM(kjr.skor) skor FROM jawaban_renaksi jr JOIN konversi_jawaban_renaksi kjr ON kjr.jawaban=jr.jawaban WHERE jr.instansi_id=? AND jr.tahun=? AND jr.lke_renaksi_id=?', [$nn1->instansi_id, $tahun, $lke_penetapan_target_id]);
-                        $skora3 = DB::select('SELECT SUM(kjr.skor) skor FROM jawaban_renaksi jr JOIN konversi_jawaban_renaksi kjr ON kjr.jawaban=jr.jawaban WHERE jr.instansi_id=? AND jr.tahun=? AND jr.lke_renaksi_id=?', [$nn1->instansi_id, $tahun, $lke_keabsahan_rencana_id]);
-                        $skorb1 = DB::select('SELECT SUM(kjr.skor) skor FROM jawaban_renaksi jr JOIN konversi_jawaban_renaksi kjr ON kjr.jawaban=jr.jawaban WHERE jr.instansi_id=? AND jr.tahun=? AND jr.lke_renaksi_id=?', [$nn1->instansi_id, $tahun, $lke_kelogisan_rencana_id]);
-                        $skorb2 = DB::select('SELECT SUM(kjr.skor) skor FROM jawaban_renaksi jr JOIN konversi_jawaban_renaksi kjr ON kjr.jawaban=jr.jawaban WHERE jr.instansi_id=? AND jr.tahun=? AND jr.lke_renaksi_id=?', [$nn1->instansi_id, $tahun, $lke_relevansi_id]);
-                        $skorb3 = DB::select('SELECT SUM(kjr.skor) skor FROM jawaban_renaksi jr JOIN konversi_jawaban_renaksi kjr ON kjr.jawaban=jr.jawaban WHERE jr.instansi_id=? AND jr.tahun=? AND jr.lke_renaksi_id=?', [$nn1->instansi_id, $tahun, $lke_ketetapan_id]);
-                        $skorb4 = DB::select('SELECT SUM(kjr.skor) skor FROM jawaban_renaksi jr JOIN konversi_jawaban_renaksi kjr ON kjr.jawaban=jr.jawaban WHERE jr.instansi_id=? AND jr.tahun=? AND jr.lke_renaksi_id=?', [$nn1->instansi_id, $tahun, $lke_anggaran_id]);
-                        $skor1 = ((floatval($skora1[0]->skor) + floatval($skora2[0]->skor) + floatval($skora3[0]->skor)) / 3) * 1.5;
-                        $skor2 = ((floatval($skorb1[0]->skor) + floatval($skorb2[0]->skor) + floatval($skorb3[0]->skor) + floatval($skorb4[0]->skor)) / 4) * 1.5;
-                        $total = $skor1 + $skor2;
-                        $nn1->skor = number_format($total, 2, ',', ' ');
-                    }
                 } else {
                     $instansis = [];
                 }
             } else {
                 $instansis = KlpdInstansi::get();
-                foreach ($instansis as $dd => &$nn2) {
-                    $skora1 = DB::select('SELECT SUM(kjr.skor) skor FROM jawaban_renaksi jr JOIN konversi_jawaban_renaksi kjr ON kjr.jawaban=jr.jawaban WHERE jr.instansi_id=? AND jr.tahun=? AND jr.lke_renaksi_id=?', [$nn2->instansi_id, $tahun, $lke_penetapan_kegiatan_id]);
-                    $skora2 = DB::select('SELECT SUM(kjr.skor) skor FROM jawaban_renaksi jr JOIN konversi_jawaban_renaksi kjr ON kjr.jawaban=jr.jawaban WHERE jr.instansi_id=? AND jr.tahun=? AND jr.lke_renaksi_id=?', [$nn2->instansi_id, $tahun, $lke_penetapan_target_id]);
-                    $skora3 = DB::select('SELECT SUM(kjr.skor) skor FROM jawaban_renaksi jr JOIN konversi_jawaban_renaksi kjr ON kjr.jawaban=jr.jawaban WHERE jr.instansi_id=? AND jr.tahun=? AND jr.lke_renaksi_id=?', [$nn2->instansi_id, $tahun, $lke_keabsahan_rencana_id]);
-                    $skorb1 = DB::select('SELECT SUM(kjr.skor) skor FROM jawaban_renaksi jr JOIN konversi_jawaban_renaksi kjr ON kjr.jawaban=jr.jawaban WHERE jr.instansi_id=? AND jr.tahun=? AND jr.lke_renaksi_id=?', [$nn2->instansi_id, $tahun, $lke_kelogisan_rencana_id]);
-                    $skorb2 = DB::select('SELECT SUM(kjr.skor) skor FROM jawaban_renaksi jr JOIN konversi_jawaban_renaksi kjr ON kjr.jawaban=jr.jawaban WHERE jr.instansi_id=? AND jr.tahun=? AND jr.lke_renaksi_id=?', [$nn2->instansi_id, $tahun, $lke_relevansi_id]);
-                    $skorb3 = DB::select('SELECT SUM(kjr.skor) skor FROM jawaban_renaksi jr JOIN konversi_jawaban_renaksi kjr ON kjr.jawaban=jr.jawaban WHERE jr.instansi_id=? AND jr.tahun=? AND jr.lke_renaksi_id=?', [$nn2->instansi_id, $tahun, $lke_ketetapan_id]);
-                    $skorb4 = DB::select('SELECT SUM(kjr.skor) skor FROM jawaban_renaksi jr JOIN konversi_jawaban_renaksi kjr ON kjr.jawaban=jr.jawaban WHERE jr.instansi_id=? AND jr.tahun=? AND jr.lke_renaksi_id=?', [$nn2->instansi_id, $tahun, $lke_anggaran_id]);
-                    $skor1 = ((floatval($skora1[0]->skor) + floatval($skora2[0]->skor) + floatval($skora3[0]->skor)) / 3) * 1.5;
-                    $skor2 = ((floatval($skorb1[0]->skor) + floatval($skorb2[0]->skor) + floatval($skorb3[0]->skor) + floatval($skorb4[0]->skor)) / 4) * 1.5;
-                    $total = $skor1 + $skor2;
-                    $nn2->skor = number_format($total, 2, ',', ' ');
-                }
+                
             }
 
             return view('evaluasi.renaksi-rb-general', ['tahun' => $tahun, 'isadmin' => $isadmin, 'data' => $instansis, 'kembali' => false, 'istpn' => $istpn, 'check' => false]);
@@ -161,9 +136,56 @@ class ERenaksiRBGeneralController extends Controller
             $tosave->jawaban = $request->jawaban;
             $tosave->catatan = $request->catatan;
             $tosave->rekomendasi = $request->rekomendasi;
+
+        
             if (!$tosave->save()) {
                 $success = false;
             }
+
+            //============calculate=================
+            //Penilaian Kegiatan Utama Road Map Reformasi Birokrasi
+            $penilaianKU = JawabanRenaksi::where('instansi_id', $request->instansi_id)->where('lke_renaksi_id',3)->where('tahun', $request->tahun)->first();
+            if(!$penilaianKU){
+                $penilaianKU = new JawabanRenaksi();
+            }
+            $penilaianKU->instansi_id = $request->instansi_id;
+            $penilaianKU->tahun = $request->tahun;
+            $penilaianKU->lke_renaksi_id = 3;
+            //get_child
+            $penetapanKU =  JawabanRenaksi::where('instansi_id', $request->instansi_id)->where('lke_renaksi_id',4)->where('tahun', $request->tahun)->first();
+            $penetapanTargetIndikatorKU =  JawabanRenaksi::where('instansi_id', $request->instansi_id)->where('lke_renaksi_id',5)->where('tahun', $request->tahun)->first();
+            $keabsahanRencanaAksi =  JawabanRenaksi::where('instansi_id', $request->instansi_id)->where('lke_renaksi_id',6)->where('tahun', $request->tahun)->first();
+            $penilaianKU->jawaban = 2 * ($penetapanKU->konversi_jawaban_renaksi->skor + $penetapanTargetIndikatorKU->konversi_jawaban_renaksi->skor + $keabsahanRencanaAksi->konversi_jawaban_renaksi->skor);
+            $penilaianKU->save();
+
+            //Kriteria Penilaian Penetapan Rencana Aksi
+            $penetapanRencanaAksi = JawabanRenaksi::where('instansi_id', $request->instansi_id)->where('lke_renaksi_id',7)->where('tahun', $request->tahun)->first();
+            if(!$penetapanRencanaAksi){
+                $penetapanRencanaAksi = new JawabanRenaksi();
+            }
+            $penetapanRencanaAksi->instansi_id = $request->instansi_id;
+            $penetapanRencanaAksi->tahun = $request->tahun;
+            $penetapanRencanaAksi->lke_renaksi_id = 7;
+            //getchild
+            $kelogisanRencanaAksi=  JawabanRenaksi::where('instansi_id', $request->instansi_id)->where('lke_renaksi_id',8)->where('tahun', $request->tahun)->first();
+            $relevansiKecukupanIndikatorOutput =  JawabanRenaksi::where('instansi_id', $request->instansi_id)->where('lke_renaksi_id',9)->where('tahun', $request->tahun)->first();
+            $ketetapanPenetapanTargetIndikatorOutput =  JawabanRenaksi::where('instansi_id', $request->instansi_id)->where('lke_renaksi_id',10)->where('tahun', $request->tahun)->first();
+            $anggaran =  JawabanRenaksi::where('instansi_id', $request->instansi_id)->where('lke_renaksi_id',11)->where('tahun', $request->tahun)->first(); 
+            $penetapanRencanaAksi->jawaban = $kelogisanRencanaAksi->konversi_jawaban_renaksi->skor + $relevansiKecukupanIndikatorOutput->konversi_jawaban_renaksi->skor + $ketetapanPenetapanTargetIndikatorOutput->konversi_jawaban_renaksi->skor + $anggaran->konversi_jawaban_renaksi->skor;
+            $penetapanRencanaAksi->save();
+            
+            
+            //SkorTotal
+            
+            $strategiPelaksanaanRBGeneral = JawabanRenaksi::where('instansi_id', $request->instansi_id)->where('lke_renaksi_id',2)->where('tahun', $request->tahun)->first();
+            if(!$strategiPelaksanaanRBGeneral){
+                $strategiPelaksanaanRBGeneral = new JawabanRenaksi();
+            }
+            $strategiPelaksanaanRBGeneral->instansi_id = $request->instansi_id;
+            $strategiPelaksanaanRBGeneral->tahun = $request->tahun;
+            $strategiPelaksanaanRBGeneral->lke_renaksi_id = 2;
+            $strategiPelaksanaanRBGeneral-> jawaban = $penetapanRencanaAksi->jawaban + $penilaianKU->jawaban;
+            $strategiPelaksanaanRBGeneral->save();
         } catch (\Throwable $th) {
             $success = false;
             throw $th;

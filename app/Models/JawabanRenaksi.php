@@ -14,4 +14,9 @@ class JawabanRenaksi extends Model
     {
         return $this->belongsTo(LKERenaksi::class, "lke_renaksi_id");
     }
+
+    public function konversi_jawaban_renaksi()
+    {
+        return $this->belongsTo(KonversiJawabanRenaksi::class, "jawaban", "jawaban");
+    }
 }

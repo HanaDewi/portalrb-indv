@@ -243,6 +243,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/kelola-instansi-tim/getData/{id}', [ManageTimController::class, 'instansi_tim_getData']);
     Route::post('/kelola-instansi-tim/hapus', [ManageTimController::class, 'kelola_instansi_tim_hapus'])->name('kelola_instansi_tim_hapus');
     
+
+
+    #generate indeks RB simple version
+    //Route::get('/evaluasi/hasil-2023/', [HasilController::class, 'generate_simple'])->name('generete_rb_simple_version');
 });
 
 

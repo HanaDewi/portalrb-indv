@@ -261,4 +261,154 @@ class HasilController extends Controller
         }
         return response()->json(['data' => $activities]);
     }
+
+
+    public function generate_simple()
+    {
+        $user = Auth::User();
+        // if (in_array($user->level, ['kabupaten', 'provinsi', 'kl', 'tpn', 'tpm'])) {
+        //     $access = OpenAccessSetting::where('user_level', $user->level)->where('fitur', 'hasil_evaluasi')->first();
+        //     if ($access) {
+        //         $today = date('Y-m-d');
+        //         if ($access->waktu_awal > $today || $access->waktu_akhir < $today) {
+        //             return view('belumbuka');
+        //         }
+        //     }
+        // }
+        // if (!in_array($user->level, ['admin', 'tpn', 'tpm'])) {
+        //     if ($user->user_rel->instansi_id != $instansi_id) {
+        //         abort(403);
+        //     }
+        // }
+
+        $instansis = KlpdInstansi::get();
+
+        $indeks_penting = array(
+            "Indeks BerAkhlak"                                                  => 1,
+            "Indeks Kualitas Kebijakan"                                         => 2,
+            "Indeks Pelayanan Publik"                                           => 3,
+            "Indeks Pengelolaan Aset"                                           => 4,
+            "Indeks Perencanaan Pembangunan"                                    => 5,
+            "Indeks Reformasi Hukum"                                            => 6,
+            "Indeks Sistem Merit"                                               => 7,
+            "Indeks Sistem Pemerintahan Berbasis Elektronik (SPBE)"             => 8,
+            "Indeks SPBE"                                                       => 8,
+            "Indeks Tata Kelola Pengadaan"                                      => 9,
+            "Indikator Kinerja Pelaksanaan Anggaran"                            => 10,
+            "Nilai Sistem Akuntabilitas Kinerja Instansi Pemerintah"            => 11,
+            "Nilai Sistem Akuntabilitas Kinerja Instansi Pemerintah (SAKIP)"    => 11,
+            "Nilai Sitem Akuntabilitas Kinerja Instansi Pemerintah (SAKIP)"     => 11,
+            "Opini BPK"                                                         => 12,
+            "Persentase Penyderhanaan Struktur Organisasi"                      => 13,
+            "Persentase Penyederhanaan Struktur Organisasi"                     => 13,
+            "Survei Kepuasan Masyarakat"                                        => 14,
+            "Survei Penilaian Integritas"                                       => 15,
+            "Tindak Lanjut Rekomendasi"                                         => 16,
+            "Tingkat Capaian Sistem Kerja untuk Penyderhanaan Birokrasi"        => 17,
+            "Tingkat Digitalisasi Arsip"                                        => 18,
+            "Tingkat Implementasi Kebijakan Arsitektur Sistem Pemerintahan Berbasis Elektronik"             =>19,
+            "Tingkat Implementasi Kebijakan Arsitektur Sistem Pemerintahan Berbasis Elektronik (SPBE)"      =>19,
+            "Tingkat Keberhasilan Pembangunan Zona Integritas"                  => 20,
+            "Tingkat Kematangan Penyelenggaraan Statistik Sektoral"             => 21,
+            "Tingkat Kepatuhan Standar Pelayanan Publik"                        => 22,
+            "Tingkat Maturitas Sistem Pengendalian Intern Pemerintah"           => 23,
+            "Tingkat Maturitas Sistem Pengendalian Intern Pemerintah (SPIP)"    => 23,
+            "Tingkat Tindak Lanjut Pengaduan Masyarakat (LAPOR) yang Sudah Diselesaikan"                    =>24,
+            "Rencana Aksi Pembangunan RB General"                               => 25,
+            "TIngkat Implementasi Rencana Aksi RB General"                      => 26,
+            "Tingkat Implementasi Rencana Aksi Pembangunan RB General"          => 26,
+            "Tingkat Capaian Sistem Kerja untuk Penyederhanaan Birokrasi"       => 27,
+            "Capaian Prioritas Nasional"                                        => 28,
+            "Capaian IKU"                                                       => 29,
+            "Capaian IKU Non Makro"                                             => 29,
+            "Capaian Indikator Kinerja Non Makro"                               => 29,
+            "Capaian Indikator Kinerja Utama Makro"                             => 30,
+            "Capaian IKU Makro"                                                 => 30,
+            "Net Koefisien"                                                     => 31,
+            "Koefisien"                                                         => 31,
+            "Pengentasan Kemiskinan (Strategi Pembangunan)"                     => 32,
+            "Pengentasan Kemiskinan (Rencana Aksi)"                             => 33,
+            "Pengentasan Kemiskinan (Capaian Output)"                           => 34,
+            "Pengentasan Kemiskinan (Capaian Dampak)"                           => 35,
+            "Penurunan Tingkat Kemiskinan (Capaian Dampak)"                     => 35,
+            "Realisasi Investasi (Strategi Pembangunan)"                        => 36,
+            "Realisasi Investasi (Rencana Aksi)"                                => 37,
+            "Realisasi Investasi (Rencana Aksi"                                 => 37,
+            "Realisasi Investasi (Capaian Output)"                              => 38,
+            "Realisasi Investasi (Capaian Dampak)"                              => 39,
+            "Peningkatan Realisasi Investasi (Capaian Dampak)"                  => 39,
+            "Digitalisasi Administrasi Pemerintahan Berfokus pada Penanganan Stunting (Strategi Pembangunan)" => 40,
+            "Digitalisasi Administrasi Pemerintahan Fokus Penanganan Stunting (Rencana Aksi)"                 => 41,  
+            "Digitalisasi Administrasi Pemerintahan Fokus Penanganan Stunting (Capaian Output)"               => 42,
+            "Digitalisasi Administrasi Pemerintahan Berfokus Penanganan Stunting (Capaian Dampak)"            => 43,
+            "Digitalisasi Administrasi Pemerintahan Fokus Penanganan Stunting (Capaian Dampak)"               => 43,
+            "Penggunaan Produk Dalam Negeri (Strategi Pembangunan)"             => 44,
+            "Penggunaan Produk Dalam Negeri (Rencana Aksi)"                     => 45,
+            "Penggunaan Produk Dalam Negeri (Capaian Output)"                   => 46,
+            "Penggunaan Produk Dalam Negeri (Capaian Dampak)"                   => 47,
+            "Tingkat Penggunaan Produk Dalam Negeri (Capaian Dampak)"           => 47, 
+            "Laju Inflasi (Strategi Pembangunan)"                               => 48,
+            "Laju Inflasi (Rencana Aksi)"                                       => 49,
+            "Pengendalian Inflasi (Rencana Aksi)"                               => 49,
+            "Laju Inflasi (Capaian Output)"                                     => 50, 
+            "Pengendalian Inflasi (Capaian Output)"                             => 50, 
+            "Laju Inflasi (Capaian Dampak)"                                     => 51,
+            "Pengendalian Inflasi (Capaian Dampak)"                             => 51,
+            "Tingkat Inflasi (Capaian Dampak)"                                  => 51,
+            "Tindak Lanjut Rekomendasi BPK"                                     => 52,
+        );
+
+        //pritn kategori
+        /*
+        $var = "";
+        foreach($indeks_penting as $key => $ind){
+            if($var != $ind ){
+                echo $ind. ", ". $key ."<br/>";
+                $var = $ind;
+            }
+        }
+        die();
+        */
+        
+        echo '<table>';
+        foreach ($instansis as $instansi) {
+            if($instansi->mapping_kode_instansi){
+                $instansi_code_lama =  $instansi->mapping_kode_instansi->old_klpd_code;
+            }else{
+                $instansi_code_lama = "-";
+            }
+            $instansi_id  = $instansi->id;
+            $lkeTestTP = LkeTestTp::where("lke_instansi_id", $instansi_id)->first();
+            $lkeTestTPLine = "";
+            if (isset($lkeTestTP)) {
+                $lkeTestTPLine = LkeTestTpLine::where("test_tp_id", $lkeTestTP->id)->get();
+                if ($user->penilai_id && $user->level == 'tpm') {
+                    $lkeTestTPLine = LkeTestTpLine::where("test_tp_id", $lkeTestTP->id)->where('penilai_id', $user->penilai_id)->get();
+                }
+            }
+            if ($lkeTestTPLine){
+                foreach ($lkeTestTPLine as $testTPLine){
+                    if(array_key_exists($testTPLine->paramL4->name, $indeks_penting)){
+                        $indeks_id = $indeks_penting[$testTPLine->paramL4->name] ;
+                    }else{
+                        $indeks_id = $testTPLine->paramL4->name;
+                    }
+                    //if (in_array($testTPLine->paramL4->name, $indeks_penting)){
+                        echo '<tr>';
+                            echo '<td>'. $instansi_code_lama. '</td>';
+                            echo '<td> 2023 </td>';
+                            //echo '<td>'. $instansi->name. '</td>';
+                            echo '<td>'. $testTPLine->paramL0->name. '</td>';
+                            echo '<td>'. $indeks_id .'</td>';
+                            echo '<td>'. $testTPLine->score . '</td>';
+                        echo '</tr>';
+                    //}
+                }
+            }
+        }
+        echo '</table>';
+        
+    }
+
+  
 }

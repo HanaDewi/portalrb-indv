@@ -6,23 +6,24 @@
     @include('common.status')
     <div class="intro-y box">
         <div class="flex flex-col sm:flex-row items-center p-5 border-b border-slate-200/60">
-            <h2 class="font-bold text-base mr-auto"> Evaluasi Renaksi  RB General
+            <h2 class="font-bold text-base mr-auto"> Evaluasi Renaksi RB General
                 @if (isset($instansi))
-                    - {{ $instansi->name }}
+                - {{ $instansi->name }}
                 @endif
             </h2>
         </div>
         <div class="lg:col-span-12 p-5 border-b border-slate-200/60">
             <div class="row">
                 <label for="indikator_id" class="form-label font-bold">Tahun</label>
-                <select name="tahun" class="form-control" onchange="location.href='/evaluasi/renaksi-rb-general?tahun=' + this.value">
+                <select name="tahun" class="form-control"
+                    onchange="location.href='/evaluasi/renaksi-rb-general?tahun=' + this.value">
                     @for ($i=date('Y'); $i>2015; $i--)
-                    <option value="{{ $i }}" {{ ($i==$tahun) ? 'selected':'' }}>{{ $i }}</option>
+                    <option value="{{ $i }}" {{ ($i==$tahun) ? 'selected' :'' }}>{{ $i }}</option>
                     @endfor
                 </select>
             </div>
             <div class="row" hidden>
-                <a class="btn btn-danger" href="/evaluasi/data-lke-renaksi">Data LKE Renaksi</a> &nbsp; 
+                <a class="btn btn-danger" href="/evaluasi/data-lke-renaksi">Data LKE Renaksi</a> &nbsp;
                 <a class="btn btn-danger" href="/evaluasi/renaksi-rb-general">Data Konversi Jawaban</a>
             </div>
             <div class="separator mt-5"></div>
@@ -40,11 +41,16 @@
                     <tr>
                         <td>{{ $cc+1 }}</td>
                         @if ($istpn)
-                        <td><a href="?instansi={{ $jw->instansi_id }}" style="color:blue">{{ $jw->instansi->name }}</a></td>
-                        @else 
+                        <td><a href="?instansi={{ $jw->instansi_id }}" style="color:blue">{{ $jw->instansi->name }}</a>
+                        </td>
+                        @else
                         <td><a href="?instansi={{ $jw->id }}" style="color:blue">{{ $jw->name }}</a></td>
                         @endif
-                        <td class="text-center">{{ $jw->skor }}</td>
+                        <td class="text-center">{{
+                            $jw->instansi->jawaban_renaksi->where('tahun',$tahun)->where('lke_renaksi_id',2)->first()->jawaban
+                            ??
+                            '-'}}
+                        </td>
                     </tr>
                     @endforeach
                 </tbody>
@@ -70,42 +76,62 @@
                             <strong>{{ $jw->kriteria }}</strong>
                         </td>
                         @if (isset($fjawaban[$jw->id]))
-                            <td class="text-center">{{ $fjawaban[$jw->id]->jawaban }}</td>
-                            <td class="text-center">{{ $fjawaban[$jw->id]->skor }}</td>
-                            <td class="text-center">{{ $fjawaban[$jw->id]->catatan }}</td>
-                            <td class="text-center">{{ $fjawaban[$jw->id]->rekomendasi }}</td>
-                            @if($check==true && $fjawaban[$jw->id]->id!='')
-                            <td class="text-center">
-                                <a class="btn btn-warning btn-xs" data-raw="{{ json_encode($fjawaban[$jw->id]) }}" data-id="{{ $fjawaban[$jw->id]->id }}" onclick="showform(this)" data-bs-toggle="modal" data-bs-target="#modal-form-jawaban-renaksi"><i class="nav-icon fas fa-edit"></i></a> &nbsp; 
-                                <a class="btn btn-danger btn-xs" data-id="{{ $fjawaban[$jw->id]->id }}" onclick="dodelete(this)" ><i class="nav-icon fas fa-remove"></i></a> &nbsp; 
-                            </td>
-                            @else
-                            <td class="text-center">
-                                @php 
-                                $checkjawab = array_filter($renaksi, function($ren) use ($jw) {
-                                    return $ren->id == $jw->id;
-                                });
-                                @endphp
-                                @if($checkjawab)
-                                <a class="btn btn-warning btn-xs" data-raw="{{ json_encode($fjawaban[$jw->id]) }}" data-id="{{ $fjawaban[$jw->id]->id }}" onclick="showform(this)" data-bs-toggle="modal" data-bs-target="#modal-form-jawaban-renaksi"> Jawab &nbsp; <i class="nav-icon fas fa-edit"></i></a> &nbsp; 
-                                @endif
-                            </td>
-                            @endif
+                        @if($jw->kriteria=="Penilaian Kegiatan Utama Road Map Reformasi Birokrasi" or
+                        $jw->kriteria=="Kriteria Penilaian Penetapan Rencana Aksi" or
+                        $jw->kriteria=="Strategi Pelaksanaan RB General")
+                        <td class="text-center" colspan=2 style="font-weight:bold; 
+                                @if($jw->kriteria=='Strategi Pelaksanaan RB General') 
+                                    color:#b42b2d; font-size:1.25em;     
+                                @endif ">{{ $fjawaban[$jw->id]->jawaban }}
+                        </td>
                         @else
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td class="text-center">
-                                @php 
-                                $checkjawab = array_filter($renaksi, function($ren) use ($jw) {
-                                    return $ren->id == $jw->id;
-                                });
-                                @endphp
-                                @if($checkjawab)
-                                <a class="btn btn-warning btn-xs" data-raw="{{ json_encode($fjawaban[$jw->id]) }}" data-id="{{ $fjawaban[$jw->id]->id }}" onclick="showform(this)" data-bs-toggle="modal" data-bs-target="#modal-form-jawaban-renaksi"> Jawab &nbsp; <i class="nav-icon fas fa-edit"></i></a> &nbsp; 
-                                @endif
-                            </td>
+                        <td class=" text-center">{{ $fjawaban[$jw->id]->jawaban }}</td>
+                        <td class="text-center">{{ $fjawaban[$jw->id]->skor }}</td>
+                        @endif
+                        <td class="text-center">{{ $fjawaban[$jw->id]->catatan }}</td>
+                        <td class="text-center">{{ $fjawaban[$jw->id]->rekomendasi }}</td>
+                        @if($check==true && $fjawaban[$jw->id]->id!='')
+                        <td class="text-center">
+                            <a class="btn btn-warning btn-xs" data-raw="{{ json_encode($fjawaban[$jw->id]) }}"
+                                data-id="{{ $fjawaban[$jw->id]->id }}" onclick="showform(this)" data-bs-toggle="modal"
+                                data-bs-target="#modal-form-jawaban-renaksi"><i class="nav-icon fas fa-edit"></i></a>
+                            &nbsp;
+                            <a class="btn btn-danger btn-xs" data-id="{{ $fjawaban[$jw->id]->id }}"
+                                onclick="dodelete(this)"><i class="nav-icon fas fa-remove"></i></a> &nbsp;
+                        </td>
+                        @else
+                        <td class="text-center">
+                            @php
+                            $checkjawab = array_filter($renaksi, function($ren) use ($jw) {
+                            return $ren->id == $jw->id;
+                            });
+                            @endphp
+                            @if($checkjawab)
+                            <a class="btn btn-warning btn-xs" data-raw="{{ json_encode($fjawaban[$jw->id]) }}"
+                                data-id="{{ $fjawaban[$jw->id]->id }}" onclick="showform(this)" data-bs-toggle="modal"
+                                data-bs-target="#modal-form-jawaban-renaksi"> Jawab &nbsp; <i
+                                    class="nav-icon fas fa-edit"></i></a> &nbsp;
+                            @endif
+                        </td>
+                        @endif
+                        @else
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="text-center">
+                            @php
+                            $checkjawab = array_filter($renaksi, function($ren) use ($jw) {
+                            return $ren->id == $jw->id;
+                            });
+                            @endphp
+                            @if($checkjawab)
+                            <a class="btn btn-warning btn-xs" data-raw="{{ json_encode($fjawaban[$jw->id]) }}"
+                                data-id="{{ $fjawaban[$jw->id]->id }}" onclick="showform(this)" data-bs-toggle="modal"
+                                data-bs-target="#modal-form-jawaban-renaksi"> Jawab &nbsp; <i
+                                    class="nav-icon fas fa-edit"></i></a> &nbsp;
+                            @endif
+                        </td>
                         @endif
                     </tr>
                     @endforeach
@@ -135,49 +161,57 @@
                 <div class="modal-body grid columns-12 gap-4 gap-y-3">
                     <div class="g-col-12">
                         <div class="form-group">
-                            <label for="tahun" class="form-label">Tahun <span class="text-danger">*</span></label> 
-                            <input type="text" name="tahun" value="{{ $tahun }}" class="form-control" readonly placeholder="Tahun"/>
-                        </div> 
+                            <label for="tahun" class="form-label">Tahun <span class="text-danger">*</span></label>
+                            <input type="text" name="tahun" value="{{ $tahun }}" class="form-control" readonly
+                                placeholder="Tahun" />
+                        </div>
                     </div>
                     <div class="g-col-12">
                         <div class="form-group">
-                            <label for="lkerenaksi" class="form-label">LKE Renaksi <span class="text-danger">*</span></label> 
-                            <select id="lkerenaksi" name="lke_renaksi_id" class="form-control" required onchange="showInfo(this)">
+                            <label for="lkerenaksi" class="form-label">LKE Renaksi <span
+                                    class="text-danger">*</span></label>
+                            <select id="lkerenaksi" name="lke_renaksi_id" class="form-control" required
+                                onchange="showInfo(this)">
                                 <option></option>
                                 @foreach ($renaksi as $ren)
-                                <option value="{{ $ren->id }}" data-info="{{ addslashes($ren->info) }}">{{ $ren->kriteria }}</option>
+                                <option value="{{ $ren->id }}" data-info="{{ addslashes($ren->info) }}">{{
+                                    $ren->kriteria }}</option>
                                 @endforeach
                             </select>
-                            <textarea class="form-control" disabled id="renaksiinfo" rows="10" style="font-size:9pt !important;"></textarea>
-                        </div> 
+                            <textarea class="form-control" disabled id="renaksiinfo" rows="10"
+                                style="font-size:9pt !important;"></textarea>
+                        </div>
                     </div>
                     <div class="g-col-12">
                         <div class="form-group">
-                            <label for="jawaban" class="form-label">Jawaban  <span class="text-danger">*</span></label> 
-                            <select id="jawbaan" name="jawaban" class="form-control" required placeholder="Pilih jawaban">
+                            <label for="jawaban" class="form-label">Jawaban <span class="text-danger">*</span></label>
+                            <select id="jawbaan" name="jawaban" class="form-control" required
+                                placeholder="Pilih jawaban">
                                 <option></option>
                                 @foreach ($list_jawaban as $lj)
                                 <option value="{{ $lj->jawaban }}">{{ $lj->jawaban }}</option>
                                 @endforeach
                             </select>
-                        </div> 
+                        </div>
                     </div>
                     <div class="g-col-12">
                         <div class="form-group">
-                            <label for="catatan" class="form-label">Catatan  </label> 
+                            <label for="catatan" class="form-label">Catatan </label>
                             <textarea id="catatan" name="catatan" class="form-control" placeholder="Catatan"></textarea>
-                        </div> 
+                        </div>
                     </div>
                     <div class="g-col-12">
                         <div class="form-group">
-                            <label for="rekomendasi" class="form-label">Rekomendasi  </label> 
-                            <textarea id="rekomendasi" name="rekomendasi" class="form-control" placeholder="Rekomendasi"></textarea>
-                        </div> 
+                            <label for="rekomendasi" class="form-label">Rekomendasi </label>
+                            <textarea id="rekomendasi" name="rekomendasi" class="form-control"
+                                placeholder="Rekomendasi"></textarea>
+                        </div>
                     </div>
                 </div>
-                <div class="modal-footer text-end"> 
-                    <button type="button" data-tw-dismiss="modal" class="btn btn-outline-secondary w-20 me-1">Batal</button> &nbsp; 
-                    <button type="submit" class="btn btn-success w-20 saveButton">Simpan</button> 
+                <div class="modal-footer text-end">
+                    <button type="button" data-tw-dismiss="modal"
+                        class="btn btn-outline-secondary w-20 me-1">Batal</button> &nbsp;
+                    <button type="submit" class="btn btn-success w-20 saveButton">Simpan</button>
                 </div>
             </form>
         </div>
@@ -199,7 +233,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.html5.min.js"></script>
 <script>
-$(document).ready(function(){
+    $(document).ready(function(){
     window.rowdata = new DataTable('#table-instansi', {
         "ordering": false,
         "pageLength": 100,
