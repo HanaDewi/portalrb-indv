@@ -3,11 +3,16 @@
 namespace App\Http\Controllers\ZI;
 
 use App\Models\KlpdInstansi;
+use App\Models\LKE\LkeBobot;
 use Illuminate\Http\Request;
-use App\Models\LkeTestTpLine;
+
+use App\Models\LKE\LkeTestTpLine;
 use App\Models\ZI\InstansiZI;
+use App\Imports\ImportRBTematik;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
+use Maatwebsite\Excel\HeadingRowImport;
 use App\Models\ZI\SeleksiAdministrasiUnit;
 use App\Models\ZI\SeleksiAdministrasiInstansi;
 
@@ -296,5 +301,61 @@ class GenerateDataController extends Controller
             $opini_bpk = "-";
         }
         return $opini_bpk;
+    }
+
+    public function input_nilai_ke_evalrb()
+    {
+        //$headings = (new HeadingRowImport())->toArray( 'ZI_Meso.xlsx');
+        $collections = Excel::toCollection(new ImportRBTematik, 'success_rate_zi.xlsx')[0];
+        //dd($collections);
+        foreach ($collections as $key => $collection) {
+            $user = Auth::User();
+            $nama_instansi_excel = trim($collection[0]);
+            $instansi = KlpdInstansi::where('name', $nama_instansi_excel )->first();
+            if($instansi){
+                echo "Instansi excel : ". $nama_instansi_excel;
+                echo " | Nilai : ". $collection[1]. "<br>";
+                echo "Klpd portalrb : ". $instansi->name ;
+                if($instansi->group == "kl" or $instansi->group == "provinsi" or $instansi->group == "kabupaten"){
+                    //$lke_bobot = LkeBobot::where('lke_parameter_id', 2135)->where('group', $instansi->group)->first();
+                    $lke_bobot = LkeBobot::where('lke_parameter_id', 2135)->where('group', $instansi->group)->first();
+                    //print_r($lke_bobot);
+                    //$test_tp_line = LkeTestTpLine::where('lke_bobot_id', $request->lke_bobot_id)->where('instansi_id', $instansi->id)->first();
+                    $test_tp_line = LkeTestTpLine::where('lke_bobot_id', $lke_bobot->id)->where('instansi_id', $instansi->id)->first();
+                    if (!$test_tp_line) {
+                        $test_tp_line = new LkeTestTpLine();
+                        $test_tp_line->penilai_user_id = $user->id;
+                    }
+                    //print_r("<b>".$lke_bobot->id."</b>");
+                    //print_r($test_tp_line->score_index);
+                    $test_tp_line->score = str_replace(',', '.', str_replace('.', '', $collection[1]));
+                    $test_tp_line->lke_bobot_id = $lke_bobot->id;
+                    $test_tp_line->instansi_id = $instansi->id;
+                    $test_tp_line->catatan = "";
+                    $test_tp_line->rekomendasi = "";
+                    $test_tp_line->update_user_id = $user->id;
+                    $test_tp_line->score_index = !empty($test_tp_line->lke_bobot->max_value) ? ($test_tp_line->score / $test_tp_line->lke_bobot->max_value) * $test_tp_line->lke_bobot->bobot : $test_tp_line->score;
+                    if ($pengali_id = $test_tp_line->lke_bobot->lke_parameter->indikator_pengali_id) {
+                        $bobot_pengali_id = LkeBobot::where('lke_parameter_id', $pengali_id)->where('group', $test_tp_line->lke_bobot->group)->first()->id;
+                        $test_tp_line_pengali = LkeTestTpLine::where('lke_bobot_id', $bobot_pengali_id)->where('instansi_id', $test_tp_line->instansi_id)->first();
+                        if ($test_tp_line_pengali) {
+                            if ($test_tp_line_pengali->score_index) {
+                                $test_tp_line->score_index = $test_tp_line->score_index * ($test_tp_line_pengali->score_index / $test_tp_line_pengali->lke_bobot->bobot);
+                            }
+                        }
+                    }
+                    
+                    if ($test_tp_line->save()) {
+                        calculateTestTp($test_tp_line->instansi_id, $test_tp_line->lke_bobot->lke_parameter->lke_kegiatan_id);
+                        $success = true;
+                    } else {
+                        $success = false;
+                    }
+                    echo " | Sukses : ". $success. "<hr>";
+                }else{
+                    echo " | diexclude karena groupnya bukan kl/provinsi/kabupaten". "<hr>";   
+                }
+            }
+        }
     }
 }
