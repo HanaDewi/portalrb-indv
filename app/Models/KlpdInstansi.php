@@ -51,4 +51,8 @@ class KlpdInstansi extends Model
     {
         return $this->hasMany(JawabanRenaksi::class, 'instansi_id');
     }
+
+    public function tematik_sasaran_roadmap(){
+        return $this->hasMany(TematikSasaranRoadmap::class, 'instansi_id');
+    }
 }

@@ -1,62 +1,179 @@
 @extends('layout.rubick')
 @section('title', 'Capaian Output - RB Tematik')
 @section('content')
-    <div class="intro-y box col-span-12 lg:col-span-12">
-        <div class="flex flex-col sm:flex-row items-center p-5 border-b border-slate-200/60">
-            <h2 class="font-bold text-base mr-auto">Capaian Output - RB Tematik</h2>
-        </div>
-        <div class="lg:col-span-12 p-5 border-b border-slate-200/60">
-            <table id="capaian-output" class="table table-bordered table-striped mt-5" cellspacing="0" width="100%">
-                <thead class="table-dark font-bold">
-                    <tr>
-                        <th rowspan="2" class="w-5">No.</th>
-                        <th rowspan="2">Instansi Pemerintah</th>
-                        <th rowspan="2">Group Instansi</th>
-                        <th colspan="4">Tingkat Pengisian Output</th>
-                        <th colspan="5">Rata-rata Persentasi Capaian Output</th>
-                    </tr>
-                    <tr>
-                        <th>TW1</th><th>TW2</th><th>TW3</th><th>TW4</th>
-                        <th>TW1</th><th>TW2</th><th>TW3</th><th>TW4</th><th>Total</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($capaians as $no=>$capaian)
-                    <tr>
-                        <td>{{ $no+1 }}</td>
-                        <td>{{ $capaian->name }}</td>
-                        <td align="center">{{ group_instansi($capaian->group) }}</td>
-                        <td align="center">{{ $capaian->realisasi_tw1 }}</td>
-                        <td align="center">{{ $capaian->realisasi_tw2 }}</td>
-                        <td align="center">{{ $capaian->realisasi_tw3 }}</td>
-                        <td align="center">{{ $capaian->realisasi_tw4 }}</td>
-                        <td align="center">{{ $capaian->output_tw1>0 ? $capaian->output_tw1 . '%':'' }}</td>
-                        <td align="center">{{ $capaian->output_tw2>0 ? $capaian->output_tw2 . '%':'' }}</td>
-                        <td align="center">{{ $capaian->output_tw3>0 ? $capaian->output_tw3 . '%':'' }}</td>
-                        <td align="center">{{ $capaian->output_tw4>0 ? $capaian->output_tw4 . '%':'' }}</td>
-                        <td align="center">{{ $capaian->prosentase_capaian_output }}</td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
+<div class="intro-y box col-span-12 lg:col-span-12">
+    <div class="flex flex-col sm:flex-row items-center p-5 border-b border-slate-200/60">
+        <h2 class="font-bold text-base mr-auto">Capaian Output - RB Tematik</h2>
     </div>
+    <div class="lg:col-span-12 p-5 border-b border-slate-200/60">
+        Data Capaian Output ini bukan data realtime. Data berikut di kalkulasi terakhir pada tanggal
+        {{$data_pertama->updated_at}}. Untuk
+        kalkulasi dengan data terbaru harap menghubungi admin.
+        @if($user = Auth::User()->level =='admin')
+        <a href="{{route('cogenerate')}}" class="btn btn-primary"> Generate </a>
+        @endif
+    </div>
+
+    <div class="lg:col-span-12 p-5 border-b border-slate-200/60">
+        <table id="capaian-output" class="table table-bordered table-striped" cellspacing="0" width="100%">
+            <thead class="table-dark font-bold">
+                <tr>
+                    <th rowspan="2" class="w-5">No.</th>
+                    <th rowspan="2">Instansi Pemerintah</th>
+                    <th rowspan="2">Group Instansi</th>
+                    <th colspan="5">Rata-rata Persentasi Capaian Output Pengentasan Kemiskinan</th>
+                    <th colspan="5">Rata-rata Persentasi Capaian Output Pengentasan Realisasi Investasi</th>
+                    <th colspan="5">Rata-rata Persentasi Capaian Output Digitalisasi Pemerintahan</th>
+                    <th colspan="5">Rata-rata Persentasi Capaian Output Penggunaan Produk Dalam Negeri</th>
+                    <th colspan="5">Rata-rata Persentasi Capaian Output Pengendalian Inflasi</th>
+                    <th colspan="4">Tingkat Pengisian Output</th>
+                    <th colspan="5">Rata-rata Persentasi Capaian Output</th>
+                </tr>
+                <tr>
+                    <th>TW1</th>
+                    <th>TW2</th>
+                    <th>TW3</th>
+                    <th>TW4</th>
+                    <th>Total</th>
+                    <th>TW1</th>
+                    <th>TW2</th>
+                    <th>TW3</th>
+                    <th>TW4</th>
+                    <th>Total</th>
+                    <th>TW1</th>
+                    <th>TW2</th>
+                    <th>TW3</th>
+                    <th>TW4</th>
+                    <th>Total</th>
+                    <th>TW1</th>
+                    <th>TW2</th>
+                    <th>TW3</th>
+                    <th>TW4</th>
+                    <th>Total</th>
+                    <th>TW1</th>
+                    <th>TW2</th>
+                    <th>TW3</th>
+                    <th>TW4</th>
+                    <th>Total</th>
+                    <th>TW1</th>
+                    <th>TW2</th>
+                    <th>TW3</th>
+                    <th>TW4</th>
+                    <th>TW1</th>
+                    <th>TW2</th>
+                    <th>TW3</th>
+                    <th>TW4</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach ($instansis as $instansi)
+                <tr>
+                    <td></td>
+                    <td>{{ $instansi['nama'] }}</td>
+                    <td>{{ $instansi['group'] }}</td>
+                    <td>{{ round($instansi[1]["capaian_output_tw1"],2) }}%</td>
+                    <td>{{ round($instansi[1]["capaian_output_tw2"],2) }}%</td>
+                    <td>{{ round($instansi[1]["capaian_output_tw3"],2) }}%</td>
+                    <td>{{ round($instansi[1]["capaian_output_tw4"],2) }}%</td>
+                    <td>{{ round($instansi[1]["capaian_output_total"],2) }}%</td>
+                    <td>{{ round($instansi[2]["capaian_output_tw1"],2) }}%</td>
+                    <td>{{ round($instansi[2]["capaian_output_tw2"],2) }}%</td>
+                    <td>{{ round($instansi[2]["capaian_output_tw3"],2) }}%</td>
+                    <td>{{ round($instansi[2]["capaian_output_tw4"],2) }}%</td>
+                    <td>{{ round($instansi[2]["capaian_output_total"],2) }}%</td>
+                    <td>{{ round($instansi[3]["capaian_output_tw1"],2) }}%</td>
+                    <td>{{ round($instansi[3]["capaian_output_tw2"],2) }}%</td>
+                    <td>{{ round($instansi[3]["capaian_output_tw3"],2) }}%</td>
+                    <td>{{ round($instansi[3]["capaian_output_tw4"] ,2)}}%</td>
+                    <td>{{ round($instansi[3]["capaian_output_total"],2) }}%</td>
+                    <td>{{ round($instansi[4]["capaian_output_tw1"],2) }}%</td>
+                    <td>{{ round($instansi[4]["capaian_output_tw2"],2) }}%</td>
+                    <td>{{ round($instansi[4]["capaian_output_tw3"],2) }}%</td>
+                    <td>{{ round($instansi[4]["capaian_output_tw4"],2)}}%</td>
+                    <td>{{ round($instansi[4]["capaian_output_total"],2) }}%</td>
+                    <td>{{ round($instansi[5]["capaian_output_tw1"],2) }}%</td>
+                    <td>{{ round($instansi[5]["capaian_output_tw2"],2) }}%</td>
+                    <td>{{ round($instansi[5]["capaian_output_tw3"],2) }}%</td>
+                    <td>{{ round($instansi[5]["capaian_output_tw4"],2) }}%</td>
+                    <td>{{ round($instansi[5]["capaian_output_total"],2) }}%</td>
+                    <td>{{ round($instansi[5]["pengisian_tw1"],2 ) }}%</td>
+                    <td>{{ round($instansi[5]["pengisian_tw2"],2 ) }}%</td>
+                    <td>{{ round($instansi[5]["pengisian_tw3"],2 ) }}%</td>
+                    <td>{{ round($instansi[5]["pengisian_tw4"],2 ) }}%</td>
+                    <td>
+                        @php
+                        $total_tw1 = ($instansi[1]["capaian_output_tw1"] +
+                        $instansi[2]["capaian_output_tw1"] +
+                        $instansi[3]["capaian_output_tw1"] +
+                        $instansi[4]["capaian_output_tw1"] +
+                        $instansi[5]["capaian_output_tw1"])/5 ;
+
+                        echo round($total_tw1,2)."%";
+                        @endphp
+                    </td>
+                    <td>@php
+                        $total_tw2 = ($instansi[1]["capaian_output_tw2"] +
+                        $instansi[2]["capaian_output_tw2"] +
+                        $instansi[3]["capaian_output_tw2"] +
+                        $instansi[4]["capaian_output_tw2"] +
+                        $instansi[5]["capaian_output_tw2"])/5 ;
+
+                        echo round($total_tw2,2)."%";
+                        @endphp
+                    </td>
+                    <td>@php
+                        $total_tw3 = ($instansi[1]["capaian_output_tw3"] +
+                        $instansi[2]["capaian_output_tw3"] +
+                        $instansi[3]["capaian_output_tw3"] +
+                        $instansi[4]["capaian_output_tw3"] +
+                        $instansi[5]["capaian_output_tw3"])/5 ;
+                        echo round($total_tw3,2)."%";
+                        @endphp
+                    </td>
+                    <td>@php
+                        $total_tw4 = ($instansi[1]["capaian_output_tw4"] +
+                        $instansi[2]["capaian_output_tw4"] +
+                        $instansi[3]["capaian_output_tw4"] +
+                        $instansi[4]["capaian_output_tw4"] +
+                        $instansi[5]["capaian_output_tw4"])/5 ;
+
+                        echo round($total_tw4,2)."%";
+                        @endphp
+                    </td>
+                    <td>@php
+                        $total_total = ($instansi[1]["capaian_output_total"] +
+                        $instansi[2]["capaian_output_total"] +
+                        $instansi[3]["capaian_output_total"] +
+                        $instansi[4]["capaian_output_total"] +
+                        $instansi[5]["capaian_output_total"])/5 ;
+
+                        echo round($total_total,2)."%";
+                        @endphp
+                    </td>
+                </tr>
+                @endforeach
+
+            </tbody>
+        </table>
+    </div>
+</div>
 @endsection
 
 @push('js')
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-    <script src="https://cdn.rawgit.com/ashl1/datatables-rowsgroup/v1.0.0/dataTables.rowsGroup.js"></script>
-    <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.2.3/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.html5.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script src="https://cdn.rawgit.com/ashl1/datatables-rowsgroup/v1.0.0/dataTables.rowsGroup.js"></script>
+<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.2.3/js/dataTables.buttons.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.html5.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
     $(document).ready(function() {
             var empDataTable = $('#capaian-output').DataTable({
-                "scrollX": true,
             dom: 'Blfrtip',
             pageLength: 50,
             lengthMenu: [50, 100, 150, 'All'],
@@ -76,8 +193,13 @@
                     text: '<button class="btn btn-warning w-32 mr-2 mb-2"> <svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 50 50" width="24px" height="24px"><path d="M 28.875 0 C 28.855469 0.0078125 28.832031 0.0195313 28.8125 0.03125 L 0.8125 5.34375 C 0.335938 5.433594 -0.0078125 5.855469 0 6.34375 L 0 43.65625 C -0.0078125 44.144531 0.335938 44.566406 0.8125 44.65625 L 28.8125 49.96875 C 29.101563 50.023438 29.402344 49.949219 29.632813 49.761719 C 29.859375 49.574219 29.996094 49.296875 30 49 L 30 44 L 47 44 C 48.09375 44 49 43.09375 49 42 L 49 8 C 49 6.90625 48.09375 6 47 6 L 30 6 L 30 1 C 30.003906 0.710938 29.878906 0.4375 29.664063 0.246094 C 29.449219 0.0546875 29.160156 -0.0351563 28.875 0 Z M 28 2.1875 L 28 6.53125 C 27.867188 6.808594 27.867188 7.128906 28 7.40625 L 28 42.8125 C 27.972656 42.945313 27.972656 43.085938 28 43.21875 L 28 47.8125 L 2 42.84375 L 2 7.15625 Z M 30 8 L 47 8 L 47 42 L 30 42 L 30 37 L 34 37 L 34 35 L 30 35 L 30 29 L 34 29 L 34 27 L 30 27 L 30 22 L 34 22 L 34 20 L 30 20 L 30 15 L 34 15 L 34 13 L 30 13 Z M 36 13 L 36 15 L 44 15 L 44 13 Z M 6.6875 15.6875 L 12.15625 25.03125 L 6.1875 34.375 L 11.1875 34.375 L 14.4375 28.34375 C 14.664063 27.761719 14.8125 27.316406 14.875 27.03125 L 14.90625 27.03125 C 15.035156 27.640625 15.160156 28.054688 15.28125 28.28125 L 18.53125 34.375 L 23.5 34.375 L 17.75 24.9375 L 23.34375 15.6875 L 18.65625 15.6875 L 15.6875 21.21875 C 15.402344 21.941406 15.199219 22.511719 15.09375 22.875 L 15.0625 22.875 C 14.898438 22.265625 14.710938 21.722656 14.5 21.28125 L 11.8125 15.6875 Z M 36 20 L 36 22 L 44 22 L 44 20 Z M 36 27 L 36 29 L 44 29 L 44 27 Z M 36 35 L 36 37 L 44 37 L 44 35 Z"/></svg>  &nbsp;Excel </button>',
                             titleAttr: 'Download Excel'
                 } 
-            ]
+            ],
+            scrollX: true,
+            autoWidth: false,
+            bInfo: false,
+            ordering: false,
+            
         });
     });
-    </script>
+</script>
 @endpush

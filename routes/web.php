@@ -55,6 +55,7 @@ Route::middleware('auth')->group(function () {
     Route::get('webdashboard/rb-general/capaian-output', [CapaianOutputController::class, 'rbGeneralCapaianOutput'])->name('webdashboard.rb-general.capaian-output');
     Route::get('webdashboard/rb-tematik/rencana-aksi', [WebDashboardController::class, 'rbTematik'])->name('webdashboard.rb-tematik');
     Route::get('webdashboard/rb-tematik/capaian-output', [CapaianOutputController::class, 'rbTematikCapaianOutput'])->name('webdashboard.rb-tematik.capaian-output');
+    Route::get('webdashboard/rb-tematik/capaian-output/generate', [CapaianOutputController::class, 'rbTematikCapaianOutputGenerate'])->name('cogenerate');
     Route::get('webdashboard/hasil-evaluasi', [WebDashboardController::class, 'hasilEvaluasi'])->name('webdashboard.hasil-evaluasi');
     });
     // Kegiatan Utama
