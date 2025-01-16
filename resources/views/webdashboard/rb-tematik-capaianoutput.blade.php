@@ -8,9 +8,14 @@
     <div class="lg:col-span-12 p-5 border-b border-slate-200/60">
         Data Capaian Output ini bukan data realtime. Data berikut di kalkulasi terakhir pada tanggal
         {{$data_pertama->updated_at}}. Untuk
-        kalkulasi dengan data terbaru harap menghubungi admin.
+        kalkulasi dengan data terbaru harap menghubungi admin. <br />
         @if($user = Auth::User()->level =='admin')
-        <a href="{{route('cogenerate')}}" class="btn btn-primary"> Generate </a>
+        <a href="{{route('cogenerate',1)}}" class="btn btn-primary"> G1 </a>
+        <a href="{{route('cogenerate',2)}}" class="btn btn-primary"> G2 </a>
+        <a href="{{route('cogenerate',3)}}" class="btn btn-primary"> G3 </a>
+        <a href="{{route('cogenerate',4)}}" class="btn btn-primary"> G4 </a>
+        <a href="{{route('cogenerate',5)}}" class="btn btn-primary"> G5 </a>
+        <a href="{{route('cogenerate',6)}}" class="btn btn-primary"> G6 </a>
         @endif
     </div>
 

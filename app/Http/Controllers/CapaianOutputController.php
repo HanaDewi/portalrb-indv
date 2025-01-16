@@ -28,7 +28,7 @@ class CapaianOutputController extends Controller
         $user = Auth::User();
         $klpdinstansis = KlpdInstansi::get();
         $instansis = [];
-        $data_pertama = TematikRekapCapaianOutput::first();
+        $data_pertama = TematikRekapCapaianOutput::orderBy('instansi_id', 'desc')->first();
         foreach($klpdinstansis as $instansi){
             foreach(Tema::get() as $tema){
                 $rekap_capaian_output = TematikRekapCapaianOutput::where("instansi_id", $instansi->id)->where("tema_id", $tema->id)->first();
@@ -54,9 +54,32 @@ class CapaianOutputController extends Controller
         return view('webdashboard.rb-tematik-capaianoutput', compact('instansis', 'data_pertama'));
         
     }
-    public function rbTematikCapaianOutputGenerate(Request $request)
+    public function rbTematikCapaianOutputGenerate($pilihan)
     {
-        $klpdinstansis = KlpdInstansi::get();
+        if($pilihan == 1){
+            $klpdinstansis = KlpdInstansi::whereBetween('id',[1,100])->get();
+            $i = 1;
+        }elseif($pilihan == 2){
+            $klpdinstansis = KlpdInstansi::whereBetween('id',[101,200])->get();
+            $i = 100;
+        }elseif($pilihan == 3){
+            $klpdinstansis = KlpdInstansi::whereBetween('id',[201,300])->get();
+            $i = 200;
+        }elseif($pilihan == 4){
+            $klpdinstansis = KlpdInstansi::whereBetween('id',[301,400])->get();
+            $i = 300;
+        }elseif($pilihan == 5){
+            $klpdinstansis = KlpdInstansi::whereBetween('id',[401,500])->get();
+            $i = 400;
+        }elseif($pilihan == 6){
+            $klpdinstansis = KlpdInstansi::whereBetween('id',[501,600])->get();
+            $i = 500;
+        }elseif($pilihan == 7){
+            $klpdinstansis = KlpdInstansi::whereBetween('id',[601,655])->get();
+            $i = 600;
+        }
+
+        
         foreach($klpdinstansis as $instansi){
             foreach(Tema::get() as $tema){
                 $capaian_output_tw1[$tema->id] = 0 ;
@@ -157,68 +180,18 @@ class CapaianOutputController extends Controller
                 $rekap_capaian_output->save();
                 
             }
+            
             // echo "finish satu";
-             echo $instansi->name . "<br/>";
-            // dd("pause");
+            echo $i ." ". $instansi->name . "<br/>";
+            $i++;
+             // dd("pause");
         }
         
         //return view('webdashboard.rb-tematik-capaianoutput', compact('instansis'));
         
     }
 
-    public function rbTematikCapaianOutput2(Request $request)
-    {
-        $user = Auth::User();
-        if (in_array($user->level, ['admin', 'tpn', 'viewer'])) {
-            $capaians ="";
-            // $capaians = DB::table('klpd_instansi as ki')
-            //     ->leftJoin('tematik_sasaran_roadmap as sasaran', 'sasaran.instansi_id', '=', 'ki.id')
-            //     ->leftJoin('tematik_indikator_roadmap as indikator', 'indikator.tematik_sasaran_roadmap_id', '=', 'sasaran.id')
-            //     ->leftJoin('tematik_permasalahan as masalah', 'masalah.tematik_indikator_roadmap_id', '=', 'indikator.id')
-            //     ->leftJoin('tematik_indikator_permasalahan as indikatormasalah', 'indikatormasalah.tematik_permasalahan_id', '=', 'masalah.id')
-            //     ->leftJoin('tematik_rencana_aksi as rencana', 'rencana.tematik_indikator_permasalahan_id', '=', 'indikatormasalah.id')
-            //     ->leftJoin('tematik_rencana_aksi_output as routput', 'routput.tematik_rencana_aksi_id', '=', 'rencana.id')
-            //     ->select('ki.name', 'ki.group',
-            //         DB::raw('SUM(CASE WHEN routput.target_tw1 > 0 THEN 1 ELSE 0 END) as jumlah_target_tw1'),
-            //         DB::raw('SUM(CASE WHEN routput.target_tw2 > 0 THEN 1 ELSE 0 END) as jumlah_target_tw2'),
-            //         DB::raw('SUM(CASE WHEN routput.target_tw3 > 0 THEN 1 ELSE 0 END) as jumlah_target_tw3'),
-            //         DB::raw('SUM(CASE WHEN routput.target_tw4 > 0 THEN 1 ELSE 0 END) as jumlah_target_tw4'),
-            //         DB::raw('SUM(CASE WHEN routput.realisasi_output_tw1 > 0 THEN 1 ELSE 0 END) as jumlah_realisasi_output_tw1'),
-            //         DB::raw('SUM(CASE WHEN routput.realisasi_output_tw2 > 0 THEN 1 ELSE 0 END) as jumlah_realisasi_output_tw2'),
-            //         DB::raw('SUM(CASE WHEN routput.realisasi_output_tw3 > 0 THEN 1 ELSE 0 END) as jumlah_realisasi_output_tw3'),
-            //         DB::raw('SUM(CASE WHEN routput.realisasi_output_tw4 > 0 THEN 1 ELSE 0 END) as jumlah_realisasi_output_tw4'),
-            //         DB::raw('SUM(CASE WHEN routput.capaian_output_tw1 > 0 THEN 1 ELSE 0 END) as jumlah_capaian_output_tw1'),
-            //         DB::raw('SUM(CASE WHEN routput.capaian_output_tw2 > 0 THEN 1 ELSE 0 END) as jumlah_capaian_output_tw2'),
-            //         DB::raw('SUM(CASE WHEN routput.capaian_output_tw3 > 0 THEN 1 ELSE 0 END) as jumlah_capaian_output_tw3'),
-            //         DB::raw('SUM(CASE WHEN routput.capaian_output_tw4 > 0 THEN 1 ELSE 0 END) as jumlah_capaian_output_tw4'),
-            //         DB::raw('SUM(routput.capaian_output_tw1) as total_capaian_output_tw1'),
-            //         DB::raw('SUM(routput.capaian_output_tw2) as total_capaian_output_tw2'),
-            //         DB::raw('SUM(routput.capaian_output_tw3) as total_capaian_output_tw3'),
-            //         DB::raw('SUM(routput.capaian_output_tw4) as total_capaian_output_tw4')
-            //     )
-            //     ->groupBy('ki.name', 'ki.group')
-            //     ->orderBy(DB::raw('SUM(CASE WHEN routput.target_tw1 > 0 THEN 1 ELSE 0 END)'), 'desc')
-            //     ->get();
-            
-            // foreach ($capaians as $capaian) {
-            //     $capaian->realisasi_tw1 = $capaian->jumlah_target_tw1 > 0 ? round(($capaian->jumlah_realisasi_output_tw1 / $capaian->jumlah_target_tw1) * 100) . '%': '';
-            //     $capaian->realisasi_tw2 = $capaian->jumlah_target_tw2 > 0 ? round(($capaian->jumlah_realisasi_output_tw2 / $capaian->jumlah_target_tw2) * 100) . '%': '';
-            //     $capaian->realisasi_tw3 = $capaian->jumlah_target_tw3 > 0 ? round(($capaian->jumlah_realisasi_output_tw3 / $capaian->jumlah_target_tw3) * 100) . '%': '';
-            //     $capaian->realisasi_tw4 = $capaian->jumlah_target_tw4 > 0 ? round(($capaian->jumlah_realisasi_output_tw4 / $capaian->jumlah_target_tw4) * 100) . '%': '';
-            //     $capaian->output_tw1 = $capaian->jumlah_capaian_output_tw1 > 0 ? round($capaian->total_capaian_output_tw1 / $capaian->jumlah_capaian_output_tw1) : 0;
-            //     $capaian->output_tw2 = $capaian->jumlah_capaian_output_tw2 > 0 ? round($capaian->total_capaian_output_tw2 / $capaian->jumlah_capaian_output_tw2) : 0;
-            //     $capaian->output_tw3 = $capaian->jumlah_capaian_output_tw3 > 0 ? round($capaian->total_capaian_output_tw3 / $capaian->jumlah_capaian_output_tw3) : 0;
-            //     $capaian->output_tw4 = $capaian->jumlah_capaian_output_tw4 > 0 ? round($capaian->total_capaian_output_tw4 / $capaian->jumlah_capaian_output_tw4) : 0;
-            //     $total = $capaian->output_tw1 + $capaian->output_tw2 + $capaian->output_tw3 + $capaian->output_tw4;
-            //     $jumlah_capaian_output = $capaian->output_tw1>0 ? 1:0;
-            //     $jumlah_capaian_output += $capaian->output_tw2>0 ? 1:0;
-            //     $jumlah_capaian_output += $capaian->output_tw3>0 ? 1:0;
-            //     $jumlah_capaian_output += $capaian->output_tw4>0 ? 1:0;
-            //     $capaian->prosentase_capaian_output = $jumlah_capaian_output>0 ? round( $total / $jumlah_capaian_output ) . '%': '';
-            // }
-            return view('webdashboard.rb-tematik-capaianoutput', compact('capaians'));
-        }
-    }
+    
 
     public function rbGeneralCapaianOutput()
     {
