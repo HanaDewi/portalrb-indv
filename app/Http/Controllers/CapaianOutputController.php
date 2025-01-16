@@ -195,14 +195,18 @@ class CapaianOutputController extends Controller
                 ($count_pengisian_pembagi_tw4[$tema->id])?$rekap_capaian_output->pengisian_tw4 = 100 * $count_pengisian_pembilang_tw4[$tema->id] / $count_pengisian_pembagi_tw4[$tema->id]  : $rekap_capaian_output->pengisian_tw4 = 0;
                 
                 $rekap_capaian_output->updated_by = Auth::User()->id;
-                $rekap_capaian_output->save();
+                $rekap_capaian_output->updated_at = now(); //butuh ini karena kalau value tidak berubah makan updated_at tidak akan berubah
+                if($rekap_capaian_output->save()){
+                    echo $rekap_capaian_output->tema_id . "-" ;
+                }
                 
             }
             
             // echo "finish satu";
             echo $i ." ". $instansi->name . "<br/>";
             $i++;
-             // dd("pause");
+
+            //dd("pause");
         }
         
         //return view('webdashboard.rb-tematik-capaianoutput', compact('instansis'));

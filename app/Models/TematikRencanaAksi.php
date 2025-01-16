@@ -9,6 +9,7 @@ class TematikRencanaAksi extends Model
 {
     use HasFactory;
     protected $table = 'tematik_rencana_aksi';
+    public $timestamps = true;
     public function output($fokus_intervensi_ids=[])
     {
         $select = $this->hasMany(TematikRencanaAksiOutput::class, 'tematik_rencana_aksi_id');
