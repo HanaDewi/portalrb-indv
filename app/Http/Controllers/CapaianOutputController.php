@@ -57,26 +57,44 @@ class CapaianOutputController extends Controller
     public function rbTematikCapaianOutputGenerate($pilihan)
     {
         if($pilihan == 1){
-            $klpdinstansis = KlpdInstansi::whereBetween('id',[1,100])->get();
+            $klpdinstansis = KlpdInstansi::whereBetween('id',[1,50])->get();
             $i = 1;
         }elseif($pilihan == 2){
-            $klpdinstansis = KlpdInstansi::whereBetween('id',[101,200])->get();
-            $i = 100;
+            $klpdinstansis = KlpdInstansi::whereBetween('id',[51,100])->get();
+            $i = 51;
         }elseif($pilihan == 3){
-            $klpdinstansis = KlpdInstansi::whereBetween('id',[201,300])->get();
-            $i = 200;
+            $klpdinstansis = KlpdInstansi::whereBetween('id',[101,150])->get();
+            $i = 101;
         }elseif($pilihan == 4){
-            $klpdinstansis = KlpdInstansi::whereBetween('id',[301,400])->get();
-            $i = 300;
+            $klpdinstansis = KlpdInstansi::whereBetween('id',[151,200])->get();
+            $i = 151;
         }elseif($pilihan == 5){
-            $klpdinstansis = KlpdInstansi::whereBetween('id',[401,500])->get();
-            $i = 400;
+            $klpdinstansis = KlpdInstansi::whereBetween('id',[201,250])->get();
+            $i = 201;
         }elseif($pilihan == 6){
-            $klpdinstansis = KlpdInstansi::whereBetween('id',[501,600])->get();
-            $i = 500;
+            $klpdinstansis = KlpdInstansi::whereBetween('id',[251,300])->get();
+            $i = 251;
         }elseif($pilihan == 7){
+            $klpdinstansis = KlpdInstansi::whereBetween('id',[301,350])->get();
+            $i = 301;
+        }elseif($pilihan == 8){
+            $klpdinstansis = KlpdInstansi::whereBetween('id',[351,400])->get();
+            $i = 351;
+        }elseif($pilihan == 9){
+            $klpdinstansis = KlpdInstansi::whereBetween('id',[401,450])->get();
+            $i = 401;
+        }elseif($pilihan == 10){
+            $klpdinstansis = KlpdInstansi::whereBetween('id',[451,500])->get();
+            $i = 451;
+        }elseif($pilihan == 11){
+            $klpdinstansis = KlpdInstansi::whereBetween('id',[501,550])->get();
+            $i = 501;
+        }elseif($pilihan == 12){
+            $klpdinstansis = KlpdInstansi::whereBetween('id',[551,600])->get();
+            $i = 551;
+        }elseif($pilihan == 13){
             $klpdinstansis = KlpdInstansi::whereBetween('id',[601,655])->get();
-            $i = 600;
+            $i = 601;
         }
 
         

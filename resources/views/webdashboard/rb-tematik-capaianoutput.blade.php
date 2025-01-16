@@ -10,12 +10,19 @@
         {{$data_pertama->updated_at}}. Untuk
         kalkulasi dengan data terbaru harap menghubungi admin. <br />
         @if($user = Auth::User()->level =='admin')
-        <a href="{{route('cogenerate',1)}}" class="btn btn-primary"> G1 </a>
-        <a href="{{route('cogenerate',2)}}" class="btn btn-primary"> G2 </a>
-        <a href="{{route('cogenerate',3)}}" class="btn btn-primary"> G3 </a>
-        <a href="{{route('cogenerate',4)}}" class="btn btn-primary"> G4 </a>
-        <a href="{{route('cogenerate',5)}}" class="btn btn-primary"> G5 </a>
-        <a href="{{route('cogenerate',6)}}" class="btn btn-primary"> G6 </a>
+        <a href="{{route('cogenerate',['pilihan'=>1])}}" class="btn btn-primary"> G1 </a>
+        <a href="{{route('cogenerate',['pilihan'=>2])}}" class="btn btn-primary"> G2 </a>
+        <a href="{{route('cogenerate',['pilihan'=>3])}}" class="btn btn-primary"> G3 </a>
+        <a href="{{route('cogenerate',['pilihan'=>4])}}" class="btn btn-primary"> G4 </a>
+        <a href="{{route('cogenerate',['pilihan'=>5])}}" class="btn btn-primary"> G5 </a>
+        <a href="{{route('cogenerate',['pilihan'=>6])}}" class="btn btn-primary"> G6 </a>
+        <a href="{{route('cogenerate',['pilihan'=>7])}}" class="btn btn-primary"> G7 </a>
+        <a href="{{route('cogenerate',['pilihan'=>8])}}" class="btn btn-primary"> G8 </a>
+        <a href="{{route('cogenerate',['pilihan'=>9])}}" class="btn btn-primary"> G9 </a>
+        <a href="{{route('cogenerate',['pilihan'=>10])}}" class="btn btn-primary"> G10 </a>
+        <a href="{{route('cogenerate',['pilihan'=>11])}}" class="btn btn-primary"> G11 </a>
+        <a href="{{route('cogenerate',['pilihan'=>12])}}" class="btn btn-primary"> G12 </a>
+        <a href="{{route('cogenerate',['pilihan'=>13])}}" class="btn btn-primary"> G13 </a>
         @endif
     </div>
 
