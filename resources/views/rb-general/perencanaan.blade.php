@@ -92,7 +92,7 @@ $idx = 0;
                                         {!! $dokumen_list !!}
                                     </td> --}}
                                     <td>
-                                        <span class="font-bold mr-1">Realisasi Indikator: </span>{{ $target->realiasasi_indikator ? $target->realiasasi_indikator : '-' }}<br>
+                                        <span class="font-bold mr-1">Realisasi Indikator: </span>{{ $target->realisasi_indikator ? $target->realisasi_indikator : '-' }}<br>
                                         <span class="font-bold mr-1">Capaian Indikator: </span>{{ $target->capaian_indikator ? number_format((float)$target->capaian_indikator, 2, '.', '') : '-' }}<br>
                                         <span class="font-bold mr-1">Catatan: </span>{{ $target->catatan ? $target->catatan : '-' }}<br>
                                     </td>
