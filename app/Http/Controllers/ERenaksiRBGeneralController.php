@@ -29,10 +29,6 @@ class ERenaksiRBGeneralController extends Controller
 
     public function index(Request $request)
     {
-        foreach(KlpdInstansi::all() as $instansi){
-            self::kalkulasi_skor($instansi->id, '2024');
-        }
-        dd("hai");
         $user = Auth::User();
         $isadmin = in_array($user->level, ['admin']);
         $istpn = in_array($user->level, ['tpn']);
