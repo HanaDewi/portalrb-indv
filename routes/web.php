@@ -175,7 +175,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/evaluasi/renaksi-rb-general', [ERenaksiRBGeneralController::class, 'index']);
     Route::post('/evaluasi/renaksi-rb-general/save', [ERenaksiRBGeneralController::class, 'dosave']);
     Route::delete('/evaluasi/renaksi-rb-general/delete', [ERenaksiRBGeneralController::class, 'dodelete']);
-    
+    Route::get('/evaluasi/generate-evaluasi-renaksi-rb-general', [ERenaksiRBGeneralController::class, 'generateEvaluasiRBGenereal']);
+
     Route::get('/master-data/data-lke-renaksi', [DataLKERenaksiController::class, 'index']);
     Route::post('/master-data/data-lke-renaksi/save', [DataLKERenaksiController::class, 'dosave']);
     Route::delete('/master-data/data-lke-renaksi/delete', [DataLKERenaksiController::class, 'dodelete']);

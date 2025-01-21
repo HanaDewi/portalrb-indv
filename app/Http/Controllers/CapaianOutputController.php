@@ -54,7 +54,7 @@ class CapaianOutputController extends Controller
         return view('webdashboard.rb-tematik-capaianoutput', compact('instansis', 'data_pertama'));
         
     }
-    public function rbTematikCapaianOutputGenerate($pilihan)
+    public function rbTematikCapaianOutputGenerate($pilihan, Request $request)
     {
         if($pilihan == 1){
             $klpdinstansis = KlpdInstansi::whereBetween('id',[1,50])->get();
@@ -95,6 +95,9 @@ class CapaianOutputController extends Controller
         }elseif($pilihan == 13){
             $klpdinstansis = KlpdInstansi::whereBetween('id',[601,655])->get();
             $i = 601;
+        }elseif($pilihan == 99){
+            $klpdinstansis = KlpdInstansi::where('id', $request->id )->get();
+            $i = 1;
         }
 
         
