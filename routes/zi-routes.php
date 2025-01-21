@@ -132,6 +132,7 @@ Route::middleware('auth')->group(function () {
     //Route::get('/zi/generate_skor', [GenerateDataController::class, 'generate_rekap_instansi_skor'])->name('pengusulan_zi');
     Route::get('/zi/sinkron_final_completed', [GenerateDataController::class, 'sinkron_final_completed']);
     Route::get('/zi/input-nilai-ke-evalrb', [GenerateDataController::class, 'input_nilai_ke_evalrb']);
+    Route::get('/generate-skor-rencana-aksi', [GenerateDataController::class, 'generate_skor_rencana_aksi']);
     
     
 });

@@ -2,16 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\JawabanRenaksi;
-use App\Models\KlpdInstansi;
-use App\Models\KonversiJawabanRenaksi;
 use App\Models\LKERenaksi;
-use App\Models\AnggotaTimEvaluasiRB as AnggotaTimEvaluasi;
-use App\Models\InstansiTimEvaluasi as InstansiTim;
-use App\Models\TimEvaluasiRB;
-use Illuminate\Support\Facades\DB;
+use App\Models\KlpdInstansi;
+use App\Models\LKE\LkeBobot;
 use Illuminate\Http\Request;
+use App\Models\TimEvaluasiRB;
+use App\Models\JawabanRenaksi;
+use App\Models\LKE\LkeTestTpLine;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use App\Models\KonversiJawabanRenaksi;
+use App\Models\InstansiTimEvaluasi as InstansiTim;
+use App\Models\AnggotaTimEvaluasiRB as AnggotaTimEvaluasi;
 
 class ERenaksiRBGeneralController extends Controller
 {
@@ -227,5 +229,46 @@ class ERenaksiRBGeneralController extends Controller
         $strategiPelaksanaanRBGeneral->lke_renaksi_id = 2;
         $strategiPelaksanaanRBGeneral->jawaban = $penetapanRencanaAksi->jawaban + $penilaianKU->jawaban;
         $strategiPelaksanaanRBGeneral->save();
+
+        
+        //Masukin ke table indeksrb
+        $user = Auth::User();
+        $instansi = KlpdInstansi::where('id', $instansi_id )->first();
+        if($instansi){
+            if($instansi->group == "kl" or $instansi->group == "provinsi" or $instansi->group == "kabupaten"){
+                $lke_bobot = LkeBobot::where('lke_parameter_id', 2130)->where('group', $instansi->group)->first();
+                $test_tp_line = LkeTestTpLine::where('lke_bobot_id', $lke_bobot->id)->where('instansi_id', $instansi->id)->first();
+                if (!$test_tp_line) {
+                    $test_tp_line = new LkeTestTpLine();
+                    $test_tp_line->penilai_user_id = $user->id;
+                }
+                $test_tp_line->score = $strategiPelaksanaanRBGeneral->jawaban;
+                $test_tp_line->lke_bobot_id = $lke_bobot->id;
+                $test_tp_line->instansi_id = $instansi->id;
+                $test_tp_line->catatan = "";
+                $test_tp_line->rekomendasi = "";
+                $test_tp_line->update_user_id = $user->id;
+                $test_tp_line->score_index = !empty($test_tp_line->lke_bobot->max_value) ? ($test_tp_line->score / $test_tp_line->lke_bobot->max_value) * $test_tp_line->lke_bobot->bobot : $test_tp_line->score;
+                if ($pengali_id = $test_tp_line->lke_bobot->lke_parameter->indikator_pengali_id) {
+                    $bobot_pengali_id = LkeBobot::where('lke_parameter_id', $pengali_id)->where('group', $test_tp_line->lke_bobot->group)->first()->id;
+                    $test_tp_line_pengali = LkeTestTpLine::where('lke_bobot_id', $bobot_pengali_id)->where('instansi_id', $test_tp_line->instansi_id)->first();
+                    if ($test_tp_line_pengali) {
+                        if ($test_tp_line_pengali->score_index) {
+                            $test_tp_line->score_index = $test_tp_line->score_index * ($test_tp_line_pengali->score_index / $test_tp_line_pengali->lke_bobot->bobot);
+                        }
+                    }
+                }
+                
+                if ($test_tp_line->save()) {
+                    calculateTestTp($test_tp_line->instansi_id, $test_tp_line->lke_bobot->lke_parameter->lke_kegiatan_id);
+                    $success = true;
+                } else {
+                    $success = false;
+                }
+                echo " | Sukses : ". $success. "<hr>";
+            }else{
+                echo " | diexclude karena groupnya bukan kl/provinsi/kabupaten". "<hr>";   
+            }
+        }
     }
 }
