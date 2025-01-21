@@ -29,6 +29,10 @@ class ERenaksiRBGeneralController extends Controller
 
     public function index(Request $request)
     {
+        foreach(KlpdInstansi::all() as $instansi){
+            self::kalkulasi_skor($instansi->id, '2024');
+        }
+        dd("hai");
         $user = Auth::User();
         $isadmin = in_array($user->level, ['admin']);
         $istpn = in_array($user->level, ['tpn']);
@@ -170,6 +174,12 @@ class ERenaksiRBGeneralController extends Controller
         }
     }
 
+    public function generateEvaluasiRBGenereal(){
+        foreach(KlpdInstansi::all() as $instansi){
+            self::kalkulasi_skor($instansi->id, '2024');
+        }
+    }
+
     public function kalkulasi_skor($instansi_id, $tahun){
         //Penilaian Kegiatan Utama Road Map Reformasi Birokrasi
         $penilaianKU = JawabanRenaksi::where('instansi_id', $instansi_id)->where('lke_renaksi_id',3)->where('tahun', $tahun)->first();
@@ -219,7 +229,7 @@ class ERenaksiRBGeneralController extends Controller
         $strategiPelaksanaanRBGeneral->instansi_id = $instansi_id;
         $strategiPelaksanaanRBGeneral->tahun = $tahun;
         $strategiPelaksanaanRBGeneral->lke_renaksi_id = 2;
-        $strategiPelaksanaanRBGeneral-> jawaban = $penetapanRencanaAksi->jawaban + $penilaianKU->jawaban;
+        $strategiPelaksanaanRBGeneral->jawaban = $penetapanRencanaAksi->jawaban + $penilaianKU->jawaban;
         $strategiPelaksanaanRBGeneral->save();
     }
 }
