@@ -213,7 +213,7 @@ class LKEController extends Controller
                         $success = false;
                         $pesan = 'Terdapat Format Angka Skor tidak sesuai! Harap perbaiki terlebih dahulu!';
                     } else if ($success) {
-                        if (!empty($lke['score'])) {
+                        if ($lke['score'] != '') {
                             $test_tp_line = LkeTestTpLine::where('instansi_id', $lke['instansi_id'])->where('lke_bobot_id', $lke['lke_bobot_id'])->first();
                             if (!$test_tp_line) {
                                 $test_tp_line = new LkeTestTpLine();
