@@ -248,7 +248,7 @@ Route::middleware('auth')->group(function () {
     
 
 
-    #generate indeks RB simple version
+    #generate indeks RB simple version buat kebutuhan satu data dakip
     //Route::get('/evaluasi/hasil-2023/', [HasilController::class, 'generate_simple'])->name('generete_rb_simple_version');
 });
 

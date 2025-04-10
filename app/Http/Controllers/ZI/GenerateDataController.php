@@ -6,9 +6,10 @@ use App\Models\KlpdInstansi;
 use App\Models\LKE\LkeBobot;
 use Illuminate\Http\Request;
 
-use App\Models\LKE\LkeTestTpLine;
 use App\Models\ZI\InstansiZI;
+use App\Models\JawabanRenaksi;
 use App\Imports\ImportRBTematik;
+use App\Models\LKE\LkeTestTpLine;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
@@ -333,6 +334,61 @@ class GenerateDataController extends Controller
                     $test_tp_line->instansi_id = $instansi->id;
                     $test_tp_line->catatan = "";
                     $test_tp_line->rekomendasi = "";
+                    $test_tp_line->update_user_id = $user->id;
+                    $test_tp_line->score_index = !empty($test_tp_line->lke_bobot->max_value) ? ($test_tp_line->score / $test_tp_line->lke_bobot->max_value) * $test_tp_line->lke_bobot->bobot : $test_tp_line->score;
+                    if ($pengali_id = $test_tp_line->lke_bobot->lke_parameter->indikator_pengali_id) {
+                        $bobot_pengali_id = LkeBobot::where('lke_parameter_id', $pengali_id)->where('group', $test_tp_line->lke_bobot->group)->first()->id;
+                        $test_tp_line_pengali = LkeTestTpLine::where('lke_bobot_id', $bobot_pengali_id)->where('instansi_id', $test_tp_line->instansi_id)->first();
+                        if ($test_tp_line_pengali) {
+                            if ($test_tp_line_pengali->score_index) {
+                                $test_tp_line->score_index = $test_tp_line->score_index * ($test_tp_line_pengali->score_index / $test_tp_line_pengali->lke_bobot->bobot);
+                            }
+                        }
+                    }
+                    
+                    if ($test_tp_line->save()) {
+                        calculateTestTp($test_tp_line->instansi_id, $test_tp_line->lke_bobot->lke_parameter->lke_kegiatan_id);
+                        $success = true;
+                    } else {
+                        $success = false;
+                    }
+                    echo " | Sukses : ". $success. "<hr>";
+                }else{
+                    echo " | diexclude karena groupnya bukan kl/provinsi/kabupaten". "<hr>";   
+                }
+            }
+        }
+    }
+
+    public function generate_skor_rencana_aksi()
+    {
+        $user = Auth::User();
+        $instansis = KlpdInstansi::all();
+        foreach($instansis as $instansi)
+        {
+            if($instansi){
+                if($instansi->group == "kl" or $instansi->group == "provinsi" or $instansi->group == "kabupaten"){
+                    $lke_bobot = LkeBobot::where('lke_parameter_id', 2130)->where('group', $instansi->group)->first();
+                    $test_tp_line = LkeTestTpLine::where('lke_bobot_id', $lke_bobot->id)->where('instansi_id', $instansi->id)->first();
+                    if (!$test_tp_line) {
+                        $test_tp_line = new LkeTestTpLine();
+                        $test_tp_line->penilai_user_id = $user->id;
+                    }
+                    $instansi_id = $instansi->id;
+                    $tahun = '2024';
+                    $strategiPelaksanaanRBGeneral = JawabanRenaksi::where('instansi_id', $instansi->id)->where('lke_renaksi_id',2)->where('tahun', '2024')->first();
+                    $test_tp_line->score = $strategiPelaksanaanRBGeneral->jawaban;
+                    $test_tp_line->lke_bobot_id = $lke_bobot->id;
+                    $test_tp_line->instansi_id = $instansi->id;
+                    $penetapanKU =  JawabanRenaksi::where('instansi_id', $instansi_id)->where('lke_renaksi_id',4)->where('tahun', $tahun)->first();
+                    $penetapanTargetIndikatorKU =  JawabanRenaksi::where('instansi_id', $instansi_id)->where('lke_renaksi_id',5)->where('tahun', $tahun)->first();
+                    $keabsahanRencanaAksi =  JawabanRenaksi::where('instansi_id', $instansi_id)->where('lke_renaksi_id',6)->where('tahun', $tahun)->first();
+                    $kelogisanRencanaAksi=  JawabanRenaksi::where('instansi_id', $instansi_id)->where('lke_renaksi_id',8)->where('tahun', $tahun)->first();
+                    $relevansiKecukupanIndikatorOutput =  JawabanRenaksi::where('instansi_id', $instansi_id)->where('lke_renaksi_id',9)->where('tahun', $tahun)->first();
+                    $ketetapanPenetapanTargetIndikatorOutput =  JawabanRenaksi::where('instansi_id', $instansi_id)->where('lke_renaksi_id',10)->where('tahun', $tahun)->first();
+                    $anggaran =  JawabanRenaksi::where('instansi_id', $instansi_id)->where('lke_renaksi_id',11)->where('tahun', $tahun)->first(); 
+                    $test_tp_line->catatan = ($penetapanKU->catatan ?? null). "." . ($penetapanTargetIndikatorKU->catatan?? null)."." . ($keabsahanRencanaAksi->catatan?? null)."." .($kelogisanRencanaAksi->catatan?? null).".".($relevansiKecukupanIndikatorOutput->catatan?? null).".".($ketetapanPenetapanTargetIndikatorOutput->catatan?? null).".".($anggaran->catatan?? null);
+                    $test_tp_line->rekomendasi = ($penetapanKU->rekomendasi?? null). "." . ($penetapanTargetIndikatorKU->rekomendasi?? null) ."." . ($keabsahanRencanaAksi->rekomendasi?? null)."." .($kelogisanRencanaAksi->rekomendasi?? null) .".". ($relevansiKecukupanIndikatorOutput->rekomendasi?? null) .".".($ketetapanPenetapanTargetIndikatorOutput->rekomendasi?? null).".".($anggaran->rekomendasi?? null);
                     $test_tp_line->update_user_id = $user->id;
                     $test_tp_line->score_index = !empty($test_tp_line->lke_bobot->max_value) ? ($test_tp_line->score / $test_tp_line->lke_bobot->max_value) * $test_tp_line->lke_bobot->bobot : $test_tp_line->score;
                     if ($pengali_id = $test_tp_line->lke_bobot->lke_parameter->indikator_pengali_id) {

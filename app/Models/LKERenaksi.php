@@ -9,4 +9,5 @@ class LKERenaksi extends Model
 {
     use HasFactory;
     protected $table = 'lke_renaksi';
+
 }

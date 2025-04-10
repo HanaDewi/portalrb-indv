@@ -11,9 +11,11 @@
         <div class="lg:col-span-12 p-5 border-b border-slate-200/60">
             <div class="form-group mb-3">
                 <label for="kegiatan_id" class="form-label mt-2">Kegiatan <span class="text-danger">*</span></label>
-                {!! Form::select('kegiatan_id', kegiatan(), null, ['class' => 'w-full', 'id' => 'kegiatan_id', 'data-placeholder' => 'Pilih Kegiatan', 'onchange' => 'getData();']) !!}
+                {!! Form::select('kegiatan_id', kegiatan(), null, ['class' => 'w-full', 'id' => 'kegiatan_id',
+                'data-placeholder' => 'Pilih Kegiatan', 'onchange' => 'getData();']) !!}
             </div>
-            <table id="hasil_evaluasi" class="table table-bordered table-striped table-hover" cellspacing="0" width="100%">
+            <table id="hasil_evaluasi" class="table table-bordered table-striped table-hover" cellspacing="0"
+                width="100%">
                 <thead class="table-dark">
                     <tr>
                         <th class="w-5">No.</th>
@@ -38,15 +40,15 @@
 @endsection
 
 @push('js')
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-    <script src="https://cdn.rawgit.com/ashl1/datatables-rowsgroup/v1.0.0/dataTables.rowsGroup.js"></script>
-    <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.2.3/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.html5.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script src="https://cdn.rawgit.com/ashl1/datatables-rowsgroup/v1.0.0/dataTables.rowsGroup.js"></script>
+<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.2.3/js/dataTables.buttons.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.html5.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     $(document).ready(function() {
         getData();
@@ -91,14 +93,14 @@
             },
             { data: 'group_instansi' },
             { data: 'nama_instansi' },
-            { data: 'rb_general' },
-            { data: 'koefisien' },
-            { data: 'rb_general_koefisien' },
-            { data: 'bobot_rb_general' },
-            { data: 'bobot_rb_general_penyesuaian' },
-            { data: 'rb_general_penyesuaian' },
-            { data: 'rb_tematik' },
-            { data: 'index_rb' },
+            { data: 'rb_general', render: $.fn.dataTable.render.number( ',', '.', 2, '' ) },
+            { data: 'koefisien', render: $.fn.dataTable.render.number( ',', '.', 2, '' ) },
+            { data: 'rb_general_koefisien', render: $.fn.dataTable.render.number( ',', '.', 2, '' ) },
+            { data: 'bobot_rb_general', render: $.fn.dataTable.render.number( ',', '.', 2, '' ) },
+            { data: 'bobot_rb_general_penyesuaian', render: $.fn.dataTable.render.number( ',', '.', 2, '' ) },
+            { data: 'rb_general_penyesuaian', render: $.fn.dataTable.render.number( ',', '.', 2, '' ) },
+            { data: 'rb_tematik', render: $.fn.dataTable.render.number( ',', '.', 2, '' ) },
+            { data: 'index_rb', render: $.fn.dataTable.render.number( ',', '.', 2, '' ) },
         ],
 		columnDefs: [
 			{
