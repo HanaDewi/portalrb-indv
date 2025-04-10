@@ -11,12 +11,13 @@ use App\Models\LkeTestTp as LkeTestTpOld;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class KlpdInstansi extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
     protected $connection = 'mysql';
-    protected $table = 'klpd_instansi';
+    protected $table = 'klpd_instansi_new';
     public $timestamps = false;
     protected $guarded = [
         'id'
@@ -55,4 +56,9 @@ class KlpdInstansi extends Model
     public function tematik_sasaran_roadmap(){
         return $this->hasMany(TematikSasaranRoadmap::class, 'instansi_id');
     }
+
+    public function getNamaInstansiAttribute() {
+        return $this->name_before ? $this->name . ' [<span class="font-italic text-danger">'.$this->name_before.'</span>]' : $this->name;
+    }
+
 }

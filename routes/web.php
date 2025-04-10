@@ -39,6 +39,7 @@ Route::get('/', function () {
 Route::get('/emptyDT', function () {
     return response()->json(['data' => []]);
 });
+Route::get('/bcrypt/', [HomeController::class, 'bcrypt']);
 
 
 Route::middleware('auth')->group(function () {

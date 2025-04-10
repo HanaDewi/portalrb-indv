@@ -36,7 +36,7 @@ class LKEController extends Controller
     public function lke_utama()
     {
         $user = Auth::User();
-        if (in_array($user->level, ['kabupaten', 'provinsi', 'kl', 'tpn', 'tpm'])) {
+        if (in_array($user->level, ['kabupaten', 'provinsi', 'kl', 'tpm'])) {
             $access = OpenAccessSetting::where('user_level', $user->level)->where('fitur', 'hasil_evaluasi')->first();
             if ($access) {
                 $today = date('Y-m-d');
@@ -70,7 +70,7 @@ class LKEController extends Controller
     public function lke_utama_score($parameter_id)
     {
         $user = Auth::User();
-        if (in_array($user->level, ['kabupaten', 'provinsi', 'kl', 'tpn', 'tpm'])) {
+        if (in_array($user->level, ['kabupaten', 'provinsi', 'kl', 'tpm'])) {
             $access = OpenAccessSetting::where('user_level', $user->level)->where('fitur', 'hasil_evaluasi')->first();
             if ($access) {
                 $today = date('Y-m-d');
@@ -111,7 +111,7 @@ class LKEController extends Controller
     {
         $group_instansi = LkeBobot::where('lke_parameter_id', $parameter_id)->pluck('group')->toArray();
         
-        $datas = DB::table('klpd_instansi as ki')
+        $datas = DB::table('klpd_instansi_new as ki')
                     ->select('ki.name as nama_instansi', 'ki.id as instansi_id', 'lb.id as lke_bobot_id', 'lb.bobot', 'lb.target_baik', 'lttl.score', 'lttl.score_index', 'lttl.catatan', 'lttl.rekomendasi', 'lb.min_value', 'lb.max_value')
                     ->selectRaw("case when ki.group = 'kl' then 'Kementerian/Badan' when ki.group = 'provinsi' then 'Provinsi' when ki.group = 'kabupaten' then 'Kabupaten/Kota' end as group_instansi")
                     ->leftJoin('lke_bobot as lb', function ($join) use ($parameter_id) {
@@ -119,7 +119,7 @@ class LKEController extends Controller
                             ->where('lb.lke_parameter_id', '=', $parameter_id);
                     })
                     ->leftJoin('lke_test_tp_line as lttl', function($join) {
-                        $join->on('lttl.instansi_id', '=', 'ki.id')
+                        $join->on('lttl.instansi_id', '=', DB::raw('COALESCE(ki.id_before, ki.id)'))
                             ->on('lttl.lke_bobot_id', '=', 'lb.id');
                     })
                     ->whereIn('ki.group', $group_instansi)
@@ -275,7 +275,7 @@ class LKEController extends Controller
     public function database()
     {
         $user = Auth::User();
-        if (in_array($user->level, ['kabupaten', 'provinsi', 'kl', 'tpn', 'tpm'])) {
+        if (in_array($user->level, ['kabupaten', 'provinsi', 'kl', 'tpm'])) {
             $access = OpenAccessSetting::where('user_level', $user->level)->where('fitur', 'hasil_evaluasi')->first();
             if ($access) {
                 $today = date('Y-m-d');
@@ -304,7 +304,7 @@ class LKEController extends Controller
     public function hasil_evaluasi()
     {
         $user = Auth::User();
-        if (in_array($user->level, ['kabupaten', 'provinsi', 'kl', 'tpn', 'tpm'])) {
+        if (in_array($user->level, ['kabupaten', 'provinsi', 'kl', 'tpm'])) {
             $access = OpenAccessSetting::where('user_level', $user->level)->where('fitur', 'hasil_evaluasi')->first();
             if ($access) {
                 $today = date('Y-m-d');
@@ -333,7 +333,7 @@ class LKEController extends Controller
     public function hasil_evaluasi_getDatas(Request $request)
     {
         $kegiatan_id = $request->kegiatan_id;
-        $datas = DB::table('klpd_instansi as ki')
+        $datas = DB::table('klpd_instansi_new as ki')
                     ->selectRaw("CASE 
                             WHEN ltt.rb_general IS NOT NULL THEN 100 
                             ELSE NULL 
@@ -342,7 +342,8 @@ class LKEController extends Controller
                             WHEN ltt.koefisien IS NOT NULL THEN ltt.rb_general + ltt.koefisien 
                             ELSE ltt.rb_general 
                         END as rb_general_koefisien, 
-                        ki.name as nama_instansi, 
+                        ki.name, 
+                        ki.name_before, 
                         ki.id as klpd_instansi_id, 
                         ltt.*, 
                         CASE 
@@ -351,7 +352,7 @@ class LKEController extends Controller
                             WHEN ki.group = 'kabupaten' THEN 'Kabupaten/Kota' 
                         END as group_instansi")
                     ->leftJoin('lke_test_tp as ltt', function ($join) use ($kegiatan_id) {
-                        $join->on('ltt.instansi_id', '=', 'ki.id')
+                        $join->on('ltt.instansi_id', '=', DB::raw('COALESCE(ki.id_before, ki.id)'))
                             ->where('ltt.lke_kegiatan_id', '=', $kegiatan_id);
                     })
                     ->whereIn('ki.group', ['kl', 'provinsi', 'kabupaten'])
@@ -360,7 +361,8 @@ class LKEController extends Controller
                     ->get();
         
         foreach ($datas as $data) {
-            $data->nama_instansi = '<a href="'.url('evaluasi/hasil-evaluasi/'.$data->klpd_instansi_id.'/'.$kegiatan_id).'" style="color: blue;">'.$data->nama_instansi.'</a>';
+            $before = $data->name_before ? ' [<span class="font-italic text-danger">'.$data->name_before.'</span>]' : '';
+            $data->nama_instansi = '<a href="'.url('evaluasi/hasil-evaluasi/'.$data->klpd_instansi_id.'/'.$kegiatan_id).'" style="color: blue;">'.$data->name.$before.'</a>';
         }
         
         return response()->json(['data' => $datas]);
@@ -369,23 +371,13 @@ class LKEController extends Controller
     public function hasil_evaluasi_instansi($instansi_id, $kegiatan_id)
     {
         $user = Auth::User();
-        if (in_array($user->level, ['tpn'])) {
-            $access = OpenAccessSetting::where('user_level', $user->level)->where('fitur', 'hasil_evaluasi')->first();
-            if ($access) {
-                $today = date('Y-m-d');
-                if ($access->waktu_awal > $today || $access->waktu_akhir < $today) {
-                    return view('belumbuka');
-                }
-            }
-        }
-
         if (!in_array($user->level, ['admin', 'tpn', 'tpm'])) {
             if ($user->user_rel->instansi_id != $instansi_id) {
                 abort(403);
             }
         }
 
-        $instansi = KlpdInstansi::find($instansi_id);
+        $instansi = KlpdInstansi::withTrashed()->find($instansi_id);
         $kegiatan = LkeKegiatan::find($kegiatan_id);
         if (!$instansi || !$kegiatan) {
             abort(404);

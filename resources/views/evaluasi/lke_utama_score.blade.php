@@ -77,7 +77,7 @@
     </div>
 </div>
 
-@if ((in_array($user->level, ['tpn', 'tpm']) && $parameter->penilai_id == $user->penilai_id) || ($user->level ==
+@if ((in_array($user->level, ['tpn', 'tpm']) && $parameter->penilai_id == $user->penilai_id && hasAksesHasilEvaluasi()) || ($user->level ==
 'admin'))
 <div id="modal-lke_score" class="modal fade" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -179,7 +179,7 @@
     $(document).ready(function() {
         getData();
 
-        @if ((in_array($user->level, ['tpn', 'tpm']) && $parameter->penilai_id == $user->penilai_id) || ($user->level == 'admin'))
+        @if ((in_array($user->level, ['tpn', 'tpm']) && $parameter->penilai_id == $user->penilai_id && hasAksesHasilEvaluasi()) || ($user->level == 'admin'))
         modal_lke_score = tailwind.Modal.getInstance(document.querySelector("#modal-lke_score"));
         modal_import_lke = tailwind.Modal.getInstance(document.querySelector("#modal-import_lke"));
 
@@ -283,7 +283,7 @@
                 sortable: false, 
                 searchable: false,
                 render: function (data, type, row, meta) {
-                    @if ((in_array($user->level, ['tpn', 'tpm']) && $parameter->penilai_id == $user->penilai_id) || ($user->level == 'admin'))
+                    @if ((in_array($user->level, ['tpn', 'tpm']) && $parameter->penilai_id == $user->penilai_id && hasAksesHasilEvaluasi()) || ($user->level == 'admin'))
                     return '<button onclick="edit('+row.instansi_id+', '+row.lke_bobot_id+');" class="btn btn-warning btn-sm w-10">Edit</button>';
                     @else
                     return '';
@@ -303,7 +303,7 @@
         lke_utama_score.ajax.url("{{url('evaluasi/lke-utama/'.$parameter->id.'/getDatas')}}").load(null, false);
     }
 
-    @if ((in_array($user->level, ['tpn', 'tpm']) && $parameter->penilai_id == $user->penilai_id) || ($user->level == 'admin'))
+    @if ((in_array($user->level, ['tpn', 'tpm']) && $parameter->penilai_id == $user->penilai_id && hasAksesHasilEvaluasi()) || ($user->level == 'admin'))
     function edit(instansi_id, lke_bobot_id) {
         $.getJSON("{{url('evaluasi/lke-utama/'.$parameter->id.'/getData')}}/"+instansi_id+"/"+lke_bobot_id, function(data) {
             $('#instansi_id').val(instansi_id);

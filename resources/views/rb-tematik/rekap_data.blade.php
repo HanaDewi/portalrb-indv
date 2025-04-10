@@ -173,7 +173,7 @@
                         <td>{{ $data['indikator_roadmap']->catatan }}</td>
                         <td>
                             {{ $data['indikator_roadmap']->catatan_evaluator }}
-                            @if (auth()->user()->level == 'tpn')
+                            @if (auth()->user()->level == 'tpn' && hasAksesRencanaAksi())
                             <button onclick="catatan_evaluator({{ $data['indikator_roadmap']->id }});"
                                 class="mb-3 btn btn-warning btn-sm w-10"><svg xmlns="https://www.w3.org/2000/svg"
                                     width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"

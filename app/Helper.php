@@ -8,6 +8,7 @@ use App\Models\LKE\LkeKegiatan;
 use App\Models\LKE\LkeParameter;
 use App\Models\LKE\LkeTestTp;
 use App\Models\LKE\LkeTestTpLine;
+use App\Models\OpenAccessSetting;
 use App\Models\LkeTP;
 use App\Models\Tahun;
 use Carbon\Carbon;
@@ -402,7 +403,7 @@ if(! function_exists('fnumber2')) {
 if(! function_exists('instansis')) {
     function instansis()
     {
-        $inslist = KlpdInstansi::orderBy('id')->pluck('name', 'id');
+        $inslist = KlpdInstansi::orderBy('id')->get()->pluck('nama_instansi', 'id');
         $result = ['-'=>' -- Pilih instansi -- '];
         foreach ($inslist as $kk=>$lst) {
             $result[$kk] = $lst;
@@ -638,4 +639,30 @@ if(! function_exists('calculateTestTp')) {
         $testTp->index_rb = $testTp->rb_general_penyesuaian + $testTp->rb_tematik;
         $testTp->save();
     }
+}
+
+function hasAksesRencanaAksi()
+{
+    $user = auth()->user();
+    $access = OpenAccessSetting::where('user_level', $user->level)->where('fitur', 'rencana_aksi')->first();
+    if ($access) {
+        $today = date('Y-m-d');
+        if ($access->waktu_awal > $today || $access->waktu_akhir < $today) {
+            return false;
+        }
+    }
+    return true;
+}
+
+function hasAksesHasilEvaluasi()
+{
+    $user = auth()->user();
+    $access = OpenAccessSetting::where('user_level', $user->level)->where('fitur', 'hasil_evaluasi')->first();
+    if ($access) {
+        $today = date('Y-m-d');
+        if ($access->waktu_awal > $today || $access->waktu_akhir < $today) {
+            return false;
+        }
+    }
+    return true;
 }

@@ -64,7 +64,7 @@
                     </td>
                 </tr>
                 @endif
-                @if (in_array(auth()->user()->level, ['admin', 'tpn']) && $test_tp->rb_general)
+                @if (in_array(auth()->user()->level, ['admin', 'tpn']) && $test_tp->rb_general && hasAksesHasilEvaluasi())
                 <tr>
                     <td class="font-bold">Aksi</td>
                     <td>
@@ -166,7 +166,7 @@
 <script src="{{ asset('ext/jquery-validation/jquery.validate.min.js') }}"></script>
 <script src="{{ asset('ext/jquery-validation/localization/messages_id.min.js') }}"></script>
 <script>
-    @if (in_array(auth()->user()->level, ['admin', 'tpn', 'tpm']))
+    @if (in_array(auth()->user()->level, ['admin', 'tpn', 'tpm']) && hasAksesHasilEvaluasi())
     var idx = {{ $idx }};
     $(document).ready(function() {
         modal_penyesuaian = tailwind.Modal.getInstance(document.querySelector("#modal-penyesuaian"));
