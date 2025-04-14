@@ -53,12 +53,13 @@ class KlpdInstansi extends Model
         return $this->hasMany(JawabanRenaksi::class, 'instansi_id');
     }
 
-    public function tematik_sasaran_roadmap(){
+    public function tematik_sasaran_roadmap()
+    {
         return $this->hasMany(TematikSasaranRoadmap::class, 'instansi_id');
     }
 
-    public function getNamaInstansiAttribute() {
-        return $this->name_before ? $this->name . ' [<span class="font-italic text-danger">'.$this->name_before.'</span>]' : $this->name;
+    public function getNamaInstansiAttribute()
+    {
+        return $this->name_before ? $this->name . ' [<span class="font-italic text-danger">' . $this->name_before . '</span>]' : $this->name;
     }
-
 }

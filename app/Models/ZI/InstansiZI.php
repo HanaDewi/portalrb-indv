@@ -18,24 +18,26 @@ class InstansiZI extends Model
     ];
     public function klpd_instansi(): BelongsTo
     {
-        return $this->belongsTo(KlpdInstansi::class, 'instansi_id');
+        return $this->belongsTo(KlpdInstansi::class, 'instansi_id')->withTrashed();
     }
 
-    public function unit_zi() {
+    public function unit_zi()
+    {
         return $this->hasMany(UnitZI::class, 'instansi_zi_id')->orderBy('nama');
     }
 
-    public function administrasi_instansi() {
+    public function administrasi_instansi()
+    {
         return $this->hasOne(SeleksiAdministrasiInstansi::class, 'instansi_zi_id');
     }
 
-    public function sanggah_instansi() {
+    public function sanggah_instansi()
+    {
         return $this->hasOne(SanggahInstansi::class, 'instansi_zi_id');
     }
 
-    public function unggah_file() {
+    public function unggah_file()
+    {
         return $this->hasMany(UnggahFile::class, 'instansi_zi_id');
     }
-
-
 }
