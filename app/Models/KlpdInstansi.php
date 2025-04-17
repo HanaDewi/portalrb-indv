@@ -25,7 +25,11 @@ class KlpdInstansi extends Model
 
     public function lke_test_tp_old(): HasOne
     {
-        return $this->hasOne(LkeTestTpOld::class,  "lke_instansi_id");
+        if ($this->id_before) {
+            return $this->hasOne(LkeTestTpOld::class,  "lke_instansi_id", "id_before");
+        } else {
+            return $this->hasOne(LkeTestTpOld::class,  "lke_instansi_id");
+        }
     }
 
     public function mapping_kode_instansi(): HasOne
