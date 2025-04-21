@@ -17,7 +17,7 @@ class InstansiTimEvaluasi extends Model
 
     public function instansi()
     {
-        return $this->belongsTo(KlpdInstansi::class, "instansi_id");
+        return $this->belongsTo(KlpdInstansi::class, "instansi_id")->withTrashed();
     }
 
     public function tim()

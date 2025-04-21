@@ -84,7 +84,7 @@ class ERenaksiRBGeneralController extends Controller
                 );
             }
 
-            $instansi = KlpdInstansi::where('id', $ins_id)->first();
+            $instansi = KlpdInstansi::where('id', $ins_id)->withTrashed()->first();
             $jawaban = JawabanRenaksi::where('tahun', $tahun)->where('instansi_id', $ins_id)->get();
             $check = false;
             if ($istpn) {
