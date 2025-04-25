@@ -3,10 +3,10 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ZI\ZIController;
+use App\Http\Controllers\ZI\HomeZIController;
 use App\Http\Controllers\ZI\FinalController;
 use App\Http\Controllers\ZI\PanelController;
 use App\Http\Controllers\ZI\TutupController;
-use App\Http\Controllers\ZI\HomeZIController;
 use App\Http\Controllers\ZI\VerlapController;
 use App\Http\Controllers\ZI\DokumenController;
 use App\Http\Controllers\ZI\SanggahController;

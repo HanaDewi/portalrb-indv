@@ -4,6 +4,7 @@
     select,
     input {
         width: auto;
+
     }
 
     .dataTables_length label {
@@ -27,11 +28,8 @@
                 <div class="feature-item" style="background-color: white; border-radius: 25px; padding: 20px 80px">
                     <div class="content">
 
-                        <a href="{{route('dashboard_zi_route')}}" class="xbtn" style="padding:15px;font-weight:900">Klik
-                            Disini
-                            Untuk
-                            Menuju Dashboard
-                            ZI
+                        <a href="{{route('dashboard_zi_route')}}" class="xbtn" style="padding:15px;font-weight:900">
+                            Klik Disini untuk Login ZI
                         </a>
                         <br /><br />
                         <div class="row">
@@ -67,6 +65,7 @@
                                                     <tr>
                                                         <th>NO</th>
                                                         <th>TAHUN</th>
+                                                        <th>INSTANSI</th>
                                                         <th>UNIT KERJA</th>
                                                         <th>PREDIKAT</th>
                                                     </tr>
@@ -77,6 +76,7 @@
                                                     <tr>
                                                         <td>{{ $key + 1 }}</td>
                                                         <td>{{ $item->tahun }}</td>
+                                                        <td style="text-align: left">{{ $item->instansi }}</td>
                                                         <td style="text-align: left">{{ $item->unit }}</td>
                                                         <td>{{ $item->predikat}}</td>
                                                     </tr>

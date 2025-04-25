@@ -30,6 +30,8 @@ class ZIController extends Controller
             abort('403');
         }
 
+        echo "<body style='text-align:center; background-color:bisque'><img src='https://www.portalrb.id/assets/images/zi/zi2025.jpg'>";;
+        die;
         $instansi_obj = Auth::User()->user_rel->instansi;
 
         $instansi_id = $instansi_obj->id;
