@@ -24,7 +24,8 @@ Route::get('/zi', [HomeZIController::class, 'home'])->name('home_zi');
 Route::middleware('auth')->group(function () {
     #==========================================evaluatan
     Route::get('/zi/dashboard', [ZIController::class, 'index'])->name('dashboard_zi_route');
-    Route::get('/zi/pengusulan', [PengusulanZIController::class, 'index'])->name('pengusulan_zi');
+    Route::get('/zi/daftar', [PengusulanZIController::class, 'index'])->name('daftar_zi');
+    Route::get('/zi/pengusulan', [PengusulanZIController::class, 'tinjau'])->name('pengusulan_zi');
     //Route::post('/zi/pengusulan/pengusulan', [PengusulanZIController::class, 'store_bukti_dukung'])->name('pengusulan_zi_store');
     Route::post('/zi/pengusulan/pengusulan', [TutupController::class, 'index'])->name('pengusulan_zi_store');
     Route::get('/zi-tinjau', [PengusulanZIController::class, 'tinjau'])->name('tinjau_zi');

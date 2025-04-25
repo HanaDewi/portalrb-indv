@@ -25,18 +25,19 @@
 
             <hr />
             <div class="col-lg-12 col-md-12">
-                <div class="feature-item" style="background-color: white; border-radius: 25px; padding: 20px 80px">
+                <div class="feature-item" style="">
                     <div class="content">
 
                         <a href="{{route('dashboard_zi_route')}}" class="xbtn" style="padding:15px;font-weight:900">
                             Klik Disini untuk Login ZI
                         </a>
-                        <br /><br />
+                        <br /><br /><br />
                         <div class="row">
                             <div class="col-md-6">
                                 <h5>Jadwal Seleksi ZI<br /> </h5>
                                 <img src="{{asset('assets/images/zi/zi2025.jpg')}}" alt=""
                                     style="width:70%;border-radius: 20px;">
+                                <br /><br />
                             </div>
                             <div class="col-md-6">
                                 <h5>Download Template LKE ZI<br /> </h5>
@@ -46,11 +47,9 @@
                                     </a>
                                 </div>
                             </div>
-
                         </div>
-                        <hr />
 
-                        <hr />
+                        <br />
                         <div class="row">
                             <div class="card">
                                 <div class="card-header" style="text-align: left; background: #b42b2d; color:#F2F9FF">
