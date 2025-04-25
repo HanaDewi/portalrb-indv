@@ -2,14 +2,12 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ZI\LkeEvaluator;
 use App\Http\Controllers\ZI\ZIController;
 use App\Http\Controllers\ZI\FinalController;
 use App\Http\Controllers\ZI\PanelController;
 use App\Http\Controllers\ZI\TutupController;
 use App\Http\Controllers\ZI\HomeZIController;
 use App\Http\Controllers\ZI\VerlapController;
-use App\Http\Controllers\ZI\WarlapController;
 use App\Http\Controllers\ZI\DokumenController;
 use App\Http\Controllers\ZI\SanggahController;
 use App\Http\Controllers\ZI\DashboardController;
@@ -25,7 +23,7 @@ use App\Http\Controllers\ZI\PengusulanZIController;
 Route::get('/zi', [HomeZIController::class, 'home'])->name('home_zi');
 Route::middleware('auth')->group(function () {
     #==========================================evaluatan
-    //Route::get('/zi', [ZIController::class, 'index'])->name('home_zi');
+    Route::get('/zi/dashboard', [ZIController::class, 'index'])->name('dashboard_zi_route');
     Route::get('/zi/pengusulan', [PengusulanZIController::class, 'index'])->name('pengusulan_zi');
     //Route::post('/zi/pengusulan/pengusulan', [PengusulanZIController::class, 'store_bukti_dukung'])->name('pengusulan_zi_store');
     Route::post('/zi/pengusulan/pengusulan', [TutupController::class, 'index'])->name('pengusulan_zi_store');

@@ -26,20 +26,32 @@
             <div class="col-lg-12 col-md-12">
                 <div class="feature-item" style="background-color: white; border-radius: 25px; padding: 20px 80px">
                     <div class="content">
+
+                        <a href="{{route('dashboard_zi_route')}}" class="xbtn" style="padding:15px;font-weight:900">Klik
+                            Disini
+                            Untuk
+                            Menuju Dashboard
+                            ZI
+                        </a>
+                        <br /><br />
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-md-6">
+                                <h5>Jadwal Seleksi ZI<br /> </h5>
                                 <img src="{{asset('assets/images/zi/zi2025.jpg')}}" alt=""
                                     style="width:70%;border-radius: 20px;">
+                            </div>
+                            <div class="col-md-6">
+                                <h5>Download Template LKE ZI<br /> </h5>
+                                <div class="row" style="text-align: center">
+                                    <a href="{{asset('template-zi/LKEZI2025.xlsx')}}" style="text-align: center">
+                                        <img src="{{asset('assets/images/zi/excel.png')}}" alt="" style="width:75%">
+                                    </a>
+                                </div>
                             </div>
 
                         </div>
                         <hr />
-                        <h5>Download Template LKE ZI<br /> </h5>
-                        <div class="row" style="text-align: center">
-                            <a href="{{asset('template-zi/LKEZI2025.xlsx')}}" style="text-align: center">
-                                <img src="{{asset('assets/images/zi/excel.png')}}" alt="" style="width:8%">LKE ZI
-                            </a>
-                        </div>
+
                         <hr />
                         <div class="row">
                             <div class="card">
