@@ -57,7 +57,7 @@ class LKEController extends Controller
             $datas = LkeParameter::where('lke_kegiatan_id', $request->kegiatan_id)->where('rencana_aksi', 0)->where('penilai_id', $user->penilai_id)->where('level', 'Indikator')->get();
         }
         foreach ($datas as $data) {
-            $data->indikator = $data->rencana_aksi ? $data->nama : '<a href="'.url('evaluasi/lke-utama/'.$data->id).'" style="color:blue;">'.$data->nama.'</a>';
+            $data->indikator = $data->rencana_aksi ? $data->nama : '<a href="' . url('evaluasi/lke-utama/' . $data->id) . '" style="color:blue;">' . $data->nama . '</a>';
             $data->subkomponen = $data->parent->nama;
             $data->komponen = $data->parent->parent->nama;
             $bobot_ids = LkeBobot::where('lke_parameter_id', $data->id)->pluck('id');
@@ -110,23 +110,23 @@ class LKEController extends Controller
     public function lke_utama_score_getDatas($parameter_id, $export = false)
     {
         $group_instansi = LkeBobot::where('lke_parameter_id', $parameter_id)->pluck('group')->toArray();
-        
+
         $datas = DB::table('klpd_instansi_new as ki')
-                    ->select('ki.name as nama_instansi', 'ki.id as instansi_id', 'lb.id as lke_bobot_id', 'lb.bobot', 'lb.target_baik', 'lttl.score', 'lttl.score_index', 'lttl.catatan', 'lttl.rekomendasi', 'lb.min_value', 'lb.max_value')
-                    ->selectRaw("case when ki.group = 'kl' then 'Kementerian/Badan' when ki.group = 'provinsi' then 'Provinsi' when ki.group = 'kabupaten' then 'Kabupaten/Kota' end as group_instansi")
-                    ->leftJoin('lke_bobot as lb', function ($join) use ($parameter_id) {
-                        $join->on('lb.group', '=', 'ki.group')
-                            ->where('lb.lke_parameter_id', '=', $parameter_id);
-                    })
-                    ->leftJoin('lke_test_tp_line as lttl', function($join) {
-                        $join->on('lttl.instansi_id', '=', DB::raw('COALESCE(ki.id_before, ki.id)'))
-                            ->on('lttl.lke_bobot_id', '=', 'lb.id');
-                    })
-                    ->whereIn('ki.group', $group_instansi)
-                    ->orderByRaw("FIELD(ki.group , 'kl', 'provinsi', 'kabupaten') ASC")
-                    ->orderBy('ki.name')
-                    ->get();
-        
+            ->select('ki.name as nama_instansi', 'ki.id as instansi_id', 'lb.id as lke_bobot_id', 'lb.bobot', 'lb.target_baik', 'lttl.score', 'lttl.score_index', 'lttl.catatan', 'lttl.rekomendasi', 'lb.min_value', 'lb.max_value')
+            ->selectRaw("case when ki.group = 'kl' then 'Kementerian/Badan' when ki.group = 'provinsi' then 'Provinsi' when ki.group = 'kabupaten' then 'Kabupaten/Kota' end as group_instansi")
+            ->leftJoin('lke_bobot as lb', function ($join) use ($parameter_id) {
+                $join->on('lb.group', '=', 'ki.group')
+                    ->where('lb.lke_parameter_id', '=', $parameter_id);
+            })
+            ->leftJoin('lke_test_tp_line as lttl', function ($join) {
+                $join->on('lttl.instansi_id', '=', DB::raw('COALESCE(ki.id_before, ki.id)'))
+                    ->on('lttl.lke_bobot_id', '=', 'lb.id');
+            })
+            ->whereIn('ki.group', $group_instansi)
+            ->orderByRaw("FIELD(ki.group , 'kl', 'provinsi', 'kabupaten') ASC")
+            ->orderBy('ki.name')
+            ->get();
+
         return $export ? $datas : response()->json(['data' => $datas]);
     }
 
@@ -181,7 +181,7 @@ class LKEController extends Controller
 
         $template = new ExportLkeTemplate($parameter, $datas);
 
-        return Excel::download($template, $parameter->nama.'.xlsx');
+        return Excel::download($template, $parameter->nama . '.xlsx');
     }
 
     public function lke_utama_score_import($parameter_id, Request $request)
@@ -257,7 +257,7 @@ class LKEController extends Controller
             $success = false;
             throw $th;
         }
-        
+
         if ($success) {
             DB::commit();
             session()->flash('success', 'Data LKE berhasil diimport!');
@@ -266,10 +266,10 @@ class LKEController extends Controller
             }
         } else {
             DB::rollBack();
-            session()->flash('error', 'Data LKE gagal diimport! '.$pesan);
+            session()->flash('error', 'Data LKE gagal diimport! ' . $pesan);
         }
 
-        return redirect('evaluasi/lke-utama/'.$parameter_id);
+        return redirect('evaluasi/lke-utama/' . $parameter_id);
     }
 
     public function database()
@@ -325,7 +325,7 @@ class LKEController extends Controller
         $user = Auth::User();
         $kegiatans = LkeKegiatan::all();
         foreach ($kegiatans as $kegiatan) {
-            $kegiatan->nama_kegiatan = '<a href="'.url('evaluasi/hasil-evaluasi/'.$user->user_rel->instansi_id.'/'.$kegiatan->id).'" style="color:blue;">'.$kegiatan->nama_tahun.'</a>';
+            $kegiatan->nama_kegiatan = '<a href="' . url('evaluasi/hasil-evaluasi/' . $user->user_rel->instansi_id . '/' . $kegiatan->id) . '" style="color:blue;">' . $kegiatan->nama_tahun . '</a>';
         }
         return response()->json(['data' => $kegiatans]);
     }
@@ -334,7 +334,7 @@ class LKEController extends Controller
     {
         $kegiatan_id = $request->kegiatan_id;
         $datas = DB::table('klpd_instansi_new as ki')
-                    ->selectRaw("CASE 
+            ->selectRaw("CASE 
                             WHEN ltt.rb_general IS NOT NULL THEN 100 
                             ELSE NULL 
                         END as bobot_rb_general, 
@@ -351,20 +351,20 @@ class LKEController extends Controller
                             WHEN ki.group = 'provinsi' THEN 'Provinsi' 
                             WHEN ki.group = 'kabupaten' THEN 'Kabupaten/Kota' 
                         END as group_instansi")
-                    ->leftJoin('lke_test_tp as ltt', function ($join) use ($kegiatan_id) {
-                        $join->on('ltt.instansi_id', '=', DB::raw('COALESCE(ki.id_before, ki.id)'))
-                            ->where('ltt.lke_kegiatan_id', '=', $kegiatan_id);
-                    })
-                    ->whereIn('ki.group', ['kl', 'provinsi', 'kabupaten'])
-                    ->orderByRaw("FIELD(ki.group , 'kl', 'provinsi', 'kabupaten') ASC")
-                    ->orderBy('ki.name')
-                    ->get();
-        
+            ->leftJoin('lke_test_tp as ltt', function ($join) use ($kegiatan_id) {
+                $join->on('ltt.instansi_id', '=', DB::raw('COALESCE(ki.id_before, ki.id)'))
+                    ->where('ltt.lke_kegiatan_id', '=', $kegiatan_id);
+            })
+            ->whereIn('ki.group', ['kl', 'provinsi', 'kabupaten'])
+            ->orderByRaw("FIELD(ki.group , 'kl', 'provinsi', 'kabupaten') ASC")
+            ->orderBy('ki.name')
+            ->get();
+
         foreach ($datas as $data) {
-            $before = $data->name_before ? ' [<span class="font-italic text-danger">'.$data->name_before.'</span>]' : '';
-            $data->nama_instansi = '<a href="'.url('evaluasi/hasil-evaluasi/'.$data->klpd_instansi_id.'/'.$kegiatan_id).'" style="color: blue;">'.$data->name.$before.'</a>';
+            $before = $data->name_before ? ' [<span class="font-italic text-danger">' . $data->name_before . '</span>]' : '';
+            $data->nama_instansi = '<a href="' . url('evaluasi/hasil-evaluasi/' . $data->klpd_instansi_id . '/' . $kegiatan_id) . '" style="color: blue;">' . $data->name . $before . '</a>';
         }
-        
+
         return response()->json(['data' => $datas]);
     }
 
@@ -394,15 +394,15 @@ class LKEController extends Controller
             foreach ($test_tp->files as $berkas) {
                 $ext = pathinfo($berkas->file, PATHINFO_EXTENSION);
                 $src = exts(strtolower($ext));
-                $test_tp->berkas_list .= '<div class="col-span-12 lg:col-span-4" id="berkasdiv'.$berkas->id.'" style="position:relative;">
+                $test_tp->berkas_list .= '<div class="col-span-12 lg:col-span-4" id="berkasdiv' . $berkas->id . '" style="position:relative;">
                     <div style="height: 100px;">
-                        <img class="img-fluid card-img-top" src="'.asset('images').'/'.$src.'" alt="Berkas'.$berkas->id.'" style="max-height: 100px; max-width:100%; padding: 5px 0;">
+                        <img class="img-fluid card-img-top" src="' . asset('images') . '/' . $src . '" alt="Berkas' . $berkas->id . '" style="max-height: 100px; max-width:100%; padding: 5px 0;">
                     </div>
                     <div class="form-group mb-0">
-                        <input type="text" name="deskripsi_existing['.$berkas->id.']" class="form-control" id="deskripsi'.$berkas->id.'" placeholder="Deskripsi" value="'.$berkas->deskripsi.'">
-                        <input type="hidden" name="berkas_existing['.$berkas->id.']" value="'.$berkas->file.'">
+                        <input type="text" name="deskripsi_existing[' . $berkas->id . ']" class="form-control" id="deskripsi' . $berkas->id . '" placeholder="Deskripsi" value="' . $berkas->deskripsi . '">
+                        <input type="hidden" name="berkas_existing[' . $berkas->id . ']" value="' . $berkas->file . '">
                     </div>
-                    <a href="javascript:void(0);" onclick="removeBerkas('.$berkas->id.')" class="remove-button text-danger">
+                    <a href="javascript:void(0);" onclick="removeBerkas(' . $berkas->id . ')" class="remove-button text-danger">
                         <div class="tooltip w-5 h-5 flex items-center justify-center absolute rounded-full text-white bg-danger right-0 top-0 -mr-2 -mt-2"> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" icon-name="x" data-lucide="x" class="lucide lucide-x w-4 h-4"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg> </div>
                     </a>
                 </div>';
@@ -430,7 +430,7 @@ class LKEController extends Controller
 
     public function hasil_evaluasi_instansi_simpan($instansi_id, $kegiatan_id, Request $request)
     {
-        $instansi = KlpdInstansi::find($instansi_id);
+        $instansi = KlpdInstansi::withTrashed()->find($instansi_id);
         $kegiatan = LkeKegiatan::find($kegiatan_id);
         if (!$instansi || !$kegiatan) {
             abort(404);
@@ -463,7 +463,7 @@ class LKEController extends Controller
                         $berkas->test_tp_id = $test_tp->id;
                         $berkas->deskripsi = $request->deskripsi[$key];
                         $time = time();
-                        $filename = $berkas->deskripsi."_$time." . $file_berkas->getClientOriginalExtension();
+                        $filename = $berkas->deskripsi . "_$time." . $file_berkas->getClientOriginalExtension();
                         $file_berkas->storeAs('berkas', $filename, 'public');
                         $berkas->file = $filename;
                         if ($berkas->save()) {
@@ -486,6 +486,6 @@ class LKEController extends Controller
             DB::rollBack();
             session()->flash('error', 'Data Test TP gagal disimpan! Silahkan dicoba kembali.');
         }
-        return redirect('evaluasi/hasil-evaluasi/'.$instansi_id.'/'.$kegiatan_id);
+        return redirect('evaluasi/hasil-evaluasi/' . $instansi_id . '/' . $kegiatan_id);
     }
 }
