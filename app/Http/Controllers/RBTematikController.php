@@ -49,7 +49,7 @@ class RBTematikController extends Controller
             }
         }
         $temas = Tema::get();
-        $sasaranRoadmaps = TematikSasaranRoadmap::where('instansi_id', $user->user_rel->instansi_id)->orderBy('tema_id')->get();
+        $sasaranRoadmaps = TematikSasaranRoadmap::where('instansi_id', $user->instansi_id)->orderBy('tema_id')->get();
         $tematikDatas = [];
         $jumlahBaris = 0;
         foreach ($sasaranRoadmaps as $sasaran) {
@@ -121,7 +121,7 @@ class RBTematikController extends Controller
         $fsasaranroadmap = $request->get('fsasaranroadmap');
         $findikatorroadmap = $request->get('findikatorroadmap');
 
-        $filterSasaranRoadmap = TematikSasaranRoadmap::where('instansi_id', $user->user_rel->instansi_id)->where('tema_id', $ftema)->orderBy('tema_id')->get();
+        $filterSasaranRoadmap = TematikSasaranRoadmap::where('instansi_id', $user->instansi_id)->where('tema_id', $ftema)->orderBy('tema_id')->get();
         if ($fsasaranroadmap) {
             $queryfilterIndikatorRoadmap = TematikIndikatorRoadmap::where('tematik_sasaran_roadmap_id', $fsasaranroadmap);
             $filterIndikatorRoadmap = $queryfilterIndikatorRoadmap->get();
@@ -141,7 +141,7 @@ class RBTematikController extends Controller
             }
         }
 
-        $querysasaranRoadmaps = TematikSasaranRoadmap::where('instansi_id', $user->user_rel->instansi_id);
+        $querysasaranRoadmaps = TematikSasaranRoadmap::where('instansi_id', $user->instansi_id);
         if ($ftema) {
             $querysasaranRoadmaps->where('tema_id', $ftema);
         }
@@ -253,11 +253,11 @@ class RBTematikController extends Controller
     public function simpanSasaranRoadmap(Request $request)
     {
         $user = Auth::User();
-        $sasaranRoadmap = TematikSasaranRoadmap::where('instansi_id', $user->user_rel->instansi_id)->where('id', $request->sasaran_roadmap_id)->first();
+        $sasaranRoadmap = TematikSasaranRoadmap::where('instansi_id', $user->instansi_id)->where('id', $request->sasaran_roadmap_id)->first();
         if (!$sasaranRoadmap) {
             foreach ($request->tema_id as $idx => $tema_id) {
                 $sasaranRoadmap = new TematikSasaranRoadmap();
-                $sasaranRoadmap->instansi_id = $user->user_rel->instansi_id;
+                $sasaranRoadmap->instansi_id = $user->instansi_id;
                 $sasaranRoadmap->tema_id = $tema_id;
                 $sasaranRoadmap->nama = $request->nama[$idx];
                 if ($sasaranRoadmap->save()) {
@@ -913,8 +913,8 @@ class RBTematikController extends Controller
         } else {
             if ($request->instansi_id && in_array($user->level, ['admin', 'tpn', 'viewer'])) {
                 $instansi_id = [$request->instansi_id];
-            } else if ($user->user_rel->instansi_id) {
-                $instansi_id = [$user->user_rel->instansi_id];
+            } else if ($user->instansi_id) {
+                $instansi_id = [$user->instansi_id];
             } else {
                 $instansi_id = [KlpdInstansi::orderBy('id')->first()->id];
             }

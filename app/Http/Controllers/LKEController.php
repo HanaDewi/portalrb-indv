@@ -325,7 +325,7 @@ class LKEController extends Controller
         $user = Auth::User();
         $kegiatans = LkeKegiatan::all();
         foreach ($kegiatans as $kegiatan) {
-            $kegiatan->nama_kegiatan = '<a href="' . url('evaluasi/hasil-evaluasi/' . $user->user_rel->instansi_id . '/' . $kegiatan->id) . '" style="color:blue;">' . $kegiatan->nama_tahun . '</a>';
+            $kegiatan->nama_kegiatan = '<a href="' . url('evaluasi/hasil-evaluasi/' . $user->instansi_id . '/' . $kegiatan->id) . '" style="color:blue;">' . $kegiatan->nama_tahun . '</a>';
         }
         return response()->json(['data' => $kegiatans]);
     }
@@ -372,7 +372,7 @@ class LKEController extends Controller
     {
         $user = Auth::User();
         if (!in_array($user->level, ['admin', 'tpn', 'tpm'])) {
-            if ($user->user_rel->instansi_id != $instansi_id) {
+            if ($user->instansi_id != $instansi_id) {
                 abort(403);
             }
         }

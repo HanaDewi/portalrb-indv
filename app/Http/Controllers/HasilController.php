@@ -44,7 +44,7 @@ class HasilController extends Controller
             $instansis = KlpdInstansi::all();
             return view('hasil.hasil_semua', compact('instansis'));
         } else {
-            return redirect('evaluasi/hasil-2023/'.$user->user_rel->instansi_id);
+            return redirect('evaluasi/hasil-2023/'.$user->instansi_id);
         }
     }
 
@@ -61,12 +61,15 @@ class HasilController extends Controller
             }
         }
         if (!in_array($user->level, ['admin', 'tpn', 'tpm'])) {
-            if ($user->user_rel->instansi_id != $instansi_id) {
+            if ($user->instansi_id != $instansi_id) {
                 abort(403);
             }
         }
         $instansi = KlpdInstansi::find($instansi_id);
         $lkeTestTP = LkeTestTp::where("lke_instansi_id", $instansi_id)->first();
+        if (!$lkeTestTP) {
+            abort('404');
+        }
         $lkeTestTPLine = "";
         if (isset($lkeTestTP)) {
             $lkeTestTPLine = LkeTestTpLine::where("test_tp_id", $lkeTestTP->id)->get();
@@ -276,7 +279,7 @@ class HasilController extends Controller
         //     }
         // }
         // if (!in_array($user->level, ['admin', 'tpn', 'tpm'])) {
-        //     if ($user->user_rel->instansi_id != $instansi_id) {
+        //     if ($user->instansi_id != $instansi_id) {
         //         abort(403);
         //     }
         // }

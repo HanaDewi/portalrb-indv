@@ -39,7 +39,7 @@ class DokumenController extends Controller
     {
         $user = Auth::User();
         if (in_array($user->level, ['provinsi', 'kabupaten', 'kl'])) {
-            $instansi_id = $user->user_rel->instansi_id;
+            $instansi_id = $user->instansi_id;
             $dokumens = Dokumen::where('instansi_id', $instansi_id)->get();
         } else {
             $model = new Dokumen();
@@ -76,7 +76,7 @@ class DokumenController extends Controller
     public function getData($tahun, $kategori_id)
     {
         $user = Auth::User();
-        $dokumen = Dokumen::where('instansi_id', $user->user_rel->instansi_id)->where('tahun', $tahun)->where('kategori_id', $kategori_id)->first();
+        $dokumen = Dokumen::where('instansi_id', $user->instansi_id)->where('tahun', $tahun)->where('kategori_id', $kategori_id)->first();
         if (!$dokumen) {
             $dokumen = new Dokumen();
         }
@@ -110,10 +110,10 @@ class DokumenController extends Controller
         try {
             $tahun = $request->tahun_edit ?? $request->tahun;
             $kategori_id = $request->kategori_id_edit ?? $request->kategori_id;
-            $dokumen = Dokumen::where('instansi_id', $user->user_rel->instansi_id)->where('tahun', $tahun)->where('kategori_id', $kategori_id)->first();
+            $dokumen = Dokumen::where('instansi_id', $user->instansi_id)->where('tahun', $tahun)->where('kategori_id', $kategori_id)->first();
             if (!$dokumen) {
                 $dokumen = new Dokumen();
-                $dokumen->instansi_id = $user->user_rel->instansi_id;
+                $dokumen->instansi_id = $user->instansi_id;
                 $dokumen->tahun = $tahun;
                 $dokumen->kategori_id = $kategori_id;
                 $dokumen->save();

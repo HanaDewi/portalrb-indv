@@ -15,7 +15,7 @@
             <!-- BEGIN: Error Page -->
             <div class="error-page flex flex-col lg:flex-row items-center justify-center h-screen text-center lg:text-left">
                 <div class="-intro-x lg:mr-20">
-                    <img alt="Rubick Tailwind HTML Admin Template" class="h-48 lg:h-auto" src="https://sixghakreasi.com/demos/rubick/dist/images/error-illustration.svg">
+                    <img alt="Rubick Tailwind HTML Admin Template" class="h-48 lg:h-auto" src="{{ asset('images/error-illustration.svg') }}">
                 </div>
                 <div class="text-white mt-10 lg:mt-0">
                     <div class="intro-x text-8xl font-medium">403</div>

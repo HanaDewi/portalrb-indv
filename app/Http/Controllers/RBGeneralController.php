@@ -56,7 +56,7 @@ class RBGeneralController extends Controller
         }
         $indikators = $model->get();
         foreach ($indikators as $indikator) {
-            $perencanaan = GeneralPerencanaan::where('instansi_id', $user->user_rel->instansi_id)->where('kegiatan_utama_id', $indikator->kegiatan_utama_id)->where('indikator_id', $indikator->id)->first();
+            $perencanaan = GeneralPerencanaan::where('instansi_id', $user->instansi_id)->where('kegiatan_utama_id', $indikator->kegiatan_utama_id)->where('indikator_id', $indikator->id)->first();
             $indikator->target = [];
             if ($perencanaan) {
                 $indikator->perencanaan_id = $perencanaan->id;
@@ -76,14 +76,14 @@ class RBGeneralController extends Controller
     public function perencanaan_getData($kegiatan_utama_id, $indikator_id)
     {
         $user = Auth::User();
-        $perencanaan = GeneralPerencanaan::where('instansi_id', $user->user_rel->instansi_id)->where('kegiatan_utama_id', $kegiatan_utama_id)->where('indikator_id', $indikator_id)->first();
+        $perencanaan = GeneralPerencanaan::where('instansi_id', $user->instansi_id)->where('kegiatan_utama_id', $kegiatan_utama_id)->where('indikator_id', $indikator_id)->first();
         return response()->json($perencanaan);
     }
 
     public function perencanaan_getTarget($kegiatan_utama_id, $indikator_id)
     {
         $user = Auth::User();
-        $perencanaan = GeneralPerencanaan::where('instansi_id', $user->user_rel->instansi_id)->where('kegiatan_utama_id', $kegiatan_utama_id)->where('indikator_id', $indikator_id)->first();
+        $perencanaan = GeneralPerencanaan::where('instansi_id', $user->instansi_id)->where('kegiatan_utama_id', $kegiatan_utama_id)->where('indikator_id', $indikator_id)->first();
         $success = true;
         $input = '';
         if ($perencanaan) {
@@ -115,10 +115,10 @@ class RBGeneralController extends Controller
         $user = Auth::User();
         $success = true;
         $pesan = '';
-        $perencanaan = GeneralPerencanaan::where('instansi_id', $user->user_rel->instansi_id)->where('kegiatan_utama_id', $request->kegiatan_utama_id)->where('indikator_id', $request->indikator_id)->first();
+        $perencanaan = GeneralPerencanaan::where('instansi_id', $user->instansi_id)->where('kegiatan_utama_id', $request->kegiatan_utama_id)->where('indikator_id', $request->indikator_id)->first();
         if (!$perencanaan) {
             $perencanaan = new GeneralPerencanaan();
-            $perencanaan->instansi_id = $user->user_rel->instansi_id;
+            $perencanaan->instansi_id = $user->instansi_id;
             $perencanaan->kegiatan_utama_id = $request->kegiatan_utama_id;
             $perencanaan->indikator_id = $request->indikator_id;
         }
@@ -147,7 +147,7 @@ class RBGeneralController extends Controller
     public function perencanaan_hapusBaseline(Request $request)
     {
         $user = Auth::User();
-        $perencanaan = GeneralPerencanaan::where('instansi_id', $user->user_rel->instansi_id)->where('id', $request->perencanaan_id)->first();
+        $perencanaan = GeneralPerencanaan::where('instansi_id', $user->instansi_id)->where('id', $request->perencanaan_id)->first();
         if (!$perencanaan) {
             session()->flash('error', 'Data Baseline Perencanaan General tidak ditemukan!');
         }
@@ -162,7 +162,7 @@ class RBGeneralController extends Controller
     public function perencanaan_simpanTarget(Request $request)
     {
         $user = Auth::User();
-        $perencanaan = GeneralPerencanaan::where('instansi_id', $user->user_rel->instansi_id)->where('kegiatan_utama_id', $request->kegiatan_utama_id)->where('indikator_id', $request->indikator_id)->first();
+        $perencanaan = GeneralPerencanaan::where('instansi_id', $user->instansi_id)->where('kegiatan_utama_id', $request->kegiatan_utama_id)->where('indikator_id', $request->indikator_id)->first();
         $pesan = '';
         if ($perencanaan) {
             $success = true;
@@ -216,10 +216,10 @@ class RBGeneralController extends Controller
     public function perencanaan_simpanMonev(Request $request)
     {
         $user = Auth::User();
-        $perencanaan = GeneralPerencanaan::where('instansi_id', $user->user_rel->instansi_id)->where('kegiatan_utama_id', $request->kegiatan_utama_id)->where('indikator_id', $request->indikator_id)->first();
+        $perencanaan = GeneralPerencanaan::where('instansi_id', $user->instansi_id)->where('kegiatan_utama_id', $request->kegiatan_utama_id)->where('indikator_id', $request->indikator_id)->first();
         if (!$perencanaan) {
             $perencanaan = new GeneralPerencanaan();
-            $perencanaan->instansi_id = $user->user_rel->instansi_id;
+            $perencanaan->instansi_id = $user->instansi_id;
             $perencanaan->kegiatan_utama_id = $request->kegiatan_utama_id;
             $perencanaan->indikator_id = $request->indikator_id;
         }
@@ -311,7 +311,7 @@ class RBGeneralController extends Controller
         }
         $target = GeneralPerencanaanTarget::where('id', $target_id)->where('general_perencanaan_id', $perencanaan_id)
             ->whereHas('perencanaan', function ($q) use ($user) {
-                $q->where('instansi_id', $user->user_rel->instansi_id);
+                $q->where('instansi_id', $user->instansi_id);
             })->first();
         if (!$target) {
             abort(404);
@@ -331,7 +331,7 @@ class RBGeneralController extends Controller
         $user = Auth::User();
         $target = GeneralPerencanaanTarget::where('id', $target_id)->where('general_perencanaan_id', $perencanaan_id)
             ->whereHas('perencanaan', function ($q) use ($user) {
-                $q->where('instansi_id', $user->user_rel->instansi_id);
+                $q->where('instansi_id', $user->instansi_id);
             })->first();
         if (!$target) {
             abort(404);
@@ -408,7 +408,7 @@ class RBGeneralController extends Controller
         $user = Auth::User();
         $target = GeneralPerencanaanTarget::where('id', $target_id)->where('general_perencanaan_id', $perencanaan_id)
             ->whereHas('perencanaan', function ($q) use ($user) {
-                $q->where('instansi_id', $user->user_rel->instansi_id);
+                $q->where('instansi_id', $user->instansi_id);
             })->first();
         $rencana_aksis = GeneralRencanaAksi::where('general_perencanaan_target_id', $target->id)->get();
         $outputs = [];
@@ -432,7 +432,7 @@ class RBGeneralController extends Controller
         $user = Auth::User();
         $target = GeneralPerencanaanTarget::where('id', $target_id)->where('general_perencanaan_id', $perencanaan_id)
             ->whereHas('perencanaan', function ($q) use ($user) {
-                $q->where('instansi_id', $user->user_rel->instansi_id);
+                $q->where('instansi_id', $user->instansi_id);
             })->first();
         if (!$target) {
             abort(404);
@@ -447,7 +447,7 @@ class RBGeneralController extends Controller
         $user = Auth::User();
         $target = GeneralPerencanaanTarget::where('id', $target_id)->where('general_perencanaan_id', $perencanaan_id)
             ->whereHas('perencanaan', function ($q) use ($user) {
-                $q->where('instansi_id', $user->user_rel->instansi_id);
+                $q->where('instansi_id', $user->instansi_id);
             })->first();
         if (!$target) {
             abort(403);
@@ -507,7 +507,7 @@ class RBGeneralController extends Controller
         $user = Auth::User();
         $target = GeneralPerencanaanTarget::where('id', $target_id)->where('general_perencanaan_id', $perencanaan_id)
             ->whereHas('perencanaan', function ($q) use ($user) {
-                $q->where('instansi_id', $user->user_rel->instansi_id);
+                $q->where('instansi_id', $user->instansi_id);
             })->first();
         if (!$target) {
             abort(403);
@@ -551,7 +551,7 @@ class RBGeneralController extends Controller
         }
         $target = GeneralPerencanaanTarget::where('id', $target_id)->where('general_perencanaan_id', $perencanaan_id)
             ->whereHas('perencanaan', function ($q) use ($user) {
-                $q->where('instansi_id', $user->user_rel->instansi_id);
+                $q->where('instansi_id', $user->instansi_id);
             })->first();
         if (!$target) {
             abort(404);
@@ -564,7 +564,7 @@ class RBGeneralController extends Controller
         $user = Auth::User();
         $target = GeneralPerencanaanTarget::where('id', $target_id)->where('general_perencanaan_id', $perencanaan_id)
             ->whereHas('perencanaan', function ($q) use ($user) {
-                $q->where('instansi_id', $user->user_rel->instansi_id);
+                $q->where('instansi_id', $user->instansi_id);
             })->first();
         if (!$target) {
             abort(404);
@@ -577,7 +577,7 @@ class RBGeneralController extends Controller
         $user = Auth::User();
         $target = GeneralPerencanaanTarget::where('id', $target_id)->where('general_perencanaan_id', $perencanaan_id)
             ->whereHas('perencanaan', function ($q) use ($user) {
-                $q->where('instansi_id', $user->user_rel->instansi_id);
+                $q->where('instansi_id', $user->instansi_id);
             })->first();
         if (!$target) {
             abort(403);
@@ -597,7 +597,7 @@ class RBGeneralController extends Controller
         $user = Auth::User();
         $target = GeneralPerencanaanTarget::where('id', $target_id)->where('general_perencanaan_id', $perencanaan_id)
             ->whereHas('perencanaan', function ($q) use ($user) {
-                $q->where('instansi_id', $user->user_rel->instansi_id);
+                $q->where('instansi_id', $user->instansi_id);
             })->first();
         if (!$target) {
             abort(403);
@@ -640,8 +640,8 @@ class RBGeneralController extends Controller
         }
         if ($request->instansi_id && in_array($user->level, ['admin', 'tpn', 'viewer'])) {
             $instansi_ids = $request->instansi_id;
-        } else if (isset($user->user_rel->instansi_id)) {
-            $instansi_ids = [$user->user_rel->instansi_id];
+        } else if (isset($user->instansi_id)) {
+            $instansi_ids = [$user->instansi_id];
         } else {
             $instansi_ids = [KlpdInstansi::orderBy('id')->first()->id];
         }
