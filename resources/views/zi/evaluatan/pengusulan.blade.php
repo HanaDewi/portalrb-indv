@@ -1,12 +1,42 @@
 @extends('home-template.template')
+@section('cssJsHere')
+<style>
+    .fancy-heading {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: white;
+        text-shadow:
+            2px 2px 4px rgba(0, 0, 0, 0.8),
+            0 0 10px rgba(0, 0, 0, 0.6);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        letter-spacing: 1px;
+        margin-bottom: 1rem;
+        animation: fadeInUp 1s ease-out;
+    }
+
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(15px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+
+@endsection
 @section('content')
 <section class="features-area pt-50 pb-85 rel z-1"
     style="background-image: url({{ URL::to('/') }}/assets/images/bg2.jpg); background-size: cover;">
     <div class="container">
         <div class="row justify-content-center">
             <div class="section-title text-center pb-35 ">
-                <h2 style="text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;">Pengusulan Zona
-                    Integritas</h2>
+                <h2 class="fancy-heading">Pengusulan Zona Integritas</h2>
+
                 <span class="line"></span>
             </div>
             <div class="col-lg-8 col-md-8">
@@ -14,7 +44,7 @@
                     <div class="content">
                         @if(Auth::User()->level =="admin" || Auth::User()->level == "tpn")
 
-                        <form action="{{URL::to('zi')}}" method="get">
+                        <form action="{{URL::to('zi/pengusulan')}}" method="get">
                             @csrf
                             <div class="row">
                                 <div class="col-md-9">
@@ -165,10 +195,11 @@
                                 <button class="btn btn-primary" id="infoAffirmasi">Info Unit Afirmasi</button>
                                 <button class="btn btn-warning" id="infoCp">Info PIC Instansi</button>
                                 <hr />
-                                <img id="infoAffirmasiImg" src="assets/images/unit_kerja_affirmasi.jpeg"
+                                <img id="infoAffirmasiImg" src="{{asset('assets/images/unit_kerja_affirmasi.jpeg')}}"
                                     style="display: none;" width="75%">
                                 <hr />
-                                <img id="infoCpImg" src="assets/images/cp_instansi.jpeg" style="display: none;">
+                                <img id="infoCpImg" src="{{asset('assets/images/zi/cp_instansi.jpeg')}}"
+                                    style="display: none;">
 
                             </div>
 

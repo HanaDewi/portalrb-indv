@@ -27,7 +27,6 @@
             <div class="col-lg-12 col-md-12">
                 <div class="feature-item" style="">
                     <div class="content">
-
                         <a href="{{route('dashboard_zi_route')}}" class="xbtn" style="padding:15px;font-weight:900">
                             Klik Disini untuk Login ZI
                         </a>

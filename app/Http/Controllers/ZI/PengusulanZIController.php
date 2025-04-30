@@ -40,9 +40,9 @@ class PengusulanZIController extends Controller
                     }
                 }
             } elseif (Auth::User()->level == "tpn" || Auth::User()->level == "admin") {
-                #$instansi_obj = KlpdInstansi::find(1); #jangan di delete ini untuk pengujian pengusulan via admin
-                #$instansiZI = InstansiZI::where("instansi_id", $instansi_obj->id)->first();
-                return redirect()->route('dashboard_zi');
+                $instansi_obj = KlpdInstansi::find(1); #jangan di delete ini untuk pengujian pengusulan via admin
+                $instansiZI = InstansiZI::where("instansi_id", $instansi_obj->id)->first();
+                #return redirect()->route('dashboard_zi');
             } else {
                 if ($date_now >= $date_tutup_zi) {
                     return redirect('zi-tinjau?instansi_id=' . Auth::User()->user_rel->instansi->id);
@@ -55,6 +55,11 @@ class PengusulanZIController extends Controller
             $instansi = $instansi_obj->name;
             $group_kld = $instansi_obj->group;
             $instansiZI = InstansiZI::where("instansi_id", $instansi_obj->id)->where('tahun', $tahun)->first();
+            //butuh biar user gak balik lagi ke halaman pengusulan kalau sudah nyimpen
+            if ($instansiZI->tahap_seleksi == 1) {
+                return redirect('zi-tinjau?instansi_id=' . $instansi_id);
+            }
+
             if ($instansiZI) {
                 if ($instansiZI->final && !(Auth::User()->level == "admin" || Auth::User()->level == "tpn")) {
                     return redirect('zi-tinjau?instansi_id=' . $instansi_id);
@@ -197,6 +202,11 @@ class PengusulanZIController extends Controller
         $instansi = $instansi_obj->name;
         $group_kld = $instansi_obj->group;
         $instansiZI = InstansiZI::where("instansi_id", $instansi_obj->id)->where('tahun', $tahun)->first();
+
+        if ($instansiZI->tahap_seleksi === 0) {
+            return redirect('zi/pengusulan');
+        }
+
         if ($instansiZI) {
             $syarat_akhir_wbk = $instansiZI->syarat_akhir_wbk;
             $syarat_akhir_wbbm   = $instansiZI->syarat_akhir_wbbm;
