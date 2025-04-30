@@ -34,21 +34,25 @@
                         <br /><br /><br />
                         <div class="row">
                             <div class="col-md-6">
-                                <h5>Jadwal Seleksi ZI<br /> </h5>
-                                <img src="{{asset('assets/images/zi/zi2025.jpg')}}" alt=""
-                                    style="width:70%;border-radius: 20px;">
-                                <br /><br />
+                                <h5>SE MENPAN No4 2025<br /> </h5>
+                                <div class="row" style="text-align: center">
+                                    <a href="https://jdih.menpan.go.id/dokumen-hukum/SE/jenis/1998?SURAT%20EDARAN"
+                                        style="text-align: center" target="_blank">
+                                        <img src="{{asset('assets/images/zi/SE4.jpg')}}" alt=""
+                                            style="width:70%;border-radius: 20px;">
+                                    </a>
+                                </div>
                             </div>
                             <div class="col-md-6">
                                 <h5>Download Template LKE ZI<br /> </h5>
                                 <div class="row" style="text-align: center">
                                     <a href="{{asset('template-zi/LKEZI2025.xlsx')}}" style="text-align: center">
-                                        <img src="{{asset('assets/images/zi/excel.png')}}" alt="" style="width:75%">
+                                        <img src="{{asset('assets/images/zi/excel.png')}}" alt="" style="width:100%">
                                     </a>
                                 </div>
                             </div>
                         </div>
-
+                        <br />
                         <br />
                         <div class="row">
                             <div class="card">

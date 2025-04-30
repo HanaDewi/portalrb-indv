@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\ZI;
 
-use App\Http\Controllers\Controller;
 use App\Models\ZI\UnitZI;
-use App\Models\ZI\InstansiZI;
 use App\Models\KlpdInstansi;
 use Illuminate\Http\Request;
+use App\Models\ZI\InstansiZI;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use SebastianBergmann\CodeCoverage\Report\Xml\Unit;
 
 class PengusulanZIController extends Controller
 {
@@ -120,6 +121,7 @@ class PengusulanZIController extends Controller
         }
 
         $instansiZI = InstansiZI::where('instansi_id', $instansi_id)->where('tahun', 2025)->first();
+        $instansiZI->tahap_seleksi = 1;
         $instansiZI->pic = $request->get("pic");
         $instansiZI->email = $request->get("email");
         $instansiZI->nomor_kontak = $request->get("nomor_kontak");
@@ -199,15 +201,13 @@ class PengusulanZIController extends Controller
             $syarat_akhir_wbk = $instansiZI->syarat_akhir_wbk;
             $syarat_akhir_wbbm   = $instansiZI->syarat_akhir_wbbm;
             $status_akhir = $instansiZI->status_akhir;
-            $unit_wbks = UnitZI::where("instansi_zi_id", $instansiZI->id)->where('wbk', 1)->get();
-            $unit_wbbms = UnitZI::where("instansi_zi_id", $instansiZI->id)->where('wbbm', 1)->get();
+            $units = UnitZI::where("instansi_zi_id", $instansiZI->id)->orderBy('wbbm', 'desc')->get();
             return view('zi.evaluatan.tinjau_zi', compact(
                 'instansi_id',
                 'instansi',
                 'group_kld',
                 'instansiZI',
-                'unit_wbks',
-                'unit_wbbms',
+                'units',
                 'syarat_akhir_wbk',
                 'syarat_akhir_wbbm',
                 'status_akhir'
@@ -215,6 +215,44 @@ class PengusulanZIController extends Controller
         } else {
             echo "mohon maaf instansi anda belum terdapat penilaian RB di tahun lalu";
         }
+    }
+    public function updateField(Request $request, $id, $field)
+    {
+        $instansi = InstansiZI::findOrFail($id);
+        if (Auth::User()->user_rel->instansi->id != $instansi->instansi_id) {
+            return back()->with('error', 'Anda tidak memiliki izin untuk mengubah data ini.');
+        }
+        // Pastikan hanya field tertentu yang bisa diubah
+        $allowedFields = ['pic', 'email', 'nomor_kontak', 'surat_usulan', 'sptjm', 'tlhp', 'survei_mandiri'];
+        if (!in_array($field, $allowedFields)) {
+            return back()->with('error', 'Field tidak valid.');
+        }
+
+
+
+        $instansi->$field = $request->input('value');
+        $instansi->save();
+
+        return back()->with('success', 'Data berhasil diperbarui.');
+    }
+
+    public function updateUnit(Request $request, $id)
+    {
+        $request->validate([
+            'nama' => 'required|string|max:255',
+            'lke' => 'required',
+        ]);
+
+        $unit = UnitZI::findOrFail($id);
+        $instansi = $unit->instansi_zi;
+        if (Auth::User()->user_rel->instansi->id != $instansi->instansi_id) {
+            return back()->with('error', 'Anda tidak memiliki izin untuk mengubah data ini.');
+        }
+        $unit->nama = $request->nama;
+        $unit->lke = $request->lke;
+        $unit->save();
+
+        return redirect()->back()->with('success', 'Data Unit ' . $unit->name) . ' telah berhasil diperbarui :';
     }
 
     public function store_final(Request $request)

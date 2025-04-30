@@ -4,18 +4,14 @@ namespace App\Http\Controllers\ZI;
 
 use App\Models\KlpdInstansi;
 use App\Models\LKE\LkeBobot;
-use Illuminate\Http\Request;
-
 use App\Models\ZI\InstansiZI;
 use App\Models\JawabanRenaksi;
 use App\Imports\ImportRBTematik;
 use App\Models\LKE\LkeTestTpLine;
 use App\Http\Controllers\Controller;
-use App\Models\Instansi;
 use App\Models\LKE\LkeParameter;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
-use Maatwebsite\Excel\HeadingRowImport;
 use App\Models\ZI\SeleksiAdministrasiUnit;
 use App\Models\ZI\SeleksiAdministrasiInstansi;
 
@@ -209,7 +205,7 @@ class GenerateDataController extends Controller
                     $instansiZI->instansi_wbk_mandiri = true;
                 }
                 $instansiZI->tahun = "2025";
-                $instansiZI->tahap_seleksi = 1;
+                $instansiZI->tahap_seleksi = 0;
                 $instansiZI->skor_bpk = $skor_opini_bpk;
                 $instansiZI->skor_indeks_rb = $skor_indeks_rb;
                 $instansiZI->skor_sakip = $skor_predikat_sakip;
