@@ -40,8 +40,8 @@ class PengusulanZIController extends Controller
                     }
                 }
             } elseif (Auth::User()->level == "tpn" || Auth::User()->level == "admin") {
-                $instansi_obj = KlpdInstansi::find(1); #jangan di delete ini untuk pengujian pengusulan via admin
-                $instansiZI = InstansiZI::where("instansi_id", $instansi_obj->id)->first();
+                $instansi_obj = KlpdInstansi::find(2); #jangan di delete ini untuk pengujian pengusulan via admin
+                $instansiZI = InstansiZI::where("instansi_id", $instansi_obj->id)->where('tahun', $tahun)->first();
                 #return redirect()->route('dashboard_zi');
             } else {
                 if ($date_now >= $date_tutup_zi) {
