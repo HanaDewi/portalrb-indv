@@ -1,6 +1,15 @@
 @extends('home-template.template')
 @section('cssJsHere')
+<link rel="stylesheet" href="{{ asset('assets/css/timelinezi.css') }}" />
 <style>
+    .modal {
+        z-index: 1999;
+    }
+
+    .modal-backdrop {
+        z-index: 105;
+    }
+
     .text-menpan {
         color: #b42b2d;
     }
@@ -11,97 +20,6 @@
     }
 
 
-    .container-timeline {
-        width: 1200px;
-        margin: auto;
-
-    }
-
-    .timeline {
-        counter-reset: test 0;
-        position: relative;
-    }
-
-    .timeline li {
-        list-style: none;
-        float: left;
-        width: 16%;
-        position: relative;
-        text-align: center;
-        text-transform: uppercase;
-        z-index: 0;
-
-
-    }
-
-    ul:nth-child(1) {
-        color: white;
-    }
-
-    .timeline li:before {
-        counter-increment: test;
-        content: counter(test);
-        width: 50px;
-        height: 50px;
-        border: 3px solid #b42b2d;
-        border-radius: 50%;
-        display: block;
-        text-align: center;
-        line-height: 50px;
-        margin: 0 auto 10px auto;
-        background: #fff;
-        color: #000;
-        transition: all ease-in-out .3s;
-        cursor: pointer;
-        left: 0%;
-        z-index: 1;
-    }
-
-    .timeline li:after {
-        content: "";
-        position: absolute;
-        width: 100%;
-        height: 4px;
-        background-color: #b42b2d;
-        top: 25px;
-        left: -38%;
-        z-index: -1;
-        transition: all ease-in-out .3s;
-    }
-
-    .timeline li:first-child:after {
-        content: none;
-    }
-
-    .timeline li.active-tl {
-        color: #555555;
-        content: "\f00c";
-    }
-
-    .timeline li.active-tl:before {
-        background: #b42b2d;
-        color: #F1F1F1;
-        content: "\2713";
-        font-size: 1.5em;
-    }
-
-    .timeline li.active-tl+li:after {
-        background: #b42b2d;
-
-    }
-
-
-    #owl-demo .item img {
-        display: block;
-        width: 100%;
-        height: auto;
-    }
-
-    .full-img img {
-        height: 100%;
-        width: 100%;
-        object-fit: contain;
-    }
 
     .form-control {
         padding: .775rem .75rem;
@@ -110,18 +28,6 @@
 
     .table-shad {
         box-shadow: 0 0 30px #9ecaed;
-    }
-
-    /* Chrome, Safari, Edge, Opera */
-    input::-webkit-outer-spin-button,
-    input::-webkit-inner-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-    }
-
-    /* Firefox */
-    input[type=number] {
-        -moz-appearance: textfield;
     }
 </style>
 @endsection
@@ -149,39 +55,47 @@
                         <br />
                         <table style="text-align:  left; " class="table table-striped table-bordered table-shad">
                             <thead>
-                                <tr>
+                                <tr class="text-center">
                                     <th>Data</th>
                                     <th>Isian</th>
+                                    <th>Edit</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
                                     <td><i class="fa fa-user text-menpan"></i> &nbsp; PIC</td>
                                     <td>{{$instansiZI->pic}}</td>
+                                    <td class="text-center"><a class="fa fa-edit"></a></td>
                                 </tr>
                                 <tr>
                                     <td><i class="fa fa-envelope text-menpan"></i> &nbsp; Email</td>
                                     <td>{{$instansiZI->email}}</td>
+                                    <td class="text-center"><a class="fa fa-edit"></a></td>
                                 </tr>
                                 <tr>
                                     <td><i class="fa fa-book text-menpan"></i> &nbsp; Nomor Kontak</td>
                                     <td>{{$instansiZI->nomor_kontak}}</td>
+                                    <td class="text-center"><a class="fa fa-edit"></a></td>
                                 </tr>
                                 <tr>
                                     <td><i class="fa fa-envelope-open text-menpan"></i> &nbsp; Surat Usulan</td>
                                     <td>{{$instansiZI->surat_usulan}}</td>
+                                    <td class="text-center"><a class="fa fa-edit"></a></td>
                                 </tr>
                                 <tr>
                                     <td><i class="fa fa-envelope-open text-menpan"> </i> &nbsp; SPTJM</td>
                                     <td>{{$instansiZI->sptjm}}</td>
+                                    <td class="text-center"><a class="fa fa-edit"></a></td>
                                 </tr>
                                 <tr>
                                     <td><i class="fa fa-envelope-open text-menpan"> </i> &nbsp; TLHP</td>
                                     <td>{{$instansiZI->tlhp}}</td>
+                                    <td class="text-center"><a class="fa fa-edit"></a></td>
                                 </tr>
                                 <tr>
                                     <td><i class="fa fa-envelope-open text-menpan"> </i> &nbsp; Mandiri</td>
                                     <td>{{$instansiZI->survei_mandiri}}</td>
+                                    <td class="text-center"><a class="fa fa-edit"></a></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -190,10 +104,11 @@
                         <h6>WBK</h6>
                         <table class="table table-striped table-bordered table-shad">
                             <thead style="background: #b42b2d;color:white; text-align:center; ">
-                                <tr>
+                                <tr class="text-center">
                                     <th>No</th>
                                     <th>Unit</th>
                                     <th>LKE</th>
+                                    <th>EDIT</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -203,6 +118,7 @@
                                     <td>{{$index+1}}</td>
                                     <td style="text-align: left">{{$unit_wbk->nama}}</td>
                                     <td style="text-align: left">{{$unit_wbk->lke}}</td>
+                                    <td style="text-align: center"><a class="fa fa-edit"></a></td>
                                 </tr>
                                 @endforeach
                                 @else
@@ -216,10 +132,11 @@
                         <h6>WBBM</h6>
                         <table style="text-align: left" class="table table-striped table-bordered table-shad">
                             <thead style="background: #ffcc08;color:black;">
-                                <tr>
+                                <tr class="text-center">
                                     <th>No</th>
                                     <th>Unit</th>
                                     <th>LKE</th>
+                                    <th>EDIT</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -229,25 +146,41 @@
                                     <td>{{$index+1}}</td>
                                     <td style="text-align: left">{{$unit_wbbm->nama}}</td>
                                     <td style="text-align: left">{{$unit_wbbm->lke}}</td>
+                                    <td style="text-align: center"><a class="fa fa-edit"></a></td>
                                 </tr>
                                 @endforeach
                                 @else
                                 <tr>
-                                    <td colspan="3" style="text-align: center">Tidak ada unit WBBM</td>
+                                    <td colspan="4" style="text-align: center">Tidak ada unit WBBM</td>
                                 </tr>
                                 @endif
                             </tbody>
                         </table>
-                        <div class="row ">
-                            <div class="col-md-1">
-                            </div>
-                            <div class="col-md-10 form-group">
+                        <!-- Modal-->
+                        <!-- Trigger -->
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                            data-bs-target="#exampleModalll">
+                            Launch modal
+                        </button>
 
-                            </div>
-
-                            <div class=" col-md-1">
+                        <!-- Modal -->
+                        <div class="modal fade" id="exampleModal" tabindex="-1" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Modal title</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">This is a modal body.</div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary"
+                                            data-bs-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
+                        <!--END MODAL-->
                     </div>
                 </div>
             </div>
@@ -257,4 +190,9 @@
         </div>
     </div>
 </section>
+@endsection
+
+@section('jsHere')
+<!-- Add this just before </body> in your template -->
+
 @endsection

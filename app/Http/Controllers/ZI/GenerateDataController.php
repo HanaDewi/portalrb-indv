@@ -11,6 +11,8 @@ use App\Models\JawabanRenaksi;
 use App\Imports\ImportRBTematik;
 use App\Models\LKE\LkeTestTpLine;
 use App\Http\Controllers\Controller;
+use App\Models\Instansi;
+use App\Models\LKE\LkeParameter;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 use Maatwebsite\Excel\HeadingRowImport;
@@ -69,10 +71,11 @@ class GenerateDataController extends Controller
     public function generate_rekap_instansi_skor()
     {
         $instansis = KlpdInstansi::get();
+        $lke_kegiatan_id = 1; //LKE Kegiatan 1 artinya evaluasi RB tahun 2024
         foreach ($instansis as $instansi) {
             $instansi_id = $instansi->id;
             $group_kld = $instansi->group;
-            $lkeTestTP = $instansi->lke_test_tp;
+            $lkeTestTP = $instansi->lke_test_tps->where('lke_kegiatan_id', $lke_kegiatan_id)->first();
             $skor_opini_bpk = 0;
             $skor_predikat_sakip = 0;
             $skor_maturitas_spip = 0;
@@ -86,29 +89,40 @@ class GenerateDataController extends Controller
             $status_akhir = 0; #0 untuk tidak lolos, 1 untuk wbk saja, 2 untuk wbk dan wbbm, 3 untuk afirmasi
             $keterangan = "";
 
+            // echo $instansi->name . " | " . $group_kld . "<br>";
+            // echo "lke_test_tp = " . $lkeTestTP . "<br/>";
             if (isset($lkeTestTP)) {
-                $skor_indeks_rb = $lkeTestTP->index_rb_penyesuaian;
-                $lkeTestTPLine = LkeTestTpLine::where("test_tp_id", $lkeTestTP->id)->get();
-                foreach ($lkeTestTPLine as $tpLine) {
-                    if ($tpLine->paramL4->name == "Opini BPK") {
-                        ($tpLine->score) ? $skor_opini_bpk = $tpLine->score_index : $skor_opini_bpk = 0; #khusus opini BPK nilai yang diambil adalah skor opini bpk
-                    } elseif (
-                        $tpLine->paramL4->name == "Nilai Sistem Akuntabilitas Kinerja Instansi Pemerintah (SAKIP)" ||
-                        $tpLine->paramL4->name == "Nilai Sistem Akuntabilitas Kinerja Instansi Pemerintah" ||
-                        $tpLine->paramL4->name == "Nilai Sitem Akuntabilitas Kinerja Instansi Pemerintah (SAKIP)"
-                    ) { // di database paramerter l4 nya ada dua
-                        ($tpLine->score) ? $skor_predikat_sakip = $tpLine->score : $skor_predikat_sakip = 0;
-                    } elseif ($tpLine->paramL4->name == "Tingkat Maturitas Sistem Pengendalian Intern Pemerintah (SPIP)" || $tpLine->paramL4->name == "Tingkat Maturitas Sistem Pengendalian Intern Pemerintah") {
-                        ($tpLine->score) ? $skor_maturitas_spip = $tpLine->score : $skor_maturitas_spip;
+                $skor_indeks_rb = $lkeTestTP->index_rb;
+
+                $lke_parameters = LkeParameter::where('lke_kegiatan_id', operator: $lke_kegiatan_id)->get();
+                foreach ($lke_parameters as $lke_parameter) {
+                    $lke_bobots = LkeBobot::where('lke_parameter_id', $lke_parameter->id)->where('group', $group_kld)->get();
+                    foreach ($lke_bobots as $lke_bobot) {
+                        $lkeTestTPLines = LkeTestTpLine::where("lke_bobot_id", $lke_bobot->id)->where("instansi_id", $instansi_id)->get();
+                        foreach ($lkeTestTPLines as $tpLine) {
+                            if ($tpLine->lke_bobot->lke_parameter->nama == "Opini BPK") {
+                                ($tpLine->score) ? $skor_opini_bpk = $tpLine->score_index : $skor_opini_bpk = 0; #khusus opini BPK nilai yang diambil adalah skor opini bpk
+                            } elseif ($tpLine->lke_bobot->lke_parameter->nama == "Nilai SAKIP") { // di database paramerter l4 nya ada dua
+                                ($tpLine->score) ? $skor_predikat_sakip = $tpLine->score : $skor_predikat_sakip = 0;
+                            } elseif ($tpLine->lke_bobot->lke_parameter->nama == "Tingkat Maturitas SPIP") {
+                                ($tpLine->score) ? $skor_maturitas_spip = $tpLine->score : $skor_maturitas_spip;
+                            }
+                        }
                     }
                 }
-
+                // echo "skor indeks :" . $skor_indeks_rb . "<br/>";
+                // echo "skor predikat sakip" . $skor_predikat_sakip . "<br/>";
+                // echo "skor opini bpk" . $skor_opini_bpk . "<br/>";
+                // echo "skor maturitas spip" . $skor_maturitas_spip . "<br/>";
                 #konversi Skor ke Predikat
                 $indeks_rb = $this->konversi_predikat_rb($skor_indeks_rb);
                 $predikat_sakip = $this->konversi_predikat_sakip($skor_predikat_sakip);
                 $opini_bpk = $this->konversi_predikat_bpk($skor_opini_bpk);
                 $maturitas_spip = "Level " . (int)$skor_maturitas_spip;
-
+                // echo "indeks rb :" . $indeks_rb . "<br/>";
+                // echo "predikat sakip" . $predikat_sakip . "<br/>";
+                // echo "opini bpk" . $opini_bpk . "<br/>";
+                // echo "maturitas spip" . $maturitas_spip . "<br/>";
                 #Syarat Instansi 
                 ($opini_bpk == "WTP") ? $syarat_bpk = "LULUS" : $syarat_bpk = "GAGAL"; #syarat BPK WTP
                 ($skor_predikat_sakip > 60) ? $syarat_sakip_wbk = "LULUS" : $syarat_sakip_wbk = "GAGAL"; #Syarat SAKIP predikat wbk B keatas 
@@ -189,11 +203,13 @@ class GenerateDataController extends Controller
                         $status_akhir = 3;
                     }
                 }
-                $instansiZI = InstansiZI::firstOrCreate(array('instansi_id' => $instansi_id));
+
+                $instansiZI = InstansiZI::create(array('instansi_id' => $instansi_id));
                 if (in_array($instansi->id, [628, 412, 551, 554, 555, 437, 607, 539, 541])) { #Jika termasuk instansi wbk mandiri 
                     $instansiZI->instansi_wbk_mandiri = true;
                 }
-                $instansiZI->tahun = "2024";
+                $instansiZI->tahun = "2025";
+                $instansiZI->tahap_seleksi = 1;
                 $instansiZI->skor_bpk = $skor_opini_bpk;
                 $instansiZI->skor_indeks_rb = $skor_indeks_rb;
                 $instansiZI->skor_sakip = $skor_predikat_sakip;
@@ -214,8 +230,8 @@ class GenerateDataController extends Controller
                 $instansiZI->status_akhir = $status_akhir;
                 $instansiZI->save();
             } else { #belum ada penilaian RB tahun 2023
-                $instansiZI = InstansiZI::firstOrCreate(array('instansi_id' => $instansi_id));
-                $instansiZI->tahun = "2024";
+                $instansiZI = InstansiZI::create(array('instansi_id' => $instansi_id));
+                $instansiZI->tahun = "2025";
                 $instansiZI->skor_bpk = 0;
                 $instansiZI->skor_indeks_rb = 0;
                 $instansiZI->skor_sakip = 0;
@@ -242,6 +258,9 @@ class GenerateDataController extends Controller
                     $instansiZI->save();
                 }
             }
+            // if ($instansi->id == 8) {
+            //     dd("hai");
+            // }
         }
         echo "berhasil";
     }
@@ -299,7 +318,7 @@ class GenerateDataController extends Controller
         } elseif ($skor_opini_bpk > 0) {
             $opini_bpk = "TW";
         } else {
-            $opini_bpk = "-";
+            $opini_bpk = "TMP";
         }
         return $opini_bpk;
     }
@@ -312,12 +331,12 @@ class GenerateDataController extends Controller
         foreach ($collections as $key => $collection) {
             $user = Auth::User();
             $nama_instansi_excel = trim($collection[0]);
-            $instansi = KlpdInstansi::where('name', $nama_instansi_excel )->first();
-            if($instansi){
-                echo "Instansi excel : ". $nama_instansi_excel;
-                echo " | Nilai : ". $collection[1]. "<br>";
-                echo "Klpd portalrb : ". $instansi->name ;
-                if($instansi->group == "kl" or $instansi->group == "provinsi" or $instansi->group == "kabupaten"){
+            $instansi = KlpdInstansi::where('name', $nama_instansi_excel)->first();
+            if ($instansi) {
+                echo "Instansi excel : " . $nama_instansi_excel;
+                echo " | Nilai : " . $collection[1] . "<br>";
+                echo "Klpd portalrb : " . $instansi->name;
+                if ($instansi->group == "kl" or $instansi->group == "provinsi" or $instansi->group == "kabupaten") {
                     //$lke_bobot = LkeBobot::where('lke_parameter_id', 2135)->where('group', $instansi->group)->first();
                     $lke_bobot = LkeBobot::where('lke_parameter_id', 2135)->where('group', $instansi->group)->first();
                     //print_r($lke_bobot);
@@ -345,16 +364,16 @@ class GenerateDataController extends Controller
                             }
                         }
                     }
-                    
+
                     if ($test_tp_line->save()) {
                         calculateTestTp($test_tp_line->instansi_id, $test_tp_line->lke_bobot->lke_parameter->lke_kegiatan_id);
                         $success = true;
                     } else {
                         $success = false;
                     }
-                    echo " | Sukses : ". $success. "<hr>";
-                }else{
-                    echo " | diexclude karena groupnya bukan kl/provinsi/kabupaten". "<hr>";   
+                    echo " | Sukses : " . $success . "<hr>";
+                } else {
+                    echo " | diexclude karena groupnya bukan kl/provinsi/kabupaten" . "<hr>";
                 }
             }
         }
@@ -364,10 +383,9 @@ class GenerateDataController extends Controller
     {
         $user = Auth::User();
         $instansis = KlpdInstansi::all();
-        foreach($instansis as $instansi)
-        {
-            if($instansi){
-                if($instansi->group == "kl" or $instansi->group == "provinsi" or $instansi->group == "kabupaten"){
+        foreach ($instansis as $instansi) {
+            if ($instansi) {
+                if ($instansi->group == "kl" or $instansi->group == "provinsi" or $instansi->group == "kabupaten") {
                     $lke_bobot = LkeBobot::where('lke_parameter_id', 2130)->where('group', $instansi->group)->first();
                     $test_tp_line = LkeTestTpLine::where('lke_bobot_id', $lke_bobot->id)->where('instansi_id', $instansi->id)->first();
                     if (!$test_tp_line) {
@@ -376,19 +394,19 @@ class GenerateDataController extends Controller
                     }
                     $instansi_id = $instansi->id;
                     $tahun = '2024';
-                    $strategiPelaksanaanRBGeneral = JawabanRenaksi::where('instansi_id', $instansi->id)->where('lke_renaksi_id',2)->where('tahun', '2024')->first();
+                    $strategiPelaksanaanRBGeneral = JawabanRenaksi::where('instansi_id', $instansi->id)->where('lke_renaksi_id', 2)->where('tahun', '2024')->first();
                     $test_tp_line->score = $strategiPelaksanaanRBGeneral->jawaban;
                     $test_tp_line->lke_bobot_id = $lke_bobot->id;
                     $test_tp_line->instansi_id = $instansi->id;
-                    $penetapanKU =  JawabanRenaksi::where('instansi_id', $instansi_id)->where('lke_renaksi_id',4)->where('tahun', $tahun)->first();
-                    $penetapanTargetIndikatorKU =  JawabanRenaksi::where('instansi_id', $instansi_id)->where('lke_renaksi_id',5)->where('tahun', $tahun)->first();
-                    $keabsahanRencanaAksi =  JawabanRenaksi::where('instansi_id', $instansi_id)->where('lke_renaksi_id',6)->where('tahun', $tahun)->first();
-                    $kelogisanRencanaAksi=  JawabanRenaksi::where('instansi_id', $instansi_id)->where('lke_renaksi_id',8)->where('tahun', $tahun)->first();
-                    $relevansiKecukupanIndikatorOutput =  JawabanRenaksi::where('instansi_id', $instansi_id)->where('lke_renaksi_id',9)->where('tahun', $tahun)->first();
-                    $ketetapanPenetapanTargetIndikatorOutput =  JawabanRenaksi::where('instansi_id', $instansi_id)->where('lke_renaksi_id',10)->where('tahun', $tahun)->first();
-                    $anggaran =  JawabanRenaksi::where('instansi_id', $instansi_id)->where('lke_renaksi_id',11)->where('tahun', $tahun)->first(); 
-                    $test_tp_line->catatan = ($penetapanKU->catatan ?? null). "." . ($penetapanTargetIndikatorKU->catatan?? null)."." . ($keabsahanRencanaAksi->catatan?? null)."." .($kelogisanRencanaAksi->catatan?? null).".".($relevansiKecukupanIndikatorOutput->catatan?? null).".".($ketetapanPenetapanTargetIndikatorOutput->catatan?? null).".".($anggaran->catatan?? null);
-                    $test_tp_line->rekomendasi = ($penetapanKU->rekomendasi?? null). "." . ($penetapanTargetIndikatorKU->rekomendasi?? null) ."." . ($keabsahanRencanaAksi->rekomendasi?? null)."." .($kelogisanRencanaAksi->rekomendasi?? null) .".". ($relevansiKecukupanIndikatorOutput->rekomendasi?? null) .".".($ketetapanPenetapanTargetIndikatorOutput->rekomendasi?? null).".".($anggaran->rekomendasi?? null);
+                    $penetapanKU =  JawabanRenaksi::where('instansi_id', $instansi_id)->where('lke_renaksi_id', 4)->where('tahun', $tahun)->first();
+                    $penetapanTargetIndikatorKU =  JawabanRenaksi::where('instansi_id', $instansi_id)->where('lke_renaksi_id', 5)->where('tahun', $tahun)->first();
+                    $keabsahanRencanaAksi =  JawabanRenaksi::where('instansi_id', $instansi_id)->where('lke_renaksi_id', 6)->where('tahun', $tahun)->first();
+                    $kelogisanRencanaAksi =  JawabanRenaksi::where('instansi_id', $instansi_id)->where('lke_renaksi_id', 8)->where('tahun', $tahun)->first();
+                    $relevansiKecukupanIndikatorOutput =  JawabanRenaksi::where('instansi_id', $instansi_id)->where('lke_renaksi_id', 9)->where('tahun', $tahun)->first();
+                    $ketetapanPenetapanTargetIndikatorOutput =  JawabanRenaksi::where('instansi_id', $instansi_id)->where('lke_renaksi_id', 10)->where('tahun', $tahun)->first();
+                    $anggaran =  JawabanRenaksi::where('instansi_id', $instansi_id)->where('lke_renaksi_id', 11)->where('tahun', $tahun)->first();
+                    $test_tp_line->catatan = ($penetapanKU->catatan ?? null) . "." . ($penetapanTargetIndikatorKU->catatan ?? null) . "." . ($keabsahanRencanaAksi->catatan ?? null) . "." . ($kelogisanRencanaAksi->catatan ?? null) . "." . ($relevansiKecukupanIndikatorOutput->catatan ?? null) . "." . ($ketetapanPenetapanTargetIndikatorOutput->catatan ?? null) . "." . ($anggaran->catatan ?? null);
+                    $test_tp_line->rekomendasi = ($penetapanKU->rekomendasi ?? null) . "." . ($penetapanTargetIndikatorKU->rekomendasi ?? null) . "." . ($keabsahanRencanaAksi->rekomendasi ?? null) . "." . ($kelogisanRencanaAksi->rekomendasi ?? null) . "." . ($relevansiKecukupanIndikatorOutput->rekomendasi ?? null) . "." . ($ketetapanPenetapanTargetIndikatorOutput->rekomendasi ?? null) . "." . ($anggaran->rekomendasi ?? null);
                     $test_tp_line->update_user_id = $user->id;
                     $test_tp_line->score_index = !empty($test_tp_line->lke_bobot->max_value) ? ($test_tp_line->score / $test_tp_line->lke_bobot->max_value) * $test_tp_line->lke_bobot->bobot : $test_tp_line->score;
                     if ($pengali_id = $test_tp_line->lke_bobot->lke_parameter->indikator_pengali_id) {
@@ -400,16 +418,16 @@ class GenerateDataController extends Controller
                             }
                         }
                     }
-                    
+
                     if ($test_tp_line->save()) {
                         calculateTestTp($test_tp_line->instansi_id, $test_tp_line->lke_bobot->lke_parameter->lke_kegiatan_id);
                         $success = true;
                     } else {
                         $success = false;
                     }
-                    echo " | Sukses : ". $success. "<hr>";
-                }else{
-                    echo " | diexclude karena groupnya bukan kl/provinsi/kabupaten". "<hr>";   
+                    echo " | Sukses : " . $success . "<hr>";
+                } else {
+                    echo " | diexclude karena groupnya bukan kl/provinsi/kabupaten" . "<hr>";
                 }
             }
         }

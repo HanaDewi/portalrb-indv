@@ -21,186 +21,97 @@ class PengusulanZIController extends Controller
         });
     }
 
+
     public function index(Request $request)
     {
+        $tahun = 2025;
         $date_now = new \DateTime();
-        $date_buka_zi    = new \DateTime("2024/07/18");
-        $date_tutup_zi    = new \DateTime("2024/08/1");
+        $date_buka_zi    = new \DateTime("2025/04/01");
+        $date_tutup_zi    = new \DateTime("2025/06/01");
+        if ($date_now >= $date_buka_zi) {
+            $instansi_id = $request->get("instansi_id");
+            if ($instansi_id && (Auth::User()->level == "admin" || Auth::User()->level == "tpn")) {
+                $instansi_obj = KlpdInstansi::find($instansi_id);
+                $instansiZI = InstansiZI::where("instansi_id", $instansi_obj->id)->where('tahun', $tahun)->first();
+                if ($instansiZI) {
+                    if ($instansiZI->final) {
+                        return redirect('zi-tinjau?instansi_id=' . $instansi_id);
+                    }
+                }
+            } elseif (Auth::User()->level == "tpn" || Auth::User()->level == "admin") {
+                #$instansi_obj = KlpdInstansi::find(1); #jangan di delete ini untuk pengujian pengusulan via admin
+                #$instansiZI = InstansiZI::where("instansi_id", $instansi_obj->id)->first();
+                return redirect()->route('dashboard_zi');
+            } else {
+                if ($date_now >= $date_tutup_zi) {
+                    return redirect('zi-tinjau?instansi_id=' . Auth::User()->user_rel->instansi->id);
+                }
+                $instansi_obj = Auth::User()->user_rel->instansi;
+                $instansi_id = $instansi_obj->id;
+            }
+            (Auth::User()->level == "admin" || Auth::User()->level == "tpn") ? $instansis = KlpdInstansi::get() : $instansis = "";
 
-        #if ($date_now >= $date_buka_zi) {
-        $instansi_id = $request->get("instansi_id");
-        if ($instansi_id && (Auth::User()->level == "admin" || Auth::User()->level == "tpn")) {
-            $instansi_obj = KlpdInstansi::find($instansi_id);
-            $instansiZI = InstansiZI::where("instansi_id", $instansi_obj->id)->first();
+            $instansi = $instansi_obj->name;
+            $group_kld = $instansi_obj->group;
+            $instansiZI = InstansiZI::where("instansi_id", $instansi_obj->id)->where('tahun', $tahun)->first();
             if ($instansiZI) {
-                if ($instansiZI->final) {
+                if ($instansiZI->final && !(Auth::User()->level == "admin" || Auth::User()->level == "tpn")) {
                     return redirect('zi-tinjau?instansi_id=' . $instansi_id);
                 }
-            }
-        } elseif (Auth::User()->level == "tpn" || Auth::User()->level == "admin") {
-            #$instansi_obj = KlpdInstansi::find(1); #jangan di delete ini untuk pengujian pengusulan via admin
-            #$instansiZI = InstansiZI::where("instansi_id", $instansi_obj->id)->first();
-            return redirect()->route('dashboard_zi');
-        } else {
-            if ($date_now >= $date_tutup_zi) {
-                return redirect('zi-tinjau?instansi_id=' . Auth::User()->user_rel->instansi->id);
-            }
-            $instansi_obj = Auth::User()->user_rel->instansi;
-            $instansi_id = $instansi_obj->id;
-        }
-        (Auth::User()->level == "admin" || Auth::User()->level == "tpn") ? $instansis = KlpdInstansi::get() : $instansis = "";
+                $skor_opini_bpk = $instansiZI->skor_bpk;
+                $skor_indeks_rb = $instansiZI->skor_indeks_rb;
+                $skor_predikat_sakip = $instansiZI->skor_sakip;
+                $skor_maturitas_spip = $instansiZI->skor_maturitas_spip;
+                $opini_bpk = $instansiZI->opini_bpk;
+                $indeks_rb = $instansiZI->indeks_rb;
+                $predikat_sakip = $instansiZI->predikat_sakip;
+                $maturitas_spip = $instansiZI->maturitas_spip;
+                $syarat_bpk = $instansiZI->syarat_bpk;
+                $syarat_sakip_wbk = $instansiZI->syarat_sakip_wbk;
+                $syarat_sakip_wbbm = $instansiZI->syarat_sakip_wbbm;
+                $syarat_indeksrb_wbk = $instansiZI->syarat_indeksrb_wbk;
+                $syarat_indeksrb_wbbm = $instansiZI->syarat_indeksrb_wbbm;
+                $syarat_maturitas_spip = $instansiZI->syarat_maturitas_spip;
+                $syarat_akhir_wbk = $instansiZI->syarat_akhir_wbk;
+                $syarat_akhir_wbbm   = $instansiZI->syarat_akhir_wbbm;
+                $keterangan = $instansiZI->keterangan;
+                $status_akhir = $instansiZI->status_akhir;
 
-        $instansi = $instansi_obj->name;
-        $group_kld = $instansi_obj->group;
-        $instansiZI = InstansiZI::where("instansi_id", $instansi_obj->id)->first();
-        if ($instansiZI) {
-            if ($instansiZI->final && !(Auth::User()->level == "admin" || Auth::User()->level == "tpn")) {
-                return redirect('zi-tinjau?instansi_id=' . $instansi_id);
+                return view('zi.evaluatan.pengusulan', compact(
+                    'instansis',
+                    'instansi_id',
+                    'instansi',
+                    'instansiZI',
+                    'group_kld',
+                    'skor_opini_bpk',
+                    'skor_indeks_rb',
+                    'skor_predikat_sakip',
+                    'skor_maturitas_spip',
+                    'opini_bpk',
+                    'indeks_rb',
+                    'predikat_sakip',
+                    'maturitas_spip',
+                    'syarat_bpk',
+                    'syarat_sakip_wbk',
+                    'syarat_sakip_wbbm',
+                    'syarat_indeksrb_wbk',
+                    'syarat_indeksrb_wbbm',
+                    'syarat_maturitas_spip',
+                    'syarat_akhir_wbk',
+                    'syarat_akhir_wbbm',
+                    'keterangan',
+                    'status_akhir'
+                ));
+            } else {
+                echo "mohon maaf instansi anda belum terdapat penilaian RB di tahun lalu";
             }
-            $skor_opini_bpk = $instansiZI->skor_bpk;
-            $skor_indeks_rb = $instansiZI->skor_indeks_rb;
-            $skor_predikat_sakip = $instansiZI->skor_sakip;
-            $skor_maturitas_spip = $instansiZI->skor_maturitas_spip;
-            $opini_bpk = $instansiZI->opini_bpk;
-            $indeks_rb = $instansiZI->indeks_rb;
-            $predikat_sakip = $instansiZI->predikat_sakip;
-            $maturitas_spip = $instansiZI->maturitas_spip;
-            $syarat_bpk = $instansiZI->syarat_bpk;
-            $syarat_sakip_wbk = $instansiZI->syarat_sakip_wbk;
-            $syarat_sakip_wbbm = $instansiZI->syarat_sakip_wbbm;
-            $syarat_indeksrb_wbk = $instansiZI->syarat_indeksrb_wbk;
-            $syarat_indeksrb_wbbm = $instansiZI->syarat_indeksrb_wbbm;
-            $syarat_maturitas_spip = $instansiZI->syarat_maturitas_spip;
-            $syarat_akhir_wbk = $instansiZI->syarat_akhir_wbk;
-            $syarat_akhir_wbbm   = $instansiZI->syarat_akhir_wbbm;
-            $keterangan = $instansiZI->keterangan;
-            $status_akhir = $instansiZI->status_akhir;
-
-            return view('zi.pengusulan', compact(
-                'instansis',
-                'instansi_id',
-                'instansi',
-                'group_kld',
-                'skor_opini_bpk',
-                'skor_indeks_rb',
-                'skor_predikat_sakip',
-                'skor_maturitas_spip',
-                'opini_bpk',
-                'indeks_rb',
-                'predikat_sakip',
-                'maturitas_spip',
-                'syarat_bpk',
-                'syarat_sakip_wbk',
-                'syarat_sakip_wbbm',
-                'syarat_indeksrb_wbk',
-                'syarat_indeksrb_wbbm',
-                'syarat_maturitas_spip',
-                'syarat_akhir_wbk',
-                'syarat_akhir_wbbm',
-                'keterangan',
-                'status_akhir'
-            ));
         } else {
-            echo "mohon maaf instansi anda belum terdapat penilaian RB di tahun lalu";
+            return view('zi.zibelumbuka');
         }
-        #}else{
-        #    return view('zibelumbuka');
-        #}
     }
-
-
-    public function tinjau(Request $request)
-    {
-        $date_now = new \DateTime();
-        $date_buka_zi    = new \DateTime("2024/07/18");
-        $date_tutup_zi    = new \DateTime("2024/08/1");
-
-        #if ($date_now >= $date_buka_zi) {
-        $instansi_id = $request->get("instansi_id");
-        if ($instansi_id && (Auth::User()->level == "admin" || Auth::User()->level == "tpn")) {
-            $instansi_obj = KlpdInstansi::find($instansi_id);
-            $instansiZI = InstansiZI::where("instansi_id", $instansi_obj->id)->first();
-            if ($instansiZI) {
-                if ($instansiZI->final) {
-                    return redirect('zi-tinjau?instansi_id=' . $instansi_id);
-                }
-            }
-        } elseif (Auth::User()->level == "tpn" || Auth::User()->level == "admin") {
-            #$instansi_obj = KlpdInstansi::find(1); #jangan di delete ini untuk pengujian pengusulan via admin
-            #$instansiZI = InstansiZI::where("instansi_id", $instansi_obj->id)->first();
-            return redirect()->route('dashboard_zi');
-        } else {
-            if ($date_now >= $date_tutup_zi) {
-                return redirect('zi-tinjau?instansi_id=' . Auth::User()->user_rel->instansi->id);
-            }
-            $instansi_obj = Auth::User()->user_rel->instansi;
-            $instansi_id = $instansi_obj->id;
-        }
-        (Auth::User()->level == "admin" || Auth::User()->level == "tpn") ? $instansis = KlpdInstansi::get() : $instansis = "";
-
-        $instansi = $instansi_obj->name;
-        $group_kld = $instansi_obj->group;
-        $instansiZI = InstansiZI::where("instansi_id", $instansi_obj->id)->first();
-        if ($instansiZI) {
-            if ($instansiZI->final && !(Auth::User()->level == "admin" || Auth::User()->level == "tpn")) {
-                return redirect('zi-tinjau?instansi_id=' . $instansi_id);
-            }
-            $skor_opini_bpk = $instansiZI->skor_bpk;
-            $skor_indeks_rb = $instansiZI->skor_indeks_rb;
-            $skor_predikat_sakip = $instansiZI->skor_sakip;
-            $skor_maturitas_spip = $instansiZI->skor_maturitas_spip;
-            $opini_bpk = $instansiZI->opini_bpk;
-            $indeks_rb = $instansiZI->indeks_rb;
-            $predikat_sakip = $instansiZI->predikat_sakip;
-            $maturitas_spip = $instansiZI->maturitas_spip;
-            $syarat_bpk = $instansiZI->syarat_bpk;
-            $syarat_sakip_wbk = $instansiZI->syarat_sakip_wbk;
-            $syarat_sakip_wbbm = $instansiZI->syarat_sakip_wbbm;
-            $syarat_indeksrb_wbk = $instansiZI->syarat_indeksrb_wbk;
-            $syarat_indeksrb_wbbm = $instansiZI->syarat_indeksrb_wbbm;
-            $syarat_maturitas_spip = $instansiZI->syarat_maturitas_spip;
-            $syarat_akhir_wbk = $instansiZI->syarat_akhir_wbk;
-            $syarat_akhir_wbbm   = $instansiZI->syarat_akhir_wbbm;
-            $keterangan = $instansiZI->keterangan;
-            $status_akhir = $instansiZI->status_akhir;
-
-            return view('zi.evaluatan.pengusulan', compact(
-                'instansis',
-                'instansi_id',
-                'instansi',
-                'group_kld',
-                'skor_opini_bpk',
-                'skor_indeks_rb',
-                'skor_predikat_sakip',
-                'skor_maturitas_spip',
-                'opini_bpk',
-                'indeks_rb',
-                'predikat_sakip',
-                'maturitas_spip',
-                'syarat_bpk',
-                'syarat_sakip_wbk',
-                'syarat_sakip_wbbm',
-                'syarat_indeksrb_wbk',
-                'syarat_indeksrb_wbbm',
-                'syarat_maturitas_spip',
-                'syarat_akhir_wbk',
-                'syarat_akhir_wbbm',
-                'keterangan',
-                'status_akhir'
-            ));
-        } else {
-            echo "mohon maaf instansi anda belum terdapat penilaian RB di tahun lalu";
-        }
-        #}else{
-        #    return view('zibelumbuka');
-        #}
-    }
-
-
     public function store_bukti_dukung(Request $request)
     {
-
-
+        $tahun = 2025;
         if (Auth::User()->level == "admin" || Auth::User()->level == "tpn") {
             $instansi_id = $request->get("instansi_id");
         } else {
@@ -208,7 +119,7 @@ class PengusulanZIController extends Controller
             $instansi_id = $instansi_obj->id;
         }
 
-        $instansiZI = InstansiZI::firstOrCreate(array('instansi_id' => $instansi_id));
+        $instansiZI = InstansiZI::where('instansi_id', $instansi_id)->where('tahun', 2025)->first();
         $instansiZI->pic = $request->get("pic");
         $instansiZI->email = $request->get("email");
         $instansiZI->nomor_kontak = $request->get("nomor_kontak");
@@ -218,10 +129,9 @@ class PengusulanZIController extends Controller
         $instansiZI->survei_mandiri = 'http://' . preg_replace('#^.*://#', '', $request->get("survei_mandiri"));
         $instansiZI->jml_wbk = $request->get("jml_wbk");
         $instansiZI->jml_wbbm = $request->get("jml_wbbm");
-        $instansiZI->final = 1;
+        //$instansiZI->final = 1;
         $instansiZI->update_by = Auth::User()->id;
         $instansiZI->save();
-
 
         $unit_wbks = $request->get("unit_wbk");
         $i = 0;
@@ -316,7 +226,7 @@ class PengusulanZIController extends Controller
             $instansi_id = $instansi_obj->id;
         }
         $instansiZI = InstansiZI::where('instansi_id', $instansi_id)->first();
-        $instansiZI->final = $request->get("final");;
+        $instansiZI->final = $request->get("final");
         $instansiZI->save();
 
 

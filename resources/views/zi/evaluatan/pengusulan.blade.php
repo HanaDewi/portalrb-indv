@@ -34,7 +34,7 @@
                         @endif
                         <br>
                         <h5>{{ $instansi}}</h5>
-                        <img src="assets/images/syarat_min_instansi.jpg" width="75%">
+                        <img src="{{asset('assets/images/syarat_min_instansi.jpg')}}" width="85%">
                         <hr />
                         <table style="text-align: left" class="table">
                             <thead>
@@ -180,7 +180,7 @@
             </div>
 
             @if($status_akhir > 0)
-            <form action="{{URL::to('zi')}}" method="post">
+            <form action="{{route('pengusulan_zi_store')}}" method="post">
                 @csrf
                 @if(Auth::User()->level =="admin" || Auth::User()->level == "tpn")
                 <input type="hidden" name="instansi_id" value="{{ $instansi_id}}">
@@ -197,19 +197,26 @@
                                     <div class="col-md-10 form-group" style="text-align: left">
                                         <div class="form-group">
                                             <label>PIC Instansi Pemerintah</label>
-                                            <input type="text" name="pic" class="form-control" required>
+                                            <input type="text" name="pic" class="form-control"
+                                                value="{{($instansiZI->pic)?$instansiZI->pic:''}}" required>
                                         </div>
                                         <div class="form-group">
                                             <label class="text-left">Email</label>
-                                            <input type="email" name="email" class="form-control" required>
+                                            <input type="email" name="email"
+                                                value="{{($instansiZI->email)?$instansiZI->email:''}}"
+                                                class="form-control" required>
                                         </div>
                                         <div class="form-group">
                                             <label>Nomor Kontak</label>
-                                            <input type="text" name="nomor_kontak" class="form-control" required>
+                                            <input type="text" name="nomor_kontak"
+                                                value="{{($instansiZI->nomor_kontak)?$instansiZI->nomor_kontak:''}}"
+                                                class="form-control" required>
                                         </div>
                                         <div class="form-group">
                                             <label>Surat Usulan</label>
-                                            <input type="text" name="surat_usulan" class="form-control" required>
+                                            <input type="text" name="surat_usulan"
+                                                value="{{($instansiZI->surat_usulan)?$instansiZI->surat_usulan:''}}"
+                                                class="form-control" required>
                                             <small id="emailHelp" class="form-text text-muted">Input link Drive
                                                 yang berisi surat usulan dari pimpinan instansi pemerintah
                                             </small>
@@ -217,7 +224,9 @@
 
                                         <div class="form-group">
                                             <label> SPTJM </label>
-                                            <input type="text" name="sptjm" class="form-control" required>
+                                            <input type="text" name="sptjm"
+                                                value="{{($instansiZI->sptjm)?$instansiZI->sptjm:''}}"
+                                                class="form-control" required>
                                             <small id="emailHelp" class="form-text text-muted">Input link Drive
                                                 yang
                                                 berisi Surat Pernyataan Tanggung Jawab
@@ -225,7 +234,9 @@
                                         </div>
                                         <div class="form-group">
                                             <label>TLHP</label>
-                                            <input type="text" name="tlhp" class="form-control" required>
+                                            <input type="text" name="tlhp"
+                                                value="{{($instansiZI->tlhp)?$instansiZI->tlhp:''}}"
+                                                class="form-control" required>
                                             <small id="emailHelp" class="form-text text-muted">Input link Drive
                                                 yang
                                                 berisi Surat Pernyataan Clearance TLHP oleh
@@ -233,7 +244,9 @@
                                         </div>
                                         <div class="form-group">
                                             <label>Survei Mandiri</label>
-                                            <input type="text" name="survei_mandiri" class="form-control" required>
+                                            <input type="text" name="survei_mandiri"
+                                                value="{{($instansiZI->survei_mandiri)?$instansiZI->survei_mandiri:''}}"
+                                                class="form-control" required>
                                             <small id="emailHelp" class="form-text text-muted">Input link Drive
                                                 yang
                                                 berisi Laporan hasil pelaksanaan survei
@@ -273,21 +286,24 @@
                                             <div class="row">
                                                 <div class="col-md-4">
                                                     <label style="text-align: center; color:white;">WBK</label>
-                                                    <input type="number" name="jml_wbk" id="jmlWBK"
-                                                        onkeyup="hitungTotal();" class="form-control"
+                                                    <input type="number" name="jml_wbk"
+                                                        value="{{($instansiZI->jml_wbk)?$instansiZI->jml_wbk:''}}"
+                                                        id="jmlWBK" onkeyup="hitungTotal();" class="form-control"
                                                         style="text-align: center;">
                                                 </div>
                                                 <div class="col-md-4">
                                                     <label style="text-align: center; color:white;">WBBM</label>
-                                                    <input type="number" name="jml_wbbm" id="jmlWBBM"
-                                                        onkeyup="hitungTotal()" class="form-control"
+                                                    <input type="number" name="jml_wbbm"
+                                                        value="{{($instansiZI->jml_wbbm)?$instansiZI->jml_wbbm:''}}"
+                                                        id="jmlWBBM" onkeyup="hitungTotal()" class="form-control"
                                                         style="text-align: center;" @if($status_akhir==1 or
                                                         $status_akhir==3 or $status_akhir==4 ) disabled @endif>
                                                 </div>
                                                 <div class=" col-md-4">
                                                     <label style="text-align: center; color:white;">Total</label>
-                                                    <input type="text" id="jmlUnit" class="form-control"
-                                                        style="text-align: center;""
+                                                    <input type="text" id="jmlUnit"
+                                                        value="{{$instansiZI->jml_wbk + $instansiZI->jml_wbbm}}"
+                                                        class="form-control" style="text-align: center;""
                                                                                             disabled>
                                                                                     </div>
                                                                                 </div>
@@ -338,7 +354,7 @@
                                                     <div class="col-md-4">
                                                         <label style="color:white">Link File LKE</label>
                                                     </div>
-                                                    @if($group_kld == "prov" || $group_kld == "kab")
+                                                    @if($group_kld == "provinsi" || $group_kld == "kabupaten")
                                                     <div class="col-md-2">
                                                         <label style="color:white; ">Afirmasi</label>
                                                     </div>
@@ -349,6 +365,10 @@
                                                             <label style="color:white; ">Delete</label>
                                                         </div>
                                                     </div>
+                                                    @foreach ($instansiZI->unit_zi as $item)
+                                                    bla
+
+                                                    @endforeach()
                                                     <hr />
                                                 </div>
                                                 <br />
@@ -469,7 +489,7 @@
                         <input type="text" name="lke_wbk[]" class="form-control" style="text-align:center" placeholder="Link File LKE" required> \
                     </div>';
 
-                @if($group_kld == "prov" || $group_kld == "kab")
+                @if($group_kld == "provinsi" || $group_kld == "kabupaten")
                     row_str = row_str + '<div class="col-md-2"> \
                         <input type="hidden" name="afirmasi[]" value="0" />\
                         <input type="checkbox" class="checkbox"  value=1 style=" margin-top:0.7em;\
