@@ -254,7 +254,7 @@ class PengusulanZIController extends Controller
         ]);
 
         $unit = UnitZI::findOrFail($id);
-        $instansi = $unit->instansi_zi;
+        $instansi = $unit->instansiZI;
         if (Auth::User()->user_rel->instansi->id != $instansi->instansi_id) {
             return back()->with('error', 'Anda tidak memiliki izin untuk mengubah data ini.');
         }

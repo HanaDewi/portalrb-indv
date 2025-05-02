@@ -1,26 +1,26 @@
 @extends('home-template.template')
 @section('cssJsHere')
 <link rel="stylesheet" href="{{ asset('assets/css/timelinezi.css') }}" />
+<style>
+    .text-menpan {
+        color: #b42b2d;
+    }
 
-.text-menpan {
-color: #b42b2d;
-}
-
-h1 {
-text-align: center;
-text-transform: uppercase;
-}
+    h1 {
+        text-align: center;
+        text-transform: uppercase;
+    }
 
 
 
-.form-control {
-padding: .775rem .75rem;
-border-radius: 10px;
-}
+    .form-control {
+        padding: .775rem .75rem;
+        border-radius: 10px;
+    }
 
-.table-shad {
-box-shadow: 0 0 30px #9ecaed;
-}
+    .table-shad {
+        box-shadow: 0 0 30px #9ecaed;
+    }
 </style>
 @endsection
 
