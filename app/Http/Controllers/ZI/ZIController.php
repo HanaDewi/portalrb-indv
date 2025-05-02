@@ -22,13 +22,14 @@ class ZIController extends Controller
 
     public function index(Request $request)
     {
+
         $tahun = 2025;
 
         if (Auth::User()->level == "tpn" || Auth::User()->level == "admin") {
             return redirect()->route('dashboard_zi');
         }
 
-        if (!isset(Auth::User()->user_rel->instansi)) {
+        if (!isset(Auth::User()->instansi_id)) {
             abort('403');
         }
 
@@ -39,6 +40,7 @@ class ZIController extends Controller
         } else {
             $instansi_obj = KlpdInstansi::find(Auth::User()->instansi_id);
         }
+
         $instansi_id = $instansi_obj->id;
         $instansiZI = InstansiZI::where("instansi_id", $instansi_obj->id)->where('tahun', $tahun)->first();
         if (!$instansiZI) {
