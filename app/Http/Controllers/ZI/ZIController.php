@@ -34,8 +34,11 @@ class ZIController extends Controller
 
         // echo "<body style='text-align:center; background-color:bisque'><img src='https://www.portalrb.id/assets/images/zi/zi2025.jpg'>";;
         // die;
-
-        $instansi_obj = Auth::User()->user_rel->instansi;
+        if (Auth::User()->user_rel) {
+            $instansi_obj = Auth::User()->user_rel->instansi;
+        } else {
+            $instansi_obj = KlpdInstansi::find(Auth::User()->instansi_id);
+        }
         $instansi_id = $instansi_obj->id;
         $instansiZI = InstansiZI::where("instansi_id", $instansi_obj->id)->where('tahun', $tahun)->first();
         if (!$instansiZI) {
