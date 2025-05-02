@@ -31,8 +31,7 @@
         <div class="row justify-content-center">
             <div class="section-title text-center pb-35 ">
                 <h2 style="text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;">
-                    Pengusulan Zona
-                    Integritas</h2>
+                    Pengusulan Zona Integritas</h2>
             </div>
             @include('zi.evaluatan.progress')
             <hr />

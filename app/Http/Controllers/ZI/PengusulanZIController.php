@@ -47,10 +47,16 @@ class PengusulanZIController extends Controller
                 if ($date_now >= $date_tutup_zi) {
                     return redirect('zi-tinjau?instansi_id=' . Auth::User()->user_rel->instansi->id);
                 }
-                $instansi_obj = Auth::User()->user_rel->instansi;
+                if (Auth::User()->user_rel) {
+                    $instansi_obj = Auth::User()->user_rel->instansi;
+                } else {
+                    $instansi_obj = KlpdInstansi::find(Auth::User()->instansi_id);
+                    //dd($instansi_obj);
+                }
+
                 $instansi_id = $instansi_obj->id;
             }
-            (Auth::User()->level == "admin" || Auth::User()->level == "tpn") ? $instansis = KlpdInstansi::get() : $instansis = "";
+            (Auth::User()->level == "admin" || Auth::User()->level == "tpn") ? $instansis = KlpdInstansi::orderBy('name')->get() : $instansis = "";
 
             $instansi = $instansi_obj->name;
             $group_kld = $instansi_obj->group;
