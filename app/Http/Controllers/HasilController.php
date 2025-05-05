@@ -31,7 +31,7 @@ class HasilController extends Controller
     public function hasil_seluruh()
     {
         $user = Auth::User();
-        if (in_array($user->level, ['kabupaten', 'provinsi', 'kl', 'tpn', 'tpm'])) {
+        if (in_array($user->level, ['kabupaten', 'provinsi', 'kl', 'tpm'])) {
             $access = OpenAccessSetting::where('user_level', $user->level)->where('fitur', 'hasil_evaluasi')->first();
             if ($access) {
                 $today = date('Y-m-d');
@@ -51,7 +51,7 @@ class HasilController extends Controller
     public function hasil($instansi_id)
     {
         $user = Auth::User();
-        if (in_array($user->level, ['kabupaten', 'provinsi', 'kl', 'tpn', 'tpm'])) {
+        if (in_array($user->level, ['kabupaten', 'provinsi', 'kl', 'tpm'])) {
             $access = OpenAccessSetting::where('user_level', $user->level)->where('fitur', 'hasil_evaluasi')->first();
             if ($access) {
                 $today = date('Y-m-d');

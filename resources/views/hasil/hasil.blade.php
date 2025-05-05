@@ -62,7 +62,7 @@
                     </td>
                 </tr>
                 @endif
-                @if (in_array(auth()->user()->level, ['admin', 'tpn']))
+                @if (in_array(auth()->user()->level, ['admin', 'tpn']) && hasAksesHasilEvaluasi())
                 <tr>
                     <td class="font-bold">Aksi</td>
                     <td>
@@ -112,7 +112,7 @@
                                 <td>{{ $testTPLine->todo }}</td>
                                 <td>{{ $testTPLine->tim_penilai->name }}</td>
                                 <td>
-                                    @if (in_array(auth()->user()->level, ['admin', 'tpn']) || auth()->user()->penilai_id == $testTPLine->penilai_id)
+                                    @if (in_array(auth()->user()->level, ['admin', 'tpn']) || auth()->user()->penilai_id == $testTPLine->penilai_id && hasAksesHasilEvaluasi())
                                     <button onclick="edit_score({{ $testTPLine->id }});" class="btn btn-warning btn-sm"><i data-lucide="edit" class="w-4 h-4 mr-1"></i></button>
                                     @endif
                                 </td>
@@ -244,7 +244,7 @@
 <script src="{{ asset('ext/jquery-validation/localization/messages_id.min.js') }}"></script>
 <script src="{{ asset('ext') }}/jquery-inputmask/jquery.inputmask.bundle.js"></script>
 <script>
-    @if (in_array(auth()->user()->level, ['admin', 'tpn', 'tpm']))
+    @if (in_array(auth()->user()->level, ['admin', 'tpn', 'tpm']) && hasAksesHasilEvaluasi())
     var idx = {{ $idx }};
     $(document).ready(function() {
         modal_score = tailwind.Modal.getInstance(document.querySelector("#modal-score"));
