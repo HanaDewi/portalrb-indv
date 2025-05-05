@@ -112,7 +112,7 @@
                                 <td>{{ $testTPLine->todo }}</td>
                                 <td>{{ $testTPLine->tim_penilai->name }}</td>
                                 <td>
-                                    @if (in_array(auth()->user()->level, ['admin', 'tpn']) || auth()->user()->penilai_id == $testTPLine->penilai_id && hasAksesHasilEvaluasi())
+                                    @if ((in_array(auth()->user()->level, ['admin', 'tpn']) || auth()->user()->penilai_id == $testTPLine->penilai_id) && hasAksesHasilEvaluasi())
                                     <button onclick="edit_score({{ $testTPLine->id }});" class="btn btn-warning btn-sm"><i data-lucide="edit" class="w-4 h-4 mr-1"></i></button>
                                     @endif
                                 </td>
