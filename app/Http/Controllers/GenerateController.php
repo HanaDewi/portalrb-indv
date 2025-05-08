@@ -41,6 +41,7 @@ class GenerateController extends Controller
             "Nilai Sistem Akuntabilitas Kinerja Instansi Pemerintah" => 11,
             "Nilai Sistem Akuntabilitas Kinerja Instansi Pemerintah (SAKIP)" => 11,
             "Nilai Sitem Akuntabilitas Kinerja Instansi Pemerintah (SAKIP)" => 11,
+            "Nilai SAKIP" => 11,
             "Opini BPK" => 12,
             "Persentase Penyderhanaan Struktur Organisasi" => 13,
             "Persentase Penyederhanaan Struktur Organisasi" => 13,
@@ -51,18 +52,25 @@ class GenerateController extends Controller
             "Tingkat Digitalisasi Arsip" => 18,
             "Tingkat Implementasi Kebijakan Arsitektur Sistem Pemerintahan Berbasis Elektronik" => 19,
             "Tingkat Implementasi Kebijakan Arsitektur Sistem Pemerintahan Berbasis Elektronik (SPBE)" => 19,
+            "Tingkat Implementasi Kebijakan Arsitektur SPBE" => 19,
             "Tingkat Keberhasilan Pembangunan Zona Integritas" => 20,
+            "Tingkat Keberhasilan Pembangunan ZI" => 20,
             "Tingkat Kematangan Penyelenggaraan Statistik Sektoral" => 21,
+            "Indeks Pembangunan Statistik" => 21,
             "Tingkat Kepatuhan Standar Pelayanan Publik" => 22,
             "Tingkat Maturitas Sistem Pengendalian Intern Pemerintah" => 23,
             "Tingkat Maturitas Sistem Pengendalian Intern Pemerintah (SPIP)" => 23,
+            "Tingkat Maturitas SPIP" => 23,
             "Tingkat Tindak Lanjut Pengaduan Masyarakat (LAPOR) yang Sudah Diselesaikan" => 24,
+            "Tingkat tindak lanjut pengaduan masyarakat (LAPOR) yang sudah diselesaikan" => 24,
             "Rencana Aksi Pembangunan RB General" => 25,
             "TIngkat Implementasi Rencana Aksi RB General" => 26,
             "Tingkat Implementasi Rencana Aksi Pembangunan RB General" => 26,
+            "Tingkat Implementasi Rencana Aksi RB General" => 26,
             "Tingkat Capaian Sistem Kerja untuk Penyederhanaan Birokrasi" => 27,
             "Capaian Prioritas Nasional" => 28,
             "Capaian IKU" => 29,
+            "Capaian IKU Kementerian/Lembaga" => 29,
             "Capaian IKU Non Makro" => 29,
             "Capaian Indikator Kinerja Non Makro" => 29,
             "Capaian Indikator Kinerja Utama Makro" => 30,
@@ -74,13 +82,17 @@ class GenerateController extends Controller
             "Pengentasan Kemiskinan (Capaian Output)" => 34,
             "Pengentasan Kemiskinan (Capaian Dampak)" => 35,
             "Penurunan Tingkat Kemiskinan (Capaian Dampak)" => 35,
+            "Pengentasan Kemiskinan (Kementerian/Lembaga)"  => 35,
             "Realisasi Investasi (Strategi Pembangunan)" => 36,
             "Realisasi Investasi (Rencana Aksi)" => 37,
             "Realisasi Investasi (Rencana Aksi" => 37,
             "Realisasi Investasi (Capaian Output)" => 38,
             "Realisasi Investasi (Capaian Dampak)" => 39,
             "Peningkatan Realisasi Investasi (Capaian Dampak)" => 39,
+            "Realisasi Investasi (Kementerian Lembaga)" => 39,
             "Digitalisasi Administrasi Pemerintahan Berfokus pada Penanganan Stunting (Strategi Pembangunan)" => 40,
+            "Digitalisasi Administrasi Pemerintahan Fokus Penanganan Stunting (Strategi Pembangunan)" => 40,
+            "Digitalisasi Administrasi Pemerintahan Fokus Penanganan Stunting (Kementerian/Lembaga)" => 40,
             "Digitalisasi Administrasi Pemerintahan Fokus Penanganan Stunting (Rencana Aksi)" => 41,
             "Digitalisasi Administrasi Pemerintahan Fokus Penanganan Stunting (Capaian Output)" => 42,
             "Digitalisasi Administrasi Pemerintahan Berfokus Penanganan Stunting (Capaian Dampak)" => 43,
@@ -90,28 +102,21 @@ class GenerateController extends Controller
             "Penggunaan Produk Dalam Negeri (Capaian Output)" => 46,
             "Penggunaan Produk Dalam Negeri (Capaian Dampak)" => 47,
             "Tingkat Penggunaan Produk Dalam Negeri (Capaian Dampak)" => 47,
+            "Penggunaan Produk Dalam Negeri (Kementerian/Lembaga)" => 47,
             "Laju Inflasi (Strategi Pembangunan)" => 48,
             "Laju Inflasi (Rencana Aksi)" => 49,
             "Pengendalian Inflasi (Rencana Aksi)" => 49,
+            "Laju Inflasi (Kementerian/Lembaga)" => 49,
             "Laju Inflasi (Capaian Output)" => 50,
             "Pengendalian Inflasi (Capaian Output)" => 50,
             "Laju Inflasi (Capaian Dampak)" => 51,
             "Pengendalian Inflasi (Capaian Dampak)" => 51,
+            "Pengendalian Inflasi (Strategi Pembangunan)" => 51,
             "Tingkat Inflasi (Capaian Dampak)" => 51,
             "Tindak Lanjut Rekomendasi BPK" => 52,
         );
 
-        //pritn kategori
-        /*
-    $var = "";
-    foreach($indeks_penting as $key => $ind){
-    if($var != $ind ){
-    echo $ind. ", ". $key ."<br />";
-    $var = $ind;
-    }
-    }
-    die();
-    */
+
 
         echo '<table border=2>';
         echo '<tr>';
@@ -142,7 +147,7 @@ class GenerateController extends Controller
             echo '<tr>';
             echo '<td>' . $instansi_code_lama . '</td>';
             echo '<td> 2023 </td>';
-            echo '<td>' . "" . '</td>';
+            echo '<td>' . "53" . '</td>';
             if (isset($instansi->lke_test_tp_old->index_rb_penyesuaian)) {
                 echo '<td>' . $instansi->lke_test_tp_old->index_rb_penyesuaian . '</td>';
             } else {
@@ -192,7 +197,7 @@ class GenerateController extends Controller
             echo '<tr>';
             echo '<td>' . $instansi_code_lama . '</td>';
             echo '<td> 2024 </td>';
-            echo '<td>' . "" . '</td>';
+            echo '<td>' . "53" . '</td>';
             if (isset($test_tp_2024->index_rb)) {
                 echo '<td>' . $test_tp_2024->index_rb . '</td>';
             } else {
