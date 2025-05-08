@@ -213,32 +213,41 @@ class DashboardController extends Controller
 
     public function rekap_unit(Request $request)
     {
-        $title = "Rekap Pengusulan Unit";
+        $tahun = ($request->get('tahun')) ? $request->get('tahun') : date('Y');
+        $title = "Rekap Pengusulan Unit Tahun " . $tahun;
         if (Auth::User()->level == "admin" || Auth::User()->level == "tpn") {
-            $unit_ZIs = UnitZI::orderBy('instansi_zi_id', 'ASC')->get();
-            $instansi_ZIs = InstansiZI::orderBy('updated_at', 'DESC')->get();
-            $instansi_non_mandiri = InstansiZI::where("instansi_wbk_mandiri", '!=', 1)->orWhereNull('instansi_wbk_mandiri')->where("final", 1)->get();
-            $instansi_non_mandiri_count = $instansi_non_mandiri->count();
-            $instansi_wbk_mandiri = InstansiZI::where("instansi_wbk_mandiri", 1)->where("final", 1)->get();
-            $instansi_wbk_mandiri_count = $instansi_wbk_mandiri->count();
-            $wbbm_count = UnitZI::where('wbbm', 1)->count();
-            $wbk_all_count = UnitZI::where('wbk', 1)->count();
-            $wbk_mandiri_count = UnitZI::whereHas('instansiZI', function ($query) {
-                $query->where('instansi_wbk_mandiri', 1);
-            })->where('wbk', 1)->count();
+            $unit_ZIs = UnitZI::orderBy('instansi_zi_id', 'ASC')
+                ->whereHas('instansiZI', function ($query) use ($tahun) {
+                    $query->where('tahun', $tahun);
+                })->get();
+
+
+            $wbbm_count = UnitZI::where('wbbm', 1)
+                ->whereHas('instansiZI', function ($query) use ($tahun) {
+                    $query->where('tahun', $tahun);
+                })
+                ->count();
+            $wbk_all_count = UnitZI::where('wbk', 1)
+                ->whereHas('instansiZI', function ($query) use ($tahun) {
+                    $query->where('tahun', $tahun);
+                })
+                ->count();
+            $wbk_mandiri_count = UnitZI::where('wbk', 1)
+                ->whereHas('instansiZI', function ($query) use ($tahun) {
+                    $query->where('instansi_wbk_mandiri', 1)->where('tahun', $tahun);
+                })
+                ->count();
             $wbk_non_mandiri_count = $wbk_all_count - $wbk_mandiri_count;
             $total_unit = $wbk_all_count + $wbbm_count;
 
             return view('zi.rekap.rekap_unit', compact(
                 "title",
                 "unit_ZIs",
-                "instansi_ZIs",
-                "instansi_non_mandiri_count",
-                "instansi_wbk_mandiri_count",
                 "wbbm_count",
                 "wbk_mandiri_count",
                 "wbk_non_mandiri_count",
-                'total_unit'
+                'total_unit',
+                'tahun'
             ));
         } else {
             return (URL::to('/'));
@@ -247,32 +256,19 @@ class DashboardController extends Controller
 
     public function rekap_administrasi(Request $request)
     {
-        $title = "Rekap Administrasi Unit";
-        if (Auth::User()->level == "admin" || Auth::User()->level == "tpn") {
-            $unit_ZIs = UnitZI::orderBy('instansi_zi_id', 'ASC')->get();
-            $instansi_ZIs = InstansiZI::orderBy('updated_at', 'DESC')->get();
-            $instansi_non_mandiri = InstansiZI::where("instansi_wbk_mandiri", '!=', 1)->orWhereNull('instansi_wbk_mandiri')->where("final", 1)->get();
-            $instansi_non_mandiri_count = $instansi_non_mandiri->count();
-            $instansi_wbk_mandiri = InstansiZI::where("instansi_wbk_mandiri", 1)->where("final", 1)->get();
-            $instansi_wbk_mandiri_count = $instansi_wbk_mandiri->count();
-            $wbbm_count = UnitZI::where('wbbm', 1)->count();
-            $wbk_all_count = UnitZI::where('wbk', 1)->count();
-            $wbk_mandiri_count = UnitZI::whereHas('instansiZI', function ($query) {
-                $query->where('instansi_wbk_mandiri', 1);
-            })->where('wbk', 1)->count();
-            $wbk_non_mandiri_count = $wbk_all_count - $wbk_mandiri_count;
-            $total_unit = $wbk_all_count + $wbbm_count;
+        $tahun = ($request->get('tahun')) ? $request->get('tahun') : date('Y');
+        $title = "Rekap Administrasi Unit Tahun " . $tahun;
 
+
+        if (Auth::User()->level == "admin" || Auth::User()->level == "tpn") {
+            $unit_ZIs = UnitZI::orderBy('instansi_zi_id', 'ASC')
+                ->whereHas('instansiZI', function ($query) use ($tahun) {
+                    $query->where('tahun', $tahun);
+                })->get();
             return view('zi.rekap.rekap_administrasi', compact(
                 "title",
                 "unit_ZIs",
-                "instansi_ZIs",
-                "instansi_non_mandiri_count",
-                "instansi_wbk_mandiri_count",
-                "wbbm_count",
-                "wbk_mandiri_count",
-                "wbk_non_mandiri_count",
-                'total_unit'
+                'tahun'
             ));
         } else {
             return (URL::to('/'));
@@ -281,35 +277,23 @@ class DashboardController extends Controller
 
     public function rekap_sanggah(Request $request)
     {
-        $title = "Rekap Sanggah Unit";
+        $tahun = ($request->get('tahun')) ? $request->get('tahun') : date('Y');
+        $title = "Rekap Sanggah Unit Tahun " . $tahun;
         if (Auth::User()->level == "admin" || Auth::User()->level == "tpn") {
-            //$unit_ZIs = UnitZI::orderBy('instansi_zi_id','ASC')->get();
-            $unit_ZIs = UnitZI::whereHas('seleksi_administrasi_unit', function ($query) {
-                $query->where('status_final', 0);
-            })->get();
-            $instansi_ZIs = InstansiZI::orderBy('updated_at', 'DESC')->get();
-            $instansi_non_mandiri = InstansiZI::where("instansi_wbk_mandiri", '!=', 1)->orWhereNull('instansi_wbk_mandiri')->where("final", 1)->get();
-            $instansi_non_mandiri_count = $instansi_non_mandiri->count();
-            $instansi_wbk_mandiri = InstansiZI::where("instansi_wbk_mandiri", 1)->where("final", 1)->get();
-            $instansi_wbk_mandiri_count = $instansi_wbk_mandiri->count();
-            $wbbm_count = UnitZI::where('wbbm', 1)->count();
-            $wbk_all_count = UnitZI::where('wbk', 1)->count();
-            $wbk_mandiri_count = UnitZI::whereHas('instansiZI', function ($query) {
-                $query->where('instansi_wbk_mandiri', 1);
-            })->where('wbk', 1)->count();
-            $wbk_non_mandiri_count = $wbk_all_count - $wbk_mandiri_count;
-            $total_unit = $wbk_all_count + $wbbm_count;
+            $unit_ZIs = UnitZI::orderBy('instansi_zi_id', 'ASC')
+                ->whereHas('instansiZI', function ($query) use ($tahun) {
+                    $query->where('tahun', $tahun);
+                })
+                ->whereHas('seleksi_administrasi_unit', function ($query) {
+                    $query->where('status_final', 0);
+                })
+                ->get();
+
 
             return view('zi.rekap.rekap_sanggah', compact(
                 "title",
                 "unit_ZIs",
-                "instansi_ZIs",
-                "instansi_non_mandiri_count",
-                "instansi_wbk_mandiri_count",
-                "wbbm_count",
-                "wbk_mandiri_count",
-                "wbk_non_mandiri_count",
-                'total_unit'
+                "tahun"
             ));
         } else {
             return (URL::to('/'));
@@ -318,40 +302,27 @@ class DashboardController extends Controller
 
     public function rekap_dokumen(Request $request)
     {
-        $title = "Rekap Analisis Dokumen";
+        $tahun = ($request->get('tahun')) ? $request->get('tahun') : date('Y');
+        $title = "Rekap Analisis Dokumen Tahun " . $tahun;
         if (Auth::User()->level == "admin" || Auth::User()->level == "tpn") {
             //$unit_ZIs = UnitZI::orderBy('instansi_zi_id','ASC')->get();
-            $unit_ZIs =  UnitZI::where(function ($q) {
-                $q->whereHas('seleksi_administrasi_unit', function ($query) {
-                    $query->where('status_final', 1);
+            $unit_ZIs = UnitZI::orderBy('instansi_zi_id', 'ASC')
+                ->whereHas('instansiZI', function ($query) use ($tahun) {
+                    $query->where('tahun', $tahun);
                 })
-                    ->orWhereHas('sanggah_unit', function ($query) {
-                        $query->where('status_final', 1);
+                ->where(function ($query) {
+                    $query->whereHas('seleksi_administrasi_unit', function ($q) {
+                        $q->where('status_final', 1);
+                    })->orWhereHas('sanggah_unit', function ($q) {
+                        $q->where('status_final', 1);
                     });
-            })->orderBy('wbk', 'desc')->get();
-            $instansi_ZIs = InstansiZI::orderBy('updated_at', 'DESC')->get();
-            $instansi_non_mandiri = InstansiZI::where("instansi_wbk_mandiri", '!=', 1)->orWhereNull('instansi_wbk_mandiri')->where("final", 1)->get();
-            $instansi_non_mandiri_count = $instansi_non_mandiri->count();
-            $instansi_wbk_mandiri = InstansiZI::where("instansi_wbk_mandiri", 1)->where("final", 1)->get();
-            $instansi_wbk_mandiri_count = $instansi_wbk_mandiri->count();
-            $wbbm_count = UnitZI::where('wbbm', 1)->count();
-            $wbk_all_count = UnitZI::where('wbk', 1)->count();
-            $wbk_mandiri_count = UnitZI::whereHas('instansiZI', function ($query) {
-                $query->where('instansi_wbk_mandiri', 1);
-            })->where('wbk', 1)->count();
-            $wbk_non_mandiri_count = $wbk_all_count - $wbk_mandiri_count;
-            $total_unit = $wbk_all_count + $wbbm_count;
+                })
+                ->get();
 
             return view('zi.rekap.rekap_dokumen', compact(
                 "title",
                 "unit_ZIs",
-                "instansi_ZIs",
-                "instansi_non_mandiri_count",
-                "instansi_wbk_mandiri_count",
-                "wbbm_count",
-                "wbk_mandiri_count",
-                "wbk_non_mandiri_count",
-                'total_unit'
+                'tahun'
             ));
         } else {
             return (URL::to('/'));
@@ -360,35 +331,22 @@ class DashboardController extends Controller
 
     public function rekap_wawancara(Request $request)
     {
-        $title = "Rekap Wawancara";
+        $tahun = ($request->get('tahun')) ? $request->get('tahun') : date('Y');
+        $title = "Rekap Wawancara Tahun " . $tahun;
         if (Auth::User()->level == "admin" || Auth::User()->level == "tpn") {
             //$unit_ZIs = UnitZI::orderBy('instansi_zi_id','ASC')->get();
             $unit_ZIs =  UnitZI::whereHas('analisis_dokumen',  function ($query) {
                 $query->where('status', 1);
-            })->orderBy('instansi_zi_id', 'asc')->orderBy('wbk', 'desc')->get();
-            $instansi_ZIs = InstansiZI::orderBy('updated_at', 'DESC')->get();
-            $instansi_non_mandiri = InstansiZI::where("instansi_wbk_mandiri", '!=', 1)->orWhereNull('instansi_wbk_mandiri')->where("final", 1)->get();
-            $instansi_non_mandiri_count = $instansi_non_mandiri->count();
-            $instansi_wbk_mandiri = InstansiZI::where("instansi_wbk_mandiri", 1)->where("final", 1)->get();
-            $instansi_wbk_mandiri_count = $instansi_wbk_mandiri->count();
-            $wbbm_count = UnitZI::where('wbbm', 1)->count();
-            $wbk_all_count = UnitZI::where('wbk', 1)->count();
-            $wbk_mandiri_count = UnitZI::whereHas('instansiZI', function ($query) {
-                $query->where('instansi_wbk_mandiri', 1);
-            })->where('wbk', 1)->count();
-            $wbk_non_mandiri_count = $wbk_all_count - $wbk_mandiri_count;
-            $total_unit = $wbk_all_count + $wbbm_count;
-
+            })
+                ->whereHas('instansiZI', function ($query) use ($tahun) {
+                    $query->where('tahun', $tahun);
+                })
+                ->get();
             return view('zi.rekap.rekap_wawancara', compact(
                 "title",
                 "unit_ZIs",
-                "instansi_ZIs",
-                "instansi_non_mandiri_count",
-                "instansi_wbk_mandiri_count",
-                "wbbm_count",
-                "wbk_mandiri_count",
-                "wbk_non_mandiri_count",
-                'total_unit'
+                'tahun'
+
             ));
         } else {
             return (URL::to('/'));
@@ -397,35 +355,22 @@ class DashboardController extends Controller
 
     public function rekap_verlap(Request $request)
     {
-        $title = "Rekap Verlap";
+        $tahun = ($request->get('tahun')) ? $request->get('tahun') : date('Y');
+        $title = "Rekap Verlap Tahun " . $tahun;
         if (Auth::User()->level == "admin" || Auth::User()->level == "tpn") {
             //$unit_ZIs = UnitZI::orderBy('instansi_zi_id','ASC')->get();
             $unit_ZIs =  UnitZI::whereHas('wawancara',  function ($query) {
                 $query->where('status', 1);
-            })->orderBy('instansi_zi_id', 'asc')->orderBy('wbk', 'desc')->get();
-            $instansi_ZIs = InstansiZI::orderBy('updated_at', 'DESC')->get();
-            $instansi_non_mandiri = InstansiZI::where("instansi_wbk_mandiri", '!=', 1)->orWhereNull('instansi_wbk_mandiri')->where("final", 1)->get();
-            $instansi_non_mandiri_count = $instansi_non_mandiri->count();
-            $instansi_wbk_mandiri = InstansiZI::where("instansi_wbk_mandiri", 1)->where("final", 1)->get();
-            $instansi_wbk_mandiri_count = $instansi_wbk_mandiri->count();
-            $wbbm_count = UnitZI::where('wbbm', 1)->count();
-            $wbk_all_count = UnitZI::where('wbk', 1)->count();
-            $wbk_mandiri_count = UnitZI::whereHas('instansiZI', function ($query) {
-                $query->where('instansi_wbk_mandiri', 1);
-            })->where('wbk', 1)->count();
-            $wbk_non_mandiri_count = $wbk_all_count - $wbk_mandiri_count;
-            $total_unit = $wbk_all_count + $wbbm_count;
+            })
+                ->whereHas('instansiZI', function ($query) use ($tahun) {
+                    $query->where('tahun', $tahun);
+                })
+                ->get();
 
             return view('zi.rekap.rekap_verlap', compact(
                 "title",
                 "unit_ZIs",
-                "instansi_ZIs",
-                "instansi_non_mandiri_count",
-                "instansi_wbk_mandiri_count",
-                "wbbm_count",
-                "wbk_mandiri_count",
-                "wbk_non_mandiri_count",
-                'total_unit'
+                'tahun'
             ));
         } else {
             return (URL::to('/'));
@@ -433,16 +378,22 @@ class DashboardController extends Controller
     }
     public function rekap_panel(Request $request)
     {
+        $tahun = ($request->get('tahun')) ? $request->get('tahun') : date('Y');
         $title = "Rekap Panel";
         if (Auth::User()->level == "admin" || Auth::User()->level == "tpn") {
             //$unit_ZIs = UnitZI::orderBy('instansi_zi_id','ASC')->get();
             $unit_ZIs =  UnitZI::whereHas('verifikasi_lapangan',  function ($query) {
                 $query->where('status', 1);
-            })->orderBy('instansi_zi_id', 'asc')->orderBy('wbk', 'desc')->get();
+            })
+                ->whereHas('instansiZI', function ($query) use ($tahun) {
+                    $query->where('tahun', $tahun);
+                })
+                ->orderBy('instansi_zi_id', 'asc')->orderBy('wbk', 'desc')->get();
 
             return view('zi.rekap.rekap_panel', compact(
                 "title",
-                "unit_ZIs"
+                "unit_ZIs",
+                'tahun'
             ));
         } else {
             return (URL::to('/'));
@@ -451,13 +402,17 @@ class DashboardController extends Controller
 
     public function rekap_final(Request $request)
     {
-        $title = "Rekap Final";
+        $tahun = ($request->get('tahun')) ? $request->get('tahun') : date('Y');
+        $title = "Rekap Final Tahun " . $tahun;
         if (Auth::User()->level == "admin" || Auth::User()->level == "tpn") {
             //$unit_ZIs = UnitZI::orderBy('instansi_zi_id','ASC')->get();
-            $unit_ZIs =  UnitZI::orderBy('instansi_zi_id', 'asc')->orderBy('wbk', 'desc')->get();
+            $unit_ZIs =  UnitZI::whereHas('instansiZI', function ($query) use ($tahun) {
+                $query->where('tahun', $tahun);
+            })->orderBy('instansi_zi_id', 'asc')->orderBy('wbk', 'desc')->get();
             return view('zi.rekap.rekap_final', compact(
                 "title",
-                "unit_ZIs"
+                "unit_ZIs",
+                "tahun"
             ));
         } else {
             return (URL::to('/'));

@@ -9,7 +9,21 @@
             <h2 class="font-bold text-base mr-auto"> {{$title}} </h2>
         </div>
         <br />
-
+        <div class="col-span-12 grid grid-cols-12 gap-6">
+            <div class="col-span-12 sm:col-span-6 2xl:col-span-6  intro-y">
+                <div class="box p-5 zoom-in">
+                    <div class="flex items-center">
+                        <div class="text-lg font-bold truncate">Tahun :
+                            <select id="filter-tahun">
+                                @for ($i =date('Y'); $i >= 2024; $i--)
+                                <option value="{{$i}}" @if($i==$tahun ) selected @endif>{{$i}}</option>
+                                @endfor
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="lg:col-span-12 p-5 border-b border-slate-200/60">
             <div class="separator mt-5"></div>
             <table id="rekap-zi" class="table table-bordered table-striped" cellspacing="0" width="100%">
@@ -98,7 +112,10 @@
 <script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.html5.min.js"></script>
 <script>
     $(document).ready(function(){
-        
+        $('#filter-tahun').change(function() {
+            var selectedValue = $(this).val();
+            window.location.href = window.location.pathname + '?tahun=' + selectedValue;
+        });
         var empDataTable = $('#rekap-zi').DataTable({
             dom: 'Blfrtip',
             buttons: [

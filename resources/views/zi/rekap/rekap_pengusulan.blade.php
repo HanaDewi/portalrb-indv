@@ -15,8 +15,9 @@
                     <div class="flex items-center">
                         <div class="text-lg font-bold truncate">Tahun :
                             <select id="filter-tahun">
-                                <option value="2025" @if($tahun=='2025' ) selected @endif>2025</option>
-                                <option value="2024" @if($tahun=='2024' ) selected @endif>2024</option>
+                                @for ($i =date('Y'); $i >= 2024; $i--)
+                                <option value="{{$i}}" @if($i==$tahun ) selected @endif>{{$i}}</option>
+                                @endfor
                             </select>
                         </div>
                     </div>
