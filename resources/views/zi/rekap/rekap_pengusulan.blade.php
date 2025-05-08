@@ -12,7 +12,20 @@
         <div class="col-span-12 grid grid-cols-12 gap-6">
             <div class="col-span-12 sm:col-span-6 2xl:col-span-6  intro-y">
                 <div class="box p-5 zoom-in">
-
+                    <div class="flex items-center">
+                        <div class="text-lg font-bold truncate">Tahun :
+                            <select id="filter-tahun">
+                                <option value="2025" @if($tahun=='2025' ) selected @endif>2025</option>
+                                <option value="2024" @if($tahun=='2024' ) selected @endif>2024</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-span-12 grid grid-cols-12 gap-6">
+            <div class="col-span-12 sm:col-span-6 2xl:col-span-6  intro-y">
+                <div class="box p-5 zoom-in">
                     <div class="flex items-center">
                         <div class="w-2/4 flex-none">
                             <div class="text-lg font-bold truncate">Jumlah Instansi</div>
@@ -201,6 +214,13 @@
 <script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.html5.min.js"></script>
 <script>
     $(document).ready(function(){
+
+        
+        $('#filter-tahun').change(function() {
+            var selectedValue = $(this).val();
+            window.location.href = window.location.pathname + '?tahun=' + selectedValue;
+        });
+
         
         var empDataTable = $('#rekap-zi').DataTable({
             dom: 'Blfrtip',

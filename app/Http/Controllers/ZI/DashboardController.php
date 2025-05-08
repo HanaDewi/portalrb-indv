@@ -154,7 +154,7 @@ class DashboardController extends Controller
 
     public function rekap_pengusulan(Request $request)
     {
-        $tahun = date('Y');
+        $tahun = ($request->get('tahun')) ? $request->get('tahun') : date('Y');
         $title = "Rekap Pengusulan Instansi";
         if (Auth::User()->level == "admin" || Auth::User()->level == "tpn") {
             $instansi_ZIs = InstansiZI::where('tahun', $tahun)
@@ -194,7 +194,8 @@ class DashboardController extends Controller
                 "wbbm_count",
                 "wbk_mandiri_count",
                 "wbk_non_mandiri_count",
-                'total_unit'
+                'total_unit',
+                'tahun'
             ));
         } else {
             return (URL::to('/'));
