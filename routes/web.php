@@ -1,10 +1,11 @@
 <?php
 
-use App\Http\Controllers\DataKonversiJawabanController;
-use App\Http\Controllers\DokumenController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\LKEController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\HasilController;
+use App\Http\Controllers\DokumenController;
+use App\Http\Controllers\GenerateController;
 use App\Http\Controllers\ManageTimController;
 use App\Http\Controllers\RBGeneralController;
 use App\Http\Controllers\RBTematikController;
@@ -12,11 +13,11 @@ use App\Http\Controllers\ManageUserController;
 use App\Http\Controllers\MasterDataController;
 use App\Http\Controllers\WebDashboardController;
 use App\Http\Controllers\CapaianOutputController;
-use App\Http\Controllers\ERenaksiRBGeneralController;
 use App\Http\Controllers\DataLKERenaksiController;
-use App\Http\Controllers\LKEController;
 use App\Http\Controllers\RBTematikImportController;
+use App\Http\Controllers\ERenaksiRBGeneralController;
 use App\Http\Controllers\RuangBelajar\AdminController;
+use App\Http\Controllers\DataKonversiJawabanController;
 use App\Http\Controllers\RuangBelajar\DashboardController;
 
 /*
@@ -52,12 +53,12 @@ Route::middleware('auth')->group(function () {
 
     // Web Dashboard
     Route::middleware(['auth'])->group(function () {
-    Route::get('webdashboard/rb-general/rencana-aksi', [WebDashboardController::class, 'rbGeneral'])->name('webdashboard.rb-general');
-    Route::get('webdashboard/rb-general/capaian-output', [CapaianOutputController::class, 'rbGeneralCapaianOutput'])->name('webdashboard.rb-general.capaian-output');
-    Route::get('webdashboard/rb-tematik/rencana-aksi', [WebDashboardController::class, 'rbTematik'])->name('webdashboard.rb-tematik');
-    Route::get('webdashboard/rb-tematik/capaian-output', [CapaianOutputController::class, 'rbTematikCapaianOutput'])->name('webdashboard.rb-tematik.capaian-output');
-    Route::get('webdashboard/rb-tematik/capaian-output/generate/{pilihan}', [CapaianOutputController::class, 'rbTematikCapaianOutputGenerate'])->name('cogenerate');
-    Route::get('webdashboard/hasil-evaluasi', [WebDashboardController::class, 'hasilEvaluasi'])->name('webdashboard.hasil-evaluasi');
+        Route::get('webdashboard/rb-general/rencana-aksi', [WebDashboardController::class, 'rbGeneral'])->name('webdashboard.rb-general');
+        Route::get('webdashboard/rb-general/capaian-output', [CapaianOutputController::class, 'rbGeneralCapaianOutput'])->name('webdashboard.rb-general.capaian-output');
+        Route::get('webdashboard/rb-tematik/rencana-aksi', [WebDashboardController::class, 'rbTematik'])->name('webdashboard.rb-tematik');
+        Route::get('webdashboard/rb-tematik/capaian-output', [CapaianOutputController::class, 'rbTematikCapaianOutput'])->name('webdashboard.rb-tematik.capaian-output');
+        Route::get('webdashboard/rb-tematik/capaian-output/generate/{pilihan}', [CapaianOutputController::class, 'rbTematikCapaianOutputGenerate'])->name('cogenerate');
+        Route::get('webdashboard/hasil-evaluasi', [WebDashboardController::class, 'hasilEvaluasi'])->name('webdashboard.hasil-evaluasi');
     });
     // Kegiatan Utama
     Route::get('/master-data/kegiatan_utama', [MasterDataController::class, 'kegiatan_utama'])->name('kegiatan_utama');
@@ -217,7 +218,7 @@ Route::middleware('auth')->group(function () {
     // Access
     Route::get('/access', [HasilController::class, 'access'])->name('access');
     Route::post('/access/simpan', [HasilController::class, 'access_simpan']);
-    
+
     // Activity Log
     Route::get('/activitylog', [HomeController::class, 'activitylog'])->name('activitylog');
     Route::get('/activitylog/getData', [HomeController::class, 'activitylog_getData']);
@@ -245,11 +246,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/kelola-instansi-tim/getDatas', [ManageTimController::class, 'instansi_tim_evaluasi_getDatas'])->name('getData_instansiTim');
     Route::get('/kelola-instansi-tim/getData/{id}', [ManageTimController::class, 'instansi_tim_getData']);
     Route::post('/kelola-instansi-tim/hapus', [ManageTimController::class, 'kelola_instansi_tim_hapus'])->name('kelola_instansi_tim_hapus');
-    
+
 
 
     #generate indeks RB simple version buat kebutuhan satu data dakip
-    //Route::get('/evaluasi/hasil-2023/', [HasilController::class, 'generate_simple'])->name('generete_rb_simple_version');
+    Route::get('/generate/hasil1data/', [GenerateController::class, 'generate_simple'])->name('generete_rb_simple_version');
+    Route::get('/generate/hasilrb2023/', [GenerateController::class, 'generateRB2023'])->name('generete_rb_simple_version');
 });
 
 
