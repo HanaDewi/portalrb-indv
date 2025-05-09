@@ -259,7 +259,7 @@
                 </div>
             </div>
 
-            <div class="col-span-12 grid grid-cols-12 gap-6">
+            <div>
                 @yield('content')
             </div>
         </div>
