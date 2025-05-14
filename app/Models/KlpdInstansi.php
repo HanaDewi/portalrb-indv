@@ -66,4 +66,9 @@ class KlpdInstansi extends Model
     {
         return $this->name_before ? $this->name . ' [<span class="font-italic text-danger">' . $this->name_before . '</span>]' : $this->name;
     }
+
+    public function idBeforeUsed()
+    {
+        return $this->hasMany(KlpdInstansi::class, 'id_before', 'id');
+    }
 }

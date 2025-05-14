@@ -41,7 +41,16 @@ class HasilController extends Controller
             }
         }
         if (in_array($user->level, ['admin', 'tpn', 'tpm'])) {
-            $instansis = KlpdInstansi::all();
+            $instansis = KlpdInstansi::withTrashed()
+                ->whereIn('group', ['kl', 'provinsi', 'kabupaten'])
+                ->where(function ($query) {
+                    $query->whereNull('deleted_at')
+                        ->orWhere(function ($query) {
+                            $query->whereNotNull('deleted_at')
+                                ->whereDoesntHave('idBeforeUsed');
+                        });
+                })
+                ->get();
             return view('hasil.hasil_semua', compact('instansis'));
         } else {
             return redirect('evaluasi/hasil-2023/' . $user->instansi_id);
