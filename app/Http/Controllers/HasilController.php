@@ -74,7 +74,7 @@ class HasilController extends Controller
                 abort(403);
             }
         }
-        $instansi = KlpdInstansi::find($instansi_id);
+        $instansi = KlpdInstansi::withTrashed()->find($instansi_id);
         $lkeTestTP = LkeTestTp::where("lke_instansi_id", $instansi_id)->first();
         if (!$lkeTestTP) {
             abort('404');
