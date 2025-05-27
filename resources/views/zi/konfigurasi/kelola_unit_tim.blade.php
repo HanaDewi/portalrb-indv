@@ -5,7 +5,23 @@
 @section('content')
 <div class="intro-y col-span-12 lg:col-span-12">
     @include('common.status')
+
     <div class="intro-y box">
+        <div class="col-span-12 grid grid-cols-12 gap-6">
+            <div class="col-span-12 sm:col-span-6 2xl:col-span-6  intro-y">
+                <div class="box p-5 zoom-in">
+                    <div class="flex items-center">
+                        <div class="text-lg font-bold truncate">Tahun :
+                            <select id="filter-tahun">
+                                @for ($i =date('Y'); $i >= 2024; $i--)
+                                <option value="{{$i}}" @if($i==$tahun ) selected @endif>{{$i}}</option>
+                                @endfor
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="flex flex-col sm:flex-row items-center p-5 border-b border-slate-200/60">
             <h2 class="font-medium text-base mr-auto"> Kelola Unit Tim</h2>
             <button class="btn btn-primary shadow-md mr-2 float-right" onclick="tambah();" data-bs-toggle="modal"
@@ -131,6 +147,12 @@
 
 <script>
     $(document).ready(function() {
+
+        $('#filter-tahun').change(function() {
+            var selectedValue = $(this).val();
+            window.location.href = window.location.pathname + '?tahun=' + selectedValue;
+        });
+
         $('.instansiId').select2({
             dropdownParent: $("#modal-kelola-unit-tim")
         });

@@ -5,8 +5,25 @@
 <div class="intro-y col-span-12 lg:col-span-12">
     @include('common.status')
     <div class="intro-y box">
+        <div class="col-span-12 grid grid-cols-12 gap-6">
+            <div class="col-span-12 sm:col-span-6 2xl:col-span-6  intro-y">
+                <div class="box p-5 zoom-in">
+                    <div class="flex items-center">
+                        <div class="text-lg font-bold truncate">Tahun :
+                            <select id="filter-tahun">
+                                @for ($i =date('Y'); $i >= 2024; $i--)
+                                <option value="{{$i}}" @if($i==$tahun ) selected @endif>{{$i}}</option>
+                                @endfor
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="flex flex-col sm:flex-row items-center p-5 border-b border-slate-200/60">
             <h2 class="font-medium text-base mr-auto"> Kelola Tim Evaluasi</h2>
+
+
             <button class="btn btn-danger shadow-md mr-2 float-right" onclick="tambah();" data-bs-toggle="modal"
                 data-bs-target="#modal-kelola-tim"><i class="fa fa-add"></i> &nbsp; Tambah Tim Evaluasi</button>
         </div>
@@ -17,6 +34,7 @@
                     <tr>
                         <th class="w-5">No.</th>
                         <th>Nama Tim</th>
+                        <th>Tahun</th>
                         <th>Keterangan</th>
                         <th class="w-30">Aksi</th>
                     </tr>
@@ -48,6 +66,16 @@
                         </div>
                         <br />
                         <div class="form-group">
+                            <label for="tahun" class="form-label">Tahun <span class="text-danger">*</span></label>
+                            <select name="tahun" id="tahun">
+                                @for ($i =date('Y')-2; $i <= date('Y')+3; $i++) <option value="{{$i}}">
+                                    {{$i}}
+                                    </option>
+                                    @endfor
+                            </select>
+                        </div>
+                        <br />
+                        <div class="form-group">
                             <label for="nama" class="form-label">Keterangan <span class="text-danger">*</span></label>
                             <textarea id="keterangan" name="keterangan" class="form-control" placeholder="Keterangan"
                                 required></textarea>
@@ -72,6 +100,12 @@
 <script src="{{ asset('ext') }}/jquery-inputmask/jquery.inputmask.bundle.js"></script>
 <script>
     $(document).ready(function() {
+        $('#filter-tahun').change(function() {
+            var selectedValue = $(this).val();
+            window.location.href = window.location.pathname + '?tahun=' + selectedValue;
+        });
+
+
         getData();
         modal_kelola_tim = tailwind.Modal.getInstance(document.querySelector("#modal-kelola-tim"));
         
@@ -137,6 +171,7 @@
                 }
             },
             { data: 'nama' },
+            { data: 'tahun' },
             { data: 'keterangan' },
             { 
                 sortable: false, 
@@ -148,7 +183,7 @@
         ],
         columnDefs: [
             {
-                "targets": 3, // your case first column
+                "targets": 4, // kolom dengan indeks ini yang akan diubah menjadi center
                 "className": "text-center",
                 "width": "20%"
             },
@@ -157,7 +192,7 @@
     }); 
 
     function getData() {
-        tim_evaluasi.ajax.url("{{route('getData_timEvaluasi')}}").load(null, false);
+        tim_evaluasi.ajax.url("{{route('getData_timEvaluasi',['tahun'=>$tahun])}}").load(null, false);
     }
 
     function clearForm() {
@@ -179,6 +214,7 @@
         modal_kelola_tim.show();
         $.getJSON("{{url('/zi/kelola-tim/getData')}}/"+id, function(data) {
             $('#nama').val(data.nama);
+            $('#tahun').val(data.tahun).change();
             $('#keterangan').val(data.keterangan);
             $('.saveButton').prop('disabled', false);
         });

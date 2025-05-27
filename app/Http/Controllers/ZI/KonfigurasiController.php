@@ -20,78 +20,92 @@ class KonfigurasiController extends Controller
     public function __construct()
     {
         $this->middleware(function ($request, $next) {
-           // Gita 10059, Wahyu 10060 Rheza  10046 Arina 10053 Canggih 10056 Afif 10048 Auffi 10052
-            if(Auth::User()->level =="admin" || in_array(Auth::User()->id, [10060, 10209, 10060, 10048, 10059, 10046, 10053,
-            10056, 10052])){
-                    return $next($request);     
+            // Gita 10059, Wahyu 10060 Rheza  10046 Arina 10053 Canggih 10056 Afif 10048 Auffi 10052
+            if (Auth::User()->level == "admin" || in_array(Auth::User()->id, [
+                10060,
+                10209,
+                10060,
+                10048,
+                10059,
+                10046,
+                10053,
+                10056,
+                10052
+            ])) {
+                return $next($request);
             }
             abort('403');
         });
     }
 
-    
-       
+
+
 
     public function update_predikat(Request $request)
-    {   
+    {
         $instansi_ZIs = InstansiZI::get();
-        return view('zi.update_predikat', compact("instansi_ZIs") );
+        return view('zi.update_predikat', compact("instansi_ZIs"));
     }
 
     public function edit_predikat($id)
-    {   
+    {
         $instansi_ZI = InstansiZI::find($id);
-        return view('zi.edit_predikat', compact("instansi_ZI") );
+        return view('zi.edit_predikat', compact("instansi_ZI"));
     }
 
-    public function store_predikat(Request $request){
+    public function store_predikat(Request $request)
+    {
         $instansiZI = InstansiZI::find($request->get("pic"));
         $opini_bpk = $request->get("opini_bpk");
         $skor_predikat_sakip = $request->get("skor_sakip");
         $skor_indeks_rb = $request->get("skor_index_rb");
         $skor_maturitas_spip = $request->get("skor_maturitas_spip");
-        $instansiZI->update_predikat_by = Auth::User()->id; 
+        $instansiZI->update_predikat_by = Auth::User()->id;
         $instansiZI->save();
-        return view('zi.edit_predikat', compact("instansi_ZI") );
+        return view('zi.edit_predikat', compact("instansi_ZI"));
     }
 
     public function surat_sanggah_simpan(Request $request)
-    {   
+    {
         $request->validate([
             'file_upload' => 'required|mimes:pdf|max:12024|',
         ]);
 
-        
+
         if ($request->file('file_upload')) {
             $request["file_upload"] = $request->file('file_upload')->store('public/files_surat');
         }
-        
+
         $upload_surat = new FilesUpload;
-        if($request->id_file){
-            $upload_surat = FilesUpload::where('id', $request->id_file)->first();    
+        if ($request->id_file) {
+            $upload_surat = FilesUpload::where('id', $request->id_file)->first();
         }
-        
+
         $upload_surat->file_upload = $request["file_upload"];
         $upload_surat->keterangan =  "Surat sanggah dari deputi";
-        if($upload_surat->save()){
+        if ($upload_surat->save()) {
             return  Redirect::back();
-        }else{
+        } else {
             echo "upload gagal";
         }
     }
     public function kelola_tim(Request $request)
-    {   
-        $instansi_ZIs = InstansiZI::get();
+    {
+        $tahun = ($request->get('tahun')) ? $request->get('tahun') : date('Y');
         $title = "Kelola Tim";
-        return view('zi.konfigurasi.kelola_tim', compact(
-            "instansi_ZIs", "title"
-            ) 
+        return view(
+            'zi.konfigurasi.kelola_tim',
+            compact(
+                "title",
+                "tahun"
+            )
         );
     }
 
     public function tim_evaluasi_getDatas()
     {
-        $datas = TimEvaluasi::latest()->get();
+        $tahun = (request()->get('tahun')) ? request()->get('tahun') : date('Y');
+        $datas = TimEvaluasi::where('tahun', $tahun)->get();
         return response()->json(['data' => $datas]);
     }
 
@@ -101,7 +115,7 @@ class KonfigurasiController extends Controller
         return $data;
     }
     public function kelola_tim_simpan(Request $request)
-    {   
+    {
         $success = false;
         $timEvaluasi = new TimEvaluasi();
         if ($request->tim_id) {
@@ -109,6 +123,7 @@ class KonfigurasiController extends Controller
         }
         $timEvaluasi->nama = $request->nama;
         $timEvaluasi->keterangan = $request->keterangan;
+        $timEvaluasi->tahun = ($request->tahun) ? $request->tahun : date('Y');
         if ($timEvaluasi->save()) {
             $success = true;
         };
@@ -124,34 +139,44 @@ class KonfigurasiController extends Controller
         #    $pesan = 'Tim Evaluasi tidak bisa dihapus, silahkan hapus dulu Anggota yang terhubung dengan Tim Evaluasi ini!';
         #    $success = false;
         #} else {
-            if ($timEvaluasi->delete()) {
-                $success = true;
-            } else {
-                $success = false;
-            }
+        if ($timEvaluasi->delete()) {
+            $success = true;
+        } else {
+            $success = false;
+        }
         #}
         return response()->json(['success' => $success, 'pesan' => $pesan]);
     }
 
     public function kelola_anggota_tim(Request $request)
-    {   
-        $instansi_ZIs = InstansiZI::get();
+    {
+        $tahun = ($request->get('tahun')) ? $request->get('tahun') : date('Y');
         $title = "Kelola Anggota Tim";
-        $teams = TimEvaluasi::get(); 
-        $userTimIds = AnggotaTimEvaluasi::get()->pluck('user_id');
+        $teams = TimEvaluasi::where('tahun')->get();
+        $userTimIds = AnggotaTimEvaluasi::whereHas('tim', function ($query) use ($tahun) {
+            $query->where('tahun', $tahun);
+        })->get()->pluck('user_id');
         //$evaluators = User::where('level', 'tpn')->whereNotIn('id', $userTimIds)->get();
         $evaluators = User::where('level', 'tpn')->get();
-        return view('zi.konfigurasi.kelola_anggota_tim', compact(
-            "instansi_ZIs", "title", "teams","evaluators"
-            ) 
+        return view(
+            'zi.konfigurasi.kelola_anggota_tim',
+            compact(
+                "title",
+                "teams",
+                "evaluators",
+                "tahun",
+            )
         );
     }
 
     public function anggota_tim_evaluasi_getDatas()
     {
-        $anggotaTim = AnggotaTimEvaluasi::latest()->get();
+        $tahun = (request()->get('tahun')) ? request()->get('tahun') : date('Y');
+        $anggotaTim = AnggotaTimEvaluasi::whereHas('tim', function ($query) use ($tahun) {
+            $query->where('tahun', $tahun);
+        })->get();
         $datas = [];
-        foreach($anggotaTim as $anggota){
+        foreach ($anggotaTim as $anggota) {
             $output = array(
                 "id" => $anggota->id,
                 "nama" => $anggota->user->nama,
@@ -168,15 +193,15 @@ class KonfigurasiController extends Controller
         return $data;
     }
     public function kelola_anggota_tim_simpan(Request $request)
-    {   
+    {
         $success = false;
         $anggotaTimEvaluasi = new AnggotaTimEvaluasi();
         if ($request->anggota_tim_id) {
             $timEvaluasi = AnggotaTimEvaluasi::find($request->anggota_tim_id);
         }
-        $userIds= $request->get("userIds"); #ini Untuk baru
-        if($userIds){ #pasti user baru
-            foreach($userIds as $userId){
+        $userIds = $request->get("userIds"); #ini Untuk baru
+        if ($userIds) { #pasti user baru
+            foreach ($userIds as $userId) {
                 $anggotaTimEvaluasi = new AnggotaTimEvaluasi();
                 $anggotaTimEvaluasi->tim_id = $request->timId;
                 $anggotaTimEvaluasi->user_id = $userId;
@@ -197,44 +222,51 @@ class KonfigurasiController extends Controller
         #    $pesan = 'Tim Evaluasi tidak bisa dihapus, silahkan hapus dulu Anggota yang terhubung dengan Tim Evaluasi ini!';
         #    $success = false;
         #} else {
-            if ($anggotaTimEvaluasi->delete()) {
-                $success = true;
-            } else {
-                $success = false;
-            }
+        if ($anggotaTimEvaluasi->delete()) {
+            $success = true;
+        } else {
+            $success = false;
+        }
         #}
         return response()->json(['success' => $success, 'pesan' => $pesan]);
     }
 
     public function kelola_unit_tim(Request $request)
-    {   
-        
+    {
+        $tahun = (request()->get('tahun')) ? request()->get('tahun') : date('Y');
         $title = "Kelola Unit Tim";
-        $teams = TimEvaluasi::get(); 
-        $instansiZIIDs = InstansiZI::where('final',1)->get()->pluck('instansi_id');
+        $teams = TimEvaluasi::get();
+        $instansiZIIDs = InstansiZI::where('tahun', $tahun)->where('final', 1)->get()->pluck('instansi_id');
         #$userTimIds = UnitTimEvaluasi::get()->pluck('unit_id');
         $unitTeams = UnitTimEvaluasi::get();
         $instansiIds = [];
-        $instansiTims= [];
-        foreach($teams as $tim){
+        $instansiTims = [];
+        foreach ($teams as $tim) {
             $instansiTims[$tim->id] = [];
         }
-        foreach($unitTeams as $unittim){
-            $value= $unittim->unit->instansiZI->klpd_instansi->id;
-            if (!in_array($value, $instansiIds))
-            {
-                $instansiIds[] = $value; 
+
+        foreach ($unitTeams as $unittim) {
+            $value = $unittim->unit->instansiZI->klpd_instansi->id;
+            if (!in_array($value, $instansiIds)) {
+                $instansiIds[] = $value;
             }
             $nama_instansi = $unittim->unit->instansiZI->klpd_instansi->name;
-            if(!in_array($nama_instansi, $instansiTims[$unittim->tim_id])){
-                array_push($instansiTims[$unittim->tim_id], $nama_instansi );
+            if (!in_array($nama_instansi, $instansiTims[$unittim->tim_id])) {
+                array_push($instansiTims[$unittim->tim_id], $nama_instansi);
             }
         }
+
         //$instansis = KlpdInstansi::whereIn('id', $instansiZIIDs );->whereNotIn('id', $instansiIds)->get();
-        $instansis = KlpdInstansi::whereIn('id', $instansiZIIDs )->get();
-        return view('zi.konfigurasi.kelola_unit_tim', compact(
-            "instansis", "title", "teams", "instansiTims"
-            ) 
+        $instansis = KlpdInstansi::whereIn('id', $instansiZIIDs)->get();
+        return view(
+            'zi.konfigurasi.kelola_unit_tim',
+            compact(
+                "instansis",
+                "title",
+                "teams",
+                "instansiTims",
+                'tahun'
+            )
         );
     }
 
@@ -242,7 +274,7 @@ class KonfigurasiController extends Controller
     {
         $unitTim = UnitTimEvaluasi::latest()->get();
         $datas = [];
-        foreach($unitTim as $unit){
+        foreach ($unitTim as $unit) {
             $output = array(
                 "id" => $unit->id,
                 "unit" => $unit->unit->nama,
@@ -260,31 +292,31 @@ class KonfigurasiController extends Controller
         return $data;
     }
     public function kelola_unit_tim_simpan(Request $request)
-    {   
+    {
         $success = false;
         $unitTimEvaluasi = new UnitTimEvaluasi();
         if ($request->unit_tim_id) {
             $unitTimEvaluasi = UnitTimEvaluasi::find($request->anggota_tim_id);
         }
-        
+
         $tim_id = $request->timId;
-        $instansiIds= $request->get("instansiIds"); #ini Untuk baru
-        if($instansiIds){
-            foreach($instansiIds as $instansi){
-                $instansiZI = InstansiZI::where("instansi_id", $instansi )->first();
+        $instansiIds = $request->get("instansiIds"); #ini Untuk baru
+        if ($instansiIds) {
+            foreach ($instansiIds as $instansi) {
+                $instansiZI = InstansiZI::where("instansi_id", $instansi)->first();
                 $is_instansiMandiri = $instansiZI->instansi_wbk_mandiri;
                 $unitZIs = $instansiZI->unit_zi;
-                foreach($unitZIs as $unitZI){
+                foreach ($unitZIs as $unitZI) {
                     $unitTimEvaluasi = new UnitTimEvaluasi();
                     $unitTimEvaluasi->tim_id = $tim_id;
                     $unitTimEvaluasi->unit_id = $unitZI->id;
-                    if($is_instansiMandiri){#hanya unit wbbm saja yang di assign ke tim
-                        if($unitZI->wbbm){
+                    if ($is_instansiMandiri) { #hanya unit wbbm saja yang di assign ke tim
+                        if ($unitZI->wbbm) {
                             if ($unitTimEvaluasi->save()) {
                                 $success = true;
                             };
                         }
-                    }else{
+                    } else {
                         if ($unitTimEvaluasi->save()) {
                             $success = true;
                         };
@@ -295,10 +327,5 @@ class KonfigurasiController extends Controller
         return response()->json(['success' => $success]);
     }
 
-    public function kelola_unit_tim_hapus(Request $request)
-    {
-        
-    }
-
-
+    public function kelola_unit_tim_hapus(Request $request) {}
 }

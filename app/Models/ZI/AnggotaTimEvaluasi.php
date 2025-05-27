@@ -15,7 +15,6 @@ class AnggotaTimEvaluasi extends Model
         'id'
     ];
 
-
     public function user()
     {
         return $this->belongsTo(User::class, "user_id");
@@ -25,6 +24,4 @@ class AnggotaTimEvaluasi extends Model
     {
         return $this->belongsTo(TimEvaluasi::class, "tim_id");
     }
-    
-
 }

@@ -122,6 +122,19 @@
                                     <td class="text-center"><a href="#" class="fa fa-edit text-primary ms-2"
                                             data-bs-toggle="modal" data-bs-target="#editSurveiMandiriModal"></a></td>
                                 </tr>
+                                <tr>
+                                    <td><i class="fa fa-envelope-open text-menpan"> </i> &nbsp; Jumlah Unit WBK</td>
+                                    <td colspan=2>{{$instansiZI->jml_wbk}}</td>
+                                </tr>
+                                <tr>
+                                    <td><i class="fa fa-envelope-open text-menpan"> </i> &nbsp; Jumlah Unit WBBM</td>
+                                    <td colspan=2>{{$instansiZI->jml_wbbm}}</td>
+
+                                </tr>
+                                <tr>
+                                    <td><i class="fa fa-envelope-open text-menpan"> </i> &nbsp; Jumlah Unit Total</td>
+                                    <td colspan=2>{{$instansiZI->jml_wbk + $instansiZI->jml_wbbm}}</td>
+                                </tr>
                             </tbody>
                         </table>
                         <br />
@@ -139,7 +152,7 @@
                                     <th>Unit</th>
                                     <th>WBK/WBBM</th>
                                     <th>LKE</th>
-                                    <th>EDIT</th>
+                                    <th>EDIT / DELETE</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -159,7 +172,15 @@
                                     <td style="text-align: center">
                                         <button class="fa fa-edit text-primary ms-2 edit-unit-btn"
                                             data-unit-id="{{ $unit->id }}" data-unit-nama="{{ $unit->nama }}"
-                                            data-unit-lke="{{ $unit->lke }}">
+                                            data-unit-lke="{{ $unit->lke }}" @if($unit->wbbm)
+                                            data-unit-kategori="WBBM"
+                                            @else
+                                            data-unit-kategori="WBK"
+                                            @endif>
+                                        </button>
+                                        /
+                                        <button class="fa fa-trash text-danger ms-2 delete-unit-btn"
+                                            data-unit-id="{{ $unit->id }}" data-unit-nama="{{ $unit->nama }}">
                                         </button>
                                     </td>
                                 </tr>
@@ -171,6 +192,10 @@
                                 @endif
                             </tbody>
                         </table>
+                        <!--<button class=" btn btn-primary tambah-unit-btn" id="btn-tambah-unit-wbk"
+                            style="color:black; background-color:#ffcc08;" data-instansi-id="{{ $instansiZI->id }}">
+                            <i class=" fa fa-plus"></i> Tambah Unit
+                        </button>-->
                         <br />
                         <!-- Modal-->
                         <!-- Modal Edit PIC -->
@@ -355,7 +380,7 @@
                             </div>
                         </div>
 
-                        <!-- Modal Dinamis -->
+                        <!-- Modal Edit Unit Dinamis -->
                         <div class="modal fade" id="editUnitModal" tabindex="-1" aria-labelledby="editUnitModalLabel"
                             aria-hidden="true">
                             <div class="modal-dialog">
@@ -374,6 +399,12 @@
                                                     Unit</label>
                                                 <input type="text" class="form-control" name="nama" id="namaUnit"
                                                     required>
+                                                <label for="namaUnit" class="form-label">Kategori
+                                                </label>
+                                                <select class="form-select" name="kategori" id="kategoriUnit" required>
+                                                    <option value="WBK">WBK</option>
+                                                    <option value="WBBM">WBBM</option>
+                                                </select>
                                                 <label for="lke" class="form-label">Link
                                                     LKE</label>
                                                 <input type="text" class="form-control" name="lke" id="linkLKE"
@@ -388,12 +419,67 @@
                             </div>
                         </div>
 
+                        <!-- Modal Delete Unit Dinamis -->
+                        <div class="modal fade" id="deleteUnitModal" tabindex="-1" aria-labelledby="editUnitModalLabel"
+                            aria-hidden="true">
+                            <div class="modal-dialog">
+                                <form method="POST" id="deleteUnitForm">
+                                    @csrf
+                                    @method('DELETE')
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="deleteUnitModalLabel">Delete Unit </h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Tutup"></button>
+                                        </div>
+                                        <div class="modal-body" style="text-align: left">
+                                            <div class="mb-3" id="deleteUnitMessage">
 
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="submit" class="btn btn-success">Delete</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
 
-
-
-
-
+                        <!-- Modal Tambah Unit  -->
+                        <div class="modal fade" id="tambahUnitModal" tabindex="-1"
+                            aria-labelledby="tambahUnitModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <form method="POST" id="addUnitForm" action="{{ route('unit.add-unit', ['id'=>
+                                    $instansiZI->id]) }}">
+                                    @csrf
+                                    <div class=" modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="tambahUnitModalLabel">Tambah Unit </h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Tutup"></button>
+                                        </div>
+                                        <div class="modal-body" style="text-align: left">
+                                            <div class="mb-3">
+                                                <label for="namaUnit" class="form-label">Nama Unit</label>
+                                                <input type="text" class="form-control" name="nama" id="namaUnit"
+                                                    required>
+                                                <label for="namaUnit" class="form-label">Kategori</label>
+                                                <select class="form-select" name="kategori" id="kategoriUnit" required>
+                                                    <option value="WBK">WBK</option>
+                                                    <option value="WBBM">WBBM</option>
+                                                </select>
+                                                <label for="lke" class="form-label">Link LKE</label>
+                                                <input type="text" class="form-control" name="lke" id="linkLKE"
+                                                    required>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="submit" class="btn btn-success">Simpan</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
                         <!--END MODAL-->
                     </div>
                 </div>
@@ -413,6 +499,7 @@
             const unitId = $(this).data('unit-id');
             const unitName = $(this).data('unit-nama');
             const unitLKE = $(this).data('unit-lke');
+            const unitKategori = $(this).data('unit-kategori');
 
             // Set action form ke route sesuai unit ID
             $('#editUnitForm').attr('action', 'zi/unit/' + unitId + '/update-unit');
@@ -420,10 +507,36 @@
             // Set judul dan nilai input
             $('#editUnitModalLabel').text('Edit Unit - ' + unitName);
             $('#linkLKE').val(unitLKE);
+            $('#kategoriUnit').val(unitKategori).change();
             $('#namaUnit').val(unitName);
 
             // Tampilkan modal
             const modal = new bootstrap.Modal(document.getElementById('editUnitModal'));
+            modal.show();
+        });
+
+        $('.delete-unit-btn').on('click', function() {
+            const unitId = $(this).data('unit-id');
+            const unitName = $(this).data('unit-nama');
+            
+            // Set action form ke route sesuai unit ID
+            $('#deleteUnitForm').attr('action', 'zi/unit/' + unitId + '/delete-unit');
+
+            // Set judul dan nilai input
+            $('#deleteUnitModalLabel').text('Delete Unit - ' + unitName);
+            $('#deleteUnitMessage').text('Apakah anda yakin akan menghapus unit -  ' + unitName + ' ini ?');
+            
+            // Tampilkan modal
+            const modal = new bootstrap.Modal(document.getElementById('deleteUnitModal'));
+            modal.show();
+        });
+
+        $('.tambah-unit-btn').on('click', function() {
+            const unitId = $(this).data('unit-id');
+            const unitName = $(this).data('unit-nama');
+            $('#addUnitModalLabel').text('Delete Unit - ' + unitName);
+            // Tampilkan modal
+            const modal = new bootstrap.Modal(document.getElementById('tambahUnitModal'));
             modal.show();
         });
     });

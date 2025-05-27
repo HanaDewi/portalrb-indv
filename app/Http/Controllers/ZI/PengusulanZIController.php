@@ -267,10 +267,97 @@ class PengusulanZIController extends Controller
         }
         $unit->nama = $request->nama;
         $unit->lke = $request->lke;
+        if ($request->kategori == 'WBK') {
+            if ($unit->wbbm) {
+                $unit->wbk = 1;
+                $unit->wbbm = 0;
+                $instansi->jml_wbk += 1; // menambah jumlah wbk jika unit ini sebelumnya adalah WBBM
+                $instansi->jml_wbbm -= 1; // Mengurangi jumlah WBBM jika unit ini sebelumnya adalah WBBM
+                $instansi->save();
+            }
+        } elseif ($request->kategori == 'WBBM') {
+            if ($unit->wbk) {
+                $unit->wbbm = 1;
+                $unit->wbk = 0;
+                $instansi->jml_wbbm += 1; // Menambah jumlah WBBM jika unit ini sebelumnya adalah WBK
+                $instansi->jml_wbk -= 1; // Mengurangi jumlah WBK jika unit ini sebelumnya adalah WBK
+                $instansi->save();
+            }
+        }
         $unit->save();
 
         return redirect()->back()->with('success', 'Data Unit ' . $unit->name) . ' telah berhasil diperbarui :';
     }
+
+    public function deleteUnit(Request $request, $id)
+    {
+        $unit = UnitZI::findOrFail($id);
+        $instansi = $unit->instansiZI;
+        if (Auth::User()->user_rel->instansi->id != $instansi->instansi_id) {
+            return back()->with('error', 'Anda tidak memiliki izin untuk mengubah data ini.');
+        }
+
+        if ($unit->wbbm) {
+            $instansi->jml_wbbm -= 1; // Mengurangi jumlah WBBM jika unit ini sebelumnya adalah WBBM
+        } elseif ($unit->wbk) {
+            $instansi->jml_wbk -= 1; // Mengurangi jumlah WBK jika unit ini sebelumnya adalah WBK
+        }
+        $instansi->save();
+        $unit->delete();
+
+        return redirect()->back()->with('success', 'Data Unit ' . $unit->name) . ' telah berhasil di hapus :';
+    }
+
+    public function addUnit(Request $request, $id)
+    {
+        $request->validate([
+            'nama' => 'required|string|max:255',
+            'lke' => 'required',
+        ]);
+        $instansiZI = InstansiZI::where('instansi_id', $instansi_id)->where('tahun', date('y'))->first();
+        if (Auth::User()->user_rel->instansi->id != $instansi->instansi_id) {
+            return back()->with('error', 'Anda tidak memiliki izin untuk mengubah data ini.');
+        }
+
+        dd("belum selesai");
+        $unit_zi = new UnitZI;
+        $unit_zi->instansi_zi_id = $instansiZI->id;
+        $unit_zi->nama = $request->nama;
+        $unit_zi->lke = 'http://' . preg_replace('#^.*://#', '', $request->lke);
+        if ($request->get("afirmasi")) {
+            if (array_key_exists($key, $request->get("afirmasi"))) {
+                $unit_zi->afirmasi = $request->get("afirmasi")[$key];
+            }
+        }
+        $unit_zi->wbk = 1;
+        $unit_zi->save();
+        $i++;
+
+
+        $unit->nama = $request->nama;
+        $unit->lke = $request->lke;
+        if ($request->kategori == 'WBK') {
+            if ($unit->wbbm) {
+                $unit->wbk = 1;
+                $unit->wbbm = 0;
+                $instansi->jml_wbk += 1; // menambah jumlah wbk jika unit ini sebelumnya adalah WBBM
+                $instansi->jml_wbbm -= 1; // Mengurangi jumlah WBBM jika unit ini sebelumnya adalah WBBM
+                $instansi->save();
+            }
+        } elseif ($request->kategori == 'WBBM') {
+            if ($unit->wbk) {
+                $unit->wbbm = 1;
+                $unit->wbk = 0;
+                $instansi->jml_wbbm += 1; // Menambah jumlah WBBM jika unit ini sebelumnya adalah WBK
+                $instansi->jml_wbk -= 1; // Mengurangi jumlah WBK jika unit ini sebelumnya adalah WBK
+                $instansi->save();
+            }
+        }
+        $unit->save();
+
+        return redirect()->back()->with('success', 'Data Unit ' . $unit->name) . ' telah berhasil diperbarui :';
+    }
+
 
     public function store_final(Request $request)
     {
