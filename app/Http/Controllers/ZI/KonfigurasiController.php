@@ -152,12 +152,12 @@ class KonfigurasiController extends Controller
     {
         $tahun = ($request->get('tahun')) ? $request->get('tahun') : date('Y');
         $title = "Kelola Anggota Tim";
-        $teams = TimEvaluasi::where('tahun')->get();
+        $teams = TimEvaluasi::where('tahun', $tahun)->get();
         $userTimIds = AnggotaTimEvaluasi::whereHas('tim', function ($query) use ($tahun) {
             $query->where('tahun', $tahun);
         })->get()->pluck('user_id');
-        //$evaluators = User::where('level', 'tpn')->whereNotIn('id', $userTimIds)->get();
-        $evaluators = User::where('level', 'tpn')->get();
+        $evaluators = User::where('level', 'tpn')->whereNotIn('id', $userTimIds)->get();
+        //$evaluators = User::where('level', 'tpn')->get();
         return view(
             'zi.konfigurasi.kelola_anggota_tim',
             compact(
