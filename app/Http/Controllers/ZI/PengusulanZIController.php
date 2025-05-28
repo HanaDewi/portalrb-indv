@@ -128,8 +128,7 @@ class PengusulanZIController extends Controller
         if (Auth::User()->level == "admin" || Auth::User()->level == "tpn") {
             $instansi_id = $request->get("instansi_id");
         } else {
-            $instansi_obj = Auth::User()->user_rel->instansi;
-            $instansi_id = $instansi_obj->id;
+            $instansi_id = Auth::User()->instansi_id;
         }
 
         $instansiZI = InstansiZI::where('instansi_id', $instansi_id)->where('tahun', 2025)->first();
@@ -203,7 +202,7 @@ class PengusulanZIController extends Controller
             $instansi_id = $request->get("instansi_id");
             $instansi_obj = KlpdInstansi::find($instansi_id);
         } else {
-            $instansi_obj = Auth::User()->user_rel->instansi;
+            $instansi_obj = KlpdInstansi::find(Auth::User()->instansi_id);
             $instansi_id = $instansi_obj->id;
         }
         $instansi = $instansi_obj->name;
@@ -364,7 +363,7 @@ class PengusulanZIController extends Controller
         if (Auth::User()->level == "admin" || Auth::User()->level == "tpn") {
             $instansi_id = $request->get("instansi_id");
         } else {
-            $instansi_obj = Auth::User()->user_rel->instansi;
+            $instansi_obj = KlpdInstansi::find(Auth::User()->instansi_id);
             $instansi_id = $instansi_obj->id;
         }
         $instansiZI = InstansiZI::where('instansi_id', $instansi_id)->first();
