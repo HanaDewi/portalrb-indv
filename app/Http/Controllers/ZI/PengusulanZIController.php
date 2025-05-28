@@ -46,7 +46,7 @@ class PengusulanZIController extends Controller
                 #return redirect()->route('dashboard_zi');
             } else {
                 if ($date_now >= $date_tutup_zi) {
-                    return redirect('zi-tinjau?instansi_id=' . Auth::User()->user_rel->instansi->id);
+                    return redirect('zi-tinjau?instansi_id=' . Auth::User()->instansi_id);
                 }
                 if (Auth::User()->user_rel) {
                     $instansi_obj = Auth::User()->user_rel->instansi;
@@ -235,7 +235,7 @@ class PengusulanZIController extends Controller
     public function updateField(Request $request, $id, $field)
     {
         $instansi = InstansiZI::findOrFail($id);
-        if (Auth::User()->user_rel->instansi->id != $instansi->instansi_id) {
+        if (Auth::User()->instansi_id != $instansi->instansi_id) {
             return back()->with('error', 'Anda tidak memiliki izin untuk mengubah data ini.');
         }
         // Pastikan hanya field tertentu yang bisa diubah
@@ -261,7 +261,7 @@ class PengusulanZIController extends Controller
 
         $unit = UnitZI::findOrFail($id);
         $instansi = $unit->instansiZI;
-        if (Auth::User()->user_rel->instansi->id != $instansi->instansi_id) {
+        if (Auth::User()->instansi_id != $instansi->instansi_id) {
             return back()->with('error', 'Anda tidak memiliki izin untuk mengubah data ini.');
         }
         $unit->nama = $request->nama;
@@ -292,7 +292,7 @@ class PengusulanZIController extends Controller
     {
         $unit = UnitZI::findOrFail($id);
         $instansi = $unit->instansiZI;
-        if (Auth::User()->user_rel->instansi->id != $instansi->instansi_id) {
+        if (Auth::User()->instansi_id != $instansi->instansi_id) {
             return back()->with('error', 'Anda tidak memiliki izin untuk mengubah data ini.');
         }
 
@@ -314,7 +314,7 @@ class PengusulanZIController extends Controller
             'lke' => 'required',
         ]);
         $instansiZI = InstansiZI::where('instansi_id', $instansi_id)->where('tahun', date('y'))->first();
-        if (Auth::User()->user_rel->instansi->id != $instansi->instansi_id) {
+        if (Auth::User()->instansi_id != $instansi->instansi_id) {
             return back()->with('error', 'Anda tidak memiliki izin untuk mengubah data ini.');
         }
 
