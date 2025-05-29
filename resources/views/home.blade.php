@@ -7,6 +7,18 @@
         width: 100%;
         height: auto;
     }
+
+    @media only screen and (max-width: 991px) {
+        .demo {
+            display: none;
+        }
+
+        #judul-bawah {
+            display: none;
+        }
+
+
+    }
 </style>
 <script>
     $(document).ready(function() {
@@ -49,7 +61,7 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="section-title text-center pb-35 ">
-                <h2>Portal Reformasi Birokrasi Nasional</h2>
+                <h2 id="judul-bawah">Portal Reformasi Birokrasi Nasional</h2>
                 <span class="line"></span>
             </div>
             <div class="col-lg-4 col-md-6">
