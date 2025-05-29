@@ -192,10 +192,10 @@
                                 @endif
                             </tbody>
                         </table>
-                        <!--<button class=" btn btn-primary tambah-unit-btn" id="btn-tambah-unit-wbk"
+                        <button class=" btn btn-primary tambah-unit-btn" id="btn-tambah-unit-wbk"
                             style="color:black; background-color:#ffcc08;" data-instansi-id="{{ $instansiZI->id }}">
                             <i class=" fa fa-plus"></i> Tambah Unit
-                        </button>-->
+                        </button>
                         <br />
                         <!-- Modal-->
                         <!-- Modal Edit PIC -->
