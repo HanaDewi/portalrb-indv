@@ -319,14 +319,14 @@
                                                     <label style="text-align: center; color:white;">WBK</label>
                                                     <input type="number" name="jml_wbk"
                                                         value="{{($instansiZI->jml_wbk)?$instansiZI->jml_wbk:''}}"
-                                                        id="jmlWBK" onkeyup="hitungTotal();" class="form-control"
+                                                        id="jmlWBK" oninput="hitungTotal();" class="form-control"
                                                         style="text-align: center;">
                                                 </div>
                                                 <div class="col-md-4">
                                                     <label style="text-align: center; color:white;">WBBM</label>
                                                     <input type="number" name="jml_wbbm"
                                                         value="{{($instansiZI->jml_wbbm)?$instansiZI->jml_wbbm:''}}"
-                                                        id="jmlWBBM" onkeyup="hitungTotal()" class="form-control"
+                                                        id="jmlWBBM" oninput="hitungTotal()" class="form-control"
                                                         style="text-align: center;" @if($status_akhir==1 or
                                                         $status_akhir==3 or $status_akhir==4 ) disabled @endif>
                                                 </div>

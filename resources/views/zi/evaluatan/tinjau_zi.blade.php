@@ -467,6 +467,7 @@
                                                 <select class="form-select" name="kategori" id="kategoriUnit" required>
                                                     <option value="WBK">WBK</option>
                                                     <option value="WBBM">WBBM</option>
+                                                    <option value="WBK-AFIRMASI">WBK AFIRMASI</option>
                                                 </select>
                                                 <label for="lke" class="form-label">Link LKE</label>
                                                 <input type="text" class="form-control" name="lke" id="linkLKE"

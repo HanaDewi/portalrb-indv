@@ -313,48 +313,39 @@ class PengusulanZIController extends Controller
             'nama' => 'required|string|max:255',
             'lke' => 'required',
         ]);
-        $instansiZI = InstansiZI::where('instansi_id', $instansi_id)->where('tahun', date('y'))->first();
-        if (Auth::User()->instansi_id != $instansi->instansi_id) {
+        $instansiZI = InstansiZI::where('instansi_id', $id)->first();
+        if (Auth::User()->instansi_id != $instansiZI->instansi_id) {
             return back()->with('error', 'Anda tidak memiliki izin untuk mengubah data ini.');
         }
 
-        dd("belum selesai");
         $unit_zi = new UnitZI;
-        $unit_zi->instansi_zi_id = $instansiZI->id;
+        $unit_zi->instansi_zi_id = $id;
         $unit_zi->nama = $request->nama;
         $unit_zi->lke = 'http://' . preg_replace('#^.*://#', '', $request->lke);
-        if ($request->get("afirmasi")) {
-            if (array_key_exists($key, $request->get("afirmasi"))) {
-                $unit_zi->afirmasi = $request->get("afirmasi")[$key];
-            }
-        }
-        $unit_zi->wbk = 1;
-        $unit_zi->save();
-        $i++;
-
-
-        $unit->nama = $request->nama;
-        $unit->lke = $request->lke;
         if ($request->kategori == 'WBK') {
-            if ($unit->wbbm) {
-                $unit->wbk = 1;
-                $unit->wbbm = 0;
-                $instansi->jml_wbk += 1; // menambah jumlah wbk jika unit ini sebelumnya adalah WBBM
-                $instansi->jml_wbbm -= 1; // Mengurangi jumlah WBBM jika unit ini sebelumnya adalah WBBM
-                $instansi->save();
+            //Cek apakah bisa menjadi WBK
+            if ($instansiZI->syarat_akhir_wbk == "LULUS") {
+                $unit_zi->wbk = 1;
+                $instansiZI->jml_wbk += 1; // menambah jumlah wbk jika unit ini adalah WBK    
+            } else {
+                return redirect()->back()->with('error', 'Data Unit ' . $unit_zi->name) . ' gagal untuk ditambah karena anda tidak bisa mengusulkan WBK, Pilih WBK AFIRMASI untuk mendaftarkan unit-unit yang berada pada kategori afirmasi :';
             }
         } elseif ($request->kategori == 'WBBM') {
-            if ($unit->wbk) {
-                $unit->wbbm = 1;
-                $unit->wbk = 0;
-                $instansi->jml_wbbm += 1; // Menambah jumlah WBBM jika unit ini sebelumnya adalah WBK
-                $instansi->jml_wbk -= 1; // Mengurangi jumlah WBK jika unit ini sebelumnya adalah WBK
-                $instansi->save();
+            //Cek apakah bisa menjadi WBBM
+            if ($instansiZI->syarat_akhir_wbk == "LULUS") {
+                $unit_zi->wbbm = 1;
+                $instansiZI->jml_wbbm += 1; // menambah jumlah wbbm jika unit ini adalah WBBM
+            } else {
+                return redirect()->back()->with('error', 'Data Unit ' . $unit_zi->name) . ' gagal untuk ditambah karena anda tidak bisa mengusulkan WBBM, Pilih WBK AFIRMASI untuk mendaftarkan unit-unit yang berada pada kategori afirmasi :';
             }
+        } elseif ($request->kategori == 'WBK-AFIRMASI') {
+            $unit_zi->wbk = 1;
+            $instansiZI->jml_wbk += 1; // menambah jumlah wbk jika unit ini adalah ZI
+            $unit_zi->afirmasi = 1; // Menandai unit ini sebagai afirmasi
         }
-        $unit->save();
+        $unit_zi->save();
 
-        return redirect()->back()->with('success', 'Data Unit ' . $unit->name) . ' telah berhasil diperbarui :';
+        return redirect()->back()->with('success', 'Data Unit ' . $unit_zi->name) . ' telah berhasil ditambah :';
     }
 
 
