@@ -83,44 +83,58 @@
                                 <tr>
                                     <td><i class="fa fa-user text-menpan"></i> &nbsp; PIC</td>
                                     <td>{{$instansiZI->pic}}</td>
-                                    <td class="text-center"><a href="#" class="fa fa-edit text-primary ms-2"
-                                            data-bs-toggle="modal" data-bs-target="#editPICModal"></a></td>
+                                    <td class="text-center">
+                                        <!--<a href="#" class="fa fa-edit text-primary ms-2"
+                                            data-bs-toggle="modal" data-bs-target="#editPICModal"></a>-->
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td><i class="fa fa-envelope text-menpan"></i> &nbsp; Email</td>
                                     <td>{{$instansiZI->email}}</td>
-                                    <td class="text-center"><a href="#" class="fa fa-edit text-primary ms-2"
-                                            data-bs-toggle="modal" data-bs-target="#editEmailModal"></a></td>
+                                    <td class="text-center">
+                                        <!--<a href="#" class="fa fa-edit text-primary ms-2"
+                                            data-bs-toggle="modal" data-bs-target="#editEmailModal"></a>-->
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td><i class="fa fa-book text-menpan"></i> &nbsp; Nomor Kontak</td>
                                     <td>{{$instansiZI->nomor_kontak}}</td>
-                                    <td class="text-center"><a href="#" class="fa fa-edit text-primary ms-2"
-                                            data-bs-toggle="modal" data-bs-target="#editHpModal"></a></td>
+                                    <td class="text-center">
+                                        <!--<a href="#" class="fa fa-edit text-primary ms-2"
+                                            data-bs-toggle="modal" data-bs-target="#editHpModal"></a>-->
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td><i class="fa fa-envelope-open text-menpan"></i> &nbsp; Surat Usulan</td>
                                     <td>{{$instansiZI->surat_usulan}}</td>
-                                    <td class="text-center"><a href="#" class="fa fa-edit text-primary ms-2"
-                                            data-bs-toggle="modal" data-bs-target="#editSuratUsulanModal"></a></td>
+                                    <td class="text-center">
+                                        <!--<a href="#" class="fa fa-edit text-primary ms-2"
+                                            data-bs-toggle="modal" data-bs-target="#editSuratUsulanModal"></a>-->
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td><i class="fa fa-envelope-open text-menpan"> </i> &nbsp; SPTJM</td>
                                     <td>{{$instansiZI->sptjm}}</td>
-                                    <td class="text-center"><a href="#" class="fa fa-edit text-primary ms-2"
-                                            data-bs-toggle="modal" data-bs-target="#editSptjmModal"></a></td>
+                                    <td class="text-center">
+                                        <!--<a href="#" class="fa fa-edit text-primary ms-2"
+                                            data-bs-toggle="modal" data-bs-target="#editSptjmModal"></a>-->
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td><i class="fa fa-envelope-open text-menpan"> </i> &nbsp; TLHP</td>
                                     <td>{{$instansiZI->tlhp}}</td>
-                                    <td class="text-center"><a href="#" class="fa fa-edit text-primary ms-2"
-                                            data-bs-toggle="modal" data-bs-target="#editTlhpModal"></a></td>
+                                    <td class="text-center">
+                                        <!--<a href="#" class="fa fa-edit text-primary ms-2"
+                                            data-bs-toggle="modal" data-bs-target="#editTlhpModal"></a>-->
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td><i class="fa fa-envelope-open text-menpan"> </i> &nbsp; Survei Mandiri</td>
                                     <td>{{$instansiZI->survei_mandiri}}</td>
-                                    <td class="text-center"><a href="#" class="fa fa-edit text-primary ms-2"
-                                            data-bs-toggle="modal" data-bs-target="#editSurveiMandiriModal"></a></td>
+                                    <td class="text-center">
+                                        <!--<a href="#" class="fa fa-edit text-primary ms-2"
+                                            data-bs-toggle="modal" data-bs-target="#editSurveiMandiriModal"></a>-->
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td><i class="fa fa-envelope-open text-menpan"> </i> &nbsp; Jumlah Unit WBK</td>
@@ -170,6 +184,7 @@
                                     </td>
                                     <td style="text-align: left">{{$unit->lke}}</td>
                                     <td style="text-align: center">
+                                        <!--
                                         <button class="fa fa-edit text-primary ms-2 edit-unit-btn"
                                             data-unit-id="{{ $unit->id }}" data-unit-nama="{{ $unit->nama }}"
                                             data-unit-lke="{{ $unit->lke }}" @if($unit->wbbm)
@@ -182,6 +197,7 @@
                                         <button class="fa fa-trash text-danger ms-2 delete-unit-btn"
                                             data-unit-id="{{ $unit->id }}" data-unit-nama="{{ $unit->nama }}">
                                         </button>
+                                    -->
                                     </td>
                                 </tr>
                                 @endforeach
@@ -192,10 +208,10 @@
                                 @endif
                             </tbody>
                         </table>
-                        <button class=" btn btn-primary tambah-unit-btn" id="btn-tambah-unit-wbk"
+                        <!--<button class=" btn btn-primary tambah-unit-btn" id="btn-tambah-unit-wbk"
                             style="color:black; background-color:#ffcc08;" data-instansi-id="{{ $instansiZI->id }}">
                             <i class=" fa fa-plus"></i> Tambah Unit
-                        </button>
+                        </button>-->
                         <br />
                         <!-- Modal-->
                         <!-- Modal Edit PIC -->
