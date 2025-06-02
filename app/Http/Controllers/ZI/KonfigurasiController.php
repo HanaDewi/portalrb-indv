@@ -277,13 +277,14 @@ class KonfigurasiController extends Controller
     public function unit_tim_evaluasi_getDatas()
     {
         $tahun = (request()->get('tahun')) ? request()->get('tahun') : date('Y');
-        if ($tahun) {
-            $unitTimEvaluasi = UnitTimEvaluasi::whereHas('tim', function ($query) use ($tahun) {
-                $query->where('tahun', $tahun);
-            })->get();
-        } else {
-            $unitTimEvaluasi = UnitTimEvaluasi::all();
-        }
+
+        $unitTimEvaluasi = UnitTimEvaluasi::whereHas('tim', function ($query) use ($tahun) {
+            $query->where('tahun', $tahun);
+        })->get();
+
+
+
+
         $datas = [];
         foreach ($unitTimEvaluasi as $unit) {
             $output = array(
@@ -294,6 +295,7 @@ class KonfigurasiController extends Controller
             );
             $datas[] = $output;
         };
+
         return response()->json(['data' => $datas]);
     }
 
@@ -304,17 +306,13 @@ class KonfigurasiController extends Controller
     }
     public function kelola_unit_tim_simpan(Request $request)
     {
+        $tahun = ($request->get('tahun')) ? $request->get('tahun') : date('Y');
         $success = false;
-        $unitTimEvaluasi = new UnitTimEvaluasi();
-        if ($request->unit_tim_id) {
-            $unitTimEvaluasi = UnitTimEvaluasi::find($request->anggota_tim_id);
-        }
-
         $tim_id = $request->timId;
-        $instansiIds = $request->get("instansiIds"); #ini Untuk baru
+        $instansiIds = $request->get("instansiIds");
         if ($instansiIds) {
             foreach ($instansiIds as $instansi) {
-                $instansiZI = InstansiZI::where("instansi_id", $instansi)->first();
+                $instansiZI = InstansiZI::where("instansi_id", $instansi)->where('tahun', $tahun)->first();
                 $is_instansiMandiri = $instansiZI->instansi_wbk_mandiri;
                 $unitZIs = $instansiZI->unit_zi;
                 foreach ($unitZIs as $unitZI) {
@@ -334,6 +332,9 @@ class KonfigurasiController extends Controller
                     }
                 }
             }
+        } else {
+            $success = false;
+            return response()->json(['success' => $success, 'pesan' => 'Tidak ada instansi yang dipilih']);
         }
         return response()->json(['success' => $success]);
     }

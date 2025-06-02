@@ -81,12 +81,13 @@
         <div class="modal-content">
             <!-- BEGIN: Modal Header -->
             <div class="modal-header text-white font-bold" style="background: #DC2626">
-                <h2 class="fw-medium fs-base me-auto" id="title">Tambah Anggota Tim</h2>
+                <h2 class="fw-medium fs-base me-auto" id="title">Tambah Unit Tim</h2>
             </div> <!-- END: Modal Header -->
             <!-- BEGIN: Modal Body -->
-            <form action="{{ route('kelola_unit_tim_zi_simpan') }}" id="form-kelola-unit-tim" method="post">
+            <form action="{{ route('kelola_unit_tim_zi_simpan', ['tahun'=>$tahun]) }}" id="form-kelola-unit-tim"
+                method="post">
                 @csrf
-                <input type="hidden" name="unit_tim_id" id="anggota_tim_id">
+                <input type="hidden" name="unit_tim_id" id="unit_tim_id">
                 <div class="modal-body grid columns-12 gap-4 gap-y-3">
                     <div class="g-col-12">
                         <div class="form-group">
@@ -263,7 +264,7 @@
         $('#form-kelola-unit-tim').trigger('reset');
         $("#instansiId").val([]).change();
         $("#namaTim").select2("val", "");
-        $('#anggota_tim_id').val('');
+        $('#unit_tim_id').val('');
     }
 
     function tambah() {
