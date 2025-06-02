@@ -235,10 +235,12 @@ class KonfigurasiController extends Controller
     {
         $tahun = (request()->get('tahun')) ? request()->get('tahun') : date('Y');
         $title = "Kelola Unit Tim";
-        $teams = TimEvaluasi::get();
+        $teams = TimEvaluasi::where('tahun', $tahun)->get();
+        $team_ids = $teams->pluck('id')->toArray();
         $instansiZIIDs = InstansiZI::where('tahun', $tahun)->where('final', 1)->get()->pluck('instansi_id');
         #$userTimIds = UnitTimEvaluasi::get()->pluck('unit_id');
-        $unitTeams = UnitTimEvaluasi::get();
+        //list semua unit yang telah terbinding ke tim evaluasi
+        $unitTeams = UnitTimEvaluasi::whereIn('tim_id', $team_ids)->get();
         $instansiIds = [];
         $instansiTims = [];
         foreach ($teams as $tim) {
@@ -256,8 +258,10 @@ class KonfigurasiController extends Controller
             }
         }
 
+
         //$instansis = KlpdInstansi::whereIn('id', $instansiZIIDs );->whereNotIn('id', $instansiIds)->get();
         $instansis = KlpdInstansi::whereIn('id', $instansiZIIDs)->get();
+
         return view(
             'zi.konfigurasi.kelola_unit_tim',
             compact(
@@ -272,9 +276,16 @@ class KonfigurasiController extends Controller
 
     public function unit_tim_evaluasi_getDatas()
     {
-        $unitTim = UnitTimEvaluasi::latest()->get();
+        $tahun = (request()->get('tahun')) ? request()->get('tahun') : date('Y');
+        if ($tahun) {
+            $unitTimEvaluasi = UnitTimEvaluasi::whereHas('tim', function ($query) use ($tahun) {
+                $query->where('tahun', $tahun);
+            })->get();
+        } else {
+            $unitTimEvaluasi = UnitTimEvaluasi::all();
+        }
         $datas = [];
-        foreach ($unitTim as $unit) {
+        foreach ($unitTimEvaluasi as $unit) {
             $output = array(
                 "id" => $unit->id,
                 "unit" => $unit->unit->nama,

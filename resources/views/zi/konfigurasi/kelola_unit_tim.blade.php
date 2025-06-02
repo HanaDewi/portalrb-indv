@@ -256,7 +256,7 @@
     }); 
 
     function getData() {
-        anggota_tim_evaluasi.ajax.url("{{route('getData_unitTimEvaluasi')}}").load(null, false);
+        anggota_tim_evaluasi.ajax.url("{{route('getData_unitTimEvaluasi', ['tahun'=>$tahun])}}").load(null, false);
     }
 
     function clearForm() {
