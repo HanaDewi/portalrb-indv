@@ -24,12 +24,8 @@ class KonfigurasiController extends Controller
             if (Auth::User()->level == "admin" || in_array(Auth::User()->id, [
                 10060,
                 10209,
-                10060,
-                10048,
                 10059,
-                10046,
                 10053,
-                10056,
                 10052
             ])) {
                 return $next($request);
@@ -37,9 +33,6 @@ class KonfigurasiController extends Controller
             abort('403');
         });
     }
-
-
-
 
     public function update_predikat(Request $request)
     {
@@ -339,5 +332,17 @@ class KonfigurasiController extends Controller
         return response()->json(['success' => $success]);
     }
 
-    public function kelola_unit_tim_hapus(Request $request) {}
+    public function kelola_unit_tim_hapus(Request $request)
+    {
+        $pesan = '';
+        $success = true;
+        $unitTimEvaluasi = UnitTimEvaluasi::find($request->id);
+        if ($unitTimEvaluasi->delete()) {
+            $success = true;
+        } else {
+            $success = false;
+        }
+        #}
+        return response()->json(['success' => $success, 'pesan' => $pesan]);
+    }
 }
