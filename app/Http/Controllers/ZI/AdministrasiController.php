@@ -13,6 +13,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Models\ZI\SeleksiAdministrasiUnit;
 use App\Models\ZI\SeleksiAdministrasiInstansi;
+use App\Models\ZI\TahapSeleksiZI;
 
 class AdministrasiController extends Controller
 {
@@ -164,6 +165,8 @@ class AdministrasiController extends Controller
     {
         $title = "Seleksi Administrasi";
         $instansi_ZI = InstansiZI::find($id);
+        $tahun = $instansi_ZI->tahun;
+        $tahap_seleksi = TahapSeleksiZI::where('tahap_seleksi', 'Seleksi Administrasi')->where('tahun', $tahun)->first();
         $unit_ZIs = UnitZI::where("instansi_zi_id", $id)->orderBy('wbk', 'desc')->get();
         $seleksiAdministrasiInstansi = SeleksiAdministrasiInstansi::where('instansi_zi_id', $id)->first();
         $valSuratUsulan = ($seleksiAdministrasiInstansi) ? $seleksiAdministrasiInstansi->surat_usulan : Null;
@@ -178,15 +181,24 @@ class AdministrasiController extends Controller
                 }
             }
         }
+
+
         $status = "Tidak Berhak";
         // DIDISABLE BIAR SEMUA ORANG TIDAK BISA EDIT
-        // if(Auth::User()->userTimZI){                   
-        //     foreach(Auth::User()->userTimZI as $anggotaTim){
-        //         if(in_array($anggotaTim->tim_id,$tim_ids)){
-        //             $status = "Berhak" ;
-        //         }
-        //     }
-        // }
+
+        if (Auth::User()->userTimZI) {
+            $date_now = new \DateTime();
+            $date_buka    = new \DateTime($tahap_seleksi->tanggal_mulai);
+            $date_tutup  = new \DateTime($tahap_seleksi->tanggal_selesai);
+            if ($date_now >= $date_buka && $date_now <= $date_tutup) {
+                foreach (Auth::User()->userTimZI as $anggotaTim) {
+                    if (in_array($anggotaTim->tim_id, $tim_ids)) {
+                        $status = "Berhak";
+                    }
+                }
+            }
+        }
+
         return view('zi.seleksi_administrasi.evaluasi', compact(
             "title",
             "instansi_ZI",
@@ -202,110 +214,122 @@ class AdministrasiController extends Controller
 
     public function evaluasi_administrasi_simpan(Request $request)
     {
+
         $instansiZIid = $request->get('instansiZIId');
         $instansi_ZI = InstansiZI::find($instansiZIid);
-        $tim_ids = [];
-        foreach ($instansi_ZI->unit_zi as $unit_zi) {
-            foreach ($unit_zi->unit_tim as $unitTim) {
-                if (!in_array($unitTim->tim_id, $tim_ids)) {
-                    array_push($tim_ids, $unitTim->tim_id);
+        $tahun = $instansi_ZI->tahun;
+        $tahap_seleksi = TahapSeleksiZI::where('tahap_seleksi', 'Seleksi Administrasi')->where('tahun', $tahun)->first();
+        if (!$tahap_seleksi) {
+            dd("Tahap Seleksi untuk tahun $tahun belum ditentukan. Silakan hubungi admin.");
+        }
+        $date_now = new \DateTime();
+        $date_buka    = new \DateTime($tahap_seleksi->tanggal_mulai);
+        $date_tutup  = new \DateTime($tahap_seleksi->tanggal_selesai);
+        if ($date_now >= $date_buka && $date_now <= $date_tutup) {
+            $tim_ids = [];
+            foreach ($instansi_ZI->unit_zi as $unit_zi) {
+                foreach ($unit_zi->unit_tim as $unitTim) {
+                    if (!in_array($unitTim->tim_id, $tim_ids)) {
+                        array_push($tim_ids, $unitTim->tim_id);
+                    }
                 }
             }
-        }
-        $status = "Tidak Berhak";
-        // DI LOCK BIAR SEMUA ORANGG TIDAK BISA SIMPAN
-        // if(Auth::User()->userTimZI){                   
-        //     foreach(Auth::User()->userTimZI as $anggotaTim){
-        //         if(in_array($anggotaTim->tim_id,$tim_ids)){
-        //             $status = "Berhak" ;
-        //         }
-        //     }
-        // }
-        if ($status == "Tidak Berhak") {
-            abort('403');
-        }
+            $status = "Tidak Berhak";
+            //DI LOCK BIAR SEMUA ORANGG TIDAK BISA SIMPAN
+            if (Auth::User()->userTimZI) {
+                foreach (Auth::User()->userTimZI as $anggotaTim) {
+                    if (in_array($anggotaTim->tim_id, $tim_ids)) {
+                        $status = "Berhak";
+                    }
+                }
+            }
+            if ($status == "Tidak Berhak") {
+                abort('403');
+            }
 
-        $suratUsulan = $request->get('suratUsulan');
-        $catatanSuratUsulan = $request->get('catatanSuratUsulan');
-        $sptjm = $request->get('sptjm');
-        $catatanSptjm = $request->get('catatanSptjm');
-        $seleksiAdministrasiInstansi = SeleksiAdministrasiInstansi::where('instansi_zi_id', $instansiZIid)->first();
-        if (!$seleksiAdministrasiInstansi) {
-            $seleksiAdministrasiInstansi = new SeleksiAdministrasiInstansi();
-        }
-        $seleksiAdministrasiInstansi->instansi_zi_id = $instansiZIid;
-        $seleksiAdministrasiInstansi->surat_usulan = $suratUsulan;
-        $seleksiAdministrasiInstansi->catatan_surat_usulan = $catatanSuratUsulan;
-        $seleksiAdministrasiInstansi->sptjm = $sptjm;
-        $seleksiAdministrasiInstansi->catatan_sptjm = $catatanSptjm;
-        if ($seleksiAdministrasiInstansi->save()) {
-            foreach ($instansi_ZI->unit_zi as $unit_zi) {
-                $seleksiAdministrasiUnit = SeleksiAdministrasiUnit::where('unit_zi_id', $unit_zi->id)->first();
-                //pakai if karena kalau ada beberapa user berbarengan ngisinya, biar yang masih kosong gak ngereplace yg sudah terisi sebelumnya
-                if (!$seleksiAdministrasiUnit) {
-                    $seleksiAdministrasiUnit = new SeleksiAdministrasiUnit();
-                }
-                $seleksiAdministrasiUnit->unit_zi_id = $unit_zi->id;
-                if (!is_null($request->get('status-lke-' . $unit_zi->id))) {
-                    $seleksiAdministrasiUnit->status_lke = $request->get('status-lke-' . $unit_zi->id);
-                }
-                if (!is_null($request->get('catatan-lke-' . $unit_zi->id))) {
-                    $seleksiAdministrasiUnit->catatan_lke = $request->get('catatan-lke-' . $unit_zi->id);
-                }
-                if (!is_null($request->get('status-2wbk-' . $unit_zi->id))) {
-                    $seleksiAdministrasiUnit->status_2wbk = $request->get('status-2wbk-' . $unit_zi->id);
-                }
-                if (!is_null($request->get('catatan-2wbk-' . $unit_zi->id))) {
-                    $seleksiAdministrasiUnit->catatan_2wbk = $request->get('catatan-2wbk-' . $unit_zi->id);
-                }
-                if (!is_null($request->get('tlhp-' . $unit_zi->id))) {
-                    $seleksiAdministrasiUnit->status_tlhp = $request->get('tlhp-' . $unit_zi->id);
-                }
-                if (!is_null($request->get('catatanTlhp-' . $unit_zi->id))) {
-                    $seleksiAdministrasiUnit->catatan_tlhp = $request->get('catatanTlhp-' . $unit_zi->id);
-                }
-                if (!is_null($request->get('surveiMandiri-' . $unit_zi->id))) {
-                    $seleksiAdministrasiUnit->status_survei_mandiri = $request->get('surveiMandiri-' . $unit_zi->id);
-                }
-                if (!is_null($request->get('catatanSurveiMandiri-' . $unit_zi->id))) {
-                    $seleksiAdministrasiUnit->catatan_survei_mandiri = $request->get('catatanSurveiMandiri-' . $unit_zi->id);
-                }
-                $seleksiAdministrasiUnit->updated_by = Auth::User()->id;
-                $seleksiAdministrasiUnit->save();
-
-
-
-                if (
-                    !is_null($seleksiAdministrasiInstansi->surat_usulan) &&
-                    !is_null($seleksiAdministrasiInstansi->sptjm) &&
-                    !is_null($seleksiAdministrasiUnit->status_lke) &&
-                    !is_null($seleksiAdministrasiUnit->status_tlhp) &&
-                    !is_null($seleksiAdministrasiUnit->status_survei_mandiri)
-                ) {
-                    $status_final = 1;
-                    ($seleksiAdministrasiInstansi->surat_usulan == 0) ? $status_final = 0 : Null;
-                    ($seleksiAdministrasiInstansi->sptjm == 0) ? $status_final = 0 : Null;
-                    ($seleksiAdministrasiUnit->status_lke == 0) ? $status_final = 0 : Null;
-                    ($seleksiAdministrasiUnit->status_tlhp == 0) ? $status_final = 0 : Null;
-                    ($seleksiAdministrasiUnit->status_survei_mandiri == 0) ? $status_final = 0 : Null;
-                    if ($unit_zi->wbbm) {
-                        if (!is_null($seleksiAdministrasiUnit->status_2wbk)) {
-                            ($seleksiAdministrasiUnit->status_2wbk == 0) ? $status_final = 0 : Null;
+            $suratUsulan = $request->get('suratUsulan');
+            $catatanSuratUsulan = $request->get('catatanSuratUsulan');
+            $sptjm = $request->get('sptjm');
+            $catatanSptjm = $request->get('catatanSptjm');
+            $seleksiAdministrasiInstansi = SeleksiAdministrasiInstansi::where('instansi_zi_id', $instansiZIid)->first();
+            if (!$seleksiAdministrasiInstansi) {
+                $seleksiAdministrasiInstansi = new SeleksiAdministrasiInstansi();
+            }
+            $seleksiAdministrasiInstansi->instansi_zi_id = $instansiZIid;
+            $seleksiAdministrasiInstansi->surat_usulan = $suratUsulan;
+            $seleksiAdministrasiInstansi->catatan_surat_usulan = $catatanSuratUsulan;
+            $seleksiAdministrasiInstansi->sptjm = $sptjm;
+            $seleksiAdministrasiInstansi->catatan_sptjm = $catatanSptjm;
+            if ($seleksiAdministrasiInstansi->save()) {
+                foreach ($instansi_ZI->unit_zi as $unit_zi) {
+                    $seleksiAdministrasiUnit = SeleksiAdministrasiUnit::where('unit_zi_id', $unit_zi->id)->first();
+                    //pakai if karena kalau ada beberapa user berbarengan ngisinya, biar yang masih kosong gak ngereplace yg sudah terisi sebelumnya
+                    if (!$seleksiAdministrasiUnit) {
+                        $seleksiAdministrasiUnit = new SeleksiAdministrasiUnit();
+                    }
+                    $seleksiAdministrasiUnit->unit_zi_id = $unit_zi->id;
+                    if (!is_null($request->get('status-lke-' . $unit_zi->id))) {
+                        $seleksiAdministrasiUnit->status_lke = $request->get('status-lke-' . $unit_zi->id);
+                    }
+                    if (!is_null($request->get('catatan-lke-' . $unit_zi->id))) {
+                        $seleksiAdministrasiUnit->catatan_lke = $request->get('catatan-lke-' . $unit_zi->id);
+                    }
+                    if (!is_null($request->get('status-2wbk-' . $unit_zi->id))) {
+                        $seleksiAdministrasiUnit->status_2wbk = $request->get('status-2wbk-' . $unit_zi->id);
+                    }
+                    if (!is_null($request->get('catatan-2wbk-' . $unit_zi->id))) {
+                        $seleksiAdministrasiUnit->catatan_2wbk = $request->get('catatan-2wbk-' . $unit_zi->id);
+                    }
+                    if (!is_null($request->get('tlhp-' . $unit_zi->id))) {
+                        $seleksiAdministrasiUnit->status_tlhp = $request->get('tlhp-' . $unit_zi->id);
+                    }
+                    if (!is_null($request->get('catatanTlhp-' . $unit_zi->id))) {
+                        $seleksiAdministrasiUnit->catatan_tlhp = $request->get('catatanTlhp-' . $unit_zi->id);
+                    }
+                    if (!is_null($request->get('surveiMandiri-' . $unit_zi->id))) {
+                        $seleksiAdministrasiUnit->status_survei_mandiri = $request->get('surveiMandiri-' . $unit_zi->id);
+                    }
+                    if (!is_null($request->get('catatanSurveiMandiri-' . $unit_zi->id))) {
+                        $seleksiAdministrasiUnit->catatan_survei_mandiri = $request->get('catatanSurveiMandiri-' . $unit_zi->id);
+                    }
+                    $seleksiAdministrasiUnit->updated_by = Auth::User()->id;
+                    $seleksiAdministrasiUnit->save();
+                    if (
+                        !is_null($seleksiAdministrasiInstansi->surat_usulan) &&
+                        !is_null($seleksiAdministrasiInstansi->sptjm) &&
+                        !is_null($seleksiAdministrasiUnit->status_lke) &&
+                        !is_null($seleksiAdministrasiUnit->status_tlhp) &&
+                        !is_null($seleksiAdministrasiUnit->status_survei_mandiri)
+                    ) {
+                        $status_final = 1;
+                        ($seleksiAdministrasiInstansi->surat_usulan == 0) ? $status_final = 0 : Null;
+                        ($seleksiAdministrasiInstansi->sptjm == 0) ? $status_final = 0 : Null;
+                        ($seleksiAdministrasiUnit->status_lke == 0) ? $status_final = 0 : Null;
+                        ($seleksiAdministrasiUnit->status_tlhp == 0) ? $status_final = 0 : Null;
+                        ($seleksiAdministrasiUnit->status_survei_mandiri == 0) ? $status_final = 0 : Null;
+                        if ($unit_zi->wbbm) {
+                            if (!is_null($seleksiAdministrasiUnit->status_2wbk)) {
+                                ($seleksiAdministrasiUnit->status_2wbk == 0) ? $status_final = 0 : Null;
+                                $seleksiAdministrasiUnit->status_final = $status_final;
+                                $seleksiAdministrasiUnit->status_completed = 1;
+                                $seleksiAdministrasiUnit->save();
+                            }
+                        } else {
                             $seleksiAdministrasiUnit->status_final = $status_final;
                             $seleksiAdministrasiUnit->status_completed = 1;
                             $seleksiAdministrasiUnit->save();
                         }
                     } else {
-                        $seleksiAdministrasiUnit->status_final = $status_final;
-                        $seleksiAdministrasiUnit->status_completed = 1;
+                        $seleksiAdministrasiUnit->status_completed = 0;
                         $seleksiAdministrasiUnit->save();
                     }
-                } else {
-                    $seleksiAdministrasiUnit->status_completed = 0;
-                    $seleksiAdministrasiUnit->save();
                 }
-            }
-        };
-        return redirect()->route('evaluasi_administrasi', $instansiZIid);
+            };
+            return redirect()->route('evaluasi_administrasi', $instansiZIid)
+                ->with('success', 'Data evaluasi administrasi berhasil disimpan.');
+        } else {
+            return redirect()->route('evaluasi_administrasi', $instansiZIid)
+                ->with('error', 'Maaf, saat ini bukan waktu untuk mengisi evaluasi administrasi. Silakan tunggu hingga periode yang ditentukan yaitu ' . $tahap_seleksi->tanggal_mulai . ' hingga' . $tahap_seleksi->tanggal_selesai . '.');
+        }
     }
 }

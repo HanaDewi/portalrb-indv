@@ -84,9 +84,7 @@ class LkeEvaluatorController extends Controller
             ->whereHas('instansiZI', function ($query) use ($tahun) {
                 $query->where('tahun', $tahun);
             })->get();
-
         // Path to the original file
-
         //$originalFilePath = storage_path('app/public/template-zi/LKEZI2024.xlsx');
         $originalFilePath = storage_path('app/public/template-zi/Template_LKE_2025.xlsx');
 
@@ -100,10 +98,6 @@ class LkeEvaluatorController extends Controller
 
         // Copy the file for each unit, grouped by instansi
         foreach ($units as $unit) {
-            // echo "Nama Unit : ". $unit->nama;
-            // echo "<br/>";
-            // echo "Instansi : ". $unit->instansiZI->klpd_instansi->name;
-            // echo "<hr>";
             if ($unit->seleksi_administrasi_unit) {
                 if ($unit->seleksi_administrasi_unit->status_final == 1 || $unit->sanggah_unit->status_final == 1) {
                     $instansiName = $unit->instansiZI->klpd_instansi->name;
@@ -134,6 +128,7 @@ class LkeEvaluatorController extends Controller
 
         $zip = new ZipArchive;
         if ($zip->open($zipFilePath, ZipArchive::CREATE | ZipArchive::OVERWRITE) === TRUE) {
+
             $folders = File::directories($tempDir);
             foreach ($folders as $folder) {
                 $files = File::files($folder);
