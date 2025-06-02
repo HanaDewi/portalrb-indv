@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Models\ZI\SeleksiAdministrasiUnit;
 use App\Models\ZI\SeleksiAdministrasiInstansi;
-
+use App\Models\ZI\UnitZI;
 
 class GenerateDataController extends Controller
 {
@@ -425,6 +425,23 @@ class GenerateDataController extends Controller
                 } else {
                     echo " | diexclude karena groupnya bukan kl/provinsi/kabupaten" . "<hr>";
                 }
+            }
+        }
+    }
+
+    public function cek_jumlah(): Returntype
+    {
+        $instansi_zis = InstansiZI::where('tahun', '2025')->get();
+        foreach ($instansi_zis as $instansi_zi) {
+            $jumlah_unit_wbk_base_inputan = $instansi_zi->jml_wbk;
+            $jumlah_unit_real = UnitZI::where('instansi_zi_id', $instansi_zi->id)->where('wbk', 1)->get()->count();
+
+            if ($jumlah_unit_wbk_base_inputan != $jumlah_unit_real) {
+                echo "<h1>" . $instansi_zi->klpd_instansi->name . "</h1>";
+                echo "Jumlah unit wbk base inputan : " . $jumlah_unit_wbk_base_inputan . "<br>";
+                echo "Jumlah unit wbk real : " . $jumlah_unit_real . "<br>";
+                echo "Ada perbedaan jumlah unit wbk, silahkan cek kembali inputan anda";
+                echo "<h1>" . $instansi_zi->klpd_instansi->name . "</h1>";
             }
         }
     }

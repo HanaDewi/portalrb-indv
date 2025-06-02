@@ -66,8 +66,8 @@ Route::middleware('auth')->group(function () {
     #Seleksi Administrasi
     Route::get('/zi/seleksi-administrasi', [AdministrasiController::class, 'index'])->name('seleksi_administrasi');
     Route::get('/zi/evaluasi-administrasi/{id}', [AdministrasiController::class, 'evaluasi_administrasi'])->name('evaluasi_administrasi');
-    //Route::post('/zi/evaluasi-administrasi/simpan', [AdministrasiController::class, 'evaluasi_administrasi_simpan'])->name('evaluasi_administrasi_simpan');
-    Route::post('/zi/evaluasi-administrasi/simpan', [TutupController::class, 'index'])->name('evaluasi_administrasi_simpan');
+    Route::post('/zi/evaluasi-administrasi/simpan', [AdministrasiController::class, 'evaluasi_administrasi_simpan'])->name('evaluasi_administrasi_simpan');
+    //Route::post('/zi/evaluasi-administrasi/simpan', [TutupController::class, 'index'])->name('evaluasi_administrasi_simpan');
 
 
     #Proses Sanggah
@@ -154,4 +154,5 @@ Route::middleware('auth')->group(function () {
     Route::get('/zi/sinkron_final_completed', [GenerateDataController::class, 'sinkron_final_completed']);
     Route::get('/zi/input-nilai-ke-evalrb', [GenerateDataController::class, 'input_nilai_ke_evalrb']);
     Route::get('/generate-skor-rencana-aksi', [GenerateDataController::class, 'generate_skor_rencana_aksi']);
+    Route::get('/zi/cek-jumlah', [GenerateDataController::class, 'cek_jumlah']);
 });
