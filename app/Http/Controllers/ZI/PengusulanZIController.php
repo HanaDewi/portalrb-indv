@@ -7,6 +7,7 @@ use App\Models\KlpdInstansi;
 use Illuminate\Http\Request;
 use App\Models\ZI\InstansiZI;
 use App\Http\Controllers\Controller;
+use App\Models\ZI\TahapSeleksiZI;
 use Illuminate\Support\Facades\Auth;
 use SebastianBergmann\CodeCoverage\Report\Xml\Unit;
 
@@ -25,11 +26,11 @@ class PengusulanZIController extends Controller
 
     public function index(Request $request)
     {
-
-        $tahun = 2025;
+        $tahun = date('Y');
+        $tahap_seleksi = TahapSeleksiZI::where('tahun', $tahun)->where('tahap_seleksi', 'Pengusulan')->first();
         $date_now = new \DateTime();
-        $date_buka_zi    = new \DateTime("2025/04/01");
-        $date_tutup_zi    = new \DateTime("2025/06/01");
+        $date_buka_zi    = new \DateTime($tahap_seleksi->tanggal_mulai);
+        $date_tutup_zi    = new \DateTime($tahap_seleksi->tanggal_selesai);
         if ($date_now >= $date_buka_zi) {
             $instansi_id = $request->get("instansi_id");
             if ($instansi_id && (Auth::User()->level == "admin" || Auth::User()->level == "tpn")) {
