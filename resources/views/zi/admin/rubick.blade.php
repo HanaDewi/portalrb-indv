@@ -381,6 +381,16 @@
                         </li>
                     </ul>
                 </li>
+                <li>
+                    <a href="{{ route('kelola_jadwal_zi') }}" class="side-menu
+                    @if($title == 'Kelola Jadwal')
+                                side-menu--active 
+                    @endif
+                    ">
+                        <div class="side-menu__icon"><i data-lucide="clipboard-list"></i></div>
+                        <div class="side-menu__title">Kelola Jadwal</div>
+                    </a>
+                </li>
                 @endif
 
                 <li>

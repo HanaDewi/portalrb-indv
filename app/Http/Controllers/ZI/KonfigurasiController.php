@@ -13,6 +13,7 @@ use App\Models\ZI\UnitTimEvaluasi;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Models\ZI\AnggotaTimEvaluasi;
+use App\Models\ZI\TahapSeleksiZI;
 use Illuminate\Support\Facades\Redirect;
 
 class KonfigurasiController extends Controller
@@ -338,6 +339,66 @@ class KonfigurasiController extends Controller
         $success = true;
         $unitTimEvaluasi = UnitTimEvaluasi::find($request->id);
         if ($unitTimEvaluasi->delete()) {
+            $success = true;
+        } else {
+            $success = false;
+        }
+        #}
+        return response()->json(['success' => $success, 'pesan' => $pesan]);
+    }
+
+    public function kelola_jadwal(Request $request)
+    {
+        $tahun = ($request->get('tahun')) ? $request->get('tahun') : date('Y');
+        $title = "Kelola Jadwal";
+        return view(
+            'zi.konfigurasi.kelola_jadwal',
+            compact(
+                "title",
+                "tahun"
+            )
+        );
+    }
+
+    public function jadwal_getDatas()
+    {
+        $tahun = (request()->get('tahun')) ? request()->get('tahun') : date('Y');
+        $datas = TahapSeleksiZI::where('tahun', $tahun)->get();
+        return response()->json(['data' => $datas]);
+    }
+
+    public function jadwal_evaluasi_getData($id)
+    {
+        $data = TahapSeleksiZI::find($id);
+        return $data;
+    }
+    public function kelola_jadwal_simpan(Request $request)
+    {
+        $success = false;
+        $jadwalZI = new TahapSeleksiZI();
+        if ($request->jadwal_id) {
+            $jadwalZI = TahapSeleksiZI::find($request->jadwal_id);
+        }
+        $jadwalZI->tahap_seleksi = $request->tahap_seleksi;
+        $jadwalZI->tanggal_mulai = $request->tanggal_mulai;
+        $jadwalZI->tanggal_selesai = $request->tanggal_selesai;
+        $jadwalZI->tahun = ($request->tahun) ? $request->tahun : date('Y');
+        if ($jadwalZI->save()) {
+            $success = true;
+        };
+        return response()->json(['success' => $success]);
+    }
+
+    public function kelola_jadwal_hapus(Request $request)
+    {
+        $pesan = '';
+        $success = true;
+        $jadwalZI = TahapSeleksiZI::find($request->id);
+        #if (count($timEvaluasi->indikators) > 0) {
+        #    $pesan = 'Tim Evaluasi tidak bisa dihapus, silahkan hapus dulu Anggota yang terhubung dengan Tim Evaluasi ini!';
+        #    $success = false;
+        #} else {
+        if ($jadwalZI->delete()) {
             $success = true;
         } else {
             $success = false;

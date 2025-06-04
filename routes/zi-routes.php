@@ -147,6 +147,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/zi/kelola-unit-tim/getData/{id}', [KonfigurasiController::class, 'unit_tim_evaluasi_getData']);
     Route::post('/zi/kelola-unit-tim/hapus', [KonfigurasiController::class, 'kelola_unit_tim_hapus'])->name('kelola_unit_tim_zi_hapus');
 
+    #Kelola Jadwal
+    Route::get('/zi/kelola-jadwal', [KonfigurasiController::class, 'kelola_jadwal'])->name('kelola_jadwal_zi');
+    Route::post('/zi/kelola-jadwal/simpan', [KonfigurasiController::class, 'kelola_jadwal_simpan'])->name('kelola_jadwal_zi_simpan');
+    Route::get('/zi/kelola-jadwal/getDatas', [KonfigurasiController::class, 'jadwal_getDatas'])->name('getData_jadwalEvaluasi');
+    Route::get('/zi/kelola-jadwal/getData/{id}', [KonfigurasiController::class, 'jadwal_evaluasi_getData']);
+    Route::post('/zi/kelola-jadwal/hapus', [KonfigurasiController::class, 'kelola_jadwal_hapus'])->name('kelola_jadwal_zi_hapus');
+
 
 
     #generate
