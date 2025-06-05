@@ -64,7 +64,7 @@ class PengusulanZIController extends Controller
             $group_kld = $instansi_obj->group;
             $instansiZI = InstansiZI::where("instansi_id", $instansi_obj->id)->where('tahun', $tahun)->first();
             //butuh biar user gak balik lagi ke halaman pengusulan kalau sudah nyimpen
-            if ($instansiZI->tahap_seleksi == 1) {
+            if ($instansiZI->final == 1) {
                 return redirect('zi-tinjau?instansi_id=' . $instansi_id);
             }
 
@@ -130,8 +130,8 @@ class PengusulanZIController extends Controller
         } else {
             $instansi_id = Auth::User()->instansi_id;
         }
-        $tahun = 2025;
-        $instansiZI = InstansiZI::where('instansi_id', $instansi_id)->where('tahun', 2025)->first();
+        $tahun = date('Y');
+        $instansiZI = InstansiZI::where('instansi_id', $instansi_id)->where('tahun', $tahun)->first();
         $tahap_seleksi = TahapSeleksiZI::where('tahap_seleksi', 'Pengusulan')->where('tahun', $tahun)->first();
         if (!$tahap_seleksi) {
             dd("Tahap Seleksi untuk tahun $tahun belum ditentukan. Silakan hubungi admin.");
@@ -150,10 +150,9 @@ class PengusulanZIController extends Controller
             $instansiZI->survei_mandiri = 'http://' . preg_replace('#^.*://#', '', $request->get("survei_mandiri"));
             $instansiZI->jml_wbk = $request->get("jml_wbk");
             $instansiZI->jml_wbbm = $request->get("jml_wbbm");
-            //$instansiZI->final = 1;
+            $instansiZI->final = 1;
             $instansiZI->update_by = Auth::User()->id;
             $instansiZI->save();
-
             $unit_wbks = $request->get("unit_wbk");
             $i = 0;
             if ($unit_wbks) {
@@ -436,9 +435,8 @@ class PengusulanZIController extends Controller
             $instansi_id = $instansi_obj->id;
         }
 
-        $instansiZI = InstansiZI::where('instansi_id', $instansi_id)->first();
-        $tahun = 2025;
-        $instansiZI = InstansiZI::where('instansi_id', $instansi_id)->where('tahun', 2025)->first();
+
+        $instansiZI = InstansiZI::where('instansi_id', $instansi_id)->where('tahun', $tahun)->first();
         $tahap_seleksi = TahapSeleksiZI::where('tahap_seleksi', 'Pengusulan')->where('tahun', $tahun)->first();
         if (!$tahap_seleksi) {
             dd("Tahap Seleksi untuk tahun $tahun belum ditentukan. Silakan hubungi admin.");
@@ -447,9 +445,6 @@ class PengusulanZIController extends Controller
         $date_buka    = new \DateTime($tahap_seleksi->tanggal_mulai);
         $date_tutup  = new \DateTime($tahap_seleksi->tanggal_selesai);
         if ($date_now >= $date_buka && $date_now <= $date_tutup) {
-
-
-
             $instansiZI->final = $request->get("final");
             $instansiZI->save();
 
