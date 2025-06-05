@@ -12,7 +12,7 @@
             <div class="col-lg-8 col-md-8">
                 <div class="feature-item" style="background-color: white; border-radius: 25px;">
                     <div class="content">
-                        <img src="{{ asset('assets/images/pembukaan_zi.jpg')}}">
+                        <img src="{{ asset('assets/images/zi/SE4.jpg')}}">
                     </div>
                 </div>
             </div>
