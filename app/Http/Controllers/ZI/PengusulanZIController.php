@@ -133,66 +133,78 @@ class PengusulanZIController extends Controller
         }
 
         $instansiZI = InstansiZI::where('instansi_id', $instansi_id)->where('tahun', 2025)->first();
-        $instansiZI->tahap_seleksi = 1;
-        $instansiZI->pic = $request->get("pic");
-        $instansiZI->email = $request->get("email");
-        $instansiZI->nomor_kontak = $request->get("nomor_kontak");
-        $instansiZI->surat_usulan = 'http://' . preg_replace('#^.*://#', '', $request->get("surat_usulan")); #kalau gak ada http:// jadinya relatif link yang buka di halaman portalrb bukan di google drivenya
-        $instansiZI->sptjm = 'http://' . preg_replace('#^.*://#', '', $request->get("sptjm"));
-        $instansiZI->tlhp = 'http://' . preg_replace('#^.*://#', '', $request->get("tlhp"));
-        $instansiZI->survei_mandiri = 'http://' . preg_replace('#^.*://#', '', $request->get("survei_mandiri"));
-        $instansiZI->jml_wbk = $request->get("jml_wbk");
-        $instansiZI->jml_wbbm = $request->get("jml_wbbm");
-        //$instansiZI->final = 1;
-        $instansiZI->update_by = Auth::User()->id;
-        $instansiZI->save();
+        $tahap_seleksi = TahapSeleksiZI::where('tahap_seleksi', 'Seleksi Administrasi')->where('tahun', $tahun)->first();
+        if (!$tahap_seleksi) {
+            dd("Tahap Seleksi untuk tahun $tahun belum ditentukan. Silakan hubungi admin.");
+        }
+        $date_now = new \DateTime();
+        $date_buka    = new \DateTime($tahap_seleksi->tanggal_mulai);
+        $date_tutup  = new \DateTime($tahap_seleksi->tanggal_selesai);
+        if ($date_now >= $date_buka && $date_now <= $date_tutup) {
+            $instansiZI->tahap_seleksi = 1;
+            $instansiZI->pic = $request->get("pic");
+            $instansiZI->email = $request->get("email");
+            $instansiZI->nomor_kontak = $request->get("nomor_kontak");
+            $instansiZI->surat_usulan = 'http://' . preg_replace('#^.*://#', '', $request->get("surat_usulan")); #kalau gak ada http:// jadinya relatif link yang buka di halaman portalrb bukan di google drivenya
+            $instansiZI->sptjm = 'http://' . preg_replace('#^.*://#', '', $request->get("sptjm"));
+            $instansiZI->tlhp = 'http://' . preg_replace('#^.*://#', '', $request->get("tlhp"));
+            $instansiZI->survei_mandiri = 'http://' . preg_replace('#^.*://#', '', $request->get("survei_mandiri"));
+            $instansiZI->jml_wbk = $request->get("jml_wbk");
+            $instansiZI->jml_wbbm = $request->get("jml_wbbm");
+            //$instansiZI->final = 1;
+            $instansiZI->update_by = Auth::User()->id;
+            $instansiZI->save();
 
-        $unit_wbks = $request->get("unit_wbk");
-        $i = 0;
-        if ($unit_wbks) {
-            foreach ($unit_wbks as $key => $unit_wbk) {
-                $unit_zi = new UnitZI;
-                $unit_zi->instansi_zi_id = $instansiZI->id;
-                $unit_zi->nama = $unit_wbk;
-                $unit_zi->lke = 'http://' . preg_replace('#^.*://#', '', $request->get("lke_wbk")[$key]);
-                if ($request->get("afirmasi")) {
-                    if (array_key_exists($key, $request->get("afirmasi"))) {
-                        $unit_zi->afirmasi = $request->get("afirmasi")[$key];
+            $unit_wbks = $request->get("unit_wbk");
+            $i = 0;
+            if ($unit_wbks) {
+                foreach ($unit_wbks as $key => $unit_wbk) {
+                    $unit_zi = new UnitZI;
+                    $unit_zi->instansi_zi_id = $instansiZI->id;
+                    $unit_zi->nama = $unit_wbk;
+                    $unit_zi->lke = 'http://' . preg_replace('#^.*://#', '', $request->get("lke_wbk")[$key]);
+                    if ($request->get("afirmasi")) {
+                        if (array_key_exists($key, $request->get("afirmasi"))) {
+                            $unit_zi->afirmasi = $request->get("afirmasi")[$key];
+                        }
                     }
+                    $unit_zi->wbk = 1;
+                    $unit_zi->save();
+                    $i++;
                 }
-                $unit_zi->wbk = 1;
-                $unit_zi->save();
-                $i++;
             }
-        }
-        #simpan jumlah unit wbk
-        $instansiZI->jml_wbk = $i;
+            #simpan jumlah unit wbk
+            $instansiZI->jml_wbk = $i;
 
 
 
-        $unit_wbbms = $request->get("unit_wbbm");
-        $i = 0;
+            $unit_wbbms = $request->get("unit_wbbm");
+            $i = 0;
 
-        if ($unit_wbbms) {
-            foreach ($unit_wbbms as $key2 => $unit_wbbm) {
-                $unit_zi = new UnitZI;
-                $unit_zi->instansi_zi_id = $instansiZI->id;
-                $unit_zi->nama = $unit_wbbm;
-                $unit_zi->lke = 'http://' . preg_replace('#^.*://#', '', $request->get("lke_wbbm")[$key2]);
-                $unit_zi->wbbm = 1;
-                $unit_zi->save();
-                $i++;
+            if ($unit_wbbms) {
+                foreach ($unit_wbbms as $key2 => $unit_wbbm) {
+                    $unit_zi = new UnitZI;
+                    $unit_zi->instansi_zi_id = $instansiZI->id;
+                    $unit_zi->nama = $unit_wbbm;
+                    $unit_zi->lke = 'http://' . preg_replace('#^.*://#', '', $request->get("lke_wbbm")[$key2]);
+                    $unit_zi->wbbm = 1;
+                    $unit_zi->save();
+                    $i++;
+                }
             }
-        }
 
-        #simpan jumlah unit wbk
-        $instansiZI->jml_wbbm = $i;
-        $instansiZI->save();
+            #simpan jumlah unit wbk
+            $instansiZI->jml_wbbm = $i;
+            $instansiZI->save();
 
-        if (Auth::User()->level == "admin" || Auth::User()->level == "tpn") {
-            return redirect('zi-tinjau?instansi_id=' . $instansi_id);
+            if (Auth::User()->level == "admin" || Auth::User()->level == "tpn") {
+                return redirect('zi-tinjau?instansi_id=' . $instansi_id);
+            } else {
+                return redirect('zi-tinjau');
+            }
         } else {
-            return redirect('zi-tinjau');
+            return redirect('zi-tinjau?instansi_id=' . $instansi_id)
+                ->with('error', 'Maaf, saat ini bukan waktu untuk mengisi evaluasi administrasi. Silakan tunggu hingga periode yang ditentukan yaitu ' . $tahap_seleksi->tanggal_mulai . ' hingga' . $tahap_seleksi->tanggal_selesai . '.');
         }
     }
 
@@ -214,6 +226,14 @@ class PengusulanZIController extends Controller
             return redirect('zi/pengusulan');
         }
 
+        $tahap_seleksi = TahapSeleksiZI::where('tahun', $tahun)->where('tahap_seleksi', 'Pengusulan')->first();
+        $date_now = new \DateTime();
+        $date_buka_zi    = new \DateTime($tahap_seleksi->tanggal_mulai);
+        $date_tutup_zi    = new \DateTime($tahap_seleksi->tanggal_selesai);
+        $editable = false;
+        if ($date_now >= $date_buka && $date_now <= $date_tutup) {
+            $editable = true;
+        }
         if ($instansiZI) {
             $syarat_akhir_wbk = $instansiZI->syarat_akhir_wbk;
             $syarat_akhir_wbbm   = $instansiZI->syarat_akhir_wbbm;
@@ -227,7 +247,8 @@ class PengusulanZIController extends Controller
                 'units',
                 'syarat_akhir_wbk',
                 'syarat_akhir_wbbm',
-                'status_akhir'
+                'status_akhir',
+                'editable'
             ));
         } else {
             echo "mohon maaf instansi anda belum terdapat penilaian RB di tahun lalu";
