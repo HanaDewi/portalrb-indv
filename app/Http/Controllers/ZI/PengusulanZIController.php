@@ -125,15 +125,14 @@ class PengusulanZIController extends Controller
     }
     public function store_bukti_dukung(Request $request)
     {
-        $tahun = 2025;
         if (Auth::User()->level == "admin" || Auth::User()->level == "tpn") {
             $instansi_id = $request->get("instansi_id");
         } else {
             $instansi_id = Auth::User()->instansi_id;
         }
-
+        $tahun = 2025;
         $instansiZI = InstansiZI::where('instansi_id', $instansi_id)->where('tahun', 2025)->first();
-        $tahap_seleksi = TahapSeleksiZI::where('tahap_seleksi', 'Seleksi Administrasi')->where('tahun', $tahun)->first();
+        $tahap_seleksi = TahapSeleksiZI::where('tahap_seleksi', 'Pengusulan')->where('tahun', $tahun)->first();
         if (!$tahap_seleksi) {
             dd("Tahap Seleksi untuk tahun $tahun belum ditentukan. Silakan hubungi admin.");
         }
@@ -256,8 +255,9 @@ class PengusulanZIController extends Controller
     }
     public function updateField(Request $request, $id, $field)
     {
+        $tahun = date('Y');
         $instansi = InstansiZI::findOrFail($id);
-        $tahap_seleksi = TahapSeleksiZI::where('tahap_seleksi', 'Seleksi Administrasi')->where('tahun', $tahun)->first();
+        $tahap_seleksi = TahapSeleksiZI::where('tahap_seleksi', 'Pengusulan')->where('tahun', $tahun)->first();
         if (!$tahap_seleksi) {
             dd("Tahap Seleksi untuk tahun $tahun belum ditentukan. Silakan hubungi admin.");
         }
@@ -293,10 +293,10 @@ class PengusulanZIController extends Controller
             'lke' => 'required',
         ]);
 
-
+        $tahun = date('Y');
         $unit = UnitZI::findOrFail($id);
         $instansi = $unit->instansiZI;
-        $tahap_seleksi = TahapSeleksiZI::where('tahap_seleksi', 'Seleksi Administrasi')->where('tahun', $tahun)->first();
+        $tahap_seleksi = TahapSeleksiZI::where('tahap_seleksi', 'Pengusulan')->where('tahun', $tahun)->first();
         if (!$tahap_seleksi) {
             dd("Tahap Seleksi untuk tahun $tahun belum ditentukan. Silakan hubungi admin.");
         }
@@ -337,9 +337,10 @@ class PengusulanZIController extends Controller
 
     public function deleteUnit(Request $request, $id)
     {
+        $tahun = date('Y');
         $unit = UnitZI::findOrFail($id);
         $instansi = $unit->instansiZI;
-        $tahap_seleksi = TahapSeleksiZI::where('tahap_seleksi', 'Seleksi Administrasi')->where('tahun', $tahun)->first();
+        $tahap_seleksi = TahapSeleksiZI::where('tahap_seleksi', 'Pengusulan')->where('tahun', $tahun)->first();
         if (!$tahap_seleksi) {
             dd("Tahap Seleksi untuk tahun $tahun belum ditentukan. Silakan hubungi admin.");
         }
@@ -368,13 +369,14 @@ class PengusulanZIController extends Controller
 
     public function addUnit(Request $request, $id)
     {
+        $tahun = date('Y');
         $request->validate([
             'nama' => 'required|string|max:255',
             'lke' => 'required',
         ]);
 
         $instansiZI = InstansiZI::find($id);
-        $tahap_seleksi = TahapSeleksiZI::where('tahap_seleksi', 'Seleksi Administrasi')->where('tahun', $tahun)->first();
+        $tahap_seleksi = TahapSeleksiZI::where('tahap_seleksi', 'Pengusulan')->where('tahun', $tahun)->first();
         if (!$tahap_seleksi) {
             dd("Tahap Seleksi untuk tahun $tahun belum ditentukan. Silakan hubungi admin.");
         }
@@ -426,44 +428,60 @@ class PengusulanZIController extends Controller
 
     public function store_final(Request $request)
     {
+        $tahun = date('Y');
         if (Auth::User()->level == "admin" || Auth::User()->level == "tpn") {
             $instansi_id = $request->get("instansi_id");
         } else {
             $instansi_obj = KlpdInstansi::find(Auth::User()->instansi_id);
             $instansi_id = $instansi_obj->id;
         }
+
         $instansiZI = InstansiZI::where('instansi_id', $instansi_id)->first();
-        $instansiZI->final = $request->get("final");
-        $instansiZI->save();
-
-
-
-        $unit_wbks = $request->get("unit_wbk");
-        $i = 0;
-        foreach ($unit_wbks as $unit_wbk) {
-            $unit_zi = new UnitZI;
-            $unit_zi->instansi_zi_id = $instansiZI->id;
-            $unit_zi->nama = $unit_wbk;
-            $unit_zi->lke = $request->get("lke_wbk")[$i];
-            $unit_zi->afirmasi = $request->get("afirmasi")[$i];
-            $unit_zi->wbk = 1;
-            $unit_zi->save();
-            $i++;
+        $tahun = 2025;
+        $instansiZI = InstansiZI::where('instansi_id', $instansi_id)->where('tahun', 2025)->first();
+        $tahap_seleksi = TahapSeleksiZI::where('tahap_seleksi', 'Pengusulan')->where('tahun', $tahun)->first();
+        if (!$tahap_seleksi) {
+            dd("Tahap Seleksi untuk tahun $tahun belum ditentukan. Silakan hubungi admin.");
         }
+        $date_now = new \DateTime();
+        $date_buka    = new \DateTime($tahap_seleksi->tanggal_mulai);
+        $date_tutup  = new \DateTime($tahap_seleksi->tanggal_selesai);
+        if ($date_now >= $date_buka && $date_now <= $date_tutup) {
 
-        $unit_wbbms = $request->get("unit_wbbm");
-        $i = 0;
 
-        foreach ($unit_wbbms as $unit_wbbm) {
-            $unit_zi = new UnitZI;
-            $unit_zi->instansi_zi_id = $instansiZI->id;
-            $unit_zi->nama = $unit_wbbm;
-            $unit_zi->lke = $request->get("lke_wbbm")[$i];
-            $unit_zi->wbbm = 1;
-            $unit_zi->save();
-            $i++;
+
+            $instansiZI->final = $request->get("final");
+            $instansiZI->save();
+
+
+
+            $unit_wbks = $request->get("unit_wbk");
+            $i = 0;
+            foreach ($unit_wbks as $unit_wbk) {
+                $unit_zi = new UnitZI;
+                $unit_zi->instansi_zi_id = $instansiZI->id;
+                $unit_zi->nama = $unit_wbk;
+                $unit_zi->lke = $request->get("lke_wbk")[$i];
+                $unit_zi->afirmasi = $request->get("afirmasi")[$i];
+                $unit_zi->wbk = 1;
+                $unit_zi->save();
+                $i++;
+            }
+
+            $unit_wbbms = $request->get("unit_wbbm");
+            $i = 0;
+
+            foreach ($unit_wbbms as $unit_wbbm) {
+                $unit_zi = new UnitZI;
+                $unit_zi->instansi_zi_id = $instansiZI->id;
+                $unit_zi->nama = $unit_wbbm;
+                $unit_zi->lke = $request->get("lke_wbbm")[$i];
+                $unit_zi->wbbm = 1;
+                $unit_zi->save();
+                $i++;
+            }
+
+            return redirect('zi-tinjau');
         }
-
-        return redirect('zi-tinjau');
     }
 }

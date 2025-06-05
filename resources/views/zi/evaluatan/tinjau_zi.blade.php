@@ -218,7 +218,7 @@
                                 @endforeach
                                 @else
                                 <tr>
-                                    <td colspan="4" style="text-align: center">Tidak ada unit </td>
+                                    <td colspan="5" style="text-align: center">Tidak ada unit </td>
                                 </tr>
                                 @endif
                             </tbody>
