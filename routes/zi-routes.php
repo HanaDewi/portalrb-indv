@@ -27,16 +27,11 @@ Route::middleware('auth')->group(function () {
     //Route::get('/zi/daftar', [PengusulanZIController::class, 'index'])->name('daftar_zi');
     Route::get('/zi/pengusulan', [PengusulanZIController::class, 'index'])->name('pengusulan_zi');
     Route::post('/zi/pengusulan/simpan', [PengusulanZIController::class, 'store_bukti_dukung'])->name('pengusulan_zi_store');
-    //Route::post('/zi/pengusulan/simpan', [TutupController::class, 'index'])->name('pengusulan_zi_store');
     Route::get('/zi-tinjau', [PengusulanZIController::class, 'tinjau'])->name('tinjau_zi');
-    //Route::put('/zi/update-field/{id}/{field}', [PengusulanZIController::class, 'updateField'])->name('zi.updateField'); //untuk update lke, surat pengusulan, cp, dll
-    Route::put('/zi/update-field/{id}/{field}', [TutupController::class, 'index'])->name('zi.updateField'); //untuk update lke, surat pengusulan, cp, dll
-    //Route::put('/zi/unit/{id}/update-unit', [PengusulanZIController::class, 'updateUnit'])->name('unit.update-unit'); //untuk update detail unit
-    Route::put('/zi/unit/{id}/update-unit', [TutupController::class, 'index'])->name('unit.update-unit'); //untuk update detail unit
-    //Route::delete('/zi/unit/{id}/delete-unit', [PengusulanZIController::class, 'deleteUnit'])->name('unit.delete-unit');
-    Route::delete('/zi/unit/{id}/delete-unit', [TutupController::class, 'index'])->name('unit.delete-unit');
-    // Route::post('/zi/unit/{id}/tambah-unit', [PengusulanZIController::class, 'addUnit'])->name('unit.add-unit'); //untuk add unit
-    Route::post('/zi/unit/{id}/tambah-unit', [TutupController::class, 'index'])->name('unit.add-unit'); //untuk add unit
+    Route::put('/zi/update-field/{id}/{field}', [PengusulanZIController::class, 'updateField'])->name('zi.updateField'); //untuk update lke, surat pengusulan, cp, dll
+    Route::put('/zi/unit/{id}/update-unit', [PengusulanZIController::class, 'updateUnit'])->name('unit.update-unit'); //untuk update detail unit
+    Route::delete('/zi/unit/{id}/delete-unit', [PengusulanZIController::class, 'deleteUnit'])->name('unit.delete-unit');
+    Route::post('/zi/unit/{id}/tambah-unit', [PengusulanZIController::class, 'addUnit'])->name('unit.add-unit'); //untuk add unit
     Route::get('/zi-administrasi', [EvaluatanController::class, 'seleksi_administrasi'])->name('evaluatan_seleksi_administrasi');
     //Route::post('/zi-simpan-sanggah', [EvaluatanController::class, 'sanggah_simpan'])->name('evaluatan_simpan_sanggah');
     Route::post('/zi-simpan-sanggah', [TutupController::class, 'index'])->name('evaluatan_simpan_sanggah');

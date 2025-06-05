@@ -167,7 +167,7 @@
                         </table>
                         <br />
 
-                        <h6>Unit Yang Diusulkan</h6>
+                        <h6>Unit Yang Diusulkan {{$editable}}</h6>
                         @error('lke')
                         <div class="text-danger">Update Gagal : {{ $message }}. LKE harus dalam bentuk Link (mengandung
                             https://)</div>
@@ -198,6 +198,7 @@
                                     </td>
                                     <td style="text-align: left">{{$unit->lke}}</td>
                                     <td style="text-align: center">
+
                                         @if($editable)
                                         <button class="fa fa-edit text-primary ms-2 edit-unit-btn"
                                             data-unit-id="{{ $unit->id }}" data-unit-nama="{{ $unit->nama }}"

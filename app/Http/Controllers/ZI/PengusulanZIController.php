@@ -257,21 +257,33 @@ class PengusulanZIController extends Controller
     public function updateField(Request $request, $id, $field)
     {
         $instansi = InstansiZI::findOrFail($id);
-        if (Auth::User()->instansi_id != $instansi->instansi_id) {
-            return back()->with('error', 'Anda tidak memiliki izin untuk mengubah data ini.');
+        $tahap_seleksi = TahapSeleksiZI::where('tahap_seleksi', 'Seleksi Administrasi')->where('tahun', $tahun)->first();
+        if (!$tahap_seleksi) {
+            dd("Tahap Seleksi untuk tahun $tahun belum ditentukan. Silakan hubungi admin.");
         }
-        // Pastikan hanya field tertentu yang bisa diubah
-        $allowedFields = ['pic', 'email', 'nomor_kontak', 'surat_usulan', 'sptjm', 'tlhp', 'survei_mandiri'];
-        if (!in_array($field, $allowedFields)) {
-            return back()->with('error', 'Field tidak valid.');
+        $date_now = new \DateTime();
+        $date_buka    = new \DateTime($tahap_seleksi->tanggal_mulai);
+        $date_tutup  = new \DateTime($tahap_seleksi->tanggal_selesai);
+        if ($date_now >= $date_buka && $date_now <= $date_tutup) {
+            if (Auth::User()->instansi_id != $instansi->instansi_id) {
+                return back()->with('error', 'Anda tidak memiliki izin untuk mengubah data ini.');
+            }
+            // Pastikan hanya field tertentu yang bisa diubah
+            $allowedFields = ['pic', 'email', 'nomor_kontak', 'surat_usulan', 'sptjm', 'tlhp', 'survei_mandiri'];
+            if (!in_array($field, $allowedFields)) {
+                return back()->with('error', 'Field tidak valid.');
+            }
+
+
+
+            $instansi->$field = $request->input('value');
+            $instansi->save();
+
+            return back()->with('success', 'Data berhasil diperbarui.');
+        } else {
+            return redirect()->route('evaluasi_administrasi', $instansiZIid)
+                ->with('error', 'Maaf, saat ini bukan waktu untuk mengisi evaluasi administrasi. Silakan tunggu hingga periode yang ditentukan yaitu ' . $tahap_seleksi->tanggal_mulai . ' hingga' . $tahap_seleksi->tanggal_selesai . '.');
         }
-
-
-
-        $instansi->$field = $request->input('value');
-        $instansi->save();
-
-        return back()->with('success', 'Data berhasil diperbarui.');
     }
 
     public function updateUnit(Request $request, $id)
@@ -281,52 +293,77 @@ class PengusulanZIController extends Controller
             'lke' => 'required',
         ]);
 
+
         $unit = UnitZI::findOrFail($id);
         $instansi = $unit->instansiZI;
-        if (Auth::User()->instansi_id != $instansi->instansi_id) {
-            return back()->with('error', 'Anda tidak memiliki izin untuk mengubah data ini.');
+        $tahap_seleksi = TahapSeleksiZI::where('tahap_seleksi', 'Seleksi Administrasi')->where('tahun', $tahun)->first();
+        if (!$tahap_seleksi) {
+            dd("Tahap Seleksi untuk tahun $tahun belum ditentukan. Silakan hubungi admin.");
         }
-        $unit->nama = $request->nama;
-        $unit->lke = $request->lke;
-        if ($request->kategori == 'WBK') {
-            if ($unit->wbbm) {
-                $unit->wbk = 1;
-                $unit->wbbm = 0;
-                $instansi->jml_wbk += 1; // menambah jumlah wbk jika unit ini sebelumnya adalah WBBM
-                $instansi->jml_wbbm -= 1; // Mengurangi jumlah WBBM jika unit ini sebelumnya adalah WBBM
-                $instansi->save();
+        $date_now = new \DateTime();
+        $date_buka    = new \DateTime($tahap_seleksi->tanggal_mulai);
+        $date_tutup  = new \DateTime($tahap_seleksi->tanggal_selesai);
+        if ($date_now >= $date_buka && $date_now <= $date_tutup) {
+            if (Auth::User()->instansi_id != $instansi->instansi_id) {
+                return back()->with('error', 'Anda tidak memiliki izin untuk mengubah data ini.');
             }
-        } elseif ($request->kategori == 'WBBM') {
-            if ($unit->wbk) {
-                $unit->wbbm = 1;
-                $unit->wbk = 0;
-                $instansi->jml_wbbm += 1; // Menambah jumlah WBBM jika unit ini sebelumnya adalah WBK
-                $instansi->jml_wbk -= 1; // Mengurangi jumlah WBK jika unit ini sebelumnya adalah WBK
-                $instansi->save();
+            $unit->nama = $request->nama;
+            $unit->lke = $request->lke;
+            if ($request->kategori == 'WBK') {
+                if ($unit->wbbm) {
+                    $unit->wbk = 1;
+                    $unit->wbbm = 0;
+                    $instansi->jml_wbk += 1; // menambah jumlah wbk jika unit ini sebelumnya adalah WBBM
+                    $instansi->jml_wbbm -= 1; // Mengurangi jumlah WBBM jika unit ini sebelumnya adalah WBBM
+                    $instansi->save();
+                }
+            } elseif ($request->kategori == 'WBBM') {
+                if ($unit->wbk) {
+                    $unit->wbbm = 1;
+                    $unit->wbk = 0;
+                    $instansi->jml_wbbm += 1; // Menambah jumlah WBBM jika unit ini sebelumnya adalah WBK
+                    $instansi->jml_wbk -= 1; // Mengurangi jumlah WBK jika unit ini sebelumnya adalah WBK
+                    $instansi->save();
+                }
             }
-        }
-        $unit->save();
+            $unit->save();
 
-        return redirect()->back()->with('success', 'Data Unit ' . $unit->name . ' telah berhasil diperbarui');
+            return redirect()->back()->with('success', 'Data Unit ' . $unit->name . ' telah berhasil diperbarui');
+        } else {
+            return redirect()->route('evaluasi_administrasi', $instansiZIid)
+                ->with('error', 'Maaf, saat ini bukan waktu untuk mengisi evaluasi administrasi. Silakan tunggu hingga periode yang ditentukan yaitu ' . $tahap_seleksi->tanggal_mulai . ' hingga' . $tahap_seleksi->tanggal_selesai . '.');
+        }
     }
 
     public function deleteUnit(Request $request, $id)
     {
         $unit = UnitZI::findOrFail($id);
         $instansi = $unit->instansiZI;
-        if (Auth::User()->instansi_id != $instansi->instansi_id) {
-            return back()->with('error', 'Anda tidak memiliki izin untuk mengubah data ini.');
+        $tahap_seleksi = TahapSeleksiZI::where('tahap_seleksi', 'Seleksi Administrasi')->where('tahun', $tahun)->first();
+        if (!$tahap_seleksi) {
+            dd("Tahap Seleksi untuk tahun $tahun belum ditentukan. Silakan hubungi admin.");
         }
+        $date_now = new \DateTime();
+        $date_buka    = new \DateTime($tahap_seleksi->tanggal_mulai);
+        $date_tutup  = new \DateTime($tahap_seleksi->tanggal_selesai);
+        if ($date_now >= $date_buka && $date_now <= $date_tutup) {
+            if (Auth::User()->instansi_id != $instansi->instansi_id) {
+                return back()->with('error', 'Anda tidak memiliki izin untuk mengubah data ini.');
+            }
 
-        if ($unit->wbbm) {
-            $instansi->jml_wbbm -= 1; // Mengurangi jumlah WBBM jika unit ini sebelumnya adalah WBBM
-        } elseif ($unit->wbk) {
-            $instansi->jml_wbk -= 1; // Mengurangi jumlah WBK jika unit ini sebelumnya adalah WBK
+            if ($unit->wbbm) {
+                $instansi->jml_wbbm -= 1; // Mengurangi jumlah WBBM jika unit ini sebelumnya adalah WBBM
+            } elseif ($unit->wbk) {
+                $instansi->jml_wbk -= 1; // Mengurangi jumlah WBK jika unit ini sebelumnya adalah WBK
+            }
+            $instansi->save();
+            $unit->delete();
+
+            return redirect()->back()->with('success', 'Data Unit ' . $unit->name . ' telah berhasil di hapus ');
+        } else {
+            return redirect()->route('evaluasi_administrasi', $instansiZIid)
+                ->with('error', 'Maaf, saat ini bukan waktu untuk mengisi evaluasi administrasi. Silakan tunggu hingga periode yang ditentukan yaitu ' . $tahap_seleksi->tanggal_mulai . ' hingga' . $tahap_seleksi->tanggal_selesai . '.');
         }
-        $instansi->save();
-        $unit->delete();
-
-        return redirect()->back()->with('success', 'Data Unit ' . $unit->name . ' telah berhasil di hapus ');
     }
 
     public function addUnit(Request $request, $id)
@@ -337,41 +374,53 @@ class PengusulanZIController extends Controller
         ]);
 
         $instansiZI = InstansiZI::find($id);
-        if (Auth::User()->instansi_id != $instansiZI->instansi_id) {
-            return back()->with('error', 'Anda tidak memiliki izin untuk mengubah data ini.');
+        $tahap_seleksi = TahapSeleksiZI::where('tahap_seleksi', 'Seleksi Administrasi')->where('tahun', $tahun)->first();
+        if (!$tahap_seleksi) {
+            dd("Tahap Seleksi untuk tahun $tahun belum ditentukan. Silakan hubungi admin.");
         }
+        $date_now = new \DateTime();
+        $date_buka    = new \DateTime($tahap_seleksi->tanggal_mulai);
+        $date_tutup  = new \DateTime($tahap_seleksi->tanggal_selesai);
+        if ($date_now >= $date_buka && $date_now <= $date_tutup) {
+            if (Auth::User()->instansi_id != $instansiZI->instansi_id) {
+                return back()->with('error', 'Anda tidak memiliki izin untuk mengubah data ini.');
+            }
 
-        $unit_zi = new UnitZI;
-        $unit_zi->instansi_zi_id = $id;
-        $unit_zi->nama = $request->nama;
-        $unit_zi->lke = 'http://' . preg_replace('#^.*://#', '', $request->lke);
-        if ($request->kategori == 'WBK') {
-            //Cek apakah bisa menjadi WBK
-            if ($instansiZI->syarat_akhir_wbk == "LULUS") {
+            $unit_zi = new UnitZI;
+            $unit_zi->instansi_zi_id = $id;
+            $unit_zi->nama = $request->nama;
+            $unit_zi->lke = 'http://' . preg_replace('#^.*://#', '', $request->lke);
+            if ($request->kategori == 'WBK') {
+                //Cek apakah bisa menjadi WBK
+                if ($instansiZI->syarat_akhir_wbk == "LULUS") {
+                    $unit_zi->wbk = 1;
+                    $instansiZI->jml_wbk += 1; // menambah jumlah wbk jika unit ini adalah WBK    
+                } else {
+                    return redirect()->back()->with('error', 'Data Unit ' . $unit_zi->nama . ' gagal untuk ditambah karena anda tidak bisa mengusulkan WBK, Pilih WBK AFIRMASI untuk mendaftarkan unit-unit yang berada pada kategori afirmasi');
+                }
+            } elseif ($request->kategori == 'WBBM') {
+                //Cek apakah bisa menjadi WBBM
+                if ($instansiZI->syarat_akhir_wbbm == "LULUS") {
+                    $unit_zi->wbbm = 1;
+                    $instansiZI->jml_wbbm += 1; // menambah jumlah wbbm jika unit ini adalah WBBM
+                } else {
+                    return redirect()->back()->with('error', 'Data Unit ' . $unit_zi->nama . ' gagal untuk ditambah karena anda tidak bisa mengusulkan WBBM, Pilih WBK AFIRMASI untuk mendaftarkan unit-unit yang berada pada kategori afirmasi');
+                }
+            } elseif ($request->kategori == 'WBK-AFIRMASI') {
                 $unit_zi->wbk = 1;
-                $instansiZI->jml_wbk += 1; // menambah jumlah wbk jika unit ini adalah WBK    
+                $instansiZI->jml_wbk += 1; // menambah jumlah wbk jika unit ini adalah ZI
+                $unit_zi->afirmasi = 1; // Menandai unit ini sebagai afirmasi
+                $unit_zi->save();
             } else {
-                return redirect()->back()->with('error', 'Data Unit ' . $unit_zi->nama . ' gagal untuk ditambah karena anda tidak bisa mengusulkan WBK, Pilih WBK AFIRMASI untuk mendaftarkan unit-unit yang berada pada kategori afirmasi');
+                return redirect()->back()->with('error', 'Error');
             }
-        } elseif ($request->kategori == 'WBBM') {
-            //Cek apakah bisa menjadi WBBM
-            if ($instansiZI->syarat_akhir_wbbm == "LULUS") {
-                $unit_zi->wbbm = 1;
-                $instansiZI->jml_wbbm += 1; // menambah jumlah wbbm jika unit ini adalah WBBM
-            } else {
-                return redirect()->back()->with('error', 'Data Unit ' . $unit_zi->nama . ' gagal untuk ditambah karena anda tidak bisa mengusulkan WBBM, Pilih WBK AFIRMASI untuk mendaftarkan unit-unit yang berada pada kategori afirmasi');
-            }
-        } elseif ($request->kategori == 'WBK-AFIRMASI') {
-            $unit_zi->wbk = 1;
-            $instansiZI->jml_wbk += 1; // menambah jumlah wbk jika unit ini adalah ZI
-            $unit_zi->afirmasi = 1; // Menandai unit ini sebagai afirmasi
             $unit_zi->save();
+            $instansiZI->save();
+            return redirect()->back()->with('success', 'Data Unit ' . $unit_zi->nama . ' telah berhasil ditambah :');
         } else {
-            return redirect()->back()->with('error', 'Error');
+            return redirect()->route('evaluasi_administrasi', $instansiZIid)
+                ->with('error', 'Maaf, saat ini bukan waktu untuk mengisi evaluasi administrasi. Silakan tunggu hingga periode yang ditentukan yaitu ' . $tahap_seleksi->tanggal_mulai . ' hingga' . $tahap_seleksi->tanggal_selesai . '.');
         }
-        $unit_zi->save();
-        $instansiZI->save();
-        return redirect()->back()->with('success', 'Data Unit ' . $unit_zi->nama . ' telah berhasil ditambah :');
     }
 
 
