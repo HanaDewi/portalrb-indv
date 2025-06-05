@@ -231,7 +231,7 @@ class PengusulanZIController extends Controller
         $date_buka_zi    = new \DateTime($tahap_seleksi->tanggal_mulai);
         $date_tutup_zi    = new \DateTime($tahap_seleksi->tanggal_selesai);
         $editable = false;
-        if ($date_now >= $date_buka && $date_now <= $date_tutup) {
+        if ($date_now >= $date_buka_zi && $date_now <= $date_tutup_zi) {
             $editable = true;
         }
         if ($instansiZI) {
