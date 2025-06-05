@@ -63,6 +63,7 @@ class PengusulanZIController extends Controller
             $instansi = $instansi_obj->name;
             $group_kld = $instansi_obj->group;
             $instansiZI = InstansiZI::where("instansi_id", $instansi_obj->id)->where('tahun', $tahun)->first();
+
             //butuh biar user gak balik lagi ke halaman pengusulan kalau sudah nyimpen
             if ($instansiZI->final == 1) {
                 return redirect('zi-tinjau?instansi_id=' . $instansi_id);
@@ -220,7 +221,7 @@ class PengusulanZIController extends Controller
         $group_kld = $instansi_obj->group;
         $instansiZI = InstansiZI::where("instansi_id", $instansi_obj->id)->where('tahun', $tahun)->first();
 
-        if ($instansiZI->tahap_seleksi === 0) {
+        if ($instansiZI->tahap_seleksi === 0 || $instansiZI->final != 1) {
             return redirect('zi/pengusulan');
         }
 
