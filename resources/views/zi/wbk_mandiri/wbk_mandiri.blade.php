@@ -32,8 +32,9 @@
                     <tr>
                         <th class="w-5">No.</th>
                         <th>Tahun</th>
+                        <th>Tahap Seleksi</th>
                         <th>Link</th>
-                        <th>Ketereangan</th>
+                        <th>Keterangan</th>
                         <th>Tanggal Update</th>
                         <th width="20%">Aksi</th>
                     </tr>
@@ -53,42 +54,40 @@
                 <h2 class="fw-medium fs-base me-auto" id="title">Tambah Tim</h2>
             </div> <!-- END: Modal Header -->
             <!-- BEGIN: Modal Body -->
-            <form action="{{ route('kelola_jadwal_zi_simpan') }}" id="form-kelola-jadwal" method="post">
+            <form action="{{ route('lapor_wbk_mandiri_simpan') }}" id="form-kelola-jadwal" method="post">
                 @csrf
-                <input type="hidden" name="jadwal_id" id="jadwal_id">
+                <input type="hidden" name="laporan_id" id="laporan_id">
                 <div class="modal-body grid columns-12 gap-4 gap-y-3">
                     <div class="g-col-12">
+
                         <div class="form-group">
-                            <label for="tahap_seleksi" class="form-label">tahap_seleksi<span
+                            <label for="tahap_seleksi" class="form-label">Tahun <span
                                     class="text-danger">*</span></label>
-                            <input type="text" id="tahap_seleksi" name="tahap_seleksi" class="form-control"
-                                placeholder="tahap_seleksi" required>
-                        </div>
-                        <br />
-                        <div class="form-group">
-                            <label for="tahun" class="form-label">Tahun <span class="text-danger">*</span></label>
                             <br />
-                            <select name="tahun" id="tahun">
-                                @for ($i =date('Y')-2; $i <= date('Y')+3; $i++) <option value="{{$i}}">
-                                    {{$i}}
-                                    </option>
-                                    @endfor
+                            <select name="tahap_seleksi_id" id="tahap_seleksi">
+                                @foreach ($tahap_seleksis as $tahap_seleksi )
+                                <option value="" disabled selected>Pilih Tahap Seleksi</option>
+                                <option value="{{$tahap_seleksi->id}}">
+                                    {{$tahap_seleksi->tahap_seleksi}}
+                                </option>
+                                @endforeach
                             </select>
                         </div>
                         <br />
                         <div class="form-group">
-                            <label for="tahap_seleksi" class="form-label">Jadwal Mulai <span
+                            <label for="tahap_seleksi" class="form-label">Link Bukti Dukung<span
                                     class="text-danger">*</span></label>
-                            <input type="datetime-local" id="tanggal_mulai" name="tanggal_mulai" class="form-control"
-                                placeholder="tanggal_mulai" required>
+                            <input type="text" id="link_bukti" name="link_bukti" class="form-control"
+                                placeholder="tahap_seleksi" required>
                         </div>
-                        <br>
+                        <br />
                         <div class="form-group">
-                            <label for="tahap_seleksi" class="form-label">jadwal Selesai <span
+                            <label for="keterangan" class="form-label">Keterangan<span
                                     class="text-danger">*</span></label>
-                            <input type="datetime-local" id="tanggal_selesai" name="tanggal_selesai"
-                                class="form-control" placeholder="tanggal_selesai" required>
+                            <textarea type="text" id="keterangan" name="keterangan" class="form-control"
+                                placeholder="Keterangan" required></textarea>
                         </div>
+                        <br />
                     </div>
                 </div> <!-- END: Modal Body -->
                 <!-- BEGIN: Modal Footer -->
@@ -180,6 +179,7 @@
                 }
             },
             { data: 'tahun' },
+            { data: 'tahap_seleksi_id' },
             { data: 'link' },
             { data: 'keterangan' },
             { data: 'updated_at' },
@@ -202,7 +202,7 @@
     }); 
 
     function getData() {
-        tim_evaluasi.ajax.url("{{route('getData_jadwalEvaluasi',['tahun'=>$tahun])}}").load(null, false);
+        tim_evaluasi.ajax.url("{{route('lapor_wbk_mandiri_getDatas',['tahun'=>$tahun])}}").load(null, false);
     }
 
     function clearForm() {

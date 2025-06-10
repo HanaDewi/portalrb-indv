@@ -45,25 +45,28 @@ class WbkMandiriController extends Controller
     {
         $tahun = ($request->get('tahun')) ? $request->get('tahun') : date('Y');
         $title = "Laporan WBK Mandiri";
+        $tahap_seleksis = TahapSeleksiZI::where('tahun', $tahun)
+            ->where('laporan_wbk_mandiri', true)
+            ->get();
         return view(
             'zi.wbk_mandiri.wbk_mandiri',
             compact(
                 "title",
-                "tahun"
+                "tahun",
+                "tahap_seleksis"
             )
         );
     }
 
     public function lapor_wbk_mandiri_getDatas()
     {
-        dd("hai");
         $tahun = (request()->get('tahun')) ? request()->get('tahun') : date('Y');
         $instansi_id = Auth::User()->instansi_id;
-        $instansiZI = InstansiZI::where('tahun', $year)
+        $instansiZI = InstansiZI::where('tahun', $tahun)
             ->where('instansi_id', $instansi_id)
             ->first();
         if ($instansiZI) {
-            $datas = LaporWbkMandiri::where('tahun', $tahun)->where("instansi_zi_id")->get();
+            $datas = LaporWbkMandiri::where('tahun', $tahun)->get();
             return response()->json(['data' => $datas]);
         }
     }
@@ -75,16 +78,23 @@ class WbkMandiriController extends Controller
     }
     public function lapor_wbk_mandiri_simpan(Request $request)
     {
+        $tahun = ($request->get('tahun')) ? $request->get('tahun') : date('Y');
         $success = false;
-        $jadwalZI = new TahapSeleksiZI();
-        if ($request->jadwal_id) {
-            $jadwalZI = TahapSeleksiZI::find($request->jadwal_id);
+        $instansi_id = Auth::User()->instansi_id;
+        $instansiZI = InstansiZI::where('tahun', $tahun)
+            ->where('instansi_id', $instansi_id)
+            ->first();
+        $LaporWbkMandiri = new LaporWbkMandiri();
+        if ($request->laporan_id) {
+            $LaporWbkMandiri = LaporWbkMandiri::find($request->laporan_id);
         }
-        $jadwalZI->tahap_seleksi = $request->tahap_seleksi;
-        $jadwalZI->tanggal_mulai = $request->tanggal_mulai;
-        $jadwalZI->tanggal_selesai = $request->tanggal_selesai;
-        $jadwalZI->tahun = ($request->tahun) ? $request->tahun : date('Y');
-        if ($jadwalZI->save()) {
+        $LaporWbkMandiri->tahun = $tahun;
+        $LaporWbkMandiri->instansi_zi_id = $instansiZI->id;
+        $LaporWbkMandiri->tahap_seleksi_id = $request->tahap_seleksi_id;
+        $LaporWbkMandiri->link = $request->link_bukti;
+        $LaporWbkMandiri->keterangan = $request->keterangan;
+        $LaporWbkMandiri->updated_by = Auth::User()->id;
+        if ($LaporWbkMandiri->save()) {
             $success = true;
         };
         return response()->json(['success' => $success]);

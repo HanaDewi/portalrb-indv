@@ -242,13 +242,17 @@ class KonfigurasiController extends Controller
         }
 
         foreach ($unitTeams as $unittim) {
-            $value = $unittim->unit->instansiZI->klpd_instansi->id;
-            if (!in_array($value, $instansiIds)) {
-                $instansiIds[] = $value;
-            }
-            $nama_instansi = $unittim->unit->instansiZI->klpd_instansi->name;
-            if (!in_array($nama_instansi, $instansiTims[$unittim->tim_id])) {
-                array_push($instansiTims[$unittim->tim_id], $nama_instansi);
+            try {
+                $value = $unittim->unit->instansiZI->klpd_instansi->id;
+                if (!in_array($value, $instansiIds)) {
+                    $instansiIds[] = $value;
+                }
+                $nama_instansi = $unittim->unit->instansiZI->klpd_instansi->name;
+                if (!in_array($nama_instansi, $instansiTims[$unittim->tim_id])) {
+                    array_push($instansiTims[$unittim->tim_id], $nama_instansi);
+                }
+            } catch (\Exception $e) {
+                dd('Error on $unittim:', $unittim, 'Exception:', $e);
             }
         }
 
