@@ -6,6 +6,10 @@
         color: #b42b2d;
     }
 
+    .link-wrap {
+        word-break: break-all;
+    }
+
     h1 {
         text-align: center;
         text-transform: uppercase;
@@ -75,8 +79,8 @@
                             <thead>
                                 <tr class="text-center">
                                     <th>Data</th>
-                                    <th>Isian</th>
-                                    <th>Edit</th>
+                                    <th width="60%" class="line-wrap">Isian</th>
+                                    <th width="15%"> Edit </th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -112,7 +116,8 @@
                                 </tr>
                                 <tr>
                                     <td><i class="fa fa-envelope-open text-menpan"></i> &nbsp; Surat Usulan</td>
-                                    <td>{{$instansiZI->surat_usulan}}</td>
+                                    <td style="text-align: left; word-break:break-all">{{$instansiZI->surat_usulan}}
+                                    </td>
                                     <td class="text-center">
                                         @if($editable)
                                         <a href="#" class="fa fa-edit text-primary ms-2" data-bs-toggle="modal"
@@ -122,7 +127,7 @@
                                 </tr>
                                 <tr>
                                     <td><i class="fa fa-envelope-open text-menpan"> </i> &nbsp; SPTJM</td>
-                                    <td>{{$instansiZI->sptjm}}</td>
+                                    <td style="text-align: left; word-break:break-all">{{$instansiZI->sptjm}}</td>
                                     <td class="text-center">
                                         @if($editable)
                                         <a href="#" class="fa fa-edit text-primary ms-2" data-bs-toggle="modal"
@@ -132,7 +137,7 @@
                                 </tr>
                                 <tr>
                                     <td><i class="fa fa-envelope-open text-menpan"> </i> &nbsp; TLHP</td>
-                                    <td>{{$instansiZI->tlhp}}</td>
+                                    <td style="text-align: left; word-break:break-all">{{$instansiZI->tlhp}}</td>
                                     <td class="text-center">
                                         @if($editable)
                                         <a href="#" class="fa fa-edit text-primary ms-2" data-bs-toggle="modal"
@@ -142,7 +147,8 @@
                                 </tr>
                                 <tr>
                                     <td><i class="fa fa-envelope-open text-menpan"> </i> &nbsp; Survei Mandiri</td>
-                                    <td>{{$instansiZI->survei_mandiri}}</td>
+                                    <td style="text-align: left; word-break:break-all">{{$instansiZI->survei_mandiri}}
+                                    </td>
                                     <td class="text-center">
                                         @if($editable)
                                         <a href="#" class="fa fa-edit text-primary ms-2" data-bs-toggle="modal"
@@ -179,7 +185,7 @@
                                     <th>No</th>
                                     <th>Unit</th>
                                     <th>WBK/WBBM</th>
-                                    <th>LKE</th>
+                                    <th class="line-wrap">LKE</th>
                                     <th>EDIT / DELETE</th>
                                 </tr>
                             </thead>
@@ -196,7 +202,8 @@
                                         WBK
                                         @endif
                                     </td>
-                                    <td style="text-align: left">{{$unit->lke}}</td>
+                                    <td style="text-align: left; word-break:break-all" class="line-wrap">{{$unit->lke}}
+                                    </td>
                                     <td style="text-align: center">
 
                                         @if($editable)

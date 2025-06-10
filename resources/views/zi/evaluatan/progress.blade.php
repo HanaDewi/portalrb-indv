@@ -25,6 +25,11 @@
                 </ul>
             </div>
             <br /><br /><br /><br />
+            @if($instansiZI->instansi_wbk_mandiri)
+            <hr />
+            <a href="{{route('lapor_wbk_mandiri')}}" class="btn btn-warning font-bold ">Lapor WBK Mandiri</a>
+            @endif
+
 
         </div>
     </div>

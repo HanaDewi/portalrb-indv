@@ -59,11 +59,14 @@
         </div>
     </div>
     <div class="flex mt-[4.7rem] md:mt-0">
+
         <nav class="side-nav">
             <a href="" class="intro-x flex items-center pl-2 pt-4">
                 <img alt="LKE RB" src="{{ asset('template_lkerb') }}/dist/images/logo.jpg">
             </a>
+
             <ul>
+                @if(Auth::User()->level == "admin" || Auth::User()->level == "tpn")
                 <li>
                     <a href="{{ route('rekap_total') }}" class="side-menu
                     @if($title == 'Rekap Total')
@@ -400,7 +403,17 @@
                         <div class="side-menu__title"> ZI 2014-2023 </div>
                     </a>
                 </li>
-
+                @endif
+                <li>
+                    <a href="{{ route('kelola_jadwal_zi') }}" class="side-menu
+                    @if($title == 'Kelola Jadwal')
+                                side-menu--active 
+                    @endif
+                    ">
+                        <div class="side-menu__icon"><i data-lucide="clipboard-list"></i></div>
+                        <div class="side-menu__title">WBK Mandiri</div>
+                    </a>
+                </li>
                 <li>
                     <a href="{{ route('logout') }}" onclick="event.preventDefault(); $('#logout').submit();"
                         class="side-menu">
@@ -409,6 +422,7 @@
                     </a>
                 </li>
             </ul>
+
         </nav>
 
         <div class="content">
@@ -475,6 +489,7 @@
                 @yield('content')
             </div>
         </div>
+
     </div>
     <script src="{{ asset('template_lkerb') }}/dist/js/app.js"></script>
     <script src="{{ asset('ext') }}/jquery/jquery.js"></script>

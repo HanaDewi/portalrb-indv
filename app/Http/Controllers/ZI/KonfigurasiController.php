@@ -314,7 +314,7 @@ class KonfigurasiController extends Controller
                     $unitTimEvaluasi->tim_id = $tim_id;
                     $unitTimEvaluasi->unit_id = $unitZI->id;
                     if ($is_instansiMandiri) { #hanya unit wbbm saja yang di assign ke tim
-                        if ($unitZI->wbbm) {
+                        if ($unitZI) {
                             if ($unitTimEvaluasi->save()) {
                                 $success = true;
                             };

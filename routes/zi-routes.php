@@ -18,7 +18,7 @@ use App\Http\Controllers\ZI\AdministrasiController;
 use App\Http\Controllers\ZI\GenerateDataController;
 use App\Http\Controllers\ZI\LkeEvaluatorController;
 use App\Http\Controllers\ZI\PengusulanZIController;
-
+use App\Http\Controllers\ZI\WbkMandiriController;
 
 Route::get('/zi', [HomeZIController::class, 'home'])->name('home_zi');
 Route::middleware('auth')->group(function () {
@@ -42,6 +42,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/zi-hasil-akhir', [EvaluatanController::class, 'hasil_akhir'])->name('evaluatan_hasil_akhir');
     #WBK MANDIRI
     //Route::post('/zi/simpan-hasil-wbk-mandiri', [EvaluatanController::class, 'simpan_hasil_wbk_mandiri'])->name('simpan_hasil_wbk_mandiri');
+    Route::get('/zi/lapor-wbk-mandiri', [WbkMandiriController::class, 'index'])->name('lapor_wbk_mandiri');
+    Route::post('/zi/lapor-wbk-mandiri/simpan', [WbkMandiriController::class, 'lapor_wbk_mandiri_simpan'])->name('lapor_wbk_mandiri_simpan');
+    Route::get('/zi/lapor-wbk-mandiri/getDatas', [WbkMandiriController::class, 'lapor_wbk_mandiri_getDatas'])->name('lapor_wbk_mandiri_getDatas');
+    Route::get('/zi/lapor-wbk-mandiri/getData/{id}', [WbkMandiriController::class, 'lapor_wbk_mandiri_getData']);
+    Route::post('/zi/lapor-wbk-mandiri/hapus', [WbkMandiriController::class, 'lapor_wbk_mandiri_hapus'])->name('lapor_wbk_mandiri_hapus');
 
     #============================Admin 
     #Pengusulan
