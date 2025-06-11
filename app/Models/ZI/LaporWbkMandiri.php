@@ -20,4 +20,9 @@ class LaporWbkMandiri extends Model
     {
         return $this->belongsTo(TahunEvaluasi::class, 'tahun');
     }
+
+    public function tahap_seleksi(): BelongsTo
+    {
+        return $this->belongsTo(TahapSeleksiZI::class, 'tahap_seleksi_id');
+    }
 }

@@ -66,14 +66,27 @@ class WbkMandiriController extends Controller
             ->where('instansi_id', $instansi_id)
             ->first();
         if ($instansiZI) {
-            $datas = LaporWbkMandiri::where('tahun', $tahun)->get();
+            $laporWbkMandiris = LaporWbkMandiri::where('tahun', $tahun)->get();
+            foreach ($laporWbkMandiris as $laporWbkMandiri) {
+                $output = array(
+                    "id" => $laporWbkMandiri->id,
+                    "tahap_seleksi" => $laporWbkMandiri->tahap_seleksi->tahap_seleksi,
+                    "tahun" => $laporWbkMandiri->tahun,
+                    "link" => $laporWbkMandiri->link,
+                    "keterangan" => $laporWbkMandiri->keterangan,
+                    "updated_at" => $laporWbkMandiri->updated_at->format('d-m-Y H:i:s')
+                );
+                $datas[] = $output;
+            }
+
             return response()->json(['data' => $datas]);
         }
     }
 
     public function lapor_wbk_mandiri_getData($id)
     {
-        $data = TahapSeleksiZI::find($id);
+        $tahun = (request()->get('tahun')) ? request()->get('tahun') : date('Y');
+        $data = LaporWbkMandiri::find($id);
         return $data;
     }
     public function lapor_wbk_mandiri_simpan(Request $request)
@@ -104,12 +117,8 @@ class WbkMandiriController extends Controller
     {
         $pesan = '';
         $success = true;
-        $jadwalZI = TahapSeleksiZI::find($request->id);
-        #if (count($timEvaluasi->indikators) > 0) {
-        #    $pesan = 'Tim Evaluasi tidak bisa dihapus, silahkan hapus dulu Anggota yang terhubung dengan Tim Evaluasi ini!';
-        #    $success = false;
-        #} else {
-        if ($jadwalZI->delete()) {
+        $laporWbkMandiri = LaporWbkMandiri::find($request->id);
+        if ($laporWbkMandiri->delete()) {
             $success = true;
         } else {
             $success = false;
