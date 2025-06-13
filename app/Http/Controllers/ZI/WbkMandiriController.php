@@ -65,8 +65,14 @@ class WbkMandiriController extends Controller
         $instansiZI = InstansiZI::where('tahun', $tahun)
             ->where('instansi_id', $instansi_id)
             ->first();
-        if ($instansiZI) {
-            $laporWbkMandiris = LaporWbkMandiri::where('tahun', $tahun)->where('instansi_zi_id', $instansiZI->id)->get();
+        if ($instansiZI || Auth::User()->level == "admin" || Auth::User()->level == "tpn") {
+            if (Auth::User()->level == "admin" || Auth::User()->level == "tpn") {
+                $laporWbkMandiris = LaporWbkMandiri::where('tahun', $tahun)->get();
+            } else {
+                $laporWbkMandiris = LaporWbkMandiri::where('tahun', $tahun)->where('instansi_zi_id', $instansiZI->id)->get();
+            }
+
+
             foreach ($laporWbkMandiris as $laporWbkMandiri) {
                 $output = array(
                     "id" => $laporWbkMandiri->id,

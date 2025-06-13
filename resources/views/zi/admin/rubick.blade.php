@@ -405,7 +405,7 @@
                 </li>
                 @endif
                 <li>
-                    <a href="{{ route('kelola_jadwal_zi') }}" class="side-menu
+                    <a href="{{ route('lapor_wbk_mandiri') }}" class="side-menu
                     @if($title == 'Kelola Jadwal')
                                 side-menu--active 
                     @endif
