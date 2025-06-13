@@ -66,7 +66,7 @@ class WbkMandiriController extends Controller
             ->where('instansi_id', $instansi_id)
             ->first();
         if ($instansiZI) {
-            $laporWbkMandiris = LaporWbkMandiri::where('tahun', $tahun)->get();
+            $laporWbkMandiris = LaporWbkMandiri::where('tahun', $tahun)->where('instansi_zi_id', $instansiZI->id)->get();
             foreach ($laporWbkMandiris as $laporWbkMandiri) {
                 $output = array(
                     "id" => $laporWbkMandiri->id,
