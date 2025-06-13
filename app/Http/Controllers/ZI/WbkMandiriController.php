@@ -77,6 +77,7 @@ class WbkMandiriController extends Controller
                 $output = array(
                     "id" => $laporWbkMandiri->id,
                     "tahap_seleksi" => $laporWbkMandiri->tahap_seleksi->tahap_seleksi,
+                    "instansi" => $laporWbkMandiri->instansi_ZI->klpd_instansi->name,
                     "tahun" => $laporWbkMandiri->tahun,
                     "link" => $laporWbkMandiri->link,
                     "keterangan" => $laporWbkMandiri->keterangan,

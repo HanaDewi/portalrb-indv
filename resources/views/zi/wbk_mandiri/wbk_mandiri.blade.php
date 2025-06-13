@@ -32,6 +32,7 @@
                     <tr>
                         <th class="w-5">No.</th>
                         <th>Tahun</th>
+                        <th>Instansi</th>
                         <th>Tahap Seleksi</th>
                         <th>Link</th>
                         <th>Keterangan</th>
@@ -179,6 +180,7 @@
                 }
             },
             { data: 'tahun' },
+            { data: 'instansi' },
             { data: 'tahap_seleksi' },
             { data: 'link' },
             { data: 'keterangan' },

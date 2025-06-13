@@ -25,4 +25,9 @@ class LaporWbkMandiri extends Model
     {
         return $this->belongsTo(TahapSeleksiZI::class, 'tahap_seleksi_id');
     }
+
+    public function instansi_ZI(): BelongsTo
+    {
+        return $this->belongsTo(InstansiZI::class, 'instansi_zi_id');
+    }
 }
