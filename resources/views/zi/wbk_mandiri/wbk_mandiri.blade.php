@@ -23,7 +23,7 @@
         <div class="flex flex-col sm:flex-row items-center p-5 border-b border-slate-200/60">
             <h2 class="font-medium text-base mr-auto"> {{$title}}</h2>
             <button class="btn btn-danger shadow-md mr-2 float-right" onclick="tambah();" data-bs-toggle="modal"
-                data-bs-target="#modal-kelola-tim"><i class="fa fa-add"></i> &nbsp; Tambah Jadwal</button>
+                data-bs-target="#modal-kelola-tim"><i class="fa fa-add"></i> &nbsp; Tambah Bukti Dukung</button>
         </div>
         <div class="lg:col-span-12 p-5 border-b border-slate-200/60">
             <table id="lapor_wbk_mandiri" class="table table-bordered table-striped table-hover" cellspacing="0"
