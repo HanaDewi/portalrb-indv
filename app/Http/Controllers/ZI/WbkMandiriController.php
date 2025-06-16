@@ -17,13 +17,7 @@ class WbkMandiriController extends Controller
         $this->middleware(function ($request, $next) {
 
             // Gita 10059, Wahyu 10060 Rheza  10046 Arina 10053 Canggih 10056 Afif 10048 Auffi 10052
-            if (Auth::User()->level == "admin" || in_array(Auth::User()->id, [
-                10060,
-                10209,
-                10059,
-                10053,
-                10052
-            ])) {
+            if (Auth::User()->level == "tpn" || Auth::User()->level == "admin") {
                 return $next($request);
             } else {
                 $year = date('Y');
@@ -67,7 +61,7 @@ class WbkMandiriController extends Controller
             ->first();
         if ($instansiZI || Auth::User()->level == "admin" || Auth::User()->level == "tpn") {
             if (Auth::User()->level == "admin" || Auth::User()->level == "tpn") {
-                $laporWbkMandiris = LaporWbkMandiri::where('tahun', $tahun)->get();
+                $laporWbkMandiris = LaporWbkMandiri::where('tahun', $tahun)->orderBy('instansi_zi_id')->get();
             } else {
                 $laporWbkMandiris = LaporWbkMandiri::where('tahun', $tahun)->where('instansi_zi_id', $instansiZI->id)->get();
             }
