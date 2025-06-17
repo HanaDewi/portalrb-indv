@@ -113,7 +113,6 @@ class WbkMandiriController extends Controller
         };
         return response()->json(['success' => $success]);
     }
-
     public function lapor_wbk_mandiri_hapus(Request $request)
     {
         $pesan = '';
@@ -126,5 +125,22 @@ class WbkMandiriController extends Controller
         }
         #}
         return response()->json(['success' => $success, 'pesan' => $pesan]);
+    }
+
+    public function progres_wbk_mandiri(Request $request)
+    {
+        $tahun = ($request->get('tahun')) ? $request->get('tahun') : date('Y');
+        $title = "Progres WBK Mandiri";
+        $instansiZIs = InstansiZI::where('tahun', $tahun)
+            ->where('instansi_wbk_mandiri', 1)
+            ->get();
+        return view(
+            'zi.wbk_mandiri.progres_wbk_mandiri',
+            compact(
+                "title",
+                "tahun",
+                "instansiZIs"
+            )
+        );
     }
 }

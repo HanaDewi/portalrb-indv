@@ -47,6 +47,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/zi/lapor-wbk-mandiri/getDatas', [WbkMandiriController::class, 'lapor_wbk_mandiri_getDatas'])->name('lapor_wbk_mandiri_getDatas');
     Route::get('/zi/lapor-wbk-mandiri/getData/{id}', [WbkMandiriController::class, 'lapor_wbk_mandiri_getData']);
     Route::post('/zi/lapor-wbk-mandiri/hapus', [WbkMandiriController::class, 'lapor_wbk_mandiri_hapus'])->name('lapor_wbk_mandiri_hapus');
+    Route::get('/zi/progres-wbk-mandiri', [WbkMandiriController::class, 'progres_wbk_mandiri'])->name('progres_wbk_mandiri');
 
     #============================Admin 
     #Pengusulan
