@@ -28,10 +28,12 @@ class AuthenticatedSessionController extends Controller
         $request->authenticate();
 
         $request->session()->regenerate();
-        if ($request->input('ruang-belajar')) {
-            return redirect('/ruang-belajar/admin-dashboard');
-        }elseif ($request->input('zi')) {
-            return redirect('/zi');
+        if ($request->modul == 'evaluasi_akip') {
+            return redirect('/akip/dashboard');
+        } else if ($request->modul == 'zi') {
+            return redirect('/zi/dashboard');
+        } else {
+            return redirect('/dashboard');
         };
 
         return redirect()->intended(RouteServiceProvider::HOME);

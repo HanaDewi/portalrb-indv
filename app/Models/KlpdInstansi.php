@@ -64,7 +64,7 @@ class KlpdInstansi extends Model
 
     public function getNamaInstansiAttribute()
     {
-        return $this->name_before ? $this->name . ' [<span class="font-italic text-danger">' . $this->name_before . '</span>]' : $this->name;
+        return $this->name_before ? $this->name . ' [<span class="italic text-red-500">' . $this->name_before . '</span>]' : $this->name;
     }
 
     public function idBeforeUsed()

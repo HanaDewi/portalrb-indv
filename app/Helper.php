@@ -1,6 +1,9 @@
 <?php
+
+use App\Models\AnggotaTimEvaluasiRB;
 use App\Models\DokumenKategori;
 use App\Models\FokusIntervensi;
+use App\Models\InstansiTimEvaluasi;
 use App\Models\KegiatanUtama;
 use App\Models\KlpdInstansi;
 use App\Models\LKE\LkeBobot;
@@ -11,14 +14,15 @@ use App\Models\LKE\LkeTestTpLine;
 use App\Models\OpenAccessSetting;
 use App\Models\LkeTP;
 use App\Models\Tahun;
+use App\Models\TimEvaluasiRB;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
 if(! function_exists('menus')) 
 {
-    function menus()
+    function menus($modul = 'rb')
     {
-        $menu = [
+        $menu['rb'] = [
             [
                 'levels' => ['admin', 'provinsi', 'kabupaten', 'kl', 'tpn', 'tpm', 'viewer'],
                 'title' => 'Beranda',
@@ -293,18 +297,42 @@ if(! function_exists('menus'))
                 ]
             ]
         ];
-        return $menu;
+
+        $menu['akip'] = [
+            [
+                'levels' => ['admin', 'provinsi', 'kabupaten', 'kl', 'tpn'],
+                'title' => 'Beranda',
+                'icon' => 'home',
+                'url' => 'akip/dashboard',
+            ],
+            [
+                'levels' => ['tpn', 'admin', 'kl', 'provinsi', 'kabupaten'],
+                'title' => 'Evaluasi',
+                'icon' => 'edit-2',
+                'url' => 'akip/evaluasi',
+                'items' => [ 
+                    [
+                        'levels' => ['tpn', 'admin', 'kl', 'provinsi', 'kabupaten'],
+                        'title' => 'Sakip',
+                        'icon' => 'smile',
+                        'url' => 'akip/evaluasi/sakip'
+                    ],
+                ],
+            ],
+        ];
+
+        return $menu[$modul];
     }
 };
 
 if(! function_exists('allowed_url')) 
 {
-    function allowed_url()
+    function allowed_url($modul = 'rb')
     {
         $level = auth()->user()->level;
         $allowed_url = [];
         $base_url = config('app.client_url') == 'localhost' ? url('/') . '/' : config('app.client_url');
-        foreach (menus() as $menu) {
+        foreach (menus($modul) as $menu) {
             if (in_array($level, $menu['levels'])) {
                 if (isset($menu['items'])) {
                     foreach ($menu['items'] as $item) { 
@@ -404,11 +432,23 @@ if(! function_exists('instansis')) {
     function instansis()
     {
         $inslist = KlpdInstansi::orderBy('id')->get()->pluck('nama_instansi', 'id');
-        $result = ['-'=>' -- Pilih instansi -- '];
         foreach ($inslist as $kk=>$lst) {
             $result[$kk] = $lst;
         }
         return $result;
+    }
+}
+
+if(! function_exists('instansi_tim')) {
+    function instansi_tim()
+    {
+        $user = Auth::User();
+        $anggota = AnggotaTimEvaluasiRB::where('user_id', $user->id)->first();
+        if ($anggota) {
+            $instansi_ids = InstansiTimEvaluasi::where('tim_id', $anggota->tim_id)->pluck('instansi_id');
+        }
+        $inslist = KlpdInstansi::whereIn('id', $instansi_ids)->orderBy('id')->get()->pluck('nama_instansi', 'id');
+        return $inslist;
     }
 }
 

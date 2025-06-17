@@ -37,10 +37,10 @@
                         <h2 class="intro-x font-bold text-2xl xl:text-3xl text-center xl:text-left">
                             Sign In
                         </h2>
-                        @if (app('request')->input('ruang-belajar'))
-                            <input id="ruang-belajar" type="hidden" class="form-check-input border mr-2" name="ruang-belajar" value="1">
-                            <input id="remember" type="checkbox" class="form-check-input border mr-2" name="remember">
-                        @endif
+                        
+                        <div class="form-group">
+                            {!! Form::select('modul', ['evaluasi_rb' => 'Evaluasi RB', 'zi' => 'Zona Integritas', 'evaluasi_akip' => 'Evaluasi Akip'], 'evaluasi_rb', ['class' => 'w-full mt-5', 'id' => 'modul', 'data-placeholder' => 'Pilih Modul', 'required']) !!}
+                        </div>
                         <div class="intro-x mt-8">
                             <input type="text" class="intro-x login__input form-control py-3 px-4 block @error('username') border-danger @enderror" placeholder="Username" name="username" value="{{ old('username') }}">
                             @if ($errors->has('username'))
