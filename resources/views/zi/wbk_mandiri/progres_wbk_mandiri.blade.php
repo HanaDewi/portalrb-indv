@@ -42,7 +42,9 @@
                         <td>{{$key + 1}}</td>
                         <td>{{$instansi_zi->tahun}}</td>
                         <td>{{$instansi_zi->klpd_instansi->name}}</td>
-                        <td>{{$instansi_zi->link_progres_wbk_mandiri}}</td>
+                        <td><a href="{{$instansi_zi->link_progres_wbk_mandiri}}"
+                                target="_blank">{{$instansi_zi->link_progres_wbk_mandiri}}
+                        </td>
                     </tr>
                     @endforeach
                 </tbody>
