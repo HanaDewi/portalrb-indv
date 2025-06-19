@@ -75,6 +75,19 @@
                                     @endfor
                             </select>
                         </div>
+                        <div class="form-group">
+                            <label for="tahun" class="form-label">Tahun <span class="text-danger">*</span></label>
+                            <br />
+                            <select name="laporan_wbk_mandiri" id="tahun">
+                                <option value="1">
+                                    Ya
+                                </option>
+                                <option value="0">
+                                    Tidak
+                                </option>
+
+                            </select>
+                        </div>
                         <br />
                         <div class="form-group">
                             <label for="tahap_seleksi" class="form-label">Jadwal Mulai <span

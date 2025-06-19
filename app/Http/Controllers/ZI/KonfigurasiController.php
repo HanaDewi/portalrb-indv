@@ -386,6 +386,7 @@ class KonfigurasiController extends Controller
         $jadwalZI->tahap_seleksi = $request->tahap_seleksi;
         $jadwalZI->tanggal_mulai = $request->tanggal_mulai;
         $jadwalZI->tanggal_selesai = $request->tanggal_selesai;
+        $jadwalZI->laporan_wbk_mandiri = $request->laporan_wbk_mandiri;
         $jadwalZI->tahun = ($request->tahun) ? $request->tahun : date('Y');
         if ($jadwalZI->save()) {
             $success = true;
