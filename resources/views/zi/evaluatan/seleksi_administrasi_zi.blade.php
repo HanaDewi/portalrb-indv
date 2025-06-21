@@ -57,13 +57,13 @@
                             {{ $instansi}}</h5>
                         <h6>Berikut adalah hasil seleksi administrasi</h6>
                         <br />
-                        <div style="text-align: left">
+                        <!--<div style="text-align: left">
                             <h5><a href="{{ asset('files-surat/Pengumuman_Seleksi_ZI.pdf') }}" target="_blank"><i
                                         class="fa-lg fa fa-file-word" style="font-size: 3em; color:#b42b2d">
                                     </i> Pengumuman Hasil
                                     Seleksi
                                     Administrasi (Download)</a></h5>
-                        </div>
+                        </div>-->
                         <br />
                         <form method="POST" action="{{route('evaluatan_simpan_sanggah')}}">
                             @csrf
