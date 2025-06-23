@@ -32,8 +32,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/zi/unit/{id}/delete-unit', [PengusulanZIController::class, 'deleteUnit'])->name('unit.delete-unit');
     Route::post('/zi/unit/{id}/tambah-unit', [PengusulanZIController::class, 'addUnit'])->name('unit.add-unit'); //untuk add unit
     Route::get('/zi-administrasi', [EvaluatanController::class, 'seleksi_administrasi'])->name('evaluatan_seleksi_administrasi');
-    //Route::post('/zi-simpan-sanggah', [EvaluatanController::class, 'sanggah_simpan'])->name('evaluatan_simpan_sanggah');
-    Route::post('/zi-simpan-sanggah', [TutupController::class, 'index'])->name('evaluatan_simpan_sanggah');
+    Route::post('/zi-simpan-sanggah', [EvaluatanController::class, 'sanggah_simpan'])->name('evaluatan_simpan_sanggah');
     Route::get('/zi-hasil-sanggah', [EvaluatanController::class, 'hasil_sanggah'])->name('evaluatan_hasil_sanggah');
     Route::get('/zi-desk', [EvaluatanController::class, 'seleksi_desk'])->name('evaluatan_desk');
     //Route::post('/zi-simpan-desk', [EvaluatanController::class, 'link_paparan_simpan'])->name('evaluatan_simpan_desk');
