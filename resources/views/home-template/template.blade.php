@@ -116,7 +116,7 @@
                                                     @endif
                                                     <span class="xbtn">
                                                         <i class="fas fa-arrow-right"></i> {{
-                                                        (Auth::User())?"Logout":"Login EvalRB" }} </span>
+                                                        (Auth::User())?"Logout":"Login" }} </span>
                                                 </a>
                                         </li>
                                     </ul>
