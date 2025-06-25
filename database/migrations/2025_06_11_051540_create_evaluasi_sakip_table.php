@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('instansi_id');
             $table->foreignId('input_user_id');
+            $table->foreignId('last_update_user_id');
             $table->integer('tahun');
             $table->string('periode')->nullable();
             $table->string('penanggung_jawab');
@@ -36,8 +37,10 @@ return new class extends Migration
             $table->float('penurunan_emisi_grk')->nullable();
             $table->float('indeks_pembangunan_manusia')->nullable();
             $table->float('indeks_gini_ratio')->nullable();
+            $table->float('pendapatan_perkapita')->nullable();
             $table->string('file_evaluasi')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

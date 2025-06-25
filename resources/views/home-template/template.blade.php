@@ -93,13 +93,16 @@
                                             <a href="{{ route('home') }}">Beranda</a>
                                         </li>
                                         <li>
-                                            <a href="{{ route('dashboard') }}">Evaluasi</a>
-                                        </li>
-                                        <li>
-                                            <a href="{{ route('ruang-belajar.home') }}">Ruang Belajar</a>
+                                            <a href="{{ route('dashboard') }}">Evaluasi RB</a>
                                         </li>
                                         <li>
                                             <a href="{{ route('home_zi') }}">Zona Integritas</a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ route('akip.dashboard') }}">Akip</a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ route('ruang-belajar.home') }}">Ruang Belajar</a>
                                         </li>
                                         <li>
                                             @if(Auth::User())

@@ -13,4 +13,9 @@ class TimEvaluasiRB extends Model
     protected $guarded = [
         'id'
     ];
+
+    public function instansi_tim()
+    {
+        return $this->hasMany(InstansiTimEvaluasi::class, 'tim_id');
+    }
 }

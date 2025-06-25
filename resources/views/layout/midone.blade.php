@@ -318,6 +318,7 @@
     <script src="{{ asset('ext') }}/jquery/jquery.js"></script>
     {{-- Sweetalert2 --}}
     <script src="{{ asset('ext') }}/sweetalert2/sweetalert2.js"></script>
+    @stack('js_file')
     <script src="{{ asset('midone') }}/dist/js/app.js"></script>
     @stack('js')
     <!-- END: JS Assets-->

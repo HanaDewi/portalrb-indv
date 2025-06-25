@@ -66,6 +66,11 @@ class User extends Authenticatable
     {
         return $this->hasMany(AnggotaTimEvaluasi::class, 'user_id');
     }
+
+    public function anggota()
+    {
+        return $this->hasOne(AnggotaTimEvaluasiRB::class, 'user_id');
+    }
     
     public function sendPasswordResetNotification($token)
     {

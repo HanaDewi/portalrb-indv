@@ -127253,7 +127253,7 @@ __webpack_require__.r(__webpack_exports__);
 (function ($) {
   "use strict"; // Datatable
 
-  $('.datatable').DataTable({
+  $('.datatables').DataTable({
     responsive: true
   });
 })($);
@@ -128028,6 +128028,10 @@ __webpack_require__.r(__webpack_exports__);
     if ($(this).data('hide-search')) {
       options.minimumResultsForSearch = -1;
     }
+
+	options.escapeMarkup = function(markup) {
+		return markup;
+	}
 
     $(this).select2(options);
   });
