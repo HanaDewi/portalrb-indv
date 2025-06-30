@@ -27,9 +27,18 @@ class EvaluasiSakipController extends Controller
 
     public function evaluasi_sakip()
     {
-        $tim = $this->currentUser->anggota ? $this->currentUser->anggota->tim : false;
-        $anggota_tims = $tim ? $tim->instansi_tim : [];
-        return view('akip.evaluasi.tim', compact('tim', 'anggota_tims'));
+        if ($this->currentUser->level == 'tpn') {
+            $tim = $this->currentUser->anggota ? $this->currentUser->anggota->tim : false;
+            $anggota_tims = $tim ? $tim->instansi_tim : [];
+            return view('akip.evaluasi.tim', compact('tim', 'anggota_tims'));
+        } else if (in_array($this->currentUser->level, ['kl', 'kabupaten', 'provinsi'])) {
+            $instansi = KlpdInstansi::find($this->currentUser->instansi_id);
+            if (!$instansi) {
+                abort('404');
+            }
+            $evaluasi_sakip = EvaluasiSakip::where('instansi_id', $this->currentUser->instansi_id)->orderBy('tahun')->orderBy('periode')->get();
+            return view('akip.evaluasi.instansi', compact('instansi', 'evaluasi_sakip'));
+        }
     }
 
     public function evaluasi_sakip_instansi($instansi_id)
