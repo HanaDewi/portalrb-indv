@@ -128514,7 +128514,7 @@ __webpack_require__.r(__webpack_exports__);
   "use strict";
 
   $('.validate-form').each(function () {
-    $(this).validate();
+    // $(this).validate();
   });
 })($);
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js")))

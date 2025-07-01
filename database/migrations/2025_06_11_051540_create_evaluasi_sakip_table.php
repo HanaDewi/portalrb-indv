@@ -30,7 +30,10 @@ return new class extends Migration
             $table->text('catatan_komponen_pengukuran_kinerja')->nullable();
             $table->text('catatan_komponen_pelaporan_kinerja')->nullable();
             $table->text('catatan_komponen_evaluasi_internal')->nullable();
-            $table->text('catatan_total_evaluasi_akip')->nullable();
+            $table->text('rekomendasi_komponen_perencanaan_kinerja')->nullable();
+            $table->text('rekomendasi_komponen_pengukuran_kinerja')->nullable();
+            $table->text('rekomendasi_komponen_pelaporan_kinerja')->nullable();
+            $table->text('rekomendasi_komponen_evaluasi_internal')->nullable();
             $table->float('angka_kemiskinan')->nullable();
             $table->float('laju_pertumbuhan_ekonomi')->nullable();
             $table->float('tingkat_pengangguran_terbuka')->nullable();
@@ -38,6 +41,13 @@ return new class extends Migration
             $table->float('indeks_pembangunan_manusia')->nullable();
             $table->float('indeks_gini_ratio')->nullable();
             $table->float('pendapatan_perkapita')->nullable();
+            $table->float('angka_kemiskinan_sebelumnya')->nullable();
+            $table->float('laju_pertumbuhan_ekonomi_sebelumnya')->nullable();
+            $table->float('tingkat_pengangguran_terbuka_sebelumnya')->nullable();
+            $table->float('penurunan_emisi_grk_sebelumnya')->nullable();
+            $table->float('indeks_pembangunan_manusia_sebelumnya')->nullable();
+            $table->float('indeks_gini_ratio_sebelumnya')->nullable();
+            $table->float('pendapatan_perkapita_sebelumnya')->nullable();
             $table->string('file_evaluasi')->nullable();
             $table->timestamps();
             $table->softDeletes();
