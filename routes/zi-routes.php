@@ -72,8 +72,7 @@ Route::middleware('auth')->group(function () {
     #Proses Sanggah
     Route::get('/zi/sanggah', [SanggahController::class, 'index'])->name('sanggah');
     Route::get('/zi/proses-sanggah/{id}', [SanggahController::class, 'proses_sanggah'])->name('proses_sanggah');
-    //Route::post('/zi/proses-sanggah/simpan', [SanggahController::class, 'proses_sanggah_simpan'])->name('proses_sanggah_simpan');
-    Route::post('/zi/proses-sanggah/simpan', [TutupController::class, 'index'])->name('proses_sanggah_simpan');
+    Route::post('/zi/proses-sanggah/simpan', [SanggahController::class, 'proses_sanggah_simpan'])->name('proses_sanggah_simpan');
     #Seleksi Dokumen
     Route::get('/zi/seleksi-dokumen', [DokumenController::class, 'index'])->name('seleksi_dokumen');
     Route::get('/zi/proses-dokumen/{id}', [DokumenController::class, 'evaluasi_dokumen'])->name('proses_dokumen');
