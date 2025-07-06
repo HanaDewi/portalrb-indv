@@ -28,7 +28,7 @@
 <body class="py-5">
     <div class="mobile-menu md:hidden">
         <div class="mobile-menu-bar">
-            <a href="" class="flex mr-auto">
+            <a href="{{ url('/') }}" class="flex mr-auto">
                 <img alt="LKE RB" class="w-24" src="{{ asset('template_lkerb') }}/dist/images/logo.jpg">
             </a>
             <a href="javascript:;" class="mobile-menu-toggler">
@@ -118,7 +118,7 @@
     </div>
     <div class="flex mt-[4.7rem] md:mt-0">
         <nav class="side-nav">
-            <a href="" class="intro-x flex items-center pl-2 pt-4">
+            <a href="{{ url('/') }}" class="intro-x flex items-center pl-2 pt-4">
                 <img alt="LKE RB" src="{{ asset('template_lkerb') }}/dist/images/logo.jpg">
             </a>
             <div class="side-nav__devider my-6"></div>

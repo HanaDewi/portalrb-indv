@@ -546,7 +546,8 @@ if(! function_exists('fiturs')) {
     {
         $fiturs = [
             'hasil_evaluasi' => 'Hasil Evaluasi',
-            'rencana_aksi' => 'Rencana Aksi'
+            'rencana_aksi' => 'Rencana Aksi',
+            'evaluasi_akip' => 'Evaluasi Akip'
         ];
         
         return $fitur ? $fiturs[$fitur] : $fiturs;
@@ -698,6 +699,19 @@ function hasAksesHasilEvaluasi()
 {
     $user = auth()->user();
     $access = OpenAccessSetting::where('user_level', $user->level)->where('fitur', 'hasil_evaluasi')->first();
+    if ($access) {
+        $today = date('Y-m-d');
+        if ($access->waktu_awal > $today || $access->waktu_akhir < $today) {
+            return false;
+        }
+    }
+    return true;
+}
+
+function hasAksesEvaluasiAkip()
+{
+    $user = auth()->user();
+    $access = OpenAccessSetting::where('user_level', $user->level)->where('fitur', 'evaluasi_akip')->first();
     if ($access) {
         $today = date('Y-m-d');
         if ($access->waktu_awal > $today || $access->waktu_akhir < $today) {

@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Akip;
 
 use App\Http\Controllers\Controller;
 use App\Models\Akip\EvaluasiSakip;
+use App\Models\InstansiTimEvaluasi;
 use App\Models\KlpdInstansi;
+use App\Models\OpenAccessSetting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -27,11 +29,21 @@ class EvaluasiSakipController extends Controller
 
     public function evaluasi_sakip()
     {
-        if ($this->currentUser->level == 'tpn') {
+        if (in_array($this->currentUser->level, ['tpn', 'admin'])) {
             $tim = $this->currentUser->anggota ? $this->currentUser->anggota->tim : false;
             $anggota_tims = $tim ? $tim->instansi_tim : [];
+            if ($this->currentUser->level == 'admin') {
+                $anggota_tims = InstansiTimEvaluasi::all();
+            }
             return view('akip.evaluasi.tim', compact('tim', 'anggota_tims'));
         } else if (in_array($this->currentUser->level, ['kl', 'kabupaten', 'provinsi'])) {
+            $access = OpenAccessSetting::where('user_level', $this->currentUser->level)->where('fitur', 'evaluasi_akip')->first();
+            if ($access) {
+                $today = date('Y-m-d');
+                if ($access->waktu_awal > $today || $access->waktu_akhir < $today) {
+                    return view('belumbuka');
+                }
+            }
             $instansi = KlpdInstansi::find($this->currentUser->instansi_id);
             if (!$instansi) {
                 abort('404');
@@ -44,10 +56,10 @@ class EvaluasiSakipController extends Controller
     public function evaluasi_sakip_instansi($instansi_id)
     {
         $cek = $this->currentUser->anggota ? $this->currentUser->anggota->tim->instansi_tim->where('instansi_id', $instansi_id)->first() : false;
-        if (!$cek) {
+        if (!$cek && $this->currentUser->level != 'admin') {
             abort('404');
         } else {
-            $instansi = $cek->instansi;
+            $instansi = KlpdInstansi::find($instansi_id);
         }
         $evaluasi_sakip = EvaluasiSakip::where('instansi_id', $instansi_id)->orderBy('tahun')->orderBy('periode')->get();
         return view('akip.evaluasi.instansi', compact('instansi', 'evaluasi_sakip'));
@@ -119,6 +131,10 @@ class EvaluasiSakipController extends Controller
             $evaluasi_sakip->pic_lke = $request->pic_lke;
             $evaluasi_sakip->link_lke = $request->link_lke;
             $evaluasi_sakip->penanggung_jawab = $request->penanggung_jawab;
+            $evaluasi_sakip->nilai_komponen_perencanaan_kinerja_tahun_lalu = $request->nilai_komponen_perencanaan_kinerja_tahun_lalu;
+            $evaluasi_sakip->nilai_komponen_pengukuran_kinerja_tahun_lalu = $request->nilai_komponen_pengukuran_kinerja_tahun_lalu;
+            $evaluasi_sakip->nilai_komponen_pelaporan_kinerja_tahun_lalu = $request->nilai_komponen_pelaporan_kinerja_tahun_lalu;
+            $evaluasi_sakip->nilai_komponen_evaluasi_internal_tahun_lalu = $request->nilai_komponen_evaluasi_internal_tahun_lalu;
             $evaluasi_sakip->nilai_komponen_perencanaan_kinerja = $request->nilai_komponen_perencanaan_kinerja;
             $evaluasi_sakip->nilai_komponen_pengukuran_kinerja = $request->nilai_komponen_pengukuran_kinerja;
             $evaluasi_sakip->nilai_komponen_pelaporan_kinerja = $request->nilai_komponen_pelaporan_kinerja;
@@ -131,14 +147,15 @@ class EvaluasiSakipController extends Controller
             $evaluasi_sakip->rekomendasi_komponen_pengukuran_kinerja = $request->rekomendasi_komponen_pengukuran_kinerja;
             $evaluasi_sakip->rekomendasi_komponen_pelaporan_kinerja = $request->rekomendasi_komponen_pelaporan_kinerja;
             $evaluasi_sakip->rekomendasi_komponen_evaluasi_internal = $request->rekomendasi_komponen_evaluasi_internal;
+            $evaluasi_sakip->nilai_total_evaluasi_akip_tahun_lalu = $request->nilai_total_evaluasi_akip_tahun_lalu;
             $evaluasi_sakip->nilai_total_evaluasi_akip = $request->nilai_total_evaluasi_akip;
-            $evaluasi_sakip->angka_kemiskinan_sebelumnya = $request->angka_kemiskinan_sebelumnya;
-            $evaluasi_sakip->laju_pertumbuhan_ekonomi_sebelumnya = $request->laju_pertumbuhan_ekonomi_sebelumnya;
-            $evaluasi_sakip->tingkat_pengangguran_terbuka_sebelumnya = $request->tingkat_pengangguran_terbuka_sebelumnya;
-            $evaluasi_sakip->penurunan_emisi_grk_sebelumnya = $request->penurunan_emisi_grk_sebelumnya;
-            $evaluasi_sakip->indeks_pembangunan_manusia_sebelumnya = $request->indeks_pembangunan_manusia_sebelumnya;
-            $evaluasi_sakip->indeks_gini_ratio_sebelumnya = $request->indeks_gini_ratio_sebelumnya;
-            $evaluasi_sakip->pendapatan_perkapita_sebelumnya = $request->pendapatan_perkapita_sebelumnya;
+            $evaluasi_sakip->angka_kemiskinan_tahun_lalu = $request->angka_kemiskinan_tahun_lalu;
+            $evaluasi_sakip->laju_pertumbuhan_ekonomi_tahun_lalu = $request->laju_pertumbuhan_ekonomi_tahun_lalu;
+            $evaluasi_sakip->tingkat_pengangguran_terbuka_tahun_lalu = $request->tingkat_pengangguran_terbuka_tahun_lalu;
+            $evaluasi_sakip->penurunan_emisi_grk_tahun_lalu = $request->penurunan_emisi_grk_tahun_lalu;
+            $evaluasi_sakip->indeks_pembangunan_manusia_tahun_lalu = $request->indeks_pembangunan_manusia_tahun_lalu;
+            $evaluasi_sakip->indeks_gini_ratio_tahun_lalu = $request->indeks_gini_ratio_tahun_lalu;
+            $evaluasi_sakip->pendapatan_perkapita_tahun_lalu = $request->pendapatan_perkapita_tahun_lalu;
             $evaluasi_sakip->angka_kemiskinan = $request->angka_kemiskinan;
             $evaluasi_sakip->laju_pertumbuhan_ekonomi = $request->laju_pertumbuhan_ekonomi;
             $evaluasi_sakip->tingkat_pengangguran_terbuka = $request->tingkat_pengangguran_terbuka;

@@ -6,9 +6,8 @@
         <h2 class="text-lg font-medium mr-auto">
             Hasil Evaluasi SAKIP
         </h2>
-        @if (auth()->user()->level == 'tpn')
-            <a href="javascript:;" data-toggle="modal" data-target="#modal-form-evaluasi"
-                class="button inline-block bg-theme-1 text-white" onclick="resetForm();">Tambah Penilaian</a>
+        @if (auth()->user()->level == 'tpn' && hasAksesEvaluasiAkip())
+            <a href="javascript:;" data-toggle="modal" data-target="#modal-form-evaluasi" class="button inline-block bg-theme-1 text-white" onclick="resetForm();">Tambah Penilaian</a>
         @endif
     </div>
     @include('common.status_midone')
@@ -32,10 +31,8 @@
                         Hasil sementara evaluasi SAKIP {{ $evaluasi->instansi->nama_instansi }}
                     </h2>
                     @if (auth()->user()->level == 'tpn')
-                        <button type="button" class="button button--sm block bg-theme-6 text-white mr-3"
-                            onclick="hapusEvaluasi('{{ $evaluasi->id }}');">Hapus Hasil Evaluasi</button>
-                        <button type="button" class="button button--sm block bg-theme-12 text-white"
-                            onclick="editEvaluasi('{{ $evaluasi->id }}');">Edit Penilaian</button>
+                        <button type="button" class="button button--sm block bg-theme-6 text-white mr-3" onclick="hapusEvaluasi('{{ $evaluasi->id }}');">Hapus Hasil Evaluasi</button>
+                        <button type="button" class="button button--sm block bg-theme-12 text-white" onclick="editEvaluasi('{{ $evaluasi->id }}');">Edit Penilaian</button>
                     @endif
                 </div>
                 @if ($instansi->group == 'kl')
@@ -57,8 +54,7 @@
                     <span class="font-medium">PIC LKE : </span>{{ $evaluasi->pic_lke }}
                 </div>
                 <div class="w-full">
-                    <span class="font-medium">Link LKE : </span><a href="{{ $evaluasi->link_lke }}" target="_blank"
-                        class="text-blue-500">{{ $evaluasi->link_lke }}</a>
+                    <span class="font-medium">Link LKE : </span><a href="{{ $evaluasi->link_lke }}" target="_blank" class="text-blue-500">{{ $evaluasi->link_lke }}</a>
                 </div>
                 @if ($instansi->group == 'kl')
             </div>
@@ -68,77 +64,122 @@
         </div>
         <hr>
         <div class="intro-y grid grid-cols-12 gap-5 p-5">
-            <div class="intro-y col-span-12 {{ $instansi->group != 'kl' ? 'lg:col-span-6' : '' }}">
-                <div class="flex flex-row items-center mb-2 py-2">
-                    <div class="mr-auto border-l-2 border-theme-1 pl-4">
-                        <div class="font-medium">Nilai Komponen Perencanaan Kinerja</div>
-                        <div class="text-gray-600">Catatan : {{ $evaluasi->catatan_komponen_perencanaan_kinerja }}
-                        </div>
-                        <div class="text-gray-600">Rekomendasi : {{ $evaluasi->rekomendasi_komponen_perencanaan_kinerja }}
-                        </div>
-                    </div>
-                    <div class="flex items-center mt-0">
-                        <div class="bg-theme-18 text-theme-9 rounded px-2 py-2">
-                            {{ $evaluasi->nilai_komponen_perencanaan_kinerja }}</div>
-                    </div>
-                </div>
-                <div class="flex flex-row items-center mb-2 py-2">
-                    <div class="mr-auto border-l-2 border-theme-1 pl-4">
-                        <div class="font-medium">Nilai Komponen Pengukuran Kinerja</div>
-                        <div class="text-gray-600">Catatan : {{ $evaluasi->catatan_komponen_pengukuran_kinerja }}
-                        </div>
-                        <div class="text-gray-600">Rekomendasi : {{ $evaluasi->rekomendasi_komponen_pengukuran_kinerja }}
-                        </div>
-                    </div>
-                    <div class="flex items-center mt-0">
-                        <div class="bg-theme-18 text-theme-9 rounded px-2 py-2">
-                            {{ $evaluasi->nilai_komponen_pengukuran_kinerja }}</div>
-                    </div>
-                </div>
-                <div class="flex flex-row items-center mb-2 py-2">
-                    <div class="mr-auto border-l-2 border-theme-1 pl-4">
-                        <div class="font-medium">Nilai Komponen Pelaporan Kinerja</div>
-                        <div class="text-gray-600">Catatan : {{ $evaluasi->catatan_komponen_pelaporan_kinerja }}
-                        </div>
-                        <div class="text-gray-600">Rekomendasi : {{ $evaluasi->rekomendasi_komponen_pelaporan_kinerja }}
-                        </div>
-                    </div>
-                    <div class="flex items-center mt-0">
-                        <div class="bg-theme-18 text-theme-9 rounded px-2 py-2">
-                            {{ $evaluasi->nilai_komponen_pelaporan_kinerja }}</div>
-                    </div>
-                </div>
-                <div class="flex flex-row items-center mb-2 py-2">
-                    <div class="mr-auto border-l-2 border-theme-1 pl-4">
-                        <div class="font-medium">Nilai Komponen Evaluasi Internal</div>
-                        <div class="text-gray-600">Catatan : {{ $evaluasi->catatan_komponen_evaluasi_internal }}
-                        </div>
-                        <div class="text-gray-600">Rekomendasi : {{ $evaluasi->rekomendasi_komponen_evaluasi_internal }}
-                        </div>
-                    </div>
-                    <div class="flex items-center mt-0">
-                        <div class="bg-theme-18 text-theme-9 rounded px-2 py-2">
-                            {{ $evaluasi->nilai_komponen_evaluasi_internal }}</div>
-                    </div>
-                </div>
-                <div class="flex flex-row items-center mb-2 py-2 border-t border-gray-200">
-                    <div class="mr-auto border-l-2 border-theme-1 pl-4">
-                        <div class="font-medium">Nilai Total Evaluasi AKIP TW 2</div>
-                    </div>
-                    <div class="flex items-center mt-0">
-                        <div class="bg-theme-18 text-theme-10 rounded px-2 py-2">
-                            {{ $evaluasi->nilai_total_evaluasi_akip }}</div>
-                    </div>
-                </div>
+            <div class="intro-y col-span-12 {{ $instansi->group != 'kl' ? 'lg:col-span-7' : '' }}">
+                <table class="table table-report table-report--bordered display datatable w-full table-fixed">
+                    <thead>
+                        <tr>
+                            <th class="border-b-2 p-5">Nilai Evaluasi</th>
+                            <th class="border-b-2 p-5 w-24">Tahun lalu</th>
+                            <th class="border-b-2 p-5 w-24">Tahun ini</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="font-medium">Nilai Komponen Perencanaan Kinerja</div>
+                                <div class="text-gray-600">Catatan :
+                                    <span class="italic">
+                                        {{ $evaluasi->catatan_komponen_perencanaan_kinerja }}
+                                    </span>
+                                </div>
+                                <div class="text-gray-600">Rekomendasi :
+                                    <span class="italic">
+                                        {{ $evaluasi->rekomendasi_komponen_perencanaan_kinerja }}
+                                    </span>
+                                </div>
+                            </td>
+                            <td>
+                                {{ $evaluasi->nilai_komponen_perencanaan_kinerja_tahun_lalu }}
+                            </td>
+                            <td>
+                                {{ $evaluasi->nilai_komponen_perencanaan_kinerja }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="font-medium">Nilai Komponen Pengukuran Kinerja</div>
+                                <div class="text-gray-600">Catatan :
+                                    <span class="italic">
+                                        {{ $evaluasi->catatan_komponen_pengukuran_kinerja }}
+                                    </span>
+                                </div>
+                                <div class="text-gray-600">Rekomendasi :
+                                    <span class="italic">
+                                        {{ $evaluasi->rekomendasi_komponen_pengukuran_kinerja }}
+                                    </span>
+                                </div>
+                            </td>
+                            <td>
+                                {{ $evaluasi->nilai_komponen_pengukuran_kinerja_tahun_lalu }}
+                            </td>
+                            <td>
+                                {{ $evaluasi->nilai_komponen_pengukuran_kinerja }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="font-medium">Nilai Komponen Pelaporan Kinerja</div>
+                                <div class="text-gray-600">Catatan :
+                                    <span class="italic">
+                                        {{ $evaluasi->catatan_komponen_pelaporan_kinerja }}
+                                    </span>
+                                </div>
+                                <div class="text-gray-600">Rekomendasi :
+                                    <span class="italic">
+                                        {{ $evaluasi->rekomendasi_komponen_pelaporan_kinerja }}
+                                    </span>
+                                </div>
+                            </td>
+                            <td>
+                                {{ $evaluasi->nilai_komponen_pelaporan_kinerja_tahun_lalu }}
+                            </td>
+                            <td>
+                                {{ $evaluasi->nilai_komponen_pelaporan_kinerja }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="font-medium">Nilai Komponen Evaluasi Internal</div>
+                                <div class="text-gray-600">Catatan :
+                                    <span class="italic">
+                                        {{ $evaluasi->catatan_komponen_evaluasi_internal }}
+                                    </span>
+                                </div>
+                                <div class="text-gray-600">Rekomendasi :
+                                    <span class="italic">
+                                        {{ $evaluasi->rekomendasi_komponen_evaluasi_internal }}
+                                    </span>
+                                </div>
+                            </td>
+                            <td>
+                                {{ $evaluasi->nilai_komponen_evaluasi_internal_tahun_lalu }}
+                            </td>
+                            <td>
+                                {{ $evaluasi->nilai_komponen_evaluasi_internal }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="border-t-2">
+                                <div class="font-medium">Nilai Total Evaluasi AKIP TW 2</div>
+                            </td>
+                            <td class="border-t-2">
+                                {{ $evaluasi->nilai_total_evaluasi_akip_tahun_lalu }}
+                            </td>
+                            <td class="border-t-2">
+                                {{ $evaluasi->nilai_total_evaluasi_akip }}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
             @if ($instansi->group != 'kl')
-                <div class="intro-y col-span-12 lg:col-span-6 border-l-2 border-theme-2">
+                <div class="intro-y col-span-12 lg:col-span-5 border-l-2 border-theme-2">
                     <table class="table table-report table-report--bordered display datatable w-full table-fixed">
                         <thead>
                             <tr>
                                 <th class="border-b-2 p-5">Hasil Capaian Indikator Makro</th>
-                                <th class="border-b-2 p-5 w-24">Tahun Sebelumnya</th>
-                                <th class="border-b-2 p-5 w-24">Tahun Ini</th>
+                                <th class="border-b-2 p-5 w-24">Tahun lalu</th>
+                                <th class="border-b-2 p-5 w-24">Tahun ini</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -181,9 +222,7 @@
                     </table>
                     <hr class="my-5">
                     @if (!empty($evaluasi->file_evaluasi))
-                        <a href="{{ asset('storage/akip/' . $evaluasi->file_evaluasi) }}" target="_blank"
-                            class="button border items-center text-gray-700 hidden sm:flex ml-3"> <i data-feather="file"
-                                class="w-4 h-4 mr-2"></i>
+                        <a href="{{ asset('storage/akip/' . $evaluasi->file_evaluasi) }}" target="_blank" class="button border items-center text-gray-700 hidden sm:flex ml-3"> <i data-feather="file" class="w-4 h-4 mr-2"></i>
                             {{ $evaluasi->periode != 'Final' ? 'Download File Catatan Evaluasi' : 'Download File Surat Pengantar LHE' }}</a>
                     @endif
                 </div>
@@ -194,7 +233,7 @@
     @endforeach
     @endif
 
-    @if (auth()->user()->level == 'tpn')
+    @if (auth()->user()->level == 'tpn' && hasAksesEvaluasiAkip())
         {{-- Modal Tambah --}}
         <div class="modal" id="modal-form-evaluasi">
             <div class="modal__content modal__content--xl">
@@ -226,127 +265,160 @@
                     @endif
                     <div class="col-span-12 lg:col-span-6">
                         <div class="input-group">
-                            {{ html()->label('Penanggung Jawab')->for('penanggung_jawab') }} <span
-                                class="text-theme-6">*</span>
-                            <input type="text" name="penanggung_jawab" id="penanggung_jawab"
-                                class="input w-full border mt-2 flex-1" placeholder="Nama Penanggung Jawab" required>
+                            {{ html()->label('Penanggung Jawab')->for('penanggung_jawab') }} <span class="text-theme-6">*</span>
+                            <input type="text" name="penanggung_jawab" id="penanggung_jawab" class="input w-full border mt-2 flex-1" placeholder="Nama Penanggung Jawab" required>
                         </div>
                     </div>
                     <div class="col-span-12 lg:col-span-6">
                         <div class="input-group">
                             {{ html()->label('PIC LKE')->for('pic_lke') }} <span class="text-theme-6">*</span>
-                            <input type="text" name="pic_lke" id="pic_lke" class="input w-full border mt-2 flex-1"
-                                placeholder="Nama PIC LKE" required>
+                            <input type="text" name="pic_lke" id="pic_lke" class="input w-full border mt-2 flex-1" placeholder="Nama PIC LKE" required>
                         </div>
                     </div>
                     <div class="col-span-12 lg:col-span-6">
                         <div class="input-group">
                             {{ html()->label('Link LKE')->for('link_lke') }} <span class="text-theme-6">*</span>
-                            <input type="url" name="link_lke" id="link_lke" class="input w-full border mt-2 flex-1"
-                                placeholder="Link LKE" required>
+                            <input type="url" name="link_lke" id="link_lke" class="input w-full border mt-2 flex-1" placeholder="Link LKE" required>
                         </div>
                     </div>
                     <div class="col-span-12 lg:col-span-6">
                         <div class="input-group">
                             {{ html()->label('File Surat Pengantar LHE')->for('file_evaluasi')->id('label_file_evaluasi') }}
                             <span class="text-theme-6">*</span>
-                            <input type="file" name="file_evaluasi" id="file_evaluasi"
-                                class="input w-full border mt-2 flex-1" placeholder="Link LKE" accept="application/pdf"
-                                required>
+                            <input type="file" name="file_evaluasi" id="file_evaluasi" class="input w-full border mt-2 flex-1" placeholder="Link LKE" accept="application/pdf" required>
                         </div>
                         <span class="italic text-sm" id="note_file_evaluasi">Pilih file jika ingin mengganti file
-                            sebelumnya.</span>
+                            tahun_lalu.</span>
                     </div>
                     <div class="col-span-12">
                         <hr>
                     </div>
                     <div class="col-span-12 lg:col-span-6">
+                        <div class="font-medium">Nilai Komponens Perencanaan Kinerja</div>
                         <div class="input-group">
                             <div class="flex items-center">
-                                <div class="font-medium">Nilai Komponens Perencanaan Kinerja <span class="text-theme-6">*</span></div>
+                                <div>Tahun Lalu <span class="text-theme-6">*</span></div>
                                 <div class="ml-auto">
-                                    <input type="text" name="nilai_komponen_perencanaan_kinerja"
-                                        id="nilai_komponen_perencanaan_kinerja"
-                                        class="input w-20 digit border flex-1 mt-2" required>
+                                    <input type="text" name="nilai_komponen_perencanaan_kinerja_tahun_lalu" id="nilai_komponen_perencanaan_kinerja_tahun_lalu" class="input w-20 digit border flex-1 mt-2" required>
                                 </div>
                             </div>
                         </div>
-                        <label>Catatan : </label> <span class="text-theme-6">*</span>
-                        <textarea name="catatan_komponen_perencanaan_kinerja" id="catatan_komponen_perencanaan_kinerja"
-                            class="input w-full border mt-2 flex-1" cols="30" rows="3"
-                            placeholder="Catatan Nilai Komponen Perencanaan Kinerja" required></textarea>
-                        <label>Rekomendasi : </label> <span class="text-theme-6">*</span>
-                        <textarea name="rekomendasi_komponen_perencanaan_kinerja" id="rekomendasi_komponen_perencanaan_kinerja"
-                            class="input w-full border mt-2 flex-1" cols="30" rows="3"
-                            placeholder="Rekomendasi Nilai Komponen Perencanaan Kinerja" required></textarea>
+                        <div class="input-group">
+                            <div class="flex items-center">
+                                <div>Tahun Ini <span class="text-theme-6">*</span></div>
+                                <div class="ml-auto">
+                                    <input type="text" name="nilai_komponen_perencanaan_kinerja" id="nilai_komponen_perencanaan_kinerja" class="input w-20 digit border flex-1 mt-2" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label>Catatan : </label> <span class="text-theme-6">*</span>
+                            <textarea name="catatan_komponen_perencanaan_kinerja" id="catatan_komponen_perencanaan_kinerja" class="input w-full border mt-2 flex-1" cols="30" rows="3" placeholder="Catatan Nilai Komponen Perencanaan Kinerja" required></textarea>
+                        </div>
+                        <div class="input-group">
+                            <label>Rekomendasi : </label> <span class="text-theme-6">*</span>
+                            <textarea name="rekomendasi_komponen_perencanaan_kinerja" id="rekomendasi_komponen_perencanaan_kinerja" class="input w-full border mt-2 flex-1" cols="30" rows="3" placeholder="Rekomendasi Nilai Komponen Perencanaan Kinerja" required></textarea>
+                        </div>
                     </div>
                     <div class="col-span-12 lg:col-span-6">
+                        <div class="font-medium">Nilai Komponen Pengukuran Kinerja</div>
                         <div class="input-group">
                             <div class="flex items-center">
-                                <div class="font-medium">Nilai Komponen Pengukuran Kinerja</div>
+                                <div>Tahun lalu <span class="text-theme-6">*</span></div>
                                 <div class="ml-auto">
-                                    <input type="text" name="nilai_komponen_pengukuran_kinerja"
-                                        id="nilai_komponen_pengukuran_kinerja" class="input w-20 digit border flex-1 mt-2"
-                                        required>
+                                    <input type="text" name="nilai_komponen_pengukuran_kinerja_tahun_lalu" id="nilai_komponen_pengukuran_kinerja_tahun_lalu" class="input w-20 digit border flex-1 mt-2" required>
                                 </div>
                             </div>
                         </div>
-                        <label>Catatan : </label> <span class="text-theme-6">*</span>
-                        <textarea name="catatan_komponen_pengukuran_kinerja" id="catatan_komponen_pengukuran_kinerja"
-                            class="input w-full border mt-2 flex-1" cols="30" rows="3"
-                            placeholder="Catatan Nilai Komponen Pengukuran Kinerja" required></textarea>
-                        <label>Rekomendasi : </label> <span class="text-theme-6">*</span>
-                        <textarea name="rekomendasi_komponen_pengukuran_kinerja" id="rekomendasi_komponen_pengukuran_kinerja"
-                            class="input w-full border mt-2 flex-1" cols="30" rows="3"
-                            placeholder="Rekomendasi Nilai Komponen Pengukuran Kinerja" required></textarea>
+                        <div class="input-group">
+                            <div class="flex items-center">
+                                <div>Tahun ini <span class="text-theme-6">*</span></div>
+                                <div class="ml-auto">
+                                    <input type="text" name="nilai_komponen_pengukuran_kinerja" id="nilai_komponen_pengukuran_kinerja" class="input w-20 digit border flex-1 mt-2" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label>Catatan : </label> <span class="text-theme-6">*</span>
+                            <textarea name="catatan_komponen_pengukuran_kinerja" id="catatan_komponen_pengukuran_kinerja" class="input w-full border mt-2 flex-1" cols="30" rows="3" placeholder="Catatan Nilai Komponen Pengukuran Kinerja" required></textarea>
+                        </div>
+                        <div class="input-group">
+                            <label>Rekomendasi : </label> <span class="text-theme-6">*</span>
+                            <textarea name="rekomendasi_komponen_pengukuran_kinerja" id="rekomendasi_komponen_pengukuran_kinerja" class="input w-full border mt-2 flex-1" cols="30" rows="3" placeholder="Rekomendasi Nilai Komponen Pengukuran Kinerja" required></textarea>
+                        </div>
                     </div>
                     <div class="col-span-12 lg:col-span-6">
+                        <div class="font-medium">Nilai Komponen Pelaporan Kinerja</div>
                         <div class="input-group">
                             <div class="flex items-center">
-                                <div class="font-medium">Nilai Komponen Pelaporan Kinerja <span class="text-theme-6">*</span></div>
+                                <div>Tahun lalu <span class="text-theme-6">*</span></div>
                                 <div class="ml-auto">
-                                    <input type="text" name="nilai_komponen_pelaporan_kinerja"
-                                        id="nilai_komponen_pelaporan_kinerja" class="input w-20 digit border flex-1 mt-2"
-                                        required>
+                                    <input type="text" name="nilai_komponen_pelaporan_kinerja_tahun_lalu" id="nilai_komponen_pelaporan_kinerja_tahun_lalu" class="input w-20 digit border flex-1 mt-2" required>
                                 </div>
                             </div>
                         </div>
-                        <label>Catatan : </label> <span class="text-theme-6">*</span>
-                        <textarea name="catatan_komponen_pelaporan_kinerja" id="catatan_komponen_pelaporan_kinerja"
-                            class="input w-full border mt-2 flex-1" cols="30" rows="3"
-                            placeholder="Catatan Nilai Komponen Pelaporan Kinerja" required></textarea>
-                        <label>Rekomendasi : </label> <span class="text-theme-6">*</span>
-                        <textarea name="rekomendasi_komponen_pelaporan_kinerja" id="rekomendasi_komponen_pelaporan_kinerja"
-                            class="input w-full border mt-2 flex-1" cols="30" rows="3"
-                            placeholder="Rekomendasi Nilai Komponen Pelaporan Kinerja" required></textarea>
+                        <div class="input-group">
+                            <div class="flex items-center">
+                                <div>Tahun ini <span class="text-theme-6">*</span></div>
+                                <div class="ml-auto">
+                                    <input type="text" name="nilai_komponen_pelaporan_kinerja" id="nilai_komponen_pelaporan_kinerja" class="input w-20 digit border flex-1 mt-2" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label>Catatan : </label> <span class="text-theme-6">*</span>
+                            <textarea name="catatan_komponen_pelaporan_kinerja" id="catatan_komponen_pelaporan_kinerja" class="input w-full border mt-2 flex-1" cols="30" rows="3" placeholder="Catatan Nilai Komponen Pelaporan Kinerja" required></textarea>
+                        </div>
+                        <div class="input-group">
+                            <label>Rekomendasi : </label> <span class="text-theme-6">*</span>
+                            <textarea name="rekomendasi_komponen_pelaporan_kinerja" id="rekomendasi_komponen_pelaporan_kinerja" class="input w-full border mt-2 flex-1" cols="30" rows="3" placeholder="Rekomendasi Nilai Komponen Pelaporan Kinerja" required></textarea>
+                        </div>
                     </div>
                     <div class="col-span-12 lg:col-span-6">
+                        <div class="font-medium">Nilai Komponen Evaluasi Internal</div>
                         <div class="input-group">
                             <div class="flex items-center">
-                                <div class="font-medium">Nilai Komponen Evaluasi Internal <span class="text-theme-6">*</span></div>
+                                <div>Tahun lalu <span class="text-theme-6">*</span></div>
                                 <div class="ml-auto">
-                                    <input type="text" name="nilai_komponen_evaluasi_internal"
-                                        id="nilai_komponen_evaluasi_internal" class="input w-20 digit border flex-1 mt-2"
-                                        required>
+                                    <input type="text" name="nilai_komponen_evaluasi_internal_tahun_lalu" id="nilai_komponen_evaluasi_internal_tahun_lalu" class="input w-20 digit border flex-1 mt-2" required>
                                 </div>
                             </div>
                         </div>
-                        <label>Catatan : </label> <span class="text-theme-6">*</span>
-                        <textarea name="catatan_komponen_evaluasi_internal" id="catatan_komponen_evaluasi_internal"
-                            class="input w-full border mt-2 flex-1" cols="30" rows="3"
-                            placeholder="Catatan Nilai Komponen Evaluasi Internal" required></textarea>
-                        <label>Rekomendasi : </label> <span class="text-theme-6">*</span>
-                        <textarea name="rekomendasi_komponen_evaluasi_internal" id="rekomendasi_komponen_evaluasi_internal"
-                            class="input w-full border mt-2 flex-1" cols="30" rows="3"
-                            placeholder="Rekomendasi Nilai Komponen Evaluasi Internal" required></textarea>
+                        <div class="input-group">
+                            <div class="flex items-center">
+                                <div>Tahun ini <span class="text-theme-6">*</span></div>
+                                <div class="ml-auto">
+                                    <input type="text" name="nilai_komponen_evaluasi_internal" id="nilai_komponen_evaluasi_internal" class="input w-20 digit border flex-1 mt-2" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label>Catatan : </label> <span class="text-theme-6">*</span>
+                            <textarea name="catatan_komponen_evaluasi_internal" id="catatan_komponen_evaluasi_internal" class="input w-full border mt-2 flex-1" cols="30" rows="3" placeholder="Catatan Nilai Komponen Evaluasi Internal" required></textarea>
+                        </div>
+                        <div class="input-group">
+                            <label>Rekomendasi : </label> <span class="text-theme-6">*</span>
+                            <textarea name="rekomendasi_komponen_evaluasi_internal" id="rekomendasi_komponen_evaluasi_internal" class="input w-full border mt-2 flex-1" cols="30" rows="3" placeholder="Rekomendasi Nilai Komponen Evaluasi Internal" required></textarea>
+                        </div>
                     </div>
                     <div class="col-span-12">
+                        <div class="font-medium">Nilai Total Evaluasi AKIP <span class="text-theme-6">*</span>
+                        </div>
                         <div class="input-group">
                             <div class="flex items-center">
-                                <div class="font-medium">Nilai Total Evaluasi AKIP <span class="text-theme-6">*</span></div>
+                                <div>Tahun lalu <span class="text-theme-6">*</span>
+                                </div>
                                 <div class="ml-auto">
-                                    <input type="text" name="nilai_total_evaluasi_akip" id="nilai_total_evaluasi_akip"
-                                        class="input w-20 digit border flex-1 mt-2" required>
+                                    <input type="text" name="nilai_total_evaluasi_akip_tahun_lalu" id="nilai_total_evaluasi_akip_tahun_lalu" class="input w-20 digit border flex-1 mt-2" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <div class="flex items-center">
+                                <div>Tahun ini <span class="text-theme-6">*</span>
+                                </div>
+                                <div class="ml-auto">
+                                    <input type="text" name="nilai_total_evaluasi_akip" id="nilai_total_evaluasi_akip" class="input w-20 digit border flex-1 mt-2" required>
                                 </div>
                             </div>
                         </div>
@@ -360,8 +432,8 @@
                                 <thead>
                                     <tr>
                                         <th class="border-b-2 p-5">Input Hasil Capaian Indikator Makro</th>
-                                        <th class="border-b-2 p-5 w-24">Tahun Sebelumnya</th>
-                                        <th class="border-b-2 p-5 w-24">Tahun Ini</th>
+                                        <th class="border-b-2 p-5 w-24">Tahun lalu</th>
+                                        <th class="border-b-2 p-5 w-24">Tahun ini</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -372,13 +444,10 @@
                                             </div>
                                         </td>
                                         <td>
-                                            <input type="text" name="angka_kemiskinan_sebelumnya"
-                                                id="angka_kemiskinan_sebelumnya"
-                                                class="input w-20 digit border flex-1 mt-2" required>
+                                            <input type="text" name="angka_kemiskinan_tahun_lalu" id="angka_kemiskinan_tahun_lalu" class="input w-20 digit border flex-1 mt-2" required>
                                         </td>
                                         <td>
-                                            <input type="text" name="angka_kemiskinan" id="angka_kemiskinan"
-                                                class="input w-20 digit border flex-1 mt-2" required>
+                                            <input type="text" name="angka_kemiskinan" id="angka_kemiskinan" class="input w-20 digit border flex-1 mt-2" required>
                                         </td>
                                     </tr>
                                     <tr>
@@ -388,14 +457,10 @@
                                             </div>
                                         </td>
                                         <td>
-                                            <input type="text" name="laju_pertumbuhan_ekonomi_sebelumnya"
-                                                id="laju_pertumbuhan_ekonomi_sebelumnya"
-                                                class="input w-20 digit border flex-1 mt-2" required>
+                                            <input type="text" name="laju_pertumbuhan_ekonomi_tahun_lalu" id="laju_pertumbuhan_ekonomi_tahun_lalu" class="input w-20 digit border flex-1 mt-2" required>
                                         </td>
                                         <td>
-                                            <input type="text" name="laju_pertumbuhan_ekonomi"
-                                                id="laju_pertumbuhan_ekonomi" class="input w-20 digit border flex-1 mt-2"
-                                                required>
+                                            <input type="text" name="laju_pertumbuhan_ekonomi" id="laju_pertumbuhan_ekonomi" class="input w-20 digit border flex-1 mt-2" required>
                                         </td>
                                     </tr>
                                     <tr>
@@ -405,14 +470,10 @@
                                             </div>
                                         </td>
                                         <td>
-                                            <input type="text" name="tingkat_pengangguran_terbuka_sebelumnya"
-                                                id="tingkat_pengangguran_terbuka_sebelumnya"
-                                                class="input w-20 digit border flex-1 mt-2" required>
+                                            <input type="text" name="tingkat_pengangguran_terbuka_tahun_lalu" id="tingkat_pengangguran_terbuka_tahun_lalu" class="input w-20 digit border flex-1 mt-2" required>
                                         </td>
                                         <td>
-                                            <input type="text" name="tingkat_pengangguran_terbuka"
-                                                id="tingkat_pengangguran_terbuka"
-                                                class="input w-20 digit border flex-1 mt-2" required>
+                                            <input type="text" name="tingkat_pengangguran_terbuka" id="tingkat_pengangguran_terbuka" class="input w-20 digit border flex-1 mt-2" required>
                                         </td>
                                     </tr>
                                     <tr>
@@ -422,13 +483,10 @@
                                             </div>
                                         </td>
                                         <td>
-                                            <input type="text" name="penurunan_emisi_grk_sebelumnya"
-                                                id="penurunan_emisi_grk_sebelumnya"
-                                                class="input w-20 digit border flex-1 mt-2" required>
+                                            <input type="text" name="penurunan_emisi_grk_tahun_lalu" id="penurunan_emisi_grk_tahun_lalu" class="input w-20 digit border flex-1 mt-2" required>
                                         </td>
                                         <td>
-                                            <input type="text" name="penurunan_emisi_grk" id="penurunan_emisi_grk"
-                                                class="input w-20 digit border flex-1 mt-2" required>
+                                            <input type="text" name="penurunan_emisi_grk" id="penurunan_emisi_grk" class="input w-20 digit border flex-1 mt-2" required>
                                         </td>
                                     </tr>
                                     <tr>
@@ -438,14 +496,10 @@
                                             </div>
                                         </td>
                                         <td>
-                                            <input type="text" name="indeks_pembangunan_manusia_sebelumnya"
-                                                id="indeks_pembangunan_manusia_sebelumnya"
-                                                class="input w-20 digit border flex-1 mt-2" required>
+                                            <input type="text" name="indeks_pembangunan_manusia_tahun_lalu" id="indeks_pembangunan_manusia_tahun_lalu" class="input w-20 digit border flex-1 mt-2" required>
                                         </td>
                                         <td>
-                                            <input type="text" name="indeks_pembangunan_manusia"
-                                                id="indeks_pembangunan_manusia"
-                                                class="input w-20 digit border flex-1 mt-2" required>
+                                            <input type="text" name="indeks_pembangunan_manusia" id="indeks_pembangunan_manusia" class="input w-20 digit border flex-1 mt-2" required>
                                         </td>
                                     </tr>
                                     <tr>
@@ -455,13 +509,10 @@
                                             </div>
                                         </td>
                                         <td>
-                                            <input type="text" name="indeks_gini_ratio_sebelumnya"
-                                                id="indeks_gini_ratio_sebelumnya"
-                                                class="input w-20 digit border flex-1 mt-2" required>
+                                            <input type="text" name="indeks_gini_ratio_tahun_lalu" id="indeks_gini_ratio_tahun_lalu" class="input w-20 digit border flex-1 mt-2" required>
                                         </td>
                                         <td>
-                                            <input type="text" name="indeks_gini_ratio" id="indeks_gini_ratio"
-                                                class="input w-20 digit border flex-1 mt-2" required>
+                                            <input type="text" name="indeks_gini_ratio" id="indeks_gini_ratio" class="input w-20 digit border flex-1 mt-2" required>
                                         </td>
                                     </tr>
                                     <tr>
@@ -471,13 +522,10 @@
                                             </div>
                                         </td>
                                         <td>
-                                            <input type="text" name="pendapatan_perkapita_sebelumnya"
-                                                id="pendapatan_perkapita_sebelumnya"
-                                                class="input w-20 digit border flex-1 mt-2" required>
+                                            <input type="text" name="pendapatan_perkapita_tahun_lalu" id="pendapatan_perkapita_tahun_lalu" class="input w-20 digit border flex-1 mt-2" required>
                                         </td>
                                         <td>
-                                            <input type="text" name="pendapatan_perkapita" id="pendapatan_perkapita"
-                                                class="input w-20 digit border flex-1 mt-2" required>
+                                            <input type="text" name="pendapatan_perkapita" id="pendapatan_perkapita" class="input w-20 digit border flex-1 mt-2" required>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -486,8 +534,7 @@
                     @endif
                 </div>
                 <div class="px-5 py-3 text-right border-t border-gray-200">
-                    <button type="button" data-dismiss="modal"
-                        class="button w-20 border text-gray-700 mr-1">Cancel</button>
+                    <button type="button" data-dismiss="modal" class="button w-20 border text-gray-700 mr-1">Cancel</button>
                     <button type="submit" class="button w-20 bg-theme-1 text-white saveButton">Simpan</button>
                 </div>
                 {{ html()->form()->close() }}
@@ -498,18 +545,19 @@
 @endsection
 
 @push('css')
-<style>
-    .table-p-0 td {
-        padding: 0px !important;
-    }
-    .table-p-0 th {
-        padding: 10px 0px !important;
-    }
-</style>
+    <style>
+        .table-p-0 td {
+            padding: 0px !important;
+        }
+
+        .table-p-0 th {
+            padding: 10px 0px !important;
+        }
+    </style>
 @endpush
 
 @push('js_file')
-    @if (auth()->user()->level == 'tpn')
+    @if (auth()->user()->level == 'tpn' && hasAksesEvaluasiAkip())
         <script src="{{ asset('ext/jquery-validation/jquery.validate.min.js') }}"></script>
         <script src="{{ asset('ext/jquery-validation/localization/messages_id.min.js') }}"></script>
         <script src="{{ asset('ext') }}/jquery-inputmask/jquery.inputmask.bundle.js"></script>
@@ -532,6 +580,7 @@
                 $('#tahun').prop('disabled', false);
                 $('#periode').prop('disabled', false);
                 $('.saveButton').prop('disabled', false);
+                validator.resetForm();
             }
 
             cekPeriode = function() {
@@ -561,14 +610,26 @@
                             } else {
                                 $('.saveButton').prop('disabled', false);
                                 if (response.evaluasi_sakip) {
-                                    $('#catatan_komponen_perencanaan_kinerja').val(response.evaluasi_sakip
-                                        .catatan_komponen_perencanaan_kinerja);
-                                    $('#catatan_komponen_pengukuran_kinerja').val(response.evaluasi_sakip
-                                        .catatan_komponen_pengukuran_kinerja);
-                                    $('#catatan_komponen_pelaporan_kinerja').val(response.evaluasi_sakip
-                                        .catatan_komponen_pelaporan_kinerja);
-                                    $('#catatan_komponen_evaluasi_internal').val(response.evaluasi_sakip
-                                        .catatan_komponen_evaluasi_internal);
+                                    $('#catatan_komponen_perencanaan_kinerja').val(response.evaluasi_sakip.catatan_komponen_perencanaan_kinerja);
+                                    $('#catatan_komponen_pengukuran_kinerja').val(response.evaluasi_sakip.catatan_komponen_pengukuran_kinerja);
+                                    $('#catatan_komponen_pelaporan_kinerja').val(response.evaluasi_sakip.catatan_komponen_pelaporan_kinerja);
+                                    $('#catatan_komponen_evaluasi_internal').val(response.evaluasi_sakip.catatan_komponen_evaluasi_internal);
+                                    $('#rekomendasi_komponen_perencanaan_kinerja').val(response.evaluasi_sakip.rekomendasi_komponen_perencanaan_kinerja);
+                                    $('#rekomendasi_komponen_pengukuran_kinerja').val(response.evaluasi_sakip.rekomendasi_komponen_pengukuran_kinerja);
+                                    $('#rekomendasi_komponen_pelaporan_kinerja').val(response.evaluasi_sakip.rekomendasi_komponen_pelaporan_kinerja);
+                                    $('#rekomendasi_komponen_evaluasi_internal').val(response.evaluasi_sakip.rekomendasi_komponen_evaluasi_internal);
+                                    $('#nilai_komponen_perencanaan_kinerja_tahun_lalu').val(response.evaluasi_sakip.nilai_komponen_perencanaan_kinerja_tahun_lalu);
+                                    $('#nilai_komponen_pengukuran_kinerja_tahun_lalu').val(response.evaluasi_sakip.nilai_komponen_pengukuran_kinerja_tahun_lalu);
+                                    $('#nilai_komponen_pelaporan_kinerja_tahun_lalu').val(response.evaluasi_sakip.nilai_komponen_pelaporan_kinerja_tahun_lalu);
+                                    $('#nilai_komponen_evaluasi_internal_tahun_lalu').val(response.evaluasi_sakip.nilai_komponen_evaluasi_internal_tahun_lalu);
+                                    $('#nilai_total_evaluasi_akip_tahun_lalu').val(response.evaluasi_sakip.nilai_total_evaluasi_akip_tahun_lalu);
+                                    $('#angka_kemiskinan_tahun_lalu').val(response.evaluasi_sakip.angka_kemiskinan_tahun_lalu);
+                                    $('#laju_pertumbuhan_ekonomi_tahun_lalu').val(response.evaluasi_sakip.laju_pertumbuhan_ekonomi_tahun_lalu);
+                                    $('#tingkat_pengangguran_terbuka_tahun_lalu').val(response.evaluasi_sakip.tingkat_pengangguran_terbuka_tahun_lalu);
+                                    $('#penurunan_emisi_grk_tahun_lalu').val(response.evaluasi_sakip.penurunan_emisi_grk_tahun_lalu);
+                                    $('#indeks_pembangunan_manusia_tahun_lalu').val(response.evaluasi_sakip.indeks_pembangunan_manusia_tahun_lalu);
+                                    $('#indeks_gini_ratio_tahun_lalu').val(response.evaluasi_sakip.indeks_gini_ratio_tahun_lalu);
+                                    $('#pendapatan_perkapita_tahun_lalu').val(response.evaluasi_sakip.pendapatan_perkapita_tahun_lalu);
                                 }
                             }
                         }
@@ -576,7 +637,7 @@
                 }
             }
 
-            $('#form-sakip').validate({
+            var validator = $('#form-sakip').validate({
                 ignore: [],
                 errorPlacement: function(error, element) {
                     if (element.hasClass('select2-hidden-accessible')) {
@@ -629,25 +690,30 @@
                         $('#pic_lke').val(response.evaluasi_sakip.pic_lke);
                         $('#link_lke').val(response.evaluasi_sakip.link_lke);
                         $('#nilai_komponen_perencanaan_kinerja').val(response.evaluasi_sakip.nilai_komponen_perencanaan_kinerja);
+                        $('#nilai_komponen_perencanaan_kinerja_tahun_lalu').val(response.evaluasi_sakip.nilai_komponen_perencanaan_kinerja_tahun_lalu);
                         $('#catatan_komponen_perencanaan_kinerja').val(response.evaluasi_sakip.catatan_komponen_perencanaan_kinerja);
                         $('#rekomendasi_komponen_perencanaan_kinerja').val(response.evaluasi_sakip.rekomendasi_komponen_perencanaan_kinerja);
                         $('#nilai_komponen_pengukuran_kinerja').val(response.evaluasi_sakip.nilai_komponen_pengukuran_kinerja);
+                        $('#nilai_komponen_pengukuran_kinerja_tahun_lalu').val(response.evaluasi_sakip.nilai_komponen_pengukuran_kinerja_tahun_lalu);
                         $('#catatan_komponen_pengukuran_kinerja').val(response.evaluasi_sakip.catatan_komponen_pengukuran_kinerja);
                         $('#rekomendasi_komponen_pengukuran_kinerja').val(response.evaluasi_sakip.rekomendasi_komponen_pengukuran_kinerja);
                         $('#nilai_komponen_pelaporan_kinerja').val(response.evaluasi_sakip.nilai_komponen_pelaporan_kinerja);
+                        $('#nilai_komponen_pelaporan_kinerja_tahun_lalu').val(response.evaluasi_sakip.nilai_komponen_pelaporan_kinerja_tahun_lalu);
                         $('#catatan_komponen_pelaporan_kinerja').val(response.evaluasi_sakip.catatan_komponen_pelaporan_kinerja);
                         $('#rekomendasi_komponen_pelaporan_kinerja').val(response.evaluasi_sakip.rekomendasi_komponen_pelaporan_kinerja);
                         $('#nilai_komponen_evaluasi_internal').val(response.evaluasi_sakip.nilai_komponen_evaluasi_internal);
+                        $('#nilai_komponen_evaluasi_internal_tahun_lalu').val(response.evaluasi_sakip.nilai_komponen_evaluasi_internal_tahun_lalu);
                         $('#catatan_komponen_evaluasi_internal').val(response.evaluasi_sakip.catatan_komponen_evaluasi_internal);
                         $('#rekomendasi_komponen_evaluasi_internal').val(response.evaluasi_sakip.rekomendasi_komponen_evaluasi_internal);
                         $('#nilai_total_evaluasi_akip').val(response.evaluasi_sakip.nilai_total_evaluasi_akip);
-                        $('#angka_kemiskinan_sebelumnya').val(response.evaluasi_sakip.angka_kemiskinan_sebelumnya);
-                        $('#laju_pertumbuhan_ekonomi_sebelumnya').val(response.evaluasi_sakip.laju_pertumbuhan_ekonomi_sebelumnya);
-                        $('#tingkat_pengangguran_terbuka_sebelumnya').val(response.evaluasi_sakip.tingkat_pengangguran_terbuka_sebelumnya);
-                        $('#penurunan_emisi_grk_sebelumnya').val(response.evaluasi_sakip.penurunan_emisi_grk_sebelumnya);
-                        $('#indeks_pembangunan_manusia_sebelumnya').val(response.evaluasi_sakip.indeks_pembangunan_manusia_sebelumnya);
-                        $('#indeks_gini_ratio_sebelumnya').val(response.evaluasi_sakip.indeks_gini_ratio_sebelumnya);
-                        $('#pendapatan_perkapita_sebelumnya').val(response.evaluasi_sakip.pendapatan_perkapita_sebelumnya);
+                        $('#nilai_total_evaluasi_akip_tahun_lalu').val(response.evaluasi_sakip.nilai_total_evaluasi_akip_tahun_lalu);
+                        $('#angka_kemiskinan_tahun_lalu').val(response.evaluasi_sakip.angka_kemiskinan_tahun_lalu);
+                        $('#laju_pertumbuhan_ekonomi_tahun_lalu').val(response.evaluasi_sakip.laju_pertumbuhan_ekonomi_tahun_lalu);
+                        $('#tingkat_pengangguran_terbuka_tahun_lalu').val(response.evaluasi_sakip.tingkat_pengangguran_terbuka_tahun_lalu);
+                        $('#penurunan_emisi_grk_tahun_lalu').val(response.evaluasi_sakip.penurunan_emisi_grk_tahun_lalu);
+                        $('#indeks_pembangunan_manusia_tahun_lalu').val(response.evaluasi_sakip.indeks_pembangunan_manusia_tahun_lalu);
+                        $('#indeks_gini_ratio_tahun_lalu').val(response.evaluasi_sakip.indeks_gini_ratio_tahun_lalu);
+                        $('#pendapatan_perkapita_tahun_lalu').val(response.evaluasi_sakip.pendapatan_perkapita_tahun_lalu);
                         $('#angka_kemiskinan').val(response.evaluasi_sakip.angka_kemiskinan);
                         $('#laju_pertumbuhan_ekonomi').val(response.evaluasi_sakip.laju_pertumbuhan_ekonomi);
                         $('#tingkat_pengangguran_terbuka').val(response.evaluasi_sakip.tingkat_pengangguran_terbuka);

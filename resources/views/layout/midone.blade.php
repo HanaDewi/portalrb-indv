@@ -29,7 +29,7 @@
     <!-- BEGIN: Mobile Menu -->
     <div class="mobile-menu md:hidden">
         <div class="mobile-menu-bar">
-            <a href="" class="flex mr-auto">
+            <a href="{{ url('/') }}" class="flex mr-auto">
                 <img alt="LKE RB" class="w-24" src="{{ asset('midone') }}/dist/images/logo_panrb.png">
             </a>
             <a href="javascript:;" id="mobile-menu-toggler"> <i data-feather="bar-chart-2"
@@ -131,10 +131,8 @@
     <div class="flex">
         <!-- BEGIN: Side Menu -->
         <nav class="side-nav">
-            <a href="" class="intro-x flex items-center pl-5 pt-4">
-                <a href="" class="intro-x flex items-center pl-2 pt-4">
-                    <img alt="LKE RB" src="{{ asset('midone') }}/dist/images/logo_panrb.png">
-                </a>
+            <a href="{{ url('/') }}" class="intro-x flex items-center pl-2 pt-4">
+                <img alt="LKE RB" src="{{ asset('midone') }}/dist/images/logo_panrb.png">
             </a>
             <div class="side-nav__devider my-6"></div>
             <ul>
