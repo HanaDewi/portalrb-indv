@@ -384,6 +384,7 @@ class KonfigurasiController extends Controller
             $jadwalZI = TahapSeleksiZI::find($request->jadwal_id);
         }
         $jadwalZI->tahap_seleksi = $request->tahap_seleksi;
+        $jadwalZI->keterangan = $request->keterangan;
         $jadwalZI->tanggal_mulai = $request->tanggal_mulai;
         $jadwalZI->tanggal_selesai = $request->tanggal_selesai;
         $jadwalZI->laporan_wbk_mandiri = $request->laporan_wbk_mandiri;

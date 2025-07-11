@@ -32,6 +32,7 @@
                     <tr>
                         <th class="w-5">No.</th>
                         <th>Tahap</th>
+                        <th>Keterangan</th>
                         <th>Tahun</th>
                         <th>Tanggal Mulai</th>
                         <th>Tanggal Selesai</th>
@@ -66,6 +67,13 @@
                         </div>
                         <br />
                         <div class="form-group">
+                            <label for="keterangan" class="form-label">keterangan<span
+                                    class="text-danger">*</span></label>
+                            <input type="text" id="keterangan" name="keterangan" class="form-control"
+                                placeholder="keterangan" required>
+                        </div>
+                        <br />
+                        <div class="form-group">
                             <label for="tahun" class="form-label">Tahun <span class="text-danger">*</span></label>
                             <br />
                             <select name="tahun" id="tahun">
@@ -76,7 +84,8 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="tahun" class="form-label">Tahun <span class="text-danger">*</span></label>
+                            <label for="tahun" class="form-label">Ditampilkan Di Laporan WBK Mandiri <span
+                                    class="text-danger">*</span></label>
                             <br />
                             <select name="laporan_wbk_mandiri" id="tahun">
                                 <option value="1">
@@ -193,6 +202,7 @@
                 }
             },
             { data: 'tahap_seleksi' },
+            { data: 'keterangan' },
             { data: 'tahun' },
             { data: 'tanggal_mulai' },
             { data: 'tanggal_selesai' },
