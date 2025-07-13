@@ -33,6 +33,7 @@
                         <th class="w-5">No.</th>
                         <th>Tahap</th>
                         <th>Keterangan</th>
+                        <th>Laporan WBK Mandiri</th>
                         <th>Tahun</th>
                         <th>Tanggal Mulai</th>
                         <th>Tanggal Selesai</th>
@@ -203,6 +204,7 @@
             },
             { data: 'tahap_seleksi' },
             { data: 'keterangan' },
+            { data: 'laporan_wbk_mandiri' },
             { data: 'tahun' },
             { data: 'tanggal_mulai' },
             { data: 'tanggal_selesai' },
