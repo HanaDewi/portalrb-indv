@@ -146,7 +146,11 @@ class EvaluatanController extends Controller
             }
             $title = "Hasil Sanggah";
             $status_akses = "Tutup"; //tutup jika melebihi tanggal 4 September
-            $instansi_obj = Auth::User()->user_rel->instansi;
+            if (Auth::User()->user_rel) {
+                $instansi_obj = Auth::User()->user_rel->instansi;
+            } else {
+                $instansi_obj = KlpdInstansi::find(Auth::User()->instansi_id);
+            }
             $instansi_id = $instansi_obj->id;
             $instansi = $instansi_obj->name;
             $group_kld = $instansi_obj->group;
