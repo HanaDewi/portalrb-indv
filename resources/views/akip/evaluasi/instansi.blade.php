@@ -623,6 +623,13 @@
                                     $('#nilai_komponen_pelaporan_kinerja_tahun_lalu').val(response.evaluasi_sakip.nilai_komponen_pelaporan_kinerja_tahun_lalu);
                                     $('#nilai_komponen_evaluasi_internal_tahun_lalu').val(response.evaluasi_sakip.nilai_komponen_evaluasi_internal_tahun_lalu);
                                     $('#nilai_total_evaluasi_akip_tahun_lalu').val(response.evaluasi_sakip.nilai_total_evaluasi_akip_tahun_lalu);
+                                    $('#angka_kemiskinan').val(response.evaluasi_sakip.angka_kemiskinan);
+                                    $('#laju_pertumbuhan_ekonomi').val(response.evaluasi_sakip.laju_pertumbuhan_ekonomi);
+                                    $('#tingkat_pengangguran_terbuka').val(response.evaluasi_sakip.tingkat_pengangguran_terbuka);
+                                    $('#penurunan_emisi_grk').val(response.evaluasi_sakip.penurunan_emisi_grk);
+                                    $('#indeks_pembangunan_manusia').val(response.evaluasi_sakip.indeks_pembangunan_manusia);
+                                    $('#indeks_gini_ratio').val(response.evaluasi_sakip.indeks_gini_ratio);
+                                    $('#pendapatan_perkapita').val(response.evaluasi_sakip.pendapatan_perkapita);
                                     $('#angka_kemiskinan_tahun_lalu').val(response.evaluasi_sakip.angka_kemiskinan_tahun_lalu);
                                     $('#laju_pertumbuhan_ekonomi_tahun_lalu').val(response.evaluasi_sakip.laju_pertumbuhan_ekonomi_tahun_lalu);
                                     $('#tingkat_pengangguran_terbuka_tahun_lalu').val(response.evaluasi_sakip.tingkat_pengangguran_terbuka_tahun_lalu);
