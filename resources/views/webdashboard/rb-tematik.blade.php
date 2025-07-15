@@ -192,87 +192,19 @@
                     @foreach ($instansis as $instansi)
                         @php
                             $no++;
-                            $instansi_id = $instansi->id;
-                            $sql = "
-            WITH baseline_check AS (
-                SELECT
-                    CASE
-                        WHEN EXISTS (
-                            SELECT 1
-                            FROM tematik_sasaran_roadmap tsr
-                            WHERE tsr.instansi_id = ?
-                        ) THEN 'yes'
-                        ELSE '---'
-                    END as tematik,
-                    (SELECT COUNT(DISTINCT tsr.tema_id)
-                    FROM tematik_sasaran_roadmap tsr
-                    WHERE tsr.instansi_id = ?)
-            AS tema_id_count
-            ),
-            distinct_themes AS (
-                SELECT DISTINCT tsr.tema_id,
-                ROW_NUMBER() OVER (ORDER BY tsr.tema_id) AS row_num
-                FROM tematik_sasaran_roadmap tsr
-                WHERE tsr.instansi_id = ?
-            ),
-            permasalahan_check AS (
-                SELECT
-                    CASE
-                        WHEN EXISTS (
-                            SELECT 1
-                            FROM tematik_sasaran_roadmap tsr
-                            JOIN tematik_indikator_roadmap tir ON tir.tematik_sasaran_roadmap_id = tsr.id
-                            JOIN tematik_permasalahan tp ON tp.tematik_indikator_roadmap_id = tir.id
-                            WHERE tsr.instansi_id = ?
-                        ) THEN 'yes'
-                        ELSE '---'
-                    END as permasalahan
-            ),
-            rencana_aksi_check AS (
-                SELECT
-                    CASE
-                        WHEN EXISTS (
-                            SELECT 1
-                            FROM tematik_sasaran_roadmap tsr
-                            JOIN tematik_indikator_roadmap tir ON tir.tematik_sasaran_roadmap_id = tsr.id
-                            JOIN tematik_permasalahan tp ON tp.tematik_indikator_roadmap_id = tir.id
-                            JOIN tematik_indikator_permasalahan tip ON tip.tematik_permasalahan_id = tp.id
-                            JOIN tematik_rencana_aksi tra ON tra.tematik_indikator_permasalahan_id = tip.id
-                            WHERE tsr.instansi_id = ?
-                        ) THEN 'yes'
-                        ELSE '---'
-                    END as rencana_aksi
-            )
-            SELECT 
-                baseline_check.tematik,
-                baseline_check.tema_id_count,
-                MAX(CASE WHEN distinct_themes.tema_id = 1 THEN 1 ELSE 0 END) AS tema1,
-                MAX(CASE WHEN distinct_themes.tema_id = 2 THEN 1 ELSE 0 END) AS tema2,
-                MAX(CASE WHEN distinct_themes.tema_id = 3 THEN 1 ELSE 0 END) AS tema3,
-                MAX(CASE WHEN distinct_themes.tema_id = 4 THEN 1 ELSE 0 END) AS tema4,
-                MAX(CASE WHEN distinct_themes.tema_id = 5 THEN 1 ELSE 0 END) AS tema5,
-                permasalahan_check.permasalahan,
-                rencana_aksi_check.rencana_aksi
-            FROM baseline_check
-            LEFT JOIN distinct_themes ON 1 = 1
-            LEFT JOIN permasalahan_check ON 1 = 1
-            LEFT JOIN rencana_aksi_check ON 1 = 1
-            GROUP BY baseline_check.tematik, baseline_check.tema_id_count, permasalahan_check.permasalahan, rencana_aksi_check.rencana_aksi;
-        ";
 
-                            $exists = DB::select($sql, [$instansi_id, $instansi_id, $instansi_id, $instansi_id, $instansi_id]);
-                            $tematik = $exists[0]->tematik ?? '---';
-                            $permasalahan = $exists[0]->permasalahan ?? '---';
-                            $rencana_aksi = $exists[0]->rencana_aksi ?? '---';
-                            $tema_id_count = $exists[0]->tema_id_count ?? '---';
+                            $tematik = $tematiks[$instansi->id]->tematik ?? '---';
+                            $permasalahan = $tematiks[$instansi->id]->permasalahan ?? '---';
+                            $rencana_aksi = $tematiks[$instansi->id]->rencana_aksi ?? '---';
+                            $tema_id_count = $tematiks[$instansi->id]->tema_id_count ?? '---';
                             $semua = $tematik == 'yes' && $permasalahan == 'yes' && $rencana_aksi == 'yes' ? 'yes' : '---';
 
                             $temas = [
-                                'tema1' => $exists[0]->tema1 ?? 0,
-                                'tema2' => $exists[0]->tema2 ?? 0,
-                                'tema3' => $exists[0]->tema3 ?? 0,
-                                'tema4' => $exists[0]->tema4 ?? 0,
-                                'tema5' => $exists[0]->tema5 ?? 0,
+                                'tema1' => $tematiks[$instansi->id]->tema1 ?? 0,
+                                'tema2' => $tematiks[$instansi->id]->tema2 ?? 0,
+                                'tema3' => $tematiks[$instansi->id]->tema3 ?? 0,
+                                'tema4' => $tematiks[$instansi->id]->tema4 ?? 0,
+                                'tema5' => $tematiks[$instansi->id]->tema5 ?? 0,
                             ];
 
                             foreach ($temas as $key => $tema) {
