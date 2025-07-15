@@ -23,7 +23,7 @@
         <div class="flex flex-col sm:flex-row items-center p-5 border-b border-slate-200/60">
             <h2 class="font-medium text-base mr-auto"> {{$title}}</h2>
             <button class="btn btn-danger shadow-md mr-2 float-right" onclick="tambah();" data-bs-toggle="modal"
-                data-bs-target="#modal-kelola-tim"><i class="fa fa-add"></i> &nbsp; Tambah Jadwal</button>
+                data-bs-target="#modal-kelola-tim"><i class="fa fa-add"></i> &nbsp; Tambah Bukti Dukung</button>
         </div>
         <div class="lg:col-span-12 p-5 border-b border-slate-200/60">
             <table id="lapor_wbk_mandiri" class="table table-bordered table-striped table-hover" cellspacing="0"
@@ -32,6 +32,7 @@
                     <tr>
                         <th class="w-5">No.</th>
                         <th>Tahun</th>
+                        <th>Instansi</th>
                         <th>Tahap Seleksi</th>
                         <th>Link</th>
                         <th>Keterangan</th>
@@ -65,8 +66,8 @@
                                     class="text-danger">*</span></label>
                             <br />
                             <select name="tahap_seleksi_id" id="tahap_seleksi">
-                                @foreach ($tahap_seleksis as $tahap_seleksi )
                                 <option value="" disabled selected>Pilih Tahap Seleksi</option>
+                                @foreach ($tahap_seleksis as $tahap_seleksi )
                                 <option value="{{$tahap_seleksi->id}}">
                                     {{$tahap_seleksi->tahap_seleksi}}
                                 </option>
@@ -75,10 +76,10 @@
                         </div>
                         <br />
                         <div class="form-group">
-                            <label for="tahap_seleksi" class="form-label">Link Bukti Dukung<span
+                            <label for="link_bukti" class="form-label">Link Bukti Dukung<span
                                     class="text-danger">*</span></label>
                             <input type="text" id="link_bukti" name="link_bukti" class="form-control"
-                                placeholder="tahap_seleksi" required>
+                                placeholder="link_bukti" required>
                         </div>
                         <br />
                         <div class="form-group">
@@ -179,7 +180,8 @@
                 }
             },
             { data: 'tahun' },
-            { data: 'tahap_seleksi_id' },
+            { data: 'instansi' },
+            { data: 'tahap_seleksi' },
             { data: 'link' },
             { data: 'keterangan' },
             { data: 'updated_at' },
@@ -193,9 +195,12 @@
         ],
         columnDefs: [
             {
-                "targets": 4, // kolom dengan indeks ini yang akan diubah menjadi center
+                "targets": 5, // kolom dengan indeks ini yang akan diubah menjadi center
                 "className": "text-center",
-                "width": "20%"
+            },
+            {
+                "targets": 6, // kolom dengan indeks ini yang akan diubah menjadi center
+                "className": "text-center",
             },
             
         ],
@@ -222,11 +227,11 @@
         $('#title').html('Edit Jadwal');
         $('.saveButton').prop('disabled', true);
         modal_kelola_jadwal.show();
-        $.getJSON("{{url('/zi/kelola-jadwal/getData/')}}/"+id, function(data) {
-            $('#tahap_seleksi').val(data.tahap_seleksi);
-            $('#tahun').val(data.tahun).change();
-            $('#tanggal_mulai').val(data.tanggal_mulai);
-            $('#tanggal_selesai').val(data.tanggal_selesai);
+        $.getJSON("{{url('/zi/lapor-wbk-mandiri/getData/')}}/"+id, function(data) {
+            $('#laporan_id').val(data.id).change();
+            $('#tahap_seleksi').val(data.tahap_seleksi_id).change();
+            $('#link_bukti').val(data.link);
+            $('#keterangan').val(data.keterangan);
             $('.saveButton').prop('disabled', false);
         });
     }
@@ -234,7 +239,7 @@
     function hapus(id) {
         Swal.fire({
             title: "Yakin?",
-            text: "Hapus Jadwal Evaluasi ini?",
+            text: "Hapus Laporan ini?",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: "#DD6B55",
@@ -242,7 +247,7 @@
         }).then((result) => {
             if (result.isConfirmed) {
                 $.ajax({
-                    url: "{{url('/zi/kelola-jadwal/hapus')}}",
+                    url: "{{url('/zi/lapor-wbk-mandiri/hapus')}}",
                     type: "post",
                     data: {_token: '{{csrf_token()}}', id: id},
                     dataType: "json",

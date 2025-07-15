@@ -32,8 +32,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/zi/unit/{id}/delete-unit', [PengusulanZIController::class, 'deleteUnit'])->name('unit.delete-unit');
     Route::post('/zi/unit/{id}/tambah-unit', [PengusulanZIController::class, 'addUnit'])->name('unit.add-unit'); //untuk add unit
     Route::get('/zi-administrasi', [EvaluatanController::class, 'seleksi_administrasi'])->name('evaluatan_seleksi_administrasi');
-    //Route::post('/zi-simpan-sanggah', [EvaluatanController::class, 'sanggah_simpan'])->name('evaluatan_simpan_sanggah');
-    Route::post('/zi-simpan-sanggah', [TutupController::class, 'index'])->name('evaluatan_simpan_sanggah');
+    Route::post('/zi-simpan-sanggah', [EvaluatanController::class, 'sanggah_simpan'])->name('evaluatan_simpan_sanggah');
     Route::get('/zi-hasil-sanggah', [EvaluatanController::class, 'hasil_sanggah'])->name('evaluatan_hasil_sanggah');
     Route::get('/zi-desk', [EvaluatanController::class, 'seleksi_desk'])->name('evaluatan_desk');
     //Route::post('/zi-simpan-desk', [EvaluatanController::class, 'link_paparan_simpan'])->name('evaluatan_simpan_desk');
@@ -47,6 +46,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/zi/lapor-wbk-mandiri/getDatas', [WbkMandiriController::class, 'lapor_wbk_mandiri_getDatas'])->name('lapor_wbk_mandiri_getDatas');
     Route::get('/zi/lapor-wbk-mandiri/getData/{id}', [WbkMandiriController::class, 'lapor_wbk_mandiri_getData']);
     Route::post('/zi/lapor-wbk-mandiri/hapus', [WbkMandiriController::class, 'lapor_wbk_mandiri_hapus'])->name('lapor_wbk_mandiri_hapus');
+    Route::get('/zi/progres-wbk-mandiri', [WbkMandiriController::class, 'progres_wbk_mandiri'])->name('progres_wbk_mandiri');
 
     #============================Admin 
     #Pengusulan
@@ -72,8 +72,7 @@ Route::middleware('auth')->group(function () {
     #Proses Sanggah
     Route::get('/zi/sanggah', [SanggahController::class, 'index'])->name('sanggah');
     Route::get('/zi/proses-sanggah/{id}', [SanggahController::class, 'proses_sanggah'])->name('proses_sanggah');
-    //Route::post('/zi/proses-sanggah/simpan', [SanggahController::class, 'proses_sanggah_simpan'])->name('proses_sanggah_simpan');
-    Route::post('/zi/proses-sanggah/simpan', [TutupController::class, 'index'])->name('proses_sanggah_simpan');
+    Route::post('/zi/proses-sanggah/simpan', [SanggahController::class, 'proses_sanggah_simpan'])->name('proses_sanggah_simpan');
     #Seleksi Dokumen
     Route::get('/zi/seleksi-dokumen', [DokumenController::class, 'index'])->name('seleksi_dokumen');
     Route::get('/zi/proses-dokumen/{id}', [DokumenController::class, 'evaluasi_dokumen'])->name('proses_dokumen');

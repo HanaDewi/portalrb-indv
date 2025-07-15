@@ -41,7 +41,7 @@ class DokumenController extends Controller
         $jumlah_lolos_wbk = 0;
         $jumlah_lolos_wbbm = 0;
         $jumlah_instansi_lolos = 0;
-        $teams = TimEvaluasi::get();
+        $teams = TimEvaluasi::where('tahun', $tahun)->get();
         $progress_teams = [];
         foreach ($teams as $tim) {
             $progress_teams[$tim->nama] = [

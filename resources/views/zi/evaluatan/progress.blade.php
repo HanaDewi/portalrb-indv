@@ -28,6 +28,12 @@
             @if($instansiZI->instansi_wbk_mandiri)
             <hr />
             <a href="{{route('lapor_wbk_mandiri')}}" class="btn btn-warning font-bold ">Lapor WBK Mandiri</a>
+            @if($instansiZI->link_progres_wbk_mandiri)
+            &nbsp;&nbsp;&nbsp;
+            <a href="{{$instansiZI->link_progres_wbk_mandiri}}" class="btn btn-warning font-bold "
+                target="_blank">Progres
+                WBK Mandiri</a>
+            @endif
             @endif
 
 

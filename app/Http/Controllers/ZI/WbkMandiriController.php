@@ -17,13 +17,7 @@ class WbkMandiriController extends Controller
         $this->middleware(function ($request, $next) {
 
             // Gita 10059, Wahyu 10060 Rheza  10046 Arina 10053 Canggih 10056 Afif 10048 Auffi 10052
-            if (Auth::User()->level == "admin" || in_array(Auth::User()->id, [
-                10060,
-                10209,
-                10059,
-                10053,
-                10052
-            ])) {
+            if (Auth::User()->level == "tpn" || Auth::User()->level == "admin") {
                 return $next($request);
             } else {
                 $year = date('Y');
@@ -65,15 +59,35 @@ class WbkMandiriController extends Controller
         $instansiZI = InstansiZI::where('tahun', $tahun)
             ->where('instansi_id', $instansi_id)
             ->first();
-        if ($instansiZI) {
-            $datas = LaporWbkMandiri::where('tahun', $tahun)->get();
+        if ($instansiZI || Auth::User()->level == "admin" || Auth::User()->level == "tpn") {
+            if (Auth::User()->level == "admin" || Auth::User()->level == "tpn") {
+                $laporWbkMandiris = LaporWbkMandiri::where('tahun', $tahun)->orderBy('instansi_zi_id')->get();
+            } else {
+                $laporWbkMandiris = LaporWbkMandiri::where('tahun', $tahun)->where('instansi_zi_id', $instansiZI->id)->get();
+            }
+
+
+            foreach ($laporWbkMandiris as $laporWbkMandiri) {
+                $output = array(
+                    "id" => $laporWbkMandiri->id,
+                    "tahap_seleksi" => $laporWbkMandiri->tahap_seleksi->tahap_seleksi,
+                    "instansi" => $laporWbkMandiri->instansi_ZI->klpd_instansi->name,
+                    "tahun" => $laporWbkMandiri->tahun,
+                    "link" => $laporWbkMandiri->link,
+                    "keterangan" => $laporWbkMandiri->keterangan,
+                    "updated_at" => $laporWbkMandiri->updated_at->format('d-m-Y H:i:s')
+                );
+                $datas[] = $output;
+            }
+
             return response()->json(['data' => $datas]);
         }
     }
 
     public function lapor_wbk_mandiri_getData($id)
     {
-        $data = TahapSeleksiZI::find($id);
+        $tahun = (request()->get('tahun')) ? request()->get('tahun') : date('Y');
+        $data = LaporWbkMandiri::find($id);
         return $data;
     }
     public function lapor_wbk_mandiri_simpan(Request $request)
@@ -99,22 +113,34 @@ class WbkMandiriController extends Controller
         };
         return response()->json(['success' => $success]);
     }
-
     public function lapor_wbk_mandiri_hapus(Request $request)
     {
         $pesan = '';
         $success = true;
-        $jadwalZI = TahapSeleksiZI::find($request->id);
-        #if (count($timEvaluasi->indikators) > 0) {
-        #    $pesan = 'Tim Evaluasi tidak bisa dihapus, silahkan hapus dulu Anggota yang terhubung dengan Tim Evaluasi ini!';
-        #    $success = false;
-        #} else {
-        if ($jadwalZI->delete()) {
+        $laporWbkMandiri = LaporWbkMandiri::find($request->id);
+        if ($laporWbkMandiri->delete()) {
             $success = true;
         } else {
             $success = false;
         }
         #}
         return response()->json(['success' => $success, 'pesan' => $pesan]);
+    }
+
+    public function progres_wbk_mandiri(Request $request)
+    {
+        $tahun = ($request->get('tahun')) ? $request->get('tahun') : date('Y');
+        $title = "Progres WBK Mandiri";
+        $instansiZIs = InstansiZI::where('tahun', $tahun)
+            ->where('instansi_wbk_mandiri', 1)
+            ->get();
+        return view(
+            'zi.wbk_mandiri.progres_wbk_mandiri',
+            compact(
+                "title",
+                "tahun",
+                "instansiZIs"
+            )
+        );
     }
 }

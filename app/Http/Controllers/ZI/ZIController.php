@@ -47,7 +47,7 @@ class ZIController extends Controller
             dd("Mohon maaf, instansi anda belum didaftarkan oleh admin");
         }
 
-        if ($instansiZI->tahap_seleksi === 0 || $instansiZI->final != 1) {
+        if ($instansiZI->tahap_seleksi === 0) {
             return redirect()->route('pengusulan_zi');
         } elseif ($instansiZI->tahap_seleksi == 1) {
             return redirect('zi-tinjau?instansi_id=' . $instansi_id);

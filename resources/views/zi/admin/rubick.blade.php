@@ -405,14 +405,52 @@
                 </li>
                 @endif
                 <li>
-                    <a href="{{ route('kelola_jadwal_zi') }}" class="side-menu
-                    @if($title == 'Kelola Jadwal')
-                                side-menu--active 
+                    <a href="#" class="side-menu
+                    @if(in_array($title, ['Laporan WBK Mandiri'])) 
+                        class side-menu--active side-menu--open
                     @endif
                     ">
+                        <!-- class side-menu--active side-menu--open-->
                         <div class="side-menu__icon"><i data-lucide="clipboard-list"></i></div>
-                        <div class="side-menu__title">WBK Mandiri</div>
+                        <div class="side-menu__title">
+                            WBK Mandiri
+                            <div class="side-menu__sub-icon "> <i data-lucide="chevron-down"></i> </div>
+                        </div>
                     </a>
+                    <ul class="
+                        @if(in_array($title, ['Laporan WBK Mandiri' ])) 
+                            side-menu__sub-open
+                        @else
+                            side-menu__sub-close
+                        @endif
+                        ">
+                        <li>
+                            <a href="{{ route('lapor_wbk_mandiri') }}" class="side-menu
+                                @if($title == 'Laporan WBK Mandiri')
+                                            side-menu--active 
+                                @endif
+                                ">
+                                <div class="side-menu__icon"><i data-lucide="clipboard-list"></i></div>
+                                <div class="side-menu__title">WBK Mandiri</div>
+                            </a>
+                        </li>
+
+                        @if(Auth::User()->level =="admin" || Auth::User()->level =="tpn" )
+                        <li>
+                            <a href="{{route('progres_wbk_mandiri')}}" class="side-menu 
+                            @if($title == 'Progres WBK Mandiri')
+                            side-menu--active 
+                            @endif
+                            ">
+                                <div class="side-menu__icon"><i data-lucide="user-plus"></i></div>
+                                <div class="side-menu__title">
+                                    Progres WBK Mandiri
+                                    <div class="side-menu__sub-icon "> </div>
+                                </div>
+                            </a>
+                        </li>
+                        @endif
+                    </ul>
                 </li>
                 <li>
                     <a href="{{ route('logout') }}" onclick="event.preventDefault(); $('#logout').submit();"

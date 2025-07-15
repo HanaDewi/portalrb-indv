@@ -73,7 +73,9 @@
                                     <td style="text-align: left">{{$unit_wbk->nama}}</td>
                                     <td style="text-align: left">
 
-
+                                        @if($unit_wbk->instansiZI->instansi_wbk_mandiri ==1)
+                                        WBK Mandiri
+                                        @else
                                         @if($unit_wbk->seleksi_administrasi_unit->status_final==1)
                                         Lulus
                                         @elseif ($unit_wbk->seleksi_administrasi_unit->status_final===0)
@@ -86,6 +88,7 @@
                                         @endif
                                         @else
                                         Belum Dinilai
+                                        @endif
                                         @endif
                                     </td>
                                 </tr>
