@@ -610,6 +610,9 @@
                             } else {
                                 $('.saveButton').prop('disabled', false);
                                 if (response.evaluasi_sakip) {
+                                    $('#penanggung_jawab').val(response.evaluasi_sakip.penanggung_jawab);
+                                    $('#pic_lke').val(response.evaluasi_sakip.pic_lke);
+                                    $('#link_lke').val(response.evaluasi_sakip.link_lke);
                                     $('#catatan_komponen_perencanaan_kinerja').val(response.evaluasi_sakip.catatan_komponen_perencanaan_kinerja);
                                     $('#catatan_komponen_pengukuran_kinerja').val(response.evaluasi_sakip.catatan_komponen_pengukuran_kinerja);
                                     $('#catatan_komponen_pelaporan_kinerja').val(response.evaluasi_sakip.catatan_komponen_pelaporan_kinerja);
