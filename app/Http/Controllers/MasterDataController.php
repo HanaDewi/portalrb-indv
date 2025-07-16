@@ -6,6 +6,7 @@ use App\Models\DokumenKategori;
 use App\Models\Indikator;
 use App\Models\KegiatanUtama;
 use App\Models\LKE\LkeBobot;
+use App\Models\LKE\LkeKegiatan;
 use App\Models\LKE\LkeParameter;
 use App\Models\Tahun;
 use App\Models\Tema;
@@ -156,6 +157,56 @@ class MasterDataController extends Controller
         }
     }
 
+    public function lke_kegiatan()
+    {
+        return view('master-data.lke_kegiatan');
+    }
+
+    public function lke_kegiatan_getDatas()
+    {
+        $datas = LkeKegiatan::latest()->get();
+        return response()->json(['data' => $datas]);
+    }
+
+    public function lke_kegiatan_getData($id)
+    {
+        $data = LkeKegiatan::find($id);
+        return $data;
+    }
+
+    public function lke_kegiatan_simpan(Request $request)
+    {
+        $success = false;
+        $lke_kegiatan = new LkeKegiatan();
+        if ($request->lke_kegiatan_id) {
+            $lke_kegiatan = LkeKegiatan::find($request->lke_kegiatan_id);
+        }
+        $lke_kegiatan->tahun = $request->tahun;
+        $lke_kegiatan->nama = $request->nama;
+        if ($lke_kegiatan->save()) {
+            $success = true;
+        };
+        return response()->json(['success' => $success]);
+    }
+
+    public function lke_kegiatan_hapus(Request $request)
+    {
+        $pesan = '';
+        $success = true;
+        $lke_kegiatan = LkeKegiatan::find($request->id);
+        if (count($lke_kegiatan->parameters) > 0) {
+            $pesan = 'LKE Kegiatan tidak bisa dihapus, silahkan hapus dulu LKE Parameter yang menggunakan LKE Kegiatan ini!';
+            $success = false;
+        } else {
+            if ($lke_kegiatan->delete()) {
+                $success = true;
+            } else {
+                $success = false;
+            }
+        }
+        return response()->json(['success' => $success, 'pesan' => $pesan]);
+    }
+
     public function tema()
     {
         return view('master-data.tema');
@@ -180,6 +231,7 @@ class MasterDataController extends Controller
         if ($request->tema_id) {
             $tema = Tema::find($request->tema_id);
         }
+        $tema->tahun = $request->tahun;
         $tema->nama = $request->nama;
         if ($tema->save()) {
             $success = true;

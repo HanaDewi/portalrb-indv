@@ -72,6 +72,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/master-data/indikator/getData/{id}', [MasterDataController::class, 'indikator_getData']);
     Route::post('/master-data/indikator/simpan', [MasterDataController::class, 'indikator_simpan']);
     Route::post('/master-data/indikator/hapus', [MasterDataController::class, 'indikator_hapus']);
+    // LKE Kegiatan
+    Route::get('/master-data/lke_kegiatan', [MasterDataController::class, 'lke_kegiatan'])->name('lke_kegiatan');
+    Route::get('/master-data/lke_kegiatan/getDatas', [MasterDataController::class, 'lke_kegiatan_getDatas']);
+    Route::get('/master-data/lke_kegiatan/getData/{id}', [MasterDataController::class, 'lke_kegiatan_getData']);
+    Route::post('/master-data/lke_kegiatan/simpan', [MasterDataController::class, 'lke_kegiatan_simpan']);
+    Route::post('/master-data/lke_kegiatan/hapus', [MasterDataController::class, 'lke_kegiatan_hapus']);
     // Tema
     Route::get('/master-data/tema', [MasterDataController::class, 'tema'])->name('tema');
     Route::get('/master-data/tema/getDatas', [MasterDataController::class, 'tema_getDatas']);

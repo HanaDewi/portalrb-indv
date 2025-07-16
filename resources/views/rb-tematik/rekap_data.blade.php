@@ -25,6 +25,12 @@
                     </tr>
                     @endif
                     <tr>
+                        <td class="font-bold" width="220">Tahun</td>
+                        <td>
+                            {!! Form::select('tahun', ['2024' => '2024', '2025' => '2025'], $tahun, ['class' => 'w-full', 'id' => 'tahun', 'data-placeholder' => 'Pilih Tahun', 'required', 'onchange' => "$('#filter-form').submit();"]) !!}
+                        </td>
+                    </tr>
+                    <tr>
                         <td class="font-bold" width="220">Tema</td>
                         <td>
                             <select class="form-control tom-select mt-1" name="ftema[]" multiple>

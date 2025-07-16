@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Exports\ExportRBTematikTemplate;
 use App\Imports\ImportRBTematik;
 use App\Models\FokusIntervensi;
@@ -36,7 +37,7 @@ class RBTematikController extends Controller
         });
     }
 
-    public function tema_sasaran()
+    public function tema_sasaran(Request $request)
     {
         $user = Auth::User();
         if (in_array($user->level, ['kabupaten', 'provinsi', 'kl'])) {
@@ -48,8 +49,11 @@ class RBTematikController extends Controller
                 }
             }
         }
-        $temas = Tema::get();
-        $sasaranRoadmaps = TematikSasaranRoadmap::where('instansi_id', $user->instansi_id)->orderBy('tema_id')->get();
+        $tahun = $request->get('tahun', '2025');
+        $temas = Tema::where('tahun', $tahun)->get();
+        $sasaranRoadmaps = TematikSasaranRoadmap::whereHas('tema', function ($query) use ($tahun) {
+            $query->where('tahun', $tahun);
+        })->where('instansi_id', $user->instansi_id)->orderBy('tema_id')->get();
         $tematikDatas = [];
         $jumlahBaris = 0;
         foreach ($sasaranRoadmaps as $sasaran) {
@@ -96,6 +100,7 @@ class RBTematikController extends Controller
             }
         }
         return view('rb-tematik.perencanaan', [
+            "tahun" => $tahun,
             "temas" => $temas,
             "sasaranRoadmaps" => $sasaranRoadmaps,
             "tematikDatas" => $tematikDatas
@@ -115,7 +120,9 @@ class RBTematikController extends Controller
                 }
             }
         }
-        $temas = Tema::get();
+
+        $tahun = $request->get('tahun', '2025');
+        $temas = Tema::where('tahun', $tahun)->get();
 
         $ftema = $request->get('ftema');
         $fsasaranroadmap = $request->get('fsasaranroadmap');
@@ -141,7 +148,9 @@ class RBTematikController extends Controller
             }
         }
 
-        $querysasaranRoadmaps = TematikSasaranRoadmap::where('instansi_id', $user->instansi_id);
+        $querysasaranRoadmaps = TematikSasaranRoadmap::whereHas('tema', function ($query) use ($tahun) {
+            $query->where('tahun', $tahun);
+        })->where('instansi_id', $user->instansi_id);
         if ($ftema) {
             $querysasaranRoadmaps->where('tema_id', $ftema);
         }
@@ -237,6 +246,7 @@ class RBTematikController extends Controller
         }
 
         return view('rb-tematik.permasalahan', [
+            "tahun" => $tahun,
             "ftema" => $ftema,
             "fsasaranroadmap" => $fsasaranroadmap,
             "findikatorroadmap" => $findikatorroadmap,
@@ -423,8 +433,7 @@ class RBTematikController extends Controller
         $permasalahan = TematikPermasalahan::where('id', $request->permasalahan_id)->first();
         if (!$permasalahan) {
             $permasalahan = new TematikPermasalahan();
-        }
-        ;
+        };
         $permasalahan->tematik_indikator_roadmap_id = $request->tematik_indikator_roadmap_id;
 
 
@@ -655,8 +664,6 @@ class RBTematikController extends Controller
                 $outputs[] = $renaksi;
                 $no++;
             }
-
-
         }
         return response()->json(['data' => $outputs]);
     }
@@ -680,7 +687,7 @@ class RBTematikController extends Controller
         DB::beginTransaction();
         try {
             $rencana_aksi = TematikRencanaAksi::where('tematik_indikator_permasalahan_id', $indikator->id)->where('id', $request->rencana_aksi_id)->first();
-            
+
             if (!$rencana_aksi) {
                 $rencana_aksi = new TematikRencanaAksi();
                 $rencana_aksi->tematik_indikator_permasalahan_id = $indikator->id;
@@ -713,7 +720,6 @@ class RBTematikController extends Controller
                     if (!$rencana_aksi_output->save()) {
                         $success = false;
                     }
-
                 }
             }
         } catch (\Throwable $th) {
@@ -887,21 +893,22 @@ class RBTematikController extends Controller
                 }
             }
         }
-        $temas = Tema::get();
+        $tahun = $request->get('tahun', date('Y'));
+        $temas = Tema::where('tahun', $tahun)->get();
 
         $finstansi = $request->get('instansi_id');
         $ftema = $request->get('ftema');
-        if ($finstansi==null && in_array($user->level, ['admin', 'tpn', 'viewer'])) {
+        if ($finstansi == null && in_array($user->level, ['admin', 'tpn', 'viewer'])) {
             $finstansi = [1];
         }
-        if ($ftema==null) {
+        if ($ftema == null) {
             $ftema = [];
         }
         if (!is_array($finstansi)) {
-            $finstansi = [ $finstansi ];
+            $finstansi = [$finstansi];
         }
         if (!is_array($ftema)) {
-            $ftema = [ $ftema ];
+            $ftema = [$ftema];
         }
         $fsasaranroadmap = $request->get('fsasaranroadmap');
         $findikatorroadmap = $request->get('findikatorroadmap');
@@ -943,9 +950,13 @@ class RBTematikController extends Controller
         }
 
         if ($instansi_id) {
-            $model = TematikSasaranRoadmap::whereIn('instansi_id', $instansi_id)->orderBy('tema_id')->orderBy('id');
+            $model = TematikSasaranRoadmap::whereHas('tema', function ($query) use ($tahun) {
+                $query->where('tahun', $tahun);
+            })->whereIn('instansi_id', $instansi_id)->orderBy('tema_id')->orderBy('id');
         } else {
-            $model = TematikSasaranRoadmap::orderBy('tema_id')->orderBy('id');
+            $model = TematikSasaranRoadmap::whereHas('tema', function ($query) use ($tahun) {
+                $query->where('tahun', $tahun);
+            })->orderBy('tema_id')->orderBy('id');
         }
 
         if (count($ftema) > 0) {
@@ -985,7 +996,7 @@ class RBTematikController extends Controller
                                         foreach ($indikator_permasalahan->rencana_aksi as $rencana_aksi) {
                                             if (!empty($fintervensi)) {
                                                 $ra_output = $rencana_aksi->output([$fintervensi])->get();
-                                            }else{
+                                            } else {
                                                 $ra_output = $rencana_aksi->output()->get();
                                             }
                                             if (count($ra_output)) {
@@ -1051,6 +1062,7 @@ class RBTematikController extends Controller
         return view(
             'rb-tematik.rekap_data',
             compact(
+                'tahun',
                 'datas',
                 'instansi_id',
                 'nama_instansi',

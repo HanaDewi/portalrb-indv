@@ -1,21 +1,21 @@
 @extends('layout.rubick')
-@section('title', 'Tema')
+@section('title', 'LKE Kegiatan')
 
 @section('content')
 <div class="intro-y col-span-12 lg:col-span-12">
     @include('common.status')
     <div class="intro-y box">
         <div class="flex flex-col sm:flex-row items-center p-5 border-b border-slate-200/60">
-            <h2 class="font-medium text-base mr-auto"> Tema</h2>
-            <button class="btn btn-danger shadow-md mr-2 float-right" onclick="tambah();" data-bs-toggle="modal" data-bs-target="#modal-tema">Tambah Tema</button>
+            <h2 class="font-medium text-base mr-auto"> LKE Kegiatan</h2>
+            <button class="btn btn-danger shadow-md mr-2 float-right" onclick="tambah();" data-bs-toggle="modal" data-bs-target="#modal-lke_kegiatan">Tambah LKE Kegiatan</button>
         </div>
         <div class="lg:col-span-12 p-5 border-b border-slate-200/60">
-            <table id="tema" class="table table-bordered table-striped table-hover" cellspacing="0" width="100%">
+            <table id="lke_kegiatan" class="table table-bordered table-striped table-hover" cellspacing="0" width="100%">
                 <thead class="table-dark">
                     <tr>
                         <th class="w-5">No.</th>
                         <th>Tahun</th>
-                        <th>Nama Tema</th>
+                        <th>Nama LKE Kegiatan</th>
                         <th class="w-5">Aksi</th>
                     </tr>
                 </thead>
@@ -26,28 +26,28 @@
     </div>
 </div>
 
-<div id="modal-tema" class="modal fade" tabindex="-1" aria-hidden="true">
+<div id="modal-lke_kegiatan" class="modal fade" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <!-- BEGIN: Modal Header -->
             <div class="modal-header">
-                <h2 class="fw-medium fs-base me-auto" id="title">Tambah Tema</h2>
+                <h2 class="fw-medium fs-base me-auto" id="title">Tambah LKE Kegiatan</h2>
             </div> <!-- END: Modal Header -->
             <!-- BEGIN: Modal Body -->
-            <form action="{{ url('master-data/tema/simpan') }}" id="form-tema" method="post">
+            <form action="{{ url('master-data/lke_kegiatan/simpan') }}" id="form-lke_kegiatan" method="post">
                 @csrf
-                <input type="hidden" name="tema_id" id="tema_id">
+                <input type="hidden" name="lke_kegiatan_id" id="lke_kegiatan_id">
                 <div class="modal-body grid columns-12 gap-4 gap-y-3">
                     <div class="g-col-12">
                         <div class="form-group">
-                            <label for="tahun" class="form-label">Tahun  <span class="text-danger">*</span></label> 
-                            <input type="text" name="tahun" id="tahun" class="form-control" placeholder="Tahun" required>
+                            <label for="tahun" class="form-label">Tahun Kegiatan  <span class="text-danger">*</span></label> 
+                            <input type="text" name="tahun" id="tahun" class="form-control" placeholder="Tahun Kegiatan" required>
                         </div> 
                     </div>
                     <div class="g-col-12">
                         <div class="form-group">
-                            <label for="nama" class="form-label">Nama Tema <span class="text-danger">*</span></label> 
-                            <input type="text" id="nama" name="nama" class="form-control" placeholder="Nama Tema" required>
+                            <label for="nama" class="form-label">Nama LKE Kegiatan  <span class="text-danger">*</span></label> 
+                            <textarea id="nama" name="nama" class="form-control" placeholder="Nama LKE Kegiatan" required></textarea>
                         </div> 
                     </div>
                 </div> <!-- END: Modal Body -->
@@ -70,9 +70,9 @@
     $(document).ready(function() {
         getData();
         $("#tahun").inputmask('2099');
-        modal_tema = tailwind.Modal.getInstance(document.querySelector("#modal-tema"));
+        modal_lke_kegiatan = tailwind.Modal.getInstance(document.querySelector("#modal-lke_kegiatan"));
         
-        $('#form-tema').validate({
+        $('#form-lke_kegiatan').validate({
             highlight: function (input) {
                 $(input).addClass('border-danger');
             },
@@ -101,11 +101,11 @@
                     success: function(data) {
                         $('.saveButton').prop('disabled', false);
                         if (data.success) {
-                            Swal.fire('Selamat!', 'Data Tema berhasil disimpan!', 'success');
-                            modal_tema.hide();
+                            Swal.fire('Selamat!', 'Data LKE Kegiatan berhasil disimpan!', 'success');
+                            modal_lke_kegiatan.hide();
                         } else {
-                            Swal.fire('Aduh!', 'Data Tema gagal disimpan! Coba lagi nanti ya..', 'error');
-                            modal_tema.hide();
+                            Swal.fire('Aduh!', 'Data LKE Kegiatan gagal disimpan! Coba lagi nanti ya..', 'error');
+                            modal_lke_kegiatan.hide();
                         }
                         getData();
                     },
@@ -118,7 +118,7 @@
         });
     });
 
-    var tema = $('#tema').DataTable( {
+    var lke_kegiatan = $('#lke_kegiatan').DataTable( {
         responsive: true,
         processing: true,
         ajax: {
@@ -146,27 +146,27 @@
     }); 
 
     function getData() {
-        tema.ajax.url("{{url('master-data/tema/getDatas')}}").load(null, false);
+        lke_kegiatan.ajax.url("{{url('master-data/lke_kegiatan/getDatas')}}").load(null, false);
     }
 
     function clearForm() {
-        $('#form-tema').trigger('reset');
-        $('#tema_id').val('');
+        $('#form-lke_kegiatan').trigger('reset');
+        $('#lke_kegiatan_id').val('');
     }
 
     function tambah() {
         clearForm();
         $('.saveButton').prop('disabled', false);
-        modal_tema.show();
+        modal_lke_kegiatan.show();
     }
 
     function edit(id) {
         clearForm();
-        $('#tema_id').val(id);
-        $('#title').html('Edit Tema');
+        $('#lke_kegiatan_id').val(id);
+        $('#title').html('Edit LKE Kegiatan');
         $('.saveButton').prop('disabled', true);
-        modal_tema.show();
-        $.getJSON("{{url('master-data/tema/getData')}}/"+id, function(data) {
+        modal_lke_kegiatan.show();
+        $.getJSON("{{url('master-data/lke_kegiatan/getData')}}/"+id, function(data) {
             $('#tahun').val(data.tahun);
             $('#nama').val(data.nama);
             $('.saveButton').prop('disabled', false);
@@ -176,7 +176,7 @@
     function hapus(id) {
         Swal.fire({
             title: "Yakin?",
-            text: "Hapus Tema ini?",
+            text: "Hapus LKE Kegiatan ini?",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: "#DD6B55",
@@ -184,15 +184,16 @@
         }).then((result) => {
             if (result.isConfirmed) {
                 $.ajax({
-                    url: "{{url('master-data/tema/hapus')}}",
+                    url: "{{url('master-data/lke_kegiatan/hapus')}}",
                     type: "post",
                     data: {_token: '{{csrf_token()}}', id: id},
                     dataType: "json",
                     success: function(terhapus) {
-                        if (terhapus) {
-                            Swal.fire('Selamat!', 'Data Tema berhasil dihapus!', 'success');
+                        console.log(terhapus);
+                        if (terhapus.success) {
+                            Swal.fire('Selamat!', 'Data LKE Kegiatan berhasil dihapus!', 'success');
                         } else {
-                            Swal.fire('Aduh!', 'Data Tema gagal dihapus! Coba lagi nanti ya..', 'error');
+                            Swal.fire('Aduh!', 'Data LKE Kegiatan gagal dihapus! '+terhapus.pesan, 'error');
                         }
                         getData();
                     },
