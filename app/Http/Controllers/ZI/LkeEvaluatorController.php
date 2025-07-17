@@ -86,7 +86,7 @@ class LkeEvaluatorController extends Controller
             })->get();
         // Path to the original file
         //$originalFilePath = storage_path('app/public/template-zi/LKEZI2024.xlsx');
-        $originalFilePath = storage_path('app/public/template-zi/Template_LKE_2025.xlsx');
+        $originalFilePath = storage_path('app/public/template-zi/Template_LKE_20251.xlsx');
 
         // Temporary directory to store copied files
         $tempDir = storage_path('app/temp-files/');
@@ -99,24 +99,26 @@ class LkeEvaluatorController extends Controller
         // Copy the file for each unit, grouped by instansi
         foreach ($units as $unit) {
             if ($unit->seleksi_administrasi_unit) {
-                try {
-                    if ($unit->seleksi_administrasi_unit->status_final == 1 || optional($unit->sanggah_unit)->status_final == 1) {
-                        $instansiName = $unit->instansiZI->klpd_instansi->name;
-                        $instansiName = str_replace("/", "-", $instansiName);
-                        $instansiDir = $tempDir . $instansiName . '/';
+                //try {
+                if ($unit->seleksi_administrasi_unit->status_final == 1 || optional($unit->sanggah_unit)->status_final == 1) {
+                    $instansiName = $unit->instansiZI->klpd_instansi->name;
+                    $instansiName = str_replace("/", "-", $instansiName);
+                    $instansiDir = $tempDir . $instansiName . '/';
 
-                        // Ensure the instansi directory exists
-                        if (!File::exists($instansiDir)) {
-                            File::makeDirectory($instansiDir, 0755, true);
-                        }
-                        $unit_nama = str_replace('/', "-", $unit->nama);
-                        $newFileName = $unit_nama . '-' . $unit->id . '.xlsx'; // Modify as needed
-                        $newFilePath = $instansiDir . $newFileName;
-                        File::copy($originalFilePath, $newFilePath);
+                    // Ensure the instansi directory exists
+                    if (!File::exists($instansiDir)) {
+                        File::makeDirectory($instansiDir, 0755, true);
                     }
-                } catch (\Exception $e) {
-                    dd($unit->sanggah_unit);
+                    $unit_nama = str_replace('/', "-", $unit->nama);
+                    $newFileName = $unit_nama . '-' . $unit->id . '.xlsx'; // Modify as needed
+                    $newFilePath = $instansiDir . $newFileName;
+                    File::copy($originalFilePath, $newFilePath);
                 }
+                // } catch (\Exception $e) {
+                //     print_r($unit);
+                //     echo "<hr> sanggah unit";
+                //     dd($unit->sanggah_unit);
+                // }
             }
         }
 

@@ -66,7 +66,7 @@
                         <tr>
 
                             <th width="15%">Unit</th>
-                            <th width="20%">Link Lke TPN</th>
+                            <th width="20%">Link </th>
                             <th>Status</th>
                             <th>Kondisi / Catatan</th>
                             <th>Rekomendasi</th>
@@ -91,10 +91,14 @@
                                 {{$unit_zi->nama}}
                             </td>
                             <td class="bukti_dukung">
+                                <strong>Lke TPN </strong> :
                                 <input type="text" name="bukti-dukung-{{$unit_zi->id}}" class="form-control"
                                     placeholder="Link Bukti Dukung" @if(isset($unit_zi->analisis_dokumen))
                                 value="{{$unit_zi->analisis_dokumen->bukti_dukung}}"
                                 @endif>
+                                <br /><br />
+                                <strong>Lke Evaluatan</strong> :<br />
+                                <a href="{{$unit_zi->lke}}" target="_blank">{{$unit_zi->lke}}</a>
                             </td>
                             <td>
                                 <select class="form-control status" name="status-{{$unit_zi->id}}"
