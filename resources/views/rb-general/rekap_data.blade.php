@@ -10,35 +10,43 @@
             </div>
             <div class="lg:col-span-12 p-5 border-b border-slate-200/60">
                 <form>
-                    <div>
-                        <label for="indikator_id" class="form-label font-bold">Indikator</label>
-                        {!! Form::select('indikator_id[]', indikators(), $indikator_id, [
-                            'class' => 'select2 w-full',
-                            'id' => 'indikator_id',
-                            'data-placeholder' => 'Pilih Indikator',
-                            'multiple' => 'multiple',
-                        ]) !!}
-                    </div>
-                    @if (in_array(auth()->user()->level, ['admin', 'tpn', 'viewer']))
-                        <div class="grid grid-cols-4">
-                            <div class="col-span-3">
-                                <label for="instansi_id" class="form-label mt-4 font-bold">Instansi</label>
-                                {!! Form::select('instansi_id[]', instansis(), $instansi_ids, [
-                                    'class' => 'select2 mt-2 w-full',
-                                    'id' => 'instansi_id',
-                                    'data-placeholder' => 'Pilih Instansi',
+                    <table class="table table-bordered table-striped mt-5">
+                        @if (in_array(auth()->user()->level, ['admin', 'tpn', 'viewer']))
+                            <tr>
+                                <td class="font-bold">Instansi</td>
+                                <td>
+                                    {!! Form::select('instansi_id[]', instansis(), $instansi_ids, [
+                                        'class' => 'form-control tom-select mt-1',
+                                        'id' => 'instansi_id',
+                                        'data-placeholder' => 'Pilih Instansi',
+                                        'multiple' => 'multiple',
+                                    ]) !!}
+                                </td>
+                            </tr>
+                        @endif
+                        <tr>
+                            <td class="font-bold" width="220">Tahun</td>
+                            <td>
+                                {!! Form::select('tahun', ['2024' => '2024', '2025' => '2025'], $tahun, ['class' => 'w-full', 'id' => 'tahun', 'data-placeholder' => 'Pilih Tahun', 'required', 'onchange' => "$('#filter-form').submit();"]) !!}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="font-bold" width="220">Indikator</td>
+                            <td>
+                                {!! Form::select('indikator_id[]', indikators(), $indikator_id, [
+                                    'class' => 'form-control tom-select mt-1',
+                                    'id' => 'indikator_id',
+                                    'data-placeholder' => 'Pilih Indikator',
                                     'multiple' => 'multiple',
                                 ]) !!}
-                            </div>
-                            <div class="ml-5">
-                                <button type="submit" class="btn btn-success saveButton mt-10">Lihat Data</button>
-                            </div>
-                        </div>
-                    @else
-                        <div class="mt-5 pb-10">
-                            <button type="submit" class="btn btn-success saveButton float-right">Lihat Data</button>
-                        </div>
-                    @endif
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>-</td>
+                            <td><button type="submit" class="btn btn-primary saveButton"><i class="fa fa-search"> </i>
+                                    &nbsp; Lihat Data</button></td>
+                        </tr>
+                    </table>
                 </form>
                 <div class="separator mt-5"></div>
                 <table id="perencanaan" class="table table-bordered table-striped" cellspacing="0" width="100%">
@@ -103,8 +111,7 @@
                                 </td>
                                 <td>
                                     @if ($data['target']->target)
-                                        <div class="flex items-center"><i data-lucide="bar-chart"
-                                                class="w-4 h-4 mr-1"></i><span class="font-bold mr-1">
+                                        <div class="flex items-center"><i data-lucide="bar-chart" class="w-4 h-4 mr-1"></i><span class="font-bold mr-1">
                                                 {{ $data['target']->tahun }}: </span> {{ $data['target']->target }}</div>
                                     @endif
                                 </td>
@@ -113,12 +120,7 @@
                                 <td>{{ $data['target']->catatan }}</td>
                                 <td>
                                     @if (auth()->user()->level == 'tpn' && hasAksesRencanaAksi())
-                                        <button onclick="catatan_evaluator({{ $data['target']->id }});"
-                                            class="mb-3 btn btn-warning btn-sm w-10"><svg
-                                                xmlns="https://www.w3.org/2000/svg" width="18" height="18"
-                                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                                stroke-linecap="round" stroke-linejoin="round" icon-name="edit"
-                                                data-lucide="edit" class="lucide lucide-edit block mx-auto">
+                                        <button onclick="catatan_evaluator({{ $data['target']->id }});" class="mb-3 btn btn-warning btn-sm w-10"><svg xmlns="https://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" icon-name="edit" data-lucide="edit" class="lucide lucide-edit block mx-auto">
                                                 <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"></path>
                                                 <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                                             </svg></button><br>
@@ -255,8 +257,7 @@
                         </h2>
                     </div> <!-- END: Modal Header -->
                     <!-- BEGIN: Modal Body -->
-                    <form action="{{ url('rencana_aksi/rb-general/rekap_data/simpanCatatanEvaluator') }}"
-                        id="form-catatan_evaluator" method="post">
+                    <form action="{{ url('rencana_aksi/rb-general/rekap_data/simpanCatatanEvaluator') }}" id="form-catatan_evaluator" method="post">
                         @csrf
                         <input type="hidden" id="target_id" name="target_id">
                         <div class="modal-body grid columns-12 gap-4 gap-y-3">
@@ -265,8 +266,7 @@
                                     <tr>
                                         <td class="font-bold">Catatan Evaluator</td>
                                         <td>
-                                            <textarea name="catatan_evaluator" id="catatan_evaluator" cols="30" rows="10" placeholder="Catatan"
-                                                class="form-control mt-4"></textarea>
+                                            <textarea name="catatan_evaluator" id="catatan_evaluator" cols="30" rows="10" placeholder="Catatan" class="form-control mt-4"></textarea>
                                         </td>
                                     </tr>
                                 </table>
@@ -274,8 +274,7 @@
                         </div> <!-- END: Modal Body -->
                         <!-- BEGIN: Modal Footer -->
                         <div class="modal-footer text-end">
-                            <button type="button" data-tw-dismiss="modal"
-                                class="btn btn-outline-secondary w-20 me-1">Batal</button>
+                            <button type="button" data-tw-dismiss="modal" class="btn btn-outline-secondary w-20 me-1">Batal</button>
                             <button type="submit" class="btn btn-primary w-20 saveButton">Simpan</button>
                         </div> <!-- END: Modal Footer -->
                     </form>
@@ -300,18 +299,18 @@
     <script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.html5.min.js"></script>
     <script>
         $(document).ready(function() {
-        $('.select2').select2({
-            templateResult: function(data) {
-                if (!data.id) {
-                    return data.text;
+            $('.select2').select2({
+                templateResult: function(data) {
+                    if (!data.id) {
+                        return data.text;
+                    }
+                    var $result = $('<span>' + data.text + '</span>');
+                    return $result;
+                },
+                templateSelection: function(data) {
+                    return $('<span>' + data.text + '</span>');
                 }
-                var $result = $('<span>' + data.text + '</span>');
-                return $result;
-            },
-            templateSelection: function(data) {
-                return $('<span>' + data.text + '</span>');
-            }
-        });
+            });
 
             var empDataTable = $('#perencanaan').DataTable({
                 dom: 'Blfrtip',

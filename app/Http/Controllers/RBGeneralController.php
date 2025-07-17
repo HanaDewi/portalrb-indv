@@ -638,6 +638,7 @@ class RBGeneralController extends Controller
                 }
             }
         }
+        $tahun = $request->get('tahun', date('Y'));
         if ($request->instansi_id && in_array($user->level, ['admin', 'tpn', 'viewer'])) {
             $instansi_ids = $request->instansi_id;
         } else if (isset($user->instansi_id)) {
@@ -658,8 +659,9 @@ class RBGeneralController extends Controller
         $key = 0;
         $datas = [];
         foreach ($perencanaans as $perencanaan) {
-            if (count($perencanaan->target)) {
-                foreach ($perencanaan->target as $target) {
+            $targets = $perencanaan->target()->where('tahun', $tahun)->get();
+            if (count($targets)) {
+                foreach ($targets as $target) {
                     if (count($target->rencana_aksi)) {
                         foreach ($target->rencana_aksi as $rencana_aksi) {
                             if (count($rencana_aksi->output)) {
@@ -694,7 +696,7 @@ class RBGeneralController extends Controller
                 $key++;
             }
         }
-        return view('rb-general.rekap_data', compact('datas', 'instansi_ids', 'indikator_id'));
+        return view('rb-general.rekap_data', compact('tahun', 'datas', 'instansi_ids', 'indikator_id'));
     }
 
     public function rekap_data_getTarget($id)
