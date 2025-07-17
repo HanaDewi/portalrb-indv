@@ -194,11 +194,20 @@ class SanggahController extends Controller
             }
         }
         $status = "Tidak Berhak";
-
-        if (Auth::User()->userTimZI) {
-            foreach (Auth::User()->userTimZI as $anggotaTim) {
-                if (in_array($anggotaTim->tim_id, $tim_ids)) {
-                    $status = "Berhak";
+        $tahun = date('Y');
+        $tahap_seleksi = TahapSeleksiZI::where('tahun', $tahun)->where('tahap_seleksi', 'Seleksi Sanggah')->first();
+        if (!$tahap_seleksi) {
+            dd("Tahap Seleksi untuk tahun $tahun belum ditentukan. Silakan hubungi admin.");
+        }
+        $date_now = new \DateTime();
+        $date_buka  = new \DateTime($tahap_seleksi->tanggal_mulai);
+        $date_tutup    = new \DateTime($tahap_seleksi->tanggal_selesai);
+        if ($date_now >= $date_buka && $date_now <= $date_tutup) {
+            if (Auth::User()->userTimZI) {
+                foreach (Auth::User()->userTimZI as $anggotaTim) {
+                    if (in_array($anggotaTim->tim_id, $tim_ids)) {
+                        $status = "Berhak";
+                    }
                 }
             }
         }

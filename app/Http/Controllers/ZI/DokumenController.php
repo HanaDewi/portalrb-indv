@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\ZI;
 
-use App\Models\ZI\AnalisisDokumen;
 use App\Models\ZI\UnitZI;
 use App\Models\KlpdInstansi;
 use Illuminate\Http\Request;
 use App\Models\ZI\InstansiZI;
 use App\Models\ZI\TimEvaluasi;
+use App\Models\ZI\TahapSeleksiZI;
+use App\Models\ZI\AnalisisDokumen;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Models\ZI\SeleksiAdministrasiUnit;
@@ -200,15 +201,23 @@ class DokumenController extends Controller
             }
         }
         $status = "Tidak Berhak";
-        //DI LOCK BIAR SEMUA ORANGG TIDAK BISA SIMPAN
-        if (Auth::User()->userTimZI) {
-            foreach (Auth::User()->userTimZI as $anggotaTim) {
-                if (in_array($anggotaTim->tim_id, $tim_ids)) {
-                    $status = "Berhak";
+        $tahun = $instansi_ZI->tahun;
+        $tahap_seleksi = TahapSeleksiZI::where('tahap_seleksi', 'Analisis Dokumen')->where('tahun', $tahun)->first();
+        if (!$tahap_seleksi) {
+            dd("Tahap Seleksi untuk tahun $tahun belum ditentukan. Silakan hubungi admin.");
+        }
+        $date_now = new \DateTime();
+        $date_buka    = new \DateTime($tahap_seleksi->tanggal_mulai);
+        $date_tutup  = new \DateTime($tahap_seleksi->tanggal_selesai);
+        if ($date_now >= $date_buka && $date_now <= $date_tutup) {
+            if (Auth::User()->userTimZI) {
+                foreach (Auth::User()->userTimZI as $anggotaTim) {
+                    if (in_array($anggotaTim->tim_id, $tim_ids)) {
+                        $status = "Berhak";
+                    }
                 }
             }
         }
-
         $unit_ZIs = UnitZI::where("instansi_zi_id", $id)->where(function ($q) {
             $q->whereHas('seleksi_administrasi_unit', function ($query) {
                 $query->where('status_final', 1);
@@ -242,10 +251,20 @@ class DokumenController extends Controller
             }
         }
         $status = "Tidak Berhak";
-        if (Auth::User()->userTimZI) {
-            foreach (Auth::User()->userTimZI as $anggotaTim) {
-                if (in_array($anggotaTim->tim_id, $tim_ids)) {
-                    $status = "Berhak";
+        $tahun = $instansi_ZI->tahun;
+        $tahap_seleksi = TahapSeleksiZI::where('tahap_seleksi', 'Analisis Dokumen')->where('tahun', $tahun)->first();
+        if (!$tahap_seleksi) {
+            dd("Tahap Seleksi untuk tahun $tahun belum ditentukan. Silakan hubungi admin.");
+        }
+        $date_now = new \DateTime();
+        $date_buka    = new \DateTime($tahap_seleksi->tanggal_mulai);
+        $date_tutup  = new \DateTime($tahap_seleksi->tanggal_selesai);
+        if ($date_now >= $date_buka && $date_now <= $date_tutup) {
+            if (Auth::User()->userTimZI) {
+                foreach (Auth::User()->userTimZI as $anggotaTim) {
+                    if (in_array($anggotaTim->tim_id, $tim_ids)) {
+                        $status = "Berhak";
+                    }
                 }
             }
         }
@@ -260,16 +279,14 @@ class DokumenController extends Controller
                     $analisisDokumenUnit = new AnalisisDokumen();
                     $analisisDokumenUnit->unit_zi_id = $unit_zi->id;
                 }
-                //if(!is_null($request->get('bukti-dukung-'.$unit_zi->id )))$analisisDokumenUnit->bukti_dukung = $request->get('bukti-dukung-'.$unit_zi->id ); 
+                if (!is_null($request->get('bukti-dukung-' . $unit_zi->id))) $analisisDokumenUnit->bukti_dukung = $request->get('bukti-dukung-' . $unit_zi->id);
                 if (!is_null($request->get('kondisi-' . $unit_zi->id))) $analisisDokumenUnit->kondisi = $request->get('kondisi-' . $unit_zi->id);
                 if (!is_null($request->get('rekomendasi-' . $unit_zi->id))) $analisisDokumenUnit->rekomendasi = $request->get('rekomendasi-' . $unit_zi->id);
-                //if(!is_null($request->get('status-'.$unit_zi->id )))$analisisDokumenUnit->status = $request->get('status-'.$unit_zi->id ); 
+                if (!is_null($request->get('status-' . $unit_zi->id))) $analisisDokumenUnit->status = $request->get('status-' . $unit_zi->id);
                 $analisisDokumenUnit->updated_by = Auth::User()->id;
                 $analisisDokumenUnit->save();
             };
         };
-
-
 
         return redirect()->route('proses_dokumen', $instansiZIid);
     }
