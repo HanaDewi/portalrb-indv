@@ -2,712 +2,530 @@
 @section('title', 'RB General - Perencanaan General')
 
 @section('content')
-@php
-$idx = 0;
-@endphp
-<div class="intro-y col-span-12 lg:col-span-12">
-    @include('common.status')
-    <div class="intro-y box">
-        <div class="flex flex-col sm:flex-row items-center p-5 border-b border-slate-200/60">
-            <h2 class="font-bold text-base mr-auto"> Data RB General - Perencanaan dan Monev</h2>
-        </div>
-        <div class="lg:col-span-12 p-5 border-b border-slate-200/60">
-            <form>
-                <div>
-                    <label for="indikator_id" class="form-label font-bold">Indikator</label>
-                    {!! Form::select('indikator_id[]', indikators(), $indikator_id, ['class' => 'w-full', 'id' => 'indikator_id', 'data-placeholder' => 'Pilih Indikator', 'multiple' => 'multiple']) !!}
-                    <div class="mt-5 pb-10">
-                        <button type="submit" class="btn btn-success saveButton float-right">Lihat Data</button>
+    @php
+        $idx = 0;
+    @endphp
+    <div class="intro-y col-span-12 lg:col-span-12">
+        @include('common.status')
+        <div class="intro-y box">
+            <div class="flex flex-col sm:flex-row items-center p-5 border-b border-slate-200/60">
+                <h2 class="font-bold text-base mr-auto"> Data RB General - Perencanaan dan Monev</h2>
+            </div>
+            <div class="lg:col-span-12 p-5 border-b border-slate-200/60">
+                <form>
+                    <div>
+                        <label for="indikator_id" class="form-label font-bold">Indikator</label>
+                        {!! Form::select('indikator_id[]', indikators(), $indikator_id, ['class' => 'w-full tom-select', 'id' => 'indikator_id', 'data-placeholder' => 'Pilih Indikator', 'multiple' => 'multiple']) !!}
+                        <div class="mt-5 pb-10">
+                            <button type="submit" class="btn btn-success saveButton float-right">Lihat Data</button>
+                        </div>
                     </div>
-                </div>
-            </form>
-            <div class="separator mt-5"></div>
-            <table id="perencanaan" class="table table-bordered table-striped mt-5" cellspacing="0" width="100%">
-                <thead class="table-dark font-bold">
-                    <tr>
-                        <th class="w-5">No.</th>
-                        <th class="w200">Kegiatan Utama</th>
-                        <th class="w150">Indikator</th>
-                        <th>Baseline</th>
-                        <th class="w-5">Target</th>
-                        {{-- <th class="w-5">Dokumen</th> --}}
-                        <th class="w150">Keterangan</th>
-                        <th class="w-5">Atur</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @php
-                        $no = 0;
-                        $nama = '';
-                    @endphp
-                    @foreach ($indikators as $indikator)
+                </form>
+                <div class="separator mt-5"></div>
+                <table id="perencanaan" class="table table-bordered table-striped mt-5" cellspacing="0" width="100%">
+                    <thead class="table-dark font-bold">
+                        <tr>
+                            <th class="w-5">No.</th>
+                            <th class="w200">Kegiatan Utama</th>
+                            <th class="w150">Indikator</th>
+                            <th>Baseline</th>
+                            <th class="w-5">Target</th>
+                            <th class="w150">Keterangan</th>
+                            <th class="w-5">Atur</th>
+                        </tr>
+                    </thead>
+                    <tbody>
                         @php
-                            if ($nama != $indikator->kegiatan_utama->nama) {
-                                $nama = $indikator->kegiatan_utama->nama;
-                                $no++;
-                            }
+                            $no = 0;
+                            $nama = '';
                         @endphp
-                        @if (count($indikator->target))
-                            @foreach ($indikator->target as $target)
+                        @foreach ($indikators as $indikator)
+                            @php
+                                if ($nama != $indikator->kegiatan_utama->nama) {
+                                    $nama = $indikator->kegiatan_utama->nama;
+                                    $no++;
+                                }
+                            @endphp
+                            @if (count($indikator->target))
+                                @foreach ($indikator->target as $target)
+                                    <tr>
+                                        <td class="font-bold">{{ $no }}</td>
+                                        <td class="font-bold" id="kegiatan_utama{{ $indikator->id }}">{{ $nama }}
+                                        </td>
+                                        <td>
+                                            <div id="indikator{{ $indikator->id }}">{{ $indikator->nama }}</div>
+                                            <button onclick="tambah_baseline_target('{{ $indikator->kegiatan_utama_id }}', '{{ $indikator->id }}');" class="btn btn-success btn-sm w-full mb-2"><i data-lucide="plus" class="w-4 h-4 mr-1"></i>Baseline/Target</button>
+                                        </td>
+                                        <td>
+                                            @if ($target->baseline_tahun)
+                                                <table class="table table-noborder">
+                                                    <tr>
+                                                        <td class="font-bold w-16">Tahun</td>
+                                                        <td>: {{ $target->baseline_tahun }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="font-bold">Realisasi</td>
+                                                        <td>: {{ $target->baseline_realisasi }}</td>
+                                                    </tr>
+                                                </table>
+                                            @endif
+                                            <button onclick="atur_baseline('{{ $indikator->kegiatan_utama_id }}', '{{ $indikator->id }}', '{{ $target->id }}');" class="btn btn-warning btn-sm w-full mb-2"><i data-lucide="edit" class="w-4 h-4 mr-1"></i>Baseline</button>
+                                        </td>
+                                        <td>
+                                            @if ($target->target)
+                                                <table class="table table-noborder">
+                                                    <tr>
+                                                        <td class="font-bold w-16">Tahun</td>
+                                                        <td>: {{ $target->tahun }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="font-bold">Target</td>
+                                                        <td>: {{ $target->target }}</td>
+                                                    </tr>
+                                                </table>
+                                            @endif
+                                            <button onclick="atur_target('{{ $indikator->kegiatan_utama_id }}', '{{ $indikator->id }}', '{{ $target->id }}');" class="btn-block btn btn-primary btn-sm w-full mb-2"><i data-lucide="edit" class="w-4 h-4 mr-1"></i>Target</button>
+                                        </td>
+                                        <td>
+                                            <span class="font-bold mr-1">Realisasi Indikator: </span>{{ $target->realisasi_indikator ? $target->realisasi_indikator : '-' }}<br>
+                                            <span class="font-bold mr-1">Capaian Indikator: </span>{{ $target->capaian_indikator ? number_format((float) $target->capaian_indikator, 2, '.', '') : '-' }}<br>
+                                            <span class="font-bold mr-1">Catatan: </span>{{ $target->catatan ? $target->catatan : '-' }}<br>
+                                        </td>
+                                        <td>
+                                            <a href="{{ url('rencana_aksi/rb-general/perencanaan/' . $indikator->perencanaan_id . '/' . $target->id . '/rencana_aksi') }}" class="btn btn-primary btn-sm w-full mb-2">
+                                                <i data-lucide="edit" class="w-4 h-4 mr-1"></i> Renaksi
+                                                <span class="text-xs px-1 rounded-full bg-warning text-white badge">{{ count($target->rencana_aksi) }}</span>
+                                            </a>
+                                            <br>
+                                            <a href="{{ url('rencana_aksi/rb-general/perencanaan/' . $indikator->perencanaan_id . '/' . $target->id . '/monev') }}" class="btn btn-dark btn-sm w-full mb-2"><i data-lucide="edit" class="w-4 h-4 mr-1"></i>Monev</a>
+                                            <br>
+                                            <a href="javascript:;" class="btn btn-danger btn-sm w-full mb-2" onclick="hapus_target('{{ $indikator->kegiatan_utama_id }}', '{{ $indikator->id }}', '{{ $target->id }}')"><i data-lucide="trash" class="w-4 h-4 mr-1"></i>Hapus</a>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            @else
                                 <tr>
                                     <td class="font-bold">{{ $no }}</td>
-                                    <td class="font-bold" id="kegiatan_utama{{ $indikator->id }}">{{ $nama }}
+                                    <td class="font-bold" id="kegiatan_utama{{ $indikator->id }}">{{ $nama }}</td>
+                                    <td id="indikator{{ $indikator->id }}">{{ $indikator->nama }}<br>
+                                        <button onclick="tambah_baseline_target('{{ $indikator->kegiatan_utama_id }}', '{{ $indikator->id }}');" class="btn btn-success btn-sm w-full mb-2"><i data-lucide="plus" class="w-4 h-4 mr-1"></i>Baseline/Target</button>
                                     </td>
-                                    <td id="indikator{{ $indikator->id }}">{{ $indikator->nama }}</td>
-                                    <td>
-                                        @if ($indikator->baseline_tahun)
-                                            <table class="table table-noborder">
-                                                <tr>
-                                                    <td class="font-bold w-16">Tahun</td>
-                                                    <td>: {{ $indikator->baseline_tahun }}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="font-bold">Realisasi</td>
-                                                    <td>: {{ $indikator->baseline_realisasi }}</td>
-                                                </tr>
-                                            </table>
-                                        @endif
-                                        <button onclick="atur_baseline('{{ $indikator->kegiatan_utama_id }}', '{{ $indikator->id }}');" class="btn btn-warning btn-sm w-full mb-2"><i data-lucide="edit" class="w-4 h-4 mr-1"></i>Baseline</button>
-                                        <button onclick="atur_target('{{ $indikator->kegiatan_utama_id }}', '{{ $indikator->id }}');" class="btn btn-primary btn-sm w-full mb-2"><i data-lucide="edit" class="w-4 h-4 mr-1"></i>Target</button>
-                                    </td>
-                                    <td>
-                                        <div class="flex items-center">
-                                            <i data-lucide="bar-chart" class="w-4 h-4 mr-1"></i>
-                                            <span class="font-bold mr-1">{{ $target->tahun }}: </span> {{ $target->target }}
-                                        </div>
-                                    </td>
-                                    {{-- <td>
-                                        <button onclick="tambah_dokumen('{{ $target->id }}');" class="btn btn-primary btn-sm w-full mb-2"><i data-lucide="plus" class="w-4 h-4 mr-1"></i>Dokumen</button>
-                                        @php
-                                        $idx = $target->dokumens ? $target->dokumens->max('id') + 1 : 0;
-                                        $dokumen_list = '';
-                                        if ($target->dokumens) {
-                                            foreach ($target->dokumens as $dokumen) {
-                                                $ext = pathinfo($dokumen->filename, PATHINFO_EXTENSION);
-                                                $src = asset('storage/target/dokumen/' . $dokumen->filename);
-                                                $dokumen_list .= '<a href="' . $src . '" target="_blank" title="' . $dokumen->dokumen . '" class="inline-block"><img src="' . asset('images') . '/'.exts($ext).'" style="width: 35px; margin-right: 5px; margin-top: 5px;"></a>';
-                                            }
-                                        }
-                                        @endphp
-                                        {!! $dokumen_list !!}
-                                    </td> --}}
-                                    <td>
-                                        <span class="font-bold mr-1">Realisasi Indikator: </span>{{ $target->realisasi_indikator ? $target->realisasi_indikator : '-' }}<br>
-                                        <span class="font-bold mr-1">Capaian Indikator: </span>{{ $target->capaian_indikator ? number_format((float)$target->capaian_indikator, 2, '.', '') : '-' }}<br>
-                                        <span class="font-bold mr-1">Catatan: </span>{{ $target->catatan ? $target->catatan : '-' }}<br>
-                                    </td>
-                                    <td>
-                                        <a href="{{ url('rencana_aksi/rb-general/perencanaan/' . $indikator->perencanaan_id . '/' . $target->id . '/rencana_aksi') }}" class="btn btn-primary btn-sm w-full mb-2">
-                                            <i data-lucide="edit" class="w-4 h-4 mr-1"></i> Renaksi
-                                            <span class="text-xs px-1 rounded-full bg-warning text-white badge">{{ count($target->rencana_aksi) }}</span>
-                                        </a>
-                                        <br>
-                                        <a href="{{ url('rencana_aksi/rb-general/perencanaan/' . $indikator->perencanaan_id . '/' . $target->id . '/monev') }}"
-                                            class="btn btn-dark btn-sm w-full mb-2"><i data-lucide="edit"
-                                                class="w-4 h-4 mr-1"></i>Monev</a>
-                                    </td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
                                 </tr>
-                            @endforeach
-                        @else
-                            <tr>
-                                <td class="font-bold">{{ $no }}</td>
-                                <td class="font-bold" id="kegiatan_utama{{ $indikator->id }}">{{ $nama }}</td>
-                                <td id="indikator{{ $indikator->id }}">{{ $indikator->nama }}</td>
-                                <td>
-                                    @if ($indikator->baseline_tahun)
-                                        <table class="table table-noborder">
-                                            <tr>
-                                                <td class="font-bold w-16">Tahun</td>
-                                                <td>: {{ $indikator->baseline_tahun }}</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="font-bold">Target</td>
-                                                <td>: {{ $indikator->baseline_target }}</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="font-bold">Realisasi</td>
-                                                <td>: {{ $indikator->baseline_realisasi }}</td>
-                                            </tr>
-                                        </table>
-                                    @endif
-                                    <button
-                                        onclick="atur_baseline('{{ $indikator->kegiatan_utama_id }}', '{{ $indikator->id }}');"
-                                        class="btn btn-warning btn-sm w-full mb-2"><i data-lucide="edit"
-                                            class="w-4 h-4 mr-1"></i>Baseline</button>
-
-                                    @if (isset($indikator->baseline_tahun))
-                                        <button
-                                            onclick="atur_target('{{ $indikator->kegiatan_utama_id }}', '{{ $indikator->id }}');"
-                                            class="btn btn-primary btn-sm w-full mb-2"><i data-lucide="edit"
-                                                class="w-4 h-4 mr-1"></i>Target</button>
-                                    @else
-                                    @endif
-                                </td>
-                                <td></td>
-                                <td></td>
-                                <td>
-                                    @foreach ($indikator->target as $key => $target)
-                                        @php
-                                            $hr = $key > 0 ? '<hr class="mt-2 mb-2">' : '';
-                                        @endphp
-                                        {!! $hr !!}
-                                        <div class="flex items-center"><i data-lucide="bar-chart"
-                                                class="w-4 h-4 mr-1"></i><span class="font-bold mr-1">
-                                                {{ $target->tahun }}: </span> {{ $target->target }}</div>
-                                        <a href="{{ url('rencana_aksi/rb-general/perencanaan/' . $indikator->perencanaan_id . '/' . $target->id . '/rencana_aksi') }}"
-                                            class="btn btn-primary btn-sm w-full mb-2">
-                                            <i data-lucide="edit" class="w-4 h-4 mr-1"></i>
-                                            Renaksi
-                                            <span
-                                                class="text-xs px-1 rounded-full bg-warning text-white badge">{{ count($target->rencana_aksi) }}</span>
-                                        </a>
-                                        <br>
-                                        <a href="{{ url('rencana_aksi/rb-general/perencanaan/' . $indikator->perencanaan_id . '/' . $target->id . '/monev') }}"
-                                            class="btn btn-dark btn-sm w-full"><i data-lucide="edit"
-                                                class="w-4 h-4 mr-1"></i>Monev</a>
-                                    @endforeach
-                                    {{-- <button onclick="atur_monev('{{ $indikator->kegiatan_utama_id }}', '{{ $indikator->id }}');" class="btn btn-dark btn-sm w-full mb-2"><i data-lucide="edit" class="w-4 h-4 mr-1"></i>Monev</button> --}}
-                                </td>
-                            </tr>
-                        @endif
-                    @endforeach
-                </tbody>
-            </table>
+                            @endif
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
-</div>
 
-{{-- Modal Form Baseline --}}
-<div id="modal-baseline" class="modal fade" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <!-- BEGIN: Modal Header -->
-            <div class="darkbg modal-header">
-                <h2 class="font-bold fw-medium  fs-base me-auto" id="title">Data Baseline</h2>
-            </div> <!-- END: Modal Header -->
-            <!-- BEGIN: Modal Body -->
-            <form action="{{ url('rencana_aksi/rb-general/perencanaan/hapusBaseline') }}" id="form-hapus-baseline" method="post">
-                @csrf
-                <input type="hidden" name="perencanaan_id" id="baseline_perencanaan_id">
-            </form>
-            <form action="{{ url('rencana_aksi/rb-general/perencanaan/simpanBaseline') }}" id="form-baseline" method="post">
-                @csrf
-                <input type="hidden" name="kegiatan_utama_id" id="baseline_kegiatan_utama_id">
-                <input type="hidden" name="indikator_id" id="baseline_indikator_id">
-                <div class="modal-body grid columns-12 gap-4 gap-y-3">
-                    <div class="g-col-12">
-                        <table class="table table-bordered hover">
-                            <tr>
-                                <td class="font-bold">Kegiatan Utama</td>
-                                <td id="baseline_kegiatan_utama"></td>
-                            </tr>
-                            <tr>
-                                <td class="font-bold">Indikator</td>
-                                <td id="baseline_indikator"></td>
-                            </tr>
-                        </table>
-                        <hr class="mt-5 mb-5">
-                        <table class="table table-bordered table-striped hover">
-                            <thead class="table-dark">
+    {{-- Form Hapus Target --}}
+    <form action="{{ url('rencana_aksi/rb-general/perencanaan/hapusTarget') }}" id="form-hapus-baseline" method="post">
+        @csrf
+        <input type="hidden" name="kegiatan_utama_id" id="hapus_target_kegiatan_utama_id">
+        <input type="hidden" name="indikator_id" id="hapus_target_indikator_id">
+        <input type="hidden" name="target_id" id="hapus_target_id">
+    </form>
+
+    {{-- Modal Form Baseline --}}
+    <div id="modal-baseline" class="modal fade" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <!-- BEGIN: Modal Header -->
+                <div class="darkbg modal-header">
+                    <h2 class="font-bold fw-medium  fs-base me-auto" id="title">Data Baseline</h2>
+                </div> <!-- END: Modal Header -->
+                <!-- BEGIN: Modal Body -->
+                <form action="{{ url('rencana_aksi/rb-general/perencanaan/simpanBaseline') }}" id="form-baseline" method="post">
+                    @csrf
+                    <input type="hidden" name="kegiatan_utama_id" id="baseline_kegiatan_utama_id">
+                    <input type="hidden" name="indikator_id" id="baseline_indikator_id">
+                    <input type="hidden" name="id" id="baseline_target_id">
+                    <div class="modal-body grid columns-12 gap-4 gap-y-3">
+                        <div class="g-col-12">
+                            <table class="table table-bordered hover">
                                 <tr>
-                                    <th>Tahun</th>
-                                    <th>Realisasi</th>
-                                    <th></th>
+                                    <td class="font-bold">Kegiatan Utama</td>
+                                    <td id="baseline_kegiatan_utama"></td>
                                 </tr>
-                            </thead>
-                            <tbody>
                                 <tr>
-                                    <td>
-                                        <input type="text" name="baseline_tahun" id="baseline_tahun"
-                                            class="form-control w-full tahun" value="{{ date('Y') - 1 }}" required>
-                                    </td>
-                                    <td>
-                                        <input type="text" name="baseline_realisasi" id="baseline_realisasi"
-                                            class="form-control w-full" required>
-                                    </td>
-                                    <td>
-                                        <a href="javascript:;" class="btn btn-danger btn-sm" id="hapus-baseline" onclick="hapus_baseline()">
-                                            <i data-lucide="trash-2" class="w-4 h-4 mr-1"></i>
-                                        </a>
-                                    </td>
+                                    <td class="font-bold">Indikator</td>
+                                    <td id="baseline_indikator"></td>
                                 </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div> <!-- END: Modal Body -->
-                <!-- BEGIN: Modal Footer -->
-                <div class="modal-footer text-end">
-                    <button type="button" data-tw-dismiss="modal"
-                        class="btn btn-outline-secondary w-20 me-1">Batal</button>
-                    <button type="submit" class="btn btn-primary w-20 saveButton">Simpan</button>
-                </div> <!-- END: Modal Footer -->
-            </form>
+                            </table>
+                            <hr class="mt-5 mb-5">
+                            <table class="table table-bordered table-striped hover">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>Tahun</th>
+                                        <th>Realisasi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <input type="text" name="baseline_tahun" id="baseline_tahun" class="form-control w-full tahun" required>
+                                        </td>
+                                        <td>
+                                            <input type="text" name="baseline_realisasi" id="baseline_realisasi" class="form-control w-full" required>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div> <!-- END: Modal Body -->
+                    <!-- BEGIN: Modal Footer -->
+                    <div class="modal-footer text-end">
+                        <button type="button" data-tw-dismiss="modal" class="btn btn-outline-secondary w-20 me-1">Batal</button>
+                        <button type="submit" class="btn btn-primary w-20 saveButton">Simpan</button>
+                    </div> <!-- END: Modal Footer -->
+                </form>
+            </div>
         </div>
-    </div>
-</div> <!-- END: Modal Content -->
+    </div> <!-- END: Modal Content -->
 
-{{-- Modal Form Target --}}
-<div id="modal-target" class="modal fade" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <!-- BEGIN: Modal Header -->
-            <div class="darkbg modal-header">
-                <h2 class="font-bold fw-medium fs-base me-auto" id="title">Data Target</h2>
-            </div> <!-- END: Modal Header -->
-            <!-- BEGIN: Modal Body -->
-            <form action="{{ url('rencana_aksi/rb-general/perencanaan/simpanTarget') }}" id="form-target" method="post">
-                @csrf
-                <input type="hidden" name="kegiatan_utama_id" id="target_kegiatan_utama_id">
-                <input type="hidden" name="indikator_id" id="target_indikator_id">
-                <input type="hidden" name="perencanaan_id" id="target_perencanaan_id">
-                <div class="modal-body grid columns-12 gap-4 gap-y-3">
-                    <div class="g-col-12">
-                        <table class="table table-bordered hover">
-                            <tr>
-                                <td class="font-bold">Kegiatan Utama</td>
-                                <td id="target_kegiatan_utama"></td>
-                            </tr>
-                            <tr>
-                                <td class="font-bold">Indikator</td>
-                                <td id="target_indikator"></td>
-                            </tr>
-                        </table>
-                        <hr class="mt-5 mb-5">
-                        <table class="table table-bordered table-striped hover" id="target-table">
-                            <thead class="table-dark">
+    {{-- Modal Form Target --}}
+    <div id="modal-target" class="modal fade" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <!-- BEGIN: Modal Header -->
+                <div class="darkbg modal-header">
+                    <h2 class="font-bold fw-medium fs-base me-auto" id="title">Data Target</h2>
+                </div> <!-- END: Modal Header -->
+                <!-- BEGIN: Modal Body -->
+                <form action="{{ url('rencana_aksi/rb-general/perencanaan/simpanTarget') }}" id="form-target" method="post">
+                    @csrf
+                    <input type="hidden" name="kegiatan_utama_id" id="target_kegiatan_utama_id">
+                    <input type="hidden" name="indikator_id" id="target_indikator_id">
+                    <input type="hidden" name="id" id="target_id">
+                    <div class="modal-body grid columns-12 gap-4 gap-y-3">
+                        <div class="g-col-12">
+                            <table class="table table-bordered hover">
                                 <tr>
-                                    <th>Tahun</th>
-                                    <th>Target</th>
-                                    <th></th>
+                                    <td class="font-bold">Kegiatan Utama</td>
+                                    <td id="target_kegiatan_utama"></td>
                                 </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
-                        <button type="button" onclick="tambah_tahun();"
-                            class="btn btn-outline-primary border-dashed w-full"><i data-lucide="plus"
-                                class="w-4 h-4 mr-2"></i></button>
-                    </div>
-                </div> <!-- END: Modal Body -->
-                <!-- BEGIN: Modal Footer -->
-                <div class="modal-footer text-end">
-                    <button type="button" data-tw-dismiss="modal"
-                        class="btn btn-outline-secondary w-20 me-1">Batal</button>
-                    <button type="submit" class="btn btn-primary w-20 saveButton">Simpan</button>
-                </div> <!-- END: Modal Footer -->
-            </form>
+                                <tr>
+                                    <td class="font-bold">Indikator</td>
+                                    <td id="target_indikator"></td>
+                                </tr>
+                            </table>
+                            <hr class="mt-5 mb-5">
+                            <table class="table table-bordered table-striped hover" id="target-table">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>Tahun</th>
+                                        <th>Target</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <input type="text" name="tahun" id="tahun" class="form-control w-full tahun" required>
+                                        </td>
+                                        <td>
+                                            <input type="text" name="target" id="target" class="form-control w-full" required>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div> <!-- END: Modal Body -->
+                    <!-- BEGIN: Modal Footer -->
+                    <div class="modal-footer text-end">
+                        <button type="button" data-tw-dismiss="modal" class="btn btn-outline-secondary w-20 me-1">Batal</button>
+                        <button type="submit" class="btn btn-primary w-20 saveButton">Simpan</button>
+                    </div> <!-- END: Modal Footer -->
+                </form>
+            </div>
         </div>
-    </div>
-</div> <!-- END: Modal Content -->
+    </div> <!-- END: Modal Content -->
 
-{{-- Modal Form Monev --}}
-<div id="modal-monev" class="modal fade" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-xl">
-        <div class="modal-content">
-            <!-- BEGIN: Modal Header -->
-            <div class="darkbg modal-header">
-                <h2 class="font-bold fw-medium fs-base me-auto" id="title-monev">Monitoring dan Evaluasi Perencanaan
-                </h2>
-            </div> <!-- END: Modal Header -->
-            <!-- BEGIN: Modal Body -->
-            <form action="{{ url('rencana_aksi/rb-general/perencanaan/simpanMonev') }}" id="form-monev" method="post">
-                @csrf
-                <input type="hidden" name="kegiatan_utama_id" id="monev_kegiatan_utama_id">
-                <input type="hidden" name="indikator_id" id="monev_indikator_id">
-                <div class="modal-body grid columns-12 gap-4 gap-y-3">
-                    <div class="g-col-12">
-                        <table class="table">
-                            <tr>
-                                <td class="font-bold w-44">Realisasi Indikator <span class="text-danger">*</span></td>
-                                <td>
-                                    <input type="text" name="realisasi_indikator" id="realisasi_indikator"
-                                        placeholder="Realisasi Indikator" class="form-control" required>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="font-bold w-44">Capaian Indikator <span class="text-danger">*</span></td>
-                                <td>
-                                    <input type="text" name="capaian_indikator" id="capaian_indikator"
-                                        placeholder="Capaian Indikator" class="form-control" required>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="font-bold w-44 align-top">Catatan</td>
-                                <td>
-                                    <textarea rows="5" name="catatan" id="catatan" placeholder="Penjelasan Rencana Aksi" class="form-control"></textarea>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                </div> <!-- END: Modal Body -->
-                <!-- BEGIN: Modal Footer -->
-                <div class="modal-footer text-end">
-                    <button type="button" data-tw-dismiss="modal"
-                        class="btn btn-outline-secondary w-20 me-1">Batal</button>
-                    <button type="submit" class="btn btn-primary w-20 saveButton">Simpan</button>
-                </div> <!-- END: Modal Footer -->
-            </form>
+    {{-- Modal Form Baseline --}}
+    <div id="modal-baseline-target" class="modal fade" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <!-- BEGIN: Modal Header -->
+                <div class="darkbg modal-header">
+                    <h2 class="font-bold fw-medium  fs-base me-auto" id="title">Data Baseline / Target</h2>
+                </div> <!-- END: Modal Header -->
+                <!-- BEGIN: Modal Body -->
+                <form action="{{ url('rencana_aksi/rb-general/perencanaan/simpanBaselineTarget') }}" id="form-baseline-target" method="post">
+                    @csrf
+                    <input type="hidden" name="kegiatan_utama_id" id="baseline_target_kegiatan_utama_id">
+                    <input type="hidden" name="indikator_id" id="baseline_target_indikator_id">
+                    <div class="modal-body grid columns-12 gap-4 gap-y-3">
+                        <div class="g-col-12">
+                            <table class="table table-bordered hover">
+                                <tr>
+                                    <td class="font-bold">Kegiatan Utama</td>
+                                    <td id="baseline_target_kegiatan_utama"></td>
+                                </tr>
+                                <tr>
+                                    <td class="font-bold">Indikator</td>
+                                    <td id="baseline_target_indikator"></td>
+                                </tr>
+                            </table>
+                            <hr class="mt-5 mb-5">
+                            <table class="table table-bordered table-striped hover">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th colspan="2">Baseline</th>
+                                        <th colspan="2">Target</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Tahun</th>
+                                        <th>Realisasi</th>
+                                        <th>Tahun</th>
+                                        <th>Target</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <input type="text" name="baseline_tahun" class="form-control w-full tahun" value="{{ date('Y') - 1 }}" required>
+                                        </td>
+                                        <td>
+                                            <input type="text" name="baseline_realisasi" id="baseline_target_realisasi" class="form-control w-full" required>
+                                        </td>
+                                        <td>
+                                            <input type="text" name="tahun" class="form-control w-full tahun" value="{{ date('Y') }}" required>
+                                        </td>
+                                        <td>
+                                            <input type="text" name="target" id="baseline_target" class="form-control w-full" required>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div> <!-- END: Modal Body -->
+                    <!-- BEGIN: Modal Footer -->
+                    <div class="modal-footer text-end">
+                        <button type="button" data-tw-dismiss="modal" class="btn btn-outline-secondary w-20 me-1">Batal</button>
+                        <button type="submit" class="btn btn-primary w-20 saveButton">Simpan</button>
+                    </div> <!-- END: Modal Footer -->
+                </form>
+            </div>
         </div>
-    </div>
-</div> <!-- END: Modal Content -->
-
-{{-- Modal Form RB General Perencanaan Dokumen --}}
-<div id="modal-dokumen" class="modal fade" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-md">
-        <div class="modal-content">
-            <!-- BEGIN: Modal Header -->
-            <div class="darkbg modal-header">
-                <h2 class="font-bold fw-medium fs-base me-auto" id="title-penyesuaian">Dokumen Perencanaan RB General
-                </h2>
-            </div> <!-- END: Modal Header -->
-            <!-- BEGIN: Modal Body -->
-            <form action="{{ url('rencana_aksi/rb-general/perencanaan/simpanDokumen') }}" id="form-dokumen" method="post" enctype="multipart/form-data">
-                @csrf
-                <input type="hidden" name="general_perencanaan_target_id" id="general_perencanaan_target_id">
-                <div class="modal-body grid columns-12 gap-4 gap-y-3">
-                    <div class="g-col-12">
-                        <button type="button" class="btn btn-info btn-sm" onclick="pilih_dokumen();"><i class="fa fa-plus"></i> Tambah Dokumen</button>
-                        <input type="file" id="dokumen" style="display: none;">
-                        <div id="dokumen_list" class="intro-y grid grid-cols-12 gap-6 mt-5"></div>
-                    </div>
-                </div> <!-- END: Modal Body -->
-                <!-- BEGIN: Modal Footer -->
-                <div class="modal-footer text-end">
-                    <button type="button" data-tw-dismiss="modal"
-                        class="btn btn-outline-secondary w-20 me-1">Batal</button>
-                    <button type="submit" class="btn btn-primary w-20 saveButton">Simpan</button>
-                </div> <!-- END: Modal Footer -->
-            </form>
-        </div>
-    </div>
-</div> <!-- END: Modal Content -->
+    </div> <!-- END: Modal Content -->
 @endsection
 
 @push('css')
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 @endpush
 
 @push('js')
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-<script src="{{ asset('ext/jquery-validation/jquery.validate.min.js') }}"></script>
-<script src="{{ asset('ext/jquery-validation/localization/messages_id.min.js') }}"></script>
-<script src="{{ asset('ext') }}/jquery-inputmask/jquery.inputmask.bundle.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="{{ asset('ext/jquery-validation/jquery.validate.min.js') }}"></script>
+    <script src="{{ asset('ext/jquery-validation/localization/messages_id.min.js') }}"></script>
+    <script src="{{ asset('ext') }}/jquery-inputmask/jquery.inputmask.bundle.js"></script>
 
-<script>
-    var idx = {{ $idx }};
-    $(document).ready(function() {
-        $('#indikator_id').select2();
-        modal_baseline = tailwind.Modal.getInstance(document.querySelector("#modal-baseline"));
-        modal_target = tailwind.Modal.getInstance(document.querySelector("#modal-target"));
-        modal_monev = tailwind.Modal.getInstance(document.querySelector("#modal-monev"));
-        modal_dokumen = tailwind.Modal.getInstance(document.querySelector("#modal-dokumen"));
-        $(".tahun").inputmask('2099');
+    <script>
+        $(document).ready(function() {
+            modal_baseline = tailwind.Modal.getInstance(document.querySelector("#modal-baseline"));
+            modal_target = tailwind.Modal.getInstance(document.querySelector("#modal-target"));
+            modal_baseline_target = tailwind.Modal.getInstance(document.querySelector("#modal-baseline-target"));
+            $(".tahun").inputmask('2099');
 
-        $('#form-baseline').validate({
-            highlight: function(input) {
-                $(input).addClass('border-danger');
-            },
-            unhighlight: function(input) {
-                $(input).removeClass('border-danger');
-            },
-            errorPlacement: function(error, element) {
-                var placement = element.closest('td');
-                if (!placement.get(0)) {
-                    placement = element;
+            $('#form-baseline').validate({
+                highlight: function(input) {
+                    $(input).addClass('border-danger');
+                },
+                unhighlight: function(input) {
+                    $(input).removeClass('border-danger');
+                },
+                errorPlacement: function(error, element) {
+                    var placement = element.closest('td');
+                    if (!placement.get(0)) {
+                        placement = element;
+                    }
+                    if (error.text() !== '') {
+                        placement.append(error);
+                    }
+                    console.log(error, placement);
+                },
+                submitHandler: function(form) {
+                    $('.saveButton').prop('disabled', true);
+                    form.submit();
                 }
-                if (error.text() !== '') {
-                    placement.append(error);
+            });
+
+            $('#form-target').validate({
+                highlight: function(input) {
+                    $(input).addClass('border-danger');
+                },
+                unhighlight: function(input) {
+                    $(input).removeClass('border-danger');
+                },
+                errorPlacement: function(error, element) {
+                    var placement = element.closest('td');
+                    if (!placement.get(0)) {
+                        placement = element;
+                    }
+                    if (error.text() !== '') {
+                        placement.append(error);
+                    }
+                    console.log(error, placement);
+                },
+                submitHandler: function(form) {
+                    $('.saveButton').prop('disabled', true);
+                    form.submit();
                 }
-                console.log(error, placement);
-            },
-            submitHandler: function(form) {
-                $('.saveButton').prop('disabled', true);
-                form.submit();
-            }
+            });
         });
 
-        $('#form-target').validate({
-            highlight: function(input) {
-                $(input).addClass('border-danger');
-            },
-            unhighlight: function(input) {
-                $(input).removeClass('border-danger');
-            },
-            errorPlacement: function(error, element) {
-                var placement = element.closest('td');
-                if (!placement.get(0)) {
-                    placement = element;
-                }
-                if (error.text() !== '') {
-                    placement.append(error);
-                }
-                console.log(error, placement);
-            },
-            submitHandler: function(form) {
-                $('.saveButton').prop('disabled', true);
-                form.submit();
-            }
-        });
-
-        $('#form-monev').validate({
-            highlight: function(input) {
-                $(input).addClass('border-danger');
-            },
-            unhighlight: function(input) {
-                $(input).removeClass('border-danger');
-            },
-            errorPlacement: function(error, element) {
-                var placement = element.closest('td');
-                if (!placement.get(0)) {
-                    placement = element;
-                }
-                if (error.text() !== '') {
-                    placement.append(error);
-                }
-                console.log(error, placement);
-            },
-            submitHandler: function(form) {
-                $('.saveButton').prop('disabled', true);
-                form.submit();
-            }
-        });
-
-        $('#dokumen').change(function() {
-            cek_dokumen(this);
-        })
-    });
-
-    function atur_baseline(kegiatan_utama_id, indikator_id) {
-        $('#baseline_kegiatan_utama_id').val(kegiatan_utama_id);
-        $('#baseline_indikator_id').val(indikator_id);
-        kegiatan_utama = $('#kegiatan_utama' + indikator_id).html();
-        indikator = $('#indikator' + indikator_id).html();
-        $('#baseline_kegiatan_utama').html(kegiatan_utama);
-        $('#baseline_indikator').html(indikator);
-        $('.saveButton').prop('disabled', true);
-        $('#hapus-baseline').hide();
-        modal_baseline.show();
-        $.getJSON("{{ url('rencana_aksi/rb-general/perencanaan/getData') }}/" + kegiatan_utama_id + "/" + indikator_id, function(data) {
-            tahun = data.baseline_tahun ? data.baseline_tahun : 2023;
-            $('#baseline_tahun').val(tahun);
-            $('#baseline_target').val(data.baseline_target);
-            $('#baseline_realisasi').val(data.baseline_realisasi);
-            if (data.id) {
-                $('#baseline_perencanaan_id').val(data.id);
-                $('#hapus-baseline').show();
-            }
-            $('.saveButton').prop('disabled', false);
-        });
-    }
-
-    function hapus_baseline() {
-        id = $('#baseline_perencanaan_id').val();
-        Swal.fire({
-            title: "Yakin?",
-            text: "baseline-nya mau di hapus?",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: "#DD6B55",
-            confirmButtonText: "Ya, hapus aja!"
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $('#form-hapus-baseline').submit();
-            }
-        });
-    }
-
-    function atur_target(kegiatan_utama_id, indikator_id) {
-        $('#target-table tbody').html('');
-        $('#target_kegiatan_utama_id').val(kegiatan_utama_id);
-        $('#target_indikator_id').val(indikator_id);
-        kegiatan_utama = $('#kegiatan_utama' + indikator_id).html();
-        indikator = $('#indikator' + indikator_id).html();
-        $('#target_kegiatan_utama').html(kegiatan_utama);
-        $('#target_indikator').html(indikator);
-        $('.saveButton').prop('disabled', true);
-        modal_target.show();
-        $.getJSON("{{ url('rencana_aksi/rb-general/perencanaan/getTarget') }}/" + kegiatan_utama_id + "/" + indikator_id, function(data) {
-            if (data.success) {
-                $('#target-table tbody').append(data.input);
-                $(".Kuantitatif").inputmask("decimal",{
-                    radixPoint:".",
+        function tambah_baseline_target(kegiatan_utama_id, indikator_id) {
+            $('#form-baseline-target').trigger('reset');
+            $('#baseline_target_realisasi').inputmask('remove');
+            $('#baseline_target_realisasi').removeClass('Kuantitatif Kualitatif');
+            $('#baseline_target').inputmask('remove');
+            $('#baseline_target').removeClass('Kuantitatif Kualitatif');
+            $('#baseline_target_kegiatan_utama_id').val(kegiatan_utama_id);
+            $('#baseline_target_indikator_id').val(indikator_id);
+            kegiatan_utama = $('#kegiatan_utama' + indikator_id).html();
+            indikator = $('#indikator' + indikator_id).html();
+            $('#target_kegiatan_utama').html(kegiatan_utama);
+            $('#target_indikator').html(indikator);
+            $('.saveButton').prop('disabled', true);
+            modal_baseline_target.show();
+            $.getJSON("{{ url('rencana_aksi/rb-general/perencanaan/getIndikator') }}/" + kegiatan_utama_id + "/" + indikator_id, function(data) {
+                $('#baseline_target_realisasi').addClass(data.tipe);
+                $('#baseline_target').addClass(data.tipe);
+                $(".Kuantitatif").inputmask("decimal", {
+                    radixPoint: ".",
                     groupSeparator: "",
                     digits: 2,
                     autoGroup: true,
                     rightAlign: false,
                 });
-            } else {
-                Swal.fire('Aduh!',
-                    'Data Target belum bisa di-input, Data Baseline-nya belum ada! Input dulu Data Baseline-nya ya..',
-                    'error');
-                modal_target.hide();
-            }
-            $('.saveButton').prop('disabled', false);
-        });
-    }
-
-    function atur_monev(kegiatan_utama_id, indikator_id) {
-        $('#monev_kegiatan_utama_id').val(kegiatan_utama_id);
-        $('#monev_indikator_id').val(indikator_id);
-        $('#realisasi_indikator').val('');
-        $('#capaian_indikator').val('');
-        $('.saveButton').prop('disabled', true);
-        modal_monev.show();
-        $.getJSON("{{ url('rencana_aksi/rb-general/perencanaan/getData') }}/" + kegiatan_utama_id + "/" + indikator_id, function(data) {
-            if (data.baseline_tahun) {
-                $('#realisasi_indikator').val(data.realisasi_indikator);
-                $('#capaian_indikator').val(data.capaian_indikator);
-                $('#catatan').val(data.catatan);
                 $('.saveButton').prop('disabled', false);
-            } else {
-                Swal.fire('Aduh!',
-                    'Data Monev belum bisa di-input, Data Baseline-nya belum ada! Input dulu Data Baseline-nya ya..',
-                    'error');
-                modal_monev.hide();
-            }
-        });
-    }
-
-    function tambah_tahun() {
-        last_tr = $('#target-table tbody tr:last').data('index');
-        last_tahun = $('#target_tahun' + last_tr).val();
-        index = last_tr + 1;
-        tahun = parseInt(last_tahun) > 0 ? parseInt(last_tahun) + 1 : {{ date('Y') }};
-        input = '<tr id="target'+index+'" data-index="'+index+'">' +
-            '<td><input type="text" name="tahun[' + index + ']" id="target_tahun' + index +
-            '" class="form-control w-full tahun" value="' + tahun + '" required></td>' +
-            '<td><input type="text" name="target[' + index + ']" id="target_target' + index +
-            '" class="form-control w-full" required></td>' +
-            '<td><a href="javascript:;" class="btn btn-danger btn-sm" id="hapus-target" onclick="hapus_target('+index+')"><i data-lucide="trash-2" class="w-4 h-4 mr-1"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" icon-name="trash-2" data-lucide="trash-2" class="lucide lucide-trash-2 block mx-auto"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg></i></a></td>' +
-            '</tr>';
-        $('#target-table tbody').append(input);
-    }
-
-    function hapus_target(index) {
-        console.log(index);
-        $('#target'+index).remove();
-    }
-
-    function tambah_dokumen(id) {
-        $('#general_perencanaan_target_id').val(id);
-        $.getJSON("{{ url('rencana_aksi/rb-general/perencanaan/getDokumen') }}/" + id, function(data) {
-            $('#dokumen_list').html(data.dokumen_list);
-            modal_dokumen.show();
-        });
-    }
-    
-    function pilih_dokumen() {
-        $('#dokumen').trigger('click');
-    }
-
-    function isAllowed(ext) {
-        switch (ext.toLowerCase()) {
-            case 'xlsx':
-            case 'xls':
-            case 'docx':
-            case 'doc':
-            case 'pptx':
-            case 'ppt':
-            case 'pdf':
-            return true;
+            });
         }
-        return false;
-    }
 
-    function cek_dokumen(input) {
-        if (input.files && input.files[0]) {
-            var reader = new FileReader();
-            reader.onload = function(e) {
-                filename = $('#dokumen').val();
-                newVal = $('#dokumen').next().val();
-                var parts = filename.split('.');
-                var ext = parts[parts.length - 1];
-                var desc = filename.replace("C:\\fakepath\\", "");
-                var desc = desc.replace("."+ext, "");
-                if (!isAllowed(ext)) {
-                    Swal.fire("Perhatian", "File yang di input tidak sesuai ketentuan (pdf, word, excel, power point).", "error");
-                } else {
-                    src = ext.toLowerCase() == 'pdf' ? "{{asset('images/pdf.png')}}" : (ext.toLowerCase() == 'xls' || ext.toLowerCase() == 'xlsx' ? "{{asset('images/excel.png')}}" : (ext.toLowerCase() == 'doc' || ext.toLowerCase() == 'docx' ? "{{asset('images/word.png')}}" : (ext.toLowerCase() == 'ppt' || ext.toLowerCase() == 'pptx' ? "{{asset('images/ppt.png')}}" : e.target.result)));
-                    console.log(src, ext.toLowerCase());
-                    dokumen = $('#dokumen').clone();
-                    dokumen.attr('name', 'dokumen['+idx+']');
-                    dokumen.attr('id', 'dokumen'+idx);
-                    dokumen_div = '<div class="col-span-12 lg:col-span-6" id="dokumendiv'+idx+'" style="position:relative;">'+
-                            '<div style="height: 100px;">'+
-                                '<img class="img-fluid card-img-top" src="'+src+'" alt="Dokumen'+idx+'" style="max-height: 100px; max-width:100%; padding: 5px 0;">'+
-                            '</div>'+
-                            '<div class="form-group mb-0">'+
-                                '<input type="text" name="deskripsi['+idx+']" class="form-control" id="deskripsi'+idx+'" placeholder="Deskripsi" value="'+desc+'" required>'+
-                            '</div>'+
-                            '<a href="javascript:void(0);" onclick="removeDokumen('+idx+')" class="remove-button text-danger">'+
-                                '<div class="tooltip w-5 h-5 flex items-center justify-center absolute rounded-full text-white bg-danger right-0 top-0 -mr-2 -mt-2"> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" icon-name="x" data-lucide="x" class="lucide lucide-x w-4 h-4"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg> </div>'
-                            '</a>'+
-                    '</div>';
-                    $('#dokumen_list').append(dokumen_div);
-                    $('#dokumen_list').append(dokumen);
-                    idx++;
+        function atur_baseline(kegiatan_utama_id, indikator_id, target_id) {
+            $('#baseline_realisasi').inputmask('remove');
+            $('#baseline_kegiatan_utama_id').val(kegiatan_utama_id);
+            $('#baseline_indikator_id').val(indikator_id);
+            $('#baseline_target_id').val(target_id);
+            kegiatan_utama = $('#kegiatan_utama' + indikator_id).html();
+            indikator = $('#indikator' + indikator_id).html();
+            $('#baseline_kegiatan_utama').html(kegiatan_utama);
+            $('#baseline_indikator').html(indikator);
+            $('.saveButton').prop('disabled', true);
+            modal_baseline.show();
+            $.getJSON("{{ url('rencana_aksi/rb-general/perencanaan/getTarget') }}/" + kegiatan_utama_id + "/" + indikator_id + "/" + target_id, function(data) {
+                $('#baseline_target_id').val(data.id);
+                $('#baseline_tahun').val(data.baseline_tahun);
+                $('#baseline_realisasi').val(data.baseline_realisasi);
+                $('#baseline_realisasi').addClass(data.tipe);
+                $(".Kuantitatif").inputmask("decimal", {
+                    radixPoint: ".",
+                    groupSeparator: "",
+                    digits: 2,
+                    autoGroup: true,
+                    rightAlign: false,
+                });
+                $('.saveButton').prop('disabled', false);
+            });
+        }
+
+        function hapus_target(kegiatan_utama_id, indikator_id, target_id) {
+            $('#hapus_target_kegiatan_utama_id').val(kegiatan_utama_id);
+            $('#hapus_target_indikator_id').val(indikator_id);
+            $('#hapus_target_id').val(target_id);
+            Swal.fire({
+                title: "Yakin?",
+                text: "target-nya mau di hapus?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Ya, hapus aja!"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $('#form-hapus-baseline').submit();
                 }
-            }
-            reader.readAsDataURL(input.files[0]);
+            });
         }
-    }
 
-    function removeDokumen(id) {
-        Swal.fire({
-            title: "Yakin?",
-            text: "dokumen-nya mau di hapus?",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: "#DD6B55",
-            confirmButtonText: "Ya, hapus aja!"
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $('#dokumendiv'+id).remove();
-                $('#dokumen'+id).remove();
-            }
-        });
-    }
-
-    function hapusBaseline() {
-        baseline_id = $('#')
-    }
-</script>
-<script src="https://cdn.rawgit.com/ashl1/datatables-rowsgroup/v1.0.0/dataTables.rowsGroup.js"></script>
-<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.2.3/js/dataTables.buttons.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.html5.min.js"></script>
-<script>
-    $(document).ready(function(){
-        var empDataTable = $('#perencanaan').DataTable({
-            dom: 'Blfrtip',
-            buttons: [
-            {
-                extend: 'pdf',
-                exportOptions: {
-                    columns: [0,1,2,3,4,5,6,7]
-                },
-                orientation: 'landscape',
-                pageSize: 'A4',
-                text: '<button class="btn btn-danger btn-sm w-32 mr-2 mb-2"><svg fill="#ffffff" height="18px" width="18px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 482.14 482.14" xml:space="preserve" stroke="#ffffff"> <g id="SVGRepo_bgCarrier" stroke-width="0"/> <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"/> <g id="SVGRepo_iconCarrier"> <g> <path d="M142.024,310.194c0-8.007-5.556-12.782-15.359-12.782c-4.003,0-6.714,0.395-8.132,0.773v25.69 c1.679,0.378,3.743,0.504,6.588,0.504C135.57,324.379,142.024,319.1,142.024,310.194z"/> <path d="M202.709,297.681c-4.39,0-7.227,0.379-8.905,0.772v56.896c1.679,0.394,4.39,0.394,6.841,0.394 c17.809,0.126,29.424-9.677,29.424-30.449C230.195,307.231,219.611,297.681,202.709,297.681z"/> <path d="M315.458,0H121.811c-28.29,0-51.315,23.041-51.315,51.315v189.754h-5.012c-11.418,0-20.678,9.251-20.678,20.679v125.404 c0,11.427,9.259,20.677,20.678,20.677h5.012v22.995c0,28.305,23.025,51.315,51.315,51.315h264.223 c28.272,0,51.3-23.011,51.3-51.315V121.449L315.458,0z M99.053,284.379c6.06-1.024,14.578-1.796,26.579-1.796 c12.128,0,20.772,2.315,26.58,6.965c5.548,4.382,9.292,11.615,9.292,20.127c0,8.51-2.837,15.745-7.999,20.646 c-6.714,6.32-16.643,9.157-28.258,9.157c-2.585,0-4.902-0.128-6.714-0.379v31.096H99.053V284.379z M386.034,450.713H121.811 c-10.954,0-19.874-8.92-19.874-19.889v-22.995h246.31c11.42,0,20.679-9.25,20.679-20.677V261.748 c0-11.428-9.259-20.679-20.679-20.679h-246.31V51.315c0-10.938,8.921-19.858,19.874-19.858l181.89-0.19v67.233 c0,19.638,15.934,35.587,35.587,35.587l65.862-0.189l0.741,296.925C405.891,441.793,396.987,450.713,386.034,450.713z M174.065,369.801v-85.422c7.225-1.15,16.642-1.796,26.58-1.796c16.516,0,27.226,2.963,35.618,9.282 c9.031,6.714,14.704,17.416,14.704,32.781c0,16.643-6.06,28.133-14.453,35.224c-9.157,7.612-23.096,11.222-40.125,11.222 C186.191,371.092,178.966,370.446,174.065,369.801z M314.892,319.226v15.996h-31.23v34.973h-19.74v-86.966h53.16v16.122h-33.42 v19.875H314.892z"/> </g> </g> </svg> &nbsp;PDF </button>',
+        function atur_target(kegiatan_utama_id, indikator_id, target_id) {
+            $('#target').inputmask('remove');
+            $('#target').removeClass('Kuantitatif Kualitatif');
+            $('#target_kegiatan_utama_id').val(kegiatan_utama_id);
+            $('#target_indikator_id').val(indikator_id);
+            $('#target_id').val(target_id);
+            kegiatan_utama = $('#kegiatan_utama' + indikator_id).html();
+            indikator = $('#indikator' + indikator_id).html();
+            $('#target_kegiatan_utama').html(kegiatan_utama);
+            $('#target_indikator').html(indikator);
+            $('.saveButton').prop('disabled', true);
+            modal_target.show();
+            $.getJSON("{{ url('rencana_aksi/rb-general/perencanaan/getTarget') }}/" + kegiatan_utama_id + "/" + indikator_id + "/" + target_id, function(data) {
+                if (data) {
+                    $('#target').val(data.target);
+                    $('#tahun').val(data.tahun);
+                    $('#target').addClass(data.tipe);
+                    $(".Kuantitatif").inputmask("decimal", {
+                        radixPoint: ".",
+                        groupSeparator: "",
+                        digits: 2,
+                        autoGroup: true,
+                        rightAlign: false,
+                    });
+                } else {
+                    Swal.fire('Aduh!',
+                        'Data Target belum bisa di-input',
+                        'error');
+                    modal_target.hide();
+                }
+                $('.saveButton').prop('disabled', false);
+            });
+        }
+    </script>
+    <script src="https://cdn.rawgit.com/ashl1/datatables-rowsgroup/v1.0.0/dataTables.rowsGroup.js"></script>
+    <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.3/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.html5.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            var table = $('#perencanaan').DataTable({
+                dom: 'Blfrtip',
+                buttons: [{
+                        extend: 'pdf',
+                        exportOptions: {
+                            columns: [0, 1, 2, 3, 4, 5, 6, 7]
+                        },
+                        orientation: 'landscape',
+                        pageSize: 'A4',
+                        text: '<button class="btn btn-danger btn-sm w-32 mr-2 mb-2"><svg fill="#ffffff" height="18px" width="18px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 482.14 482.14" xml:space="preserve" stroke="#ffffff"> <g id="SVGRepo_bgCarrier" stroke-width="0"/> <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"/> <g id="SVGRepo_iconCarrier"> <g> <path d="M142.024,310.194c0-8.007-5.556-12.782-15.359-12.782c-4.003,0-6.714,0.395-8.132,0.773v25.69 c1.679,0.378,3.743,0.504,6.588,0.504C135.57,324.379,142.024,319.1,142.024,310.194z"/> <path d="M202.709,297.681c-4.39,0-7.227,0.379-8.905,0.772v56.896c1.679,0.394,4.39,0.394,6.841,0.394 c17.809,0.126,29.424-9.677,29.424-30.449C230.195,307.231,219.611,297.681,202.709,297.681z"/> <path d="M315.458,0H121.811c-28.29,0-51.315,23.041-51.315,51.315v189.754h-5.012c-11.418,0-20.678,9.251-20.678,20.679v125.404 c0,11.427,9.259,20.677,20.678,20.677h5.012v22.995c0,28.305,23.025,51.315,51.315,51.315h264.223 c28.272,0,51.3-23.011,51.3-51.315V121.449L315.458,0z M99.053,284.379c6.06-1.024,14.578-1.796,26.579-1.796 c12.128,0,20.772,2.315,26.58,6.965c5.548,4.382,9.292,11.615,9.292,20.127c0,8.51-2.837,15.745-7.999,20.646 c-6.714,6.32-16.643,9.157-28.258,9.157c-2.585,0-4.902-0.128-6.714-0.379v31.096H99.053V284.379z M386.034,450.713H121.811 c-10.954,0-19.874-8.92-19.874-19.889v-22.995h246.31c11.42,0,20.679-9.25,20.679-20.677V261.748 c0-11.428-9.259-20.679-20.679-20.679h-246.31V51.315c0-10.938,8.921-19.858,19.874-19.858l181.89-0.19v67.233 c0,19.638,15.934,35.587,35.587,35.587l65.862-0.189l0.741,296.925C405.891,441.793,396.987,450.713,386.034,450.713z M174.065,369.801v-85.422c7.225-1.15,16.642-1.796,26.58-1.796c16.516,0,27.226,2.963,35.618,9.282 c9.031,6.714,14.704,17.416,14.704,32.781c0,16.643-6.06,28.133-14.453,35.224c-9.157,7.612-23.096,11.222-40.125,11.222 C186.191,371.092,178.966,370.446,174.065,369.801z M314.892,319.226v15.996h-31.23v34.973h-19.74v-86.966h53.16v16.122h-33.42 v19.875H314.892z"/> </g> </g> </svg> &nbsp;PDF </button>',
                         titleAttr: 'Download PDF'
-            },
-            {
-                extend: 'excel',
-                text: '<button class="btn btn-warning btn-sm w-32 mr-2 mb-2"> <svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 50 50" width="18px" height="18px"><path d="M 28.875 0 C 28.855469 0.0078125 28.832031 0.0195313 28.8125 0.03125 L 0.8125 5.34375 C 0.335938 5.433594 -0.0078125 5.855469 0 6.34375 L 0 43.65625 C -0.0078125 44.144531 0.335938 44.566406 0.8125 44.65625 L 28.8125 49.96875 C 29.101563 50.023438 29.402344 49.949219 29.632813 49.761719 C 29.859375 49.574219 29.996094 49.296875 30 49 L 30 44 L 47 44 C 48.09375 44 49 43.09375 49 42 L 49 8 C 49 6.90625 48.09375 6 47 6 L 30 6 L 30 1 C 30.003906 0.710938 29.878906 0.4375 29.664063 0.246094 C 29.449219 0.0546875 29.160156 -0.0351563 28.875 0 Z M 28 2.1875 L 28 6.53125 C 27.867188 6.808594 27.867188 7.128906 28 7.40625 L 28 42.8125 C 27.972656 42.945313 27.972656 43.085938 28 43.21875 L 28 47.8125 L 2 42.84375 L 2 7.15625 Z M 30 8 L 47 8 L 47 42 L 30 42 L 30 37 L 34 37 L 34 35 L 30 35 L 30 29 L 34 29 L 34 27 L 30 27 L 30 22 L 34 22 L 34 20 L 30 20 L 30 15 L 34 15 L 34 13 L 30 13 Z M 36 13 L 36 15 L 44 15 L 44 13 Z M 6.6875 15.6875 L 12.15625 25.03125 L 6.1875 34.375 L 11.1875 34.375 L 14.4375 28.34375 C 14.664063 27.761719 14.8125 27.316406 14.875 27.03125 L 14.90625 27.03125 C 15.035156 27.640625 15.160156 28.054688 15.28125 28.28125 L 18.53125 34.375 L 23.5 34.375 L 17.75 24.9375 L 23.34375 15.6875 L 18.65625 15.6875 L 15.6875 21.21875 C 15.402344 21.941406 15.199219 22.511719 15.09375 22.875 L 15.0625 22.875 C 14.898438 22.265625 14.710938 21.722656 14.5 21.28125 L 11.8125 15.6875 Z M 36 20 L 36 22 L 44 22 L 44 20 Z M 36 27 L 36 29 L 44 29 L 44 27 Z M 36 35 L 36 37 L 44 37 L 44 35 Z"/></svg>  &nbsp;Excel </button>',
+                    },
+                    {
+                        extend: 'excel',
+                        text: '<button class="btn btn-warning btn-sm w-32 mr-2 mb-2"> <svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 50 50" width="18px" height="18px"><path d="M 28.875 0 C 28.855469 0.0078125 28.832031 0.0195313 28.8125 0.03125 L 0.8125 5.34375 C 0.335938 5.433594 -0.0078125 5.855469 0 6.34375 L 0 43.65625 C -0.0078125 44.144531 0.335938 44.566406 0.8125 44.65625 L 28.8125 49.96875 C 29.101563 50.023438 29.402344 49.949219 29.632813 49.761719 C 29.859375 49.574219 29.996094 49.296875 30 49 L 30 44 L 47 44 C 48.09375 44 49 43.09375 49 42 L 49 8 C 49 6.90625 48.09375 6 47 6 L 30 6 L 30 1 C 30.003906 0.710938 29.878906 0.4375 29.664063 0.246094 C 29.449219 0.0546875 29.160156 -0.0351563 28.875 0 Z M 28 2.1875 L 28 6.53125 C 27.867188 6.808594 27.867188 7.128906 28 7.40625 L 28 42.8125 C 27.972656 42.945313 27.972656 43.085938 28 43.21875 L 28 47.8125 L 2 42.84375 L 2 7.15625 Z M 30 8 L 47 8 L 47 42 L 30 42 L 30 37 L 34 37 L 34 35 L 30 35 L 30 29 L 34 29 L 34 27 L 30 27 L 30 22 L 34 22 L 34 20 L 30 20 L 30 15 L 34 15 L 34 13 L 30 13 Z M 36 13 L 36 15 L 44 15 L 44 13 Z M 6.6875 15.6875 L 12.15625 25.03125 L 6.1875 34.375 L 11.1875 34.375 L 14.4375 28.34375 C 14.664063 27.761719 14.8125 27.316406 14.875 27.03125 L 14.90625 27.03125 C 15.035156 27.640625 15.160156 28.054688 15.28125 28.28125 L 18.53125 34.375 L 23.5 34.375 L 17.75 24.9375 L 23.34375 15.6875 L 18.65625 15.6875 L 15.6875 21.21875 C 15.402344 21.941406 15.199219 22.511719 15.09375 22.875 L 15.0625 22.875 C 14.898438 22.265625 14.710938 21.722656 14.5 21.28125 L 11.8125 15.6875 Z M 36 20 L 36 22 L 44 22 L 44 20 Z M 36 27 L 36 29 L 44 29 L 44 27 Z M 36 35 L 36 37 L 44 37 L 44 35 Z"/></svg>  &nbsp;Excel </button>',
                         titleAttr: 'Download Excel'
-            } 
-            ],
-            scrollX: true,
+                    }
+                ],
+                scrollX: true,
                 // 'orderFixed': [0, 'asc'],
                 autoWidth: false,
                 rowsGroup: [0, 1, 2, 3],
                 paging: true,
                 bInfo: false,
                 ordering: false,
+            });
+
+            table.on('page.dt', function() {
+                setTimeout(() => {
+                    table.columns.adjust().draw(false);
+                }, 100); // beri jeda sedikit
+            });
         });
-    });
-</script>
+    </script>
 @endpush

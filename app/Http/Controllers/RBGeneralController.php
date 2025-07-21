@@ -77,10 +77,30 @@ class RBGeneralController extends Controller
     {
         $user = Auth::User();
         $perencanaan = GeneralPerencanaan::where('instansi_id', $user->instansi_id)->where('kegiatan_utama_id', $kegiatan_utama_id)->where('indikator_id', $indikator_id)->first();
+        dd($perencanaan, $kegiatan_utama_id, $indikator_id);
+        $perencanaan->tipe = $perencanaan->indikator->tipe;
         return response()->json($perencanaan);
     }
 
-    public function perencanaan_getTarget($kegiatan_utama_id, $indikator_id)
+    public function perencanaan_getIndikator($kegiatan_utama_id, $indikator_id)
+    {
+        $indikator = Indikator::where('kegiatan_utama_id', $kegiatan_utama_id)->where('id', $indikator_id)->first();
+        if (!$indikator) {
+            abort(404);
+        }
+        return response()->json($indikator);
+    }
+
+    public function perencanaan_getTarget($kegiatan_utama_id, $indikator_id, $target_id)
+    {
+        $user = Auth::User();
+        $perencanaan = GeneralPerencanaan::where('instansi_id', $user->instansi_id)->where('kegiatan_utama_id', $kegiatan_utama_id)->where('indikator_id', $indikator_id)->first();
+        $target = GeneralPerencanaanTarget::where('general_perencanaan_id', $perencanaan->id)->where('id', $target_id)->first();
+        $target->tipe = $perencanaan->indikator->tipe;
+        return response()->json($target);
+    }
+
+    public function perencanaan_getTargetOld($kegiatan_utama_id, $indikator_id)
     {
         $user = Auth::User();
         $perencanaan = GeneralPerencanaan::where('instansi_id', $user->instansi_id)->where('kegiatan_utama_id', $kegiatan_utama_id)->where('indikator_id', $indikator_id)->first();
@@ -92,7 +112,7 @@ class RBGeneralController extends Controller
                 foreach ($perencanaan->target as $target) {
                     $input .= '<tr id="target' . $idx . '" data-index="' . $idx . '">
                                 <td><input type="text" name="tahun[' . $idx . ']" id="target_tahun' . $idx . '" class="form-control w-full tahun" value="' . $target->tahun . '" required></td>
-                                <td><input type="text" name="target[' . $idx . ']" id="target_target' . $idx . '" class="form-control w-full '.$perencanaan->indikator->tipe.'" value="' . $target->target . '" required></td>
+                                <td><input type="text" name="target[' . $idx . ']" id="target_target' . $idx . '" class="form-control w-full ' . $perencanaan->indikator->tipe . '" value="' . $target->target . '" required></td>
                                 <td><a href="javascript:;" class="btn btn-danger btn-sm" id="hapus-target" onclick="hapus_target(' . $idx . ')"><i data-lucide="trash-2" class="w-4 h-4 mr-1"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" icon-name="trash-2" data-lucide="trash-2" class="lucide lucide-trash-2 block mx-auto"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg></i></a></td>
                             </tr>';
                     $idx++;
@@ -100,7 +120,7 @@ class RBGeneralController extends Controller
             } else {
                 $input .= '<tr>
                             <td><input type="text" name="tahun[0]" id="target_tahun0" class="form-control w-full tahun" value="' . date('Y') . '" required></td>
-                            <td><input type="text" name="target[0]" id="target_target0" class="form-control w-full '.$perencanaan->indikator->tipe.'" required></td>
+                            <td><input type="text" name="target[0]" id="target_target0" class="form-control w-full ' . $perencanaan->indikator->tipe . '" required></td>
                             <td></td>
                         </tr>';
             }
@@ -110,7 +130,7 @@ class RBGeneralController extends Controller
         return response()->json(['success' => $success, 'input' => $input, 'perencanaan' => $perencanaan]);
     }
 
-    public function perencanaan_simpanBaseline(Request $request)
+    public function perencanaan_simpanBaselineTarget(Request $request)
     {
         $user = Auth::User();
         $success = true;
@@ -121,40 +141,100 @@ class RBGeneralController extends Controller
             $perencanaan->instansi_id = $user->instansi_id;
             $perencanaan->kegiatan_utama_id = $request->kegiatan_utama_id;
             $perencanaan->indikator_id = $request->indikator_id;
+            $perencanaan->save();
         }
-        $perencanaan->baseline_tahun = $request->baseline_tahun;
-        $perencanaan->baseline_target = 0;
-        $perencanaan->baseline_realisasi = $request->baseline_realisasi;
+        $target = GeneralPerencanaanTarget::where('general_perencanaan_id', $perencanaan->id)->where('baseline_tahun', $request->baseline_tahun)->where('tahun', $request->tahun)->first();
+        if ($target) {
+            $success = false;
+            $pesan .= 'Data Target untuk baseline tahun ' . $request->baseline_tahun . ' dan target tahun ' . $request->tahun . ' sudah ada!';
+        }
+        $target = new GeneralPerencanaanTarget();
+        $target->general_perencanaan_id = $perencanaan->id;
+        $target->baseline_tahun = $request->baseline_tahun;
+        $target->baseline_realisasi = $request->baseline_realisasi;
+        $target->tahun = $request->tahun;
+        $target->target = $request->target;
         if ($perencanaan->indikator->tipe == 'Kuantitatif') {
+            // Cek Baseline Realisasi
             if ($perencanaan->indikator->min != null && $request->baseline_realisasi < $perencanaan->indikator->min) {
                 $success = false;
-                $pesan .= 'Baseline tidak boleh kurang dari '.$perencanaan->indikator->min.'!!';
+                $pesan .= 'Baseline tidak boleh kurang dari ' . $perencanaan->indikator->min . '!!';
             } else if ($perencanaan->indikator->max != null && $request->baseline_realisasi > $perencanaan->indikator->max) {
                 $success = false;
-                $pesan .= 'Baseline tidak boleh lebih dari '.$perencanaan->indikator->max.'!!';
+                $pesan .= 'Baseline tidak boleh lebih dari ' . $perencanaan->indikator->max . '!!';
+            }
+            // Cek Target
+            if ($target->target < $target->baseline_realisasi) {
+                $success = false;
+                $pesan .= 'Target tidak boleh kurang dari Baseline Realisasi!!';
+            } else if ($perencanaan->indikator->min != null && $target->target < $perencanaan->indikator->min) {
+                $success = false;
+                $pesan .= 'Target tidak boleh kurang dari ' . $perencanaan->indikator->min . '!!';
+            } else if ($perencanaan->indikator->max != null && $target->target > $perencanaan->indikator->max) {
+                $success = false;
+                $pesan .= 'Target tidak boleh lebih dari ' . $perencanaan->indikator->max . '!!';
             }
         }
 
         if ($success) {
-            $perencanaan->save();
-            session()->flash('success', 'Data Baseline Perencanaan General berhasil disimpan.');
+            $target->save();
+            session()->flash('success', 'Data Baseline / Target Perencanaan General berhasil disimpan.');
         } else {
-            session()->flash('error', 'Data Baseline Perencanaan General gagal disimpan! '.$pesan);
+            session()->flash('error', 'Data Baseline / Target Perencanaan General gagal disimpan! ' . $pesan);
         }
         return redirect('rencana_aksi/rb-general/perencanaan');
     }
 
-    public function perencanaan_hapusBaseline(Request $request)
+    public function perencanaan_simpanBaseline(Request $request)
     {
         $user = Auth::User();
-        $perencanaan = GeneralPerencanaan::where('instansi_id', $user->instansi_id)->where('id', $request->perencanaan_id)->first();
+        $success = true;
+        $pesan = '';
+        $perencanaan = GeneralPerencanaan::where('instansi_id', $user->instansi_id)->where('kegiatan_utama_id', $request->kegiatan_utama_id)->where('indikator_id', $request->indikator_id)->first();
         if (!$perencanaan) {
-            session()->flash('error', 'Data Baseline Perencanaan General tidak ditemukan!');
+            $success = false;
+            $pesan .= 'Data Perencanaan tidak ditemukan!';
         }
-        if ($perencanaan->delete()) {
-            session()->flash('success', 'Data Baseline Perencanaan General berhasil dihapus.');
+        $target = GeneralPerencanaanTarget::where('general_perencanaan_id', $perencanaan->id)->where('id', $request->id)->first();
+        if (!$target) {
+            $success = false;
+            $pesan .= 'Data Perencanaan Target tidak ditemukan!';
+        }
+        $target->general_perencanaan_id = $perencanaan->id;
+        $target->baseline_tahun = $request->baseline_tahun;
+        $target->baseline_realisasi = $request->baseline_realisasi;
+        if ($perencanaan->indikator->tipe == 'Kuantitatif') {
+            if ($perencanaan->indikator->min != null && $request->baseline_realisasi < $perencanaan->indikator->min) {
+                $success = false;
+                $pesan .= 'Baseline tidak boleh kurang dari ' . $perencanaan->indikator->min . '!!';
+            } else if ($perencanaan->indikator->max != null && $request->baseline_realisasi > $perencanaan->indikator->max) {
+                $success = false;
+                $pesan .= 'Baseline tidak boleh lebih dari ' . $perencanaan->indikator->max . '!!';
+            }
+        }
+
+        if ($success) {
+            $target->save();
+            session()->flash('success', 'Data Baseline Perencanaan General berhasil disimpan.');
         } else {
-            session()->flash('error', 'Data Baseline Perencanaan General gagal dihapus! Silahkan dicoba kembali.');
+            session()->flash('error', 'Data Baseline Perencanaan General gagal disimpan! ' . $pesan);
+        }
+        return redirect('rencana_aksi/rb-general/perencanaan');
+    }
+
+    public function perencanaan_hapusTarget(Request $request)
+    {
+        $user = Auth::User();
+        $perencanaan = GeneralPerencanaan::where('instansi_id', $user->instansi_id)->where('kegiatan_utama_id', $request->kegiatan_utama_id)->where('indikator_id', $request->indikator_id)->first();
+        $target = GeneralPerencanaanTarget::where('general_perencanaan_id', $perencanaan->id)->where('id', $request->target_id)->first();
+        if (!$target) {
+            session()->flash('error', 'Data Baseline Perencanaan General tidak ditemukan!');
+        } else {
+            if ($target->delete()) {
+                session()->flash('success', 'Data Baseline Perencanaan General berhasil dihapus.');
+            } else {
+                session()->flash('error', 'Data Baseline Perencanaan General gagal dihapus! Silahkan dicoba kembali.');
+            }
         }
         return redirect('rencana_aksi/rb-general/perencanaan');
     }
@@ -168,39 +248,36 @@ class RBGeneralController extends Controller
             $success = true;
             DB::beginTransaction();
             try {
-                foreach ($request->tahun as $key => $tahun) {
-                    $target = GeneralPerencanaanTarget::where('general_perencanaan_id', $perencanaan->id)->where('tahun', $tahun)->first();
-                    if (!$target) {
-                        $target = new GeneralPerencanaanTarget();
-                    }
+                $target = GeneralPerencanaanTarget::where('general_perencanaan_id', $perencanaan->id)->where('id', $request->id)->first();
+                if (!$target) {
+                    $target = new GeneralPerencanaanTarget();
                     $target->general_perencanaan_id = $perencanaan->id;
-                    $target->tahun = $tahun;
-                    $target->target = $request->target[$key];
-                    if (!$target->save()) {
+                }
+                $target->tahun = $request->tahun;
+                $target->target = $request->target;
+                if (!$target->save()) {
+                    $success = false;
+                }
+                if ($perencanaan->indikator->tipe == 'Kuantitatif') {
+                    if ($target->target < $target->baseline_realisasi) {
                         $success = false;
-                    }
-                    if ($perencanaan->indikator->tipe == 'Kuantitatif') {
-                        if ($target->target < $perencanaan->baseline_realisasi) {
-                            $success = false;
-                            $pesan .= 'Target tidak boleh kurang dari Baseline Realisasi!!';
-                        } else if ($perencanaan->indikator->min != null && $target->target < $perencanaan->indikator->min) {
-                            $success = false;
-                            $pesan .= 'Target tidak boleh kurang dari '.$perencanaan->indikator->min.'!!';
-                        } else if ($perencanaan->indikator->max != null && $target->target > $perencanaan->indikator->max) {
-                            $success = false;
-                            $pesan .= 'Target tidak boleh lebih dari '.$perencanaan->indikator->max.'!!';
-                        }
-                    }
-                    if ($tahun <= $perencanaan->baseline_tahun) {
+                        $pesan .= 'Target tidak boleh kurang dari Baseline Realisasi!!';
+                    } else if ($perencanaan->indikator->min != null && $target->target < $perencanaan->indikator->min) {
                         $success = false;
-                        $pesan .= 'Tahun yang di-input tidak boleh sama atau kurang dari tahun baseline!';
+                        $pesan .= 'Target tidak boleh kurang dari ' . $perencanaan->indikator->min . '!!';
+                    } else if ($perencanaan->indikator->max != null && $target->target > $perencanaan->indikator->max) {
+                        $success = false;
+                        $pesan .= 'Target tidak boleh lebih dari ' . $perencanaan->indikator->max . '!!';
                     }
+                }
+                if ($request->tahun <= $perencanaan->baseline_tahun) {
+                    $success = false;
+                    $pesan .= 'Tahun yang di-input tidak boleh sama atau kurang dari tahun baseline!';
                 }
             } catch (\Throwable $th) {
                 throw $th;
             }
             if ($success) {
-                GeneralPerencanaanTarget::where('general_perencanaan_id', $perencanaan->id)->whereNotIn('tahun', $request->tahun)->delete();
                 DB::commit();
                 session()->flash('success', 'Data Target Perencanaan General berhasil disimpan.');
             } else {
@@ -208,7 +285,7 @@ class RBGeneralController extends Controller
                 session()->flash('error', 'Data Target Perencanaan General gagal disimpan! ' . $pesan);
             }
         } else {
-            session()->flash('error', 'Data Target Perencanaan General gagal disimpan! Data Baseline tidak ditemukan.');
+            session()->flash('error', 'Data Target Perencanaan General gagal disimpan! Data General Perencanaan tidak ditemukan.');
         }
         return redirect('rencana_aksi/rb-general/perencanaan');
     }
@@ -391,16 +468,16 @@ class RBGeneralController extends Controller
             $success = false;
             throw $th;
         }
-        
+
         if ($success) {
             DB::commit();
             session()->flash('success', 'Data RB General Rencana Aksi berhasil diimport!');
         } else {
             DB::rollBack();
-            session()->flash('error', 'Data RB General Rencana Aksi gagal diimport! '.$pesan);
+            session()->flash('error', 'Data RB General Rencana Aksi gagal diimport! ' . $pesan);
         }
 
-        return redirect('rencana_aksi/rb-general/perencanaan/'.$perencanaan_id.'/'.$target_id.'/rencana_aksi');
+        return redirect('rencana_aksi/rb-general/perencanaan/' . $perencanaan_id . '/' . $target_id . '/rencana_aksi');
     }
 
     public function rencana_aksi_getDatas($perencanaan_id, $target_id)
@@ -419,7 +496,7 @@ class RBGeneralController extends Controller
                 $output->nama_rencana_aksi = $output->rencana_aksi->rencana_aksi;
                 $output->anggaran_total = currency($output->anggaran_total);
                 $output->realisasi_anggaran_total = currency((int) $output->realisasi_anggaran_total);
-                $output->capaian_anggaran_total = $output->capaian_anggaran_total ? $output->capaian_anggaran_total.'%' : '';
+                $output->capaian_anggaran_total = $output->capaian_anggaran_total ? $output->capaian_anggaran_total . '%' : '';
                 $outputs[] = $output;
             }
             $no++;

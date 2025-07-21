@@ -35,6 +35,6 @@ class GeneralPerencanaan extends Model
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-        ->logOnly(['id', 'instansi_id', 'kegiatan_utama_id', 'indikator_id', 'baseline_tahun', 'baseline_target', 'baseline_realisasi']);
+        ->logOnly(['id', 'instansi_id', 'kegiatan_utama_id', 'indikator_id']);
     }
 }
