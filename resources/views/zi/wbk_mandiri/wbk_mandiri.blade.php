@@ -23,7 +23,7 @@
         <div class="flex flex-col sm:flex-row items-center p-5 border-b border-slate-200/60">
             <h2 class="font-medium text-base mr-auto"> {{$title}}</h2>
             <button class="btn btn-danger shadow-md mr-2 float-right" onclick="tambah();" data-bs-toggle="modal"
-                data-bs-target="#modal-kelola-tim"><i class="fa fa-add"></i> &nbsp; Tambah Bukti Dukung</button>
+                data-bs-target="#modal-kelola-laporan"><i class="fa fa-add"></i> &nbsp; Tambah Bukti Dukung</button>
         </div>
         <div class="lg:col-span-12 p-5 border-b border-slate-200/60">
             <table id="lapor_wbk_mandiri" class="table table-bordered table-striped table-hover" cellspacing="0"
@@ -47,15 +47,15 @@
     </div>
 </div>
 
-<div id="modal-kelola-tim" class="modal fade" tabindex="-1" aria-hidden="true">
+<div id="modal-kelola-laporan" class="modal fade" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <!-- BEGIN: Modal Header -->
             <div class="modal-header text-white font-bold" style="background: #DC2626">
-                <h2 class="fw-medium fs-base me-auto" id="title">Tambah Tim</h2>
+                <h2 class="fw-medium fs-base me-auto" id="title">Tambah Laporan</h2>
             </div> <!-- END: Modal Header -->
             <!-- BEGIN: Modal Body -->
-            <form action="{{ route('lapor_wbk_mandiri_simpan') }}" id="form-kelola-jadwal" method="post">
+            <form action="{{ route('lapor_wbk_mandiri_simpan') }}" id="form-kelola-laporan" method="post">
                 @csrf
                 <input type="hidden" name="laporan_id" id="laporan_id">
                 <div class="modal-body grid columns-12 gap-4 gap-y-3">
@@ -116,9 +116,9 @@
 
 
         getData();
-        modal_kelola_jadwal = tailwind.Modal.getInstance(document.querySelector("#modal-kelola-tim"));
+        modal_kelola_jadwal = tailwind.Modal.getInstance(document.querySelector("#modal-kelola-laporan"));
         
-        $('#form-kelola-jadwal').validate({
+        $('#form-kelola-laporan').validate({
             highlight: function (input) {
                 $(input).addClass('border-danger');
             },
@@ -211,20 +211,22 @@
     }
 
     function clearForm() {
-        $('#form-kelola-jadwal').trigger('reset');
-        $('#jadwal_id').val('');
+        $('#form-kelola-laporan').trigger('reset');
+        $('#laporan_id').val('');
     }
 
     function tambah() {
         clearForm();
         $('.saveButton').prop('disabled', false);
+        $('#laporan_id').val();
+        $('#title').html('Tambah Laporan');
         modal_kelola_jadwal.show();
     }
 
     function edit(id) {
         clearForm();
-        $('#jadwal_id').val(id);
-        $('#title').html('Edit Jadwal');
+        $('#laporan_id').val(id);
+        $('#title').html('Edit Laporan');
         $('.saveButton').prop('disabled', true);
         modal_kelola_jadwal.show();
         $.getJSON("{{url('/zi/lapor-wbk-mandiri/getData/')}}/"+id, function(data) {

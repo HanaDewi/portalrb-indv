@@ -98,7 +98,13 @@
                                 @endif>
                                 <br /><br />
                                 <strong>Lke Evaluatan</strong> :<br />
+                                @if($unit_zi->sanggah_unit->lke)
+                                (LKE Sanggah) :
+                                <a href="{{$unit_zi->sanggah_unit->lke}}"
+                                    target="_blank">{{$unit_zi->sanggah_unit->lke}}</a>
+                                @else
                                 <a href="{{$unit_zi->lke}}" target="_blank">{{$unit_zi->lke}}</a>
+                                @endif
                             </td>
                             <td>
                                 <select class="form-control status" name="status-{{$unit_zi->id}}"
