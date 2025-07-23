@@ -77,85 +77,97 @@
                         <tr>
                             <td>
                                 <div class="font-medium">Nilai Komponen Perencanaan Kinerja</div>
-                                <div class="text-gray-600">Catatan :
-                                    <span class="italic">
-                                        {{ $evaluasi->catatan_komponen_perencanaan_kinerja }}
-                                    </span>
-                                </div>
-                                <div class="text-gray-600">Rekomendasi :
-                                    <span class="italic">
-                                        {{ $evaluasi->rekomendasi_komponen_perencanaan_kinerja }}
-                                    </span>
-                                </div>
                             </td>
                             <td>
-                                {{ $evaluasi->nilai_komponen_perencanaan_kinerja_tahun_lalu }}
+                                {{ fnumber($evaluasi->nilai_komponen_perencanaan_kinerja_tahun_lalu, 2) }}
                             </td>
                             <td>
-                                {{ $evaluasi->nilai_komponen_perencanaan_kinerja }}
+                                {{ fnumber($evaluasi->nilai_komponen_perencanaan_kinerja, 2) }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="italic text-justify">
+                                <div class="font-medium">Catatan :</div>
+                                <span class="text-gray-600">
+                                    {!! $evaluasi->catatan_komponen_perencanaan_kinerja !!}
+                                </span>
+                                <hr class="my-2">
+                                <div class="font-medium">Rekomendasi :</div>
+                                <span class="text-gray-600">
+                                    {!! $evaluasi->rekomendasi_komponen_perencanaan_kinerja !!}
+                                </span>
                             </td>
                         </tr>
                         <tr>
                             <td>
                                 <div class="font-medium">Nilai Komponen Pengukuran Kinerja</div>
-                                <div class="text-gray-600">Catatan :
-                                    <span class="italic">
-                                        {{ $evaluasi->catatan_komponen_pengukuran_kinerja }}
-                                    </span>
-                                </div>
-                                <div class="text-gray-600">Rekomendasi :
-                                    <span class="italic">
-                                        {{ $evaluasi->rekomendasi_komponen_pengukuran_kinerja }}
-                                    </span>
-                                </div>
                             </td>
                             <td>
-                                {{ $evaluasi->nilai_komponen_pengukuran_kinerja_tahun_lalu }}
+                                {{ fnumber($evaluasi->nilai_komponen_pengukuran_kinerja_tahun_lalu, 2) }}
                             </td>
                             <td>
-                                {{ $evaluasi->nilai_komponen_pengukuran_kinerja }}
+                                {{ fnumber($evaluasi->nilai_komponen_pengukuran_kinerja, 2) }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="italic text-justify">
+                                <div class="font-medium">Catatan :</div>
+                                <span class="text-gray-600">
+                                    {!! $evaluasi->catatan_komponen_pengukuran_kinerja !!}
+                                </span>
+                                <hr class="my-2">
+                                <div class="font-medium">Rekomendasi :</div>
+                                <span class="text-gray-600">
+                                    {!! $evaluasi->rekomendasi_komponen_pengukuran_kinerja !!}
+                                </span>
                             </td>
                         </tr>
                         <tr>
                             <td>
                                 <div class="font-medium">Nilai Komponen Pelaporan Kinerja</div>
-                                <div class="text-gray-600">Catatan :
-                                    <span class="italic">
-                                        {{ $evaluasi->catatan_komponen_pelaporan_kinerja }}
-                                    </span>
-                                </div>
-                                <div class="text-gray-600">Rekomendasi :
-                                    <span class="italic">
-                                        {{ $evaluasi->rekomendasi_komponen_pelaporan_kinerja }}
-                                    </span>
-                                </div>
                             </td>
                             <td>
-                                {{ $evaluasi->nilai_komponen_pelaporan_kinerja_tahun_lalu }}
+                                {{ fnumber($evaluasi->nilai_komponen_pelaporan_kinerja_tahun_lalu, 2) }}
                             </td>
                             <td>
-                                {{ $evaluasi->nilai_komponen_pelaporan_kinerja }}
+                                {{ fnumber($evaluasi->nilai_komponen_pelaporan_kinerja, 2) }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="italic text-justify">
+                                <div class="font-medium">Catatan :</div>
+                                <span class="text-gray-600">
+                                    {!! $evaluasi->catatan_komponen_pelaporan_kinerja !!}
+                                </span>
+                                <hr class="my-2">
+                                <div class="font-medium">Rekomendasi :</div>
+                                <span class="text-gray-600">
+                                    {!! $evaluasi->rekomendasi_komponen_pelaporan_kinerja !!}
+                                </span>
                             </td>
                         </tr>
                         <tr>
                             <td>
                                 <div class="font-medium">Nilai Komponen Evaluasi Internal</div>
-                                <div class="text-gray-600">Catatan :
-                                    <span class="italic">
-                                        {{ $evaluasi->catatan_komponen_evaluasi_internal }}
-                                    </span>
-                                </div>
-                                <div class="text-gray-600">Rekomendasi :
-                                    <span class="italic">
-                                        {{ $evaluasi->rekomendasi_komponen_evaluasi_internal }}
-                                    </span>
-                                </div>
                             </td>
                             <td>
-                                {{ $evaluasi->nilai_komponen_evaluasi_internal_tahun_lalu }}
+                                {{ fnumber($evaluasi->nilai_komponen_evaluasi_internal_tahun_lalu, 2) }}
                             </td>
                             <td>
-                                {{ $evaluasi->nilai_komponen_evaluasi_internal }}
+                                {{ fnumber($evaluasi->nilai_komponen_evaluasi_internal, 2) }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="italic text-justify">
+                                <div class="font-medium">Catatan :</div>
+                                <span class="text-gray-600">
+                                    {!! $evaluasi->catatan_komponen_evaluasi_internal !!}
+                                </span>
+                                <hr class="my-2">
+                                <div class="font-medium">Rekomendasi :</div>
+                                <span class="text-gray-600">
+                                    {!! $evaluasi->rekomendasi_komponen_evaluasi_internal !!}
+                                </span>
                             </td>
                         </tr>
                         <tr>
@@ -163,10 +175,10 @@
                                 <div class="font-medium">Nilai Total Evaluasi AKIP TW 2</div>
                             </td>
                             <td class="border-t-2">
-                                {{ $evaluasi->nilai_total_evaluasi_akip_tahun_lalu }}
+                                {{ fnumber($evaluasi->nilai_total_evaluasi_akip_tahun_lalu, 2) }}
                             </td>
                             <td class="border-t-2">
-                                {{ $evaluasi->nilai_total_evaluasi_akip }}
+                                {{ fnumber($evaluasi->nilai_total_evaluasi_akip, 2) }}
                             </td>
                         </tr>
                     </tbody>
@@ -178,45 +190,45 @@
                         <thead>
                             <tr>
                                 <th class="border-b-2 p-5">Hasil Capaian Indikator Makro</th>
-                                <th class="border-b-2 p-5 w-24">Tahun lalu</th>
-                                <th class="border-b-2 p-5 w-24">Tahun ini</th>
+                                <th class="border-b-2 p-5 w-28">Tahun lalu</th>
+                                <th class="border-b-2 p-5 w-28">Tahun ini</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
                                 <td>Angka Kemiskinan</td>
-                                <td>{{ $evaluasi->angka_kemiskinan }}</td>
-                                <td>{{ $evaluasi->angka_kemiskinan }}</td>
+                                <td>{{ fnumber($evaluasi->angka_kemiskinan_tahun_lalu, 2) }}</td>
+                                <td>{{ fnumber($evaluasi->angka_kemiskinan, 2) }}</td>
                             </tr>
                             <tr>
                                 <td>Laju Pertumbuhan Ekonomi</td>
-                                <td>{{ $evaluasi->laju_pertumbuhan_ekonomi }}</td>
-                                <td>{{ $evaluasi->laju_pertumbuhan_ekonomi }}</td>
+                                <td>{{ fnumber($evaluasi->laju_pertumbuhan_ekonomi_tahun_lalu, 2) }}</td>
+                                <td>{{ fnumber($evaluasi->laju_pertumbuhan_ekonomi, 2) }}</td>
                             </tr>
                             <tr>
                                 <td>Tingkat Pengangguran terbuka</td>
-                                <td>{{ $evaluasi->tingkat_pengangguran_terbuka }}</td>
-                                <td>{{ $evaluasi->tingkat_pengangguran_terbuka }}</td>
+                                <td>{{ fnumber($evaluasi->tingkat_pengangguran_terbuka_tahun_lalu, 2) }}</td>
+                                <td>{{ fnumber($evaluasi->tingkat_pengangguran_terbuka, 2) }}</td>
                             </tr>
                             <tr>
                                 <td>Penurunan emisi GRK</td>
-                                <td>{{ $evaluasi->penurunan_emisi_grk }}</td>
-                                <td>{{ $evaluasi->penurunan_emisi_grk }}</td>
+                                <td>{{ fnumber($evaluasi->penurunan_emisi_grk_tahun_lalu, 2) }}</td>
+                                <td>{{ fnumber($evaluasi->penurunan_emisi_grk, 2) }}</td>
                             </tr>
                             <tr>
                                 <td>Indeks Pembangunan Manusia</td>
-                                <td>{{ $evaluasi->indeks_pembangunan_manusia }}</td>
-                                <td>{{ $evaluasi->indeks_pembangunan_manusia }}</td>
+                                <td>{{ fnumber($evaluasi->indeks_pembangunan_manusia_tahun_lalu, 2) }}</td>
+                                <td>{{ fnumber($evaluasi->indeks_pembangunan_manusia, 2) }}</td>
                             </tr>
                             <tr>
                                 <td>Indeks Gini Ratio</td>
-                                <td>{{ $evaluasi->indeks_gini_ratio }}</td>
-                                <td>{{ $evaluasi->indeks_gini_ratio }}</td>
+                                <td>{{ fnumber($evaluasi->indeks_gini_ratio_tahun_lalu, 2) }}</td>
+                                <td>{{ fnumber($evaluasi->indeks_gini_ratio, 2) }}</td>
                             </tr>
                             <tr>
                                 <td>Pendapatan Perkapita</td>
-                                <td>{{ $evaluasi->pendapatan_perkapita }}</td>
-                                <td>{{ $evaluasi->pendapatan_perkapita }}</td>
+                                <td>{{ fnumber($evaluasi->pendapatan_perkapita_tahun_lalu, 2) }}</td>
+                                <td>{{ fnumber($evaluasi->pendapatan_perkapita, 2) }}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -294,7 +306,7 @@
                         <hr>
                     </div>
                     <div class="col-span-12 lg:col-span-6">
-                        <div class="font-medium">Nilai Komponens Perencanaan Kinerja</div>
+                        <div class="font-medium">Nilai Komponen Perencanaan Kinerja</div>
                         <div class="input-group">
                             <div class="flex items-center">
                                 <div>Tahun Lalu <span class="text-theme-6">*</span></div>
@@ -313,11 +325,11 @@
                         </div>
                         <div class="input-group">
                             <label>Catatan : </label> <span class="text-theme-6">*</span>
-                            <textarea name="catatan_komponen_perencanaan_kinerja" id="catatan_komponen_perencanaan_kinerja" class="input w-full border mt-2 flex-1" cols="30" rows="3" placeholder="Catatan Nilai Komponen Perencanaan Kinerja" required></textarea>
+                            <textarea name="catatan_komponen_perencanaan_kinerja" id="catatan_komponen_perencanaan_kinerja" class="input editor w-full border mt-2 flex-1" cols="30" rows="3" placeholder="Catatan Nilai Komponen Perencanaan Kinerja" required></textarea>
                         </div>
-                        <div class="input-group">
+                        <div class="input-group mt-2">
                             <label>Rekomendasi : </label> <span class="text-theme-6">*</span>
-                            <textarea name="rekomendasi_komponen_perencanaan_kinerja" id="rekomendasi_komponen_perencanaan_kinerja" class="input w-full border mt-2 flex-1" cols="30" rows="3" placeholder="Rekomendasi Nilai Komponen Perencanaan Kinerja" required></textarea>
+                            <textarea name="rekomendasi_komponen_perencanaan_kinerja" id="rekomendasi_komponen_perencanaan_kinerja" class="input editor w-full border mt-2 flex-1" cols="30" rows="3" placeholder="Rekomendasi Nilai Komponen Perencanaan Kinerja" required></textarea>
                         </div>
                     </div>
                     <div class="col-span-12 lg:col-span-6">
@@ -340,11 +352,11 @@
                         </div>
                         <div class="input-group">
                             <label>Catatan : </label> <span class="text-theme-6">*</span>
-                            <textarea name="catatan_komponen_pengukuran_kinerja" id="catatan_komponen_pengukuran_kinerja" class="input w-full border mt-2 flex-1" cols="30" rows="3" placeholder="Catatan Nilai Komponen Pengukuran Kinerja" required></textarea>
+                            <textarea name="catatan_komponen_pengukuran_kinerja" id="catatan_komponen_pengukuran_kinerja" class="input editor w-full border mt-2 flex-1" cols="30" rows="3" placeholder="Catatan Nilai Komponen Pengukuran Kinerja" required></textarea>
                         </div>
-                        <div class="input-group">
+                        <div class="input-group mt-2">
                             <label>Rekomendasi : </label> <span class="text-theme-6">*</span>
-                            <textarea name="rekomendasi_komponen_pengukuran_kinerja" id="rekomendasi_komponen_pengukuran_kinerja" class="input w-full border mt-2 flex-1" cols="30" rows="3" placeholder="Rekomendasi Nilai Komponen Pengukuran Kinerja" required></textarea>
+                            <textarea name="rekomendasi_komponen_pengukuran_kinerja" id="rekomendasi_komponen_pengukuran_kinerja" class="input editor w-full border mt-2 flex-1" cols="30" rows="3" placeholder="Rekomendasi Nilai Komponen Pengukuran Kinerja" required></textarea>
                         </div>
                     </div>
                     <div class="col-span-12 lg:col-span-6">
@@ -367,11 +379,11 @@
                         </div>
                         <div class="input-group">
                             <label>Catatan : </label> <span class="text-theme-6">*</span>
-                            <textarea name="catatan_komponen_pelaporan_kinerja" id="catatan_komponen_pelaporan_kinerja" class="input w-full border mt-2 flex-1" cols="30" rows="3" placeholder="Catatan Nilai Komponen Pelaporan Kinerja" required></textarea>
+                            <textarea name="catatan_komponen_pelaporan_kinerja" id="catatan_komponen_pelaporan_kinerja" class="input editor w-full border mt-2 flex-1" cols="30" rows="3" placeholder="Catatan Nilai Komponen Pelaporan Kinerja" required></textarea>
                         </div>
-                        <div class="input-group">
+                        <div class="input-group mt-2">
                             <label>Rekomendasi : </label> <span class="text-theme-6">*</span>
-                            <textarea name="rekomendasi_komponen_pelaporan_kinerja" id="rekomendasi_komponen_pelaporan_kinerja" class="input w-full border mt-2 flex-1" cols="30" rows="3" placeholder="Rekomendasi Nilai Komponen Pelaporan Kinerja" required></textarea>
+                            <textarea name="rekomendasi_komponen_pelaporan_kinerja" id="rekomendasi_komponen_pelaporan_kinerja" class="input editor w-full border mt-2 flex-1" cols="30" rows="3" placeholder="Rekomendasi Nilai Komponen Pelaporan Kinerja" required></textarea>
                         </div>
                     </div>
                     <div class="col-span-12 lg:col-span-6">
@@ -394,11 +406,11 @@
                         </div>
                         <div class="input-group">
                             <label>Catatan : </label> <span class="text-theme-6">*</span>
-                            <textarea name="catatan_komponen_evaluasi_internal" id="catatan_komponen_evaluasi_internal" class="input w-full border mt-2 flex-1" cols="30" rows="3" placeholder="Catatan Nilai Komponen Evaluasi Internal" required></textarea>
+                            <textarea name="catatan_komponen_evaluasi_internal" id="catatan_komponen_evaluasi_internal" class="input editor w-full border mt-2 flex-1" cols="30" rows="3" placeholder="Catatan Nilai Komponen Evaluasi Internal" required></textarea>
                         </div>
-                        <div class="input-group">
+                        <div class="input-group mt-2">
                             <label>Rekomendasi : </label> <span class="text-theme-6">*</span>
-                            <textarea name="rekomendasi_komponen_evaluasi_internal" id="rekomendasi_komponen_evaluasi_internal" class="input w-full border mt-2 flex-1" cols="30" rows="3" placeholder="Rekomendasi Nilai Komponen Evaluasi Internal" required></textarea>
+                            <textarea name="rekomendasi_komponen_evaluasi_internal" id="rekomendasi_komponen_evaluasi_internal" class="input editor w-full border mt-2 flex-1" cols="30" rows="3" placeholder="Rekomendasi Nilai Komponen Evaluasi Internal" required></textarea>
                         </div>
                     </div>
                     <div class="col-span-12">
@@ -432,8 +444,8 @@
                                 <thead>
                                     <tr>
                                         <th class="border-b-2 p-5">Input Hasil Capaian Indikator Makro</th>
-                                        <th class="border-b-2 p-5 w-24">Tahun lalu</th>
-                                        <th class="border-b-2 p-5 w-24">Tahun ini</th>
+                                        <th class="border-b-2 p-5 w-32">Tahun lalu</th>
+                                        <th class="border-b-2 p-5 w-32">Tahun ini</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -522,10 +534,10 @@
                                             </div>
                                         </td>
                                         <td>
-                                            <input type="text" name="pendapatan_perkapita_tahun_lalu" id="pendapatan_perkapita_tahun_lalu" class="input w-20 digit border flex-1 mt-2" required>
+                                            <input type="text" name="pendapatan_perkapita_tahun_lalu" id="pendapatan_perkapita_tahun_lalu" class="input w-28 currency border flex-1 mt-2" required>
                                         </td>
                                         <td>
-                                            <input type="text" name="pendapatan_perkapita" id="pendapatan_perkapita" class="input w-20 digit border flex-1 mt-2" required>
+                                            <input type="text" name="pendapatan_perkapita" id="pendapatan_perkapita" class="input w-28 currency border flex-1 mt-2" required>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -554,6 +566,7 @@
             padding: 10px 0px !important;
         }
     </style>
+    <link rel="stylesheet" href="{{ asset('ext') }}/summernote/summernote-lite.min.css" />
 @endpush
 
 @push('js_file')
@@ -561,14 +574,59 @@
         <script src="{{ asset('ext/jquery-validation/jquery.validate.min.js') }}"></script>
         <script src="{{ asset('ext/jquery-validation/localization/messages_id.min.js') }}"></script>
         <script src="{{ asset('ext') }}/jquery-inputmask/jquery.inputmask.bundle.js"></script>
+        <script src="{{ asset('ext') }}/summernote/summernote-lite.min.js"></script>
         <script>
+            $(document).ready(function() {
+                $('.editor').each(function() {
+                    var $this = $(this);
+                    $this.summernote({
+                        placeholder: $this.attr('placeholder'),
+                        toolbar: [
+                            ['style', ['bold', 'italic', 'underline', 'clear']],
+                            ['font', ['strikethrough', 'superscript', 'subscript']]
+                        ],
+                        height: 100
+                    });
+                });
+            });
+
             $(".digit").inputmask("decimal", {
-                radixPoint: ".",
-                digits: 2,
-                autoGroup: true,
+                radixPoint: ",", // koma sebagai pemisah desimal
+                groupSeparator: ".", // titik sebagai pemisah ribuan
+                digits: 2, // maksimal 2 digit di belakang koma
+                autoGroup: false, // otomatis group (misal ribuan)
                 rightAlign: false,
-                min: 0,
-                max: 100,
+                min: 0, // minimal 0
+                max: 100, // maksimal 100
+                allowMinus: false, // tidak boleh angka negatif
+                allowPlus: false, // tidak boleh tanda plus
+                placeholder: '0', // placeholder angka nol
+                showMaskOnHover: false, // tidak tampil mask saat hover
+                showMaskOnFocus: false, // tidak tampil mask saat focus
+                inputmode: "numeric", // membantu di mobile (keyboard angka)
+                onBeforePaste: function(pastedValue) {
+                    // Cegah paste selain angka dan titik
+                    this.value = this.value.replace(/[^0-9.,]/g, '');
+                }
+            });
+
+            $(".currency").inputmask("decimal", {
+                radixPoint: ",", // koma sebagai pemisah desimal
+                groupSeparator: ".", // titik sebagai pemisah ribuan
+                digits: 2, // tidak ada angka di belakang koma
+                autoGroup: true, // aktifkan grup ribuan
+                rightAlign: false,
+                min: 0, // minimal nilai 0
+                allowMinus: false, // tidak boleh nilai negatif
+                allowPlus: false, // tidak boleh tanda plus
+                inputmode: "numeric", // memunculkan keypad angka di mobile
+                showMaskOnHover: false,
+                showMaskOnFocus: false,
+                placeholder: '0',
+                onBeforePaste: function(pastedValue) {
+                    // Hapus semua karakter selain angka
+                    return pastedValue.replace(/[^\d]/g, '');
+                }
             });
 
             resetForm = function() {
@@ -580,6 +638,9 @@
                 $('#tahun').prop('disabled', false);
                 $('#periode').prop('disabled', false);
                 $('.saveButton').prop('disabled', false);
+                $('.editor').each(function() {
+                    $(this).summernote('code', '');
+                });
                 validator.resetForm();
             }
 
@@ -613,14 +674,14 @@
                                     $('#penanggung_jawab').val(response.evaluasi_sakip.penanggung_jawab);
                                     $('#pic_lke').val(response.evaluasi_sakip.pic_lke);
                                     $('#link_lke').val(response.evaluasi_sakip.link_lke);
-                                    $('#catatan_komponen_perencanaan_kinerja').val(response.evaluasi_sakip.catatan_komponen_perencanaan_kinerja);
-                                    $('#catatan_komponen_pengukuran_kinerja').val(response.evaluasi_sakip.catatan_komponen_pengukuran_kinerja);
-                                    $('#catatan_komponen_pelaporan_kinerja').val(response.evaluasi_sakip.catatan_komponen_pelaporan_kinerja);
-                                    $('#catatan_komponen_evaluasi_internal').val(response.evaluasi_sakip.catatan_komponen_evaluasi_internal);
-                                    $('#rekomendasi_komponen_perencanaan_kinerja').val(response.evaluasi_sakip.rekomendasi_komponen_perencanaan_kinerja);
-                                    $('#rekomendasi_komponen_pengukuran_kinerja').val(response.evaluasi_sakip.rekomendasi_komponen_pengukuran_kinerja);
-                                    $('#rekomendasi_komponen_pelaporan_kinerja').val(response.evaluasi_sakip.rekomendasi_komponen_pelaporan_kinerja);
-                                    $('#rekomendasi_komponen_evaluasi_internal').val(response.evaluasi_sakip.rekomendasi_komponen_evaluasi_internal);
+                                    $('#catatan_komponen_perencanaan_kinerja').summernote('code', response.evaluasi_sakip.catatan_komponen_perencanaan_kinerja);
+                                    $('#catatan_komponen_pengukuran_kinerja').summernote('code', response.evaluasi_sakip.catatan_komponen_pengukuran_kinerja);
+                                    $('#catatan_komponen_pelaporan_kinerja').summernote('code', response.evaluasi_sakip.catatan_komponen_pelaporan_kinerja);
+                                    $('#catatan_komponen_evaluasi_internal').summernote('code', response.evaluasi_sakip.catatan_komponen_evaluasi_internal);
+                                    $('#rekomendasi_komponen_perencanaan_kinerja').sumernote('code', response.evaluasi_sakip.rekomendasi_komponen_perencanaan_kinerja);
+                                    $('#rekomendasi_komponen_pengukuran_kinerja').sumernote('code', response.evaluasi_sakip.rekomendasi_komponen_pengukuran_kinerja);
+                                    $('#rekomendasi_komponen_pelaporan_kinerja').sumernote('code', response.evaluasi_sakip.rekomendasi_komponen_pelaporan_kinerja);
+                                    $('#rekomendasi_komponen_evaluasi_internal').sumernote('code', response.evaluasi_sakip.rekomendasi_komponen_evaluasi_internal);
                                     $('#nilai_komponen_perencanaan_kinerja_tahun_lalu').val(response.evaluasi_sakip.nilai_komponen_perencanaan_kinerja_tahun_lalu);
                                     $('#nilai_komponen_pengukuran_kinerja_tahun_lalu').val(response.evaluasi_sakip.nilai_komponen_pengukuran_kinerja_tahun_lalu);
                                     $('#nilai_komponen_pelaporan_kinerja_tahun_lalu').val(response.evaluasi_sakip.nilai_komponen_pelaporan_kinerja_tahun_lalu);
@@ -701,20 +762,20 @@
                         $('#link_lke').val(response.evaluasi_sakip.link_lke);
                         $('#nilai_komponen_perencanaan_kinerja').val(response.evaluasi_sakip.nilai_komponen_perencanaan_kinerja);
                         $('#nilai_komponen_perencanaan_kinerja_tahun_lalu').val(response.evaluasi_sakip.nilai_komponen_perencanaan_kinerja_tahun_lalu);
-                        $('#catatan_komponen_perencanaan_kinerja').val(response.evaluasi_sakip.catatan_komponen_perencanaan_kinerja);
-                        $('#rekomendasi_komponen_perencanaan_kinerja').val(response.evaluasi_sakip.rekomendasi_komponen_perencanaan_kinerja);
+                        $('#catatan_komponen_perencanaan_kinerja').summernote('code', response.evaluasi_sakip.catatan_komponen_perencanaan_kinerja);
+                        $('#rekomendasi_komponen_perencanaan_kinerja').summernote('code', response.evaluasi_sakip.rekomendasi_komponen_perencanaan_kinerja);
                         $('#nilai_komponen_pengukuran_kinerja').val(response.evaluasi_sakip.nilai_komponen_pengukuran_kinerja);
                         $('#nilai_komponen_pengukuran_kinerja_tahun_lalu').val(response.evaluasi_sakip.nilai_komponen_pengukuran_kinerja_tahun_lalu);
-                        $('#catatan_komponen_pengukuran_kinerja').val(response.evaluasi_sakip.catatan_komponen_pengukuran_kinerja);
-                        $('#rekomendasi_komponen_pengukuran_kinerja').val(response.evaluasi_sakip.rekomendasi_komponen_pengukuran_kinerja);
+                        $('#catatan_komponen_pengukuran_kinerja').summernote('code', response.evaluasi_sakip.catatan_komponen_pengukuran_kinerja);
+                        $('#rekomendasi_komponen_pengukuran_kinerja').summernote('code', response.evaluasi_sakip.rekomendasi_komponen_pengukuran_kinerja);
                         $('#nilai_komponen_pelaporan_kinerja').val(response.evaluasi_sakip.nilai_komponen_pelaporan_kinerja);
                         $('#nilai_komponen_pelaporan_kinerja_tahun_lalu').val(response.evaluasi_sakip.nilai_komponen_pelaporan_kinerja_tahun_lalu);
-                        $('#catatan_komponen_pelaporan_kinerja').val(response.evaluasi_sakip.catatan_komponen_pelaporan_kinerja);
-                        $('#rekomendasi_komponen_pelaporan_kinerja').val(response.evaluasi_sakip.rekomendasi_komponen_pelaporan_kinerja);
+                        $('#catatan_komponen_pelaporan_kinerja').summernote('code', response.evaluasi_sakip.catatan_komponen_pelaporan_kinerja);
+                        $('#rekomendasi_komponen_pelaporan_kinerja').summernote('code', response.evaluasi_sakip.rekomendasi_komponen_pelaporan_kinerja);
                         $('#nilai_komponen_evaluasi_internal').val(response.evaluasi_sakip.nilai_komponen_evaluasi_internal);
                         $('#nilai_komponen_evaluasi_internal_tahun_lalu').val(response.evaluasi_sakip.nilai_komponen_evaluasi_internal_tahun_lalu);
-                        $('#catatan_komponen_evaluasi_internal').val(response.evaluasi_sakip.catatan_komponen_evaluasi_internal);
-                        $('#rekomendasi_komponen_evaluasi_internal').val(response.evaluasi_sakip.rekomendasi_komponen_evaluasi_internal);
+                        $('#catatan_komponen_evaluasi_internal').summernote('code', response.evaluasi_sakip.catatan_komponen_evaluasi_internal);
+                        $('#rekomendasi_komponen_evaluasi_internal').summernote('code', response.evaluasi_sakip.rekomendasi_komponen_evaluasi_internal);
                         $('#nilai_total_evaluasi_akip').val(response.evaluasi_sakip.nilai_total_evaluasi_akip);
                         $('#nilai_total_evaluasi_akip_tahun_lalu').val(response.evaluasi_sakip.nilai_total_evaluasi_akip_tahun_lalu);
                         $('#angka_kemiskinan_tahun_lalu').val(response.evaluasi_sakip.angka_kemiskinan_tahun_lalu);
