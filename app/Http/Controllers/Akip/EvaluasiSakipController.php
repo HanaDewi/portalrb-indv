@@ -33,7 +33,9 @@ class EvaluasiSakipController extends Controller
             $tim = $this->currentUser->anggota ? $this->currentUser->anggota->tim : false;
             $anggota_tims = $tim ? $tim->instansi_tim : [];
             if ($this->currentUser->level == 'admin') {
-                $anggota_tims = InstansiTimEvaluasi::all();
+                $anggota_tims = InstansiTimEvaluasi::whereHas('instansi', function ($query) {
+                    $query->where('group', 'kl')->where('deleted_at', null);
+                })->get();
             }
             return view('akip.evaluasi.tim', compact('tim', 'anggota_tims'));
         } else if (in_array($this->currentUser->level, ['kl', 'kabupaten', 'provinsi'])) {
