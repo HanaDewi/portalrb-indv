@@ -53,9 +53,11 @@
                 <div class="w-full">
                     <span class="font-medium">PIC LKE : </span>{{ $evaluasi->pic_lke }}
                 </div>
-                <div class="w-full">
-                    <span class="font-medium">Link LKE : </span><a href="{{ $evaluasi->link_lke }}" target="_blank" class="text-blue-500">{{ $evaluasi->link_lke }}</a>
-                </div>
+                @if (auth()->user()->level == 'tpn')
+                    <div class="w-full">
+                        <span class="font-medium">Link LKE : </span><a href="{{ $evaluasi->link_lke }}" target="_blank" class="text-blue-500">{{ $evaluasi->link_lke }}</a>
+                    </div>
+                @endif
                 @if ($instansi->group == 'kl')
             </div>
             <button class="button border items-center text-gray-700 flex"> <i data-feather="file" class="w-4 h-4 mr-2"></i>
