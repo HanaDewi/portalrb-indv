@@ -5,7 +5,7 @@
     <!-- END: Top Bar -->
     <div class="intro-y flex flex-col sm:flex-row items-center mt-8">
         <h2 class="text-lg font-medium mr-auto">
-            Hasil Evaluasi SAKIP {{ $tim ? $tim->nama.' ('.$tim->keterangan.')' : '' }}
+            Hasil Evaluasi SAKIP {{ $tim ? $tim->nama . ' (' . $tim->keterangan . ')' : '' }}
         </h2>
     </div>
     <!-- BEGIN: Datatable -->
@@ -26,8 +26,7 @@
                 @foreach ($anggota_tims as $anggota)
                     <tr>
                         <td></td>
-                        <td><a
-                                href="{{ url('akip/evaluasi/sakip/' . $anggota->instansi_id) }}">{{ $anggota->instansi->nama_instansi }}</a>
+                        <td><a href="{{ url('akip/evaluasi/sakip/' . $anggota->instansi_id) }}">{{ $anggota->instansi->nama_instansi }}</a>
                         </td>
                     </tr>
                 @endforeach

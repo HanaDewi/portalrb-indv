@@ -398,10 +398,10 @@ if(! function_exists('indikators')) {
 }
 
 if(! function_exists('currency')) {
-    function currency($number)
+    function currency($number, $digit = 0)
     {
+        return $number > 0 ? 'Rp. ' . number_format($number, $digit, ',', '.') : '';
         if (gettype($number)=='integer' || gettype($number)=='double') { 
-            return $number > 0 ? 'Rp. ' . number_format($number, 0, ',', '.') : '';
         } else {
             return $number;
         }

@@ -33,7 +33,9 @@ class EvaluasiSakipController extends Controller
             $tim = $this->currentUser->anggota ? $this->currentUser->anggota->tim : false;
             $anggota_tims = $tim ? $tim->instansi_tim : [];
             if ($this->currentUser->level == 'admin') {
-                $anggota_tims = InstansiTimEvaluasi::all();
+                $anggota_tims = InstansiTimEvaluasi::whereHas('instansi', function ($query) {
+                    $query->where('group', 'kl')->where('deleted_at', null);
+                })->get();
             }
             return view('akip.evaluasi.tim', compact('tim', 'anggota_tims'));
         } else if (in_array($this->currentUser->level, ['kl', 'kabupaten', 'provinsi'])) {
@@ -131,14 +133,14 @@ class EvaluasiSakipController extends Controller
             $evaluasi_sakip->pic_lke = $request->pic_lke;
             $evaluasi_sakip->link_lke = $request->link_lke;
             $evaluasi_sakip->penanggung_jawab = $request->penanggung_jawab;
-            $evaluasi_sakip->nilai_komponen_perencanaan_kinerja_tahun_lalu = $request->nilai_komponen_perencanaan_kinerja_tahun_lalu;
-            $evaluasi_sakip->nilai_komponen_pengukuran_kinerja_tahun_lalu = $request->nilai_komponen_pengukuran_kinerja_tahun_lalu;
-            $evaluasi_sakip->nilai_komponen_pelaporan_kinerja_tahun_lalu = $request->nilai_komponen_pelaporan_kinerja_tahun_lalu;
-            $evaluasi_sakip->nilai_komponen_evaluasi_internal_tahun_lalu = $request->nilai_komponen_evaluasi_internal_tahun_lalu;
-            $evaluasi_sakip->nilai_komponen_perencanaan_kinerja = $request->nilai_komponen_perencanaan_kinerja;
-            $evaluasi_sakip->nilai_komponen_pengukuran_kinerja = $request->nilai_komponen_pengukuran_kinerja;
-            $evaluasi_sakip->nilai_komponen_pelaporan_kinerja = $request->nilai_komponen_pelaporan_kinerja;
-            $evaluasi_sakip->nilai_komponen_evaluasi_internal = $request->nilai_komponen_evaluasi_internal;
+            $evaluasi_sakip->nilai_komponen_perencanaan_kinerja_tahun_lalu = str_replace(',', '.', $request->nilai_komponen_perencanaan_kinerja_tahun_lalu);
+            $evaluasi_sakip->nilai_komponen_pengukuran_kinerja_tahun_lalu = str_replace(',', '.', $request->nilai_komponen_pengukuran_kinerja_tahun_lalu);
+            $evaluasi_sakip->nilai_komponen_pelaporan_kinerja_tahun_lalu = str_replace(',', '.', $request->nilai_komponen_pelaporan_kinerja_tahun_lalu);
+            $evaluasi_sakip->nilai_komponen_evaluasi_internal_tahun_lalu = str_replace(',', '.', $request->nilai_komponen_evaluasi_internal_tahun_lalu);
+            $evaluasi_sakip->nilai_komponen_perencanaan_kinerja = str_replace(',', '.', $request->nilai_komponen_perencanaan_kinerja);
+            $evaluasi_sakip->nilai_komponen_pengukuran_kinerja = str_replace(',', '.', $request->nilai_komponen_pengukuran_kinerja);
+            $evaluasi_sakip->nilai_komponen_pelaporan_kinerja = str_replace(',', '.', $request->nilai_komponen_pelaporan_kinerja);
+            $evaluasi_sakip->nilai_komponen_evaluasi_internal = str_replace(',', '.', $request->nilai_komponen_evaluasi_internal);
             $evaluasi_sakip->catatan_komponen_perencanaan_kinerja = $request->catatan_komponen_perencanaan_kinerja;
             $evaluasi_sakip->catatan_komponen_pengukuran_kinerja = $request->catatan_komponen_pengukuran_kinerja;
             $evaluasi_sakip->catatan_komponen_pelaporan_kinerja = $request->catatan_komponen_pelaporan_kinerja;
@@ -147,22 +149,24 @@ class EvaluasiSakipController extends Controller
             $evaluasi_sakip->rekomendasi_komponen_pengukuran_kinerja = $request->rekomendasi_komponen_pengukuran_kinerja;
             $evaluasi_sakip->rekomendasi_komponen_pelaporan_kinerja = $request->rekomendasi_komponen_pelaporan_kinerja;
             $evaluasi_sakip->rekomendasi_komponen_evaluasi_internal = $request->rekomendasi_komponen_evaluasi_internal;
-            $evaluasi_sakip->nilai_total_evaluasi_akip_tahun_lalu = $request->nilai_total_evaluasi_akip_tahun_lalu;
-            $evaluasi_sakip->nilai_total_evaluasi_akip = $request->nilai_total_evaluasi_akip;
-            $evaluasi_sakip->angka_kemiskinan_tahun_lalu = $request->angka_kemiskinan_tahun_lalu;
-            $evaluasi_sakip->laju_pertumbuhan_ekonomi_tahun_lalu = $request->laju_pertumbuhan_ekonomi_tahun_lalu;
-            $evaluasi_sakip->tingkat_pengangguran_terbuka_tahun_lalu = $request->tingkat_pengangguran_terbuka_tahun_lalu;
-            $evaluasi_sakip->penurunan_emisi_grk_tahun_lalu = $request->penurunan_emisi_grk_tahun_lalu;
-            $evaluasi_sakip->indeks_pembangunan_manusia_tahun_lalu = $request->indeks_pembangunan_manusia_tahun_lalu;
-            $evaluasi_sakip->indeks_gini_ratio_tahun_lalu = $request->indeks_gini_ratio_tahun_lalu;
-            $evaluasi_sakip->pendapatan_perkapita_tahun_lalu = $request->pendapatan_perkapita_tahun_lalu;
-            $evaluasi_sakip->angka_kemiskinan = $request->angka_kemiskinan;
-            $evaluasi_sakip->laju_pertumbuhan_ekonomi = $request->laju_pertumbuhan_ekonomi;
-            $evaluasi_sakip->tingkat_pengangguran_terbuka = $request->tingkat_pengangguran_terbuka;
-            $evaluasi_sakip->penurunan_emisi_grk = $request->penurunan_emisi_grk;
-            $evaluasi_sakip->indeks_pembangunan_manusia = $request->indeks_pembangunan_manusia;
-            $evaluasi_sakip->indeks_gini_ratio = $request->indeks_gini_ratio;
-            $evaluasi_sakip->pendapatan_perkapita = $request->pendapatan_perkapita;
+            $evaluasi_sakip->nilai_total_evaluasi_akip_tahun_lalu = str_replace(',', '.', $request->nilai_total_evaluasi_akip_tahun_lalu);
+            $evaluasi_sakip->nilai_total_evaluasi_akip = str_replace(',', '.', $request->nilai_total_evaluasi_akip);
+            if (in_array($instansi->group, ['kabupaten', 'provinsi'])) {
+                $evaluasi_sakip->angka_kemiskinan_tahun_lalu = str_replace(',', '.', $request->angka_kemiskinan_tahun_lalu);
+                $evaluasi_sakip->laju_pertumbuhan_ekonomi_tahun_lalu = str_replace(',', '.', $request->laju_pertumbuhan_ekonomi_tahun_lalu);
+                $evaluasi_sakip->tingkat_pengangguran_terbuka_tahun_lalu = str_replace(',', '.', $request->tingkat_pengangguran_terbuka_tahun_lalu);
+                $evaluasi_sakip->penurunan_emisi_grk_tahun_lalu = str_replace(',', '.', $request->penurunan_emisi_grk_tahun_lalu);
+                $evaluasi_sakip->indeks_pembangunan_manusia_tahun_lalu = str_replace(',', '.', $request->indeks_pembangunan_manusia_tahun_lalu);
+                $evaluasi_sakip->indeks_gini_ratio_tahun_lalu = str_replace(',', '.', $request->indeks_gini_ratio_tahun_lalu);
+                $evaluasi_sakip->pendapatan_perkapita_tahun_lalu = str_replace(',', '.', str_replace('.', '', $request->pendapatan_perkapita_tahun_lalu));
+                $evaluasi_sakip->angka_kemiskinan = str_replace(',', '.', $request->angka_kemiskinan);
+                $evaluasi_sakip->laju_pertumbuhan_ekonomi = str_replace(',', '.', $request->laju_pertumbuhan_ekonomi);
+                $evaluasi_sakip->tingkat_pengangguran_terbuka = str_replace(',', '.', $request->tingkat_pengangguran_terbuka);
+                $evaluasi_sakip->penurunan_emisi_grk = str_replace(',', '.', $request->penurunan_emisi_grk);
+                $evaluasi_sakip->indeks_pembangunan_manusia = str_replace(',', '.', $request->indeks_pembangunan_manusia);
+                $evaluasi_sakip->indeks_gini_ratio = str_replace(',', '.', $request->indeks_gini_ratio);
+                $evaluasi_sakip->pendapatan_perkapita = str_replace(',', '.', str_replace('.', '', $request->pendapatan_perkapita));
+            }
             $evaluasi_sakip->last_update_user_id = $this->currentUser->id;
             if ($evaluasi_sakip->save()) {
                 $success = true;
@@ -183,7 +187,7 @@ class EvaluasiSakipController extends Controller
         }
         if ($success) {
             DB::commit();
-            return redirect('akip/evaluasi/sakip/'.$instansi_id)->with('success', 'Data evaluasi SAKIP berhasil disimpan.');
+            return redirect('akip/evaluasi/sakip/' . $instansi_id)->with('success', 'Data evaluasi SAKIP berhasil disimpan.');
         } else {
             DB::rollBack();
             return redirect()->back()->with('error', 'Gagal menyimpan data evaluasi SAKIP. Silakan coba lagi.');

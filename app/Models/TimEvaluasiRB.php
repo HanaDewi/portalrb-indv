@@ -16,6 +16,9 @@ class TimEvaluasiRB extends Model
 
     public function instansi_tim()
     {
-        return $this->hasMany(InstansiTimEvaluasi::class, 'tim_id');
+        return $this->hasMany(InstansiTimEvaluasi::class, 'tim_id')
+            ->whereHas('instansi', function ($query) {
+                $query->whereNull('deleted_at');
+            });
     }
 }
