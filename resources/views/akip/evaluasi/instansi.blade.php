@@ -86,7 +86,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <td class="italic text-justify">
+                            <td class="text-justify">
                                 <div class="font-medium">Catatan :</div>
                                 <span class="text-gray-600">
                                     {!! $evaluasi->catatan_komponen_perencanaan_kinerja !!}
@@ -110,7 +110,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <td class="italic text-justify">
+                            <td class="text-justify">
                                 <div class="font-medium">Catatan :</div>
                                 <span class="text-gray-600">
                                     {!! $evaluasi->catatan_komponen_pengukuran_kinerja !!}
@@ -134,7 +134,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <td class="italic text-justify">
+                            <td class="text-justify">
                                 <div class="font-medium">Catatan :</div>
                                 <span class="text-gray-600">
                                     {!! $evaluasi->catatan_komponen_pelaporan_kinerja !!}
@@ -158,7 +158,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <td class="italic text-justify">
+                            <td class="text-justify">
                                 <div class="font-medium">Catatan :</div>
                                 <span class="text-gray-600">
                                     {!! $evaluasi->catatan_komponen_evaluasi_internal !!}
@@ -585,7 +585,18 @@
                             ['style', ['bold', 'italic', 'underline', 'clear']],
                             ['font', ['strikethrough', 'superscript', 'subscript']]
                         ],
-                        height: 100
+                        height: 100,
+                        callbacks: {
+                            onPaste: function(e) {
+                                e.preventDefault();
+
+                                const clipboardData = (e.originalEvent || e).clipboardData;
+                                const text = clipboardData.getData('text/plain');
+
+                                // Sisipkan sebagai teks biasa
+                                document.execCommand('insertText', false, text);
+                            }
+                        }
                     });
                 });
             });
