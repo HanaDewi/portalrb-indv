@@ -165,6 +165,7 @@ class EvaluasiSakipController extends Controller
                 $evaluasi_sakip->penurunan_emisi_grk = str_replace(',', '.', $request->penurunan_emisi_grk);
                 $evaluasi_sakip->indeks_pembangunan_manusia = str_replace(',', '.', $request->indeks_pembangunan_manusia);
                 $evaluasi_sakip->indeks_gini_ratio = str_replace(',', '.', $request->indeks_gini_ratio);
+                dd($request->pendapatan_perkapita, str_replace('.', '', $request->pendapatan_perkapita), str_replace(',', '.', str_replace('.', '', $request->pendapatan_perkapita)));
                 $evaluasi_sakip->pendapatan_perkapita = str_replace(',', '.', str_replace('.', '', $request->pendapatan_perkapita));
             }
             $evaluasi_sakip->last_update_user_id = $this->currentUser->id;

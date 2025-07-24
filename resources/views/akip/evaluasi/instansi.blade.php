@@ -81,10 +81,10 @@
                                 <div class="font-medium">Nilai Komponen Perencanaan Kinerja</div>
                             </td>
                             <td>
-                                {{ fnumber($evaluasi->nilai_komponen_perencanaan_kinerja_tahun_lalu, 2) }}
+                                {{ fnumber2($evaluasi->nilai_komponen_perencanaan_kinerja_tahun_lalu, 2) }}
                             </td>
                             <td>
-                                {{ fnumber($evaluasi->nilai_komponen_perencanaan_kinerja, 2) }}
+                                {{ fnumber2($evaluasi->nilai_komponen_perencanaan_kinerja, 2) }}
                             </td>
                         </tr>
                         <tr>
@@ -104,10 +104,10 @@
                                 <div class="font-medium">Nilai Komponen Pengukuran Kinerja</div>
                             </td>
                             <td class="border-t-1">
-                                {{ fnumber($evaluasi->nilai_komponen_pengukuran_kinerja_tahun_lalu, 2) }}
+                                {{ fnumber2($evaluasi->nilai_komponen_pengukuran_kinerja_tahun_lalu, 2) }}
                             </td>
                             <td class="border-t-1">
-                                {{ fnumber($evaluasi->nilai_komponen_pengukuran_kinerja, 2) }}
+                                {{ fnumber2($evaluasi->nilai_komponen_pengukuran_kinerja, 2) }}
                             </td>
                         </tr>
                         <tr>
@@ -127,10 +127,10 @@
                                 <div class="font-medium">Nilai Komponen Pelaporan Kinerja</div>
                             </td>
                             <td class="border-t-1">
-                                {{ fnumber($evaluasi->nilai_komponen_pelaporan_kinerja_tahun_lalu, 2) }}
+                                {{ fnumber2($evaluasi->nilai_komponen_pelaporan_kinerja_tahun_lalu, 2) }}
                             </td>
                             <td class="border-t-1">
-                                {{ fnumber($evaluasi->nilai_komponen_pelaporan_kinerja, 2) }}
+                                {{ fnumber2($evaluasi->nilai_komponen_pelaporan_kinerja, 2) }}
                             </td>
                         </tr>
                         <tr>
@@ -150,10 +150,10 @@
                                 <div class="font-medium">Nilai Komponen Evaluasi Internal</div>
                             </td>
                             <td class="border-t-1">
-                                {{ fnumber($evaluasi->nilai_komponen_evaluasi_internal_tahun_lalu, 2) }}
+                                {{ fnumber2($evaluasi->nilai_komponen_evaluasi_internal_tahun_lalu, 2) }}
                             </td>
                             <td class="border-t-1">
-                                {{ fnumber($evaluasi->nilai_komponen_evaluasi_internal, 2) }}
+                                {{ fnumber2($evaluasi->nilai_komponen_evaluasi_internal, 2) }}
                             </td>
                         </tr>
                         <tr>
@@ -173,10 +173,10 @@
                                 <div class="font-medium">Nilai Total Evaluasi AKIP TW 2</div>
                             </td>
                             <td class="border-t-2">
-                                {{ fnumber($evaluasi->nilai_total_evaluasi_akip_tahun_lalu, 2) }}
+                                {{ fnumber2($evaluasi->nilai_total_evaluasi_akip_tahun_lalu, 2) }}
                             </td>
                             <td class="border-t-2">
-                                {{ fnumber($evaluasi->nilai_total_evaluasi_akip, 2) }}
+                                {{ fnumber2($evaluasi->nilai_total_evaluasi_akip, 2) }}
                             </td>
                         </tr>
                     </tbody>
@@ -195,38 +195,38 @@
                         <tbody>
                             <tr>
                                 <td>Angka Kemiskinan</td>
-                                <td>{{ fnumber($evaluasi->angka_kemiskinan_tahun_lalu, 2) }}</td>
-                                <td>{{ fnumber($evaluasi->angka_kemiskinan, 2) }}</td>
+                                <td>{{ fnumber2($evaluasi->angka_kemiskinan_tahun_lalu, 2) }}</td>
+                                <td>{{ fnumber2($evaluasi->angka_kemiskinan, 2) }}</td>
                             </tr>
                             <tr>
                                 <td>Laju Pertumbuhan Ekonomi</td>
-                                <td>{{ fnumber($evaluasi->laju_pertumbuhan_ekonomi_tahun_lalu, 2) }}</td>
-                                <td>{{ fnumber($evaluasi->laju_pertumbuhan_ekonomi, 2) }}</td>
+                                <td>{{ fnumber2($evaluasi->laju_pertumbuhan_ekonomi_tahun_lalu, 2) }}</td>
+                                <td>{{ fnumber2($evaluasi->laju_pertumbuhan_ekonomi, 2) }}</td>
                             </tr>
                             <tr>
                                 <td>Tingkat Pengangguran terbuka</td>
-                                <td>{{ fnumber($evaluasi->tingkat_pengangguran_terbuka_tahun_lalu, 2) }}</td>
-                                <td>{{ fnumber($evaluasi->tingkat_pengangguran_terbuka, 2) }}</td>
+                                <td>{{ fnumber2($evaluasi->tingkat_pengangguran_terbuka_tahun_lalu, 2) }}</td>
+                                <td>{{ fnumber2($evaluasi->tingkat_pengangguran_terbuka, 2) }}</td>
                             </tr>
                             <tr>
                                 <td>Penurunan emisi GRK</td>
-                                <td>{{ fnumber($evaluasi->penurunan_emisi_grk_tahun_lalu, 2) }}</td>
-                                <td>{{ fnumber($evaluasi->penurunan_emisi_grk, 2) }}</td>
+                                <td>{{ fnumber2($evaluasi->penurunan_emisi_grk_tahun_lalu, 2) }}</td>
+                                <td>{{ fnumber2($evaluasi->penurunan_emisi_grk, 2) }}</td>
                             </tr>
                             <tr>
                                 <td>Indeks Pembangunan Manusia</td>
-                                <td>{{ fnumber($evaluasi->indeks_pembangunan_manusia_tahun_lalu, 2) }}</td>
-                                <td>{{ fnumber($evaluasi->indeks_pembangunan_manusia, 2) }}</td>
+                                <td>{{ fnumber2($evaluasi->indeks_pembangunan_manusia_tahun_lalu, 2) }}</td>
+                                <td>{{ fnumber2($evaluasi->indeks_pembangunan_manusia, 2) }}</td>
                             </tr>
                             <tr>
                                 <td>Indeks Gini Ratio</td>
-                                <td>{{ fnumber($evaluasi->indeks_gini_ratio_tahun_lalu, 2) }}</td>
-                                <td>{{ fnumber($evaluasi->indeks_gini_ratio, 2) }}</td>
+                                <td>{{ fnumber2($evaluasi->indeks_gini_ratio_tahun_lalu, 2) }}</td>
+                                <td>{{ fnumber2($evaluasi->indeks_gini_ratio, 2) }}</td>
                             </tr>
                             <tr>
                                 <td>Pendapatan Perkapita</td>
-                                <td>{{ fnumber($evaluasi->pendapatan_perkapita_tahun_lalu, 2) }}</td>
-                                <td>{{ fnumber($evaluasi->pendapatan_perkapita, 2) }}</td>
+                                <td>{{ fnumber2($evaluasi->pendapatan_perkapita_tahun_lalu, 2) }}</td>
+                                <td>{{ fnumber2($evaluasi->pendapatan_perkapita, 2) }}</td>
                             </tr>
                         </tbody>
                     </table>
