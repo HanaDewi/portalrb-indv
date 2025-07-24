@@ -91,21 +91,20 @@
                                 <span class="text-gray-600">
                                     {!! $evaluasi->catatan_komponen_perencanaan_kinerja !!}
                                 </span>
-                                <hr class="my-2">
-                                <div class="font-medium">Rekomendasi :</div>
+                                <div class="font-medium pt-2">Rekomendasi :</div>
                                 <span class="text-gray-600">
                                     {!! $evaluasi->rekomendasi_komponen_perencanaan_kinerja !!}
                                 </span>
                             </td>
                         </tr>
                         <tr>
-                            <td>
+                            <td class="border-t-1">
                                 <div class="font-medium">Nilai Komponen Pengukuran Kinerja</div>
                             </td>
-                            <td>
+                            <td class="border-t-1">
                                 {{ fnumber($evaluasi->nilai_komponen_pengukuran_kinerja_tahun_lalu, 2) }}
                             </td>
-                            <td>
+                            <td class="border-t-1">
                                 {{ fnumber($evaluasi->nilai_komponen_pengukuran_kinerja, 2) }}
                             </td>
                         </tr>
@@ -115,21 +114,20 @@
                                 <span class="text-gray-600">
                                     {!! $evaluasi->catatan_komponen_pengukuran_kinerja !!}
                                 </span>
-                                <hr class="my-2">
-                                <div class="font-medium">Rekomendasi :</div>
+                                <div class="font-medium pt-2">Rekomendasi :</div>
                                 <span class="text-gray-600">
                                     {!! $evaluasi->rekomendasi_komponen_pengukuran_kinerja !!}
                                 </span>
                             </td>
                         </tr>
                         <tr>
-                            <td>
+                            <td class="border-t-1">
                                 <div class="font-medium">Nilai Komponen Pelaporan Kinerja</div>
                             </td>
-                            <td>
+                            <td class="border-t-1">
                                 {{ fnumber($evaluasi->nilai_komponen_pelaporan_kinerja_tahun_lalu, 2) }}
                             </td>
-                            <td>
+                            <td class="border-t-1">
                                 {{ fnumber($evaluasi->nilai_komponen_pelaporan_kinerja, 2) }}
                             </td>
                         </tr>
@@ -139,21 +137,20 @@
                                 <span class="text-gray-600">
                                     {!! $evaluasi->catatan_komponen_pelaporan_kinerja !!}
                                 </span>
-                                <hr class="my-2">
-                                <div class="font-medium">Rekomendasi :</div>
+                                <div class="font-medium pt-2">Rekomendasi :</div>
                                 <span class="text-gray-600">
                                     {!! $evaluasi->rekomendasi_komponen_pelaporan_kinerja !!}
                                 </span>
                             </td>
                         </tr>
                         <tr>
-                            <td>
+                            <td class="border-t-1">
                                 <div class="font-medium">Nilai Komponen Evaluasi Internal</div>
                             </td>
-                            <td>
+                            <td class="border-t-1">
                                 {{ fnumber($evaluasi->nilai_komponen_evaluasi_internal_tahun_lalu, 2) }}
                             </td>
-                            <td>
+                            <td class="border-t-1">
                                 {{ fnumber($evaluasi->nilai_komponen_evaluasi_internal, 2) }}
                             </td>
                         </tr>
@@ -163,8 +160,7 @@
                                 <span class="text-gray-600">
                                     {!! $evaluasi->catatan_komponen_evaluasi_internal !!}
                                 </span>
-                                <hr class="my-2">
-                                <div class="font-medium">Rekomendasi :</div>
+                                <div class="font-medium pt-2">Rekomendasi :</div>
                                 <span class="text-gray-600">
                                     {!! $evaluasi->rekomendasi_komponen_evaluasi_internal !!}
                                 </span>
