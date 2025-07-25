@@ -98,7 +98,7 @@
                                 @endif>
                                 <br /><br />
                                 <strong>Lke Evaluatan</strong> :<br />
-                                @if($unit_zi->sanggah_unit->lke)
+                                @if(optional($unit_zi->sanggah_unit)->lke)
                                 (LKE Sanggah) :
                                 <a href="{{$unit_zi->sanggah_unit->lke}}"
                                     target="_blank">{{$unit_zi->sanggah_unit->lke}}</a>
