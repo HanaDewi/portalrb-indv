@@ -27,6 +27,65 @@ class EvaluasiSakipController extends Controller
         });
     }
 
+    public function dashboard(Request $request)
+    {
+        // Use distinct names to pass into view
+        $selectedYear = $request->input('tahun', date('Y'));
+        $selectedPeriode = $request->input('tw') ?? 1;
+
+        $tims = DB::table('instansi_tim')
+            ->join('tim_evaluasi', 'instansi_tim.tim_id', '=', 'tim_evaluasi.id')
+            ->leftJoin('evaluasi_sakip', function ($join) use ($selectedYear, $selectedPeriode) {
+                $join->on('evaluasi_sakip.instansi_id', '=', 'instansi_tim.instansi_id')
+                     ->where('evaluasi_sakip.tahun', $selectedYear)
+                     ->where('evaluasi_sakip.periode', 'TW ' . $selectedPeriode);
+            })
+            ->select(
+                'tim_evaluasi.nama',
+                'tim_evaluasi.keterangan',
+                DB::raw('COUNT(DISTINCT instansi_tim.instansi_id) as total_instansi'),
+                DB::raw('COUNT(DISTINCT CASE WHEN evaluasi_sakip.id IS NOT NULL THEN evaluasi_sakip.instansi_id END) as total_instansi_filled')
+            )
+            ->groupBy('instansi_tim.tim_id', 'tim_evaluasi.nama', 'tim_evaluasi.keterangan')
+            ->get();
+
+        return view('akip.dashboard', compact('tims', 'selectedYear', 'selectedPeriode'));
+    }
+
+    public function filterDashboard(Request $request)
+    {
+        $request->validate([
+            'tahun' => 'required|integer|min:2020|max:' . date('Y'),
+            'periode' => 'required|integer|min:1|max:4'
+        ]);
+        
+        $tahun = $request->tahun;
+        $periode = $request->periode;
+        
+        // Your existing logic to get teams data
+        $tims = DB::table('instansi_tim')
+            ->join('tim_evaluasi', 'instansi_tim.tim_id', '=', 'tim_evaluasi.id')
+            ->leftJoin('evaluasi_sakip', function ($join) use ($tahun, $periode) {
+                $join->on('evaluasi_sakip.instansi_id', '=', 'instansi_tim.instansi_id')
+                     ->where('evaluasi_sakip.tahun', $tahun)
+                     ->where('evaluasi_sakip.periode', 'TW ' . $periode);
+            })
+            ->select(
+                'tim_evaluasi.nama',
+                'tim_evaluasi.keterangan',
+                DB::raw('COUNT(DISTINCT instansi_tim.instansi_id) as total_instansi'),
+                DB::raw('COUNT(DISTINCT CASE WHEN evaluasi_sakip.id IS NOT NULL THEN evaluasi_sakip.instansi_id END) as total_instansi_filled')
+            )
+            ->groupBy('instansi_tim.tim_id', 'tim_evaluasi.nama', 'tim_evaluasi.keterangan')
+            ->get();
+        
+        return response()->json([
+            'tims' => $tims,
+            'tahun' => $tahun,
+            'periode' => $periode
+        ]);
+    }
+
     public function evaluasi_sakip()
     {
         if (in_array($this->currentUser->level, ['tpn', 'admin'])) {
