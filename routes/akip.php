@@ -14,5 +14,6 @@ Route::group(['prefix' => 'akip', 'as' => 'akip.'], function () {
         Route::delete('/evaluasi/sakip/{instansi_id}/hapus/{id}', [EvaluasiSakipController::class, 'evaluasi_sakip_instansi_hapus']);
 
         Route::get('/dashboard/filter', [EvaluasiSakipController::class, 'filterDashboard'])->name('dashboard.filter');
+        Route::get('/dashboard/filter/kl', [EvaluasiSakipController::class, 'filterDashboardKl'])->name('dashboard.filter.kl');
     });
 });
