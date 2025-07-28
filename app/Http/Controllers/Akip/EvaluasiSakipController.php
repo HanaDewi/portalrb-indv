@@ -29,7 +29,11 @@ class EvaluasiSakipController extends Controller
 
     public function dashboard(Request $request)
     {
-        // Use distinct names to pass into view
+        // Get level user
+        $level = $this->currentUser->level;
+
+        if ($level == 'tpn') {
+           // Use distinct names to pass into view
         $selectedYear = $request->input('tahun', date('Y'));
         $selectedPeriode = $request->input('tw') ?? 1;
         $selectedYearK = $request->input('tahunK', date('Y'));
@@ -78,7 +82,10 @@ class EvaluasiSakipController extends Controller
             ->groupBy('instansi_tim.tim_id', 'tim_evaluasi.nama', 'tim_evaluasi.keterangan')
             ->get();
 
-        return view('akip.dashboard', compact('tims_kl', 'tims', 'selectedYear', 'selectedPeriode', 'selectedYearK'));
+            return view('akip.dashboard', compact('tims_kl', 'tims', 'selectedYear', 'selectedPeriode', 'selectedYearK', 'level'));
+        } else {
+            return view('akip.dashboard', compact('level'));
+        }
     }
 
     public function filterDashboard(Request $request)

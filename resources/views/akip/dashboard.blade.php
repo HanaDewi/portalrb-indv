@@ -81,121 +81,123 @@
             </div>
         </div>
     </div>
-    <div class="intro-y datatable-wrapper box p-5 mt-5">
-        <h1 class="text-2xl font-semibold mb-6">
-            Progress Pengisian Evaluasi AKIP Pemerintah Daerah Tahun <span id="tahun-display">{{ $selectedYear }}</span> TW <span id="tw-display">{{ $selectedPeriode }}</span> 
-        </h1>
-        <div class="flex gap-4 mb-6">
-            <div class="form-group">
-                <label for="tahun" class="block text-sm font-medium text-gray-700 mb-2">Tahun:</label>
-                <select id="tahun" name="tahun" class="form-control px-4 py-2 border rounded-md focus:ring-blue-500 focus:border-blue-500">
-                    @for ($year = date('Y'); $year >= 2020; $year--)
-                        <option value="{{ $year }}" {{ $year == $selectedYear ? 'selected' : '' }}>{{ $year }}</option>
-                    @endfor
-                </select>
-            </div>
+    @if ($level == 'tpn')
+        <div class="intro-y datatable-wrapper box p-5 mt-5">
+            <h1 class="text-2xl font-semibold mb-6">
+                Progress Pengisian Evaluasi AKIP Pemerintah Daerah Tahun <span id="tahun-display">{{ $selectedYear }}</span> TW <span id="tw-display">{{ $selectedPeriode }}</span> 
+            </h1>
+            <div class="flex gap-4 mb-6">
+                <div class="form-group">
+                    <label for="tahun" class="block text-sm font-medium text-gray-700 mb-2">Tahun:</label>
+                    <select id="tahun" name="tahun" class="form-control px-4 py-2 border rounded-md focus:ring-blue-500 focus:border-blue-500">
+                        @for ($year = date('Y'); $year >= 2020; $year--)
+                            <option value="{{ $year }}" {{ $year == $selectedYear ? 'selected' : '' }}>{{ $year }}</option>
+                        @endfor
+                    </select>
+                </div>
 
-            <div class="form-group">
-                <label for="periode" class="block text-sm font-medium text-gray-700 mb-2">Triwulan:</label>
-                <select id="periode" name="periode" class="form-control px-4 py-2 border rounded-md focus:ring-blue-500 focus:border-blue-500">
-                    @foreach ([1 => 'TW 1 (Jan–Mar)', 2 => 'TW 2 (Apr–Jun)', 3 => 'TW 3 (Jul–Sep)', 4 => 'TW 4 (Okt–Des)'] as $key => $label)
-                        <option value="{{ $key }}" {{ $key == $selectedPeriode ? 'selected' : '' }}>{{ $label }}</option>
-                    @endforeach
-                </select>
-            </div>
+                <div class="form-group">
+                    <label for="periode" class="block text-sm font-medium text-gray-700 mb-2">Triwulan:</label>
+                    <select id="periode" name="periode" class="form-control px-4 py-2 border rounded-md focus:ring-blue-500 focus:border-blue-500">
+                        @foreach ([1 => 'TW 1 (Jan–Mar)', 2 => 'TW 2 (Apr–Jun)', 3 => 'TW 3 (Jul–Sep)', 4 => 'TW 4 (Okt–Des)'] as $key => $label)
+                            <option value="{{ $key }}" {{ $key == $selectedPeriode ? 'selected' : '' }}>{{ $label }}</option>
+                        @endforeach
+                    </select>
+                </div>
 
-            <div class="flex items-end">
-                <button id="filterBtn" class="btn btn-primary px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
-                    <i data-lucide="filter" class="w-4 h-4 mr-2"></i>
-                    Filter
-                </button>
+                <div class="flex items-end">
+                    <button id="filterBtn" class="btn btn-primary px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                        <i data-lucide="filter" class="w-4 h-4 mr-2"></i>
+                        Filter
+                    </button>
+                </div>
             </div>
-        </div>
-        <div class="overflow-x-auto bg-white shadow-md rounded-lg">
-            <table class="min-w-full table-auto">
-                <thead>
-                    <tr class="bg-gray-100 border-b">
-                        <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Nama Tim</th>
-                        <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700 flex items-center justify-center">
-                            Jumlah Pemda yang Dikelola</th>
-                        <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Jumlah Pemda yang Telah Diisi
-                        </th>
-                        <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Progress Pengisian</th>
-                    </tr>
-                </thead>
-                <tbody id="table-pda">
-                    @foreach ($tims as $tim)
-                        <tr class="border-b">
-                            <td class="px-4 py-2 text-sm text-gray-800">{{ $tim->nama }} ({{ $tim->keterangan }})</td>
-                            <td class="px-4 py-2 text-sm text-gray-800 flex items-center justify-center">
-                                {{ $tim->total_instansi }}</td>
-                            <td class="px-4 py-2 text-sm text-gray-800 text-center">{{ $tim->total_instansi_filled }}</td>
-                            <td class="px-4 py-2 text-sm text-gray-800 text-center">
-                                @if ($tim->total_instansi > 0)
-                                    {{ number_format(($tim->total_instansi_filled / $tim->total_instansi) * 100, 2) }} %
-                                @else
-                                    0 %
-                                @endif
-                            </td>
+            <div class="overflow-x-auto bg-white shadow-md rounded-lg">
+                <table class="min-w-full table-auto">
+                    <thead>
+                        <tr class="bg-gray-100 border-b">
+                            <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Nama Tim</th>
+                            <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700 flex items-center justify-center">
+                                Jumlah Pemda yang Dikelola</th>
+                            <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Jumlah Pemda yang Telah Diisi
+                            </th>
+                            <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Progress Pengisian</th>
                         </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <div class="intro-y datatable-wrapper box p-5 mt-5">
-        <h1 class="text-2xl font-semibold mb-6">
-            Progress Pengisian Evaluasi AKIP Kementerian/Lembaga Tahun <span id="tahun-displayK">{{ $selectedYearK }}</span> 
-        </h1>
-        <div class="flex gap-4 mb-6">
-            <div class="form-group">
-                <label for="tahun" class="block text-sm font-medium text-gray-700 mb-2">Tahun:</label>
-                <select id="tahunK" name="tahunK" class="form-control px-4 py-2 border rounded-md focus:ring-blue-500 focus:border-blue-500">
-                    @for ($year = date('Y'); $year >= 2020; $year--)
-                        <option value="{{ $year }}" {{ $year == $selectedYearK ? 'selected' : '' }}>{{ $year }}</option>
-                    @endfor
-                </select>
+                    </thead>
+                    <tbody id="table-pda">
+                        @foreach ($tims as $tim)
+                            <tr class="border-b">
+                                <td class="px-4 py-2 text-sm text-gray-800">{{ $tim->nama }} ({{ $tim->keterangan }})</td>
+                                <td class="px-4 py-2 text-sm text-gray-800 flex items-center justify-center">
+                                    {{ $tim->total_instansi }}</td>
+                                <td class="px-4 py-2 text-sm text-gray-800 text-center">{{ $tim->total_instansi_filled }}</td>
+                                <td class="px-4 py-2 text-sm text-gray-800 text-center">
+                                    @if ($tim->total_instansi > 0)
+                                        {{ number_format(($tim->total_instansi_filled / $tim->total_instansi) * 100, 2) }} %
+                                    @else
+                                        0 %
+                                    @endif
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
+        </div>
+        <div class="intro-y datatable-wrapper box p-5 mt-5">
+            <h1 class="text-2xl font-semibold mb-6">
+                Progress Pengisian Evaluasi AKIP Kementerian/Lembaga Tahun <span id="tahun-displayK">{{ $selectedYearK }}</span> 
+            </h1>
+            <div class="flex gap-4 mb-6">
+                <div class="form-group">
+                    <label for="tahun" class="block text-sm font-medium text-gray-700 mb-2">Tahun:</label>
+                    <select id="tahunK" name="tahunK" class="form-control px-4 py-2 border rounded-md focus:ring-blue-500 focus:border-blue-500">
+                        @for ($year = date('Y'); $year >= 2020; $year--)
+                            <option value="{{ $year }}" {{ $year == $selectedYearK ? 'selected' : '' }}>{{ $year }}</option>
+                        @endfor
+                    </select>
+                </div>
 
-            <div class="flex items-end">
-                <button id="filterBtnK" class="btn btn-primary px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
-                    <i data-lucide="filter" class="w-4 h-4 mr-2"></i>
-                    Filter
-                </button>
+                <div class="flex items-end">
+                    <button id="filterBtnK" class="btn btn-primary px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                        <i data-lucide="filter" class="w-4 h-4 mr-2"></i>
+                        Filter
+                    </button>
+                </div>
+            </div>
+            <div class="overflow-x-auto bg-white shadow-md rounded-lg">
+                <table class="min-w-full table-auto">
+                    <thead>
+                        <tr class="bg-gray-100 border-b">
+                            <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Nama Tim</th>
+                            <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700 flex items-center justify-center">
+                                Jumlah K/L yang Dikelola</th>
+                            <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Jumlah K/L yang Telah Diisi
+                            </th>
+                            <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Progress Pengisian</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-kl">
+                        @foreach ($tims_kl as $tim)
+                            <tr class="border-b">
+                                <td class="px-4 py-2 text-sm text-gray-800">{{ $tim->nama }} ({{ $tim->keterangan }})</td>
+                                <td class="px-4 py-2 text-sm text-gray-800 flex items-center justify-center">
+                                    {{ $tim->total_instansi }}</td>
+                                <td class="px-4 py-2 text-sm text-gray-800 text-center">{{ $tim->total_instansi_filled }}</td>
+                                <td class="px-4 py-2 text-sm text-gray-800 text-center">
+                                    @if ($tim->total_instansi > 0)
+                                        {{ number_format(($tim->total_instansi_filled / $tim->total_instansi) * 100, 2) }} %
+                                    @else
+                                        0 %
+                                    @endif
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
         </div>
-        <div class="overflow-x-auto bg-white shadow-md rounded-lg">
-            <table class="min-w-full table-auto">
-                <thead>
-                    <tr class="bg-gray-100 border-b">
-                        <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Nama Tim</th>
-                        <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700 flex items-center justify-center">
-                            Jumlah K/L yang Dikelola</th>
-                        <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Jumlah K/L yang Telah Diisi
-                        </th>
-                        <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Progress Pengisian</th>
-                    </tr>
-                </thead>
-                <tbody id="table-kl">
-                    @foreach ($tims_kl as $tim)
-                        <tr class="border-b">
-                            <td class="px-4 py-2 text-sm text-gray-800">{{ $tim->nama }} ({{ $tim->keterangan }})</td>
-                            <td class="px-4 py-2 text-sm text-gray-800 flex items-center justify-center">
-                                {{ $tim->total_instansi }}</td>
-                            <td class="px-4 py-2 text-sm text-gray-800 text-center">{{ $tim->total_instansi_filled }}</td>
-                            <td class="px-4 py-2 text-sm text-gray-800 text-center">
-                                @if ($tim->total_instansi > 0)
-                                    {{ number_format(($tim->total_instansi_filled / $tim->total_instansi) * 100, 2) }} %
-                                @else
-                                    0 %
-                                @endif
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
-    </div>
+    @endif
     @endsection
     @push('js')
         <script>
