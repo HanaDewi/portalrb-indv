@@ -431,7 +431,7 @@ if(! function_exists('fnumber2')) {
 if(! function_exists('instansis')) {
     function instansis()
     {
-        $inslist = KlpdInstansi::orderBy('id')->get()->pluck('nama_instansi', 'id');
+        $inslist = KlpdInstansi::orderBy('id')->whereIn('group', ['kl', 'provinsi', 'kabupaten'])->get()->pluck('nama_instansi', 'id');
         foreach ($inslist as $kk=>$lst) {
             $result[$kk] = $lst;
         }
