@@ -26561,7 +26561,15 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     var options = {
       plugins: {
         dropdown_input: {}
-      }
+      },
+      render: {
+				option: function(data, escape) {
+					return `<div class="option-item">${data.text}</div>`;
+				},
+				item: function(data, escape) {
+					return `<div class="selected-item">${data.text}</div>`;
+				}
+			}
     };
 
     if ($(this).data("placeholder")) {

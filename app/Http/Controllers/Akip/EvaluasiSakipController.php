@@ -305,7 +305,6 @@ class EvaluasiSakipController extends Controller
             $evaluasi_sakip->last_update_user_id = $this->currentUser->id;
             if ($evaluasi_sakip->save()) {
                 $success = true;
-                dd($request->hasFile('file_evaluasi'));
                 if ($request->hasFile('file_evaluasi')) {
                     $filename = 'file_evaluasi_' . $evaluasi_sakip->instansi_id . '_' . $evaluasi_sakip->tahun . '_' . $evaluasi_sakip->periode . '.pdf';
                     $request->file('file_evaluasi')->storeAs('akip', $filename, 'public');

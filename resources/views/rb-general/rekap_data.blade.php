@@ -299,19 +299,6 @@
     <script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.html5.min.js"></script>
     <script>
         $(document).ready(function() {
-            $('.select2').select2({
-                templateResult: function(data) {
-                    if (!data.id) {
-                        return data.text;
-                    }
-                    var $result = $('<span>' + data.text + '</span>');
-                    return $result;
-                },
-                templateSelection: function(data) {
-                    return $('<span>' + data.text + '</span>');
-                }
-            });
-
             var empDataTable = $('#perencanaan').DataTable({
                 dom: 'Blfrtip',
                 buttons: [{
