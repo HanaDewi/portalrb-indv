@@ -36,6 +36,8 @@
                         <th>Tahap Seleksi</th>
                         <th>Link</th>
                         <th>Keterangan</th>
+                        <th>Unit Diseleksi</th>
+                        <th>Unit Lolos</th>
                         <th>Tanggal Update</th>
                         <th width="20%">Aksi</th>
                     </tr>
@@ -79,6 +81,20 @@
                             <label for="link_bukti" class="form-label">Link Bukti Dukung<span
                                     class="text-danger">*</span></label>
                             <input type="text" id="link_bukti" name="link_bukti" class="form-control"
+                                placeholder="link_bukti" required>
+                        </div>
+                        <br />
+                        <div class="form-group">
+                            <label for="link_bukti" class="form-label">Jumlah Unit yang di evaluasi<span
+                                    class="text-danger">*</span></label>
+                            <input type="number" id="jumlah_unit" name="jumlah_unit" class="form-control"
+                                placeholder="link_bukti" required>
+                        </div>
+                        <br />
+                        <div class="form-group">
+                            <label for="link_bukti" class="form-label">Jumlah Unit Lolos<span
+                                    class="text-danger">*</span></label>
+                            <input type="number" id="jumlah_unit_lolos" name="jumlah_unit_lolos" class="form-control"
                                 placeholder="link_bukti" required>
                         </div>
                         <br />
@@ -184,6 +200,8 @@
             { data: 'tahap_seleksi' },
             { data: 'link' },
             { data: 'keterangan' },
+            { data: 'jumlah_unit' },
+            { data: 'jumlah_unit_lolos' },
             { data: 'updated_at' },
             { 
                 sortable: false, 
@@ -234,6 +252,8 @@
             $('#tahap_seleksi').val(data.tahap_seleksi_id).change();
             $('#link_bukti').val(data.link);
             $('#keterangan').val(data.keterangan);
+            $('#jumlah_unit').val(data.jumlah_unit);
+            $('#jumlah_unit_lolos').val(data.jumlah_unit_lolos);
             $('.saveButton').prop('disabled', false);
         });
     }

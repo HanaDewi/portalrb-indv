@@ -73,6 +73,8 @@ class WbkMandiriController extends Controller
                     "tahap_seleksi" => $laporWbkMandiri->tahap_seleksi->tahap_seleksi,
                     "instansi" => $laporWbkMandiri->instansi_ZI->klpd_instansi->name,
                     "tahun" => $laporWbkMandiri->tahun,
+                    "jumlah_unit" => $laporWbkMandiri->jumlah_unit,
+                    "jumlah_unit_lolos" => $laporWbkMandiri->jumlah_unit_lolos,
                     "link" => $laporWbkMandiri->link,
                     "keterangan" => $laporWbkMandiri->keterangan,
                     "updated_at" => $laporWbkMandiri->updated_at->format('d-m-Y H:i:s')
@@ -106,6 +108,8 @@ class WbkMandiriController extends Controller
         $LaporWbkMandiri->instansi_zi_id = $instansiZI->id;
         $LaporWbkMandiri->tahap_seleksi_id = $request->tahap_seleksi_id;
         $LaporWbkMandiri->link = $request->link_bukti;
+        $LaporWbkMandiri->jumlah_unit = $request->jumlah_unit;
+        $LaporWbkMandiri->jumlah_unit_lolos = $request->jumlah_unit_lolos;
         $LaporWbkMandiri->keterangan = $request->keterangan;
         $LaporWbkMandiri->updated_by = Auth::User()->id;
         if ($LaporWbkMandiri->save()) {
