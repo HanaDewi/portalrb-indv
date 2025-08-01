@@ -26,7 +26,7 @@
                 @foreach ($anggota_tims as $anggota)
                     <tr>
                         <td></td>
-                        <td><a href="{{ url('akip/evaluasi/sakip/' . $anggota->instansi_id) }}">{{ $anggota->instansi->nama_instansi }}</a>
+                        <td><a href="{{ url('akip/evaluasi/sakip/' . $anggota->instansi_id) }}">{!! $anggota->instansi->nama_instansi !!}</a>
                         </td>
                     </tr>
                 @endforeach
