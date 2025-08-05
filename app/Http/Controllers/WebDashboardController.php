@@ -22,9 +22,84 @@ class WebDashboardController extends Controller
 
     public function rbGeneral(Request $request)
     {
-        $instansis = KlpdInstansi::all();
+        $tahun = $request->get('tahun', 2025); // default ke 2024, bisa diganti jadi now()->year kalau dinamis
 
-        return view('webdashboard.rb-general', compact('instansis'));
+        $instansis = KlpdInstansi::all();
+        $instansiIds = $instansis->pluck('id');
+
+        $all_plans = DB::table('general_perencanaan')
+            ->join('general_perencanaan_target as gpt', 'gpt.general_perencanaan_id', '=', 'general_perencanaan.id')
+            ->select('general_perencanaan.instansi_id', 'gpt.baseline_tahun')
+            ->where('gpt.baseline_tahun', $tahun - 1)
+            ->whereIn('general_perencanaan.instansi_id', $instansiIds)
+            ->get()
+            ->groupBy('instansi_id');
+
+        $all_targets = DB::table('general_perencanaan_target as gpt')
+            ->join('general_perencanaan as gp', 'gp.id', '=', 'gpt.general_perencanaan_id')
+            ->where('gpt.tahun', $tahun)
+            ->whereIn('gp.instansi_id', $instansiIds)
+            ->select('gp.instansi_id', DB::raw('COUNT(gpt.id) as target_count'))
+            ->groupBy('gp.instansi_id')
+            ->get()
+            ->keyBy('instansi_id');
+
+        $all_rencana_aksi = DB::table('general_rencana_aksi')
+            ->join('general_perencanaan_target as gpt', 'gpt.id', '=', 'general_rencana_aksi.general_perencanaan_target_id')
+            ->join('general_perencanaan as gp', 'gp.id', '=', 'gpt.general_perencanaan_id')
+            ->where('gpt.tahun', $tahun)
+            ->whereIn('gp.instansi_id', $instansiIds)
+            ->select('gp.instansi_id', DB::raw('COUNT(general_rencana_aksi.id) as rencana_aksi_count'))
+            ->groupBy('gp.instansi_id')
+            ->get()
+            ->keyBy('instansi_id');
+
+        $rekap = [];
+        $yes_kl = $no_kl = $yes_prov = $no_prov = $yes_kab = $no_kab = 0;
+
+        foreach ($instansis as $instansi) {
+            $plans = $all_plans->get($instansi->id, collect());
+            $target = $all_targets->get($instansi->id);
+            $rencana = $all_rencana_aksi->get($instansi->id);
+
+            $baseline = $plans->count() >= 5;
+            $target_ok = ($target->target_count ?? 0) >= 5;
+            $rencana_ok = ($rencana->rencana_aksi_count ?? 0) >= 5;
+            $semua = $baseline && $target_ok && $rencana_ok;
+
+            switch ($instansi->group) {
+                case 'kl':
+                    $semua ? $yes_kl++ : $no_kl++;
+                    break;
+                case 'provinsi':
+                    $semua ? $yes_prov++ : $no_prov++;
+                    break;
+                case 'kabupaten':
+                    $semua ? $yes_kab++ : $no_kab++;
+                    break;
+            }
+
+            $rekap[] = [
+                'instansi' => $instansi,
+                'group' => group_instansi($instansi->group),
+                'baseline' => $baseline,
+                'tahun_target' => $tahun,
+                'target' => $target_ok,
+                'rencana_aksi' => $rencana_ok,
+                'semua' => $semua
+            ];
+        }
+
+        return view('webdashboard.rb-general', compact(
+            'rekap',
+            'yes_kl',
+            'no_kl',
+            'yes_prov',
+            'no_prov',
+            'yes_kab',
+            'no_kab',
+            'tahun'
+        ));
     }
 
     public function rbTematik(Request $request)

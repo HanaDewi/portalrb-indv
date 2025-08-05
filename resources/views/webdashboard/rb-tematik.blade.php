@@ -1,5 +1,5 @@
 @extends('layout.rubick')
-@section('title', 'Dashboard RB General')
+@section('title', 'Dashboard RB Tematik')
 @section('content')
 
     <div class="intro-y col-span-12 lg:col-span-12">
