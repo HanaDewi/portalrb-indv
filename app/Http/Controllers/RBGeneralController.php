@@ -716,26 +716,49 @@ class RBGeneralController extends Controller
             }
         }
         $tahun = $request->get('tahun', date('Y'));
+
         if ($request->instansi_id && in_array($user->level, ['admin', 'tpn', 'viewer'])) {
-            $instansi_ids = $request->instansi_id;
+            $instansi_ids = (array) $request->instansi_id;
         } else if (isset($user->instansi_id)) {
             $instansi_ids = [$user->instansi_id];
         } else {
             $instansi_ids = [KlpdInstansi::orderBy('id')->first()->id];
         }
+
+        // Mapping instansi_id ke id_before (jika tahun < 2025 dan id_before tersedia)
+        $mapped_instansi = [];
+        foreach ($instansi_ids as $instansi_id) {
+            $instansi = KlpdInstansi::find($instansi_id);
+            if ($instansi) {
+                $mapped_instansi[$instansi_id] = ($tahun < 2025 && $instansi->id_before) ? $instansi->id_before : $instansi->id;
+            }
+        }
+
+        // Ambil data perencanaan berdasarkan mapped id_before
+        $used_ids = array_values($mapped_instansi);
+        $model = GeneralPerencanaan::whereIn('instansi_id', $used_ids)
+            ->orderBy('kegiatan_utama_id')
+            ->orderBy('indikator_id');
+
         if ($request->indikator_id) {
             $indikator_id = $request->indikator_id;
+            $model = $model->whereIn('indikator_id', $indikator_id);
         } else {
             $indikator_id = [];
         }
-        $model = GeneralPerencanaan::whereIn('instansi_id', $instansi_ids)->orderBy('kegiatan_utama_id')->orderBy('indikator_id');
-        if (count($indikator_id)) {
-            $model = $model->whereIn('indikator_id', $indikator_id);
-        }
+
         $perencanaans = $model->get();
+
+        // Simpan data instansi berdasarkan ID asli (bukan id_before)
+        $instansi_map = KlpdInstansi::whereIn('id', $instansi_ids)->get()->keyBy('id');
+
         $key = 0;
         $datas = [];
         foreach ($perencanaans as $perencanaan) {
+            // Cari instansi_id asli dari mapped_instansi
+            $instansi_id_asli = array_search($perencanaan->instansi_id, $mapped_instansi);
+            $instansi_asli = $instansi_map[$instansi_id_asli] ?? null;
+
             $targets = $perencanaan->target()->where('tahun', $tahun)->get();
             if (count($targets)) {
                 foreach ($targets as $target) {
@@ -743,36 +766,35 @@ class RBGeneralController extends Controller
                         foreach ($target->rencana_aksi as $rencana_aksi) {
                             if (count($rencana_aksi->output)) {
                                 foreach ($rencana_aksi->output as $output) {
-                                    $datas[$key]['perencanaan'] = $perencanaan;
-                                    $datas[$key]['target'] = $target;
-                                    $datas[$key]['rencana_aksi'] = $rencana_aksi;
-                                    $datas[$key]['output'] = $output;
+                                    $datas[$key] = compact('perencanaan', 'target', 'rencana_aksi', 'output');
+                                    $datas[$key]['instansi'] = $instansi_asli;
                                     $key++;
                                 }
                             } else {
-                                $datas[$key]['perencanaan'] = $perencanaan;
-                                $datas[$key]['target'] = $target;
-                                $datas[$key]['rencana_aksi'] = $rencana_aksi;
+                                $datas[$key] = compact('perencanaan', 'target', 'rencana_aksi');
                                 $datas[$key]['output'] = new GeneralRencanaAksiOutput();
+                                $datas[$key]['instansi'] = $instansi_asli;
                                 $key++;
                             }
                         }
                     } else {
-                        $datas[$key]['perencanaan'] = $perencanaan;
-                        $datas[$key]['target'] = $target;
+                        $datas[$key] = compact('perencanaan', 'target');
                         $datas[$key]['rencana_aksi'] = new GeneralRencanaAksi();
                         $datas[$key]['output'] = new GeneralRencanaAksiOutput();
+                        $datas[$key]['instansi'] = $instansi_asli;
                         $key++;
                     }
                 }
             } else {
-                $datas[$key]['perencanaan'] = $perencanaan;
+                $datas[$key] = compact('perencanaan');
                 $datas[$key]['target'] = new GeneralPerencanaanTarget();
                 $datas[$key]['rencana_aksi'] = new GeneralRencanaAksi();
                 $datas[$key]['output'] = new GeneralRencanaAksiOutput();
+                $datas[$key]['instansi'] = $instansi_asli;
                 $key++;
             }
         }
+
         return view('rb-general.rekap_data', compact('tahun', 'datas', 'instansi_ids', 'indikator_id'));
     }
 

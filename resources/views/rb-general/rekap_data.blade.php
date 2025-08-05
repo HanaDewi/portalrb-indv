@@ -93,7 +93,7 @@
                             @endphp
                             <tr>
                                 <td class="font-bold">{{ $no }}</td>
-                                <td class="font-bold">{{ $data['perencanaan']->instansi->name }}</td>
+                                <td class="font-bold">{!! $data['instansi']->nama_instansi !!}</td>
                                 <td class="font-bold">{{ $data['perencanaan']->kegiatan_utama->nama }}</td>
                                 <td>{{ $data['perencanaan']->indikator ? $data['perencanaan']->indikator->nama : '' }}</td>
                                 <td>
