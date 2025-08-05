@@ -274,7 +274,7 @@ class DokumenController extends Controller
 
         foreach ($instansi_ZI->unit_zi as $unit_zi) {
             $analisisDokumenUnit = AnalisisDokumen::where('unit_zi_id', $unit_zi->id)->first();
-            if ($unit_zi->seleksi_administrasi_unit->status_final == 1 || $unit_zi->sanggah_unit->status_final == 1) {
+            if (optional($unit_zi->seleksi_administrasi_unit)->status_final == 1 || optional($unit_zi->sanggah_unit)->status_final == 1) {
                 if (!$analisisDokumenUnit) {
                     $analisisDokumenUnit = new AnalisisDokumen();
                     $analisisDokumenUnit->unit_zi_id = $unit_zi->id;
