@@ -137,7 +137,7 @@
                                 <td>
                                     {{ $tematikData['permasalahan_sasaran'] }}
                                     @if ($tematikData['permasalahan_nama'])
-                                        <button onclick="tambah_indikator_permasalahan('{{ $tematikData['permasalahan_nama'] }}','{{ $tematikData['permasalahan_sasaran'] }}', '{{ $tematikData['permasalahan_id'] }}');" class="btn btn-success btn-sm w-full mb-2"><i data-lucide="edit" class="w-4 h-4 mr-1"></i>Tambah Indikator</button>
+                                        <button onclick="tambah_indikator_permasalahan('{{ $tematikData['permasalahan_id'] }}');" class="btn btn-success btn-sm w-full mb-2"><i data-lucide="edit" class="w-4 h-4 mr-1"></i>Tambah Indikator</button>
                                     @endif
                                 </td>
                                 <td>
@@ -456,11 +456,15 @@
             modal_permasalahan.show();
         }
 
-        function tambah_indikator_permasalahan(permasalahan, sasaran, permasalahan_id) {
+        function tambah_indikator_permasalahan(permasalahan_id) {
             $('#tematik-permasalahan-id-onIndikatorPermasalahan').val(permasalahan_id);
-            $('#permasalahan-onIndikatorPermasalahan').val(permasalahan);
-            $('#sasaran-permasalahan-onIndikatorPermasalahan').val(sasaran);
-            modal_indikator_permasalahan.show();
+            $('.saveButton').prop('disabled', true);
+            $.getJSON("{{ url('rencana_aksi/rb-tematik/permasalahan/get-permasalahan/') }}/" + permasalahan_id, function(data) {
+                $('#permasalahan-onIndikatorPermasalahan').val(data.permasalahan_nama);
+                $('#sasaran-permasalahan-onIndikatorPermasalahan').val(data.permasalahan_sasaran);
+                $('.saveButton').prop('disabled', false);
+                modal_indikator_permasalahan.show();
+            });
         }
 
         function edit(id) {
