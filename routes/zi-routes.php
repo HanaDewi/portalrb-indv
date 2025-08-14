@@ -81,8 +81,8 @@ Route::middleware('auth')->group(function () {
     #Seleksi Wawancara
     Route::get('/zi/seleksi-wawancara', [WawancaraController::class, 'index'])->name('seleksi_wawancara');
     Route::get('/zi/proses-wawancara/{id}', [WawancaraController::class, 'wawancara'])->name('proses_wawancara');
-    //Route::post('/zi/proses-wawancara/simpan', [WawancaraController::class, 'proses_wawancara_simpan'])->name('proses_wawancara_simpan');
-    Route::post('/zi/proses-wawancara/simpan', [TutupController::class, 'index'])->name('proses_wawancara_simpan');
+    Route::post('/zi/proses-wawancara/simpan', [WawancaraController::class, 'proses_wawancara_simpan'])->name('proses_wawancara_simpan');
+    //Route::post('/zi/proses-wawancara/simpan', [TutupController::class, 'index'])->name('proses_wawancara_simpan');
 
     #Seleksi Verifikasi Lapangan
     Route::get('/zi/verifikasi-lapangan', [VerlapController::class, 'index'])->name('verifikasi_lapangan');
