@@ -194,7 +194,11 @@ class EvaluatanController extends Controller
             return redirect()->route('dashboard_zi');
         }
         $title = "Seleksi Desk";
-        $instansi_obj = Auth::User()->user_rel->instansi;
+        if (Auth::User()->user_rel) {
+            $instansi_obj = Auth::User()->user_rel->instansi;
+        } else {
+            $instansi_obj = KlpdInstansi::find(Auth::User()->instansi_id);
+        }
         $instansi_id = $instansi_obj->id;
         $instansi = $instansi_obj->name;
         $tahun = date('Y');
@@ -230,7 +234,11 @@ class EvaluatanController extends Controller
         $date_buka  = new \DateTime($tahap_seleksi->tanggal_mulai);
         $date_tutup    = new \DateTime($tahap_seleksi->tanggal_selesai);
         if ($date_now >= $date_buka && $date_now <= $date_tutup) {
-            $instansi_obj = Auth::User()->user_rel->instansi;
+            if (Auth::User()->user_rel) {
+                $instansi_obj = Auth::User()->user_rel->instansi;
+            } else {
+                $instansi_obj = KlpdInstansi::find(Auth::User()->instansi_id);
+            }
             $tahun = date('Y');
             $instansi_ZI = InstansiZI::where("instansi_id", $instansi_obj->id)->where('tahun', $tahun)->first();
             foreach ($instansi_ZI->unit_zi as $unit_zi) {
@@ -249,7 +257,11 @@ class EvaluatanController extends Controller
         if (Auth::User()->level == "admin" || Auth::User()->level == "tpn") {
             return redirect()->route('dashboard_zi');
         }
-        $instansi_obj = Auth::User()->user_rel->instansi;
+        if (Auth::User()->user_rel) {
+            $instansi_obj = Auth::User()->user_rel->instansi;
+        } else {
+            $instansi_obj = KlpdInstansi::find(Auth::User()->instansi_id);
+        }
         $instansi_id = $instansi_obj->id;
         $instansi = $instansi_obj->name;
         $group_kld = $instansi_obj->group;
@@ -283,7 +295,12 @@ class EvaluatanController extends Controller
         if (Auth::User()->level == "admin" || Auth::User()->level == "tpn") {
             $instansiZI = InstansiZI::where("id", $request->get("instansi_zi_id"))->first();
         } else {
-            $instansiZI = InstansiZI::where("instansi_id", Auth::User()->user_rel->instansi->id)->first();
+            if (Auth::User()->user_rel) {
+                $instansi_obj = Auth::User()->user_rel->instansi;
+            } else {
+                $instansi_obj = KlpdInstansi::find(Auth::User()->instansi_id);
+            }
+            $instansiZI = InstansiZI::where("instansi_id", $instansi_obj->id)->first();
             //return redirect()->route('evaluatan_desk');
         }
 
