@@ -197,26 +197,25 @@ class EvaluatanController extends Controller
         $instansi_obj = Auth::User()->user_rel->instansi;
         $instansi_id = $instansi_obj->id;
         $instansi = $instansi_obj->name;
-        $group_kld = $instansi_obj->group;
-        $instansiZI = InstansiZI::where("instansi_id", $instansi_obj->id)->first();
+        $tahun = date('Y');
+        $instansiZI = InstansiZI::where("instansi_id", $instansi_obj->id)->where('tahun', $tahun)->first();
+        $tahap_seleksi = TahapSeleksiZI::where('tahun', $tahun)->where('tahap_seleksi', 'Wawancara')->first();
+        $date_now = new \DateTime();
+        $date_buka  = new \DateTime($tahap_seleksi->tanggal_mulai);
+        $date_tutup    = new \DateTime($tahap_seleksi->tanggal_selesai);
+        $buka_formulir = false;
+        if ($date_now >= $date_buka && $date_now <= $date_tutup) {
+            $buka_formulir = true;
+        }
         if ($instansiZI) {
-            $syarat_akhir_wbk = $instansiZI->syarat_akhir_wbk;
-            $syarat_akhir_wbbm   = $instansiZI->syarat_akhir_wbbm;
-            $status_akhir = $instansiZI->status_akhir;
-            $unit_wbks = UnitZI::where("instansi_zi_id", $instansiZI->id)->where('wbk', 1)->get();
-            $unit_wbbms = UnitZI::where("instansi_zi_id", $instansiZI->id)->where('wbbm', 1)->get();
+            $units = UnitZI::where("instansi_zi_id", $instansiZI->id)->orderBy('wbbm')->get();
             return view('zi.evaluatan.seleksi_desk', compact(
                 'title',
                 'instansi_id',
                 'instansi',
-                'group_kld',
                 'instansiZI',
-                'unit_wbks',
-                'unit_wbbms',
-                'syarat_akhir_wbk',
-                'syarat_akhir_wbbm',
-                'status_akhir',
-                'instansi_obj'
+                'units',
+                'buka_formulir'
             ));
         } else {
             echo "mohon maaf instansi anda belum terdapat penilaian RB di tahun lalu";
@@ -225,16 +224,24 @@ class EvaluatanController extends Controller
 
     public function link_paparan_simpan(Request $request)
     {
-        $instansiZIid = Auth::User()->user_rel->instansi->instansi_zi->first()->id;
-        $instansi_ZI = Auth::User()->user_rel->instansi->instansi_zi->first();
-        foreach ($instansi_ZI->unit_zi as $unit_zi) {
-            $wawancaraUnit = Wawancara::where('unit_zi_id', $unit_zi->id)->first();
-            if ($wawancaraUnit) {
-                $wawancaraUnit->link_paparan = $request->get('link_paparan_' . $unit_zi->id);
-                $wawancaraUnit->save();
+        $tahun = date('Y');
+        $tahap_seleksi = TahapSeleksiZI::where('tahun', $tahun)->where('tahap_seleksi', 'Wawancara')->first();
+        $date_now = new \DateTime();
+        $date_buka  = new \DateTime($tahap_seleksi->tanggal_mulai);
+        $date_tutup    = new \DateTime($tahap_seleksi->tanggal_selesai);
+        if ($date_now >= $date_buka && $date_now <= $date_tutup) {
+            $instansi_obj = Auth::User()->user_rel->instansi;
+            $tahun = date('Y');
+            $instansi_ZI = InstansiZI::where("instansi_id", $instansi_obj->id)->where('tahun', $tahun)->first();
+            foreach ($instansi_ZI->unit_zi as $unit_zi) {
+                $wawancaraUnit = Wawancara::where('unit_zi_id', $unit_zi->id)->first();
+                if ($wawancaraUnit) {
+                    $wawancaraUnit->link_paparan = $request->get('link_paparan_' . $unit_zi->id);
+                    $wawancaraUnit->save();
+                }
             }
         }
-        return redirect()->route('evaluatan_desk', $instansiZIid);
+        return redirect()->route('evaluatan_desk', $instansi_ZI->id);
     }
 
     public function seleksi_verifikasi_lapangan(Request $request)
@@ -269,24 +276,6 @@ class EvaluatanController extends Controller
         }
     }
 
-
-    public function simpan_hasil_wbk_mandiri(Request $request)
-    {
-        $instansiZIid = Auth::User()->user_rel->instansi->instansi_zi->first()->id;
-        $instansi_ZI = Auth::User()->user_rel->instansi->instansi_zi->first();
-
-        $instansi_ZI->hasil_wbk_mandiri = $request->get('link_hasil_wbk_mandiri');
-        if ($instansi_ZI->save()) {
-            session()->flash('message', 'Url berhasil disimpan');
-            session()->flash('sukses', '1');
-        } else {
-            session()->flash('message', 'Url Gagal Disimpan');
-            session()->flash('sukses', '0');
-        }
-
-
-        return redirect()->route('evaluatan_desk', $instansiZIid);
-    }
 
     public function hasil_akhir(Request $request)
     {

@@ -130,11 +130,13 @@
                                 class="form-control">
                                 <hr>
                                 <br />
-                                Link Zoom <br />
-                                <input type="text" name="link-zoom-{{$unit_zi->id}}" @if(isset($unit_zi->wawancara))
-                                value="{{$unit_zi->wawancara->link_zoom}}"
-                                @endif
-                                class="form-control">
+                                Link Zoom / Keterangan<br />
+                                <textarea rows='3' cols='15' class='form-control glowing-border'
+                                    name="link-zoom-{{$unit_zi->id}}">
+                                    @if(isset($unit_zi->wawancara))
+                                    {{$unit_zi->wawancara->link_zoom}}
+                                    @endif
+                                </textarea>
                             </td>
                             <td>
                                 <select class="form-control status" name="status-{{$unit_zi->id}}"
