@@ -68,8 +68,7 @@
                                 dalam melakukan pendalaman / validasi / verifikasi hasil pembangunan ZI.
 
                                 Hasil akhir evaluasi akan disampaikan melalui Lembar Hasil Evaluasi (LHE)
-                                kemungkinan
-                                pada Desember 2024.
+                                kemungkinan pada Desember 2025.
                             </h5>
                             <hr>
                             <br /><br />
