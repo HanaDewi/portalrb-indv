@@ -164,10 +164,11 @@ class RBGeneralController extends Controller
                 $pesan .= 'Baseline tidak boleh lebih dari ' . $perencanaan->indikator->max . '!!';
             }
             // Cek Target
-            if ($target->target < $target->baseline_realisasi) {
-                $success = false;
-                $pesan .= 'Target tidak boleh kurang dari Baseline Realisasi!!';
-            } else if ($perencanaan->indikator->min != null && $target->target < $perencanaan->indikator->min) {
+            // if ($target->target < $target->baseline_realisasi) {
+            //     $success = false;
+            //     $pesan .= 'Target tidak boleh kurang dari Baseline Realisasi!!';
+            // } else 
+            if ($perencanaan->indikator->min != null && $target->target < $perencanaan->indikator->min) {
                 $success = false;
                 $pesan .= 'Target tidak boleh kurang dari ' . $perencanaan->indikator->min . '!!';
             } else if ($perencanaan->indikator->max != null && $target->target > $perencanaan->indikator->max) {
@@ -259,10 +260,11 @@ class RBGeneralController extends Controller
                     $success = false;
                 }
                 if ($perencanaan->indikator->tipe == 'Kuantitatif') {
-                    if ($target->target < $target->baseline_realisasi) {
-                        $success = false;
-                        $pesan .= 'Target tidak boleh kurang dari Baseline Realisasi!!';
-                    } else if ($perencanaan->indikator->min != null && $target->target < $perencanaan->indikator->min) {
+                    // if ($target->target < $target->baseline_realisasi) {
+                    //     $success = false;
+                    //     $pesan .= 'Target tidak boleh kurang dari Baseline Realisasi!!';
+                    // } else 
+                    if ($perencanaan->indikator->min != null && $target->target < $perencanaan->indikator->min) {
                         $success = false;
                         $pesan .= 'Target tidak boleh kurang dari ' . $perencanaan->indikator->min . '!!';
                     } else if ($perencanaan->indikator->max != null && $target->target > $perencanaan->indikator->max) {
