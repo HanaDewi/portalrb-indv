@@ -35,12 +35,11 @@ Route::middleware('auth')->group(function () {
     Route::post('/zi-simpan-sanggah', [EvaluatanController::class, 'sanggah_simpan'])->name('evaluatan_simpan_sanggah');
     Route::get('/zi-hasil-sanggah', [EvaluatanController::class, 'hasil_sanggah'])->name('evaluatan_hasil_sanggah');
     Route::get('/zi-desk', [EvaluatanController::class, 'seleksi_desk'])->name('evaluatan_desk');
-    //Route::post('/zi-simpan-desk', [EvaluatanController::class, 'link_paparan_simpan'])->name('evaluatan_simpan_desk');
-    Route::post('/zi-simpan-desk', [TutupController::class, 'index'])->name('evaluatan_simpan_desk');
+    Route::post('/zi-simpan-desk', [EvaluatanController::class, 'link_paparan_simpan'])->name('evaluatan_simpan_desk');
+    //Route::post('/zi-simpan-desk', [TutupController::class, 'index'])->name('evaluatan_simpan_desk');
     Route::get('/zi-verifikasi-lapangan', [EvaluatanController::class, 'seleksi_verifikasi_lapangan'])->name('evaluatan_verifikasi_lapangan');
     Route::get('/zi-hasil-akhir', [EvaluatanController::class, 'hasil_akhir'])->name('evaluatan_hasil_akhir');
     #WBK MANDIRI
-    //Route::post('/zi/simpan-hasil-wbk-mandiri', [EvaluatanController::class, 'simpan_hasil_wbk_mandiri'])->name('simpan_hasil_wbk_mandiri');
     Route::get('/zi/lapor-wbk-mandiri', [WbkMandiriController::class, 'index'])->name('lapor_wbk_mandiri');
     Route::post('/zi/lapor-wbk-mandiri/simpan', [WbkMandiriController::class, 'lapor_wbk_mandiri_simpan'])->name('lapor_wbk_mandiri_simpan');
     Route::get('/zi/lapor-wbk-mandiri/getDatas', [WbkMandiriController::class, 'lapor_wbk_mandiri_getDatas'])->name('lapor_wbk_mandiri_getDatas');
@@ -81,8 +80,8 @@ Route::middleware('auth')->group(function () {
     #Seleksi Wawancara
     Route::get('/zi/seleksi-wawancara', [WawancaraController::class, 'index'])->name('seleksi_wawancara');
     Route::get('/zi/proses-wawancara/{id}', [WawancaraController::class, 'wawancara'])->name('proses_wawancara');
-    //Route::post('/zi/proses-wawancara/simpan', [WawancaraController::class, 'proses_wawancara_simpan'])->name('proses_wawancara_simpan');
-    Route::post('/zi/proses-wawancara/simpan', [TutupController::class, 'index'])->name('proses_wawancara_simpan');
+    Route::post('/zi/proses-wawancara/simpan', [WawancaraController::class, 'proses_wawancara_simpan'])->name('proses_wawancara_simpan');
+    //Route::post('/zi/proses-wawancara/simpan', [TutupController::class, 'index'])->name('proses_wawancara_simpan');
 
     #Seleksi Verifikasi Lapangan
     Route::get('/zi/verifikasi-lapangan', [VerlapController::class, 'index'])->name('verifikasi_lapangan');

@@ -194,29 +194,32 @@ class EvaluatanController extends Controller
             return redirect()->route('dashboard_zi');
         }
         $title = "Seleksi Desk";
-        $instansi_obj = Auth::User()->user_rel->instansi;
+        if (Auth::User()->user_rel) {
+            $instansi_obj = Auth::User()->user_rel->instansi;
+        } else {
+            $instansi_obj = KlpdInstansi::find(Auth::User()->instansi_id);
+        }
         $instansi_id = $instansi_obj->id;
         $instansi = $instansi_obj->name;
-        $group_kld = $instansi_obj->group;
-        $instansiZI = InstansiZI::where("instansi_id", $instansi_obj->id)->first();
+        $tahun = date('Y');
+        $instansiZI = InstansiZI::where("instansi_id", $instansi_obj->id)->where('tahun', $tahun)->first();
+        $tahap_seleksi = TahapSeleksiZI::where('tahun', $tahun)->where('tahap_seleksi', 'Wawancara')->first();
+        $date_now = new \DateTime();
+        $date_buka  = new \DateTime($tahap_seleksi->tanggal_mulai);
+        $date_tutup    = new \DateTime($tahap_seleksi->tanggal_selesai);
+        $buka_formulir = false;
+        if ($date_now >= $date_buka && $date_now <= $date_tutup) {
+            $buka_formulir = true;
+        }
         if ($instansiZI) {
-            $syarat_akhir_wbk = $instansiZI->syarat_akhir_wbk;
-            $syarat_akhir_wbbm   = $instansiZI->syarat_akhir_wbbm;
-            $status_akhir = $instansiZI->status_akhir;
-            $unit_wbks = UnitZI::where("instansi_zi_id", $instansiZI->id)->where('wbk', 1)->get();
-            $unit_wbbms = UnitZI::where("instansi_zi_id", $instansiZI->id)->where('wbbm', 1)->get();
+            $units = UnitZI::where("instansi_zi_id", $instansiZI->id)->orderBy('wbbm')->get();
             return view('zi.evaluatan.seleksi_desk', compact(
                 'title',
                 'instansi_id',
                 'instansi',
-                'group_kld',
                 'instansiZI',
-                'unit_wbks',
-                'unit_wbbms',
-                'syarat_akhir_wbk',
-                'syarat_akhir_wbbm',
-                'status_akhir',
-                'instansi_obj'
+                'units',
+                'buka_formulir'
             ));
         } else {
             echo "mohon maaf instansi anda belum terdapat penilaian RB di tahun lalu";
@@ -225,16 +228,28 @@ class EvaluatanController extends Controller
 
     public function link_paparan_simpan(Request $request)
     {
-        $instansiZIid = Auth::User()->user_rel->instansi->instansi_zi->first()->id;
-        $instansi_ZI = Auth::User()->user_rel->instansi->instansi_zi->first();
-        foreach ($instansi_ZI->unit_zi as $unit_zi) {
-            $wawancaraUnit = Wawancara::where('unit_zi_id', $unit_zi->id)->first();
-            if ($wawancaraUnit) {
-                $wawancaraUnit->link_paparan = $request->get('link_paparan_' . $unit_zi->id);
-                $wawancaraUnit->save();
+        $tahun = date('Y');
+        $tahap_seleksi = TahapSeleksiZI::where('tahun', $tahun)->where('tahap_seleksi', 'Wawancara')->first();
+        $date_now = new \DateTime();
+        $date_buka  = new \DateTime($tahap_seleksi->tanggal_mulai);
+        $date_tutup    = new \DateTime($tahap_seleksi->tanggal_selesai);
+        if ($date_now >= $date_buka && $date_now <= $date_tutup) {
+            if (Auth::User()->user_rel) {
+                $instansi_obj = Auth::User()->user_rel->instansi;
+            } else {
+                $instansi_obj = KlpdInstansi::find(Auth::User()->instansi_id);
+            }
+            $tahun = date('Y');
+            $instansi_ZI = InstansiZI::where("instansi_id", $instansi_obj->id)->where('tahun', $tahun)->first();
+            foreach ($instansi_ZI->unit_zi as $unit_zi) {
+                $wawancaraUnit = Wawancara::where('unit_zi_id', $unit_zi->id)->first();
+                if ($wawancaraUnit) {
+                    $wawancaraUnit->link_paparan = $request->get('link_paparan_' . $unit_zi->id);
+                    $wawancaraUnit->save();
+                }
             }
         }
-        return redirect()->route('evaluatan_desk', $instansiZIid);
+        return redirect()->route('evaluatan_desk', $instansi_ZI->id);
     }
 
     public function seleksi_verifikasi_lapangan(Request $request)
@@ -242,7 +257,11 @@ class EvaluatanController extends Controller
         if (Auth::User()->level == "admin" || Auth::User()->level == "tpn") {
             return redirect()->route('dashboard_zi');
         }
-        $instansi_obj = Auth::User()->user_rel->instansi;
+        if (Auth::User()->user_rel) {
+            $instansi_obj = Auth::User()->user_rel->instansi;
+        } else {
+            $instansi_obj = KlpdInstansi::find(Auth::User()->instansi_id);
+        }
         $instansi_id = $instansi_obj->id;
         $instansi = $instansi_obj->name;
         $group_kld = $instansi_obj->group;
@@ -270,31 +289,18 @@ class EvaluatanController extends Controller
     }
 
 
-    public function simpan_hasil_wbk_mandiri(Request $request)
-    {
-        $instansiZIid = Auth::User()->user_rel->instansi->instansi_zi->first()->id;
-        $instansi_ZI = Auth::User()->user_rel->instansi->instansi_zi->first();
-
-        $instansi_ZI->hasil_wbk_mandiri = $request->get('link_hasil_wbk_mandiri');
-        if ($instansi_ZI->save()) {
-            session()->flash('message', 'Url berhasil disimpan');
-            session()->flash('sukses', '1');
-        } else {
-            session()->flash('message', 'Url Gagal Disimpan');
-            session()->flash('sukses', '0');
-        }
-
-
-        return redirect()->route('evaluatan_desk', $instansiZIid);
-    }
-
     public function hasil_akhir(Request $request)
     {
         $title = "Hasil Akhir";
         if (Auth::User()->level == "admin" || Auth::User()->level == "tpn") {
             $instansiZI = InstansiZI::where("id", $request->get("instansi_zi_id"))->first();
         } else {
-            $instansiZI = InstansiZI::where("instansi_id", Auth::User()->user_rel->instansi->id)->first();
+            if (Auth::User()->user_rel) {
+                $instansi_obj = Auth::User()->user_rel->instansi;
+            } else {
+                $instansi_obj = KlpdInstansi::find(Auth::User()->instansi_id);
+            }
+            $instansiZI = InstansiZI::where("instansi_id", $instansi_obj->id)->first();
             //return redirect()->route('evaluatan_desk');
         }
 

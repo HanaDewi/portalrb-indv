@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\ZI;
 
-use App\Models\ZI\AnalisisDokumen;
 use App\Models\ZI\UnitZI;
 use App\Models\KlpdInstansi;
 use App\Models\ZI\Wawancara;
 use Illuminate\Http\Request;
 use App\Models\ZI\InstansiZI;
 use App\Models\ZI\TimEvaluasi;
+use App\Models\ZI\TahapSeleksiZI;
+use App\Models\ZI\AnalisisDokumen;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Models\ZI\SeleksiAdministrasiUnit;
@@ -188,11 +189,20 @@ class WawancaraController extends Controller
             }
         }
         $status = "Tidak Berhak";
-        //DI LOCK BIAR SEMUA ORANGG TIDAK BISA SIMPAN
-        if (Auth::User()->userTimZI) {
-            foreach (Auth::User()->userTimZI as $anggotaTim) {
-                if (in_array($anggotaTim->tim_id, $tim_ids)) {
-                    $status = "Berhak";
+        $tahun = $instansi_ZI->tahun;
+        $tahap_seleksi = TahapSeleksiZI::where('tahap_seleksi', 'Wawancara')->where('tahun', $tahun)->first();
+        if (!$tahap_seleksi) {
+            dd("Tahap Seleksi untuk tahun $tahun belum ditentukan. Silakan hubungi admin.");
+        }
+        $date_now = new \DateTime();
+        $date_buka    = new \DateTime($tahap_seleksi->tanggal_mulai);
+        $date_tutup  = new \DateTime($tahap_seleksi->tanggal_selesai);
+        if ($date_now >= $date_buka && $date_now <= $date_tutup) {
+            if (Auth::User()->userTimZI) {
+                foreach (Auth::User()->userTimZI as $anggotaTim) {
+                    if (in_array($anggotaTim->tim_id, $tim_ids)) {
+                        $status = "Berhak";
+                    }
                 }
             }
         }
@@ -225,13 +235,24 @@ class WawancaraController extends Controller
             }
         }
         $status = "Tidak Berhak";
-        if (Auth::User()->userTimZI) {
-            foreach (Auth::User()->userTimZI as $anggotaTim) {
-                if (in_array($anggotaTim->tim_id, $tim_ids)) {
-                    $status = "Berhak";
+        $tahun = $instansi_ZI->tahun;
+        $tahap_seleksi = TahapSeleksiZI::where('tahap_seleksi', 'Wawancara')->where('tahun', $tahun)->first();
+        if (!$tahap_seleksi) {
+            dd("Tahap Seleksi untuk tahun $tahun belum ditentukan. Silakan hubungi admin.");
+        }
+        $date_now = new \DateTime();
+        $date_buka    = new \DateTime($tahap_seleksi->tanggal_mulai);
+        $date_tutup  = new \DateTime($tahap_seleksi->tanggal_selesai);
+        if ($date_now >= $date_buka && $date_now <= $date_tutup) {
+            if (Auth::User()->userTimZI) {
+                foreach (Auth::User()->userTimZI as $anggotaTim) {
+                    if (in_array($anggotaTim->tim_id, $tim_ids)) {
+                        $status = "Berhak";
+                    }
                 }
             }
         }
+
         if ($status == "Tidak Berhak") {
             abort('403');
         }
@@ -249,7 +270,7 @@ class WawancaraController extends Controller
                     if (!is_null($request->get('bukti-dukung-' . $unit_zi->id))) $wawancaraUnit->bukti_dukung = $request->get('bukti-dukung-' . $unit_zi->id);
                     if (!is_null($request->get('kondisi-' . $unit_zi->id))) $wawancaraUnit->kondisi = $request->get('kondisi-' . $unit_zi->id);
                     if (!is_null($request->get('rekomendasi-' . $unit_zi->id))) $wawancaraUnit->rekomendasi = $request->get('rekomendasi-' . $unit_zi->id);
-                    //if(!is_null($request->get('status-'.$unit_zi->id )))$wawancaraUnit->status = $request->get('status-'.$unit_zi->id ); 
+                    if (!is_null($request->get('status-' . $unit_zi->id))) $wawancaraUnit->status = $request->get('status-' . $unit_zi->id);
                     $wawancaraUnit->updated_by = Auth::User()->id;
                     $wawancaraUnit->save();
                 };

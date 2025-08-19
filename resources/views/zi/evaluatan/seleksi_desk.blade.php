@@ -21,6 +21,10 @@
         word-break: break-all;
 
     }
+
+    textarea {
+        padding: 5px;
+    }
 </style>
 
 
@@ -48,24 +52,9 @@
                         {{ session('message') }}
                     </div>
                     @endif
-                    @if(optional($instansi_obj->instansi_zi[0])->instansi_wbk_mandiri)
-                    === Khusus Instansi yang Menyelenggarakan WBK Mandiri ===
-                    <form method="POST" action="{{route('simpan_hasil_wbk_mandiri')}}">
-                        @csrf
-                        <div class="row">
-                            <div class="col-md-12">
-                                <input type="text" class="glowing-border" name="link_hasil_wbk_mandiri"
-                                    placeholder="Masukan Link Hasil WBK Mandiri disini"
-                                    @if($instansi_obj->instansi_zi[0]->hasil_wbk_mandiri)value="{{$instansi_obj->instansi_zi[0]->hasil_wbk_mandiri}}"@endif>
-                            </div>
-                            <div class="col-md-12" style="vertical-align:middle">
-                                <input type="submit" class="btn btn-primary" style="background-color: #b42b2d"
-                                    value="Kirim">
-                            </div>
-                        </div>
-                    </form>
-                    @endif
+                    @if($buka_formulir)
                     <form method="POST" action="{{route('evaluatan_simpan_desk')}}">
+                        @endif
                         @csrf
                         <div class="content">
                             <br>
@@ -79,72 +68,83 @@
                                 dalam melakukan pendalaman / validasi / verifikasi hasil pembangunan ZI.
 
                                 Hasil akhir evaluasi akan disampaikan melalui Lembar Hasil Evaluasi (LHE)
-                                kemungkinan
-                                pada Desember 2024.
+                                kemungkinan pada Desember 2025.
                             </h5>
                             <hr>
                             <br /><br />
                             <img src="{{ asset('/assets/images/teknis-wawancara-zi.png') }}">
                             <br /><br /><br />
 
-                            <h6>WBK</h6>
                             <table class="table table-striped table-bordered table-shad">
                                 <thead style="background: #b42b2d;color:white; text-align:center; ">
                                     <tr>
                                         <th>No</th>
                                         <th>Unit</th>
                                         <th>Jadwal Wawancara</th>
-                                        <!-- <th>Link Zoom Wawancara</th> -->
+                                        <th>Keterangan / Link Zoom Wawancara</th>
                                         <th>Link Bahan Paparan Evaluatan</th>
                                         <th>Jadwal Verifikasi Lapangan</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @if($unit_wbks->count())
-                                    @foreach ($unit_wbks as $index => $unit_wbk)
-                                    @if(isset($unit_wbk->analisis_dokumen))
-                                    @if($unit_wbk->analisis_dokumen->status == 1)
+                                    @php
+                                    $no = 0;
+                                    @endphp
+                                    @if($units->count())
+                                    @foreach ($units as $index => $unit)
+                                    @if(isset($unit->analisis_dokumen))
+                                    @if($unit->analisis_dokumen->status == 1)
+                                    @php
+                                    $no++;
+                                    @endphp
                                     <tr>
-                                        <td>{{$index+1}}</td>
-                                        <td style="text-align: left">{{$unit_wbk->nama}}</td>
+                                        <td>{{$no}}</td>
                                         <td style="text-align: left">
-                                            @if(isset($unit_wbk->wawancara->jadwal))
+                                            {{$unit->nama}} <br>
+                                            @if($unit->wbbm)
+                                            (WBBM)
+                                            @else
+                                            (WBK)
+                                            @endif
+                                        </td>
+                                        <td style="text-align: left">
+                                            @if(isset($unit->wawancara->jadwal))
                                             <i class="fa fa-calendar fa-lg text-danger" aria-hidden="true"></i>
-                                            {{\Carbon\Carbon::parse($unit_wbk->wawancara->jadwal)->isoFormat('dddd,
+                                            {{\Carbon\Carbon::parse($unit->wawancara->jadwal)->isoFormat('dddd,
                                             D
                                             MMMM Y HH:mm');}} WIB
                                             @endif
 
                                         </td>
-                                        <!--
                                         <td style="text-align: left">
+                                            @if(isset($unit->wawancara->link_zoom))
                                             <i class="fa fa-play" aria-hidden="true"></i>
-                                            @if(isset($unit_wbk->wawancara->link_zoom))
-                                            {{$unit_wbk->wawancara->link_zoom}}
+                                            {{$unit->wawancara->link_zoom}}
                                             @endif
 
                                         </td>
-                                        -->
                                         <td style="text-align: left" class="link-wrap">
-                                            @if(isset($unit_wbk->wawancara->jadwal))
-                                            <!--
-                                            <input type="text" @if(isset($unit_wbk->wawancara->link_paparan))
-                                            value={{$unit_wbk->wawancara->link_paparan}}
+                                            @if($buka_formulir)
+                                            @if(isset($unit->wawancara->link_zoom))
+                                            <textarea rows='4' cols='15' class='form-control glowing-border'
+                                                name="link_paparan_{{$unit->id}}">@if(isset($unit->wawancara->link_paparan)){{$unit->wawancara->link_paparan}}@endif</textarea>
                                             @endif
-                                            name="link_paparan_{{$unit_wbk->id}}">
-                                            -->
-                                            {{$unit_wbk->wawancara->link_paparan}}
+                                            @else
+                                            @if(isset($unit->wawancara))
+                                            {{$unit->wawancara->link_paparan}}
                                             @endif
+                                            @endif
+
                                         </td>
                                         <td style="text-align: left">
-                                            @if(isset($unit_wbk->verifikasi_lapangan->jadwal))
+                                            @if(isset($unit->verifikasi_lapangan->jadwal))
                                             <i class="fa fa-calendar fa-lg text-danger" aria-hidden="true"></i>
-                                            @if(\Carbon\Carbon::parse($unit_wbk->verifikasi_lapangan->jadwal)->isoFormat('HH')!='00')
-                                            {{\Carbon\Carbon::parse($unit_wbk->verifikasi_lapangan->jadwal)->isoFormat('dddd,
+                                            @if(\Carbon\Carbon::parse($unit->verifikasi_lapangan->jadwal)->isoFormat('HH')!='00')
+                                            {{\Carbon\Carbon::parse($unit->verifikasi_lapangan->jadwal)->isoFormat('dddd,
                                             D
                                             MMMM Y HH:mm');}} WIB
                                             @else
-                                            {{\Carbon\Carbon::parse($unit_wbk->verifikasi_lapangan->jadwal)->isoFormat('dddd,
+                                            {{\Carbon\Carbon::parse($unit->verifikasi_lapangan->jadwal)->isoFormat('dddd,
                                             D
                                             MMMM Y');}}
                                             @endif
@@ -162,78 +162,7 @@
                                 </tbody>
                             </table>
                             <br />
-                            <h6>WBBM</h6>
-                            <table style="text-align: left" class="table table-striped table-bordered table-shad">
-                                <thead style="background: #ffcc08;color:black; text-align:center; ">
-                                    <tr>
-                                        <th>No</th>
-                                        <th>Unit</th>
-                                        <th>Jadwal Wawancara</th>
-                                        <!-- <th>Link Zoom Wawancara</th> -->
-                                        <th>Link Bahan Paparan Evaluatan</th>
-                                        <th>Jadwal Verifikasi Lapangan</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @if($unit_wbbms->count())
-                                    @foreach ($unit_wbbms as $index => $unit_wbbm)
-                                    @if(isset($unit_wbbm->analisis_dokumen) )
-                                    @if($unit_wbbm->analisis_dokumen->status == 1)
-                                    <tr>
-                                        <td>{{$index+1}}</td>
-                                        <td style="text-align: left">{{$unit_wbbm->nama}}</td>
-                                        <td style="text-align: left">
-                                            @if(isset($unit_wbbm->wawancara->jadwal))
-                                            <i class="fa fa-calendar fa-lg text-danger" aria-hidden="true"></i>
-                                            {{\Carbon\Carbon::parse($unit_wbbm->wawancara->jadwal)->isoFormat('dddd,
-                                            D
-                                            MMMM Y HH:mm');}} WIB
-                                            @endif
-                                        </td>
-                                        <!--
-                                        <td style="text-align: left">
-                                            <i class="fa fa-play" aria-hidden="true"></i>
-                                            @if(isset($unit_wbbm->wawancara->link_zoom))
-                                            {{$unit_wbbm->wawancara->link_zoom}}
-                                            @endif
-                                        </td>
-                                        -->
-                                        <td style="text-align: left" class="link-wrap">
-                                            @if(isset($unit_wbbm->wawancara->jadwal))
-                                            <!--
-                                            <input type="text" @if(isset($unit_wbbm->wawancara->link_paparan))
-                                            value={{$unit_wbbm->wawancara->link_paparan}}
-                                            @endif
-                                            name="link_paparan_{{$unit_wbbm->id}}">
-                                            -->
-                                            {{$unit_wbbm->wawancara->link_paparan}}
-                                            @endif
-                                        </td>
-                                        <td style="text-align: left">
-                                            @if(isset($unit_wbbm->verifikasi_lapangan->jadwal))
-                                            <i class="fa fa-calendar fa-lg text-danger" aria-hidden="true"></i>
-                                            @if(\Carbon\Carbon::parse($unit_wbbm->verifikasi_lapangan->jadwal)->isoFormat('HH')!='00')
-                                            {{\Carbon\Carbon::parse($unit_wbbm->verifikasi_lapangan->jadwal)->isoFormat('dddd,
-                                            D
-                                            MMMM Y HH:mm');}} WIB
-                                            @else
-                                            {{\Carbon\Carbon::parse($unit_wbbm->verifikasi_lapangan->jadwal)->isoFormat('dddd,
-                                            D
-                                            MMMM Y');}}
-                                            @endif
-                                            @endif
-                                        </td>
-                                    </tr>
-                                    @endif
-                                    @endif
-                                    @endforeach
-                                    @else
-                                    <tr>
-                                        <td colspan="5" style="text-align: center">Tidak ada unit WBBM</td>
-                                    </tr>
-                                    @endif
-                                </tbody>
-                            </table>
+
                             <div class="row ">
                                 <div class="col-md-1">
                                 </div>
@@ -243,7 +172,9 @@
                                 </div>
                             </div>
                         </div>
-                        <!--<input type="submit" class="btn btn-primary" value="KIRIM">-->
+                        @if($buka_formulir)
+                        <input type="submit" class="btn btn-primary" value="KIRIM">
+                        @endif
                     </form>
                 </div>
             </div>
