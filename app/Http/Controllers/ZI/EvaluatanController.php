@@ -249,7 +249,7 @@ class EvaluatanController extends Controller
                 }
             }
         }
-        return redirect()->route('evaluatan_desk', $instansi_ZI->id);
+        return redirect()->route('evaluatan_desk');
     }
 
     public function seleksi_verifikasi_lapangan(Request $request)
