@@ -188,14 +188,29 @@ class VerlapController extends Controller
             }
         }
         $status = "Tidak Berhak";
-        //DI LOCK BIAR SEMUA ORANGG TIDAK BISA SIMPAN
-        if (Auth::User()->userTimZI) {
-            foreach (Auth::User()->userTimZI as $anggotaTim) {
-                if (in_array($anggotaTim->tim_id, $tim_ids)) {
-                    $status = "Berhak";
+        $tahun = $instansi_ZI->tahun;
+        $tahap_seleksi = TahapSeleksiZI::where('tahap_seleksi', 'Wawancara')->where('tahun', $tahun)->first();
+        if (!$tahap_seleksi) {
+            dd("Tahap Seleksi untuk tahun $tahun belum ditentukan. Silakan hubungi admin.");
+        }
+        $date_now = new \DateTime();
+        $date_buka    = new \DateTime($tahap_seleksi->tanggal_mulai);
+        $date_tutup  = new \DateTime($tahap_seleksi->tanggal_selesai);
+        if ($date_now >= $date_buka && $date_now <= $date_tutup) {
+
+            if (Auth::User()->userTimZI) {
+                foreach (Auth::User()->userTimZI as $anggotaTim) {
+                    if (in_array($anggotaTim->tim_id, $tim_ids)) {
+                        $status = "Berhak";
+                    }
                 }
             }
         }
+
+        if ($status == "Tidak Berhak") {
+            dd("Jadwal Verlap Sudah Ditutup");
+        }
+
 
         $unit_ZIs = UnitZI::where("instansi_zi_id", $id)->where(function ($q) {
             $q->whereHas('wawancara', function ($query) {
