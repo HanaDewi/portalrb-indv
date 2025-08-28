@@ -5,12 +5,13 @@ namespace App\Http\Controllers\ZI;
 
 use App\Models\ZI\UnitZI;
 use App\Models\KlpdInstansi;
-use App\Models\ZI\VerifikasiLapangan;
 use Illuminate\Http\Request;
 use App\Models\ZI\InstansiZI;
 use App\Models\ZI\TimEvaluasi;
+use App\Models\ZI\TahapSeleksiZI;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use App\Models\ZI\VerifikasiLapangan;
 use App\Models\ZI\SeleksiAdministrasiUnit;
 use App\Models\ZI\SeleksiAdministrasiInstansi;
 
@@ -242,15 +243,27 @@ class VerlapController extends Controller
             }
         }
         $status = "Tidak Berhak";
-        if (Auth::User()->userTimZI) {
-            foreach (Auth::User()->userTimZI as $anggotaTim) {
-                if (in_array($anggotaTim->tim_id, $tim_ids)) {
-                    $status = "Berhak";
+        $tahun = $instansi_ZI->tahun;
+        $tahap_seleksi = TahapSeleksiZI::where('tahap_seleksi', 'Wawancara')->where('tahun', $tahun)->first();
+        if (!$tahap_seleksi) {
+            dd("Tahap Seleksi untuk tahun $tahun belum ditentukan. Silakan hubungi admin.");
+        }
+        $date_now = new \DateTime();
+        $date_buka    = new \DateTime($tahap_seleksi->tanggal_mulai);
+        $date_tutup  = new \DateTime($tahap_seleksi->tanggal_selesai);
+        if ($date_now >= $date_buka && $date_now <= $date_tutup) {
+            if (Auth::User()->userTimZI) {
+                foreach (Auth::User()->userTimZI as $anggotaTim) {
+                    if (in_array($anggotaTim->tim_id, $tim_ids)) {
+                        $status = "Berhak";
+                    }
                 }
             }
         }
+
+
         if ($status == "Tidak Berhak") {
-            abort('403');
+            dd("Jadwal Verlap Sudah Ditutup");
         }
 
         foreach ($instansi_ZI->unit_zi as $unit_zi) {
