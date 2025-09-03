@@ -153,6 +153,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/rencana_aksi/rb-tematik/perencanaan/import', [RBTematikImportController::class, 'rbTematik_import']);
     // RB Tematik Permasalahan
     Route::get('/rencana_aksi/rb-tematik/permasalahan', [RBTematikController::class, 'permasalahan'])->name('permasalahan');
+    Route::get('/rencana_aksi/rb-tematik/permasalahan/get-indikators-roadmap', [RBTematikController::class, 'getIndikatorsRoadmap'])->name('get_indikators_roadmap');
     Route::get('/rencana_aksi/rb-tematik/permasalahan/get-indikator-roadmap', [RBTematikController::class, 'getIndikatorRoadmap'])->name('get_indikator_roadmap');
     Route::post('/rencana_aksi/rb-tematik/permasalahan/simpan-permasalahan', [RBTematikController::class, 'simpanPermasalahan']);
     Route::get('/rencana_aksi/rb-tematik/permasalahan/get-permasalahan/{indikator_permasalahan_id}', [RBTematikController::class, 'get_permasalahan'])->name('get_permasalahan');

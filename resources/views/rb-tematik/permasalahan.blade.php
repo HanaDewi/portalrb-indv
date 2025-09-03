@@ -408,7 +408,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.html5.min.js"></script>
-
     <script>
         $(document).ready(function() {
             $(".numeric").inputmask("decimal", {
@@ -426,13 +425,10 @@
                 rightAlign: false,
                 min: 0,
             });
-
             modal_permasalahan = tailwind.Modal.getInstance(document.querySelector(
                 "#modal-permasalahan"));
             modal_indikator_permasalahan = tailwind.Modal.getInstance(document.querySelector(
                 "#modal-indikator-permasalahan"));
-
-
         });
 
         function output_form() {
@@ -452,8 +448,9 @@
             $(th).parent().parent().parent().remove();
         }
 
-        function tambah_permasalahan(indikator_roadmap, target_roadmap, satuan, indikator_roadmap_id) {
+        function tambah_permasalahan() {
             modal_permasalahan.show();
+            $('#sasaran-roadmap-onPermasalahan').trigger('change');
         }
 
         function tambah_indikator_permasalahan(permasalahan_id) {
@@ -627,10 +624,8 @@
     <script>
         $('#sasaran-roadmap-onPermasalahan').on('change', function() {
             var firstSelectValue = $(this).val();
-            $('#target-roadmap-onPermasalahan').val("");
-            $('#target-satuan-onPermasalahan').val("");
             $.ajax({
-                url: '{{ url('rencana_aksi/rb-tematik/permasalahan/get-indikator-roadmap') }}',
+                url: "{{ url('rencana_aksi/rb-tematik/permasalahan/get-indikators-roadmap') }}",
                 type: 'GET',
                 data: {
                     "tematik_sasaran_roadmap_id": firstSelectValue
@@ -641,9 +636,24 @@
                     // Add new options based on the response
                     $.each(response, function(key, value) {
                         $('#indikator-roadmap-onPermasalahan').append('<option value="' + value["id"] + '">' + value["nama"] + '</option>');
-                        $('#target-roadmap-onPermasalahan').val(value["target"]);
-                        $('#target-satuan-onPermasalahan').val(value["satuan"]);
                     });
+                    $('#indikator-roadmap-onPermasalahan').trigger('change'); // Trigger change event to update dependent fields
+                },
+            });
+        });
+        $('#indikator-roadmap-onPermasalahan').on('change', function() {
+            var firstSelectValue = $(this).val();
+            $('#target-roadmap-onPermasalahan').val("");
+            $('#target-satuan-onPermasalahan').val("");
+            $.ajax({
+                url: "{{ url('rencana_aksi/rb-tematik/permasalahan/get-indikator-roadmap') }}",
+                type: 'GET',
+                data: {
+                    "tematik_indikator_roadmap_id": firstSelectValue
+                },
+                success: function(data) {
+                    $('#target-roadmap-onPermasalahan').val(data["target"]);
+                    $('#target-satuan-onPermasalahan').val(data["satuan"]);
                 },
             });
         });

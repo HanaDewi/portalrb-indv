@@ -355,11 +355,18 @@ class RBTematikController extends Controller
         return redirect('rencana_aksi/rb-tematik/perencanaan');
     }
 
-    public function getIndikatorRoadmap()
+    public function getIndikatorsRoadmap()
     {
         $tematik_sasaran_roadmap_id = request()->get('tematik_sasaran_roadmap_id');
         $indikators = TematikIndikatorRoadmap::where('tematik_sasaran_roadmap_id', $tematik_sasaran_roadmap_id)->get();
         return response()->json($indikators);
+    }
+
+    public function getIndikatorRoadmap()
+    {
+        $tematik_indikator_roadmap_id = request()->get('tematik_indikator_roadmap_id');
+        $indikator = TematikIndikatorRoadmap::find($tematik_indikator_roadmap_id);
+        return response()->json($indikator);
     }
 
     public function indikatorRoadmapHapus(Request $request)
