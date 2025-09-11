@@ -190,7 +190,7 @@ class VerlapController extends Controller
         }
         $status = "Tidak Berhak";
         $tahun = $instansi_ZI->tahun;
-        $tahap_seleksi = TahapSeleksiZI::where('tahap_seleksi', 'Wawancara')->where('tahun', $tahun)->first();
+        $tahap_seleksi = TahapSeleksiZI::where('tahap_seleksi', 'Verifikasi Lapangan')->where('tahun', $tahun)->first();
         if (!$tahap_seleksi) {
             dd("Tahap Seleksi untuk tahun $tahun belum ditentukan. Silakan hubungi admin.");
         }
