@@ -206,12 +206,9 @@ class VerlapController extends Controller
                     }
                 }
             }
-        }
-
-        if ($status == "Tidak Berhak") {
+        } else {
             dd("Jadwal Verlap Sudah Ditutup");
         }
-
 
         $unit_ZIs = UnitZI::where("instansi_zi_id", $id)->where(function ($q) {
             $q->whereHas('wawancara', function ($query) {
