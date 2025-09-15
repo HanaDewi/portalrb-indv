@@ -51,7 +51,6 @@ class RBTematikImportController extends Controller
         DB::beginTransaction();
         try {
             $headings = (new HeadingRowImport())->toArray($request->file('file_rbTematik'));
-            
             if (
                 $headings[0][0][0] == "tema" &&
                 $headings[0][0][1] == "sasaran" &&
@@ -93,18 +92,20 @@ class RBTematikImportController extends Controller
                 $message = '';
                 $baris = 2;
                 foreach ($collections as $key => $collection) {
-                    if ($collection["tema"]==null) {
-                        continue;
+                    if ($collection["tema"] == null) {
+                        $success = false;
+                        $message = "Tema tidak boleh kosong (Baris " . $baris . ")";
+                        break;
                     }
                     if ($key != '') {
-                        $tema = Tema::where('nama',$collection["tema"] )->first();
-                        if(!$tema){
+                        $tema = Tema::where('nama', $collection["tema"])->where('tahun', $request->tahun)->first();
+                        if (!$tema) {
                             $success = false;
-                            $message = "Tema : " . $collection["tema"] . "Tidak sesuai dengan tema yang ada di sistem, harap menggunakan template yang disediakan ( Baris "  . $baris  . ")";
-                        }else{
-                            //cek apakah cell di excelnya kosong
-                            if(str_replace(' ', '', $collection["sasaran"])){
-                                $sasaranRoadmap = TematikSasaranRoadmap::where('instansi_id', $instansi_id)->where('tema_id',$tema->id)->where("nama", $collection["sasaran"] )->first();
+                            $message = "Tema : " . $collection["tema"] . " tidak sesuai dengan tema yang ada di sistem, harap menggunakan template yang disediakan (Baris "  . $baris  . ")";
+                            break;
+                        } else {
+                            if (str_replace(' ', '', $collection["sasaran"])) {
+                                $sasaranRoadmap = TematikSasaranRoadmap::where('instansi_id', $instansi_id)->where('tema_id', $tema->id)->where("nama", $collection["sasaran"])->first();
                                 if (!$sasaranRoadmap) {
                                     $sasaranRoadmap = new TematikSasaranRoadmap();
                                 }
@@ -113,11 +114,11 @@ class RBTematikImportController extends Controller
                                 $sasaranRoadmap->nama = $collection["sasaran"];
                                 if (!$sasaranRoadmap->save()) {
                                     $success = false;
-                                    $message = "Sasaran Tidak Bisa disimpan, mohon di cek kembali ( Baris "  . $baris  . " )";
-                                }else{
-                                    //cek apakah cell di excelnya kosong
-                                    if(str_replace(' ', '', $collection["indikator_roadmap"])){
-                                        if($collection["target"]!=Null ){
+                                    $message = "Sasaran tidak bisa disimpan, mohon dicek kembali (Baris "  . $baris  . ")";
+                                    break;
+                                } else {
+                                    if (str_replace(' ', '', $collection["indikator_roadmap"])) {
+                                        if ($collection["target"] != null) {
                                             $indikatorRoadmap = TematikIndikatorRoadmap::where('tematik_sasaran_roadmap_id', $sasaranRoadmap->id)->where('nama', $collection["indikator_roadmap"])->first();
                                             if (!$indikatorRoadmap) {
                                                 $indikatorRoadmap = new TematikIndikatorRoadmap();
@@ -131,19 +132,23 @@ class RBTematikImportController extends Controller
                                             $indikatorRoadmap->catatan = $collection["catatan"];
                                             if (!$indikatorRoadmap->save()) {
                                                 $success = false;
-                                            }else{
-                                                if(str_replace(' ', '', $collection["permasalahan"])){
-                                                    $permasalahan = TematikPermasalahan::where('tematik_indikator_roadmap_id', $indikatorRoadmap->id)->where('nama', $collection["permasalahan"])->first();
+                                                $message = "Indikator Roadmap tidak bisa disimpan (Baris " . $baris . ")";
+                                                break;
+                                            } else {
+                                                if (str_replace(' ', '', $collection["permasalahan"])) {
+                                                    $permasalahan = TematikPermasalahan::where('tematik_indikator_roadmap_id', $indikatorRoadmap->id)->where('nama', $collection["permasalahan"])->where('sasaran_permasalahan', $collection['sasaran_permasalahan'])->first();
                                                     if (!$permasalahan) {
                                                         $permasalahan = new TematikPermasalahan();
                                                     }
-                                                    $permasalahan->tematik_indikator_roadmap_id	= $indikatorRoadmap->id;
+                                                    $permasalahan->tematik_indikator_roadmap_id    = $indikatorRoadmap->id;
                                                     $permasalahan->nama = $collection["permasalahan"];
                                                     $permasalahan->sasaran_permasalahan = $collection["sasaran_permasalahan"];
                                                     if (!$permasalahan->save()) {
                                                         $success = false;
-                                                    }else{
-                                                        if(str_replace(' ', '', $collection["indikator_permasalahan"]) && str_replace(' ', '', $collection["target_indikator_permasalahan"])){
+                                                        $message = "Permasalahan tidak bisa disimpan (Baris " . $baris . ")";
+                                                        break;
+                                                    } else {
+                                                        if (str_replace(' ', '', $collection["indikator_permasalahan"]) && str_replace(' ', '', $collection["target_indikator_permasalahan"])) {
                                                             $indikatorPermasalahan = TematikIndikatorPermasalahan::where('tematik_permasalahan_id', $permasalahan->id)->where('nama', $collection["indikator_permasalahan"])->first();
                                                             if (!$indikatorPermasalahan) {
                                                                 $indikatorPermasalahan = new TematikIndikatorPermasalahan();
@@ -157,105 +162,127 @@ class RBTematikImportController extends Controller
                                                             $indikatorPermasalahan->catatan = $collection["catatan_indikator_permasalahan"];
                                                             if (!$indikatorPermasalahan->save()) {
                                                                 $success = false;
-                                                            }else{
-                                                                if(str_replace(' ', '', $collection["rencana_aksi"]) && str_replace(' ', '', $collection["indikator_output"])&& str_replace(' ', '', $collection["satuan_output"])){
+                                                                $message = "Indikator Permasalahan tidak bisa disimpan (Baris " . $baris . ")";
+                                                                break;
+                                                            } else {
+                                                                if (str_replace(' ', '', $collection["rencana_aksi"]) && str_replace(' ', '', $collection["indikator_output"]) && str_replace(' ', '', $collection["satuan_output"])) {
                                                                     $rencanaAksi = TematikRencanaAksi::where('tematik_indikator_permasalahan_id', $indikatorPermasalahan->id)->where('nama', $collection["rencana_aksi"])->first();
                                                                     if (!$rencanaAksi) {
                                                                         $rencanaAksi = new TematikRencanaAksi();
                                                                     }
-                                                                    $rencanaAksi->tematik_indikator_permasalahan_id = $indikatorPermasalahan->id ;
+                                                                    $rencanaAksi->tematik_indikator_permasalahan_id = $indikatorPermasalahan->id;
                                                                     $rencanaAksi->nama = $collection["rencana_aksi"];
                                                                     if (!$rencanaAksi->save()) {
                                                                         $success = false;
-                                                                    }else{
+                                                                        $message = "Rencana Aksi tidak bisa disimpan (Baris " . $baris . ")";
+                                                                        break;
+                                                                    } else {
                                                                         $fokus_intervensi = FokusIntervensi::where("nama", $collection["fokus_intervensi"])->first();
-                                                                        if(!$fokus_intervensi){
+                                                                        if (!$fokus_intervensi) {
                                                                             $success = false;
-                                                                        }else{
-                                                                            $rencanaAksiOutput = TematikRencanaAksiOutput::where('tematik_rencana_aksi_id', $rencanaAksi->id)->where('indikator_output', $collection["indikator_output"])->first();
-                                                                            
-                                                                            if (!$rencanaAksiOutput) {
-                                                                                $rencanaAksiOutput = new TematikRencanaAksiOutput();
-                                                                            }
-                                                                            $target_tw1 = str_replace(',', '.', str_replace('.', '', $collection["target_tw1"])); 
-                                                                            $target_tw2 = str_replace(',', '.', str_replace('.', '', $collection["target_tw2"]));
-                                                                            $target_tw3 = str_replace(',', '.', str_replace('.', '', $collection['target_tw3']));
-                                                                            $target_tw4 = str_replace(',', '.', str_replace('.', '', $collection['target_tw4']));
-                                                                            $target_total = str_replace(',', '.', str_replace('.', '', $collection['target_total']));
-                                                                            
-                                                                            $realisasi_tw1 = str_replace(',', '.', str_replace('.', '', $collection["realisasi_tw1"])); 
-                                                                            $realisasi_tw2 = str_replace(',', '.', str_replace('.', '', $collection["realisasi_tw2"])); 
-                                                                            $realisasi_tw3 = str_replace(',', '.', str_replace('.', '', $collection["realisasi_tw3"])); 
-                                                                            $realisasi_tw4 = str_replace(',', '.', str_replace('.', '', $collection["realisasi_tw4"])); 
-                                                                            $realisasi_total = str_replace(',', '.', str_replace('.', '', $collection["realisasi_total"])); 
-                                                                            $anggaran_total = str_replace(',', '.', str_replace('.', '', $collection["anggaran"]));
-                                                                            $realisasi_anggaran = str_replace(',', '.', str_replace('.', '', $collection["realisasi_anggaran"]));
-                                                                            $rencanaAksiOutput->tematik_rencana_aksi_id = $rencanaAksi->id;
-                                                                            $rencanaAksiOutput->satuan_output = $collection["satuan_output"];
-                                                                            $rencanaAksiOutput->indikator_output = $collection["indikator_output"];
-                                                                            $rencanaAksiOutput->target_tw1 = (float)$target_tw1;
-                                                                            $rencanaAksiOutput->target_tw2 = (float)$target_tw2;
-                                                                            $rencanaAksiOutput->target_tw3 = (float)$target_tw3;
-                                                                            $rencanaAksiOutput->target_tw4 = (float)$target_tw4;
-                                                                            $rencanaAksiOutput->target_total = (float)$target_total;
-                                                                            $rencanaAksiOutput->anggaran_total = (float)$anggaran_total;
-                                                                            $rencanaAksiOutput->pelaksana = $collection["pelaksana"];
-                                                                            $rencanaAksiOutput->koordinator = $collection["koordinator"];
-                                                                            $rencanaAksiOutput->realisasi_output_tw1 = (float)$realisasi_tw1;
-                                                                            $rencanaAksiOutput->realisasi_output_tw2 = (float)$realisasi_tw2;
-                                                                            $rencanaAksiOutput->realisasi_output_tw3 = (float)$realisasi_tw3;
-                                                                            $rencanaAksiOutput->realisasi_output_tw4 = (float)$realisasi_tw4;
-                                                                            $rencanaAksiOutput->realisasi_output_total = (float)$realisasi_total;
-                                                                            $rencanaAksiOutput->realisasi_anggaran_total = (float)$realisasi_anggaran;
-                                                                            $rencanaAksiOutput->catatan = $collection["catatan_monev"];
-
-                                                                            #hitung capaian
-                                                                            #biar gak dibagi sama nol
-                                                                            $pembagi_tw1 = (float)($target_tw1>0 )?$target_tw1:1;
-                                                                            $pembagi_tw2 = (float)($target_tw2>0 )?$target_tw2:1;
-                                                                            $pembagi_tw3 = (float)($target_tw3>0 )?$target_tw3:1;
-                                                                            $pembagi_tw4 = (float)($target_tw4>0 )?$target_tw4:1;
-                                                                            $pembagi_total = (float)($target_total>0 )?$target_total:1;
-                                                                            $pembagi_anggaran_total = (float)($anggaran_total>0 )?$anggaran_total:1;
-
-                                                                            $rencanaAksiOutput->capaian_output_tw1 = (float)$realisasi_tw1*100/$pembagi_tw1;
-                                                                            $rencanaAksiOutput->capaian_output_tw2 = (float)$realisasi_tw2*100/$pembagi_tw2;
-                                                                            $rencanaAksiOutput->capaian_output_tw3 = (float)$realisasi_tw3*100/$pembagi_tw3;
-                                                                            $rencanaAksiOutput->capaian_output_tw4 = (float)$realisasi_total*100/$pembagi_tw4;
-                                                                            $rencanaAksiOutput->capaian_output_total = (float)$realisasi_total*100/$pembagi_total;;
-                                                                            $rencanaAksiOutput->capaian_anggaran_total =  (float)$realisasi_anggaran*100/$pembagi_anggaran_total;
-                                                                            $rencanaAksiOutput->fokus_intervensi= $fokus_intervensi->id;
-                                                                            if (!$rencanaAksiOutput->save()) {
+                                                                            $message = "Fokus Intervensi tidak ditemukan (Baris " . $baris . ")";
+                                                                            break;
+                                                                        } else {
+                                                                            if (str_replace(' ', '', $collection["pelaksana"]) && str_replace(' ', '', $collection["koordinator"])) {
+                                                                                $rencanaAksiOutput = TematikRencanaAksiOutput::where('tematik_rencana_aksi_id', $rencanaAksi->id)->where('indikator_output', $collection["indikator_output"])->first();
+                                                                                if (!$rencanaAksiOutput) {
+                                                                                    $rencanaAksiOutput = new TematikRencanaAksiOutput();
+                                                                                }
+                                                                                $target_tw1 = str_replace(',', '.', str_replace('.', '', $collection["target_tw1"]));
+                                                                                $target_tw2 = str_replace(',', '.', str_replace('.', '', $collection["target_tw2"]));
+                                                                                $target_tw3 = str_replace(',', '.', str_replace('.', '', $collection['target_tw3']));
+                                                                                $target_tw4 = str_replace(',', '.', str_replace('.', '', $collection['target_tw4']));
+                                                                                $target_total = str_replace(',', '.', str_replace('.', '', $collection['target_total']));
+                                                                                $realisasi_tw1 = str_replace(',', '.', str_replace('.', '', $collection["realisasi_tw1"]));
+                                                                                $realisasi_tw2 = str_replace(',', '.', str_replace('.', '', $collection["realisasi_tw2"]));
+                                                                                $realisasi_tw3 = str_replace(',', '.', str_replace('.', '', $collection["realisasi_tw3"]));
+                                                                                $realisasi_tw4 = str_replace(',', '.', str_replace('.', '', $collection["realisasi_tw4"]));
+                                                                                $realisasi_total = str_replace(',', '.', str_replace('.', '', $collection["realisasi_total"]));
+                                                                                $anggaran_total = str_replace(',', '.', str_replace('.', '', $collection["anggaran"]));
+                                                                                $realisasi_anggaran = str_replace(',', '.', str_replace('.', '', $collection["realisasi_anggaran"]));
+                                                                                $rencanaAksiOutput->tematik_rencana_aksi_id = $rencanaAksi->id;
+                                                                                $rencanaAksiOutput->satuan_output = $collection["satuan_output"];
+                                                                                $rencanaAksiOutput->indikator_output = $collection["indikator_output"];
+                                                                                $rencanaAksiOutput->target_tw1 = (float)$target_tw1;
+                                                                                $rencanaAksiOutput->target_tw2 = (float)$target_tw2;
+                                                                                $rencanaAksiOutput->target_tw3 = (float)$target_tw3;
+                                                                                $rencanaAksiOutput->target_tw4 = (float)$target_tw4;
+                                                                                $rencanaAksiOutput->target_total = (float)$target_total;
+                                                                                $rencanaAksiOutput->anggaran_total = (float)$anggaran_total;
+                                                                                $rencanaAksiOutput->pelaksana = $collection["pelaksana"];
+                                                                                $rencanaAksiOutput->koordinator = $collection["koordinator"];
+                                                                                $rencanaAksiOutput->realisasi_output_tw1 = (float)$realisasi_tw1;
+                                                                                $rencanaAksiOutput->realisasi_output_tw2 = (float)$realisasi_tw2;
+                                                                                $rencanaAksiOutput->realisasi_output_tw3 = (float)$realisasi_tw3;
+                                                                                $rencanaAksiOutput->realisasi_output_tw4 = (float)$realisasi_tw4;
+                                                                                $rencanaAksiOutput->realisasi_output_total = (float)$realisasi_total;
+                                                                                $rencanaAksiOutput->realisasi_anggaran_total = (float)$realisasi_anggaran;
+                                                                                $rencanaAksiOutput->catatan = $collection["catatan_monev"];
+                                                                                #hitung capaian
+                                                                                $pembagi_tw1 = (float)($target_tw1 > 0) ? $target_tw1 : 1;
+                                                                                $pembagi_tw2 = (float)($target_tw2 > 0) ? $target_tw2 : 1;
+                                                                                $pembagi_tw3 = (float)($target_tw3 > 0) ? $target_tw3 : 1;
+                                                                                $pembagi_tw4 = (float)($target_tw4 > 0) ? $target_tw4 : 1;
+                                                                                $pembagi_total = (float)($target_total > 0) ? $target_total : 1;
+                                                                                $pembagi_anggaran_total = (float)($anggaran_total > 0) ? $anggaran_total : 1;
+                                                                                $rencanaAksiOutput->capaian_output_tw1 = (float)$realisasi_tw1 * 100 / $pembagi_tw1;
+                                                                                $rencanaAksiOutput->capaian_output_tw2 = (float)$realisasi_tw2 * 100 / $pembagi_tw2;
+                                                                                $rencanaAksiOutput->capaian_output_tw3 = (float)$realisasi_tw3 * 100 / $pembagi_tw3;
+                                                                                $rencanaAksiOutput->capaian_output_tw4 = (float)$realisasi_total * 100 / $pembagi_tw4;
+                                                                                $rencanaAksiOutput->capaian_output_total = (float)$realisasi_total * 100 / $pembagi_total;
+                                                                                $rencanaAksiOutput->capaian_anggaran_total =  (float)$realisasi_anggaran * 100 / $pembagi_anggaran_total;
+                                                                                $rencanaAksiOutput->fokus_intervensi = $fokus_intervensi->id;
+                                                                                if (!$rencanaAksiOutput->save()) {
+                                                                                    $success = false;
+                                                                                    $message = "Rencana Aksi Output tidak bisa disimpan (Baris " . $baris . ")";
+                                                                                    break;
+                                                                                }
+                                                                            } else {
                                                                                 $success = false;
+                                                                                $message = "Pelaksana dan Koordinator tidak boleh kosong (Baris " . $baris . ")";
+                                                                                break;
                                                                             }
                                                                         }
                                                                     }
-                                                                }else{
+                                                                } else {
                                                                     $success = false;
-                                                                    $message = "Jika Anda mengisi rencana aksi maka indikator output dan seterusnya harus diisi dan tidak boleh kosong ( Baris "  . $baris  . " )";
+                                                                    $message = "Jika Anda mengisi rencana aksi maka indikator output dan seterusnya harus diisi dan tidak boleh kosong (Baris "  . $baris  . ")";
                                                                     break;
                                                                 }
                                                             }
+                                                        } else {
+                                                            $success = false;
+                                                            $message = "Indikator Permasalahan dan Target Indikator Permasalahan tidak boleh kosong (Baris " . $baris . ")";
+                                                            break;
                                                         }
                                                     }
+                                                } else {
+                                                    $success = false;
+                                                    $message = "Permasalahan tidak boleh kosong (Baris " . $baris . ")";
+                                                    break;
                                                 }
                                             }
-                                        }else{
+                                        } else {
                                             $success = false;
-                                            $message = "Jika Anda mengisi indikator Roadmap maka target tidak boleh kosong ( Baris "  . $baris  . " )";
+                                            $message = "Jika Anda mengisi indikator Roadmap maka target tidak boleh kosong (Baris "  . $baris  . ")";
                                             break;
                                         }
+                                    } else {
+                                        $success = false;
+                                        $message = "Indikator Roadmap tidak boleh kosong (Baris " . $baris . ")";
+                                        break;
                                     }
                                 }
-                            }else{
+                            } else {
                                 $success = false;
-                                $message = "Sasarannya tidak boleh kosong ( Baris "  . $baris  . " )";
+                                $message = "Sasaran tidak boleh kosong (Baris "  . $baris  . ")";
                                 break;
                             }
                         }
                     } else {
                         $success = false;
-                        session()->flash('error', $message);
+                        $message = "Data tidak valid pada baris " . $baris;
+                        break;
                     }
                     $baris++;
                 }
@@ -264,7 +291,7 @@ class RBTematikImportController extends Controller
             $success = false;
             throw $th;
         }
-        
+
         if ($success) {
             DB::commit();
             session()->flash('success', 'Data RB Tematik Rencana Aksi berhasil diimport!');

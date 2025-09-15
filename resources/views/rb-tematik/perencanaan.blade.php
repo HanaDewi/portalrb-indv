@@ -338,6 +338,10 @@
                 <form action="{{ url('rencana_aksi/rb-tematik/perencanaan/import') }}" id="form-import_rencana_aksi" method="post" enctype="multipart/form-data">
                     @csrf
                     <div class="modal-body grid columns-12 gap-4 gap-y-3">
+                        <div class="g-col-12 font-bold">
+                            <label for="tahun">Tahun</label>
+                            {!! Form::select('tahun', ['2024' => '2024', '2025' => '2025'], $tahun, ['class' => 'w-full', 'id' => 'import_tahun', 'data-placeholder' => 'Pilih Tahun', 'required']) !!}
+                        </div>
                         <div class="g-col-12">
                             <input type="file" id="file_rbTematik" name="file_rbTematik" required>
                         </div>
