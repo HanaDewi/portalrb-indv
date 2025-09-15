@@ -97,13 +97,26 @@
                                 :
                                 {{$unit_zi->nama}}
                             </td>
-                            <td class="bukti_dukung">
+                            <td class="bukti_dukung link-wrap">
                                 @if(isset($unit_zi->analisis_dokumen))
-                                {{$unit_zi->analisis_dokumen->bukti_dukung}}
+                                <a href="{{$unit_zi->analisis_dokumen->bukti_dukung}}"
+                                    target="_blank">{{$unit_zi->analisis_dokumen->bukti_dukung}}</a>
                                 @endif
                             </td>
                             <td>
-
+                                <select class="form-control" name="sama_waktu_wawancara_{{$unit_zi->id}}"
+                                    id="sama_waktu_wawancara_{{$unit_zi->id}}"
+                                    onchange="cek_wawancara({{$unit_zi->id}}, '{{$unit_zi->wawancara->jadwal}}')">
+                                    <option value="input_baru" selected> Input Jadwal Wawancara</option>
+                                    <option value="wawancara" @if(isset($unit_zi->verifikasi_lapangan))
+                                        @if($unit_zi->verifikasi_lapangan->jadwal == $unit_zi->wawancara->jadwal)
+                                        selected
+                                        @php
+                                        $sama_waktu_wawancara = true;
+                                        @endphp
+                                        @endif @endif > Sudah dilakukan verlap bersamaan dengan wawancara</option>
+                                </select>
+                                <br><br>
                                 @if(isset($unit_zi->verifikasi_lapangan))
                                 @if(isset($unit_zi->verifikasi_lapangan->jadwal))
                                 @if(\Carbon\Carbon::parse($unit_zi->verifikasi_lapangan->jadwal)->isoFormat('HH:mm')=='00:00')
@@ -117,19 +130,20 @@
                                 @endif
                                 @endif
                                 <br />
-
-                                Tanggal dan Waktu <br />
-                                <input type="datetime-local" id="jadwal" name="jadwal-{{$unit_zi->id}}"
-                                    @if(isset($unit_zi->verifikasi_lapangan))
-                                value="{{$unit_zi->verifikasi_lapangan->jadwal}}"
-                                @endif
-                                class="form-control">
-                                <hr>
-                                <br />
-
+                                <div @if(isset($sama_waktu_wawancara )) style="display: none" @endif>
+                                    <label>Tanggal dan Waktu </label><br />
+                                    <input type="datetime-local" id="jadwal-{{$unit_zi->id}}"
+                                        name="jadwal-{{$unit_zi->id}}" @if(isset($unit_zi->verifikasi_lapangan))
+                                    value="{{$unit_zi->verifikasi_lapangan->jadwal}}"
+                                    @endif
+                                    class="form-control">
+                                    <hr>
+                                    <br />
+                                </div>
                             </td>
                             <td>
-                                <select disabled class="form-control status" name="status-{{$unit_zi->id}}"
+                                <select @if ($status !="Berhak" ) disabled @endif class="form-control status"
+                                    name="status-{{$unit_zi->id}}"
                                     data-old=@if(isset($unit_zi->verifikasi_lapangan->status))
                                     @if($unit_zi->verifikasi_lapangan->status==1) "1"
                                     @elseif($unit_zi->verifikasi_lapangan->status===0) "0"
@@ -204,6 +218,18 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.html5.min.js"></script>
 <script>
+    function cek_wawancara(unitId, jadwalWawancara){
+        var unitId =  unitId;
+        var valWawancara = $('#sama_waktu_wawancara_'+unitId).val();
+        if(valWawancara=="wawancara"){
+            $('#jadwal-'+unitId).val(jadwalWawancara);
+            $('#jadwal-'+unitId).prop('disabled', true);
+        }else{  
+            $('#jadwal-'+unitId).val('');
+            $('#jadwal-'+unitId).prop('disabled', false);
+        }    
+    }
+
     $(document).ready(function(){
 
         $('.openNew').click(function(event) {

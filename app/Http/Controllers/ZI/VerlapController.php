@@ -206,8 +206,6 @@ class VerlapController extends Controller
                     }
                 }
             }
-        } else {
-            dd("Jadwal Verlap Sudah Ditutup");
         }
 
         $unit_ZIs = UnitZI::where("instansi_zi_id", $id)->where(function ($q) {
@@ -260,7 +258,7 @@ class VerlapController extends Controller
 
 
         if ($status == "Tidak Berhak") {
-            dd("Jadwal Verlap Sudah Ditutup");
+            dd("Anda tidak berhak atau Jadwal Verlap Sudah Ditutup");
         }
 
         foreach ($instansi_ZI->unit_zi as $unit_zi) {
