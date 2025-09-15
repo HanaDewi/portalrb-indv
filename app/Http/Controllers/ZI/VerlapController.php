@@ -257,23 +257,26 @@ class VerlapController extends Controller
         }
 
 
+
         if ($status == "Tidak Berhak") {
             dd("Anda tidak berhak atau Jadwal Verlap Sudah Ditutup");
         }
 
         foreach ($instansi_ZI->unit_zi as $unit_zi) {
-            $verlapUnit = VerifikasiLapangan::where('unit_zi_id', $unit_zi->id)->first();
             if ($unit_zi->wawancara) {
                 if ($unit_zi->wawancara->status == 1) {
+                    $verlapUnit = VerifikasiLapangan::where('unit_zi_id', $unit_zi->id)->first();
                     if (!$verlapUnit) {
                         $verlapUnit = new VerifikasiLapangan();
                         $verlapUnit->unit_zi_id = $unit_zi->id;
                     }
+
                     if (!is_null($request->get('jadwal-' . $unit_zi->id))) $verlapUnit->jadwal = $request->get('jadwal-' . $unit_zi->id);
                     //if(!is_null($request->get('bukti-dukung-'.$unit_zi->id )))$verlapUnit->bukti_dukung = $request->get('bukti-dukung-'.$unit_zi->id ); 
                     if (!is_null($request->get('kondisi-' . $unit_zi->id))) $verlapUnit->kondisi = $request->get('kondisi-' . $unit_zi->id);
                     if (!is_null($request->get('rekomendasi-' . $unit_zi->id))) $verlapUnit->rekomendasi = $request->get('rekomendasi-' . $unit_zi->id);
-                    //if(!is_null($request->get('status-'.$unit_zi->id )))$verlapUnit->status = $request->get('status-'.$unit_zi->id ); 
+                    if (!is_null($request->get('status-' . $unit_zi->id))) $verlapUnit->status = $request->get('status-' . $unit_zi->id);
+
                     $verlapUnit->updated_by = Auth::User()->id;
                     $verlapUnit->save();
                 };

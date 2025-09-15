@@ -130,13 +130,13 @@
                                 @endif
                                 @endif
                                 <br />
-                                <div @if(isset($sama_waktu_wawancara )) style="display: none" @endif>
+                                <div>
                                     <label>Tanggal dan Waktu </label><br />
                                     <input type="datetime-local" id="jadwal-{{$unit_zi->id}}"
                                         name="jadwal-{{$unit_zi->id}}" @if(isset($unit_zi->verifikasi_lapangan))
                                     value="{{$unit_zi->verifikasi_lapangan->jadwal}}"
                                     @endif
-                                    class="form-control">
+                                    class="form-control" @if(isset($sama_waktu_wawancara )) readonly @endif>
                                     <hr>
                                     <br />
                                 </div>
@@ -223,10 +223,10 @@
         var valWawancara = $('#sama_waktu_wawancara_'+unitId).val();
         if(valWawancara=="wawancara"){
             $('#jadwal-'+unitId).val(jadwalWawancara);
-            $('#jadwal-'+unitId).prop('disabled', true);
+            $('#jadwal-'+unitId).prop('readonly', true);
         }else{  
             $('#jadwal-'+unitId).val('');
-            $('#jadwal-'+unitId).prop('disabled', false);
+            $('#jadwal-'+unitId).prop('readonly', false);
         }    
     }
 
