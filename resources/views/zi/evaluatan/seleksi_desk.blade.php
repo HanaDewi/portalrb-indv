@@ -139,6 +139,9 @@
                                         <td style="text-align: left">
                                             @if(isset($unit->verifikasi_lapangan->jadwal))
                                             <i class="fa fa-calendar fa-lg text-danger" aria-hidden="true"></i>
+                                            @if($unit->verifikasi_lapangan->jadwal == $unit->wawancara->jadwal)
+                                            Sudah dilakukan verifikasi lapangan bersamaan dengan wawancara
+                                            @else
                                             @if(\Carbon\Carbon::parse($unit->verifikasi_lapangan->jadwal)->isoFormat('HH')!='00')
                                             {{\Carbon\Carbon::parse($unit->verifikasi_lapangan->jadwal)->isoFormat('dddd,
                                             D
@@ -147,6 +150,7 @@
                                             {{\Carbon\Carbon::parse($unit->verifikasi_lapangan->jadwal)->isoFormat('dddd,
                                             D
                                             MMMM Y');}}
+                                            @endif
                                             @endif
                                             @endif
                                         </td>
