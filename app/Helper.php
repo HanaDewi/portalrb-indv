@@ -14,6 +14,7 @@ use App\Models\LKE\LkeTestTpLine;
 use App\Models\OpenAccessSetting;
 use App\Models\LkeTP;
 use App\Models\Tahun;
+use App\Models\Tema;
 use App\Models\TimEvaluasiRB;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -531,6 +532,13 @@ if(! function_exists('tahun')) {
     function tahun()
     {
         return Tahun::pluck('tahun', 'tahun');
+    }
+}
+
+if(! function_exists('tahun_tematik')) {
+    function tahun_tematik()
+    {
+        return Tema::select('tahun')->distinct()->pluck('tahun', 'tahun');
     }
 }
 

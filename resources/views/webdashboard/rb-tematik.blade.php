@@ -1,60 +1,103 @@
 @extends('layout.rubick')
 @section('title', 'Dashboard RB Tematik')
-@section('content')
 
-    <div class="intro-y col-span-12 lg:col-span-12">
+@section('content')
+    <div class="intro-y col-span-12">
+        <div class="intro-y box p-5">
+            <div class="form-group mb-3">
+                <form>
+                    <label for="tahun" class="form-label mt-2">Tahun</label>
+                    {!! Form::select('tahun', tahun_tematik(), $tahun, ['class' => 'w-full', 'id' => 'tahun', 'data-placeholder' => 'Pilih Tahun', 'onchange' => 'this.form.submit();']) !!}
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="intro-y col-span-12 my-5">
         @include('common.status')
         <h2 class="text-lg font-medium truncate mr-5">Dashboard RB Tematik - Penilaian Tema dan Sasaran Tematik, Permasalahan
             dan Sasaran, Rencana Aksi. </h2>
     </div>
-    <div class="col-span-12 sm:col-span-6 lg:col-span-4">
-        <div class="intro-y box p-5">
-            <h2 class="text-lg font-medium truncate mr-5">
-                Provinsi
-            </h2>
-            <div class="mt-3">
-                <div class="h-[213px]">
-                    <canvas id="pie-chart-provinsi" width="956" height="800"
-                        style="display: block; box-sizing: border-box; height: 400px; width: 478px;"></canvas>
+    <div class="col-span-12 grid grid-cols-12 gap-6">
+        <div class="col-span-12 sm:col-span-6 2xl:col-span-4 intro-y">
+            <div class="intro-y box p-5">
+                <h2 class="text-lg font-medium truncate mr-5">
+                    Provinsi
+                </h2>
+                <div class="mt-3">
+                    <div class="h-[213px]">
+                        <canvas id="pie-chart-provinsi" width="956" height="800" style="display: block; box-sizing: border-box; height: 400px; width: 478px;"></canvas>
+                    </div>
                 </div>
-            </div>
 
-        </div>
-    </div>
-
-    <div class="col-span-12 sm:col-span-6 lg:col-span-4">
-        <div class="intro-y box p-5">
-            <h2 class="text-lg font-medium truncate mr-5">
-                Kementrian Lembaga
-            </h2>
-            <div class="mt-3">
-                <div class="h-[213px]">
-                    <canvas id="pie-chart-kementrian" width="956" height="800"
-                        style="display: block; box-sizing: border-box; height: 400px; width: 478px;"></canvas>
-                </div>
-            </div>
-
-        </div>
-    </div>
-
-    <div class="col-span-12 sm:col-span-6 lg:col-span-4">
-        <div class="intro-y box p-5">
-            <h2 class="text-lg font-medium truncate mr-5">
-                Pemerintah Kabupaten/Kota
-            </h2>
-            <div class="mt-3">
-                <div class="h-[213px]">
-                    <canvas id="pie-chart-pemerintah" width="956" height="800"
-                        style="display: block; box-sizing: border-box; height: 400px; width: 478px;"></canvas>
-                </div>
             </div>
         </div>
-    </div>
 
-    <div class="intro-y col-span-12 lg:col-span-12">
+        <div class="col-span-12 sm:col-span-6 2xl:col-span-4 intro-y">
+            <div class="intro-y box p-5">
+                <h2 class="text-lg font-medium truncate mr-5">
+                    Kementrian Lembaga
+                </h2>
+                <div class="mt-3">
+                    <div class="h-[213px]">
+                        <canvas id="pie-chart-kementrian" width="956" height="800" style="display: block; box-sizing: border-box; height: 400px; width: 478px;"></canvas>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="col-span-12 sm:col-span-6 2xl:col-span-4 intro-y">
+            <div class="intro-y box p-5">
+                <h2 class="text-lg font-medium truncate mr-5">
+                    Pemerintah Kabupaten/Kota
+                </h2>
+                <div class="mt-3">
+                    <div class="h-[213px]">
+                        <canvas id="pie-chart-pemerintah" width="956" height="800" style="display: block; box-sizing: border-box; height: 400px; width: 478px;"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="intro-y col-span-12 my-5">
         <h2 class="text-lg font-medium truncate mr-5">Dashboard RB Tematik Berdasarkan Tematik Permasalahan</h2>
     </div>
 
+    @php
+        $temaDefinitions = [];
+        foreach ($temas as $index => $tema) {
+            $alias = 'tema' . ($index + 1);
+            $temaDefinitions[] = [
+                'alias' => $alias,
+                'label' => 'Tema ' . ($index + 1),
+                'name' => $tema->nama,
+            ];
+        }
+
+        $temaLabels = [];
+        $temaLegendLabels = [];
+        foreach ($temaDefinitions as $definition) {
+            $temaLabels[] = $definition['label'];
+            $temaLegendLabels[] = $definition['label'] . ': ' . $definition['name'];
+        }
+
+        $palette = ['#f1c40f', '#b32d29', '#b3611f', '#b39450', '#a2a2a2', '#30d15b', '#2980b9', '#8e44ad', '#16a085', '#e67e22', '#2c3e50', '#95a5a6'];
+        $temaColors = [];
+        $paletteCount = count($palette);
+        $temaCount = count($temaDefinitions);
+        for ($i = 0; $i < $temaCount; $i++) {
+            $temaColors[] = $palette[$i % $paletteCount];
+        }
+
+        $groupKeys = ['kl', 'provinsi', 'kabupaten'];
+        $temaCountsByGroup = [];
+        $groupTotals = [];
+        foreach ($groupKeys as $groupKey) {
+            $temaCountsByGroup[$groupKey] = array_fill(0, $temaCount, 0);
+            $groupTotals[$groupKey] = ['yes' => 0, 'no' => 0];
+        }
+    @endphp
+
     <div class="col-span-12 sm:col-span-6 lg:col-span-4">
         <div class="intro-y box p-5">
             <h2 class="text-lg font-medium truncate mr-5">
@@ -62,8 +105,7 @@
             </h2>
             <div class="mt-3">
                 <div class="h-[213px]">
-                    <canvas id="pie-bar1" width="956" height="800"
-                        style="display: block; box-sizing: border-box; height: 400px; width: 478px;"></canvas>
+                    <canvas id="pie-bar1" width="956" height="800" style="display: block; box-sizing: border-box; height: 400px; width: 478px;"></canvas>
                 </div>
             </div>
         </div>
@@ -76,8 +118,7 @@
             </h2>
             <div class="mt-3">
                 <div class="h-[213px]">
-                    <canvas id="pie-bar2" width="956" height="800"
-                        style="display: block; box-sizing: border-box; height: 400px; width: 478px;"></canvas>
+                    <canvas id="pie-bar2" width="956" height="800" style="display: block; box-sizing: border-box; height: 400px; width: 478px;"></canvas>
                 </div>
             </div>
         </div>
@@ -90,53 +131,29 @@
             </h2>
             <div class="mt-3">
                 <div class="h-[213px]">
-                    <canvas id="pie-bar3" width="956" height="800"
-                        style="display: block; box-sizing: border-box; height: 400px; width: 478px;"></canvas>
+                    <canvas id="pie-bar3" width="956" height="800" style="display: block; box-sizing: border-box; height: 400px; width: 478px;"></canvas>
                 </div>
             </div>
         </div>
     </div>
 
-
-
     <div class="intro-y col-span-12 lg:col-span-12" class="overflow-x-auto">
         <table class="table table-report -mt-2">
             <tbody>
                 <tr class="intro-x">
-                    <td class="text-center">
-                        <div class="flex items-center">
-                            <div class="w-4 h-4 rounded-full mr-3" style="background-color: #f1c40f"></div>
-                            Tema 1: Pengentasan Kemiskinan
-                        </div>
-                    </td>
-                    <td class="text-center">
-                        <div class="flex items-center">
-                            <div class="w-4 h-4 bg-primary rounded-full mr-3"></div>
-                            Tema 2: Realisasi Investasi
-                        </div>
-                    </td>
-                    <td class="text-center">
-                        <div class="flex items-center">
-                            <div class="w-4 h-4 rounded-full mr-3" style="background-color: #b3611f"></div>
-                            Tema 3: Digitalisasi Pemerintahan
-                        </div>
-                    </td>
-                    <td class="text-center">
-                        <div class="flex items-center">
-                            <div class="w-4 h-4 rounded-full mr-3" style="background-color: #b39450"></div>
-                            Tema 4: Penggunaan Produk Dalam Negeri
-                        </div>
-                    </td>
-                    <td class="text-center">
-                        <div class="flex items-center">
-                            <div class="w-4 h-4 rounded-full mr-3" style="background-color: #a2a2a2"></div>
-                            Tema 5: Pengendalian Inflasi
-                        </div>
-                    </td>
+                    @forelse ($temaLegendLabels as $legendIndex => $legend)
+                        <td class="text-center">
+                            <div class="flex items-center">
+                                <div class="w-4 h-4 rounded-full mr-3" style="background-color: {{ $temaColors[$legendIndex] ?? '#f1c40f' }}"></div>
+                                {{ $legend }}
+                            </div>
+                        </td>
+                    @empty
+                        <td class="text-center">Belum ada tema pada tahun terpilih.</td>
+                    @endforelse
                 </tr>
             </tbody>
         </table>
-
 
     </div>
 
@@ -161,92 +178,41 @@
                 <tbody>
                     @php
                         $no = 0;
-                        $yes_kl = 0;
-                        $no_kl = 0;
-                        $yes_prov = 0;
-                        $no_prov = 0;
-                        $yes_kab = 0;
-                        $no_kab = 0;
-                        $tema_kl_counts = [
-                            'tema1' => 0,
-                            'tema2' => 0,
-                            'tema3' => 0,
-                            'tema4' => 0,
-                            'tema5' => 0,
-                        ];
-                        $tema_prov_counts = [
-                            'tema1' => 0,
-                            'tema2' => 0,
-                            'tema3' => 0,
-                            'tema4' => 0,
-                            'tema5' => 0,
-                        ];
-                        $tema_kab_counts = [
-                            'tema1' => 0,
-                            'tema2' => 0,
-                            'tema3' => 0,
-                            'tema4' => 0,
-                            'tema5' => 0,
-                        ];
                     @endphp
                     @foreach ($instansis as $instansi)
                         @php
                             $no++;
 
-                            $tematik = $tematiks[$instansi->id]->tematik ?? '---';
-                            $permasalahan = $tematiks[$instansi->id]->permasalahan ?? '---';
-                            $rencana_aksi = $tematiks[$instansi->id]->rencana_aksi ?? '---';
-                            $tema_id_count = $tematiks[$instansi->id]->tema_id_count ?? '---';
-                            $semua = $tematik == 'yes' && $permasalahan == 'yes' && $rencana_aksi == 'yes' ? 'yes' : '---';
+                            $temaData = $tematiks[$instansi->id] ?? null;
+                            $tematik = $temaData->tematik ?? '---';
+                            $permasalahan = $temaData->permasalahan ?? '---';
+                            $rencana_aksi = $temaData->rencana_aksi ?? '---';
+                            $tema_id_count = $temaData->tema_id_count ?? '---';
+                            $semua = $tematik === 'yes' && $permasalahan === 'yes' && $rencana_aksi === 'yes';
+                            $semua_label = $semua ? 'yes' : '---';
 
-                            $temas = [
-                                'tema1' => $tematiks[$instansi->id]->tema1 ?? 0,
-                                'tema2' => $tematiks[$instansi->id]->tema2 ?? 0,
-                                'tema3' => $tematiks[$instansi->id]->tema3 ?? 0,
-                                'tema4' => $tematiks[$instansi->id]->tema4 ?? 0,
-                                'tema5' => $tematiks[$instansi->id]->tema5 ?? 0,
-                            ];
+                            $groupKey = $instansi->group;
 
-                            foreach ($temas as $key => $tema) {
-                                if ($tema) {
-                                    if ($instansi->group == 'kl') {
-                                        $tema_kl_counts[$key]++;
-                                    } elseif ($instansi->group == 'kabupaten') {
-                                        $tema_kab_counts[$key]++;
-                                    } else {
-                                        $tema_prov_counts[$key]++;
+                            if ($temaData && array_key_exists($groupKey, $temaCountsByGroup)) {
+                                foreach ($temaDefinitions as $position => $definition) {
+                                    $alias = $definition['alias'];
+                                    if (!empty($temaData->{$alias})) {
+                                        $temaCountsByGroup[$groupKey][$position]++;
                                     }
                                 }
                             }
 
-                            $tema_counts_kl_json = json_encode(array_values($tema_kl_counts));
-                            $tema_counts_kab_json = json_encode(array_values($tema_kab_counts));
-                            $tema_counts_prov_json = json_encode(array_values($tema_prov_counts));
-
-                            if ($instansi->group == 'kl') {
-                                if ($semua == 'yes') {
-                                    $yes_kl++;
+                            if (array_key_exists($groupKey, $groupTotals)) {
+                                if ($semua) {
+                                    $groupTotals[$groupKey]['yes']++;
                                 } else {
-                                    $no_kl++;
-                                }
-                            } elseif ($instansi->group == 'provinsi') {
-                                if ($semua == 'yes') {
-                                    $yes_prov++;
-                                } else {
-                                    $no_prov++;
-                                }
-                            } elseif ($instansi->group == 'kabupaten') {
-                                if ($semua == 'yes') {
-                                    $yes_kab++;
-                                } else {
-                                    $no_kab++;
+                                    $groupTotals[$groupKey]['no']++;
                                 }
                             }
                         @endphp
                         <tr>
                             <td>{{ $no }}</td>
-                            <td><a class="tabel"
-                                    href="{{ URL::to('/rencana_aksi/rb-tematik/rekap_data?instansi_id=' . $instansi->id) }}">{{ $instansi->name }}</a>
+                            <td><a class="tabel" href="{{ URL::to('/rencana_aksi/rb-tematik/rekap_data?instansi_id=' . $instansi->id) }}">{{ $instansi->name }}</a>
                             </td>
                             @php
                                 $group = group_instansi($instansi->group);
@@ -255,31 +221,31 @@
                             <td> {{ $tema_id_count }}
                             </td>
                             <td>
-                                @if ($tematik == 'yes')
-                                <span style="font-weight: bolder; font-size:28px;">✔</span>
+                                @if ($tematik === 'yes')
+                                    <span style="font-weight: bolder; font-size:28px;">✔</span>
                                 @else
                                     {{ $tematik }}
                                 @endif
                             </td>
                             <td>
-                                @if ($permasalahan == 'yes')
-                                <span style="font-weight: bolder; font-size:28px;">✔</span>
+                                @if ($permasalahan === 'yes')
+                                    <span style="font-weight: bolder; font-size:28px;">✔</span>
                                 @else
                                     {{ $permasalahan }}
                                 @endif
                             </td>
                             <td>
-                                @if ($rencana_aksi == 'yes')
-                                <span style="font-weight: bolder; font-size:28px;">✔</span>
+                                @if ($rencana_aksi === 'yes')
+                                    <span style="font-weight: bolder; font-size:28px;">✔</span>
                                 @else
                                     {{ $rencana_aksi }}
                                 @endif
                             </td>
                             <td>
-                                @if ($semua == 'yes')
-                                <span style="font-weight: bolder; font-size:28px; color: #30d15b;">✔</span>
+                                @if ($semua)
+                                    <span style="font-weight: bolder; font-size:28px; color: #30d15b;">✔</span>
                                 @else
-                                    {{ $semua }}
+                                    {{ $semua_label }}
                                 @endif
                             </td>
                         </tr>
@@ -288,6 +254,15 @@
             </table>
         </div>
     </div>
+
+    @php
+        $yes_kl = $groupTotals['kl']['yes'] ?? 0;
+        $no_kl = $groupTotals['kl']['no'] ?? 0;
+        $yes_prov = $groupTotals['provinsi']['yes'] ?? 0;
+        $no_prov = $groupTotals['provinsi']['no'] ?? 0;
+        $yes_kab = $groupTotals['kabupaten']['yes'] ?? 0;
+        $no_kab = $groupTotals['kabupaten']['no'] ?? 0;
+    @endphp
 @endsection
 
 @push('js')
@@ -388,28 +363,27 @@
             });
         }
 
+        const temaLabels = @json($temaLabels);
+        const temaLegendColors = @json($temaColors);
+        const temaCountsByGroup = {
+            provinsi: @json($temaCountsByGroup['provinsi'] ?? []),
+            kl: @json($temaCountsByGroup['kl'] ?? []),
+            kabupaten: @json($temaCountsByGroup['kabupaten'] ?? []),
+        };
 
-        var tema_prov_Counts = <?php echo $tema_counts_prov_json; ?>;
-
-        if (document.getElementById("pie-bar1")) {
+        if (temaLabels.length && document.getElementById("pie-bar1")) {
             var ctxProvinsis = document.getElementById("pie-bar1").getContext("2d");
 
             var myPieChartProvinsi = new Chart(ctxProvinsis, {
                 type: "bar",
                 data: {
-                    labels: ["Tema 1", "Tema 2", "Tema 3", "Tema 4", "Tema 5"],
+                    labels: temaLabels,
                     datasets: [{
-                        data: tema_prov_Counts,
-                        backgroundColor: [
-                            "#f1c40f", "#b32d29", "#b3611f", "#b39450", "#a2a2a2", "#000", "#e74a0c"
-                        ],
-                        hoverBackgroundColor: [
-                            "#f1c40f", "#b32d29", "#b3611f", "#b39450", "#a2a2a2", "#000", "#e74a0c"
-                        ],
+                        data: temaCountsByGroup.provinsi,
+                        backgroundColor: temaLegendColors,
+                        hoverBackgroundColor: temaLegendColors,
                         borderWidth: 1,
-                        borderColor: [
-                            "#f1c40f", "#b32d29", "#f1bf52", "#b39450", "#a2a2a2", "#000", "#e74a0c"
-                        ]
+                        borderColor: temaLegendColors
                     }]
                 },
                 options: {
@@ -433,26 +407,19 @@
         }
 
 
-        var tema_kl_Counts = <?php echo $tema_counts_kl_json; ?>;
-        if (document.getElementById("pie-bar2")) {
+        if (temaLabels.length && document.getElementById("pie-bar2")) {
             var ctxProvinsis2 = document.getElementById("pie-bar2").getContext("2d");
 
             var myPieChartProvinsi2 = new Chart(ctxProvinsis2, {
                 type: "bar",
                 data: {
-                    labels: ["Tema 1", "Tema 2", "Tema 3", "Tema 4", "Tema 5"],
+                    labels: temaLabels,
                     datasets: [{
-                        data: tema_kl_Counts,
-                        backgroundColor: [
-                            "#f1c40f", "#b32d29", "#b3611f", "#b39450", "#a2a2a2", "#000", "#e74a0c"
-                        ],
-                        hoverBackgroundColor: [
-                            "#f1c40f", "#b32d29", "#b3611f", "#b39450", "#a2a2a2", "#000", "#e74a0c"
-                        ],
+                        data: temaCountsByGroup.kl,
+                        backgroundColor: temaLegendColors,
+                        hoverBackgroundColor: temaLegendColors,
                         borderWidth: 1,
-                        borderColor: [
-                            "#f1c40f", "#b32d29", "#f1bf52", "#b39450", "#a2a2a2", "#000", "#e74a0c"
-                        ]
+                        borderColor: temaLegendColors
                     }]
                 },
                 options: {
@@ -476,26 +443,19 @@
         }
 
 
-        var tema_kab_Counts = <?php echo $tema_counts_kab_json; ?>;
-        if (document.getElementById("pie-bar3")) {
+        if (temaLabels.length && document.getElementById("pie-bar3")) {
             var ctxProvinsis3 = document.getElementById("pie-bar3").getContext("2d");
 
             var myPieChartProvinsi3 = new Chart(ctxProvinsis3, {
                 type: "bar",
                 data: {
-                    labels: ["Tema 1", "Tema 2", "Tema 3", "Tema 4", "Tema 5"],
+                    labels: temaLabels,
                     datasets: [{
-                        data: tema_kab_Counts,
-                        backgroundColor: [
-                            "#f1c40f", "#b32d29", "#b3611f", "#b39450", "#a2a2a2", "#000", "#e74a0c"
-                        ],
-                        hoverBackgroundColor: [
-                            "#f1c40f", "#b32d29", "#b3611f", "#b39450", "#a2a2a2", "#000", "#e74a0c"
-                        ],
+                        data: temaCountsByGroup.kabupaten,
+                        backgroundColor: temaLegendColors,
+                        hoverBackgroundColor: temaLegendColors,
                         borderWidth: 1,
-                        borderColor: [
-                            "#f1c40f", "#b32d29", "#f1bf52", "#b39450", "#a2a2a2", "#000", "#e74a0c"
-                        ]
+                        borderColor: temaLegendColors
                     }]
                 },
                 options: {
@@ -520,41 +480,39 @@
 
 
 
-       
-    $(document).ready(function() {
+
+        $(document).ready(function() {
             var empDataTable = $('#perencanaan').DataTable({
                 "scrollX": true,
-            dom: 'Blfrtip',
-            pageLength: 50,
-            lengthMenu: [50, 100, 150, 'All'],
-            buttons: [
-                {
-                    extend: 'pdf',
-                    exportOptions: {
-                        columns: [0,1,2,3,4,5,6]
+                dom: 'Blfrtip',
+                pageLength: 50,
+                lengthMenu: [50, 100, 150, 'All'],
+                buttons: [{
+                        extend: 'pdf',
+                        exportOptions: {
+                            columns: [0, 1, 2, 3, 4, 5, 6]
+                        },
+                        orientation: 'landscape',
+                        pageSize: 'A4',
+                        text: '<button class="btn btn-danger w-32 mr-2 mb-2"><svg fill="#ffffff" height="24px" width="24px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 482.14 482.14" xml:space="preserve" stroke="#ffffff"> <g id="SVGRepo_bgCarrier" stroke-width="0"/> <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"/> <g id="SVGRepo_iconCarrier"> <g> <path d="M142.024,310.194c0-8.007-5.556-12.782-15.359-12.782c-4.003,0-6.714,0.395-8.132,0.773v25.69 c1.679,0.378,3.743,0.504,6.588,0.504C135.57,324.379,142.024,319.1,142.024,310.194z"/> <path d="M202.709,297.681c-4.39,0-7.227,0.379-8.905,0.772v56.896c1.679,0.394,4.39,0.394,6.841,0.394 c17.809,0.126,29.424-9.677,29.424-30.449C230.195,307.231,219.611,297.681,202.709,297.681z"/> <path d="M315.458,0H121.811c-28.29,0-51.315,23.041-51.315,51.315v189.754h-5.012c-11.418,0-20.678,9.251-20.678,20.679v125.404 c0,11.427,9.259,20.677,20.678,20.677h5.012v22.995c0,28.305,23.025,51.315,51.315,51.315h264.223 c28.272,0,51.3-23.011,51.3-51.315V121.449L315.458,0z M99.053,284.379c6.06-1.024,14.578-1.796,26.579-1.796 c12.128,0,20.772,2.315,26.58,6.965c5.548,4.382,9.292,11.615,9.292,20.127c0,8.51-2.837,15.745-7.999,20.646 c-6.714,6.32-16.643,9.157-28.258,9.157c-2.585,0-4.902-0.128-6.714-0.379v31.096H99.053V284.379z M386.034,450.713H121.811 c-10.954,0-19.874-8.92-19.874-19.889v-22.995h246.31c11.42,0,20.679-9.25,20.679-20.677V261.748 c0-11.428-9.259-20.679-20.679-20.679h-246.31V51.315c0-10.938,8.921-19.858,19.874-19.858l181.89-0.19v67.233 c0,19.638,15.934,35.587,35.587,35.587l65.862-0.189l0.741,296.925C405.891,441.793,396.987,450.713,386.034,450.713z M174.065,369.801v-85.422c7.225-1.15,16.642-1.796,26.58-1.796c16.516,0,27.226,2.963,35.618,9.282 c9.031,6.714,14.704,17.416,14.704,32.781c0,16.643-6.06,28.133-14.453,35.224c-9.157,7.612-23.096,11.222-40.125,11.222 C186.191,371.092,178.966,370.446,174.065,369.801z M314.892,319.226v15.996h-31.23v34.973h-19.74v-86.966h53.16v16.122h-33.42 v19.875H314.892z"/> </g> </g> </svg> &nbsp;PDF </button>',
+                        titleAttr: 'Download PDF',
+                        customize: function(doc) {
+                            doc.content[1].table.body.forEach(function(row) {
+                                row.forEach(function(cell) {
+                                    if (cell.text === '✔' || cell.text === '✓') {
+                                        cell.text = 'YA';
+                                    }
+                                });
+                            });
+                        }
                     },
-                    orientation: 'landscape',
-                    pageSize: 'A4',
-                    text: '<button class="btn btn-danger w-32 mr-2 mb-2"><svg fill="#ffffff" height="24px" width="24px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 482.14 482.14" xml:space="preserve" stroke="#ffffff"> <g id="SVGRepo_bgCarrier" stroke-width="0"/> <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"/> <g id="SVGRepo_iconCarrier"> <g> <path d="M142.024,310.194c0-8.007-5.556-12.782-15.359-12.782c-4.003,0-6.714,0.395-8.132,0.773v25.69 c1.679,0.378,3.743,0.504,6.588,0.504C135.57,324.379,142.024,319.1,142.024,310.194z"/> <path d="M202.709,297.681c-4.39,0-7.227,0.379-8.905,0.772v56.896c1.679,0.394,4.39,0.394,6.841,0.394 c17.809,0.126,29.424-9.677,29.424-30.449C230.195,307.231,219.611,297.681,202.709,297.681z"/> <path d="M315.458,0H121.811c-28.29,0-51.315,23.041-51.315,51.315v189.754h-5.012c-11.418,0-20.678,9.251-20.678,20.679v125.404 c0,11.427,9.259,20.677,20.678,20.677h5.012v22.995c0,28.305,23.025,51.315,51.315,51.315h264.223 c28.272,0,51.3-23.011,51.3-51.315V121.449L315.458,0z M99.053,284.379c6.06-1.024,14.578-1.796,26.579-1.796 c12.128,0,20.772,2.315,26.58,6.965c5.548,4.382,9.292,11.615,9.292,20.127c0,8.51-2.837,15.745-7.999,20.646 c-6.714,6.32-16.643,9.157-28.258,9.157c-2.585,0-4.902-0.128-6.714-0.379v31.096H99.053V284.379z M386.034,450.713H121.811 c-10.954,0-19.874-8.92-19.874-19.889v-22.995h246.31c11.42,0,20.679-9.25,20.679-20.677V261.748 c0-11.428-9.259-20.679-20.679-20.679h-246.31V51.315c0-10.938,8.921-19.858,19.874-19.858l181.89-0.19v67.233 c0,19.638,15.934,35.587,35.587,35.587l65.862-0.189l0.741,296.925C405.891,441.793,396.987,450.713,386.034,450.713z M174.065,369.801v-85.422c7.225-1.15,16.642-1.796,26.58-1.796c16.516,0,27.226,2.963,35.618,9.282 c9.031,6.714,14.704,17.416,14.704,32.781c0,16.643-6.06,28.133-14.453,35.224c-9.157,7.612-23.096,11.222-40.125,11.222 C186.191,371.092,178.966,370.446,174.065,369.801z M314.892,319.226v15.996h-31.23v34.973h-19.74v-86.966h53.16v16.122h-33.42 v19.875H314.892z"/> </g> </g> </svg> &nbsp;PDF </button>',
-                            titleAttr: 'Download PDF',
-                            customize: function (doc) {
-                    doc.content[1].table.body.forEach(function(row) {
-                        row.forEach(function(cell) {
-                            if (cell.text === '✔' || cell.text === '✓') {
-                                cell.text = 'YA';
-                            } 
-                        });
-                    });
-                }
-            },
-                {
-                    extend: 'excel',
-                    text: '<button class="btn btn-warning w-32 mr-2 mb-2"> <svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 50 50" width="24px" height="24px"><path d="M 28.875 0 C 28.855469 0.0078125 28.832031 0.0195313 28.8125 0.03125 L 0.8125 5.34375 C 0.335938 5.433594 -0.0078125 5.855469 0 6.34375 L 0 43.65625 C -0.0078125 44.144531 0.335938 44.566406 0.8125 44.65625 L 28.8125 49.96875 C 29.101563 50.023438 29.402344 49.949219 29.632813 49.761719 C 29.859375 49.574219 29.996094 49.296875 30 49 L 30 44 L 47 44 C 48.09375 44 49 43.09375 49 42 L 49 8 C 49 6.90625 48.09375 6 47 6 L 30 6 L 30 1 C 30.003906 0.710938 29.878906 0.4375 29.664063 0.246094 C 29.449219 0.0546875 29.160156 -0.0351563 28.875 0 Z M 28 2.1875 L 28 6.53125 C 27.867188 6.808594 27.867188 7.128906 28 7.40625 L 28 42.8125 C 27.972656 42.945313 27.972656 43.085938 28 43.21875 L 28 47.8125 L 2 42.84375 L 2 7.15625 Z M 30 8 L 47 8 L 47 42 L 30 42 L 30 37 L 34 37 L 34 35 L 30 35 L 30 29 L 34 29 L 34 27 L 30 27 L 30 22 L 34 22 L 34 20 L 30 20 L 30 15 L 34 15 L 34 13 L 30 13 Z M 36 13 L 36 15 L 44 15 L 44 13 Z M 6.6875 15.6875 L 12.15625 25.03125 L 6.1875 34.375 L 11.1875 34.375 L 14.4375 28.34375 C 14.664063 27.761719 14.8125 27.316406 14.875 27.03125 L 14.90625 27.03125 C 15.035156 27.640625 15.160156 28.054688 15.28125 28.28125 L 18.53125 34.375 L 23.5 34.375 L 17.75 24.9375 L 23.34375 15.6875 L 18.65625 15.6875 L 15.6875 21.21875 C 15.402344 21.941406 15.199219 22.511719 15.09375 22.875 L 15.0625 22.875 C 14.898438 22.265625 14.710938 21.722656 14.5 21.28125 L 11.8125 15.6875 Z M 36 20 L 36 22 L 44 22 L 44 20 Z M 36 27 L 36 29 L 44 29 L 44 27 Z M 36 35 L 36 37 L 44 37 L 44 35 Z"/></svg>  &nbsp;Excel </button>',
-                            titleAttr: 'Download Excel'
-                }
-            ]
+                    {
+                        extend: 'excel',
+                        text: '<button class="btn btn-warning w-32 mr-2 mb-2"> <svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 50 50" width="24px" height="24px"><path d="M 28.875 0 C 28.855469 0.0078125 28.832031 0.0195313 28.8125 0.03125 L 0.8125 5.34375 C 0.335938 5.433594 -0.0078125 5.855469 0 6.34375 L 0 43.65625 C -0.0078125 44.144531 0.335938 44.566406 0.8125 44.65625 L 28.8125 49.96875 C 29.101563 50.023438 29.402344 49.949219 29.632813 49.761719 C 29.859375 49.574219 29.996094 49.296875 30 49 L 30 44 L 47 44 C 48.09375 44 49 43.09375 49 42 L 49 8 C 49 6.90625 48.09375 6 47 6 L 30 6 L 30 1 C 30.003906 0.710938 29.878906 0.4375 29.664063 0.246094 C 29.449219 0.0546875 29.160156 -0.0351563 28.875 0 Z M 28 2.1875 L 28 6.53125 C 27.867188 6.808594 27.867188 7.128906 28 7.40625 L 28 42.8125 C 27.972656 42.945313 27.972656 43.085938 28 43.21875 L 28 47.8125 L 2 42.84375 L 2 7.15625 Z M 30 8 L 47 8 L 47 42 L 30 42 L 30 37 L 34 37 L 34 35 L 30 35 L 30 29 L 34 29 L 34 27 L 30 27 L 30 22 L 34 22 L 34 20 L 30 20 L 30 15 L 34 15 L 34 13 L 30 13 Z M 36 13 L 36 15 L 44 15 L 44 13 Z M 6.6875 15.6875 L 12.15625 25.03125 L 6.1875 34.375 L 11.1875 34.375 L 14.4375 28.34375 C 14.664063 27.761719 14.8125 27.316406 14.875 27.03125 L 14.90625 27.03125 C 15.035156 27.640625 15.160156 28.054688 15.28125 28.28125 L 18.53125 34.375 L 23.5 34.375 L 17.75 24.9375 L 23.34375 15.6875 L 18.65625 15.6875 L 15.6875 21.21875 C 15.402344 21.941406 15.199219 22.511719 15.09375 22.875 L 15.0625 22.875 C 14.898438 22.265625 14.710938 21.722656 14.5 21.28125 L 11.8125 15.6875 Z M 36 20 L 36 22 L 44 22 L 44 20 Z M 36 27 L 36 29 L 44 29 L 44 27 Z M 36 35 L 36 37 L 44 37 L 44 35 Z"/></svg>  &nbsp;Excel </button>',
+                        titleAttr: 'Download Excel'
+                    }
+                ]
+            });
         });
-    });
-
     </script>
 @endpush
