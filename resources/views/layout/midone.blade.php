@@ -18,6 +18,15 @@
         integrity="sha512-10/jx2EXwxxWqCLX/hHth/vu2KY3jCF70dCQB8TSgNjbCVAC/8vai53GfMDrO2Emgwccf2pJqxct9ehpzG+MTw=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
     <!-- END: CSS Assets-->
+    <!-----------------------------------------------------------
+    -- animate.min.css by Daniel Eden (https://animate.style)
+    -- is required for the animation of notifications and slide out panels
+    -- you can ignore this step if you already have this file in your project
+    --------------------------------------------------------------------------->
+    <link href="{{ asset('vendor/bladewind/css/animate.min.css') }}" rel="stylesheet" />
+    <link href="{{ asset('vendor/bladewind/css/bladewind-ui.min.css') }}" rel="stylesheet" />
+    <script src="{{ asset('vendor/bladewind/js/helpers.js') }}"></script>
+    <script src="//unpkg.com/alpinejs" defer></script>
 </head>
 <!-- END: Head -->
 
@@ -241,7 +250,7 @@
         <!-- BEGIN: Content -->
         <div class="content">
             <!-- BEGIN: Top Bar -->
-            <div class="top-bar">
+            <div class="top-bar flex w-full justify-end">
                 <!-- BEGIN: Breadcrumb -->
                 <nav aria-label="breadcrumb" class="-intro-x mr-auto hidden sm:flex">
                     <svg xmlns="https://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
@@ -271,41 +280,85 @@
                     </h1>
                     <div class="text-slate-500 text-xs mt-0.3 float-right">{{ auth()->user()->nama }}</div>
                 </div>
-                <!-- BEGIN: Account Menu -->
-                <div class="intro-x dropdown w-8 h-8 relative">
-                    <div class="dropdown-toggle w-8 h-8 rounded-full overflow-hidden shadow-lg image-fit zoom-in">
-                        <img alt="{{ auth()->user()->username }}"
-                            src="{{ auth()->user()->foto ? asset('storage/user/' . auth()->user()->foto) : asset('template_lkerb/dist/images/favicon.png') }}">
-                    </div>
-                    <div class="dropdown-box mt-10 absolute w-56 top-0 right-0 z-20">
-                        <div class="dropdown-box__content box bg-theme-38 text-white">
-                            <div class="p-4 border-b border-theme-40">
-                                <div class="font-medium">{{ auth()->user()->username }}</div>
-                                <div class="text-xs text-theme-41">{{ auth()->user()->nama }} -
-                                    {{ auth()->user()->level }}</div>
+
+                <!-- BladewindUI Account Menu -->
+                <div class="intro-x relative mr-3 sm:mr-6">
+                    <x-bladewind::dropmenu position="right">
+                        <x-slot:trigger>
+                            <div class="flex items-center space-x-3 cursor-pointer">
+                                <div class="flex w-full">
+                                    <x-bladewind::avatar
+                                        image="{{ auth()->user()->foto ? asset('storage/user/' . auth()->user()->foto) : asset('template_lkerb/dist/images/favicon.png') }}"
+                                        size="small"
+                                        class="shadow-lg"
+                                    />
+                                </div>
+
+                                <div class="hidden sm:block">
+                                    <div class="font-medium text-sm">{{ auth()->user()->username }}</div>
+                                    <div class="text-xs text-gray-500">{{ auth()->user()->nama }}</div>
+                                </div>
+
+                                <x-bladewind::icon name="chevron-down" class="!h-4 !w-4 text-gray-400" />
                             </div>
-                            <div class="p-2">
-                                <a href="{{ route('profil') }}"
-                                    class="flex items-center block p-2 transition duration-300 ease-in-out hover:bg-theme-1 rounded-md">
-                                    <i data-feather="user" class="w-4 h-4 mr-2"></i> Profile </a>
+                        </x-slot:trigger>
+
+                        <!-- Header dengan info user -->
+                        {{-- <x-bladewind::dropmenu.item header="true" class="bg-gray-50">
+                            <div class="flex items-center space-x-3">
+                                <x-bladewind::avatar
+                                    image="{{ auth()->user()->foto ? asset('storage/user/' . auth()->user()->foto) : asset('template_lkerb/dist/images/favicon.png') }}"
+                                    size="small"
+                                />
+                                <div>
+                                    <div class="font-semibold text-gray-900">{{ auth()->user()->username }}</div>
+                                    <div class="text-sm text-gray-500">{{ auth()->user()->nama }}</div>
+                                    <div class="text-xs text-gray-400">{{ auth()->user()->level }}</div>
+                                </div>
                             </div>
-                            <div class="p-2 border-t border-theme-40">
-                                <a href="{{ route('logout') }}"
-                                    onclick="event.preventDefault(); $('#logout').submit();"
-                                    class="flex items-center block p-2 transition duration-300 ease-in-out hover:bg-theme-1 rounded-md">
-                                    <i data-feather="toggle-right" class="w-4 h-4 mr-2"></i> Logout </a>
-                                <!-- Authentication -->
-                                <form method="POST" action="{{ route('logout') }}" id="logout">
-                                    @csrf
-                                </form>
-                            </div>
-                        </div>
-                    </div>
+                        </x-bladewind::dropmenu.item> --}}
+
+                        <!-- Divider -->
+                        {{-- <x-bladewind::dropmenu.item divider /> --}}
+
+                        <!-- Menu Profile -->
+                        <x-bladewind::dropmenu.item
+                            icon="user"
+                            onclick="window.location.href='{{ route('profil') }}'"
+                        >
+                            Profile
+                        </x-bladewind::dropmenu.item>
+
+                        <!-- Menu Settings -->
+                        <x-bladewind::dropmenu.item
+                            icon="cog-6-tooth"
+                            onclick="window.location.href='{{ route('profil') }}'"
+                        >
+                            Pengaturan
+                        </x-bladewind::dropmenu.item>
+
+                        <!-- Divider -->
+                        <x-bladewind::dropmenu.item divider />
+
+                        <!-- Menu Logout -->
+                        <x-bladewind::dropmenu.item
+                            icon="arrow-right-on-rectangle"
+                            onclick="event.preventDefault(); $('#logout').submit();"
+                            class="text-red-600 hover:bg-red-50"
+                        >
+                            Logout
+                        </x-bladewind::dropmenu.item>
+                    </x-bladewind::dropmenu>
+
+                    <!-- Authentication Form -->
+                    <form method="POST" action="{{ route('logout') }}" id="logout" style="display: none;">
+                        @csrf
+                    </form>
                 </div>
                 <!-- END: Account Menu -->
             </div>
             <!-- END: Top Bar -->
-            
+
             <div class="mt-4">
                 @yield('content')
             </div>
