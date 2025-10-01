@@ -278,7 +278,7 @@
                         style="font-weight: 600">Selamat datang, <a class="text-lg text-danger font-bold">
                             {{ auth()->user()->username }}</a>
                     </h1>
-                    <div class="text-slate-500 text-xs mt-0.3 float-right">{{ auth()->user()->nama }}</div>
+                    <div class="text-slate-500 text-xs mt-0.3 float-right">{{ auth()->user()->nama }} | {{ auth()->user()->level }}</div>
                 </div>
 
                 <!-- BladewindUI Account Menu -->
@@ -316,7 +316,7 @@
                                     <div class="text-xs text-gray-400">{{ auth()->user()->level }}</div>
                                 </div>
                             </div>
-                        </x-bladewind::dropmenu.item> --}}
+                        </x-bladewind::dropmenu.item>
 
                         <!-- Divider -->
                         {{-- <x-bladewind::dropmenu.item divider /> --}}
