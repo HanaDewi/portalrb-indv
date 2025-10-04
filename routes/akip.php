@@ -12,6 +12,7 @@ Route::group(['prefix' => 'akip', 'as' => 'akip.'], function () {
         Route::post('/evaluasi/sakip/{instansi_id}/simpan', [EvaluasiSakipController::class, 'evaluasi_sakip_instansi_simpan']);
         Route::post('/evaluasi/sakip/{instansi_id}/cekPeriode', [EvaluasiSakipController::class, 'evaluasi_sakip_instansi_cekPeriode']);
         Route::delete('/evaluasi/sakip/{instansi_id}/hapus/{id}', [EvaluasiSakipController::class, 'evaluasi_sakip_instansi_hapus']);
+        Route::post('/evaluasi/sakip/search', [EvaluasiSakipController::class, 'evaluasi_sakip_search'])->name('evaluasi.sakip.search');
 
         Route::get('/dashboard/filter', [EvaluasiSakipController::class, 'filterDashboard'])->name('dashboard.filter');
         Route::get('/dashboard/filter/kl', [EvaluasiSakipController::class, 'filterDashboardKl'])->name('dashboard.filter.kl');

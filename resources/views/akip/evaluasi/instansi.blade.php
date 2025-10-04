@@ -3,8 +3,8 @@
 
 @section('content')
     <div class="intro-y flex items-center">
-        <h2 class="text-lg font-medium mr-auto">
-            Hasil Evaluasi SAKIP
+        <h2 class="text-lg mr-auto">
+            Hasil Evaluasi SAKIP - <span class="font-medium">{{ $instansi->nama_instansi }}</span>
         </h2>
         @if (auth()->user()->level == 'tpn' && hasAksesEvaluasiAkip())
             <a href="javascript:;" data-toggle="modal" data-target="#modal-form-evaluasi" class="button inline-block bg-theme-1 text-white" onclick="resetForm();">Tambah Penilaian</a>

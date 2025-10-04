@@ -4,6 +4,7 @@
 
 <head>
     <meta charset="utf-8">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link href="{{ asset('midone') }}/dist/images/favicon.ico" rel="shortcut icon">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Lembar Kerja Evaluasi">

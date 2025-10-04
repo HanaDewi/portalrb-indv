@@ -35,60 +35,54 @@
                     class="shadow-sm"
                 />
             </div>
-            {{-- <div class="flex items-end">
-                <button
-                    type="submit"
-                    id="filterBtn"
-                    class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                >
-                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.207A1 1 0 013 6.5V4z"></path>
-                    </svg>
-                    Filter
-                </button>
-            </div> --}}
+            <!-- Hidden inputs to preserve search terms -->
+            <input type="hidden" name="search_kl" value="{{ $search_kl ?? '' }}">
+            <input type="hidden" name="search_pemda" value="{{ $search_pemda ?? '' }}">
         </form>
     </div>
 
-    <!-- Tabel Kementerian/Lembaga -->
-    @if($anggota_kl->count() > 0)
-        <div class="intro-y box p-5 mt-5">
-            <div class="flex items-center mb-5 pb-5 border-b border-gray-200">
-                <h3 class="font-medium text-base mr-auto">
-                    Kementerian/Lembaga ({{ $anggota_kl->count() }} instansi) - Tahun {{ $tahun }}
-                </h3>
-            </div>
+    <!-- Tabel Kementerian/Lembaga - Selalu tampilkan, tidak bergantung pada count -->
+    <div class="intro-y box p-5 mt-5">
+        <div class="flex items-center mb-5 pb-5 border-b border-gray-200">
+            <h3 class="font-medium text-base mr-auto">
+                Kementerian/Lembaga ({{ $anggota_kl->count() }} instansi) - Tahun {{ $tahun }}
+            </h3>
+        </div>
 
-            <!-- Search Box untuk K/L -->
-            <div class="mb-4">
+        <!-- Search Box untuk K/L -->
+        <div class="mb-4">
+            <div class="relative">
                 <input
                     type="text"
-                    id="searchKl"
+                    id="searchKlInput"
                     placeholder="Cari nama instansi K/L..."
+                    value="{{ $search_kl ?? '' }}"
                     class="w-full px-4 py-2 pl-10 pr-4 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 >
             </div>
+        </div>
 
-            <x-bladewind::table
-                striped="true"
-                has_border="true"
-                has_shadow="true"
-                compact="true"
-                divider="thin"
-                has_hover="true"
-                id="tableKl"
-            >
-                <x-slot name="header">
-                    <th>No</th>
-                    <th>Nama Instansi</th>
-                    <th>Group</th>
-                    <th>Status Evaluasi</th>
-                    <th>Aksi</th>
-                </x-slot>
+        <x-bladewind::table
+            striped="true"
+            has_border="true"
+            has_shadow="true"
+            compact="true"
+            divider="thin"
+            has_hover="true"
+            id="tableKl"
+        >
+            <x-slot name="header">
+                <th>No</th>
+                <th>Nama Instansi</th>
+                <th>Group</th>
+                <th>Status Evaluasi</th>
+                <th>Aksi</th>
+            </x-slot>
 
-                <tbody id="tbodyKl">
+            <tbody id="tbodyKl">
+                @if($anggota_kl->count() > 0)
                     @foreach($klPaginated as $index => $anggota)
-                        <tr class="kl-row" data-nama="{{ strtolower(strip_tags($anggota->instansi->nama_instansi)) }}">
+                        <tr class="kl-row">
                             <td>{{ ($currentPageKl - 1) * 10 + $index + 1 }}</td>
                             <td>{!! $anggota->instansi->nama_instansi !!}</td>
                             <td>
@@ -122,84 +116,103 @@
                             </td>
                         </tr>
                     @endforeach
-                </tbody>
-            </x-bladewind::table>
+                @else
+                    <tr>
+                        <td colspan="5" class="text-center py-8">
+                            <div class="flex flex-col items-center justify-center">
+                                <svg class="h-12 w-12 text-gray-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                <p class="text-gray-600">Data tidak ditemukan</p>
+                            </div>
+                        </td>
+                    </tr>
+                @endif
+            </tbody>
+        </x-bladewind::table>
 
-            <!-- Pagination untuk K/L -->
+        <!-- Pagination untuk K/L -->
+        <div id="klPaginationContainer" class="mt-4">
             @if($klTotalPages > 1)
-                <div class="flex items-center justify-between mt-4">
+                <div class="flex items-center justify-between">
                     <div class="text-sm text-gray-700">
-                        Menampilkan <span id="klShowingStart">{{ ($currentPageKl - 1) * 10 + 1 }}</span> sampai <span id="klShowingEnd">{{ min($currentPageKl * 10, $anggota_kl->count()) }}</span> dari <span id="klTotal">{{ $anggota_kl->count() }}</span> hasil
+                        Menampilkan <span id="klShowingStart">{{ $anggota_kl->count() > 0 ? ($currentPageKl - 1) * 10 + 1 : 0 }}</span> sampai <span id="klShowingEnd">{{ $anggota_kl->count() > 0 ? min($currentPageKl * 10, $anggota_kl->count()) : 0 }}</span> dari <span id="klTotal">{{ $anggota_kl->count() }}</span> hasil
                     </div>
-                    <div class="flex space-x-2">
+                    <div class="flex space-x-2" id="klPaginationLinks">
                         @if($currentPageKl > 1)
-                            <a href="{{ request()->fullUrlWithQuery(['page_kl' => $currentPageKl - 1, 'tahun' => $tahun]) }}"
+                            <button type="button"
+                                onclick="changePage('kl', {{ $currentPageKl - 1 }})"
                                 class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50">
                                 Sebelumnya
-                            </a>
+                            </button>
                         @endif
 
                         @for($i = max(1, $currentPageKl - 2); $i <= min($klTotalPages, $currentPageKl + 2); $i++)
-                            <a href="{{ request()->fullUrlWithQuery(['page_kl' => $i, 'tahun' => $tahun]) }}"
+                            <button type="button"
+                                onclick="changePage('kl', {{ $i }})"
                                 class="px-3 py-2 text-sm font-medium {{ $i == $currentPageKl ? 'text-white bg-blue-600 border-blue-600' : 'text-gray-500 bg-white border-gray-300 hover:bg-gray-50' }} border rounded-md">
                                 {{ $i }}
-                            </a>
+                            </button>
                         @endfor
 
                         @if($currentPageKl < $klTotalPages)
-                            <a href="{{ request()->fullUrlWithQuery(['page_kl' => $currentPageKl + 1, 'tahun' => $tahun]) }}"
+                            <button type="button"
+                                onclick="changePage('kl', {{ $currentPageKl + 1 }})"
                                 class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50">
                                 Selanjutnya
-                            </a>
+                            </button>
                         @endif
                     </div>
                 </div>
             @endif
         </div>
-    @endif
+    </div>
 
-    <!-- Tabel Pemerintah Daerah -->
-    @if($anggota_pemda->count() > 0)
-        <div class="intro-y box p-5 mt-5">
-            <div class="flex items-center mb-5 pb-5 border-b border-gray-200">
-                <h3 class="font-medium text-base mr-auto">
-                    Pemerintah Daerah ({{ $anggota_pemda->count() }} instansi) - Tahun {{ $tahun }}
-                </h3>
-            </div>
+    <!-- Tabel Pemerintah Daerah - Selalu tampilkan, tidak bergantung pada count -->
+    <div class="intro-y box p-5 mt-5">
+        <div class="flex items-center mb-5 pb-5 border-b border-gray-200">
+            <h3 class="font-medium text-base mr-auto">
+                Pemerintah Daerah ({{ $anggota_pemda->count() }} instansi) - Tahun {{ $tahun }}
+            </h3>
+        </div>
 
-            <!-- Search Box untuk Pemda -->
-            <div class="mb-4">
+        <!-- Search Box untuk Pemda -->
+        <div class="mb-4">
+            <div class="relative">
                 <input
                     type="text"
-                    id="searchPemda"
+                    id="searchPemdaInput"
                     placeholder="Cari nama instansi Pemda..."
+                    value="{{ $search_pemda ?? '' }}"
                     class="w-full px-4 py-2 pl-10 pr-4 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 >
             </div>
+        </div>
 
-            <x-bladewind::table
-                striped="true"
-                has_border="true"
-                has_shadow="true"
-                compact="true"
-                divider="thin"
-                has_hover="true"
-                id="tablePemda"
-            >
-                <x-slot name="header">
-                    <th>No</th>
-                    <th>Nama Instansi</th>
-                    <th>Group</th>
-                    <th>TW 1</th>
-                    <th>TW 2</th>
-                    <th>TW 3</th>
-                    <th>TW 4</th>
-                    <th>Aksi</th>
-                </x-slot>
+        <x-bladewind::table
+            striped="true"
+            has_border="true"
+            has_shadow="true"
+            compact="true"
+            divider="thin"
+            has_hover="true"
+            id="tablePemda"
+        >
+            <x-slot name="header">
+                <th>No</th>
+                <th>Nama Instansi</th>
+                <th>Group</th>
+                <th>TW 1</th>
+                <th>TW 2</th>
+                <th>TW 3</th>
+                <th>TW 4</th>
+                <th>Aksi</th>
+            </x-slot>
 
-                <tbody id="tbodyPemda">
+            <tbody id="tbodyPemda">
+                @if($anggota_pemda->count() > 0)
                     @foreach($pemdaPaginated as $index => $anggota)
-                        <tr class="pemda-row" data-nama="{{ strtolower(strip_tags($anggota->instansi->nama_instansi)) }}">
+                        <tr class="pemda-row">
                             <td>{{ ($currentPagePemda - 1) * 10 + $index + 1 }}</td>
                             <td>{!! $anggota->instansi->nama_instansi !!}</td>
                             <td>
@@ -284,41 +297,57 @@
                             </td>
                         </tr>
                     @endforeach
-                </tbody>
-            </x-bladewind::table>
+                @else
+                    <tr>
+                        <td colspan="8" class="text-center py-8">
+                            <div class="flex flex-col items-center justify-center">
+                                <svg class="h-12 w-12 text-gray-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                <p class="text-gray-600">Data tidak ditemukan</p>
+                            </div>
+                        </td>
+                    </tr>
+                @endif
+            </tbody>
+        </x-bladewind::table>
 
-            <!-- Pagination untuk Pemda -->
+        <!-- Pagination untuk Pemda -->
+        <div id="pemdaPaginationContainer" class="mt-4">
             @if($pemdaTotalPages > 1)
-                <div class="flex items-center justify-between mt-4">
+                <div class="flex items-center justify-between">
                     <div class="text-sm text-gray-700">
-                        Menampilkan <span id="pemdaShowingStart">{{ ($currentPagePemda - 1) * 10 + 1 }}</span> sampai <span id="pemdaShowingEnd">{{ min($currentPagePemda * 10, $anggota_pemda->count()) }}</span> dari <span id="pemdaTotal">{{ $anggota_pemda->count() }}</span> hasil
+                        Menampilkan <span id="pemdaShowingStart">{{ $anggota_pemda->count() > 0 ? ($currentPagePemda - 1) * 10 + 1 : 0 }}</span> sampai <span id="pemdaShowingEnd">{{ $anggota_pemda->count() > 0 ? min($currentPagePemda * 10, $anggota_pemda->count()) : 0 }}</span> dari <span id="pemdaTotal">{{ $anggota_pemda->count() }}</span> hasil
                     </div>
-                    <div class="flex space-x-2">
+                    <div class="flex space-x-2" id="pemdaPaginationLinks">
                         @if($currentPagePemda > 1)
-                            <a href="{{ request()->fullUrlWithQuery(['page_pemda' => $currentPagePemda - 1, 'tahun' => $tahun]) }}"
+                            <button type="button"
+                                onclick="changePage('pemda', {{ $currentPagePemda - 1 }})"
                                 class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50">
                                 Sebelumnya
-                            </a>
+                            </button>
                         @endif
 
                         @for($i = max(1, $currentPagePemda - 2); $i <= min($pemdaTotalPages, $currentPagePemda + 2); $i++)
-                            <a href="{{ request()->fullUrlWithQuery(['page_pemda' => $i, 'tahun' => $tahun]) }}"
+                            <button type="button"
+                                onclick="changePage('pemda', {{ $i }})"
                                 class="px-3 py-2 text-sm font-medium {{ $i == $currentPagePemda ? 'text-white bg-blue-600 border-blue-600' : 'text-gray-500 bg-white border-gray-300 hover:bg-gray-50' }} border rounded-md">
                                 {{ $i }}
-                            </a>
+                            </button>
                         @endfor
 
                         @if($currentPagePemda < $pemdaTotalPages)
-                            <a href="{{ request()->fullUrlWithQuery(['page_pemda' => $currentPagePemda + 1, 'tahun' => $tahun]) }}"
+                            <button type="button"
+                                onclick="changePage('pemda', {{ $currentPagePemda + 1 }})"
                                 class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50">
                                 Selanjutnya
-                            </a>
+                            </button>
                         @endif
                     </div>
                 </div>
             @endif
         </div>
-    @endif
+    </div>
 
     <!-- Pesan jika tidak ada data -->
     @if($anggota_kl->count() == 0 && $anggota_pemda->count() == 0)
@@ -359,156 +388,422 @@
             color: white;
         }
 
-        .search-highlight {
-            background-color: #fef3c7;
-            padding: 1px 2px;
-            border-radius: 2px;
+        .loading-overlay {
+            position: relative;
+            pointer-events: none;
+        }
+
+        .loading-overlay::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.8);
+            z-index: 10;
         }
     </style>
 @endpush
 
 @push('js')
     <script>
+        // Global state management
+        let searchState = {
+            tahun: '{{ $tahun }}',
+            searchKl: '{{ $search_kl ?? "" }}',
+            searchPemda: '{{ $search_pemda ?? "" }}',
+            pageKl: {{ $currentPageKl ?? 1 }},
+            pagePemda: {{ $currentPagePemda ?? 1 }},
+            isLoadingKl: false,
+            isLoadingPemda: false,
+            searchTimeout: null
+        };
+
         // Wait for DOM to be fully loaded
         document.addEventListener('DOMContentLoaded', function() {
             // Re-initialize feather icons
             feather.replace();
 
-            // Function to get tahun value safely
-            function getTahunValue() {
-                // Try multiple selectors to find the tahun input
-                const selectors = [
-                    'input[name="tahun"]',
-                    '#tahun',
-                    'select[name="tahun"]',
-                    '.bw-select input[name="tahun"]'
-                ];
+            // Initialize search functionality
+            initializeSearch();
 
-                for (let selector of selectors) {
-                    const element = document.querySelector(selector);
-                    if (element && element.value) {
-                        return element.value;
-                    }
-                }
-
-                return null;
-            }
-
-            // Handle form submission
+            // Handle form submission for tahun filter
             const filterForm = document.getElementById('filterForm');
             if (filterForm) {
                 filterForm.addEventListener('submit', function(e) {
                     e.preventDefault();
-
                     const tahun = getTahunValue();
                     if (!tahun) {
                         alert('Silakan pilih tahun terlebih dahulu.');
                         return;
                     }
-
-                    // Submit form
+                    // Reset pagination when changing year
+                    searchState.pageKl = 1;
+                    searchState.pagePemda = 1;
+                    searchState.tahun = tahun;
                     this.submit();
                 });
             }
 
-            // Handle button click
-            const filterBtn = document.getElementById('filterBtn');
-            if (filterBtn) {
-                filterBtn.addEventListener('click', function(e) {
-                    e.preventDefault();
-
-                    const tahun = getTahunValue();
-                    if (!tahun) {
-                        alert('Silakan pilih tahun terlebih dahulu.');
-                        return;
-                    }
-
-                    // Submit form
-                    const form = document.getElementById('filterForm');
-                    if (form) {
-                        form.submit();
-                    }
-                });
-            }
-
-            // Auto-submit when tahun changes (with delay to ensure BladewindUI is ready)
+            // Auto-submit when tahun changes
             setTimeout(function() {
                 const tahunInputs = document.querySelectorAll('input[name="tahun"], select[name="tahun"]');
                 tahunInputs.forEach(function(input) {
                     input.addEventListener('change', function() {
                         const form = document.getElementById('filterForm');
                         if (form && this.value) {
+                            // Reset pagination when changing year
+                            searchState.pageKl = 1;
+                            searchState.pagePemda = 1;
+                            searchState.tahun = this.value;
                             form.submit();
                         }
                     });
                 });
-            }, 1000); // Wait 1 second for BladewindUI to initialize
+            }, 1000);
+        });
 
-            // Search functionality for K/L table
-            const searchKl = document.getElementById('searchKl');
-            if (searchKl) {
-                searchKl.addEventListener('input', function() {
-                    filterTable('kl', this.value);
+        // Initialize search functionality
+        function initializeSearch() {
+            const searchKlInput = document.getElementById('searchKlInput');
+            const searchPemdaInput = document.getElementById('searchPemdaInput');
+
+            if (searchKlInput) {
+                searchKlInput.addEventListener('input', function() {
+                    handleSearch('kl', this.value);
                 });
             }
 
-            // Search functionality for Pemda table
-            const searchPemda = document.getElementById('searchPemda');
-            if (searchPemda) {
-                searchPemda.addEventListener('input', function() {
-                    filterTable('pemda', this.value);
+            if (searchPemdaInput) {
+                searchPemdaInput.addEventListener('input', function() {
+                    handleSearch('pemda', this.value);
                 });
             }
+        }
 
-            // Function to filter table rows
-            function filterTable(tableType, searchTerm) {
-                const rows = document.querySelectorAll(`.${tableType}-row`);
-                const tbody = document.getElementById(`tbody${tableType.charAt(0).toUpperCase() + tableType.slice(1)}`);
-                let visibleCount = 0;
-
-                rows.forEach(function(row, index) {
-                    const namaInstansi = row.getAttribute('data-nama');
-                    const searchLower = searchTerm.toLowerCase();
-
-                    if (namaInstansi.includes(searchLower)) {
-                        row.style.display = '';
-                        visibleCount++;
-
-                        // Update row number
-                        const noCell = row.querySelector('td:first-child');
-                        if (noCell) {
-                            noCell.textContent = visibleCount;
-                        }
-                    } else {
-                        row.style.display = 'none';
-                    }
-                });
-
-                // Update counter
-                updateCounter(tableType, visibleCount, rows.length);
+        // Handle search with debouncing - PERBAIKAN: Loading terpisah per type
+        function handleSearch(type, value) {
+            // Clear existing timeout
+            if (searchState.searchTimeout) {
+                clearTimeout(searchState.searchTimeout);
             }
 
-            // Function to update counter
-            function updateCounter(tableType, visibleCount, totalCount) {
-                const showingStart = document.getElementById(`${tableType}ShowingStart`);
-                const showingEnd = document.getElementById(`${tableType}ShowingEnd`);
-                const total = document.getElementById(`${tableType}Total`);
+            // Update search state
+            if (type === 'kl') {
+                searchState.searchKl = value;
+                searchState.pageKl = 1; // Reset to first page when searching
+            } else {
+                searchState.searchPemda = value;
+                searchState.pagePemda = 1; // Reset to first page when searching
+            }
 
-                if (showingStart && showingEnd && total) {
-                    if (visibleCount === 0) {
-                        showingStart.textContent = '0';
-                        showingEnd.textContent = '0';
-                    } else {
-                        showingStart.textContent = '1';
-                        showingEnd.textContent = visibleCount;
-                    }
-                    total.textContent = totalCount;
+            // Debounce search
+            searchState.searchTimeout = setTimeout(() => {
+                performSearch(type); // PERBAIKAN: Pass type parameter
+            }, 500);
+        }
+
+        // Handle page changes - PERBAIKAN: Loading terpisah per type
+        function changePage(type, page) {
+            if ((type === 'kl' && searchState.isLoadingKl) || (type === 'pemda' && searchState.isLoadingPemda)) {
+                return;
+            }
+
+            if (type === 'kl') {
+                searchState.pageKl = page;
+            } else {
+                searchState.pagePemda = page;
+            }
+
+            performSearch(type); // PERBAIKAN: Pass type parameter
+        }
+
+        // Function to get tahun value safely
+        function getTahunValue() {
+            const selectors = [
+                'input[name="tahun"]',
+                '#tahun',
+                'select[name="tahun"]',
+                '.bw-select input[name="tahun"]'
+            ];
+
+            for (let selector of selectors) {
+                const element = document.querySelector(selector);
+                if (element && element.value) {
+                    return element.value;
                 }
             }
+            return searchState.tahun;
+        }
 
-            // Initialize counters
-            updateCounter('kl', document.querySelectorAll('.kl-row').length, document.querySelectorAll('.kl-row').length);
-            updateCounter('pemda', document.querySelectorAll('.pemda-row').length, document.querySelectorAll('.pemda-row').length);
-        });
+        // Function to show loading state for specific table
+        function showLoadingState(tableId) {
+            const tbody = document.getElementById(tableId);
+            if (tbody) {
+                const colspan = tableId === 'tbodyKl' ? '5' : '8';
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="${colspan}" class="text-center py-8">
+                            <div class="flex flex-col items-center justify-center">
+                                <svg class="animate-spin h-8 w-8 text-blue-600 mb-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
+                                <p class="text-gray-600">Memuat data...</p>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }
+        }
+
+        // Function to show empty state
+        function showEmptyState(tableId, message) {
+            const tbody = document.getElementById(tableId);
+            if (tbody) {
+                // Get the correct colspan based on table type
+                const colspan = tableId === 'tbodyKl' ? '5' : '8';
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="${colspan}" class="text-center py-8">
+                            <div class="flex flex-col items-center justify-center">
+                                <svg class="h-12 w-12 text-gray-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                <p class="text-gray-600">${message}</p>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }
+        }
+
+        // Function to update pagination with proper numbering
+        function updatePagination(type, paginationInfo) {
+            const container = document.getElementById(type + 'PaginationContainer');
+            const showingStart = document.getElementById(type + 'ShowingStart');
+            const showingEnd = document.getElementById(type + 'ShowingEnd');
+            const total = document.getElementById(type + 'Total');
+
+            // Update pagination info
+            if (showingStart) showingStart.textContent = paginationInfo.showingStart;
+            if (showingEnd) showingEnd.textContent = paginationInfo.showingEnd;
+            if (total) total.textContent = paginationInfo.total;
+
+            // Update pagination links
+            if (container && paginationInfo.totalPages > 1) {
+                const currentPage = type === 'kl' ? searchState.pageKl : searchState.pagePemda;
+                const totalPages = paginationInfo.totalPages;
+
+                let paginationHtml = `
+                    <div class="flex items-center justify-between">
+                        <div class="text-sm text-gray-700">
+                            Menampilkan ${paginationInfo.showingStart} sampai ${paginationInfo.showingEnd} dari ${paginationInfo.total} hasil
+                        </div>
+                        <div class="flex space-x-2">
+                `;
+
+                // Previous button
+                if (currentPage > 1) {
+                    paginationHtml += `
+                        <button type="button"
+                            onclick="changePage('${type}', ${currentPage - 1})"
+                            class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50">
+                            Sebelumnya
+                        </button>
+                    `;
+                }
+
+                // Page numbers - show more pages for better navigation
+                const startPage = Math.max(1, currentPage - 2);
+                const endPage = Math.min(totalPages, currentPage + 2);
+
+                // Show first page if not in range
+                if (startPage > 1) {
+                    paginationHtml += `
+                        <button type="button"
+                            onclick="changePage('${type}', 1)"
+                            class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 hover:bg-gray-50 border rounded-md">
+                            1
+                        </button>
+                    `;
+                    if (startPage > 2) {
+                        paginationHtml += `<span class="px-3 py-2 text-sm text-gray-500">...</span>`;
+                    }
+                }
+
+                // Show pages in range
+                for (let i = startPage; i <= endPage; i++) {
+                    const isActive = i === currentPage;
+                    paginationHtml += `
+                        <button type="button"
+                            onclick="changePage('${type}', ${i})"
+                            class="px-3 py-2 text-sm font-medium ${isActive ? 'text-white bg-blue-600 border-blue-600' : 'text-gray-500 bg-white border-gray-300 hover:bg-gray-50'} border rounded-md">
+                            ${i}
+                        </button>
+                    `;
+                }
+
+                // Show last page if not in range
+                if (endPage < totalPages) {
+                    if (endPage < totalPages - 1) {
+                        paginationHtml += `<span class="px-3 py-2 text-sm text-gray-500">...</span>`;
+                    }
+                    paginationHtml += `
+                        <button type="button"
+                            onclick="changePage('${type}', ${totalPages})"
+                            class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 hover:bg-gray-50 border rounded-md">
+                            ${totalPages}
+                        </button>
+                    `;
+                }
+
+                // Next button
+                if (currentPage < totalPages) {
+                    paginationHtml += `
+                        <button type="button"
+                            onclick="changePage('${type}', ${currentPage + 1})"
+                            class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50">
+                            Selanjutnya
+                        </button>
+                    `;
+                }
+
+                paginationHtml += `
+                        </div>
+                    </div>
+                `;
+
+                container.innerHTML = paginationHtml;
+            } else if (container) {
+                container.innerHTML = `
+                    <div class="text-sm text-gray-700">
+                        Menampilkan ${paginationInfo.showingStart} sampai ${paginationInfo.showingEnd} dari ${paginationInfo.total} hasil
+                    </div>
+                `;
+            }
+        }
+
+        // PERBAIKAN: Main search function dengan loading benar-benar terpisah
+        function performSearch(searchType = null) {
+            // Determine which tables need to be loaded - PERBAIKAN LOGIKA
+            let shouldLoadKl = false;
+            let shouldLoadPemda = false;
+
+            if (searchType === 'kl') {
+                // HANYA load table K/L saat search K/L
+                shouldLoadKl = true;
+                shouldLoadPemda = false; // JANGAN load Pemda
+            } else if (searchType === 'pemda') {
+                // HANYA load table Pemda saat search Pemda
+                shouldLoadPemda = true;
+                shouldLoadKl = false; // JANGAN load K/L
+            } else {
+                // Load both tables (for initial load or year change)
+                shouldLoadKl = true;
+                shouldLoadPemda = true;
+            }
+
+            // Prevent multiple simultaneous requests for the same table
+            if (shouldLoadKl && searchState.isLoadingKl) return;
+            if (shouldLoadPemda && searchState.isLoadingPemda) return;
+
+            // Set loading states only for tables that will be loaded
+            if (shouldLoadKl) {
+                searchState.isLoadingKl = true;
+                showLoadingState('tbodyKl');
+            }
+            if (shouldLoadPemda) {
+                searchState.isLoadingPemda = true;
+                showLoadingState('tbodyPemda');
+            }
+
+            // Get current tahun
+            const tahun = getTahunValue();
+
+            // Prepare request data
+            const requestData = {
+                tahun: tahun,
+                search_kl: searchState.searchKl,
+                search_pemda: searchState.searchPemda,
+                page_kl: searchState.pageKl,
+                page_pemda: searchState.pagePemda
+            };
+
+            // Perform AJAX request
+            fetch('{{ url("akip/evaluasi/sakip/search") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                },
+                body: JSON.stringify(requestData)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    // Update K/L table only if it was being loaded
+                    if (shouldLoadKl) {
+                        const tbodyKl = document.getElementById('tbodyKl');
+                        if (tbodyKl) {
+                            if (data.klTableContent && data.klTableContent.trim() !== '') {
+                                tbodyKl.innerHTML = data.klTableContent;
+                            } else {
+                                showEmptyState('tbodyKl', 'Data tidak ditemukan');
+                            }
+                            updatePagination('kl', data.klPaginationInfo);
+                        }
+                    }
+
+                    // Update Pemda table only if it was being loaded
+                    if (shouldLoadPemda) {
+                        const tbodyPemda = document.getElementById('tbodyPemda');
+                        if (tbodyPemda) {
+                            if (data.pemdaTableContent && data.pemdaTableContent.trim() !== '') {
+                                tbodyPemda.innerHTML = data.pemdaTableContent;
+                            } else {
+                                showEmptyState('tbodyPemda', 'Data tidak ditemukan');
+                            }
+                            updatePagination('pemda', data.pemdaPaginationInfo);
+                        }
+                    }
+
+                    // Re-initialize feather icons
+                    feather.replace();
+                } else {
+                    console.error('Search failed:', data.message);
+                    if (shouldLoadKl) {
+                        showEmptyState('tbodyKl', 'Terjadi kesalahan saat mencari data');
+                    }
+                    if (shouldLoadPemda) {
+                        showEmptyState('tbodyPemda', 'Terjadi kesalahan saat mencari data');
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                if (shouldLoadKl) {
+                    showEmptyState('tbodyKl', 'Terjadi kesalahan saat mencari data');
+                }
+                if (shouldLoadPemda) {
+                    showEmptyState('tbodyPemda', 'Terjadi kesalahan saat mencari data');
+                }
+            })
+            .finally(() => {
+                // Clear loading states only for tables that were being loaded
+                if (shouldLoadKl) {
+                    searchState.isLoadingKl = false;
+                }
+                if (shouldLoadPemda) {
+                    searchState.isLoadingPemda = false;
+                }
+            });
+        }
     </script>
 @endpush
