@@ -4,7 +4,7 @@
 @section('content')
     <div class="intro-y flex items-center">
         <h2 class="text-lg mr-auto">
-            Hasil Evaluasi SAKIP - <span class="font-medium">{{ $instansi->nama_instansi }}</span>
+            Hasil Evaluasi SAKIP - <span class="font-medium">{!! $instansi->nama_instansi !!}</span>
         </h2>
         @if (auth()->user()->level == 'tpn' && hasAksesEvaluasiAkip())
             <a href="javascript:;" data-toggle="modal" data-target="#modal-form-evaluasi" class="button inline-block bg-theme-1 text-white" onclick="resetForm();">Tambah Penilaian</a>
@@ -28,7 +28,7 @@
             <div class="intro-y box mt-5">
                 <div class="flex items-center p-5 border-b border-gray-200">
                     <h2 class="font-medium text-base mr-auto">
-                        Hasil sementara evaluasi SAKIP {{ $evaluasi->instansi->nama_instansi }}
+                        Hasil sementara evaluasi SAKIP {!! $evaluasi->instansi->nama_instansi !!}
                     </h2>
                     @if (auth()->user()->level == 'tpn')
                         <button type="button" class="button button--sm block bg-theme-6 text-white mr-3" onclick="hapusEvaluasi('{{ $evaluasi->id }}');">Hapus Hasil Evaluasi</button>
