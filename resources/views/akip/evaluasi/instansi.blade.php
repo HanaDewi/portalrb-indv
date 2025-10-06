@@ -231,8 +231,12 @@
                         </tbody>
                     </table>
                     <hr class="my-5">
-                    @if (!empty($evaluasi->file_evaluasi))
+                    {{-- @if (!empty($evaluasi->file_evaluasi))
                         <a href="{{ asset('storage/akip/' . $evaluasi->file_evaluasi) }}" target="_blank" class="button border items-center text-gray-700 hidden sm:flex ml-3"> <i data-feather="file" class="w-4 h-4 mr-2"></i>
+                            {{ $evaluasi->periode != 'Final' ? 'Download File Catatan Evaluasi' : 'Download File Surat Pengantar LHE' }}</a>
+                    @endif --}}
+                    @if (!empty($evaluasi->file_evaluasi))
+                        <a href="{{ asset('storage/akip/' . $evaluasi->file_evaluasi) }}" target="_blank" class="button border items-center text-gray-700 flex ml-3"> <i data-feather="file" class="w-4 h-4 mr-2"></i>
                             {{ $evaluasi->periode != 'Final' ? 'Download File Catatan Evaluasi' : 'Download File Surat Pengantar LHE' }}</a>
                     @endif
                 </div>
