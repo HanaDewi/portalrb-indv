@@ -6,6 +6,7 @@ use App\Models\KlpdUserRel;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class ManageUserController extends Controller
 {
@@ -68,7 +69,7 @@ class ManageUserController extends Controller
 
         if (empty($id)) {
             if (!empty($pwda) && $pwda==$pwdb) {
-                $data->password = $pwda;
+                $data->password = Hash::make($pwda);
             } else {
                 return response()->json(['success' => false, 'message' => 'Invalid password']);
             }

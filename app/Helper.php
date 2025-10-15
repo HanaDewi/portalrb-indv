@@ -457,7 +457,7 @@ if(! function_exists('timpenilai')) {
     function timpenilai()
     {
         $ltp = LkeTP::orderBy('id')->pluck('name', 'id');
-        $result = ['-'=>' -- Pilih Tim Penilai -- '];
+        $result = [null => ' -- Pilih Tim Penilai -- '];
         foreach ($ltp as $kk=>$lst) {
             $result[$kk] = $lst;
         }
