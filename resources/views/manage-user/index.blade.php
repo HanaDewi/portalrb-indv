@@ -67,7 +67,7 @@
                             <div class="password-requirements mb-4" style="font-size:10pt;">
                                 <p class="requirement" id="length">Min. 8 characters</p>
                                 <p class="requirement" id="lowercase">Include lowercase letter</p>
-                                <p class="requirement" id="uppercase">Include uppercase letter</p>
+                                {{-- <p class="requirement" id="uppercase">Include uppercase letter</p> --}}
                                 <p class="requirement" id="number">Include number</p>
                                 <p class="requirement" id="characters">Include a special character: #.-?!@$%^&*</p>
                             </div>
@@ -180,7 +180,7 @@
             const value = event.target.value;
             window.validLength = value.length >= 8;
             window.validLCase = /[a-z]/.test(value);
-            window.validUCase =/[A-Z]/.test(value);
+            // window.validUCase =/[A-Z]/.test(value);
             window.validNum = /\d/.test(value);
             window.validChr = /[#.?!@$%^&*-]/.test(value);
             if (window.validLength)
@@ -191,10 +191,10 @@
                 $('#lowercase').css('color', 'blue');
             else
                 $('#lowercase').css('color', 'red');
-            if (window.validUCase)
-                $('#uppercase').css('color', 'blue');
-            else
-                $('#uppercase').css('color', 'red');
+            // if (window.validUCase)
+            //     $('#uppercase').css('color', 'blue');
+            // else
+            //     $('#uppercase').css('color', 'red');
             if (window.validNum)
                 $('#number').css('color', 'blue');
             else
@@ -221,7 +221,7 @@
         const cpval = document.getElementById('idpassword_').value;
         return (window.validLength===true 
             && window.validLCase===true 
-            && window.validUCase===true 
+            // && window.validUCase===true 
             && window.validNum===true 
             && window.validChr==true 
             && window.validConfirm===true) || (window.editMode===true && pval=='' && cpval=='');
