@@ -16,5 +16,9 @@ Route::group(['prefix' => 'akip', 'as' => 'akip.'], function () {
 
         Route::get('/dashboard/filter', [EvaluasiSakipController::class, 'filterDashboard'])->name('dashboard.filter');
         Route::get('/dashboard/filter/kl', [EvaluasiSakipController::class, 'filterDashboardKl'])->name('dashboard.filter.kl');
+
+        Route::get('/evaluasi/tim', [EvaluasiSakipController::class, 'tim_evaluasi'])->name('evaluasi.tim');
+        Route::get('/evaluasi/tim/getDatas', [EvaluasiSakipController::class, 'tim_evaluasi_getDatas']);
+        Route::get('/evaluasi/tim/instansi/{user_id}', [EvaluasiSakipController::class, 'tim_evaluasi_getInstansi']);
     });
 });
