@@ -4,7 +4,7 @@
 @section('content')
     <div class="intro-y flex items-center">
         <h2 class="text-lg mr-auto">
-            Hasil Evaluasi SAKIP - <span class="font-medium">{!! $instansi->nama_instansi !!}</span>
+            Hasil Evaluasi SAKIP - <span class="font-medium">{!! $instansi->name !!}</span>
         </h2>
         @if (auth()->user()->level == 'tpn' && hasAksesEvaluasiAkip())
             <a href="javascript:;" data-toggle="modal" data-target="#modal-form-evaluasi" class="button inline-block bg-theme-1 text-white" onclick="resetForm();">Tambah Penilaian</a>
@@ -28,7 +28,7 @@
             <div class="intro-y box mt-5">
                 <div class="flex items-center p-5 border-b border-gray-200">
                     <h2 class="font-medium text-base mr-auto">
-                        Hasil sementara evaluasi SAKIP {!! $evaluasi->instansi->nama_instansi !!}
+                        Hasil sementara evaluasi SAKIP {!! $evaluasi->instansi->name !!}
                     </h2>
                     @if (auth()->user()->level == 'tpn')
                         <button type="button" class="button button--sm block bg-theme-6 text-white mr-3" onclick="hapusEvaluasi('{{ $evaluasi->id }}');">Hapus Hasil Evaluasi</button>
@@ -257,6 +257,7 @@
                     </h2>
                 </div>
                 {{ html()->form('POST', route('akip.evaluasi.store', $instansi->id))->id('form-sakip')->class('validate-form')->acceptsFiles()->open() }}
+                @csrf
                 {{ html()->hidden('id_evaluasi')->id('id_evaluasi') }}
                 <div class="p-5 grid grid-cols-12 gap-4 row-gap-3">
                     <div class="col-span-12 lg:col-span-6">
@@ -724,33 +725,113 @@
             var validator = $('#form-sakip').validate({
                 ignore: [],
                 errorPlacement: function(error, element) {
-                    if (element.hasClass('select2-hidden-accessible')) {
-                        error.insertAfter(element.next('.select2-container'));
-                    } else {
-                        error.insertAfter(element.closest('.input-group'));
+                    try {
+                        if (element.hasClass('select2-hidden-accessible')) {
+                            error.insertAfter(element.next('.select2-container'));
+                        } else {
+                            error.insertAfter(element.closest('.input-group'));
+                        }
+                    } catch (e) {
+                        console.error('Error in errorPlacement:', e);
+                        error.insertAfter(element);
                     }
                 },
                 highlight: function(element) {
-                    if ($(element).hasClass('select2-hidden-accessible')) {
-                        $(element).next('.select2-container')
-                            .find('.select2-selection')
-                            .addClass('border border-red-500');
-                    } else {
-                        $(element).addClass('border-red-500');
+                    try {
+                        if ($(element).hasClass('select2-hidden-accessible')) {
+                            $(element).next('.select2-container')
+                                .find('.select2-selection')
+                                .addClass('border border-red-500');
+                        } else {
+                            $(element).addClass('border-red-500');
+                        }
+                    } catch (e) {
+                        console.error('Error in highlight:', e);
                     }
                 },
                 unhighlight: function(element) {
-                    if ($(element).hasClass('select2-hidden-accessible')) {
-                        $(element).next('.select2-container')
-                            .find('.select2-selection')
-                            .removeClass('border border-red-500');
-                    } else {
-                        $(element).removeClass('border-red-500');
+                    try {
+                        if ($(element).hasClass('select2-hidden-accessible')) {
+                            $(element).next('.select2-container')
+                                .find('.select2-selection')
+                                .removeClass('border border-red-500');
+                        } else {
+                            $(element).removeClass('border-red-500');
+                        }
+                    } catch (e) {
+                        console.error('Error in unhighlight:', e);
                     }
                 },
                 submitHandler: function(form) {
+                    console.log('Form submission started');
                     $('.saveButton').prop('disabled', true);
-                    form.submit();
+                    
+                    // Find the actual form element
+                    var formElement = $('#form-sakip')[0];
+                    console.log('Form element:', formElement);
+                    console.log('Form element type:', formElement ? formElement.tagName : 'null');
+                    
+                    if (!formElement || formElement.tagName !== 'FORM') {
+                        console.error('Invalid form element, trying alternative method');
+                        // Try to get form from the submit button
+                        formElement = $('.saveButton').closest('form')[0];
+                        console.log('Alternative form element:', formElement);
+                        
+                        if (!formElement || formElement.tagName !== 'FORM') {
+                            console.error('Still invalid form element');
+                            $('.saveButton').prop('disabled', false);
+                            return false;
+                        }
+                    }
+                    
+                    var formData = new FormData(formElement);
+                    console.log('Form action URL:', $(formElement).attr('action'));
+                    console.log('Form data entries:');
+                    for (var pair of formData.entries()) {
+                        console.log(pair[0] + ': ' + pair[1]);
+                    }
+                    
+                    $.ajax({
+                        url: $(formElement).attr('action'),
+                        type: 'POST',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function(response) {
+                            console.log('AJAX Success response:', response);
+                            if (response.success) {
+                                Swal.fire({
+                                    title: 'Berhasil!',
+                                    text: 'Data evaluasi SAKIP berhasil disimpan.',
+                                    icon: 'success',
+                                    confirmButtonText: 'OK'
+                                }).then(() => {
+                                    location.reload();
+                                });
+                            } else {
+                                Swal.fire({
+                                    title: 'Gagal!',
+                                    text: 'Terjadi kesalahan saat menyimpan data evaluasi SAKIP.',
+                                    icon: 'error',
+                                    confirmButtonText: 'OK'
+                                });
+                                $('.saveButton').prop('disabled', false);
+                            }
+                        },
+                        error: function(xhr) {
+                            console.log('AJAX Error:', xhr);
+                            console.log('Response text:', xhr.responseText);
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'Terjadi kesalahan server. Silakan coba lagi.',
+                                icon: 'error',
+                                confirmButtonText: 'OK'
+                            });
+                            $('.saveButton').prop('disabled', false);
+                        }
+                    });
+                    
+                    return false; // Prevent default form submission
                 }
             });
 
