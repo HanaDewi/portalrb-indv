@@ -821,19 +821,27 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
-                            url: "{{ url('akip/evaluasi/sakip/' . $instansi->id . '/hapus') }}/" + id,
+                            url: "{{ url('akip/evaluasi/sakip/' . $instansi->id) }}/" + id,
                             type: 'DELETE',
                             data: {
                                 _token: '{{ csrf_token() }}'
                             },
                             success: function(response) {
-                                Swal.fire('Berhasil!', 'Hasil evaluasi berhasil dihapus.', 'success')
-                                    .then(() => {
-                                        location.reload();
-                                    });
+                                if (response.success) {
+                                    Swal.fire('Berhasil!', response.message || 'Hasil evaluasi berhasil dihapus.', 'success')
+                                        .then(() => {
+                                            location.reload();
+                                        });
+                                } else {
+                                    Swal.fire('Error!', response.message || 'Gagal menghapus hasil evaluasi.', 'error');
+                                }
                             },
                             error: function(xhr) {
-                                Swal.fire('Error!', 'Gagal menghapus hasil evaluasi.', 'error');
+                                var errorMessage = 'Gagal menghapus hasil evaluasi.';
+                                if (xhr.responseJSON && xhr.responseJSON.message) {
+                                    errorMessage = xhr.responseJSON.message;
+                                }
+                                Swal.fire('Error!', errorMessage, 'error');
                             }
                         });
                     }

@@ -36,7 +36,7 @@
                     @endif
                 </div>
                 @if ($instansi->group == 'kl')
-                    <div class="intro-y p-5 flex items-center justify-between flex-col sm:flex-row">
+                    <div class="intro-y p-5 flex items-start justify-between flex-col sm:flex-row">
                         <div>
                         @else
                             <div class="intro-y p-5">
@@ -170,7 +170,7 @@
                         </tr>
                         <tr>
                             <td class="border-t-2">
-                                <div class="font-medium">Nilai Total Evaluasi AKIP TW 2</div>
+                                <div class="font-medium">Nilai Total Evaluasi AKIP {{ $evaluasi->periode }}</div>
                             </td>
                             <td class="border-t-2">
                                 {{ fnumber2($evaluasi->nilai_total_evaluasi_akip_tahun_lalu, 2) }}
@@ -656,6 +656,15 @@
                     $(this).summernote('code', '');
                 });
                 validator.resetForm();
+                
+                // Reset period dropdown to enabled state
+                $('#periode').find('option').each(function() {
+                    $(this).prop('disabled', false);
+                    $(this).removeClass('text-gray-400');
+                });
+                
+                // Trigger cekPeriode to update dropdown based on current year
+                cekPeriode();
             }
 
             cekPeriode = function() {
@@ -667,17 +676,20 @@
                 } else {
                     $("#label_file_evaluasi").text("File Surat Pengantar LHE");
                 }
-                if (tahun && periode && !id_evaluasi) {
+                if (tahun && !id_evaluasi) {
                     $.ajax({
                         url: "{{ route('akip.evaluasi.check', $instansi->id) }}",
                         type: 'POST',
                         data: {
                             tahun: tahun,
-                            periode: periode,
+                            periode: periode || '',
                             _token: '{{ csrf_token() }}'
                         },
                         success: function(response) {
-                            if (response.exists) {
+                            // Update period dropdown options based on filled periods
+                            updatePeriodDropdown(response.filled_periods);
+                            
+                            if (periode && response.exists) {
                                 Swal.fire('Error!', 'Penilaian untuk tahun ' + tahun + ' dan periode ' +
                                     periode +
                                     ' sudah ada.', 'error');
@@ -692,10 +704,10 @@
                                     $('#catatan_komponen_pengukuran_kinerja').summernote('code', response.evaluasi_sakip.catatan_komponen_pengukuran_kinerja);
                                     $('#catatan_komponen_pelaporan_kinerja').summernote('code', response.evaluasi_sakip.catatan_komponen_pelaporan_kinerja);
                                     $('#catatan_komponen_evaluasi_internal').summernote('code', response.evaluasi_sakip.catatan_komponen_evaluasi_internal);
-                                    $('#rekomendasi_komponen_perencanaan_kinerja').sumernote('code', response.evaluasi_sakip.rekomendasi_komponen_perencanaan_kinerja);
-                                    $('#rekomendasi_komponen_pengukuran_kinerja').sumernote('code', response.evaluasi_sakip.rekomendasi_komponen_pengukuran_kinerja);
-                                    $('#rekomendasi_komponen_pelaporan_kinerja').sumernote('code', response.evaluasi_sakip.rekomendasi_komponen_pelaporan_kinerja);
-                                    $('#rekomendasi_komponen_evaluasi_internal').sumernote('code', response.evaluasi_sakip.rekomendasi_komponen_evaluasi_internal);
+                                    $('#rekomendasi_komponen_perencanaan_kinerja').summernote('code', response.evaluasi_sakip.rekomendasi_komponen_perencanaan_kinerja);
+                                    $('#rekomendasi_komponen_pengukuran_kinerja').summernote('code', response.evaluasi_sakip.rekomendasi_komponen_pengukuran_kinerja);
+                                    $('#rekomendasi_komponen_pelaporan_kinerja').summernote('code', response.evaluasi_sakip.rekomendasi_komponen_pelaporan_kinerja);
+                                    $('#rekomendasi_komponen_evaluasi_internal').summernote('code', response.evaluasi_sakip.rekomendasi_komponen_evaluasi_internal);
                                     $('#nilai_komponen_perencanaan_kinerja_tahun_lalu').val(response.evaluasi_sakip.nilai_komponen_perencanaan_kinerja_tahun_lalu);
                                     $('#nilai_komponen_pengukuran_kinerja_tahun_lalu').val(response.evaluasi_sakip.nilai_komponen_pengukuran_kinerja_tahun_lalu);
                                     $('#nilai_komponen_pelaporan_kinerja_tahun_lalu').val(response.evaluasi_sakip.nilai_komponen_pelaporan_kinerja_tahun_lalu);
@@ -719,6 +731,30 @@
                             }
                         }
                     });
+                }
+            }
+
+            // Function to update period dropdown based on filled periods
+            updatePeriodDropdown = function(filledPeriods) {
+                var $periodeSelect = $('#periode');
+                var currentValue = $periodeSelect.val();
+                
+                // Reset all options to enabled
+                $periodeSelect.find('option').each(function() {
+                    $(this).prop('disabled', false);
+                    $(this).removeClass('text-gray-400');
+                });
+                
+                // Disable filled periods
+                if (filledPeriods && filledPeriods.length > 0) {
+                    filledPeriods.forEach(function(period) {
+                        $periodeSelect.find('option[value="' + period + '"]').prop('disabled', true).addClass('text-gray-400');
+                    });
+                }
+                
+                // If current selection is disabled, clear it
+                if (currentValue && filledPeriods.includes(currentValue)) {
+                    $periodeSelect.val('').trigger('change');
                 }
             }
 
@@ -763,33 +799,92 @@
                     }
                 },
                 submitHandler: function(form) {
-                    console.log('Form submission started');
                     $('.saveButton').prop('disabled', true);
                     
                     // Find the actual form element
                     var formElement = $('#form-sakip')[0];
-                    console.log('Form element:', formElement);
-                    console.log('Form element type:', formElement ? formElement.tagName : 'null');
                     
                     if (!formElement || formElement.tagName !== 'FORM') {
-                        console.error('Invalid form element, trying alternative method');
                         // Try to get form from the submit button
                         formElement = $('.saveButton').closest('form')[0];
-                        console.log('Alternative form element:', formElement);
                         
                         if (!formElement || formElement.tagName !== 'FORM') {
-                            console.error('Still invalid form element');
                             $('.saveButton').prop('disabled', false);
                             return false;
                         }
                     }
                     
-                    var formData = new FormData(formElement);
-                    console.log('Form action URL:', $(formElement).attr('action'));
-                    console.log('Form data entries:');
-                    for (var pair of formData.entries()) {
-                        console.log(pair[0] + ': ' + pair[1]);
+                    // Validate required fields before submission
+                    var isKL = $('#periode').length === 0;
+                    var isEdit = $('#id_evaluasi').val() !== '';
+                    
+                    var requiredFields = [];
+                    
+                    if (isEdit) {
+                        // For edit mode, validate all required fields
+                        requiredFields = [
+                            'penanggung_jawab', 'pic_lke', 'link_lke',
+                            'nilai_komponen_perencanaan_kinerja', 'nilai_komponen_pengukuran_kinerja',
+                            'nilai_komponen_pelaporan_kinerja', 'nilai_komponen_evaluasi_internal',
+                            'nilai_total_evaluasi_akip', 'nilai_komponen_perencanaan_kinerja_tahun_lalu',
+                            'nilai_komponen_pengukuran_kinerja_tahun_lalu', 'nilai_komponen_pelaporan_kinerja_tahun_lalu',
+                            'nilai_komponen_evaluasi_internal_tahun_lalu', 'nilai_total_evaluasi_akip_tahun_lalu',
+                            'catatan_komponen_perencanaan_kinerja', 'rekomendasi_komponen_perencanaan_kinerja',
+                            'catatan_komponen_pengukuran_kinerja', 'rekomendasi_komponen_pengukuran_kinerja',
+                            'catatan_komponen_pelaporan_kinerja', 'rekomendasi_komponen_pelaporan_kinerja',
+                            'catatan_komponen_evaluasi_internal', 'rekomendasi_komponen_evaluasi_internal'
+                        ];
+                        
+                        // Add macro indicators for Pemda only
+                        if (!isKL) {
+                            requiredFields = requiredFields.concat([
+                                'angka_kemiskinan_tahun_lalu', 'angka_kemiskinan',
+                                'laju_pertumbuhan_ekonomi_tahun_lalu', 'laju_pertumbuhan_ekonomi',
+                                'tingkat_pengangguran_terbuka_tahun_lalu', 'tingkat_pengangguran_terbuka',
+                                'penurunan_emisi_grk_tahun_lalu', 'penurunan_emisi_grk',
+                                'indeks_pembangunan_manusia_tahun_lalu', 'indeks_pembangunan_manusia',
+                                'indeks_gini_ratio_tahun_lalu', 'indeks_gini_ratio',
+                                'pendapatan_perkapita_tahun_lalu', 'pendapatan_perkapita'
+                            ]);
+                        }
+                    } else {
+                        // For create mode
+                        requiredFields = isKL 
+                            ? ['tahun', 'penanggung_jawab', 'pic_lke', 'link_lke']
+                            : ['tahun', 'periode', 'penanggung_jawab', 'pic_lke', 'link_lke'];
                     }
+                    
+                    var missingFields = [];
+                    
+                    requiredFields.forEach(function(field) {
+                        var value;
+                        
+                        // Handle summernote fields differently
+                        if (field.includes('catatan_') || field.includes('rekomendasi_')) {
+                            value = $('#' + field).summernote('code');
+                            // Remove HTML tags and check if content is empty
+                            value = value.replace(/<[^>]*>/g, '').trim();
+                        } else {
+                            value = $('#' + field).val();
+                        }
+                        
+                        if (!value || value.trim() === '') {
+                            missingFields.push(field);
+                        }
+                    });
+                    
+                    if (missingFields.length > 0) {
+                        Swal.fire({
+                            title: 'Error!',
+                            text: 'Mohon lengkapi semua field yang wajib diisi.',
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                        $('.saveButton').prop('disabled', false);
+                        return false;
+                    }
+                    
+                    var formData = new FormData(formElement);
                     
                     $.ajax({
                         url: $(formElement).attr('action'),
@@ -798,7 +893,6 @@
                         processData: false,
                         contentType: false,
                         success: function(response) {
-                            console.log('AJAX Success response:', response);
                             if (response.success) {
                                 Swal.fire({
                                     title: 'Berhasil!',
@@ -818,12 +912,22 @@
                                 $('.saveButton').prop('disabled', false);
                             }
                         },
-                        error: function(xhr) {
-                            console.log('AJAX Error:', xhr);
-                            console.log('Response text:', xhr.responseText);
+                        error: function(xhr, status, error) {
+                            var errorMessage = 'Terjadi kesalahan server. Silakan coba lagi.';
+                            if (xhr.responseText) {
+                                try {
+                                    var response = JSON.parse(xhr.responseText);
+                                    if (response.message) {
+                                        errorMessage = response.message;
+                                    }
+                                } catch (e) {
+                                    // Could not parse error response
+                                }
+                            }
+                            
                             Swal.fire({
                                 title: 'Error!',
-                                text: 'Terjadi kesalahan server. Silakan coba lagi.',
+                                text: errorMessage,
                                 icon: 'error',
                                 confirmButtonText: 'OK'
                             });
@@ -851,6 +955,14 @@
                         $('#tahun').prop('disabled', true);
                         $('#periode').val(response.evaluasi_sakip.periode).trigger('change');
                         $('#periode').prop('disabled', true);
+                        
+                        // For editing, disable all periods except the current one
+                        $('#periode').find('option').each(function() {
+                            if ($(this).val() !== response.evaluasi_sakip.periode) {
+                                $(this).prop('disabled', true).addClass('text-gray-400');
+                            }
+                        });
+                        
                         $('#penanggung_jawab').val(response.evaluasi_sakip.penanggung_jawab);
                         $('#pic_lke').val(response.evaluasi_sakip.pic_lke);
                         $('#link_lke').val(response.evaluasi_sakip.link_lke);
@@ -902,19 +1014,27 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
-                            url: "{{ url('akip/evaluasi/sakip/' . $instansi->id . '/hapus') }}/" + id,
+                            url: "{{ url('akip/evaluasi/sakip/' . $instansi->id) }}/" + id,
                             type: 'DELETE',
                             data: {
                                 _token: '{{ csrf_token() }}'
                             },
                             success: function(response) {
-                                Swal.fire('Berhasil!', 'Hasil evaluasi berhasil dihapus.', 'success')
-                                    .then(() => {
-                                        location.reload();
-                                    });
+                                if (response.success) {
+                                    Swal.fire('Berhasil!', response.message || 'Hasil evaluasi berhasil dihapus.', 'success')
+                                        .then(() => {
+                                            location.reload();
+                                        });
+                                } else {
+                                    Swal.fire('Error!', response.message || 'Gagal menghapus hasil evaluasi.', 'error');
+                                }
                             },
                             error: function(xhr) {
-                                Swal.fire('Error!', 'Gagal menghapus hasil evaluasi.', 'error');
+                                var errorMessage = 'Gagal menghapus hasil evaluasi.';
+                                if (xhr.responseJSON && xhr.responseJSON.message) {
+                                    errorMessage = xhr.responseJSON.message;
+                                }
+                                Swal.fire('Error!', errorMessage, 'error');
                             }
                         });
                     }

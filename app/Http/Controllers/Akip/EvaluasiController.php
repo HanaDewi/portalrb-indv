@@ -19,13 +19,10 @@ class EvaluasiController extends Controller
         $this->middleware(function ($request, $next) {
             $this->currentUser = auth()->user();
             $allowed_urls = allowed_url('akip');
-            \Log::info('Checking URL access for: ' . $request->path());
-            \Log::info('Allowed URLs: ' . json_encode($allowed_urls));
             
             // Check if URL matches any allowed pattern
             foreach ($allowed_urls as $allowed) {
                 if ($request->is($allowed)) {
-                    \Log::info('URL matched: ' . $allowed);
                     return $next($request);
                 }
             }
@@ -33,11 +30,9 @@ class EvaluasiController extends Controller
             // Additional check for evaluasi sakip routes (including detail pages)
             if ($request->is('akip/evaluasi/sakip') || 
                 $request->is('akip/evaluasi/sakip/*')) {
-                \Log::info('URL matched via evaluasi sakip wildcard');
                 return $next($request);
             }
             
-            \Log::warning('URL not allowed: ' . $request->path());
             abort('403');
         });
     }
@@ -47,7 +42,6 @@ class EvaluasiController extends Controller
      */
     public function index(Request $request)
     {
-        \Log::info('EvaluasiController::index called with request: ' . $request->fullUrl());
         
         if (in_array($this->currentUser->level, ['tpn', 'admin'])) {
             $tim = $this->currentUser->anggota ? $this->currentUser->anggota->tim : false;
@@ -117,7 +111,7 @@ class EvaluasiController extends Controller
 
                     $evaluasi_tw4 = EvaluasiSakip::where('instansi_id', $instansi->id)
                         ->where('tahun', $tahun)
-                        ->where('periode', 'TW 4')
+                        ->where('periode', 'Final')
                         ->first();
 
                     $anggota_tim->status_tw1 = $evaluasi_tw1 ? 'sudah' : 'belum';
@@ -182,40 +176,19 @@ class EvaluasiController extends Controller
      */
     public function show($instansi_id)
     {
-        \Log::info('EvaluasiController::show called with instansi_id: ' . $instansi_id);
-        
         $cek = $this->currentUser->anggota ? $this->currentUser->anggota->tim->instansi_tim->where('instansi_id', $instansi_id)->first() : false;
         if (!$cek && $this->currentUser->level != 'admin') {
-            \Log::info('User does not have access to instansi_id: ' . $instansi_id);
             abort('404');
         }
         
         $instansi = KlpdInstansi::find($instansi_id);
         if (!$instansi) {
-            \Log::info('Instansi not found with id: ' . $instansi_id);
             abort('404');
         }
         
         $evaluasi_sakip = EvaluasiSakip::where('instansi_id', $instansi_id)->orderBy('tahun')->orderBy('periode')->get();
-        \Log::info('Found ' . $evaluasi_sakip->count() . ' evaluasi records for instansi_id: ' . $instansi_id);
-        \Log::info('Instansi data: ' . json_encode($instansi->toArray()));
-        \Log::info('About to return view: akip.evaluasi.instansi.show');
-
-        try {
-            $view = view('akip.evaluasi.instansi.show', compact('instansi', 'evaluasi_sakip'));
-            \Log::info('View created successfully');
-            
-            // Debug: Check if view is being returned as JSON
-            $content = $view->render();
-            \Log::info('View content length: ' . strlen($content));
-            \Log::info('View content preview: ' . substr($content, 0, 200));
-            
-            return $view;
-        } catch (\Exception $e) {
-            \Log::error('Error rendering view: ' . $e->getMessage());
-            \Log::error('Stack trace: ' . $e->getTraceAsString());
-            throw $e;
-        }
+        
+        return view('akip.evaluasi.instansi.show', compact('instansi', 'evaluasi_sakip'));
     }
 
     /**
@@ -240,23 +213,46 @@ class EvaluasiController extends Controller
      */
     public function store(Request $request, $instansi_id)
     {
-        \Log::info('EvaluasiController::store called with instansi_id: ' . $instansi_id);
-        \Log::info('Request data: ' . json_encode($request->all()));
-        
         $cek = $this->currentUser->anggota ? $this->currentUser->anggota->tim->instansi_tim->where('instansi_id', $instansi_id)->first() : false;
         if (!$cek) {
-            \Log::warning('User does not have access to instansi_id: ' . $instansi_id);
             abort('404');
         }
         $success = false;
         $instansi = KlpdInstansi::find($instansi_id);
         if (!$instansi) {
-            \Log::warning('Instansi not found with id: ' . $instansi_id);
             abort('404');
         }
         DB::beginTransaction();
         try {
             if (!$request->id_evaluasi) {
+                // Validate required fields
+                // For K/L, periode is not required (it's set to 'Final' automatically)
+                $requiredFields = [
+                    'tahun', 'penanggung_jawab', 'pic_lke', 'link_lke',
+                    'nilai_komponen_perencanaan_kinerja', 'nilai_komponen_pengukuran_kinerja',
+                    'nilai_komponen_pelaporan_kinerja', 'nilai_komponen_evaluasi_internal',
+                    'nilai_total_evaluasi_akip', 'nilai_komponen_perencanaan_kinerja_tahun_lalu',
+                    'nilai_komponen_pengukuran_kinerja_tahun_lalu', 'nilai_komponen_pelaporan_kinerja_tahun_lalu',
+                    'nilai_komponen_evaluasi_internal_tahun_lalu', 'nilai_total_evaluasi_akip_tahun_lalu'
+                ];
+                
+                // Add periode validation only for non-K/L instances
+                if ($instansi->group != 'kl') {
+                    $requiredFields[] = 'periode';
+                }
+                
+                $missingFields = [];
+                foreach ($requiredFields as $field) {
+                    if (!$request->has($field) || $request->$field === null || $request->$field === '') {
+                        $missingFields[] = $field;
+                    }
+                }
+                
+                if (!empty($missingFields)) {
+                    \Log::error('Missing required fields: ' . implode(', ', $missingFields));
+                    throw new \Exception('Missing required fields: ' . implode(', ', $missingFields));
+                }
+                
                 $evaluasi_sakip = new EvaluasiSakip();
                 $evaluasi_sakip->instansi_id = $instansi_id;
                 $evaluasi_sakip->tahun = $request->tahun;
@@ -266,6 +262,7 @@ class EvaluasiController extends Controller
                 $evaluasi_sakip->link_lke = $request->link_lke;
                 $evaluasi_sakip->input_user_id = $this->currentUser->id;
                 $evaluasi_sakip->last_update_user_id = $this->currentUser->id;
+                
                 
                 // Handle file upload
                 if ($request->hasFile('file_evaluasi')) {
@@ -280,6 +277,7 @@ class EvaluasiController extends Controller
                 $evaluasi_sakip->nilai_komponen_perencanaan_kinerja = $request->nilai_komponen_perencanaan_kinerja;
                 $evaluasi_sakip->catatan_komponen_perencanaan_kinerja = $request->catatan_komponen_perencanaan_kinerja;
                 $evaluasi_sakip->rekomendasi_komponen_perencanaan_kinerja = $request->rekomendasi_komponen_perencanaan_kinerja;
+                
                 
                 $evaluasi_sakip->nilai_komponen_pengukuran_kinerja_tahun_lalu = $request->nilai_komponen_pengukuran_kinerja_tahun_lalu;
                 $evaluasi_sakip->nilai_komponen_pengukuran_kinerja = $request->nilai_komponen_pengukuran_kinerja;
@@ -301,25 +299,64 @@ class EvaluasiController extends Controller
                 
                 // For Pemda only
                 if ($instansi->group != 'kl') {
-                    $evaluasi_sakip->angka_kemiskinan_tahun_lalu = $request->angka_kemiskinan_tahun_lalu;
-                    $evaluasi_sakip->angka_kemiskinan = $request->angka_kemiskinan;
-                    $evaluasi_sakip->laju_pertumbuhan_ekonomi_tahun_lalu = $request->laju_pertumbuhan_ekonomi_tahun_lalu;
-                    $evaluasi_sakip->laju_pertumbuhan_ekonomi = $request->laju_pertumbuhan_ekonomi;
-                    $evaluasi_sakip->tingkat_pengangguran_terbuka_tahun_lalu = $request->tingkat_pengangguran_terbuka_tahun_lalu;
-                    $evaluasi_sakip->tingkat_pengangguran_terbuka = $request->tingkat_pengangguran_terbuka;
-                    $evaluasi_sakip->penurunan_emisi_grk_tahun_lalu = $request->penurunan_emisi_grk_tahun_lalu;
-                    $evaluasi_sakip->penurunan_emisi_grk = $request->penurunan_emisi_grk;
-                    $evaluasi_sakip->indeks_pembangunan_manusia_tahun_lalu = $request->indeks_pembangunan_manusia_tahun_lalu;
-                    $evaluasi_sakip->indeks_pembangunan_manusia = $request->indeks_pembangunan_manusia;
-                    $evaluasi_sakip->indeks_gini_ratio_tahun_lalu = $request->indeks_gini_ratio_tahun_lalu;
-                    $evaluasi_sakip->indeks_gini_ratio = $request->indeks_gini_ratio;
-                    $evaluasi_sakip->pendapatan_perkapita_tahun_lalu = $request->pendapatan_perkapita_tahun_lalu;
-                    $evaluasi_sakip->pendapatan_perkapita = $request->pendapatan_perkapita;
+                    $evaluasi_sakip->angka_kemiskinan_tahun_lalu = str_replace(',', '.', $request->angka_kemiskinan_tahun_lalu);
+                    $evaluasi_sakip->angka_kemiskinan = str_replace(',', '.', $request->angka_kemiskinan);
+                    $evaluasi_sakip->laju_pertumbuhan_ekonomi_tahun_lalu = str_replace(',', '.', $request->laju_pertumbuhan_ekonomi_tahun_lalu);
+                    $evaluasi_sakip->laju_pertumbuhan_ekonomi = str_replace(',', '.', $request->laju_pertumbuhan_ekonomi);
+                    $evaluasi_sakip->tingkat_pengangguran_terbuka_tahun_lalu = str_replace(',', '.', $request->tingkat_pengangguran_terbuka_tahun_lalu);
+                    $evaluasi_sakip->tingkat_pengangguran_terbuka = str_replace(',', '.', $request->tingkat_pengangguran_terbuka);
+                    $evaluasi_sakip->penurunan_emisi_grk_tahun_lalu = str_replace(',', '.', $request->penurunan_emisi_grk_tahun_lalu);
+                    $evaluasi_sakip->penurunan_emisi_grk = str_replace(',', '.', $request->penurunan_emisi_grk);
+                    $evaluasi_sakip->indeks_pembangunan_manusia_tahun_lalu = str_replace(',', '.', $request->indeks_pembangunan_manusia_tahun_lalu);
+                    $evaluasi_sakip->indeks_pembangunan_manusia = str_replace(',', '.', $request->indeks_pembangunan_manusia);
+                    $evaluasi_sakip->indeks_gini_ratio_tahun_lalu = str_replace(',', '.', $request->indeks_gini_ratio_tahun_lalu);
+                    $evaluasi_sakip->indeks_gini_ratio = str_replace(',', '.', $request->indeks_gini_ratio);
+                    $evaluasi_sakip->pendapatan_perkapita_tahun_lalu = $this->formatCurrencyForDatabase($request->pendapatan_perkapita_tahun_lalu);
+                    $evaluasi_sakip->pendapatan_perkapita = $this->formatCurrencyForDatabase($request->pendapatan_perkapita);
                 }
                 
                 $evaluasi_sakip->save();
                 $success = true;
             } else {
+                // Validate required fields for edit mode
+                $requiredFields = [
+                    'penanggung_jawab', 'pic_lke', 'link_lke',
+                    'nilai_komponen_perencanaan_kinerja', 'nilai_komponen_pengukuran_kinerja',
+                    'nilai_komponen_pelaporan_kinerja', 'nilai_komponen_evaluasi_internal',
+                    'nilai_total_evaluasi_akip', 'nilai_komponen_perencanaan_kinerja_tahun_lalu',
+                    'nilai_komponen_pengukuran_kinerja_tahun_lalu', 'nilai_komponen_pelaporan_kinerja_tahun_lalu',
+                    'nilai_komponen_evaluasi_internal_tahun_lalu', 'nilai_total_evaluasi_akip_tahun_lalu',
+                    'catatan_komponen_perencanaan_kinerja', 'rekomendasi_komponen_perencanaan_kinerja',
+                    'catatan_komponen_pengukuran_kinerja', 'rekomendasi_komponen_pengukuran_kinerja',
+                    'catatan_komponen_pelaporan_kinerja', 'rekomendasi_komponen_pelaporan_kinerja',
+                    'catatan_komponen_evaluasi_internal', 'rekomendasi_komponen_evaluasi_internal'
+                ];
+                
+                // Add macro indicators for Pemda only
+                if ($instansi->group != 'kl') {
+                    $requiredFields = array_merge($requiredFields, [
+                        'angka_kemiskinan_tahun_lalu', 'angka_kemiskinan',
+                        'laju_pertumbuhan_ekonomi_tahun_lalu', 'laju_pertumbuhan_ekonomi',
+                        'tingkat_pengangguran_terbuka_tahun_lalu', 'tingkat_pengangguran_terbuka',
+                        'penurunan_emisi_grk_tahun_lalu', 'penurunan_emisi_grk',
+                        'indeks_pembangunan_manusia_tahun_lalu', 'indeks_pembangunan_manusia',
+                        'indeks_gini_ratio_tahun_lalu', 'indeks_gini_ratio',
+                        'pendapatan_perkapita_tahun_lalu', 'pendapatan_perkapita'
+                    ]);
+                }
+                
+                $missingFields = [];
+                foreach ($requiredFields as $field) {
+                    if (!$request->has($field) || $request->$field === null || $request->$field === '') {
+                        $missingFields[] = $field;
+                    }
+                }
+                
+                if (!empty($missingFields)) {
+                    \Log::error('Missing required fields for edit: ' . implode(', ', $missingFields));
+                    throw new \Exception('Missing required fields: ' . implode(', ', $missingFields));
+                }
+                
                 $evaluasi_sakip = EvaluasiSakip::find($request->id_evaluasi);
                 if ($evaluasi_sakip) {
                     // Update existing record with same fields as above
@@ -362,20 +399,20 @@ class EvaluasiController extends Controller
                     
                     // For Pemda only
                     if ($instansi->group != 'kl') {
-                        $evaluasi_sakip->angka_kemiskinan_tahun_lalu = $request->angka_kemiskinan_tahun_lalu;
-                        $evaluasi_sakip->angka_kemiskinan = $request->angka_kemiskinan;
-                        $evaluasi_sakip->laju_pertumbuhan_ekonomi_tahun_lalu = $request->laju_pertumbuhan_ekonomi_tahun_lalu;
-                        $evaluasi_sakip->laju_pertumbuhan_ekonomi = $request->laju_pertumbuhan_ekonomi;
-                        $evaluasi_sakip->tingkat_pengangguran_terbuka_tahun_lalu = $request->tingkat_pengangguran_terbuka_tahun_lalu;
-                        $evaluasi_sakip->tingkat_pengangguran_terbuka = $request->tingkat_pengangguran_terbuka;
-                        $evaluasi_sakip->penurunan_emisi_grk_tahun_lalu = $request->penurunan_emisi_grk_tahun_lalu;
-                        $evaluasi_sakip->penurunan_emisi_grk = $request->penurunan_emisi_grk;
-                        $evaluasi_sakip->indeks_pembangunan_manusia_tahun_lalu = $request->indeks_pembangunan_manusia_tahun_lalu;
-                        $evaluasi_sakip->indeks_pembangunan_manusia = $request->indeks_pembangunan_manusia;
-                        $evaluasi_sakip->indeks_gini_ratio_tahun_lalu = $request->indeks_gini_ratio_tahun_lalu;
-                        $evaluasi_sakip->indeks_gini_ratio = $request->indeks_gini_ratio;
-                        $evaluasi_sakip->pendapatan_perkapita_tahun_lalu = $request->pendapatan_perkapita_tahun_lalu;
-                        $evaluasi_sakip->pendapatan_perkapita = $request->pendapatan_perkapita;
+                        $evaluasi_sakip->angka_kemiskinan_tahun_lalu = str_replace(',', '.', $request->angka_kemiskinan_tahun_lalu);
+                        $evaluasi_sakip->angka_kemiskinan = str_replace(',', '.', $request->angka_kemiskinan);
+                        $evaluasi_sakip->laju_pertumbuhan_ekonomi_tahun_lalu = str_replace(',', '.', $request->laju_pertumbuhan_ekonomi_tahun_lalu);
+                        $evaluasi_sakip->laju_pertumbuhan_ekonomi = str_replace(',', '.', $request->laju_pertumbuhan_ekonomi);
+                        $evaluasi_sakip->tingkat_pengangguran_terbuka_tahun_lalu = str_replace(',', '.', $request->tingkat_pengangguran_terbuka_tahun_lalu);
+                        $evaluasi_sakip->tingkat_pengangguran_terbuka = str_replace(',', '.', $request->tingkat_pengangguran_terbuka);
+                        $evaluasi_sakip->penurunan_emisi_grk_tahun_lalu = str_replace(',', '.', $request->penurunan_emisi_grk_tahun_lalu);
+                        $evaluasi_sakip->penurunan_emisi_grk = str_replace(',', '.', $request->penurunan_emisi_grk);
+                        $evaluasi_sakip->indeks_pembangunan_manusia_tahun_lalu = str_replace(',', '.', $request->indeks_pembangunan_manusia_tahun_lalu);
+                        $evaluasi_sakip->indeks_pembangunan_manusia = str_replace(',', '.', $request->indeks_pembangunan_manusia);
+                        $evaluasi_sakip->indeks_gini_ratio_tahun_lalu = str_replace(',', '.', $request->indeks_gini_ratio_tahun_lalu);
+                        $evaluasi_sakip->indeks_gini_ratio = str_replace(',', '.', $request->indeks_gini_ratio);
+                        $evaluasi_sakip->pendapatan_perkapita_tahun_lalu = $this->formatCurrencyForDatabase($request->pendapatan_perkapita_tahun_lalu);
+                        $evaluasi_sakip->pendapatan_perkapita = $this->formatCurrencyForDatabase($request->pendapatan_perkapita);
                     }
                     
                     $evaluasi_sakip->save();
@@ -390,7 +427,6 @@ class EvaluasiController extends Controller
             $success = false;
         }
         
-        \Log::info('Store method completed with success: ' . ($success ? 'true' : 'false'));
         return response()->json(['success' => $success]);
     }
 
@@ -403,19 +439,27 @@ class EvaluasiController extends Controller
         if (!$cek) {
             abort('404');
         }
+        
+        // Get all filled periods for the selected year
+        $filled_periods = EvaluasiSakip::where('instansi_id', $instansi_id)
+            ->where('tahun', $request->tahun)
+            ->pluck('periode')
+            ->toArray();
+        
+        // Check if specific periode is already filled
+        $exists = in_array($request->periode, $filled_periods);
+        
+        // Get last evaluasi for pre-filling data
         $evaluasi_sakip = EvaluasiSakip::where('instansi_id', $instansi_id)
             ->where('tahun', $request->tahun)
-            ->where('periode', $request->periode)
+            ->orderBy('periode', 'desc')
             ->first();
-        if ($evaluasi_sakip) {
-            return response()->json(['exists' => true]);
-        } else {
-            $evaluasi_sakip = EvaluasiSakip::where('instansi_id', $instansi_id)
-                ->where('tahun', $request->tahun)
-                ->orderBy('periode', 'desc')
-                ->first();
-            return response()->json(['exists' => false, 'evaluasi_sakip' => $evaluasi_sakip]);
-        }
+        
+        return response()->json([
+            'exists' => $exists,
+            'filled_periods' => $filled_periods,
+            'evaluasi_sakip' => $evaluasi_sakip
+        ]);
     }
 
     /**
@@ -423,16 +467,33 @@ class EvaluasiController extends Controller
      */
     public function destroy($instansi_id, $id)
     {
-        $cek = $this->currentUser->anggota ? $this->currentUser->anggota->tim->instansi_tim->where('instansi_id', $instansi_id)->first() : false;
-        if (!$cek) {
-            abort('404');
-        }
-        $evaluasi_sakip = EvaluasiSakip::find($id);
-        if ($evaluasi_sakip) {
+        try {
+            $cek = $this->currentUser->anggota ? $this->currentUser->anggota->tim->instansi_tim->where('instansi_id', $instansi_id)->first() : false;
+            if (!$cek) {
+                \Log::error('Delete evaluasi: User not authorized for instansi_id: ' . $instansi_id);
+                return response()->json(['success' => false, 'message' => 'Unauthorized'], 403);
+            }
+            
+            $evaluasi_sakip = EvaluasiSakip::find($id);
+            if (!$evaluasi_sakip) {
+                \Log::error('Delete evaluasi: Evaluasi not found with id: ' . $id);
+                return response()->json(['success' => false, 'message' => 'Evaluasi not found'], 404);
+            }
+            
+            // Verify that the evaluasi belongs to the correct instansi
+            if ($evaluasi_sakip->instansi_id != $instansi_id) {
+                \Log::error('Delete evaluasi: Instansi mismatch. Evaluasi instansi_id: ' . $evaluasi_sakip->instansi_id . ', Request instansi_id: ' . $instansi_id);
+                return response()->json(['success' => false, 'message' => 'Instansi mismatch'], 400);
+            }
+            
             $evaluasi_sakip->delete();
-            return response()->json(['success' => true]);
-        } else {
-            return response()->json(['success' => false]);
+            \Log::info('Delete evaluasi: Successfully deleted evaluasi id: ' . $id);
+            return response()->json(['success' => true, 'message' => 'Evaluasi berhasil dihapus']);
+            
+        } catch (\Exception $e) {
+            \Log::error('Delete evaluasi error: ' . $e->getMessage());
+            \Log::error('Stack trace: ' . $e->getTraceAsString());
+            return response()->json(['success' => false, 'message' => 'Terjadi kesalahan saat menghapus evaluasi'], 500);
         }
     }
 
@@ -519,7 +580,7 @@ class EvaluasiController extends Controller
 
                     $evaluasi_tw4 = EvaluasiSakip::where('instansi_id', $instansi->id)
                         ->where('tahun', $tahun)
-                        ->where('periode', 'TW 4')
+                        ->where('periode', 'Final')
                         ->first();
 
                     $anggota_tim->status_tw1 = $evaluasi_tw1 ? 'sudah' : 'belum';
@@ -567,5 +628,22 @@ class EvaluasiController extends Controller
                 'message' => 'Terjadi kesalahan: ' . $e->getMessage()
             ], 500);
         }
+    }
+
+    /**
+     * Format currency from Indonesian format to database format
+     * Converts "6.000.000" to "6000000" for database storage
+     */
+    private function formatCurrencyForDatabase($value)
+    {
+        if (empty($value)) {
+            return null;
+        }
+        
+        // Remove all dots (thousand separators) and replace comma with dot for decimal
+        $value = str_replace('.', '', $value); // Remove thousand separators
+        $value = str_replace(',', '.', $value); // Replace decimal separator
+        
+        return $value;
     }
 }
