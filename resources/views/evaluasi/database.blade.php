@@ -16,12 +16,18 @@
             <table id="lke_utama" class="table table-bordered table-striped table-hover" cellspacing="0" width="100%">
                 <thead class="table-dark">
                     <tr>
-                        <th class="w-5">No.</th>
-                        <th>Komponen</th>
-                        <th>Sub Komponen</th>
-                        <th>Indikator</th>
-                        <th>Sudah Terisi</th>
-                        <th>Rata-rata Skor</th>
+                        <th rowspan="2" class="w-5">No.</th>
+                        <th rowspan="2">Komponen</th>
+                        <th rowspan="2">Sub Komponen</th>
+                        <th rowspan="2">Indikator</th>
+                        <th rowspan="2">Sudah Terisi</th>
+                        <th rowspan="2">Belum Dilakukan Penilaian</th>
+                        <th rowspan="2">Rata-rata Skor</th>
+                        <th colspan="2">Mencapai Target Baik</th>
+                    </tr>
+                    <tr>
+                        <th>Jumlah</th>
+                        <th>Persentase (%)</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -88,7 +94,10 @@
             { data: 'subkomponen' },
             { data: 'indikator' },
             { data: 'terisi' },
+            { data: 'belum' },
             { data: 'rata_rata_score' },
+            { data: 'mencapai_target_baik' },
+            { data: 'persentase_target_baik' },
         ],
 		columnDefs: [
 			{

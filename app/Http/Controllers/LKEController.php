@@ -61,10 +61,46 @@ class LKEController extends Controller
             $data->subkomponen = $data->parent->nama;
             $data->komponen = $data->parent->parent->nama;
             $bobot_ids = LkeBobot::where('lke_parameter_id', $data->id)->pluck('id');
-            $data->terisi = LkeTestTpLine::whereIn('lke_bobot_id', $bobot_ids)->count();
+            $data->terisi = LkeTestTpLine::whereIn('lke_bobot_id', $bobot_ids)
+                ->join('klpd_instansi_new as ki', function($join) {
+                    $join->on('lke_test_tp_line.instansi_id', '=', 'ki.id_before')
+                        ->orOn('lke_test_tp_line.instansi_id', '=', 'ki.id');
+                })
+                ->whereNull('ki.deleted_at')
+                ->distinct('ki.id')
+                ->count('ki.id');
+            $totalInstansi = DB::table('klpd_instansi_new')->where('deleted_at', null)
+                ->whereIn('group', LkeBobot::whereIn('id', $bobot_ids)->pluck('group'))
+                ->count();
+            $data->belum = $totalInstansi - $data->terisi;
             $data->rata_rata_score = LkeTestTpLine::whereIn('lke_bobot_id', $bobot_ids)->avg('score');
+            $data->mencapai_target_baik = LkeTestTpLine::whereIn('lke_bobot_id', $bobot_ids)
+                ->whereRaw('score >= (select target_baik from lke_bobot where lke_bobot.id = lke_test_tp_line.lke_bobot_id)')
+                ->count();
+            $data->persentase_target_baik = $data->terisi > 0 ? ($data->mencapai_target_baik / $data->terisi) * 100 : 0;
         }
-        return response()->json(['data' => $datas]);
+
+        $chartData = $datas->map(function ($item) {
+            return [
+                'id' => $item->id,
+                'label' => $item->nama,
+                'value' => (float) $item->persentase_target_baik,
+            ];
+        })->filter(function ($item) {
+            return $item['label'] !== null && $item['label'] !== '';
+        });
+
+        $limit = min(5, $chartData->count());
+        $topIndicators = $chartData->sortByDesc('value')->take($limit)->values();
+        $bottomIndicators = $chartData->sortBy('value')->take($limit)->values();
+
+        return response()->json([
+            'data' => $datas,
+            'chart' => [
+                'top' => $topIndicators,
+                'bottom' => $bottomIndicators,
+            ],
+        ]);
     }
 
     public function lke_utama_score($parameter_id)
@@ -123,6 +159,7 @@ class LKEController extends Controller
                     ->on('lttl.lke_bobot_id', '=', 'lb.id');
             })
             ->whereIn('ki.group', $group_instansi)
+            ->whereNull('deleted_at')
             ->orderByRaw("FIELD(ki.group , 'kl', 'provinsi', 'kabupaten') ASC")
             ->orderBy('ki.name')
             ->get();
@@ -296,7 +333,13 @@ class LKEController extends Controller
             $data->komponen = $data->parent->parent->nama;
             $bobot_ids = LkeBobot::where('lke_parameter_id', $data->id)->pluck('id');
             $data->terisi = LkeTestTpLine::whereIn('lke_bobot_id', $bobot_ids)->count();
+            $data->belum = $bobot_ids->count() - $data->terisi;
             $data->rata_rata_score = LkeTestTpLine::whereIn('lke_bobot_id', $bobot_ids)->avg('score');
+            $data->mencapai_target_baik = LkeTestTpLine::whereIn('lke_bobot_id', $bobot_ids)
+                ->whereRaw('score >= (select target_baik from lke_bobot where lke_bobot.id = lke_test_tp_line.lke_bobot_id)')
+                ->count();
+            $persentase_target_baik = $data->terisi > 0 ? ($data->mencapai_target_baik / $data->terisi) * 100 : 0;
+            $data->persentase_target_baik = round($persentase_target_baik, 2);
         }
         return response()->json(['data' => $datas]);
     }
