@@ -56,38 +56,72 @@ class LKEController extends Controller
         } else if (in_array($user->level, ['tpm', 'tpn'])) {
             $datas = LkeParameter::where('lke_kegiatan_id', $request->kegiatan_id)->where('rencana_aksi', 0)->where('penilai_id', $user->penilai_id)->where('level', 'Indikator')->get();
         }
+        $kegiatan = LkeKegiatan::find($request->kegiatan_id);
         foreach ($datas as $data) {
             $data->indikator = $data->rencana_aksi ? $data->nama : '<a href="' . url('evaluasi/lke-utama/' . $data->id) . '" style="color:blue;">' . $data->nama . '</a>';
             $data->subkomponen = $data->parent->nama;
             $data->komponen = $data->parent->parent->nama;
-            $bobot_ids = LkeBobot::where('lke_parameter_id', $data->id)->pluck('id');
-            $data->terisi = LkeTestTpLine::whereIn('lke_bobot_id', $bobot_ids)
-                ->join('klpd_instansi_new as ki', function($join) {
-                    $join->on('lke_test_tp_line.instansi_id', '=', 'ki.id_before')
-                        ->orOn('lke_test_tp_line.instansi_id', '=', 'ki.id');
-                })
-                ->whereNull('ki.deleted_at')
-                ->distinct('ki.id')
-                ->count('ki.id');
-            $totalInstansi = DB::table('klpd_instansi_new')->where('deleted_at', null)
-                ->whereIn('group', LkeBobot::whereIn('id', $bobot_ids)->pluck('group'))
-                ->count();
+            $bobotItems = LkeBobot::where('lke_parameter_id', $data->id)->get(['id', 'group', 'target_baik']);
+            $bobot_ids = $bobotItems->pluck('id');
+            $bobotGroups = $bobotItems->pluck('group')->filter()->unique()->values();
+            if ($kegiatan->tahun == 2024) {
+                $data->terisi = LkeTestTpLine::whereIn('lke_bobot_id', $bobot_ids)->count();
+                $totalInstansiQuery = DB::table('klpd_instansi_new')->where('keterangan', '!=', 'baru')->whereNull('id_before');
+                if ($bobotGroups->isNotEmpty()) {
+                    $totalInstansiQuery->whereIn('group', $bobotGroups);
+                } else {
+                    $totalInstansiQuery->whereRaw('1 = 0');
+                }
+                $totalInstansi = $totalInstansiQuery->count();
+            } else {
+                $data->terisi = LkeTestTpLine::whereIn('lke_bobot_id', $bobot_ids)
+                    ->join('klpd_instansi_new as ki', function($join) {
+                        $join->on('lke_test_tp_line.instansi_id', '=', 'ki.id_before')
+                            ->orOn('lke_test_tp_line.instansi_id', '=', 'ki.id');
+                    })
+                    ->whereNull('ki.deleted_at')
+                    ->distinct('ki.id')
+                    ->count('ki.id');
+                $totalInstansiQuery = DB::table('klpd_instansi_new')->whereNull('deleted_at');
+                if ($bobotGroups->isNotEmpty()) {
+                    $totalInstansiQuery->whereIn('group', $bobotGroups);
+                } else {
+                    $totalInstansiQuery->whereRaw('1 = 0');
+                }
+                $totalInstansi = $totalInstansiQuery->count();
+            }
             $data->belum = $totalInstansi - $data->terisi;
             $data->rata_rata_score = LkeTestTpLine::whereIn('lke_bobot_id', $bobot_ids)->avg('score');
+            $data->rata_rata_score_index = LkeTestTpLine::whereIn('lke_bobot_id', $bobot_ids)->avg('score_index');
             $data->mencapai_target_baik = LkeTestTpLine::whereIn('lke_bobot_id', $bobot_ids)
                 ->whereRaw('score >= (select target_baik from lke_bobot where lke_bobot.id = lke_test_tp_line.lke_bobot_id)')
                 ->count();
-            $data->persentase_target_baik = $data->terisi > 0 ? ($data->mencapai_target_baik / $data->terisi) * 100 : 0;
+            $hasTargetBaik = $bobotItems->pluck('target_baik')->contains(function ($value) {
+                if ($value === null) {
+                    return false;
+                }
+                if (is_string($value)) {
+                    return trim($value) !== '';
+                }
+                return true;
+            });
+            $data->has_target_baik = $hasTargetBaik;
+            if ($hasTargetBaik && $data->terisi > 0) {
+                $persentase_target_baik = ($data->mencapai_target_baik / $data->terisi) * 100;
+                $data->persentase_target_baik = round($persentase_target_baik, 2);
+            } else {
+                $data->persentase_target_baik = null;
+            }
         }
 
-        $chartData = $datas->map(function ($item) {
+        $chartData = $datas->filter(function ($item) {
+            return $item->has_target_baik && $item->persentase_target_baik !== null && !empty($item->nama);
+        })->map(function ($item) {
             return [
                 'id' => $item->id,
                 'label' => $item->nama,
                 'value' => (float) $item->persentase_target_baik,
             ];
-        })->filter(function ($item) {
-            return $item['label'] !== null && $item['label'] !== '';
         });
 
         $limit = min(5, $chartData->count());
@@ -147,22 +181,43 @@ class LKEController extends Controller
     {
         $group_instansi = LkeBobot::where('lke_parameter_id', $parameter_id)->pluck('group')->toArray();
 
-        $datas = DB::table('klpd_instansi_new as ki')
-            ->select('ki.name as nama_instansi', 'ki.id as instansi_id', 'lb.id as lke_bobot_id', 'lb.bobot', 'lb.target_baik', 'lttl.score', 'lttl.score_index', 'lttl.catatan', 'lttl.rekomendasi', 'lb.min_value', 'lb.max_value')
-            ->selectRaw("case when ki.group = 'kl' then 'Kementerian/Badan' when ki.group = 'provinsi' then 'Provinsi' when ki.group = 'kabupaten' then 'Kabupaten/Kota' end as group_instansi")
-            ->leftJoin('lke_bobot as lb', function ($join) use ($parameter_id) {
-                $join->on('lb.group', '=', 'ki.group')
-                    ->where('lb.lke_parameter_id', '=', $parameter_id);
-            })
-            ->leftJoin('lke_test_tp_line as lttl', function ($join) {
-                $join->on('lttl.instansi_id', '=', DB::raw('COALESCE(ki.id_before, ki.id)'))
-                    ->on('lttl.lke_bobot_id', '=', 'lb.id');
-            })
-            ->whereIn('ki.group', $group_instansi)
-            ->whereNull('deleted_at')
-            ->orderByRaw("FIELD(ki.group , 'kl', 'provinsi', 'kabupaten') ASC")
-            ->orderBy('ki.name')
-            ->get();
+        $parameter = LkeParameter::find($parameter_id);
+        if ($parameter->kegiatan->tahun == 2024) {
+            $datas = DB::table('klpd_instansi_new as ki')
+                ->select('ki.name as nama_instansi', 'ki.id as instansi_id', 'lb.id as lke_bobot_id', 'lb.bobot', 'lb.target_baik', 'lttl.score', 'lttl.score_index', 'lttl.catatan', 'lttl.rekomendasi', 'lb.min_value', 'lb.max_value')
+                ->selectRaw("case when ki.group = 'kl' then 'Kementerian/Badan' when ki.group = 'provinsi' then 'Provinsi' when ki.group = 'kabupaten' then 'Kabupaten/Kota' end as group_instansi")
+                ->leftJoin('lke_bobot as lb', function ($join) use ($parameter_id) {
+                    $join->on('lb.group', '=', 'ki.group')
+                        ->where('lb.lke_parameter_id', '=', $parameter_id);
+                })
+                ->leftJoin('lke_test_tp_line as lttl', function ($join) {
+                    $join->on('lttl.instansi_id', '=', DB::raw('COALESCE(ki.id_before, ki.id)'))
+                        ->on('lttl.lke_bobot_id', '=', 'lb.id');
+                })
+                ->whereIn('ki.group', $group_instansi)
+                ->where('keterangan', '!=', 'baru')
+                ->whereNull('id_before')
+                ->orderByRaw("FIELD(ki.group , 'kl', 'provinsi', 'kabupaten') ASC")
+                ->orderBy('ki.name')
+                ->get();
+        } else {
+            $datas = DB::table('klpd_instansi_new as ki')
+                ->select('ki.name as nama_instansi', 'ki.id as instansi_id', 'lb.id as lke_bobot_id', 'lb.bobot', 'lb.target_baik', 'lttl.score', 'lttl.score_index', 'lttl.catatan', 'lttl.rekomendasi', 'lb.min_value', 'lb.max_value')
+                ->selectRaw("case when ki.group = 'kl' then 'Kementerian/Badan' when ki.group = 'provinsi' then 'Provinsi' when ki.group = 'kabupaten' then 'Kabupaten/Kota' end as group_instansi")
+                ->leftJoin('lke_bobot as lb', function ($join) use ($parameter_id) {
+                    $join->on('lb.group', '=', 'ki.group')
+                        ->where('lb.lke_parameter_id', '=', $parameter_id);
+                })
+                ->leftJoin('lke_test_tp_line as lttl', function ($join) {
+                    $join->on('lttl.instansi_id', '=', DB::raw('COALESCE(ki.id_before, ki.id)'))
+                        ->on('lttl.lke_bobot_id', '=', 'lb.id');
+                })
+                ->whereIn('ki.group', $group_instansi)
+                ->whereNull('deleted_at')
+                ->orderByRaw("FIELD(ki.group , 'kl', 'provinsi', 'kabupaten') ASC")
+                ->orderBy('ki.name')
+                ->get();
+        }
 
         return $export ? $datas : response()->json(['data' => $datas]);
     }
@@ -327,19 +382,37 @@ class LKEController extends Controller
     public function database_getDatas(Request $request)
     {
         $datas = LkeParameter::where('lke_kegiatan_id', $request->kegiatan_id)->where('level', 'Indikator')->get();
+        $kegiatan = LkeKegiatan::find($request->kegiatan_id);
         foreach ($datas as $data) {
             $data->indikator = $data->nama;
             $data->subkomponen = $data->parent->nama;
             $data->komponen = $data->parent->parent->nama;
             $bobot_ids = LkeBobot::where('lke_parameter_id', $data->id)->pluck('id');
-            $data->terisi = LkeTestTpLine::whereIn('lke_bobot_id', $bobot_ids)->count();
-            $data->belum = $bobot_ids->count() - $data->terisi;
+            if ($kegiatan->tahun == 2024) {
+                $data->terisi = LkeTestTpLine::whereIn('lke_bobot_id', $bobot_ids)->count();
+                $totalInstansi = DB::table('klpd_instansi_new')->where('keterangan', '!=', 'baru')->whereNull('id_before')
+                    ->whereIn('group', LkeBobot::whereIn('id', $bobot_ids)->pluck('group'))
+                    ->count();
+            } else {
+                $data->terisi = LkeTestTpLine::whereIn('lke_bobot_id', $bobot_ids)
+                    ->join('klpd_instansi_new as ki', function($join) {
+                        $join->on('lke_test_tp_line.instansi_id', '=', 'ki.id_before')
+                            ->orOn('lke_test_tp_line.instansi_id', '=', 'ki.id');
+                    })
+                    ->whereNull('ki.deleted_at')
+                    ->distinct('ki.id')
+                    ->count('ki.id');
+                $totalInstansi = DB::table('klpd_instansi_new')->where('deleted_at', null)
+                    ->whereIn('group', LkeBobot::whereIn('id', $bobot_ids)->pluck('group'))
+                    ->count();
+            }
+            $data->belum = $totalInstansi - $data->terisi;
             $data->rata_rata_score = LkeTestTpLine::whereIn('lke_bobot_id', $bobot_ids)->avg('score');
+            $data->rata_rata_score_index = LkeTestTpLine::whereIn('lke_bobot_id', $bobot_ids)->avg('score_index');
             $data->mencapai_target_baik = LkeTestTpLine::whereIn('lke_bobot_id', $bobot_ids)
                 ->whereRaw('score >= (select target_baik from lke_bobot where lke_bobot.id = lke_test_tp_line.lke_bobot_id)')
                 ->count();
-            $persentase_target_baik = $data->terisi > 0 ? ($data->mencapai_target_baik / $data->terisi) * 100 : 0;
-            $data->persentase_target_baik = round($persentase_target_baik, 2);
+            $data->persentase_target_baik = $data->terisi > 0 ? ($data->mencapai_target_baik / $data->terisi) * 100 : 0;
         }
         return response()->json(['data' => $datas]);
     }

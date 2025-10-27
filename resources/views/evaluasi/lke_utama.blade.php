@@ -59,6 +59,7 @@
                         <th rowspan="2">Sudah Terisi</th>
                         <th rowspan="2">Belum Dilakukan Penilaian</th>
                         <th rowspan="2">Rata-rata Skor</th>
+                        <th rowspan="2">Rata-rata Skor Index</th>
                         <th colspan="2">Mencapai Target Baik</th>
                     </tr>
                     <tr>
@@ -136,13 +137,27 @@ var lke_utama = $('#lke_utama').DataTable( {
             { data: 'terisi' },
             { data: 'belum' },
             { data: 'rata_rata_score' },
+            { data: 'rata_rata_score_index' },
             { data: 'mencapai_target_baik' },
             { data: 'persentase_target_baik' },
         ],
         columnDefs: [
             {
-                targets: [6,8],
+                targets: [6,7],
                 render: $.fn.dataTable.render.number('.', ',', 2, '')
+            },
+            {
+                targets: [9],
+                render: function(data, type) {
+                    if (data === null || data === undefined) {
+                        return type === 'display' || type === 'filter' ? '-' : null;
+                    }
+                    const numericValue = Number(data);
+                    if (type === 'display' || type === 'filter') {
+                        return percentageFormatter.format(numericValue);
+                    }
+                    return numericValue;
+                }
             }
         ]
     }); 
