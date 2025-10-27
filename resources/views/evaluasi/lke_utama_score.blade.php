@@ -237,7 +237,7 @@
     var lke_utama_score = $('#lke_utama_score').DataTable( {
         responsive: true,
         processing: true,
-        ordering: false,
+        ordering: true,
         dom: 'Blfrtip',
         buttons: [
             {

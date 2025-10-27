@@ -108,7 +108,7 @@
                             <tr>
                                 <td class="font-bold w-44">Satuan Output<span class="text-danger">*</span></td>
                                 <td colspan="5">
-                                    <input type="text" name="target_output[0][satuan_output]" id="satuan_output0" placeholder="Satuan Output" class="form-control" required>
+                                    <textarea rows="5" name="target_output[0][satuan_output]" id="satuan_output0" placeholder="Satuan Output" class="form-control" required></textarea>
                                 </td>
                                 
                             </tr>
@@ -116,7 +116,7 @@
                                 <td class="font-bold w-44">Indikator Output <span class="text-danger">*</span></td>
                                 <td colspan="5">
                                     <div class="mt-4">
-                                        <input type="text" name="target_output[0][indikator_output]" id="indikator_output0" placeholder="Indikator Output" class="form-control" required>
+                                        <textarea rows="5" name="target_output[0][indikator_output]" id="indikator_output0" placeholder="Indikator Output" class="form-control" required></textarea>
                                     </div>
                                 </td>
                             </tr>
@@ -478,14 +478,14 @@
                     '<tr>'+
                         '<td class="font-bold w-44">Satuan Output<span class="text-danger">*</span></td>'+
                         '<td colspan="5">'+
-                            '<input type="text" name="target_output['+idx+'][satuan_output]" id="satuan_output'+idx+'" placeholder="Satuan Output" class="form-control" required>'+
+                            '<textarea rows="5" name="target_output['+idx+'][satuan_output]" id="satuan_output'+idx+'" placeholder="Satuan Output" class="form-control" required></textarea>'+
                         '</td>'+
                     '</tr>'+
                     '<tr>'+
                         '<td class="font-bold w-44">Indikator Output <span class="text-danger">*</span></td>'+
                         '<td colspan="5">'+
                             '<div class="mt-4">'+
-                                '<input type="text" name="target_output['+idx+'][indikator_output]" id="indikator_output'+idx+'" placeholder="Indikator Output" class="form-control" required>'+
+                                '<textarea rows="5" name="target_output['+idx+'][indikator_output]" id="indikator_output'+idx+'" placeholder="Indikator Output" class="form-control" required></textarea>'+
                             '</div>'+
                         '</td>'+
                     '</tr>'+

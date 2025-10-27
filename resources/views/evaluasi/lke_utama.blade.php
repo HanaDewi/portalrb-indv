@@ -13,15 +13,57 @@
                 <label for="kegiatan_id" class="form-label mt-2">Kegiatan <span class="text-danger">*</span></label>
                 {!! Form::select('kegiatan_id', kegiatan(), null, ['class' => 'w-full', 'id' => 'kegiatan_id', 'data-placeholder' => 'Pilih Kegiatan', 'onchange' => 'getData();']) !!}
             </div>
+            <div class="col-span-12 grid grid-cols-12 gap-6 mb-5">
+                <div class="col-span-12 lg:col-span-6 intro-y box p-5">
+                    <h3 class="font-medium text-base mb-4">5 Indikator dengan Persentase Target Baik Tertinggi</h3>
+                    <div class="overflow-x-auto">
+                        <table class="table table-bordered table-striped">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th class="w-12 text-center">No.</th>
+                                    <th>Indikator</th>
+                                    <th class="text-center">Persentase (%)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="bestIndicatorsBody">
+                            </tbody>
+                        </table>
+                    </div>
+                    <p id="bestIndicatorsEmpty" class="text-slate-500 text-sm mt-4 hidden">Belum ada data untuk ditampilkan.</p>
+                </div>
+                <div class="col-span-12 lg:col-span-6 intro-y box p-5">
+                    <h3 class="font-medium text-base mb-4">5 Indikator dengan Persentase Target Baik Terendah</h3>
+                    <div class="overflow-x-auto">
+                        <table class="table table-bordered table-striped">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th class="w-12 text-center">No.</th>
+                                    <th>Indikator</th>
+                                    <th class="text-center">Persentase (%)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="worstIndicatorsBody">
+                            </tbody>
+                        </table>
+                    </div>
+                    <p id="worstIndicatorsEmpty" class="text-slate-500 text-sm mt-4 hidden">Belum ada data untuk ditampilkan.</p>
+                </div>
+            </div>
             <table id="lke_utama" class="table table-bordered table-striped table-hover" cellspacing="0" width="100%">
                 <thead class="table-dark">
                     <tr>
-                        <th class="w-5">No.</th>
-                        <th>Komponen</th>
-                        <th>Sub Komponen</th>
-                        <th>Indikator</th>
-                        <th>Sudah Terisi</th>
-                        <th>Rata-rata Skor</th>
+                        <th rowspan="2" class="w-5">No.</th>
+                        <th rowspan="2">Komponen</th>
+                        <th rowspan="2">Sub Komponen</th>
+                        <th rowspan="2">Indikator</th>
+                        <th rowspan="2">Sudah Terisi</th>
+                        <th rowspan="2">Belum Dilakukan Penilaian</th>
+                        <th rowspan="2">Rata-rata Skor</th>
+                        <th colspan="2">Mencapai Target Baik</th>
+                    </tr>
+                    <tr>
+                        <th>Jumlah</th>
+                        <th>Persentase (%)</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -41,11 +83,15 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.html5.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     $(document).ready(function() {
         getData();
     });
+
+const percentageFormatter = new Intl.NumberFormat('id-ID', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+});
 
 var lke_utama = $('#lke_utama').DataTable( {
         responsive: true,
@@ -88,18 +134,78 @@ var lke_utama = $('#lke_utama').DataTable( {
             { data: 'subkomponen' },
             { data: 'indikator' },
             { data: 'terisi' },
+            { data: 'belum' },
             { data: 'rata_rata_score' },
+            { data: 'mencapai_target_baik' },
+            { data: 'persentase_target_baik' },
         ],
         columnDefs: [
             {
-                targets: [5],
+                targets: [6,8],
                 render: $.fn.dataTable.render.number('.', ',', 2, '')
             }
         ]
     }); 
 
+    lke_utama.on('xhr.dt', function(e, settings, json) {
+        const chartPayload = json && json.chart ? json.chart : null;
+        renderIndicatorTables(chartPayload);
+    });
+
     function getData() {
         lke_utama.ajax.url("{{url('evaluasi/lke-utama/getDatas')}}").load(null, false);
+    }
+
+    function renderIndicatorTables(chartPayload) {
+        const topIndicators = chartPayload && Array.isArray(chartPayload.top) ? chartPayload.top : [];
+        const bottomIndicators = chartPayload && Array.isArray(chartPayload.bottom) ? chartPayload.bottom : [];
+
+        populateIndicatorTable('bestIndicatorsBody', 'bestIndicatorsEmpty', topIndicators);
+        populateIndicatorTable('worstIndicatorsBody', 'worstIndicatorsEmpty', bottomIndicators);
+    }
+
+    function populateIndicatorTable(bodyId, emptyMessageId, rows) {
+        const body = document.getElementById(bodyId);
+        const emptyMessage = document.getElementById(emptyMessageId);
+
+        if (!body || !emptyMessage) {
+            return;
+        }
+
+        body.innerHTML = '';
+
+        if (!rows.length) {
+            emptyMessage.classList.remove('hidden');
+            return;
+        }
+
+        emptyMessage.classList.add('hidden');
+
+        rows.forEach(function(item, index) {
+            const tr = document.createElement('tr');
+
+            const numberCell = document.createElement('td');
+            numberCell.className = 'text-center';
+            numberCell.textContent = index + 1;
+
+            const labelCell = document.createElement('td');
+            labelCell.textContent = item.label;
+
+            const valueCell = document.createElement('td');
+            valueCell.className = 'text-right';
+            valueCell.textContent = formatPercentage(item.value);
+
+            tr.appendChild(numberCell);
+            tr.appendChild(labelCell);
+            tr.appendChild(valueCell);
+
+            body.appendChild(tr);
+        });
+    }
+
+    function formatPercentage(value) {
+        const numericValue = Number(value) || 0;
+        return percentageFormatter.format(numericValue);
     }
 </script>
 @endpush
