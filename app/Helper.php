@@ -321,7 +321,7 @@ if (!function_exists('menus')) {
                             'levels' => ['tpn'],
                             'title' => 'Tim',
                             'icon' => 'users',
-                            'url' => 'akip/evaluasi/tim'
+                            'url' => 'akip/tim'
                         ],
                     ],
             ],
