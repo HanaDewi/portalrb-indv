@@ -526,22 +526,88 @@ class LKEController extends Controller
         }
 
         $parameters = LkeBobot::where('group', $instansi->group)->get();
+        $nationalStats = collect();
+        if ($parameters->isNotEmpty()) {
+            $nationalStats = LkeTestTpLine::whereIn('lke_bobot_id', $parameters->pluck('id'))
+                ->select('lke_bobot_id', DB::raw('SUM(capaian_index) as total_capaian_index'), DB::raw('COUNT(capaian_index) as capaian_count'))
+                ->groupBy('lke_bobot_id')
+                ->get()
+                ->keyBy('lke_bobot_id');
+        }
         foreach ($parameters as $parameter) {
             $parameter->komponen = $parameter->lke_parameter->parent->parent->nama;
             $parameter->subkomponen = $parameter->lke_parameter->parent->nama;
             $parameter->indikator = $parameter->lke_parameter->nama;
             $parameter->bobot = $parameter->bobot;
+            $parameter->target_baik = $parameter->target_baik;
             $tp_line = LkeTestTpLine::where('lke_bobot_id', $parameter->id)->where('instansi_id', $instansi_id)->first();
             if (!$tp_line) {
                 $tp_line = new LkeTestTpLine();
             }
             $parameter->score = $tp_line->score;
             $parameter->score_index = $tp_line->score_index;
+            $parameter->capaian_index = $tp_line->capaian_index;
             $parameter->catatan = $tp_line->catatan;
             $parameter->rekomendasi = $tp_line->rekomendasi;
         }
 
-        return view('evaluasi.hasil_evaluasi_instansi', compact('instansi', 'test_tp', 'parameters'));
+        $subcomponentSummaries = [];
+        foreach ($parameters as $parameter) {
+            $komponenName = $parameter->komponen ?: 'Tanpa Komponen';
+            $subkomponenName = $parameter->subkomponen ?: 'Tanpa Sub Komponen';
+            $subkomponenId = optional($parameter->lke_parameter->parent)->id;
+            $subcomponentKey = $subkomponenId ?: $subkomponenName;
+            $scoreIndex = (float) ($parameter->score_index ?? 0);
+            $bobot = (float) ($parameter->bobot ?? 0);
+            $stat = $nationalStats->get($parameter->id);
+            $nationalTotal = $stat ? (float) $stat->total_capaian_index : 0;
+            $nationalCount = $stat ? (int) $stat->capaian_count : 0;
+
+            if (!isset($subcomponentSummaries[$komponenName])) {
+                $subcomponentSummaries[$komponenName] = [];
+            }
+            if (!isset($subcomponentSummaries[$komponenName][$subcomponentKey])) {
+                $subcomponentSummaries[$komponenName][$subcomponentKey] = [
+                    'subkomponen' => $subkomponenName,
+                    'total_score_index' => 0,
+                    'total_bobot' => 0,
+                    'national_total' => 0,
+                    'national_count' => 0,
+                ];
+            }
+
+            $subcomponentSummaries[$komponenName][$subcomponentKey]['total_score_index'] += $scoreIndex;
+            $subcomponentSummaries[$komponenName][$subcomponentKey]['total_bobot'] += $bobot;
+            $subcomponentSummaries[$komponenName][$subcomponentKey]['national_total'] += $nationalTotal;
+            $subcomponentSummaries[$komponenName][$subcomponentKey]['national_count'] += $nationalCount;
+        }
+
+        $subcomponentSummaries = collect($subcomponentSummaries)->map(function ($subcomponents, $komponenName) {
+            $items = collect($subcomponents)->map(function ($values) {
+                $totalScoreIndex = (float) ($values['total_score_index'] ?? 0);
+                $totalBobot = (float) ($values['total_bobot'] ?? 0);
+                $ratio = $totalBobot > 0 ? $totalScoreIndex / $totalBobot : null;
+                $nationalAverage = ($values['national_count'] ?? 0) > 0
+                    ? ($values['national_total'] ?? 0) / $values['national_count']
+                    : null;
+
+                return [
+                    'subkomponen' => $values['subkomponen'] ?? 'Tanpa Sub Komponen',
+                    'total_score_index' => round($totalScoreIndex, 2),
+                    'total_bobot' => round($totalBobot, 2),
+                    'nilai' => $ratio !== null ? round($ratio, 2) : null,
+                    'persentase' => $ratio !== null ? round($ratio * 100, 2) : null,
+                    'rata_rata_nasional' => $nationalAverage !== null ? round($nationalAverage, 2) : null,
+                ];
+            })->sortByDesc('nilai')->values();
+
+            return [
+                'komponen' => $komponenName,
+                'items' => $items,
+            ];
+        })->values();
+
+        return view('evaluasi.hasil_evaluasi_instansi', compact('instansi', 'test_tp', 'parameters', 'subcomponentSummaries'));
     }
 
     public function hasil_evaluasi_instansi_simpan($instansi_id, $kegiatan_id, Request $request)

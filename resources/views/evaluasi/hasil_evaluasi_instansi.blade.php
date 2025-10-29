@@ -84,18 +84,71 @@
                         </li>
                     </ul>
                     <div class="tab-content border-l border-r border-b">
-                        <div id="overview" class="tab-pane leading-relaxed p-5 active" role="tabpanel" aria-labelledby="overview-tab"> Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum. </div>
+                        <div id="overview" class="tab-pane leading-relaxed p-5 active" role="tabpanel" aria-labelledby="overview-tab">
+                            @forelse ($subcomponentSummaries as $group)
+                                <div class="intro-y bg-slate-50 border border-slate-200 rounded-md p-5 mb-6">
+                                    <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-4">
+                                        <h3 class="text-lg font-semibold text-slate-800">{{ $group['komponen'] }}</h3>
+                                    </div>
+                                    @if ($group['items']->isEmpty())
+                                        <div class="intro-y box p-5">
+                                            <div class="text-slate-500 text-sm">Belum ada data sub komponen untuk komponen {{ $group['komponen'] }}.</div>
+                                        </div>
+                                    @else
+                                        <div class="grid grid-cols-12 gap-5">
+                                            @foreach ($group['items'] as $item)
+                                                <div class="col-span-12 md:col-span-6 xl:col-span-4">
+                                                    <div class="intro-y box h-full">
+                                                        <div class="p-5 border-b border-slate-100">
+                                                            <div class="text-sm font-medium text-primary mb-1">{{ $item['subkomponen'] }}</div>
+                                                        </div>
+                                                        <div class="p-5 space-y-3 text-sm">
+                                                            <div class="flex justify-between">
+                                                                <span class="text-slate-500">Total Score Index</span>
+                                                                <span class="font-semibold text-slate-800 ml-3">{{ number_format($item['total_score_index'], 2, ',', '.') }}</span>
+                                                            </div>
+                                                            <div class="flex justify-between">
+                                                                <span class="text-slate-500">Total Bobot</span>
+                                                                <span class="font-semibold text-slate-800 ml-3">{{ number_format($item['total_bobot'], 2, ',', '.') }}</span>
+                                                            </div>
+                                                            <div class="flex justify-between">
+                                                                <span class="text-slate-500">Nilai</span>
+                                                                <span class="font-semibold text-slate-800 ml-3">{{ $item['nilai'] !== null ? number_format($item['nilai'], 2, ',', '.') : '-' }}</span>
+                                                            </div>
+                                                            <div class="flex justify-between">
+                                                                <span class="text-slate-500">Persentase</span>
+                                                                <span class="font-semibold text-slate-800 ml-3">{{ $item['persentase'] !== null ? number_format($item['persentase'], 2, ',', '.') . '%' : '-' }}</span>
+                                                            </div>
+                                                            <div class="flex justify-between">
+                                                                <span class="text-slate-500">Rata-rata Nasional</span>
+                                                                <span class="font-semibold text-slate-800 ml-3">{{ $item['rata_rata_nasional'] !== null ? number_format($item['rata_rata_nasional'], 2, ',', '.') : '-' }}</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    @endif
+                                </div>
+                            @empty
+                                <div class="intro-y box p-5">
+                                    <div class="text-slate-500 text-sm">Belum ada data indikator untuk ditampilkan.</div>
+                                </div>
+                            @endforelse
+                        </div>
                         <div id="kertas-kerja" class="tab-pane leading-relaxed p-5" role="tabpanel" aria-labelledby="kertas-kerja-tab">
                             <table id="hasil_evaluasi_instansi" class="table table-bordered table-striped table-hover" cellspacing="0" width="100%">
                                 <thead class="table-dark">
                                     <tr>
                                         <th class="w-5">No.</th>
                                         <th class="w100">Komponen</th>
-                                        <th class="w200">Sub Komponen </th>
-                                        <th class="w200">Indikator Penilaian </th>
-                                        <th class="w200">Bobot </th>
-                                        <th class="w200">Skor </th>
-                                        <th class="w200">Skor Index </th>
+                                        <th class="w200">Sub Komponen</th>
+                                        <th class="w200">Indikator Penilaian</th>
+                                        <th class="w200">Bobot</th>
+                                        <th class="w200">Target Baik</th>
+                                        <th class="w200">Skor</th>
+                                        <th class="w200">Skor Index</th>
+                                        <th class="w200">Capaian Index</th>
                                         <th class="w200">Catatan </th>
                                         <th class="w200">Rekomendasi </th>
                                     </tr>
@@ -108,8 +161,10 @@
                                             <td>{{ $parameter->subkomponen }}</td>
                                             <td>{{ $parameter->indikator }}</td>
                                             <td>{{ $parameter->bobot }}</td>
+                                            <td>{{ $parameter->target_baik }}</td>
                                             <td>{{ $parameter->score }}</td>
                                             <td>{{ $parameter->score_index }}</td>
+                                            <td>{{ $parameter->capaian_index }}</td>
                                             <td>{{ $parameter->catatan }}</td>
                                             <td>{{ $parameter->rekomendasi }}</td>
                                         </tr>
