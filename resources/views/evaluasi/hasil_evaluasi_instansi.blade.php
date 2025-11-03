@@ -82,9 +82,66 @@
                         <li id="example-2-tab" class="nav-item flex-1" role="presentation">
                             <button class="nav-link w-full py-2" data-tw-toggle="pill" data-tw-target="#kertas-kerja" type="button" role="tab" aria-controls="kertas-kerja" aria-selected="false"> Kertas Kerja </button>
                         </li>
+                        @if ($instansi->group === 'provinsi')
+                            <li id="example-3-tab" class="nav-item flex-1" role="presentation">
+                                <button class="nav-link w-full py-2" data-tw-toggle="pill" data-tw-target="#kabkota" type="button" role="tab" aria-controls="kabkota" aria-selected="false"> Data Kabupaten/Kota </button>
+                            </li>
+                        @endif
                     </ul>
                     <div class="tab-content border-l border-r border-b">
                         <div id="overview" class="tab-pane leading-relaxed p-5 active" role="tabpanel" aria-labelledby="overview-tab">
+                            @if ($targetAchievementSummary->count())
+                                <div class="intro-y bg-white border border-slate-200 rounded-md p-5 mb-6">
+                                    <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-4">
+                                        <h3 class="text-lg font-semibold text-slate-800">Persentase Indikator Mencapai Target Baik</h3>
+                                    </div>
+                                    <div class="grid grid-cols-12 gap-5">
+                                        @foreach ($targetAchievementSummary as $summary)
+                                            <div class="col-span-12 md:col-span-6">
+                                                <div class="intro-y box h-full">
+                                                    <div class="p-5">
+                                                        <div class="text-sm font-medium text-primary mb-3">{{ $summary['subkomponen'] }}</div>
+                                                        <div class="text-3xl font-semibold text-slate-800">
+                                                            {{ $summary['persentase'] !== null ? number_format($summary['persentase'], 2, ',', '.') . '%' : '-' }}
+                                                        </div>
+                                                        <div class="mt-4 text-xs text-slate-500 space-y-1">
+                                                            <div>Indikator mencapai target baik: {{ $summary['indikator_mencapai'] }}</div>
+                                                            <div>Indikator dengan target baik: {{ $summary['indikator_target'] }}</div>
+                                                            <div>Total indikator: {{ $summary['total_indikator'] }}</div>
+                                                        </div>
+                                                        @if ($summary['top_indicators']->isNotEmpty())
+                                                            <div class="mt-5">
+                                                                <div class="text-xs uppercase tracking-wide text-slate-500 mb-2">5 indikator dengan capaian bobot tertinggi</div>
+                                                                <ul class="space-y-2 text-sm text-slate-700">
+                                                                    @foreach ($summary['top_indicators'] as $indicator)
+                                                                        <li class="flex justify-between gap-3">
+                                                                            <span class="flex-1">{{ $indicator['indikator'] }}</span>
+                                                                            <span class="font-semibold text-slate-800">{{ number_format($indicator['capaian_index'], 2, ',', '.') }}</span>
+                                                                        </li>
+                                                                    @endforeach
+                                                                </ul>
+                                                            </div>
+                                                        @endif
+                                                        @if ($summary['bottom_indicators']->isNotEmpty())
+                                                            <div class="mt-5">
+                                                                <div class="text-xs uppercase tracking-wide text-slate-500 mb-2">5 indikator dengan capaian bobot terendah</div>
+                                                                <ul class="space-y-2 text-sm text-slate-700">
+                                                                    @foreach ($summary['bottom_indicators'] as $indicator)
+                                                                        <li class="flex justify-between gap-3">
+                                                                            <span class="flex-1">{{ $indicator['indikator'] }}</span>
+                                                                            <span class="font-semibold text-slate-800">{{ number_format($indicator['capaian_index'], 2, ',', '.') }}</span>
+                                                                        </li>
+                                                                    @endforeach
+                                                                </ul>
+                                                            </div>
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            @endif
                             @forelse ($subcomponentSummaries as $group)
                                 <div class="intro-y bg-slate-50 border border-slate-200 rounded-md p-5 mb-6">
                                     <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-4">
@@ -172,6 +229,48 @@
                                 </tbody>
                             </table>
                         </div>
+                        @if ($instansi->group === 'provinsi')
+                            <div id="kabkota" class="tab-pane leading-relaxed p-5" role="tabpanel" aria-labelledby="kabkota-tab">
+                                <table class="table table-bordered table-striped table-hover">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th class="w-5">No.</th>
+                                            <th class="w-32">Kelompok Instansi</th>
+                                            <th class="w200">Nama Instansi</th>
+                                            <th class="w-5">RB General Awal</th>
+                                            <th class="w-5">Koefisien</th>
+                                            <th class="w-5">RB General</th>
+                                            <th class="w-5">Bobot RB General</th>
+                                            <th class="w-5">Bobot RB General Penyesuaian</th>
+                                            <th class="w-5">RB General Penyesuaian</th>
+                                            <th class="w-5">RB Tematik</th>
+                                            <th class="w-5">Index RB</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @forelse ($kabkotaDatas as $index => $kabkota)
+                                            <tr>
+                                                <td>{{ $index + 1 }}</td>
+                                                <td>{{ $kabkota->group_instansi }}</td>
+                                                <td>{!! $kabkota->nama_instansi !!}</td>
+                                                <td>{{ $kabkota->rb_general !== null ? number_format($kabkota->rb_general, 2, ',', '.') : '-' }}</td>
+                                                <td>{{ $kabkota->koefisien !== null ? number_format($kabkota->koefisien, 2, ',', '.') : '-' }}</td>
+                                                <td>{{ $kabkota->rb_general_koefisien !== null ? number_format($kabkota->rb_general_koefisien, 2, ',', '.') : '-' }}</td>
+                                                <td>{{ $kabkota->bobot_rb_general !== null ? number_format($kabkota->bobot_rb_general, 2, ',', '.') : '-' }}</td>
+                                                <td>{{ $kabkota->bobot_rb_general_penyesuaian !== null ? number_format($kabkota->bobot_rb_general_penyesuaian, 2, ',', '.') : '-' }}</td>
+                                                <td>{{ $kabkota->rb_general_penyesuaian !== null ? number_format($kabkota->rb_general_penyesuaian, 2, ',', '.') : '-' }}</td>
+                                                <td>{{ $kabkota->rb_tematik !== null ? number_format($kabkota->rb_tematik, 2, ',', '.') : '-' }}</td>
+                                                <td>{{ $kabkota->index_rb !== null ? number_format($kabkota->index_rb, 2, ',', '.') : '-' }}</td>
+                                            </tr>
+                                        @empty
+                                            <tr>
+                                                <td colspan="11" class="text-center text-slate-500">Belum ada data kabupaten/kota untuk ditampilkan.</td>
+                                            </tr>
+                                        @endforelse
+                                    </tbody>
+                                </table>
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>

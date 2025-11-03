@@ -525,7 +525,7 @@ class LKEController extends Controller
             }
         }
 
-        $parameters = LkeBobot::where('group', $instansi->group)->get();
+        $parameters = LkeBobot::where('group', $instansi->group)->orderBy('lke_parameter_id')->get();
         $nationalStats = collect();
         if ($parameters->isNotEmpty()) {
             $nationalStats = LkeTestTpLine::whereIn('lke_bobot_id', $parameters->pluck('id'))
@@ -549,6 +549,108 @@ class LKEController extends Controller
             $parameter->capaian_index = $tp_line->capaian_index;
             $parameter->catatan = $tp_line->catatan;
             $parameter->rekomendasi = $tp_line->rekomendasi;
+        }
+
+        $targetSubcomponents = [
+            'Capaian Pelaksanaan Kebijakan Reformasi Birokrasi',
+            'Capaian Sasaran Strategis Reformasi Birokrasi',
+        ];
+
+        $normalizeNumber = function ($value) {
+            if ($value === null || $value === '') {
+                return null;
+            }
+
+            if (is_numeric($value)) {
+                return (float) $value;
+            }
+
+            if (is_string($value)) {
+                $normalized = trim(str_replace(["\xc2\xa0", ' '], '', $value));
+                if (strpos($normalized, ',') !== false && strpos($normalized, '.') !== false) {
+                    $normalized = str_replace('.', '', $normalized);
+                }
+                $normalized = str_replace(',', '.', $normalized);
+
+                if (is_numeric($normalized)) {
+                    return (float) $normalized;
+                }
+            }
+
+            return null;
+        };
+
+        $targetAchievementSummary = collect($targetSubcomponents)->map(function ($subcomponentName) use ($parameters, $normalizeNumber) {
+            $indicators = $parameters->filter(function ($parameter) use ($subcomponentName) {
+                return trim((string) $parameter->subkomponen) === $subcomponentName;
+            });
+
+            $indicatorsWithTarget = $indicators->filter(function ($parameter) use ($normalizeNumber) {
+                return $normalizeNumber($parameter->target_baik) !== null;
+            });
+
+            $indicatorsWithScores = $indicators->map(function ($parameter) use ($normalizeNumber) {
+                return [
+                    'indikator' => $parameter->indikator,
+                    'capaian_index' => $normalizeNumber($parameter->capaian_index),
+                ];
+            })->filter(function ($item) {
+                return $item['capaian_index'] !== null;
+            });
+
+            $topIndicators = $indicatorsWithScores->sortByDesc('capaian_index')->take(5)->values();
+            $bottomIndicators = $indicatorsWithScores->sortBy('capaian_index')->take(5)->values();
+
+            $achievedCount = $indicatorsWithTarget->filter(function ($parameter) use ($normalizeNumber) {
+                $score = $normalizeNumber($parameter->score);
+                $target = $normalizeNumber($parameter->target_baik);
+
+                return $score !== null && $target !== null && $score >= $target;
+            })->count();
+
+            $withTargetCount = $indicatorsWithTarget->count();
+            $percentage = $withTargetCount > 0 ? round(($achievedCount / $withTargetCount) * 100, 2) : null;
+
+            return [
+                'subkomponen' => $subcomponentName,
+                'total_indikator' => $indicators->count(),
+                'indikator_target' => $withTargetCount,
+                'indikator_mencapai' => $achievedCount,
+                'persentase' => $percentage,
+                'top_indicators' => $topIndicators,
+                'bottom_indicators' => $bottomIndicators,
+            ];
+        });
+
+        $kabkotaDatas = collect();
+        if ($instansi->group === 'provinsi') {
+            $kabkotaDatas = DB::table('klpd_instansi_new as ki')
+                ->select('ki.id', 'ki.name', 'ki.name_before')
+                ->selectRaw("'Kabupaten/Kota' as group_instansi")
+                ->selectRaw("CASE WHEN ltt.rb_general IS NOT NULL THEN 100 ELSE NULL END as bobot_rb_general")
+                ->selectRaw("CASE WHEN ltt.koefisien IS NOT NULL THEN ltt.rb_general + ltt.koefisien ELSE ltt.rb_general END as rb_general_koefisien")
+                ->addSelect(
+                    'ltt.rb_general',
+                    'ltt.koefisien',
+                    'ltt.bobot_rb_general_penyesuaian',
+                    'ltt.rb_general_penyesuaian',
+                    'ltt.rb_tematik',
+                    'ltt.index_rb'
+                )
+                ->leftJoin('lke_test_tp as ltt', function ($join) use ($kegiatan_id) {
+                    $join->on('ltt.instansi_id', '=', DB::raw('COALESCE(ki.id_before, ki.id)'))
+                        ->where('ltt.lke_kegiatan_id', '=', $kegiatan_id);
+                })
+                ->where('ki.prov_id', $instansi_id)
+                ->where('ki.group', 'kabupaten')
+                ->whereNull('ki.deleted_at')
+                ->orderBy('ki.name')
+                ->get()
+                ->transform(function ($child) use ($kegiatan_id) {
+                    $before = $child->name_before ? ' [<span class="font-italic text-danger">' . $child->name_before . '</span>]' : '';
+                    $child->nama_instansi = '<a href="' . url('evaluasi/hasil-evaluasi/' . $child->id . '/' . $kegiatan_id) . '" style="color: blue;">' . $child->name . $before . '</a>';
+                    return $child;
+                });
         }
 
         $subcomponentSummaries = [];
@@ -607,7 +709,7 @@ class LKEController extends Controller
             ];
         })->values();
 
-        return view('evaluasi.hasil_evaluasi_instansi', compact('instansi', 'test_tp', 'parameters', 'subcomponentSummaries'));
+        return view('evaluasi.hasil_evaluasi_instansi', compact('instansi', 'test_tp', 'parameters', 'subcomponentSummaries', 'targetAchievementSummary', 'kabkotaDatas'));
     }
 
     public function hasil_evaluasi_instansi_simpan($instansi_id, $kegiatan_id, Request $request)
