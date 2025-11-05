@@ -2,7 +2,8 @@
 
 @section('cssJsHere')
 <style>
-    #owl-demo .item img {
+    #owl-demo .item img,
+    .slick-slider .item img {
         display: block;
         width: 100%;
         height: auto;
@@ -16,16 +17,21 @@
         #judul-bawah {
             display: none;
         }
-
-
     }
 </style>
 <script>
     $(document).ready(function() {
-        $("#owl-demo").owlCarousel({
-            pagination: false,
-            autoPlay: 5000,
-            singleItem: true
+        // Ganti owlCarousel dengan Slick
+        $("#owl-demo").slick({
+            autoplay: true,
+            autoplaySpeed: 4000,
+            dots: false,
+            arrows: false,
+            fade: true,
+            speed: 500,
+            infinite: true,
+            slidesToShow: 1,
+            slidesToScroll: 1
         });
     });
 </script>
@@ -34,6 +40,7 @@
 @section('content')
 <div class="demo">
     <div id="owl-demo" class="owl-carousel">
+        <!-- Slide 1: Portal RB -->
         <div class="item">
             <section class="hero-area bgs-cover pt-30 pb-15 rpt-130"
                 style="background-image: url({{ URL::to('/') }}/assets/images/bgportal.jpg)">
@@ -41,7 +48,35 @@
                     <div class="row gap-80 align-items-center">
                         <div class="col-lg-12">
                             <img class="one wow fadeInRight delay-0-2s"
-                                src="{{ URL::to('/') }}/assets/images/portalrbslider.png" alt="Hero">
+                                src="{{ URL::to('/') }}/assets/images/portalrbslider.png" alt="Portal RB">
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Slide 2: Presiden -->
+        <div class="item">
+            <section class="hero-area bgs-cover pt-30 pb-15 rpt-130"
+                style="background-image: url({{ URL::to('/') }}/assets/images/bgslide1.jpg)">
+                <div class="container container-1000">
+                    <div class="row gap-80 align-items-center">
+                        <div class="col-lg-12">
+                            <img class="one wow fadeInRight delay-0-2s" src="{{ URL::to('/') }}/assets/images/banner_ZI_1.png" alt="zi1" style="width: 1000px; height: 500px; object-fit: contain;">
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Slide 3: Menteri -->
+        <div class="item">
+            <section class="hero-area bgs-cover pt-30 pb-15 rpt-130"
+                style="background-image: url({{ URL::to('/') }}/assets/images/bgslide2.jpg)">
+                <div class="container container-1000">
+                    <div class="row gap-80 align-items-center">
+                        <div class="col-lg-12">
+                            <img class="one wow fadeInRight delay-0-2s" src="{{ URL::to('/') }}/assets/images/banner_ZI_2.png" alt="zi2" style="width: 1000px; height: 500px; object-fit: contain;">
                         </div>
                     </div>
                 </div>

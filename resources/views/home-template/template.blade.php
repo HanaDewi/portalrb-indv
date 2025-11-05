@@ -23,7 +23,9 @@
 
     @yield('cssJsHere')
 
-
+    <!-- Slick Carousel -->
+    <link rel="stylesheet" href="{{ URL::to('/ruangbelajar/') }}/assets/css/slick.min.css">
+    <link rel="stylesheet" href="{{ URL::to('/ruangbelajar/') }}/assets/css/slick-theme.min.css">
 </head>
 
 <body>
@@ -193,7 +195,8 @@
         </div>
     </div>
 
-
+    <!-- Slick Carousel JS -->
+    <script src="{{ URL::to('/ruangbelajar/') }}/assets/js/slick.min.js"></script>
 </body>
 @yield('jsHere')
 
