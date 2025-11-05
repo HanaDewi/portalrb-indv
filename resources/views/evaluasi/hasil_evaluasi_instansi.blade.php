@@ -109,9 +109,13 @@
                                                             <div>Indikator dengan target baik: {{ $summary['indikator_target'] }}</div>
                                                             <div>Total indikator: {{ $summary['total_indikator'] }}</div>
                                                         </div>
+                                                        @php
+                                                            $topCount = $summary['top_indicators']->count();
+                                                            $bottomCount = $summary['bottom_indicators']->count();
+                                                        @endphp
                                                         @if ($summary['top_indicators']->isNotEmpty())
                                                             <div class="mt-5">
-                                                                <div class="text-xs uppercase tracking-wide text-slate-500 mb-2">5 indikator dengan capaian bobot tertinggi</div>
+                                                                <div class="text-xs uppercase tracking-wide text-slate-500 mb-2">{{ $topCount }} indikator dengan capaian bobot tertinggi</div>
                                                                 <ul class="space-y-2 text-sm text-slate-700">
                                                                     @foreach ($summary['top_indicators'] as $indicator)
                                                                         <li class="flex justify-between gap-3">
@@ -124,7 +128,7 @@
                                                         @endif
                                                         @if ($summary['bottom_indicators']->isNotEmpty())
                                                             <div class="mt-5">
-                                                                <div class="text-xs uppercase tracking-wide text-slate-500 mb-2">5 indikator dengan capaian bobot terendah</div>
+                                                                <div class="text-xs uppercase tracking-wide text-slate-500 mb-2">{{ $bottomCount }} indikator dengan capaian bobot terendah</div>
                                                                 <ul class="space-y-2 text-sm text-slate-700">
                                                                     @foreach ($summary['bottom_indicators'] as $indicator)
                                                                         <li class="flex justify-between gap-3">
