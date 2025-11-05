@@ -591,7 +591,7 @@ class LKEController extends Controller
             }
             $parameter->score = $tp_line->score;
             $parameter->score_index = $tp_line->score_index;
-            $parameter->capaian_index = $tp_line->capaian_index.'%';
+            $parameter->capaian_index = $tp_line->capaian_index;
             $parameter->catatan = $tp_line->catatan;
             $parameter->rekomendasi = $tp_line->rekomendasi;
         }

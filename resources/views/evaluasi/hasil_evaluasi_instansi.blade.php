@@ -120,7 +120,7 @@
                                                                     @foreach ($summary['top_indicators'] as $indicator)
                                                                         <li class="flex justify-between gap-3">
                                                                             <span class="flex-1">{{ $indicator['indikator'] }}</span>
-                                                                            <span class="font-semibold text-slate-800">{{ number_format($indicator['capaian_index'], 2, ',', '.') }}</span>
+                                                                            <span class="font-semibold text-slate-800">{{ number_format($indicator['capaian_index'], 2, ',', '.') }}%</span>
                                                                         </li>
                                                                     @endforeach
                                                                 </ul>
@@ -133,7 +133,7 @@
                                                                     @foreach ($summary['bottom_indicators'] as $indicator)
                                                                         <li class="flex justify-between gap-3">
                                                                             <span class="flex-1">{{ $indicator['indikator'] }}</span>
-                                                                            <span class="font-semibold text-slate-800">{{ number_format($indicator['capaian_index'], 2, ',', '.') }}</span>
+                                                                            <span class="font-semibold text-slate-800">{{ number_format($indicator['capaian_index'], 2, ',', '.') }}%</span>
                                                                         </li>
                                                                     @endforeach
                                                                 </ul>
@@ -182,7 +182,7 @@
                                                             </div>
                                                             <div class="flex justify-between">
                                                                 <span class="text-slate-500">Rata-rata Nasional</span>
-                                                                <span class="font-semibold text-slate-800 ml-3">{{ $item['rata_rata_nasional'] !== null ? number_format($item['rata_rata_nasional'], 2, ',', '.') : '-' }}</span>
+                                                                <span class="font-semibold text-slate-800 ml-3">{{ $item['rata_rata_nasional'] !== null ? number_format($item['rata_rata_nasional'], 2, ',', '.').'%' : '-' }}</span>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -225,7 +225,7 @@
                                             <td>{{ $parameter->target_baik }}</td>
                                             <td>{{ $parameter->score }}</td>
                                             <td>{{ $parameter->score_index }}</td>
-                                            <td>{{ $parameter->capaian_index }}</td>
+                                            <td>{{ $parameter->capaian_index }}%</td>
                                             <td>{{ $parameter->catatan }}</td>
                                             <td>{{ $parameter->rekomendasi }}</td>
                                         </tr>
