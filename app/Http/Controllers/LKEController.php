@@ -387,12 +387,18 @@ class LKEController extends Controller
             $data->indikator = $data->nama;
             $data->subkomponen = $data->parent->nama;
             $data->komponen = $data->parent->parent->nama;
-            $bobot_ids = LkeBobot::where('lke_parameter_id', $data->id)->pluck('id');
+            $bobotItems = LkeBobot::where('lke_parameter_id', $data->id)->get(['id', 'group', 'target_baik']);
+            $bobot_ids = $bobotItems->pluck('id');
+            $bobotGroups = $bobotItems->pluck('group')->filter()->unique()->values();
             if ($kegiatan->tahun == 2024) {
                 $data->terisi = LkeTestTpLine::whereIn('lke_bobot_id', $bobot_ids)->count();
-                $totalInstansi = DB::table('klpd_instansi_new')->where('keterangan', '!=', 'baru')->whereNull('id_before')
-                    ->whereIn('group', LkeBobot::whereIn('id', $bobot_ids)->pluck('group'))
-                    ->count();
+                $totalInstansiQuery = DB::table('klpd_instansi_new')->where('keterangan', '!=', 'baru')->whereNull('id_before');
+                if ($bobotGroups->isNotEmpty()) {
+                    $totalInstansiQuery->whereIn('group', $bobotGroups);
+                } else {
+                    $totalInstansiQuery->whereRaw('1 = 0');
+                }
+                $totalInstansi = $totalInstansiQuery->count();
             } else {
                 $data->terisi = LkeTestTpLine::whereIn('lke_bobot_id', $bobot_ids)
                     ->join('klpd_instansi_new as ki', function($join) {
@@ -402,9 +408,13 @@ class LKEController extends Controller
                     ->whereNull('ki.deleted_at')
                     ->distinct('ki.id')
                     ->count('ki.id');
-                $totalInstansi = DB::table('klpd_instansi_new')->where('deleted_at', null)
-                    ->whereIn('group', LkeBobot::whereIn('id', $bobot_ids)->pluck('group'))
-                    ->count();
+                $totalInstansiQuery = DB::table('klpd_instansi_new')->whereNull('deleted_at');
+                if ($bobotGroups->isNotEmpty()) {
+                    $totalInstansiQuery->whereIn('group', $bobotGroups);
+                } else {
+                    $totalInstansiQuery->whereRaw('1 = 0');
+                }
+                $totalInstansi = $totalInstansiQuery->count();
             }
             $data->belum = $totalInstansi - $data->terisi;
             $data->rata_rata_score = LkeTestTpLine::whereIn('lke_bobot_id', $bobot_ids)->avg('score');
@@ -412,9 +422,44 @@ class LKEController extends Controller
             $data->mencapai_target_baik = LkeTestTpLine::whereIn('lke_bobot_id', $bobot_ids)
                 ->whereRaw('score >= (select target_baik from lke_bobot where lke_bobot.id = lke_test_tp_line.lke_bobot_id)')
                 ->count();
-            $data->persentase_target_baik = $data->terisi > 0 ? ($data->mencapai_target_baik / $data->terisi) * 100 : 0;
+            $hasTargetBaik = $bobotItems->pluck('target_baik')->contains(function ($value) {
+                if ($value === null) {
+                    return false;
+                }
+                if (is_string($value)) {
+                    return trim($value) !== '';
+                }
+                return true;
+            });
+            $data->has_target_baik = $hasTargetBaik;
+            if ($hasTargetBaik && $data->terisi > 0) {
+                $persentase_target_baik = ($data->mencapai_target_baik / $data->terisi) * 100;
+                $data->persentase_target_baik = round($persentase_target_baik, 2);
+            } else {
+                $data->persentase_target_baik = null;
+            }
         }
-        return response()->json(['data' => $datas]);
+        $chartData = $datas->filter(function ($item) {
+            return $item->has_target_baik && $item->persentase_target_baik !== null && !empty($item->nama);
+        })->map(function ($item) {
+            return [
+                'id' => $item->id,
+                'label' => $item->nama,
+                'value' => (float) $item->persentase_target_baik,
+            ];
+        });
+
+        $limit = min(5, $chartData->count());
+        $topIndicators = $chartData->sortByDesc('value')->take($limit)->values();
+        $bottomIndicators = $chartData->sortBy('value')->take($limit)->values();
+
+        return response()->json([
+            'data' => $datas,
+            'chart' => [
+                'top' => $topIndicators,
+                'bottom' => $bottomIndicators,
+            ],
+        ]);
     }
 
     public function hasil_evaluasi()
@@ -598,8 +643,9 @@ class LKEController extends Controller
                 return $item['capaian_index'] !== null;
             });
 
-            $topIndicators = $indicatorsWithScores->sortByDesc('capaian_index')->take(5)->values();
-            $bottomIndicators = $indicatorsWithScores->sortBy('capaian_index')->take(5)->values();
+            $limit = $subcomponentName === 'Capaian Sasaran Strategis Reformasi Birokrasi' ? 3 : 5;
+            $topIndicators = $indicatorsWithScores->sortByDesc('capaian_index')->take($limit)->values();
+            $bottomIndicators = $indicatorsWithScores->sortBy('capaian_index')->take($limit)->values();
 
             $achievedCount = $indicatorsWithTarget->filter(function ($parameter) use ($normalizeNumber) {
                 $score = $normalizeNumber($parameter->score);
