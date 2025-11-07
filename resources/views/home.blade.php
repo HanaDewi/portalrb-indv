@@ -24,7 +24,7 @@
         // Ganti owlCarousel dengan Slick
         $("#owl-demo").slick({
             autoplay: true,
-            autoplaySpeed: 4000,
+            autoplaySpeed: 2000,
             dots: false,
             arrows: false,
             fade: true,
@@ -76,7 +76,7 @@
                 <div class="container container-1000">
                     <div class="row gap-80 align-items-center">
                         <div class="col-lg-12">
-                            <img class="one wow fadeInRight delay-0-2s" src="{{ URL::to('/') }}/assets/images/banner_ZI_2.png" alt="zi2" style="width: 1000px; height: 500px; object-fit: contain;">
+                            <img class="one wow fadeInRight delay-0-2s" src="{{ URL::to('/') }}/assets/images/banner_ZI_2.png" alt="zi2" style="width: 1000px; height: 440px; object-fit: contain;">
                         </div>
                     </div>
                 </div>
