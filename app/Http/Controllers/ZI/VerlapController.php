@@ -198,7 +198,6 @@ class VerlapController extends Controller
         $date_buka    = new \DateTime($tahap_seleksi->tanggal_mulai);
         $date_tutup  = new \DateTime($tahap_seleksi->tanggal_selesai);
         if ($date_now >= $date_buka && $date_now <= $date_tutup) {
-
             if (Auth::User()->userTimZI) {
                 foreach (Auth::User()->userTimZI as $anggotaTim) {
                     if (in_array($anggotaTim->tim_id, $tim_ids)) {
@@ -226,7 +225,6 @@ class VerlapController extends Controller
 
     public function verlap_simpan(Request $request)
     {
-        //dd("Proses Seleksi Dokumen Buat Evaluator Masih Belum Dibuka Yah, mau ke mana sih buru-buru amat, Jangan Ya Dek Ya !! :p");
         $instansiZIid = $request->get('instansiZIId');
         $instansi_ZI = InstansiZI::find($instansiZIid);
         $tim_ids = [];
@@ -239,7 +237,7 @@ class VerlapController extends Controller
         }
         $status = "Tidak Berhak";
         $tahun = $instansi_ZI->tahun;
-        $tahap_seleksi = TahapSeleksiZI::where('tahap_seleksi', 'Wawancara')->where('tahun', $tahun)->first();
+        $tahap_seleksi = TahapSeleksiZI::where('tahap_seleksi', 'Verifikasi Lapangan')->where('tahun', $tahun)->first();
         if (!$tahap_seleksi) {
             dd("Tahap Seleksi untuk tahun $tahun belum ditentukan. Silakan hubungi admin.");
         }
