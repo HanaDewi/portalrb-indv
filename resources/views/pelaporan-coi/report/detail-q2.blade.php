@@ -28,10 +28,8 @@
                             <tr>
                                 <th class="w-12 text-center">No.</th>
                                 <th>Instansi</th>
-                                <th>2.1. Menyusun revisi?</th>
-                                <th class="text-center w-16">Ya</th>
-                                <th class="text-center w-16">Tidak</th>
-                                <th>2.1.1. Rencana penyesuaian</th>
+                                <th>Apakah instansi Bapak/Ibu sudah mulai menyusun revisi peraturan pengelolaan konflik kepentingan sesuai dengan Permen PANRB Nomor 17 Tahun 2024?</th>
+                                <th>Jika belum, kapan aturan eksisting akan disesuaikan dengan Permen PANRB Nomor 17 Tahun 2024?</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -40,9 +38,7 @@
                                     <td class="text-center">{{ $loop->iteration }}</td>
                                     <td>{{ $item->instansi->name ?? $item->instansi->nama_instansi ?? '-' }}</td>
                                     <td>{{ $item->q21_susun_revisi === null ? '-' : ($item->q21_susun_revisi ? 'Ya' : 'Tidak') }}</td>
-                                    <td class="text-center">{!! $item->q21_susun_revisi ? '&#10003;' : '' !!}</td>
-                                    <td class="text-center">{!! $item->q21_susun_revisi === 0 ? '&#10003;' : '' !!}</td>
-                                    <td>{{ $item->q21_susun_revisi === 0 ? ($item->q211_rencana_penyesuaian ?? '-') : '-' }}</td>
+                                    <td>{{ $item->q211_rencana_penyesuaian }}</td>
                                 </tr>
                             @empty
                                 <tr>

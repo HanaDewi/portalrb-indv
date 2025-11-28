@@ -51,8 +51,8 @@
                                 <tr>
                                     <th class="w-12 text-center">No.</th>
                                     <th>Instansi</th>
-                                    <th>{{ $child['label'] }}</th>
-                                    <th>6.2. Total ASN Telah Melaporkan</th>
+                                    <th>Total ASN Wajib Melaporkan</th>
+                                    <th>Total ASN Telah Melaporkan</th>
                                     <th>% Sudah Melapor</th>
                                 </tr>
                             </thead>
