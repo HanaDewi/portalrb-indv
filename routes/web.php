@@ -11,6 +11,8 @@ use App\Http\Controllers\RBGeneralController;
 use App\Http\Controllers\RBTematikController;
 use App\Http\Controllers\ManageUserController;
 use App\Http\Controllers\MasterDataController;
+use App\Http\Controllers\PelaporanCoiController;
+use App\Http\Controllers\PelaporanCoiReportController;
 use App\Http\Controllers\WebDashboardController;
 use App\Http\Controllers\CapaianOutputController;
 use App\Http\Controllers\DataLKERenaksiController;
@@ -216,6 +218,16 @@ Route::middleware('auth')->group(function () {
     Route::get('/evaluasi/hasil-evaluasi/getKegiatan', [LKEController::class, 'hasil_evaluasi_getKegiatan']);
     Route::get('/evaluasi/hasil-evaluasi/{instansi_id}/{kegiatan_id}', [LKEController::class, 'hasil_evaluasi_instansi']);
     Route::post('/evaluasi/hasil-evaluasi/{instansi_id}/{kegiatan_id}/simpan', [LKEController::class, 'hasil_evaluasi_instansi_simpan']);
+
+    // Pelaporan COI
+    Route::get('/pelaporan-coi', [PelaporanCoiController::class, 'index']);
+    Route::post('/pelaporan-coi/simpan', [PelaporanCoiController::class, 'store']);
+    Route::post('/pelaporan-coi/final', [PelaporanCoiController::class, 'finalize']);
+
+    // Pelaporan COI - Modul COI (TPN)
+    Route::get('modul-coi', [PelaporanCoiReportController::class, 'index']);
+    Route::get('modul-coi/{question}/lanjutan', [PelaporanCoiReportController::class, 'detailChild']);
+    Route::get('modul-coi/{question}/{answer}', [PelaporanCoiReportController::class, 'detail']);
 
     // Hasil
     Route::get('/evaluasi/hasil-2023', [HasilController::class, 'hasil_seluruh'])->name('hasil_seluruh');

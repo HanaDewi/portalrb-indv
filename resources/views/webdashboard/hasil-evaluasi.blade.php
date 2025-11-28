@@ -111,8 +111,7 @@
                         @endphp
                         <tr>
                             <td>{{ $no }}</td>
-                            <td><a class="tabel" href="{{ URL::to('/hasil/' . $instansi->id) }}">{{ $instansi->name }}
-                                    </class=>
+                            <td><a class="tabel" href="{{ URL::to('/hasil/' . $instansi->id) }}">{{ $instansi->name }}</a>
                             </td>
                             <td> {{ $group }}</td>
                             <td>
