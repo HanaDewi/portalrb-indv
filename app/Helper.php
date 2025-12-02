@@ -188,6 +188,18 @@ if (!function_exists('menus')) {
                     ],
             ],
             [
+                'levels' => ['tpn', 'admin'],
+                'title' => 'Modul COI',
+                'icon' => 'shield',
+                'url' => 'modul-coi'
+            ],
+            [
+                'levels' => ['kl', 'provinsi', 'kabupaten'],
+                'title' => 'Pelaporan COI',
+                'icon' => 'shield',
+                'url' => 'pelaporan-coi',
+            ],
+            [
                 'levels' => ['devider'],
             ],
             [

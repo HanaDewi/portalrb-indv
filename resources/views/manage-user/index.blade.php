@@ -46,8 +46,8 @@
                             <input id="idusername" type="text" name="username" class="form-control" placeholder="Username" required onfocus="$(this).removeAttr('readonly');" readonly/>
                         </div> 
                         <div class="form-group">
-                            <label for="idemail" class="form-label">Email  <span class="text-danger">*</span></label> 
-                            <input id="idemail" type="email" name="email" class="form-control" placeholder="Email" required />
+                            <label for="idemail" class="form-label">Email</label> 
+                            <input id="idemail" type="email" name="email" class="form-control" placeholder="Email" />
                         </div> 
                         <div class="form-group">
                             <label for="idnama" class="form-label">Nama  <span class="text-danger">*</span></label> 
@@ -65,7 +65,7 @@
                                 </div>
                             </div>
                             <div class="password-requirements mb-4" style="font-size:10pt;">
-                                <p class="requirement" id="length">Min. 8 characters</p>
+                                <p class="requirement" id="length">Min. 7 characters</p>
                                 <p class="requirement" id="lowercase">Include lowercase letter</p>
                                 {{-- <p class="requirement" id="uppercase">Include uppercase letter</p> --}}
                                 <p class="requirement" id="number">Include number</p>
@@ -178,7 +178,7 @@
 
         document.getElementById('idpassword').addEventListener("input", (event) => {
             const value = event.target.value;
-            window.validLength = value.length >= 8;
+            window.validLength = value.length >= 7;
             window.validLCase = /[a-z]/.test(value);
             // window.validUCase =/[A-Z]/.test(value);
             window.validNum = /\d/.test(value);
