@@ -81,18 +81,18 @@ Route::middleware('auth')->group(function () {
     Route::get('/zi/seleksi-wawancara', [WawancaraController::class, 'index'])->name('seleksi_wawancara');
     Route::get('/zi/proses-wawancara/{id}', [WawancaraController::class, 'wawancara'])->name('proses_wawancara');
     Route::post('/zi/proses-wawancara/simpan', [WawancaraController::class, 'proses_wawancara_simpan'])->name('proses_wawancara_simpan');
-    //Route::post('/zi/proses-wawancara/simpan', [TutupController::class, 'index'])->name('proses_wawancara_simpan');
+
 
     #Seleksi Verifikasi Lapangan
     Route::get('/zi/verifikasi-lapangan', [VerlapController::class, 'index'])->name('verifikasi_lapangan');
     Route::get('/zi/proses-verifikasi-lapangan/{id}', [VerlapController::class, 'verlap'])->name('proses_verifikasi_lapangan');
     Route::post('/zi/proses-verifikasi-lapangan/simpan', [VerlapController::class, 'verlap_simpan'])->name('proses_verifikasi_lapangan_simpan');
-    //Route::post('/zi/proses-verifikasi-lapangan/simpan', [TutupController::class, 'index'])->name('proses_verifikasi_lapangan_simpan');
+
     #Seleksi Panel
     Route::get('/zi/seleksi-panel', [PanelController::class, 'index'])->name('panel');
     Route::get('/zi/proses-panel/{id}', [PanelController::class, 'panel'])->name('proses_panel');
-    //Route::post('/zi/proses-panel/simpan', [PanelController::class, 'panel_simpan'])->name('proses_panel_simpan');
-    Route::post('/zi/proses-panel/simpan', [TutupController::class, 'index'])->name('proses_panel_simpan');
+    Route::post('/zi/proses-panel/simpan', [PanelController::class, 'panel_simpan'])->name('proses_panel_simpan');
+
     #Final
     Route::get('/zi/final', [FinalController::class, 'index'])->name('final');
     Route::get('/zi/final/{id}', [FinalController::class, 'final'])->name('proses_final');
