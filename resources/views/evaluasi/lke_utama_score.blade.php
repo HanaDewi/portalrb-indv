@@ -100,8 +100,8 @@
                             </tr>
                         </table>
                         <div class="form-group">
-                            <label for="score" class="form-label mt-2">Skor <span class="text-danger">*</span></label>
-                            <input type="text" name="score" id="score" placeholder="Skor" class="form-control" required>
+                            <label for="score" class="form-label mt-2">Skor</label>
+                            <input type="text" name="score" id="score" placeholder="Skor" class="form-control">
                             <span><b>Min: </b></span><span id="min"></span>, <span><b>Max: </b></span><span
                                 id="max"></span>
                         </div>

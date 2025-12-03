@@ -240,7 +240,7 @@ class LKEController extends Controller
             $test_tp_line = new LkeTestTpLine();
             $test_tp_line->penilai_user_id = $user->id;
         }
-        $test_tp_line->score = str_replace(',', '.', str_replace('.', '', $request->score));
+        $test_tp_line->score = $request->score ? str_replace(',', '.', str_replace('.', '', $request->score)) : null;
         $test_tp_line->lke_bobot_id = $request->lke_bobot_id;
         $test_tp_line->instansi_id = $request->instansi_id;
         $test_tp_line->catatan = $request->catatan;
