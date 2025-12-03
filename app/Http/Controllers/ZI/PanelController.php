@@ -199,16 +199,15 @@ class PanelController extends Controller
         $date_buka    = new \DateTime($tahap_seleksi->tanggal_mulai);
         $date_tutup  = new \DateTime($tahap_seleksi->tanggal_selesai);
         if ($date_now >= $date_buka && $date_now <= $date_tutup) {
-            //if (Auth::User()->userTimZI) {\
-            //foreach (Auth::User()->userTimZI as $anggotaTim) {
-
-            //    if (in_array($anggotaTim->tim_id, $tim_ids)) {
-            if (in_array(Auth::User()->id, [10060, 10046])) { // TEMPORARY ACCESS FOR mas wahyu & mas rheza
+            if (Auth::User()->userTimZI) {\
+            foreach (Auth::User()->userTimZI as $anggotaTim) {
+               if (in_array($anggotaTim->tim_id, $tim_ids)) {
+            //if (in_array(Auth::User()->id, [10060, 10046])) { // TEMPORARY ACCESS FOR mas wahyu & mas rheza
                 $status = "Berhak";
-            }
-            //   }
-            // }
             //}
+              }
+            }
+            }
         }
 
         $unit_ZIs = UnitZI::where("instansi_zi_id", $id)->where(function ($q) {
@@ -247,16 +246,16 @@ class PanelController extends Controller
         $date_buka    = new \DateTime($tahap_seleksi->tanggal_mulai);
         $date_tutup  = new \DateTime($tahap_seleksi->tanggal_selesai);
         if ($date_now >= $date_buka && $date_now <= $date_tutup) {
-            //if (Auth::User()->userTimZI) {
+            if (Auth::User()->userTimZI) {
 
-            // foreach (Auth::User()->userTimZI as $anggotaTim) {
-            //     if (in_array($anggotaTim->tim_id, $tim_ids)) {
-            if (in_array(Auth::User()->id, [10060, 10046])) { // TEMPORARY ACCESS FOR mas wahyu & mas rheza
+            foreach (Auth::User()->userTimZI as $anggotaTim) {
+                if (in_array($anggotaTim->tim_id, $tim_ids)) {
+            //if (in_array(Auth::User()->id, [10060, 10046])) { // TEMPORARY ACCESS FOR mas wahyu & mas rheza
                 $status = "Berhak";
+            //}
+                    }
+                }
             }
-            //         }
-            //     }
-            // }
         }
 
         if ($status == "Tidak Berhak") {
@@ -276,7 +275,7 @@ class PanelController extends Controller
                     if (!is_null($request->get('bukti-dukung-' . $unit_zi->id))) $panel->bukti_dukung = $request->get('bukti-dukung-' . $unit_zi->id);
                     if (!is_null($request->get('kondisi-' . $unit_zi->id))) $panel->kondisi = $request->get('kondisi-' . $unit_zi->id);
                     if (!is_null($request->get('rekomendasi-' . $unit_zi->id))) $panel->rekomendasi = $request->get('rekomendasi-' . $unit_zi->id);
-                    if (!is_null($request->get('status-' . $unit_zi->id))) $panel->status = $request->get('status-' . $unit_zi->id);
+                    //if (!is_null($request->get('status-' . $unit_zi->id))) $panel->status = $request->get('status-' . $unit_zi->id);
                     $panel->updated_by = Auth::User()->id;
                     $panel->save();
                 };
