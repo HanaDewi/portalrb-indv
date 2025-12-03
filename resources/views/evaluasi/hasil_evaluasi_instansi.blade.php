@@ -173,10 +173,6 @@
                                                                 <span class="font-semibold text-slate-800 ml-3">{{ number_format($item['total_bobot'], 2, ',', '.') }}</span>
                                                             </div>
                                                             <div class="flex justify-between">
-                                                                <span class="text-slate-500">Nilai</span>
-                                                                <span class="font-semibold text-slate-800 ml-3">{{ $item['nilai'] !== null ? number_format($item['nilai'], 2, ',', '.') : '-' }}</span>
-                                                            </div>
-                                                            <div class="flex justify-between">
                                                                 <span class="text-slate-500">Persentase</span>
                                                                 <span class="font-semibold text-slate-800 ml-3">{{ $item['persentase'] !== null ? number_format($item['persentase'], 2, ',', '.') . '%' : '-' }}</span>
                                                             </div>
