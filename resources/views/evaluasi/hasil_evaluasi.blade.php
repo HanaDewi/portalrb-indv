@@ -11,7 +11,7 @@
         <div class="lg:col-span-12 p-5 border-b border-slate-200/60">
             <div class="form-group mb-3">
                 <label for="kegiatan_id" class="form-label mt-2">Kegiatan <span class="text-danger">*</span></label>
-                {!! Form::select('kegiatan_id', kegiatan(), null, ['class' => 'w-full', 'id' => 'kegiatan_id',
+                {!! Form::select('kegiatan_id', kegiatan(), 2, ['class' => 'w-full', 'id' => 'kegiatan_id',
                 'data-placeholder' => 'Pilih Kegiatan', 'onchange' => 'getData();']) !!}
             </div>
             <table id="hasil_evaluasi" class="table table-bordered table-striped table-hover" cellspacing="0"

@@ -570,7 +570,12 @@ class LKEController extends Controller
             }
         }
 
-        $parameters = LkeBobot::where('group', $instansi->group)->orderBy('lke_parameter_id')->get();
+        $parameters = LkeBobot::where('group', $instansi->group)
+            ->whereHas('lke_parameter', function ($query) use ($kegiatan_id) {
+                $query->where('lke_kegiatan_id', $kegiatan_id);
+            })
+            ->orderBy('lke_parameter_id')
+            ->get();
         $nationalStats = collect();
         if ($parameters->isNotEmpty()) {
             $nationalStats = LkeTestTpLine::whereIn('lke_bobot_id', $parameters->pluck('id'))
