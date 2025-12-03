@@ -247,7 +247,6 @@ class LKEController extends Controller
         $test_tp_line->rekomendasi = $request->rekomendasi;
         $test_tp_line->update_user_id = $user->id;
         $test_tp_line->score_index = !empty($test_tp_line->lke_bobot->max_value) ? ($test_tp_line->score / $test_tp_line->lke_bobot->max_value) * $test_tp_line->lke_bobot->bobot : $test_tp_line->score;
-        $test_tp_line->score_index = !empty($test_tp_line->lke_bobot->max_value) ? ($test_tp_line->score / $test_tp_line->lke_bobot->max_value) * $test_tp_line->lke_bobot->bobot : $test_tp_line->score;
         if ($pengali_id = $test_tp_line->lke_bobot->lke_parameter->indikator_pengali_id) {
             $bobot_pengali_id = LkeBobot::where('lke_parameter_id', $pengali_id)->where('group', $test_tp_line->lke_bobot->group)->first()->id;
             $test_tp_line_pengali = LkeTestTpLine::where('lke_bobot_id', $bobot_pengali_id)->where('instansi_id', $test_tp_line->instansi_id)->first();
@@ -257,6 +256,7 @@ class LKEController extends Controller
                 }
             }
         }
+        $test_tp_line->capaian_index = ($test_tp_line->score_index / $bobot->bobot) * 100;
         if ($test_tp_line->save()) {
             calculateTestTp($test_tp_line->instansi_id, $test_tp_line->lke_bobot->lke_parameter->lke_kegiatan_id);
             $success = true;

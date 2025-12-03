@@ -104,7 +104,8 @@
                                             <a href="{{ route('akip.dashboard') }}">Akip</a>
                                         </li>
                                         <li>
-                                            <a href="{{ route('ruang-belajar.home') }}">Ruang Belajar</a>
+                                            {{-- <a href="{{ route('ruang-belajar.home') }}">Ruang Belajar</a> --}}
+                                            <a href="https://ruangbelajar.portalrb.id" target="_blank">Ruang Belajar</a>
                                         </li>
                                         <li>
                                             @if(Auth::User())
