@@ -199,14 +199,14 @@ class PanelController extends Controller
         $date_buka    = new \DateTime($tahap_seleksi->tanggal_mulai);
         $date_tutup  = new \DateTime($tahap_seleksi->tanggal_selesai);
         if ($date_now >= $date_buka && $date_now <= $date_tutup) {
-            if (Auth::User()->userTimZI) {\
-            foreach (Auth::User()->userTimZI as $anggotaTim) {
-               if (in_array($anggotaTim->tim_id, $tim_ids)) {
-            //if (in_array(Auth::User()->id, [10060, 10046])) { // TEMPORARY ACCESS FOR mas wahyu & mas rheza
-                $status = "Berhak";
-            //}
-              }
-            }
+            if (Auth::User()->userTimZI) {
+                foreach (Auth::User()->userTimZI as $anggotaTim) {
+                    if (in_array($anggotaTim->tim_id, $tim_ids)) {
+                        //if (in_array(Auth::User()->id, [10060, 10046])) { // TEMPORARY ACCESS FOR mas wahyu & mas rheza
+                        $status = "Berhak";
+                        //}
+                    }
+                }
             }
         }
 
@@ -248,11 +248,11 @@ class PanelController extends Controller
         if ($date_now >= $date_buka && $date_now <= $date_tutup) {
             if (Auth::User()->userTimZI) {
 
-            foreach (Auth::User()->userTimZI as $anggotaTim) {
-                if (in_array($anggotaTim->tim_id, $tim_ids)) {
-            //if (in_array(Auth::User()->id, [10060, 10046])) { // TEMPORARY ACCESS FOR mas wahyu & mas rheza
-                $status = "Berhak";
-            //}
+                foreach (Auth::User()->userTimZI as $anggotaTim) {
+                    if (in_array($anggotaTim->tim_id, $tim_ids)) {
+                        //if (in_array(Auth::User()->id, [10060, 10046])) { // TEMPORARY ACCESS FOR mas wahyu & mas rheza
+                        $status = "Berhak";
+                        //}
                     }
                 }
             }
@@ -281,7 +281,6 @@ class PanelController extends Controller
                 };
             };
         };
-
 
 
         return redirect()->route('proses_panel', $instansiZIid);
