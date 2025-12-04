@@ -95,12 +95,10 @@
                                             @php
                                                 $val = $item->{$child['field']};
                                             @endphp
-                                            @if (is_bool($val))
-                                                @if ($val)
-                                                    <span class="text-success">&#10003;</span>
-                                                @else
-                                                    <span class="text-danger">&#10007;</span>
-                                                @endif
+                                            @if ($child['field'] === 'q51_url_sistem' && $val)
+                                                <a href="{{ $val }}" target="_blank" class="text-primary underline">{{ $val }}</a>
+                                            @elseif (is_bool($val))
+                                                {!! $val ? '<span class=\"text-success\">&#10003;</span>' : '<span class=\"text-danger\">&#10007;</span>' !!}
                                             @else
                                                 {{ $val ?? '-' }}
                                             @endif

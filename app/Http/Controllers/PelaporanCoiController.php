@@ -135,6 +135,7 @@ class PelaporanCoiController extends Controller
             'q31_nomor_pedoman' => $requireComplete ? 'required_if:q3_pedoman_teknis,1|string' : 'nullable|string',
             'q4_penunjukan_pejabat' => $booleanRule,
             'q5_sistem_aplikasi' => $booleanRule,
+            'q51_url_sistem' => $requireComplete ? 'required_if:q5_sistem_aplikasi,1|url' : 'nullable|url',
             'q6_pencatatan_register' => $booleanRule,
             'q61_total_wajib' => [
                 $requireComplete ? 'required_if:q6_pencatatan_register,1' : 'nullable',
@@ -196,6 +197,10 @@ class PelaporanCoiController extends Controller
 
         if (($data['q3_pedoman_teknis'] ?? null) != 1) {
             $data['q31_nomor_pedoman'] = null;
+        }
+
+        if (($data['q5_sistem_aplikasi'] ?? null) != 1) {
+            $data['q51_url_sistem'] = null;
         }
 
         if (($data['q6_pencatatan_register'] ?? null) != 1) {

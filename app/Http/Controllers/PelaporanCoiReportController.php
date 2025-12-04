@@ -27,6 +27,7 @@ class PelaporanCoiReportController extends Controller
         'q2_selaras_permepan' => ['field' => 'q21_susun_revisi', 'label' => 'Apakah instansi sudah mulai menyusun revisi?', 'when' => 0],
         'q21_susun_revisi' => ['field' => 'q211_rencana_penyesuaian', 'label' => 'Kapan aturan akan disesuaikan?', 'when' => 0],
         'q3_pedoman_teknis' => ['field' => 'q31_nomor_pedoman', 'label' => 'Nomor pedoman?', 'when' => 1],
+        'q5_sistem_aplikasi' => ['field' => 'q51_url_sistem', 'label' => 'Url Sistem atau Aplikasi yang digunakan?', 'when' => 1],
         'q6_pencatatan_register' => ['field' => 'q61_total_wajib', 'label' => 'Total ASN Wajib Melaporkan', 'when' => 1],
         'q7_deklarasi_aktual' => ['field' => 'q71_jumlah_deklarasi', 'label' => 'jumlah deklarasi yang disampaikan?', 'when' => 1],
         'q8_lini_aduan' => ['field' => 'q81_nama_lini', 'label' => 'nama lini pengaduan?', 'when' => 1],
