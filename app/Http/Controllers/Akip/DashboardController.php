@@ -42,8 +42,14 @@ class DashboardController extends Controller
                 ->join('tim_evaluasi', 'instansi_tim.tim_id', '=', 'tim_evaluasi.id')
                 ->leftJoin('evaluasi_sakip', function ($join) use ($selectedYear, $selectedPeriode) {
                     $join->on('evaluasi_sakip.instansi_id', '=', 'instansi_tim.instansi_id')
-                        ->where('evaluasi_sakip.tahun', $selectedYear)
-                        ->where('evaluasi_sakip.periode', 'TW ' . $selectedPeriode);
+                        ->where('evaluasi_sakip.tahun', $selectedYear);
+
+                    // Handle TW 4 -> Final mapping
+                    if ($selectedPeriode == 4 ) {
+                        $join->where('evaluasi_sakip.periode', 'Final');
+                    } else {
+                        $join->where('evaluasi_sakip.periode', 'TW ' . $selectedPeriode);
+                    }
                 })
                 ->join('klpd_instansi_new', 'instansi_tim.instansi_id', '=', 'klpd_instansi_new.id')
                 ->where(function ($query) {
@@ -106,8 +112,13 @@ class DashboardController extends Controller
             ->join('tim_evaluasi', 'instansi_tim.tim_id', '=', 'tim_evaluasi.id')
             ->leftJoin('evaluasi_sakip', function ($join) use ($tahun, $periode) {
                 $join->on('evaluasi_sakip.instansi_id', '=', 'instansi_tim.instansi_id')
-                    ->where('evaluasi_sakip.tahun', $tahun)
-                    ->where('evaluasi_sakip.periode', 'TW ' . $periode);
+                    ->where('evaluasi_sakip.tahun', $tahun);
+
+                    if ($periode == 4 ) {
+                        $join->where('evaluasi_sakip.periode', 'Final');
+                    } else {
+                        $join->where('evaluasi_sakip.periode', 'TW ' . $periode);
+                    }
             })
             ->join('klpd_instansi_new', 'instansi_tim.instansi_id', '=', 'klpd_instansi_new.id')
             ->where(function ($query) {
