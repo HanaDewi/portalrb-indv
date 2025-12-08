@@ -576,6 +576,7 @@ class LKEController extends Controller
             })
             ->orderBy('lke_parameter_id')
             ->get();
+            dd($instansi->group, $parameters);
         $nationalStats = collect();
         if ($parameters->isNotEmpty()) {
             $nationalStats = LkeTestTpLine::whereIn('lke_bobot_id', $parameters->pluck('id'))
