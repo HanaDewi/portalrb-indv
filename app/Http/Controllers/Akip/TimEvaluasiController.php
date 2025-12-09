@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Akip;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\TimEvaluasiRB;
+use App\Models\InstansiTimEvaluasi;
 
 class TimEvaluasiController extends Controller
 {
@@ -23,9 +25,9 @@ class TimEvaluasiController extends Controller
     }
 
     /**
-     * Display the tim evaluasi page
+     * Display the our team evaluasi page
      */
-    public function index()
+    public function ourTeam()
     {
         // Check akses hanya untuk TPN
         if ($this->currentUser->level !== 'tpn') {
@@ -35,7 +37,7 @@ class TimEvaluasiController extends Controller
         $anggota = $this->currentUser->anggota;
 
         if (!$anggota || !$anggota->tim) {
-            return view('akip.tim-evaluasi.index', [
+            return view('akip.team-evaluasi.index', [
                 'tim' => null,
                 'message' => 'Anda belum terdaftar sebagai anggota tim evaluasi.'
             ]);
@@ -47,7 +49,7 @@ class TimEvaluasiController extends Controller
     }
 
     /**
-     * Get data tim evaluasi untuk DataTables
+     * Get data our team evaluasi untuk DataTables
      */
     public function getDatas()
     {
@@ -173,5 +175,132 @@ class TimEvaluasiController extends Controller
                 'message' => 'Terjadi kesalahan: ' . $e->getMessage()
             ], 500);
         }
+    }
+
+    /**
+     * Get daftar instansi yang dievaluasi oleh tim
+     */
+    public function getInstansiByTim($tim_id, Request $request)
+    {
+        try {
+            // Get parameters
+            $search = $request->input('search', '');
+            $page = max(1, (int) $request->input('page', 1));
+            $perPage = max(10, min(100, (int) $request->input('per_page', 10)));
+
+            // Query instansi tim berdasarkan tim_id
+            $query = InstansiTimEvaluasi::where('tim_id', $tim_id)
+                ->with(['instansi' => function($q) {
+                    $q->whereNull('deleted_at');
+                }])
+                ->whereHas('instansi', function($q) {
+                    $q->whereNull('deleted_at');
+                });
+
+            // Apply search filter
+            if (!empty($search)) {
+                $query->whereHas('instansi', function($q) use ($search) {
+                    $q->where('name', 'LIKE', '%' . $search . '%')
+                      ->orWhere('name_before', 'LIKE', '%' . $search . '%');
+                });
+            }
+
+            // Get total count before pagination
+            $total = $query->count();
+
+            // Apply pagination
+            $instansiTims = $query->orderBy('id', 'asc')
+                ->skip(($page - 1) * $perPage)
+                ->take($perPage)
+                ->get();
+
+            // Format data
+            $data = [];
+            foreach ($instansiTims as $instansiTim) {
+                if ($instansiTim->instansi) {
+                    $group = $instansiTim->instansi->group ?? '';
+                    $kategori = '';
+                    
+                    // Format kategori berdasarkan group
+                    switch ($group) {
+                        case 'kl':
+                            $kategori = 'Kementerian/Badan';
+                            break;
+                        case 'provinsi':
+                            $kategori = 'Provinsi';
+                            break;
+                        case 'kabupaten':
+                            $kategori = 'Kabupaten/Kota';
+                            break;
+                        default:
+                            $kategori = ucfirst($group);
+                    }
+
+                    $data[] = [
+                        'instansi_id' => $instansiTim->instansi_id,
+                        'nama_instansi' => $instansiTim->instansi->name ?? '-',
+                        'group' => $group,
+                        'kategori' => $kategori,
+                        'url' => url('akip/evaluasi/sakip/' . $instansiTim->instansi_id)
+                    ];
+                }
+            }
+
+            // Calculate pagination info
+            $lastPage = ceil($total / $perPage);
+            $from = $total > 0 ? (($page - 1) * $perPage) + 1 : 0;
+            $to = min($page * $perPage, $total);
+
+            return response()->json([
+                'success' => true,
+                'data' => $data,
+                'pagination' => [
+                    'current_page' => $page,
+                    'last_page' => $lastPage,
+                    'per_page' => $perPage,
+                    'total' => $total,
+                    'from' => $from,
+                    'to' => $to
+                ]
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan: ' . $e->getMessage(),
+                'data' => [],
+                'pagination' => [
+                    'current_page' => 1,
+                    'last_page' => 1,
+                    'per_page' => 10,
+                    'total' => 0,
+                    'from' => 0,
+                    'to' => 0
+                ]
+            ], 500);
+        }
+    }
+
+    public function allTeams()
+    {
+        // Query semua tim dengan anggota
+        $tims = TimEvaluasiRB::with(['anggota.user'])
+            ->get()
+            ->map(function($tim) {
+                return [
+                    'id' => $tim->id,
+                    'nama' => $tim->nama,
+                    'keterangan' => $tim->keterangan ?? '',
+                    'total_anggota' => $tim->anggota->count(),
+                    'anggota_list' => $tim->anggota->map(function($anggota) {
+                        return [
+                            'id' => $anggota->user_id,
+                            'nama' => $anggota->user->nama ?? '-'
+                        ];
+                    })->toArray()
+                ];
+            });
+
+        return view('akip.all-team-evaluasi.index', compact('tims'));
     }
 }

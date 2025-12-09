@@ -331,9 +331,23 @@ if (!function_exists('menus')) {
                         ],
                         [
                             'levels' => ['tpn'],
-                            'title' => 'Tim',
+                            'title' => 'Team Evaluasi',
                             'icon' => 'users',
-                            'url' => 'akip/tim'
+                            'url' => 'akip/tim',
+                            'items' => [
+                                [
+                                    'levels' => ['tpn'],
+                                    'title' => 'Team Saya',
+                                    'icon' => 'user',
+                                    'url' => 'akip/tim/our-team'
+                                ],
+                                [
+                                    'levels' => ['tpn'],
+                                    'title' => 'Semua Tim',
+                                    'icon' => 'users',
+                                    'url' => 'akip/tim/all-teams'
+                                ]
+                            ]
                         ],
                     ],
             ],

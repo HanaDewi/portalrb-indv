@@ -176,10 +176,11 @@ class EvaluasiController extends Controller
      */
     public function show($instansi_id)
     {
-        $cek = $this->currentUser->anggota ? $this->currentUser->anggota->tim->instansi_tim->where('instansi_id', $instansi_id)->first() : false;
-        if (!$cek && $this->currentUser->level != 'admin') {
-            abort('404');
-        }
+        // Hapus pengecekan anggota tim - semua user bisa akses
+        // $cek = $this->currentUser->anggota ? $this->currentUser->anggota->tim->instansi_tim->where('instansi_id', $instansi_id)->first() : false;
+        // if (!$cek && $this->currentUser->level != 'admin') {
+        //     abort('404');
+        // }
         
         $instansi = KlpdInstansi::find($instansi_id);
         if (!$instansi) {

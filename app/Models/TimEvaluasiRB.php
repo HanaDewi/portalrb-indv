@@ -21,4 +21,9 @@ class TimEvaluasiRB extends Model
                 $query->whereNull('deleted_at');
             });
     }
+
+    public function anggota()
+    {
+        return $this->hasMany(AnggotaTimEvaluasiRB::class, 'tim_id');
+    }
 }

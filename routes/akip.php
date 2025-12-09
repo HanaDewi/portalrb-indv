@@ -27,8 +27,10 @@ Route::group(['prefix' => 'akip', 'as' => 'akip.'], function () {
         
         // Tim Evaluasi routes
         Route::controller(TimEvaluasiController::class)->prefix('tim')->group(function () {
-            Route::get('/', 'index')->name('tim.index');
+            Route::get('/all-teams', 'allTeams')->name('tim.all-teams');
+            Route::get('/our-team', 'ourTeam')->name('tim.our-team');
             Route::get('/data', 'getDatas')->name('tim.data');
+            Route::get('/{tim_id}/instansi', 'getInstansiByTim')->name('tim.instansi-by-tim');
             Route::get('/{user}/instansi', 'getInstansi')->name('tim.instansi');
         });
     });
