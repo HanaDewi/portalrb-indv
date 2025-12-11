@@ -6,7 +6,14 @@
         <h2 class="text-lg mr-auto">
             Hasil Evaluasi SAKIP - <span class="font-medium">{!! $instansi->name !!}</span>
         </h2>
-        @if (auth()->user()->level == 'tpn' && hasAksesEvaluasiAkip())
+        @php
+            $isTpn = auth()->user()->level == 'tpn';
+            $isAnggotaTim = false;
+            if (auth()->user()->anggota && auth()->user()->anggota->tim) {
+                $isAnggotaTim = auth()->user()->anggota->tim->instansi_tim->where('instansi_id', $instansi->id)->first() ? true : false;
+            }
+        @endphp
+        @if ($isTpn && $isAnggotaTim && hasAksesEvaluasiAkip())
             <a href="javascript:;" data-toggle="modal" data-target="#modal-form-evaluasi" class="button inline-block bg-theme-1 text-white" onclick="resetForm();">Tambah Penilaian</a>
         @endif
     </div>
@@ -14,7 +21,7 @@
     @if (count($evaluasi_sakip) == 0)
         <div class="intro-y box p-5 mt-5">
             <div class="text-center">
-                @if (auth()->user()->level == 'tpn')
+                @if ($isTpn)
                     <p class="text-gray-600">Belum ada penilaian SAKIP untuk instansi ini.</p>
                     <p class="text-gray-600">Silakan tambahkan penilaian SAKIP terlebih dahulu.</p>
                 @else
@@ -30,7 +37,7 @@
                     <h2 class="font-medium text-base mr-auto">
                         Hasil sementara evaluasi SAKIP {!! $evaluasi->instansi->name !!}
                     </h2>
-                    @if (auth()->user()->level == 'tpn')
+                    @if ($isTpn && $isAnggotaTim)
                         <button type="button" class="button button--sm block bg-theme-6 text-white mr-3" onclick="hapusEvaluasi('{{ $evaluasi->id }}');">Hapus Hasil Evaluasi</button>
                         <button type="button" class="button button--sm block bg-theme-12 text-white" onclick="editEvaluasi('{{ $evaluasi->id }}');">Edit Penilaian</button>
                     @endif
@@ -53,7 +60,7 @@
                 <div class="w-full">
                     <span class="font-medium">PIC LKE : </span>{{ $evaluasi->pic_lke }}
                 </div>
-                @if (auth()->user()->level == 'tpn')
+                @if ($isTpn)
                     <div class="w-full">
                         <span class="font-medium">Link LKE : </span><a href="{{ $evaluasi->link_lke }}" target="_blank" class="text-blue-500">{{ $evaluasi->link_lke }}</a>
                     </div>
@@ -247,7 +254,7 @@
     @endforeach
     @endif
 
-    @if (auth()->user()->level == 'tpn' && hasAksesEvaluasiAkip())
+    @if ($isTpn && hasAksesEvaluasiAkip())
         {{-- Modal Tambah --}}
         <div class="modal" id="modal-form-evaluasi">
             <div class="modal__content modal__content--xl">
