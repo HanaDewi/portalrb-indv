@@ -68,7 +68,7 @@
                                     @if (isset($fjawaban[$jw->id]))
                                         @if ($jw->kriteria == 'Penilaian Kegiatan Utama Road Map Reformasi Birokrasi' or $jw->kriteria == 'Kriteria Penilaian Penetapan Rencana Aksi' or $jw->kriteria == 'Strategi Pelaksanaan RB General')
                                             <td class="text-center" colspan=2 style="font-weight:bold; 
-                                @if ($jw->kriteria == 'Strategi Pelaksanaan RB General') color:#b42b2d; font-size:1.25em; @endif ">{{ $fjawaban[$jw->id]->jawaban }}
+                                            @if ($jw->kriteria == 'Strategi Pelaksanaan RB General') color:#b42b2d; font-size:1.25em; @endif ">{{ $fjawaban[$jw->id]->jawaban }}
                                             </td>
                                         @else
                                             <td class=" text-center">{{ $fjawaban[$jw->id]->jawaban }}</td>

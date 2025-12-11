@@ -166,6 +166,8 @@ class ERenaksiRBGeneralController extends Controller
     public function dodelete(Request $request)
     {
         $todelete = JawabanRenaksi::find($request->id);
+        dd($todelete, $request->id);
+
         if ($todelete->delete()) {
             self::kalkulasi_skor($todelete->instansi_id, $todelete->tahun);
             return response()->json(['success' => 'Sukses', 'result' => true]);
@@ -217,15 +219,18 @@ class ERenaksiRBGeneralController extends Controller
         if ($tahun == 2024) {
             $penilaianKU = JawabanRenaksi::where('instansi_id', $instansi_id)->where('lke_renaksi_id', 3)->where('tahun', $tahun)->first();
         } else if ($tahun == 2025) {
-            $penilaianKU = JawabanRenaksi::where('instansi_id', $instansi_id)->where('lke_renaksi_id', 12)->where('tahun', $tahun)->first();
+            $penilaianKU = JawabanRenaksi::where('instansi_id', $instansi_id)->where('lke_renaksi_id', 14)->where('tahun', $tahun)->first();
         }
         if (!$penilaianKU) {
             $penilaianKU = new JawabanRenaksi();
         }
         $penilaianKU->instansi_id = $instansi_id;
         $penilaianKU->tahun = $tahun;
-        $penilaianKU->lke_renaksi_id = 3;
-
+        if ($tahun == 2024) {
+            $penilaianKU->lke_renaksi_id = 3;
+        } else if ($tahun == 2025) {
+            $penilaianKU->lke_renaksi_id = 14;
+        }
         $skorPenetapanKU = data_get($penetapanKU, 'konversi_jawaban_renaksi.skor', 0);
         $skorPenetapanTargetIndikatorKU = data_get($penetapanTargetIndikatorKU, 'konversi_jawaban_renaksi.skor', 0);
         $skorKeabsahanRencanaAksi = data_get($keabsahanRencanaAksi, 'konversi_jawaban_renaksi.skor', 0);
@@ -240,7 +245,11 @@ class ERenaksiRBGeneralController extends Controller
         }
         $penetapanRencanaAksi->instansi_id = $instansi_id;
         $penetapanRencanaAksi->tahun = $tahun;
-        $penetapanRencanaAksi->lke_renaksi_id = 7;
+        if ($tahun == 2024) {
+            $penetapanRencanaAksi->lke_renaksi_id = 7;
+        } else if ($tahun == 2025) {
+            $penetapanRencanaAksi->lke_renaksi_id = 18;
+        }
 
         $skorKelogisanRencanaAksi = data_get($kelogisanRencanaAksi, 'konversi_jawaban_renaksi.skor', 0);
         $skorRelevansiKecukupanIndikatorOutput = data_get($relevansiKecukupanIndikatorOutput, 'konversi_jawaban_renaksi.skor', 0);
@@ -252,13 +261,21 @@ class ERenaksiRBGeneralController extends Controller
 
         //SkorTotal
 
-        $strategiPelaksanaanRBGeneral = JawabanRenaksi::where('instansi_id', $instansi_id)->where('lke_renaksi_id', 2)->where('tahun', $tahun)->first();
+        if ($tahun == 2024) {
+            $strategiPelaksanaanRBGeneral = JawabanRenaksi::where('instansi_id', $instansi_id)->where('lke_renaksi_id', 2)->where('tahun', $tahun)->first();
+        } else if ($tahun == 2025) {
+            $strategiPelaksanaanRBGeneral = JawabanRenaksi::where('instansi_id', $instansi_id)->where('lke_renaksi_id', 13)->where('tahun', $tahun)->first();
+        }
         if (!$strategiPelaksanaanRBGeneral) {
             $strategiPelaksanaanRBGeneral = new JawabanRenaksi();
         }
         $strategiPelaksanaanRBGeneral->instansi_id = $instansi_id;
         $strategiPelaksanaanRBGeneral->tahun = $tahun;
-        $strategiPelaksanaanRBGeneral->lke_renaksi_id = 2;
+        if ($tahun == 2024) {
+            $strategiPelaksanaanRBGeneral->lke_renaksi_id = 2;
+        } else if ($tahun == 2025) {
+            $strategiPelaksanaanRBGeneral->lke_renaksi_id = 13;
+        }
         $strategiPelaksanaanRBGeneral->jawaban = ($penetapanRencanaAksi->jawaban ?? 0) + ($penilaianKU->jawaban ?? 0);
         $strategiPelaksanaanRBGeneral->save();
 
@@ -268,7 +285,11 @@ class ERenaksiRBGeneralController extends Controller
         $instansi = KlpdInstansi::where('id', $instansi_id)->first();
         if ($instansi) {
             if ($instansi->group == "kl" or $instansi->group == "provinsi" or $instansi->group == "kabupaten") {
-                $lke_bobot = LkeBobot::where('lke_parameter_id', 2130)->where('group', $instansi->group)->first();
+                if ($tahun == 2024) {
+                    $lke_bobot = LkeBobot::where('lke_parameter_id', 2130)->where('group', $instansi->group)->first();
+                } else if ($tahun == 2025) {
+                    $lke_bobot = LkeBobot::where('lke_parameter_id', 3180)->where('group', $instansi->group)->first();
+                }
                 $test_tp_line = LkeTestTpLine::where('lke_bobot_id', $lke_bobot->id)->where('instansi_id', $instansi->id)->first();
                 if (!$test_tp_line) {
                     $test_tp_line = new LkeTestTpLine();
