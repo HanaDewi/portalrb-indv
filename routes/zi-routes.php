@@ -97,17 +97,11 @@ Route::middleware('auth')->group(function () {
     #Final
     Route::get('/zi/final', [FinalController::class, 'index'])->name('final');
     Route::get('/zi/final/{id}', [FinalController::class, 'final'])->name('proses_final');
-    //Route::post('/zi/final/simpan', [FinalController::class, 'final_simpan'])->name('proses_final_simpan');
-    Route::post('/zi/final/simpan', [TutupController::class, 'index'])->name('proses_final_simpan');
     Route::get('/zi/final/unit/{id}', [FinalController::class, 'final_unit'])->name('proses_final_unit');
-    //Route::post('/zi/final/unit/simpan', [FinalController::class, 'final_unit_simpan'])->name('proses_final_unit_simpan');
-    Route::post('/zi/final/unit/simpan', [TutupController::class, 'index'])->name('proses_final_unit_simpan');
+    Route::post('/zi/final/unit/simpan', [FinalController::class, 'final_unit_simpan'])->name('proses_final_unit_simpan');
+    Route::post('/zi/final/simpan_lhe', [FinalController::class, 'lhe_simpan'])->name('proses_upload_lhe_simpan');
+    Route::post('/zi/final/simpan_undangan', [FinalController::class, 'undangan_simpan'])->name('proses_upload_surat_undangan_simpan');
 
-
-    //Route::post('/zi/final/simpan_lhe', [FinalController::class, 'lhe_simpan'])->name('proses_upload_lhe_simpan');
-    Route::post('/zi/final/simpan_lhe', [TutupController::class, 'index'])->name('proses_upload_lhe_simpan');
-    //Route::post('/zi/final/simpan_undangan', [FinalController::class, 'undangan_simpan'])->name('proses_upload_surat_undangan_simpan');
-    Route::post('/zi/final/simpan_undangan', [TutupController::class, 'index'])->name('proses_upload_surat_undangan_simpan');
 
 
     #Tautkan LKE
