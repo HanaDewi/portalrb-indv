@@ -202,7 +202,7 @@ class PanelController extends Controller
             //if (Auth::User()->userTimZI) {
             //foreach (Auth::User()->userTimZI as $anggotaTim) {
             //if (in_array($anggotaTim->tim_id, $tim_ids)) {
-            if (in_array(Auth::User()->id, [10060, 10059, 10046])) { // TEMPORARY ACCESS FOR mas wahyu, mba gita & mas rheza
+            if (in_array(Auth::User()->id, [10060, 10059, 10052])) { // TEMPORARY ACCESS FOR mas wahyu, mba gita & Auffi
                 $status = "Berhak";
             }
             //}
@@ -249,7 +249,7 @@ class PanelController extends Controller
             // if (Auth::User()->userTimZI) {
             //     foreach (Auth::User()->userTimZI as $anggotaTim) {
             //         if (in_array($anggotaTim->tim_id, $tim_ids)) {
-            if (in_array(Auth::User()->id, [10060, 10059, 10046])) { // TEMPORARY ACCESS FOR mas wahyu, mba gita & mas rheza
+            if (in_array(Auth::User()->id, [10060, 10059, 10052])) { // TEMPORARY ACCESS FOR mas wahyu, mba gita & Auffi
                 $status = "Berhak";
             }
             //         }
