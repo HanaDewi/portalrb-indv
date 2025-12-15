@@ -152,8 +152,8 @@
                     <div class="flex items-center">
                         <div class="w-3/4 flex-none">
                             <div class="text-lg font-bold truncate">Kondisi / Catatan</div>
-                            <textarea id="content" name="catatan" rows="20"
-                                class="form-control glowing-border">{{optional($unit_zi->final)->kondisi}}</textarea>
+                            <textarea id="content" name="catatan" rows="20" class="form-control glowing-border"
+                                required>{{optional($unit_zi->final)->kondisi}}</textarea>
                         </div>
                     </div>
                 </div>
@@ -163,8 +163,11 @@
                     <div class="flex items-center">
                         <div class="w-3/4 flex-none">
                             <div class="text-lg font-bold truncate">Rekomendasi</div>
-                            <textarea id="content" name="rekomendasi" rows="20"
-                                class="form-control glowing-border">{{optional($unit_zi->final)->rekomendasi}}</textarea>
+                            <textarea id="content" name="rekomendasi" rows="20" class="form-control glowing-border" @if
+                                @if($unit_zi->panel->status === 0)
+                                    required
+                                @endif
+                                >{{optional($unit_zi->final)->rekomendasi}}</textarea>
                         </div>
                     </div>
                 </div>
