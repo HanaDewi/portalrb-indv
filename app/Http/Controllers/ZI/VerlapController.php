@@ -268,12 +268,11 @@ class VerlapController extends Controller
                         $verlapUnit = new VerifikasiLapangan();
                         $verlapUnit->unit_zi_id = $unit_zi->id;
                     }
-
                     if (!is_null($request->get('jadwal-' . $unit_zi->id))) $verlapUnit->jadwal = $request->get('jadwal-' . $unit_zi->id);
-                    //if(!is_null($request->get('bukti-dukung-'.$unit_zi->id )))$verlapUnit->bukti_dukung = $request->get('bukti-dukung-'.$unit_zi->id ); 
+                    if (!is_null($request->get('bukti-dukung-' . $unit_zi->id))) $verlapUnit->bukti_dukung = $request->get('bukti-dukung-' . $unit_zi->id);
                     if (!is_null($request->get('kondisi-' . $unit_zi->id))) $verlapUnit->kondisi = $request->get('kondisi-' . $unit_zi->id);
                     if (!is_null($request->get('rekomendasi-' . $unit_zi->id))) $verlapUnit->rekomendasi = $request->get('rekomendasi-' . $unit_zi->id);
-                    //if (!is_null($request->get('status-' . $unit_zi->id))) $verlapUnit->status = $request->get('status-' . $unit_zi->id);
+                    // if (!is_null($request->get('status-' . $unit_zi->id))) $verlapUnit->status = $request->get('status-' . $unit_zi->id);
 
                     $verlapUnit->updated_by = Auth::User()->id;
                     $verlapUnit->save();
