@@ -11,6 +11,7 @@ use App\Models\ZI\HasilFinal;
 use App\Models\ZI\InstansiZI;
 use App\Models\ZI\UnggahFile;
 use App\Models\ZI\TimEvaluasi;
+use App\Models\ZI\TahapSeleksiZI;
 use GuzzleHttp\Psr7\UploadedFile;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -230,7 +231,7 @@ class FinalController extends Controller
 
         $unit_zi = UnitZI::find($request->get('unit_id'));
         $tim_ids = [];
-
+        $instansi_ZI = $unit_zi->instansiZI;
 
         foreach ($unit_zi->unit_tim as $unitTim) {
             if (!in_array($unitTim->tim_id, $tim_ids)) {
