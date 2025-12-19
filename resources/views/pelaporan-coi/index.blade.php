@@ -97,7 +97,7 @@
                                 </label>
                             </div>
                             <div class="mt-3 follow-up" data-parent="q1_peraturan_internal" data-follow-up="1">
-                                <label class="form-label">1.1. Nomor Permen/Kepmen/Pergub/Perbub/Perwali?</label>
+                                <label class="form-label">1.1. Nomor Permen/Kepmen/Pergub/Perbub/Perwali? <br><span class="font-bold">Contoh: </span><span class="text-slate-500">Pergub Nomor xx Tahun xxxx Tentang Pengelolaan Konflik Kepntingan Pada Provinsi xxx</span></label>
                                 <input type="text" name="q11_nomor_peraturan" class="form-control" value="{{ old('q11_nomor_peraturan', $data->q11_nomor_peraturan ?? '') }}">
                             </div>
                         </div>
@@ -155,7 +155,7 @@
                                 </label>
                             </div>
                             <div class="mt-3 follow-up" data-parent="q3_pedoman_teknis" data-follow-up="1">
-                                <label class="form-label">3.1. Nomor pedoman?</label>
+                                <label class="form-label">3.1. Nomor pedoman? <br><span class="font-bold">Contoh: </span><span class="text-slate-500">Keputusan Menteri Nomor xx Tahun xxxx Tentang Pedoman Pengelolaan Konflik Kepentingan pada xxx</span></label>
                                 <input type="text" name="q31_nomor_pedoman" class="form-control" value="{{ old('q31_nomor_pedoman', $data->q31_nomor_pedoman ?? '') }}">
                             </div>
                         </div>

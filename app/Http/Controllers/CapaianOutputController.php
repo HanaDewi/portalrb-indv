@@ -246,15 +246,25 @@ class CapaianOutputController extends Controller
             ->get();
         
         foreach ($capaians as $capaian) {
-            $capaian->realisasi_tw1 = $capaian->jumlah_target_tw1 > 0 ? round(($capaian->jumlah_realisasi_output_tw1 / $capaian->jumlah_target_tw1) * 100) . '%' : '';
-            $capaian->realisasi_tw2 = $capaian->jumlah_target_tw2 > 0 ? round(($capaian->jumlah_realisasi_output_tw2 / $capaian->jumlah_target_tw2) * 100) . '%' : '';
-            $capaian->realisasi_tw3 = $capaian->jumlah_target_tw3 > 0 ? round(($capaian->jumlah_realisasi_output_tw3 / $capaian->jumlah_target_tw3) * 100) . '%' : '';
-            $capaian->realisasi_tw4 = $capaian->jumlah_target_tw4 > 0 ? round(($capaian->jumlah_realisasi_output_tw4 / $capaian->jumlah_target_tw4) * 100) . '%' : '';
-            $capaian->output_tw1 = $capaian->jumlah_capaian_output_tw1 > 0 ? round($capaian->jumlah_capaian_output_tw1 / $capaian->jumlah_target_total) . '%' : '';
-            $capaian->output_tw2 = $capaian->jumlah_capaian_output_tw2 > 0 ? round($capaian->jumlah_capaian_output_tw2 / $capaian->jumlah_target_total) . '%' : '';
-            $capaian->output_tw3 = $capaian->jumlah_capaian_output_tw3 > 0 ? round($capaian->jumlah_capaian_output_tw3 / $capaian->jumlah_target_total) . '%' : '';
-            $capaian->output_tw4 = $capaian->jumlah_capaian_output_tw4 > 0 ? round($capaian->jumlah_capaian_output_tw4 / $capaian->jumlah_target_total) . '%' : '';
-            $capaian->output_total = $capaian->jumlah_target_total > 0 ? round($capaian->jumlah_capaian_output_total / $capaian->jumlah_target_total) . '%' : '';
+            $capaian->realisasi_tw1 = $capaian->jumlah_target_tw1 > 0 ? round(($capaian->jumlah_realisasi_output_tw1 / $capaian->jumlah_target_tw1) * 100) : '';
+            $capaian->realisasi_tw2 = $capaian->jumlah_target_tw2 > 0 ? round(($capaian->jumlah_realisasi_output_tw2 / $capaian->jumlah_target_tw2) * 100) : '';
+            $capaian->realisasi_tw3 = $capaian->jumlah_target_tw3 > 0 ? round(($capaian->jumlah_realisasi_output_tw3 / $capaian->jumlah_target_tw3) * 100) : '';
+            $capaian->realisasi_tw4 = $capaian->jumlah_target_tw4 > 0 ? round(($capaian->jumlah_realisasi_output_tw4 / $capaian->jumlah_target_tw4) * 100) : '';
+            $capaian->output_tw1 = $capaian->jumlah_capaian_output_tw1 > 0 ? round($capaian->jumlah_capaian_output_tw1 / $capaian->jumlah_target_total) : '';
+            $capaian->output_tw2 = $capaian->jumlah_capaian_output_tw2 > 0 ? round($capaian->jumlah_capaian_output_tw2 / $capaian->jumlah_target_total) : '';
+            $capaian->output_tw3 = $capaian->jumlah_capaian_output_tw3 > 0 ? round($capaian->jumlah_capaian_output_tw3 / $capaian->jumlah_target_total) : '';
+            $capaian->output_tw4 = $capaian->jumlah_capaian_output_tw4 > 0 ? round($capaian->jumlah_capaian_output_tw4 / $capaian->jumlah_target_total) : '';
+            $capaian->output_total = $capaian->jumlah_target_total > 0 ? round($capaian->jumlah_capaian_output_total / $capaian->jumlah_target_total) : '';
+            
+            $capaian->realisasi_tw1 = $capaian->realisasi_tw1 != '' ? ($capaian->realisasi_tw1 > 100 ? 100 . '%' : $capaian->realisasi_tw1 . '%') : '';
+            $capaian->realisasi_tw2 = $capaian->realisasi_tw2 != '' ? ($capaian->realisasi_tw2 > 100 ? 100 . '%' : $capaian->realisasi_tw2 . '%') : '';
+            $capaian->realisasi_tw3 = $capaian->realisasi_tw3 != '' ? ($capaian->realisasi_tw3 > 100 ? 100 . '%' : $capaian->realisasi_tw3 . '%') : '';
+            $capaian->realisasi_tw4 = $capaian->realisasi_tw4 != '' ? ($capaian->realisasi_tw4 > 100 ? 100 . '%' : $capaian->realisasi_tw4 . '%') : '';
+            $capaian->output_tw1 = $capaian->output_tw1 != '' ? ($capaian->output_tw1 > 100 ? 100 . '%' : $capaian->output_tw1 . '%') : '';
+            $capaian->output_tw2 = $capaian->output_tw2 != '' ? ($capaian->output_tw2 > 100 ? 100 . '%' : $capaian->output_tw2 . '%') : '';
+            $capaian->output_tw3 = $capaian->output_tw3 != '' ? ($capaian->output_tw3 > 100 ? 100 . '%' : $capaian->output_tw3 . '%') : '';
+            $capaian->output_tw4 = $capaian->output_tw4 != '' ? ($capaian->output_tw4 > 100 ? 100 . '%' : $capaian->output_tw4 . '%') : '';
+            $capaian->output_total = $capaian->output_total != '' ? ($capaian->output_total > 100 ? 100 . '%' : $capaian->output_total . '%') : '';
         }
         
         return view('webdashboard.rb-general-capaianoutput', compact('capaians'));
