@@ -38,59 +38,246 @@ class DashboardController extends Controller
             $selectedYearK = $request->input('tahunK', date('Y'));
 
             // Get all tims and their evaluasi status in klpd group (provinsi, kabupaten)
-            $tims = DB::table('instansi_tim')
-                ->join('tim_evaluasi', 'instansi_tim.tim_id', '=', 'tim_evaluasi.id')
-                ->leftJoin('evaluasi_sakip', function ($join) use ($selectedYear, $selectedPeriode) {
-                    $join->on('evaluasi_sakip.instansi_id', '=', 'instansi_tim.instansi_id')
-                        ->where('evaluasi_sakip.tahun', $selectedYear);
-
-                    // Handle TW 4 -> Final mapping
-                    if ($selectedPeriode == 4 ) {
-                        $join->where('evaluasi_sakip.periode', 'Final');
-                    } else {
-                        $join->where('evaluasi_sakip.periode', 'TW ' . $selectedPeriode);
-                    }
-                })
-                ->join('klpd_instansi_new', 'instansi_tim.instansi_id', '=', 'klpd_instansi_new.id')
-                ->where(function ($query) {
-                    $query->where('klpd_instansi_new.group', '=', 'provinsi')
-                        ->orWhere('klpd_instansi_new.group', '=', 'kabupaten');
-                })
-                ->select(
-                    'instansi_tim.tim_id',
-                    'tim_evaluasi.nama',
-                    'tim_evaluasi.keterangan',
-                    DB::raw('COUNT(DISTINCT instansi_tim.instansi_id) as total_instansi'),
-                    DB::raw('COUNT(DISTINCT CASE WHEN evaluasi_sakip.id IS NOT NULL THEN evaluasi_sakip.instansi_id END) as total_instansi_filled')
-                )
-                ->groupBy('instansi_tim.tim_id', 'tim_evaluasi.nama', 'tim_evaluasi.keterangan')
-                ->get();
+            $tims = $this->getTimsPemda($selectedYear, $selectedPeriode);
 
             // Get all tims and their evaluasi status in klpd group (kl, lain)
-            $tims_kl = DB::table('instansi_tim')
-                ->join('tim_evaluasi', 'instansi_tim.tim_id', '=', 'tim_evaluasi.id')
-                ->leftJoin('evaluasi_sakip', function ($join) use ($selectedYear) {
-                    $join->on('evaluasi_sakip.instansi_id', '=', 'instansi_tim.instansi_id')
-                        ->where('evaluasi_sakip.tahun', $selectedYear)
-                        ->where('evaluasi_sakip.periode', 'Final');
-                })
-                ->join('klpd_instansi_new', 'instansi_tim.instansi_id', '=', 'klpd_instansi_new.id')
-                ->where(function ($query) {
-                    $query->where('klpd_instansi_new.group', '=', 'kl')
-                        ->orWhere('klpd_instansi_new.group', '=', 'lain');
-                })
-                ->select(
-                    'tim_evaluasi.nama',
-                    'tim_evaluasi.keterangan',
-                    DB::raw('COUNT(DISTINCT instansi_tim.instansi_id) as total_instansi'),
-                    DB::raw('COUNT(DISTINCT CASE WHEN evaluasi_sakip.id IS NOT NULL THEN evaluasi_sakip.instansi_id END) as total_instansi_filled')
-                )
-                ->groupBy('instansi_tim.tim_id', 'tim_evaluasi.nama', 'tim_evaluasi.keterangan')
-                ->get();
+            $tims_kl = $this->getTimsKl($selectedYearK);
 
             return view('akip.dashboard.index', compact('tims_kl', 'tims', 'selectedYear', 'selectedPeriode', 'selectedYearK', 'level'));
         } else {
             return view('akip.dashboard.index', compact('level'));
+        }
+    }
+
+    /**
+     * Get tims data for Pemda (provinsi, kabupaten)
+     * Using same logic as getTimsPemdaDetail for consistency
+     */
+    private function getTimsPemda($tahun, $periode)
+    {
+        $periodeCondition = $periode == 4 ? 'Final' : 'TW ' . $periode;
+        
+        $instansi_list = DB::table('instansi_tim')
+            ->join('tim_evaluasi', 'instansi_tim.tim_id', '=', 'tim_evaluasi.id')
+            ->join('klpd_instansi_new', function($join) {
+                $join->on('instansi_tim.instansi_id', '=', 'klpd_instansi_new.id')
+                     ->whereNull('klpd_instansi_new.deleted_at')
+                     ->whereIn('klpd_instansi_new.group', ['provinsi', 'kabupaten']);
+            })
+            ->leftJoin('evaluasi_sakip', function ($join) use ($tahun, $periodeCondition) {
+                $join->on('evaluasi_sakip.instansi_id', '=', 'instansi_tim.instansi_id')
+                    ->where('evaluasi_sakip.tahun', $tahun)
+                    ->where('evaluasi_sakip.periode', $periodeCondition);
+            })
+            ->select(
+                'instansi_tim.tim_id',
+                'tim_evaluasi.nama',
+                'tim_evaluasi.keterangan',
+                'instansi_tim.instansi_id',
+                'evaluasi_sakip.id as evaluasi_id'
+            )
+            ->get()
+            ->groupBy('tim_id')
+            ->map(function($items) {
+                $first = $items->first();
+                $total_instansi = $items->unique('instansi_id')->count();
+                $total_instansi_filled = $items->whereNotNull('evaluasi_id')->unique('instansi_id')->count();
+                
+                return (object) [
+                    'tim_id' => $first->tim_id,
+                    'nama' => $first->nama,
+                    'keterangan' => $first->keterangan,
+                    'total_instansi' => $total_instansi,
+                    'total_instansi_filled' => $total_instansi_filled
+                ];
+            })
+            ->values();
+        
+        return $instansi_list;
+    }
+
+    /**
+     * Get tims data for K/L (kl, lain)
+     * Using same logic as getTimsKlDetail for consistency
+     */
+    private function getTimsKl($tahun)
+    {
+        $instansi_list = DB::table('instansi_tim')
+            ->join('tim_evaluasi', 'instansi_tim.tim_id', '=', 'tim_evaluasi.id')
+            ->join('klpd_instansi_new', function($join) {
+                $join->on('instansi_tim.instansi_id', '=', 'klpd_instansi_new.id')
+                     ->whereNull('klpd_instansi_new.deleted_at')
+                     ->whereIn('klpd_instansi_new.group', ['kl', 'lain']);
+            })
+            ->leftJoin('evaluasi_sakip', function ($join) use ($tahun) {
+                $join->on('evaluasi_sakip.instansi_id', '=', 'instansi_tim.instansi_id')
+                    ->where('evaluasi_sakip.tahun', $tahun)
+                    ->where('evaluasi_sakip.periode', 'Final');
+            })
+            ->select(
+                'instansi_tim.tim_id',
+                'tim_evaluasi.nama',
+                'tim_evaluasi.keterangan',
+                'instansi_tim.instansi_id',
+                'evaluasi_sakip.id as evaluasi_id'
+            )
+            ->get()
+            ->groupBy('tim_id')
+            ->map(function($items) {
+                $first = $items->first();
+                $total_instansi = $items->unique('instansi_id')->count();
+                $total_instansi_filled = $items->whereNotNull('evaluasi_id')->unique('instansi_id')->count();
+                
+                return (object) [
+                    'tim_id' => $first->tim_id,
+                    'nama' => $first->nama,
+                    'keterangan' => $first->keterangan,
+                    'total_instansi' => $total_instansi,
+                    'total_instansi_filled' => $total_instansi_filled
+                ];
+            })
+            ->values();
+        
+        return $instansi_list;
+    }
+
+    /**
+     * Get detail instansi K/L per tim
+     */
+    private function getTimsKlDetail($tahun, $tim_id)
+    {
+        // Get tim info first
+        $tim_info = DB::table('tim_evaluasi')
+            ->where('id', $tim_id)
+            ->first();
+        
+        $instansi_list = DB::table('instansi_tim')
+            ->join('tim_evaluasi', 'instansi_tim.tim_id', '=', 'tim_evaluasi.id')
+            ->join('klpd_instansi_new', function($join) {
+                $join->on('instansi_tim.instansi_id', '=', 'klpd_instansi_new.id')
+                     ->whereNull('klpd_instansi_new.deleted_at')
+                     ->whereIn('klpd_instansi_new.group', ['kl', 'lain']);
+            })
+            ->leftJoin('evaluasi_sakip', function ($join) use ($tahun) {
+                $join->on('evaluasi_sakip.instansi_id', '=', 'instansi_tim.instansi_id')
+                    ->where('evaluasi_sakip.tahun', $tahun)
+                    ->where('evaluasi_sakip.periode', 'Final');
+            })
+            ->where('instansi_tim.tim_id', $tim_id)
+            ->select(
+                'instansi_tim.tim_id',
+                'tim_evaluasi.nama as tim_nama',
+                'tim_evaluasi.keterangan as tim_keterangan',
+                'instansi_tim.instansi_id',
+                'klpd_instansi_new.name as instansi_name',
+                'klpd_instansi_new.group as instansi_group',
+                DB::raw('CASE WHEN evaluasi_sakip.id IS NOT NULL THEN "Sudah" ELSE "Belum" END as status_evaluasi')
+            )
+            ->orderBy('klpd_instansi_new.name')
+            ->get();
+
+        return [
+            'tim_id' => $tim_id,
+            'tim_nama' => $tim_info->nama ?? ($instansi_list->first()->tim_nama ?? ''),
+            'tim_keterangan' => $tim_info->keterangan ?? ($instansi_list->first()->tim_keterangan ?? ''),
+            'total_instansi' => $instansi_list->count(),
+            'instansi_list' => $instansi_list->map(function($item) {
+                return [
+                    'instansi_id' => $item->instansi_id,
+                    'instansi_name' => $item->instansi_name,
+                    'instansi_group' => $item->instansi_group,
+                    'status_evaluasi' => $item->status_evaluasi
+                ];
+            })->values()
+        ];
+    }
+
+    /**
+     * Get detail instansi Pemda per tim
+     */
+    private function getTimsPemdaDetail($tahun, $periode, $tim_id)
+    {
+        $periodeCondition = $periode == 4 ? 'Final' : 'TW ' . $periode;
+        
+        // Get tim info first
+        $tim_info = DB::table('tim_evaluasi')
+            ->where('id', $tim_id)
+            ->first();
+        
+        $instansi_list = DB::table('instansi_tim')
+            ->join('tim_evaluasi', 'instansi_tim.tim_id', '=', 'tim_evaluasi.id')
+            ->join('klpd_instansi_new', function($join) {
+                $join->on('instansi_tim.instansi_id', '=', 'klpd_instansi_new.id')
+                     ->whereNull('klpd_instansi_new.deleted_at')
+                     ->whereIn('klpd_instansi_new.group', ['provinsi', 'kabupaten']);
+            })
+            ->leftJoin('evaluasi_sakip', function ($join) use ($tahun, $periodeCondition) {
+                $join->on('evaluasi_sakip.instansi_id', '=', 'instansi_tim.instansi_id')
+                    ->where('evaluasi_sakip.tahun', $tahun)
+                    ->where('evaluasi_sakip.periode', $periodeCondition);
+            })
+            ->where('instansi_tim.tim_id', $tim_id)
+            ->select(
+                'instansi_tim.tim_id',
+                'tim_evaluasi.nama as tim_nama',
+                'tim_evaluasi.keterangan as tim_keterangan',
+                'instansi_tim.instansi_id',
+                'klpd_instansi_new.name as instansi_name',
+                'klpd_instansi_new.group as instansi_group',
+                DB::raw('CASE WHEN evaluasi_sakip.id IS NOT NULL THEN "Sudah" ELSE "Belum" END as status_evaluasi')
+            )
+            ->orderBy('klpd_instansi_new.name')
+            ->get();
+
+        return [
+            'tim_id' => $tim_id,
+            'tim_nama' => $tim_info->nama ?? ($instansi_list->first()->tim_nama ?? ''),
+            'tim_keterangan' => $tim_info->keterangan ?? ($instansi_list->first()->tim_keterangan ?? ''),
+            'total_instansi' => $instansi_list->count(),
+            'instansi_list' => $instansi_list->map(function($item) {
+                return [
+                    'instansi_id' => $item->instansi_id,
+                    'instansi_name' => $item->instansi_name,
+                    'instansi_group' => $item->instansi_group,
+                    'status_evaluasi' => $item->status_evaluasi
+                ];
+            })->values()
+        ];
+    }
+
+    /**
+     * Get detail instansi per tim - Endpoint AJAX
+     */
+    public function getDetailInstansi(Request $request)
+    {
+        try {
+            $request->validate([
+                'tim_id' => 'required|integer',
+                'tahun' => 'required|integer|min:2020|max:' . date('Y'),
+                'type' => 'required|in:kl,pemda',
+                'periode' => 'nullable|integer|min:1|max:4'
+            ]);
+
+            $tim_id = $request->tim_id;
+            $tahun = $request->tahun;
+            $type = $request->type;
+            $periode = $request->periode ?? 1;
+
+            if ($type == 'kl') {
+                $data = $this->getTimsKlDetail($tahun, $tim_id);
+            } else {
+                $data = $this->getTimsPemdaDetail($tahun, $periode, $tim_id);
+            }
+
+            return response()->json([
+                'success' => true,
+                'data' => $data
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan: ' . $e->getMessage()
+            ], 500);
         }
     }
 
@@ -107,33 +294,7 @@ class DashboardController extends Controller
         $tahun = $request->tahun;
         $periode = $request->periode;
 
-        // Your existing logic to get teams data
-        $tims = DB::table('instansi_tim')
-            ->join('tim_evaluasi', 'instansi_tim.tim_id', '=', 'tim_evaluasi.id')
-            ->leftJoin('evaluasi_sakip', function ($join) use ($tahun, $periode) {
-                $join->on('evaluasi_sakip.instansi_id', '=', 'instansi_tim.instansi_id')
-                    ->where('evaluasi_sakip.tahun', $tahun);
-
-                    if ($periode == 4 ) {
-                        $join->where('evaluasi_sakip.periode', 'Final');
-                    } else {
-                        $join->where('evaluasi_sakip.periode', 'TW ' . $periode);
-                    }
-            })
-            ->join('klpd_instansi_new', 'instansi_tim.instansi_id', '=', 'klpd_instansi_new.id')
-            ->where(function ($query) {
-                $query->where('klpd_instansi_new.group', '=', 'provinsi')
-                    ->orWhere('klpd_instansi_new.group', '=', 'kabupaten');
-            })
-            ->select(
-                'instansi_tim.tim_id',
-                'tim_evaluasi.nama',
-                'tim_evaluasi.keterangan',
-                DB::raw('COUNT(DISTINCT instansi_tim.instansi_id) as total_instansi'),
-                DB::raw('COUNT(DISTINCT CASE WHEN evaluasi_sakip.id IS NOT NULL THEN evaluasi_sakip.instansi_id END) as total_instansi_filled')
-            )
-            ->groupBy('instansi_tim.tim_id', 'tim_evaluasi.nama', 'tim_evaluasi.keterangan')
-            ->get();
+        $tims = $this->getTimsPemda($tahun, $periode);
 
         return response()->json([
             'tims' => $tims,
@@ -153,27 +314,7 @@ class DashboardController extends Controller
 
         $tahun = $request->tahun;
 
-        // Get all tims and their evaluasi status in klpd group (kl, lain)
-        $tims_kl = DB::table('instansi_tim')
-            ->join('tim_evaluasi', 'instansi_tim.tim_id', '=', 'tim_evaluasi.id')
-            ->leftJoin('evaluasi_sakip', function ($join) use ($tahun) {
-                $join->on('evaluasi_sakip.instansi_id', '=', 'instansi_tim.instansi_id')
-                    ->where('evaluasi_sakip.tahun', $tahun)
-                    ->where('evaluasi_sakip.periode', 'Final');
-            })
-            ->join('klpd_instansi_new', 'instansi_tim.instansi_id', '=', 'klpd_instansi_new.id')
-            ->where(function ($query) {
-                $query->where('klpd_instansi_new.group', '=', 'kl')
-                    ->orWhere('klpd_instansi_new.group', '=', 'lain');
-            })
-            ->select(
-                'tim_evaluasi.nama',
-                'tim_evaluasi.keterangan',
-                DB::raw('COUNT(DISTINCT instansi_tim.instansi_id) as total_instansi'),
-                DB::raw('COUNT(DISTINCT CASE WHEN evaluasi_sakip.id IS NOT NULL THEN evaluasi_sakip.instansi_id END) as total_instansi_filled')
-            )
-            ->groupBy('instansi_tim.tim_id', 'tim_evaluasi.nama', 'tim_evaluasi.keterangan')
-            ->get();
+        $tims_kl = $this->getTimsKl($tahun);
 
         return response()->json([
             'tims_kl' => $tims_kl,

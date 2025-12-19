@@ -1,6 +1,130 @@
 @extends('layout.midone', ['akip' => true])
 @section('title', 'Dashboard')
 
+@push('css')
+<style>
+    /* Fix z-index untuk modal detail instansi agar muncul di atas semua elemen termasuk card dan image */
+    /* Gunakan z-index maksimum untuk memastikan modal selalu di atas */
+    [data-modal="detail-instansi-modal"],
+    .bw-modal[name="detail-instansi-modal"],
+    div[data-modal="detail-instansi-modal"],
+    .bw-modal[data-modal="detail-instansi-modal"] {
+        z-index: 2147483647 !important;
+        position: fixed !important;
+    }
+    
+    [data-modal="detail-instansi-modal"] .bw-modal-backdrop,
+    .bw-modal[name="detail-instansi-modal"] .bw-modal-backdrop,
+    div[data-modal="detail-instansi-modal"] .bw-modal-backdrop,
+    .bw-modal[data-modal="detail-instansi-modal"] .bw-modal-backdrop,
+    .bw-modal-backdrop[data-modal="detail-instansi-modal"],
+    .bw-modal-backdrop {
+        z-index: 2147483646 !important;
+        position: fixed !important;
+        background-color: rgba(0, 0, 0, 0.6) !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+    }
+    
+    [data-modal="detail-instansi-modal"] .bw-modal-container,
+    .bw-modal[name="detail-instansi-modal"] .bw-modal-container,
+    div[data-modal="detail-instansi-modal"] .bw-modal-container,
+    .bw-modal[data-modal="detail-instansi-modal"] .bw-modal-container {
+        z-index: 2147483647 !important;
+        position: relative !important;
+    }
+    
+    /* Ensure modal overlay is on top */
+    .bw-modal-overlay[data-modal="detail-instansi-modal"],
+    div.bw-modal-overlay[data-modal="detail-instansi-modal"],
+    .bw-modal-overlay {
+        z-index: 2147483646 !important;
+        background-color: rgba(0, 0, 0, 0.6) !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+    }
+    
+    /* Ensure DataTable doesn't override modal z-index */
+    .datatable-wrapper {
+        z-index: 1 !important;
+    }
+    
+    /* Force modal to be on top of everything - including cards and images */
+    body:has([data-modal="detail-instansi-modal"]) [data-modal="detail-instansi-modal"],
+    body:has(.bw-modal[name="detail-instansi-modal"]) .bw-modal[name="detail-instansi-modal"],
+    body:has(.bw-modal[data-modal="detail-instansi-modal"]) .bw-modal[data-modal="detail-instansi-modal"] {
+        z-index: 2147483647 !important;
+    }
+    
+    /* Ensure backdrop covers everything */
+    body:has([data-modal="detail-instansi-modal"]) [data-modal="detail-instansi-modal"] .bw-modal-backdrop,
+    body:has(.bw-modal[name="detail-instansi-modal"]) .bw-modal[name="detail-instansi-modal"] .bw-modal-backdrop,
+    body:has(.bw-modal[data-modal="detail-instansi-modal"]) .bw-modal[data-modal="detail-instansi-modal"] .bw-modal-backdrop {
+        z-index: 2147483646 !important;
+        background-color: rgba(0, 0, 0, 0.6) !important;
+    }
+    
+    /* Pastikan semua elemen di halaman memiliki z-index lebih rendah */
+    .intro-y,
+    .box,
+    .card,
+    img {
+        position: relative;
+        z-index: 1 !important;
+    }
+    
+    /* Scroll untuk konten modal */
+    [data-modal="detail-instansi-modal"] .bw-modal-body,
+    .bw-modal[name="detail-instansi-modal"] .bw-modal-body,
+    #modal-content-instansi {
+        max-height: 70vh;
+        overflow-y: auto;
+        overflow-x: auto;
+    }
+    
+    /* Styling scrollbar untuk konten modal */
+    #modal-content-instansi::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+    
+    #modal-content-instansi::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 4px;
+    }
+    
+    #modal-content-instansi::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 4px;
+    }
+    
+    #modal-content-instansi::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
+    
+    /* Styling untuk tabel di dalam modal */
+    #modal-content-instansi table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    
+    #modal-content-instansi table thead {
+        position: sticky;
+        top: 0;
+        background: white;
+        z-index: 10;
+    }
+</style>
+@endpush
+
 @section('content')
     <div class="col-span-12 grid grid-cols-12 gap-6">
         <div class="intro-y col-span-12 md:col-span-12 lg:col-span-12 xl:col-span-12">
@@ -156,6 +280,7 @@
                     <th class="text-center">Jumlah Pemda yang Dikelola</th>
                     <th class="text-center">Jumlah Pemda yang Telah Diisi</th>
                     <th class="text-center">Progress Pengisian</th>
+                    <th class="text-center">Aksi</th>
                 </x-slot>
 
                 <tbody id="table-pda">
@@ -178,6 +303,13 @@
                                         0%
                                     </span>
                                 @endif
+                            </td>
+                            <td class="text-center">
+                                <x-bladewind::button
+                                    size="tiny"
+                                    onclick="showDetailInstansi({{ $tim->tim_id }}, '{{ $selectedYear }}', '{{ $selectedPeriode }}', 'pemda')">
+                                    Detail
+                                </x-bladewind::button>
                             </td>
                         </tr>
                     @endforeach
@@ -239,6 +371,7 @@
                     <th class="text-center">Jumlah K/L yang Dikelola</th>
                     <th class="text-center">Jumlah K/L yang Telah Diisi</th>
                     <th class="text-center">Progress Pengisian</th>
+                    <th class="text-center">Aksi</th>
                 </x-slot>
 
                 <tbody id="table-kl">
@@ -262,12 +395,34 @@
                                     </span>
                                 @endif
                             </td>
+                            <td class="text-center">
+                                <x-bladewind::button
+                                    size="tiny"
+                                    onclick="showDetailInstansi({{ $tim->tim_id }}, '{{ $selectedYearK }}', '', 'kl')">
+                                    Detail
+                                </x-bladewind::button>
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>
             </x-bladewind::table>
         </div>
     @endif
+
+    <!-- Modal Detail Instansi -->
+    <x-bladewind::modal
+        name="detail-instansi-modal"
+        title="Detail Instansi"
+        size="large"
+        show_action_buttons="false"
+        show_close_icon="true">
+        <div id="modal-content-instansi">
+            <div class="text-center py-4">
+                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mx-auto"></div>
+                <p class="mt-2 text-gray-500">Memuat data...</p>
+            </div>
+        </div>
+    </x-bladewind::modal>
     @endsection
     @push('js')
         <script>
@@ -383,10 +538,13 @@
 
                 function updateTable(tims) {
                     const tbody = $('#table-pda').empty();
+                    const tahun = $('input[name="tahun"]').val();
+                    const periode = $('input[name="periode"]').val();
+                    
                     if (!tims.length) {
                         tbody.append(`
                         <tr>
-                            <td colspan="4" class="px-4 py-2 text-center text-gray-500">Tidak ada data untuk periode yang dipilih</td>
+                            <td colspan="5" class="px-4 py-2 text-center text-gray-500">Tidak ada data untuk periode yang dipilih</td>
                         </tr>
                     `);
                         return;
@@ -407,6 +565,11 @@
                                     ${progress}%
                                 </span>
                             </td>
+                            <td class="text-center">
+                                <button onclick="showDetailInstansi(${tim.tim_id}, '${tahun}', '${periode}', 'pemda')" class="inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                    Detail
+                                </button>
+                            </td>
                         </tr>
                     `);
                     });
@@ -414,10 +577,12 @@
 
                 function updateTableK(tims) {
                     const tbody = $('#table-kl').empty();
+                    const tahunK = $('input[name="tahunK"]').val();
+                    
                     if (!tims.length) {
                         tbody.append(`
                         <tr>
-                            <td colspan="4" class="px-4 py-2 text-center text-gray-500">Tidak ada data untuk periode yang dipilih</td>
+                            <td colspan="5" class="px-4 py-2 text-center text-gray-500">Tidak ada data untuk periode yang dipilih</td>
                         </tr>
                     `);
                         return;
@@ -437,6 +602,11 @@
                                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${badgeClass}">
                                     ${progress}%
                                 </span>
+                            </td>
+                            <td class="text-center">
+                                <button onclick="showDetailInstansi(${tim.tim_id}, '${tahunK}', '', 'kl')" class="inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                    Detail
+                                </button>
                             </td>
                         </tr>
                     `);
@@ -446,7 +616,7 @@
                 function showLoadingK() {
                     $('#table-kl').html(`
                     <tr>
-                        <td colspan="4" class="px-4 py-8 text-center">
+                        <td colspan="5" class="px-4 py-8 text-center">
                             <div class="flex justify-center">
                                 <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
                             </div>
@@ -459,7 +629,7 @@
                 function showLoading() {
                     $('#table-pda').html(`
                     <tr>
-                        <td colspan="4" class="px-4 py-8 text-center">
+                        <td colspan="5" class="px-4 py-8 text-center">
                             <div class="flex justify-center">
                                 <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
                             </div>
@@ -473,5 +643,188 @@
                     // no-op; table will be re-rendered by updateTable
                 }
             });
+
+            // Function to show detail instansi in modal - Global scope
+            function showDetailInstansi(timId, tahun, periode, type) {
+                // Show loading state
+                $('#modal-content-instansi').html(`
+                    <div class="text-center py-4">
+                        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mx-auto"></div>
+                        <p class="mt-2 text-gray-500">Memuat data...</p>
+                    </div>
+                `);
+                
+                // Show modal
+                showModal('detail-instansi-modal');
+                
+                // Force z-index after modal is shown - multiple attempts to ensure it works
+                function forceModalZIndex() {
+                    const modalSelectors = [
+                        '[data-modal="detail-instansi-modal"]',
+                        '.bw-modal[name="detail-instansi-modal"]',
+                        'div[data-modal="detail-instansi-modal"]',
+                        '.bw-modal[data-modal="detail-instansi-modal"]'
+                    ];
+                    
+                    modalSelectors.forEach(selector => {
+                        $(selector).css({
+                            'z-index': '2147483647',
+                            'position': 'fixed'
+                        });
+                        
+                        $(selector + ' .bw-modal-backdrop, .bw-modal-backdrop[data-modal="detail-instansi-modal"], .bw-modal-backdrop').css({
+                            'z-index': '2147483646',
+                            'position': 'fixed',
+                            'background-color': 'rgba(0, 0, 0, 0.6)',
+                            'top': '0',
+                            'left': '0',
+                            'right': '0',
+                            'bottom': '0',
+                            'width': '100%',
+                            'height': '100%'
+                        });
+                        
+                        $(selector + ' .bw-modal-container').css({
+                            'z-index': '2147483647',
+                            'position': 'relative'
+                        });
+                    });
+                    
+                    // Also target backdrop directly
+                    $('.bw-modal-backdrop').css({
+                        'z-index': '2147483646',
+                        'position': 'fixed',
+                        'background-color': 'rgba(0, 0, 0, 0.6)',
+                        'top': '0',
+                        'left': '0',
+                        'right': '0',
+                        'bottom': '0',
+                        'width': '100%',
+                        'height': '100%'
+                    });
+                    
+                    // Target modal overlay
+                    $('.bw-modal-overlay').css({
+                        'z-index': '2147483646',
+                        'background-color': 'rgba(0, 0, 0, 0.6)',
+                        'top': '0',
+                        'left': '0',
+                        'right': '0',
+                        'bottom': '0',
+                        'width': '100%',
+                        'height': '100%'
+                    });
+                }
+                
+                // Apply immediately and with delays
+                forceModalZIndex();
+                setTimeout(forceModalZIndex, 50);
+                setTimeout(forceModalZIndex, 100);
+                setTimeout(forceModalZIndex, 200);
+                
+                // Keep checking while modal is visible
+                const zIndexInterval = setInterval(function() {
+                    if ($('[data-modal="detail-instansi-modal"]:visible, .bw-modal[name="detail-instansi-modal"]:visible').length > 0) {
+                        forceModalZIndex();
+                    } else {
+                        clearInterval(zIndexInterval);
+                    }
+                }, 100);
+                
+                // Prepare request data
+                const requestData = {
+                    tim_id: timId,
+                    tahun: tahun,
+                    type: type
+                };
+                
+                // Add periode for pemda type
+                if (type === 'pemda' && periode) {
+                    requestData.periode = periode;
+                }
+                
+                // Fetch data via AJAX
+                $.get('{{ route('akip.dashboard.detail-instansi') }}', requestData)
+                    .done(function(response) {
+                        if (response.success && response.data) {
+                            const data = response.data;
+                            
+                            // Update modal title
+                            const modalTitle = $('.bw-modal[name="detail-instansi-modal"] .bw-modal-title, [data-modal="detail-instansi-modal"] .bw-modal-title');
+                            if (modalTitle.length) {
+                                modalTitle.text('Detail Instansi - ' + data.tim_nama + (data.tim_keterangan ? ' (' + data.tim_keterangan + ')' : ''));
+                            }
+                            
+                                let tableHtml = `
+                                    <div class="mb-4">
+                                        <p class="text-sm text-gray-600">Total Instansi: <strong>${data.total_instansi}</strong></p>
+                                    </div>
+                                    <div class="overflow-x-auto" style="max-height: 60vh; overflow-y: auto;">
+                                        <table class="min-w-full divide-y divide-gray-200 border border-gray-300">
+                                            <thead class="bg-gray-50 sticky top-0 z-10">
+                                                <tr>
+                                                    <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border border-gray-300">No</th>
+                                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border border-gray-300">Nama Instansi</th>
+                                                    <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border border-gray-300">Group</th>
+                                                    <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border border-gray-300">Status Evaluasi</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="bg-white divide-y divide-gray-200">
+                            `;
+                            
+                            if (data.instansi_list && data.instansi_list.length > 0) {
+                                data.instansi_list.forEach((instansi, index) => {
+                                    const statusBadge = instansi.status_evaluasi === 'Sudah' 
+                                        ? '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Sudah</span>'
+                                        : '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">Belum</span>';
+                                    
+                                    const groupBadge = instansi.instansi_group === 'kl'
+                                        ? '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">K/L</span>'
+                                        : '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">' + instansi.instansi_group.charAt(0).toUpperCase() + instansi.instansi_group.slice(1) + '</span>';
+                                    
+                                        tableHtml += `
+                                            <tr class="hover:bg-gray-50">
+                                                <td class="px-4 py-3 text-center text-sm text-gray-900 border border-gray-300">${index + 1}</td>
+                                                <td class="px-4 py-3 text-sm text-gray-900 border border-gray-300">${instansi.instansi_name}</td>
+                                                <td class="px-4 py-3 text-center text-sm border border-gray-300">${groupBadge}</td>
+                                                <td class="px-4 py-3 text-center text-sm border border-gray-300">${statusBadge}</td>
+                                            </tr>
+                                        `;
+                                });
+                                } else {
+                                    tableHtml += `
+                                        <tr>
+                                            <td colspan="4" class="px-4 py-4 text-center text-gray-500 border border-gray-300">Tidak ada data instansi</td>
+                                        </tr>
+                                    `;
+                                }
+                            
+                            tableHtml += `
+                                        </tbody>
+                                    </table>
+                                </div>
+                            `;
+                            
+                            $('#modal-content-instansi').html(tableHtml);
+                        } else {
+                            $('#modal-content-instansi').html(`
+                                <div class="text-center py-4">
+                                    <p class="text-red-500">Gagal memuat data. Silakan coba lagi.</p>
+                                </div>
+                            `);
+                        }
+                    })
+                    .fail(function(xhr) {
+                        let errorMessage = 'Terjadi kesalahan saat memuat data.';
+                        if (xhr.responseJSON && xhr.responseJSON.message) {
+                            errorMessage = xhr.responseJSON.message;
+                        }
+                        $('#modal-content-instansi').html(`
+                            <div class="text-center py-4">
+                                <p class="text-red-500">${errorMessage}</p>
+                            </div>
+                        `);
+                    });
+            }
         </script>
     @endpush

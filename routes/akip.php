@@ -12,6 +12,7 @@ Route::group(['prefix' => 'akip', 'as' => 'akip.'], function () {
             Route::get('/', 'index')->name('dashboard');
             Route::get('/filter', 'filter')->name('dashboard.filter');
             Route::get('/filter/kl', 'filterKl')->name('dashboard.filter.kl');
+            Route::get('/detail-instansi', 'getDetailInstansi')->name('dashboard.detail-instansi');
         });
         
         // Evaluasi SAKIP routes
