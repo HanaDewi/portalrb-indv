@@ -9,6 +9,8 @@ use App\Models\KlpdInstansi;
 use App\Models\OpenAccessSetting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 class EvaluasiController extends Controller
 {
@@ -264,12 +266,17 @@ class EvaluasiController extends Controller
                 $evaluasi_sakip->input_user_id = $this->currentUser->id;
                 $evaluasi_sakip->last_update_user_id = $this->currentUser->id;
                 
-                
                 // Handle file upload
                 if ($request->hasFile('file_evaluasi')) {
                     $file = $request->file('file_evaluasi');
-                    $filename = time() . '_' . $file->getClientOriginalName();
-                    $file->storeAs('akip', $filename);
+
+                    // Normalisasi nama file: ganti spasi dan karakter khusus jadi underscore
+                    $original = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+                    $ext = $file->getClientOriginalExtension();
+                    $safeName = Str::slug($original, '_') . '.' . $ext;
+
+                    $filename = time() . '_' . $safeName;
+                    $file->storeAs('akip', $filename, 'public');
                     $evaluasi_sakip->file_evaluasi = $filename;
                 }
                 
@@ -366,15 +373,24 @@ class EvaluasiController extends Controller
                     $evaluasi_sakip->pic_lke = $request->pic_lke;
                     $evaluasi_sakip->link_lke = $request->link_lke;
                     $evaluasi_sakip->last_update_user_id = $this->currentUser->id;
-                    
+
                     // Handle file upload for update
                     if ($request->hasFile('file_evaluasi')) {
+                        // Hapus file lama jika ada
+                        if (!empty($evaluasi_sakip->file_evaluasi)) {
+                            Storage::disk('public')->delete('akip/' . $evaluasi_sakip->file_evaluasi);
+                        }
+
                         $file = $request->file('file_evaluasi');
-                        $filename = time() . '_' . $file->getClientOriginalName();
-                        $file->storeAs('akip', $filename);
+                        $original = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+                        $ext = $file->getClientOriginalExtension();
+                        $safeName = Str::slug($original, '_') . '.' . $ext;
+
+                        $filename = time() . '_' . $safeName;
+                        $file->storeAs('akip', $filename, 'public');
                         $evaluasi_sakip->file_evaluasi = $filename;
                     }
-                    
+
                     // Update all evaluation data (same as above)
                     // Convert comma to dot for decimal separator (MySQL requires dot)
                     $evaluasi_sakip->nilai_komponen_perencanaan_kinerja_tahun_lalu = str_replace(',', '.', $request->nilai_komponen_perencanaan_kinerja_tahun_lalu);
