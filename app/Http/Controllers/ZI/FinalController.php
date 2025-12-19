@@ -11,6 +11,7 @@ use App\Models\ZI\HasilFinal;
 use App\Models\ZI\InstansiZI;
 use App\Models\ZI\UnggahFile;
 use App\Models\ZI\TimEvaluasi;
+use App\Models\ZI\TahapSeleksiZI;
 use GuzzleHttp\Psr7\UploadedFile;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -223,52 +224,6 @@ class FinalController extends Controller
             "unit_zi",
         ));
     }
-    public function final_simpan(Request $request)
-    {
-        //dd("Proses Seleksi Dokumen Buat Evaluator Masih Belum Dibuka Yah, mau ke mana sih buru-buru amat, Jangan Ya Dek Ya !! :p");
-        $instansiZIid = $request->get('instansiZIId');
-        $instansi_ZI = InstansiZI::find($instansiZIid);
-        $tim_ids = [];
-        foreach ($instansi_ZI->unit_zi as $unit_zi) {
-            foreach ($unit_zi->unit_tim as $unitTim) {
-                if (!in_array($unitTim->tim_id, $tim_ids)) {
-                    array_push($tim_ids, $unitTim->tim_id);
-                }
-            }
-        }
-        $status = "Tidak Berhak";
-        // if(Auth::User()->userTimZI){                   
-        //     foreach(Auth::User()->userTimZI as $anggotaTim){
-        //         if(in_array($anggotaTim->tim_id,$tim_ids)){
-        //             $status = "Berhak" ;
-        //         }
-        //     }
-        // }
-        if ($status == "Tidak Berhak") {
-            abort('403');
-        }
-
-        foreach ($instansi_ZI->unit_zi as $unit_zi) {
-            $finalUnit = HasilFinal::where('unit_zi_id', $unit_zi->id)->first();
-            if (!$finalUnit) {
-                $finalUnit = new HasilFinal();
-                $finalUnit->unit_zi_id = $unit_zi->id;
-            }
-
-            #if(!is_null($request->get('jadwal-'.$unit_zi->id)))$finalUnit->jadwal = $request->get('jadwal-'.$unit_zi->id ); 
-            #if(!is_null($request->get('bukti-dukung-'.$unit_zi->id )))$finalUnit->bukti_dukung = $request->get('bukti-dukung-'.$unit_zi->id ); 
-            if (!is_null($request->get('kondisi-' . $unit_zi->id))) $finalUnit->kondisi = $request->get('kondisi-' . $unit_zi->id);
-            if (!is_null($request->get('rekomendasi-' . $unit_zi->id))) $finalUnit->rekomendasi = $request->get('rekomendasi-' . $unit_zi->id);
-            #if(!is_null($request->get('status-'.$unit_zi->id )))$finalUnit->status = $request->get('status-'.$unit_zi->id ); 
-            $finalUnit->updated_by = Auth::User()->id;
-
-            $finalUnit->save();
-        };
-
-
-
-        return redirect()->route('proses_final', $instansiZIid);
-    }
 
     public function final_unit_simpan(Request $request)
     {
@@ -276,7 +231,7 @@ class FinalController extends Controller
 
         $unit_zi = UnitZI::find($request->get('unit_id'));
         $tim_ids = [];
-
+        $instansi_ZI = $unit_zi->instansiZI;
 
         foreach ($unit_zi->unit_tim as $unitTim) {
             if (!in_array($unitTim->tim_id, $tim_ids)) {
@@ -285,10 +240,20 @@ class FinalController extends Controller
         }
 
         $status = "Tidak Berhak";
-        if (Auth::User()->userTimZI) {
-            foreach (Auth::User()->userTimZI as $anggotaTim) {
-                if (in_array($anggotaTim->tim_id, $tim_ids)) {
-                    $status = "Berhak";
+        $tahun = $instansi_ZI->tahun;
+        $tahap_seleksi = TahapSeleksiZI::where('tahap_seleksi', 'Final')->where('tahun', $tahun)->first();
+        if (!$tahap_seleksi) {
+            dd("Tahap Seleksi untuk tahun $tahun belum ditentukan. Silakan hubungi admin.");
+        }
+        $date_now = new \DateTime();
+        $date_buka    = new \DateTime($tahap_seleksi->tanggal_mulai);
+        $date_tutup  = new \DateTime($tahap_seleksi->tanggal_selesai);
+        if ($date_now >= $date_buka && $date_now <= $date_tutup) {
+            if (Auth::User()->userTimZI) {
+                foreach (Auth::User()->userTimZI as $anggotaTim) {
+                    if (in_array($anggotaTim->tim_id, $tim_ids)) {
+                        $status = "Berhak";
+                    }
                 }
             }
         }
@@ -320,13 +285,23 @@ class FinalController extends Controller
 
         $success = false;
         $status = "Tidak Berhak";
-        // if(Auth::User()->userTimZI){                   
-        //     foreach(Auth::User()->userTimZI as $anggotaTim){
-        //         if(in_array($anggotaTim->tim_id,$tim_ids)){
-        //             $status = "Berhak" ;
-        //         }
-        //     }
-        // }
+        $tahun = $instansi_ZI->tahun;
+        $tahap_seleksi = TahapSeleksiZI::where('tahap_seleksi', 'Final')->where('tahun', $tahun)->first();
+        if (!$tahap_seleksi) {
+            dd("Tahap Seleksi untuk tahun $tahun belum ditentukan. Silakan hubungi admin.");
+        }
+        $date_now = new \DateTime();
+        $date_buka    = new \DateTime($tahap_seleksi->tanggal_mulai);
+        $date_tutup  = new \DateTime($tahap_seleksi->tanggal_selesai);
+        if ($date_now >= $date_buka && $date_now <= $date_tutup) {
+            if (Auth::User()->userTimZI) {
+                foreach (Auth::User()->userTimZI as $anggotaTim) {
+                    if (in_array($anggotaTim->tim_id, $tim_ids)) {
+                        $status = "Berhak";
+                    }
+                }
+            }
+        }
         if ($status == "Tidak Berhak") {
             abort('403');
         }
@@ -368,13 +343,26 @@ class FinalController extends Controller
         $success = false;
 
         $status = "Tidak Berhak";
-        // if(Auth::User()->userTimZI){                   
-        //     foreach(Auth::User()->userTimZI as $anggotaTim){
-        //         if(in_array($anggotaTim->tim_id,$tim_ids)){
-        //             $status = "Berhak" ;
-        //         }
-        //     }
-        // }
+        $tahun = $instansi_ZI->tahun;
+        $tahap_seleksi = TahapSeleksiZI::where('tahap_seleksi', 'Final')->where('tahun', $tahun)->first();
+        if (!$tahap_seleksi) {
+            dd("Tahap Seleksi untuk tahun $tahun belum ditentukan. Silakan hubungi admin.");
+        }
+        $date_now = new \DateTime();
+        $date_buka    = new \DateTime($tahap_seleksi->tanggal_mulai);
+        $date_tutup  = new \DateTime($tahap_seleksi->tanggal_selesai);
+        if ($date_now >= $date_buka && $date_now <= $date_tutup) {
+            if (Auth::User()->userTimZI) {
+                foreach (Auth::User()->userTimZI as $anggotaTim) {
+                    if (in_array($anggotaTim->tim_id, $tim_ids)) {
+                        $status = "Berhak";
+                    }
+                }
+            }
+        }
+        if ($status == "Tidak Berhak") {
+            abort('403');
+        }
         try {
             if ($request->hasFile('berkas_undangan')) {
 
