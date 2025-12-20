@@ -82,7 +82,7 @@
 
                 @foreach ($instansis as $instansi)
                 <tr>
-                    <td></td>
+                    <td>{{ $loop->iteration }}</td>
                     <td>{{ $instansi['nama'] }}</td>
                     <td>{{ $instansi['group'] }}</td>
                     <td>{{ round($instansi[1]["capaian_output_tw1"],2) }}%</td>
@@ -210,8 +210,18 @@
             autoWidth: false,
             bInfo: false,
             ordering: false,
+            columnDefs: [
+                { targets: 0, orderable: false, searchable: false }
+            ],
             
         });
+
+        empDataTable.on('draw.dt', function () {
+            var PageInfo = $('#capaian-output').DataTable().page.info();
+            empDataTable.column(0, { page: 'current' }).nodes().each(function (cell, i) {
+                cell.innerHTML = i + 1 + PageInfo.start;
+            });
+        }).draw();
     });
 </script>
 @endpush

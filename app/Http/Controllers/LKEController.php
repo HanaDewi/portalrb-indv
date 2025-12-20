@@ -222,6 +222,99 @@ class LKEController extends Controller
         return $export ? $datas : response()->json(['data' => $datas]);
     }
 
+    public function lke_utama_score_generateRbGeneral($parameter_id)
+    {
+        $user = Auth::User();
+        if ($user->level !== 'admin') {
+            abort(403);
+        }
+
+        $parameter = LkeParameter::with('kegiatan')->find($parameter_id);
+        if (!$parameter || $parameter->nama !== 'Tingkat Implementasi Rencana Aksi RB General') {
+            abort(404);
+        }
+
+        $bobotByGroup = LkeBobot::where('lke_parameter_id', $parameter_id)->get()->keyBy('group');
+        if ($bobotByGroup->isEmpty()) {
+            return response()->json(['success' => false, 'message' => 'Bobot tidak ditemukan untuk parameter ini.'], 422);
+        }
+
+        $tahun = $parameter->kegiatan ? $parameter->kegiatan->tahun : null;
+        $instansiTable = (new KlpdInstansi())->getTable();
+
+        $capaians = DB::table($instansiTable . ' as ki')
+            ->leftJoin('general_perencanaan as gp', 'gp.instansi_id', '=', 'ki.id')
+            ->leftJoin('general_perencanaan_target as gpt', function ($join) use ($tahun) {
+                $join->on('gpt.general_perencanaan_id', '=', 'gp.id');
+                if ($tahun) {
+                    $join->where('gpt.tahun', $tahun);
+                }
+            })
+            ->leftJoin('general_rencana_aksi as gra', 'gra.general_perencanaan_target_id', '=', 'gpt.id')
+            ->leftJoin('general_rencana_aksi_output as grao', 'grao.general_rencana_aksi_id', '=', 'gra.id')
+            ->select(
+                'ki.id',
+                'ki.group',
+                DB::raw('SUM(grao.capaian_output_total) as jumlah_capaian_output_total'),
+                DB::raw('SUM(CASE WHEN grao.target_tw1 > 0 OR grao.target_tw2 > 0 OR grao.target_tw3 > 0 OR grao.target_tw4 > 0 THEN 1 ELSE 0 END) as jumlah_target_total')
+            )
+            ->groupBy('ki.id', 'ki.group')
+            ->get();
+
+        $updatedInstansiIds = [];
+        foreach ($capaians as $capaian) {
+            if (!$capaian->jumlah_capaian_output_total || !$capaian->jumlah_target_total) {
+                continue;
+            }
+
+            $bobot = $bobotByGroup->get($capaian->group);
+            if (!$bobot) {
+                continue;
+            }
+
+            $score = $capaian->jumlah_target_total > 0 ? round($capaian->jumlah_capaian_output_total / $capaian->jumlah_target_total) : null;
+            if ($score === null) {
+                continue;
+            }
+
+            $score = $score > 100 ? 100 : $score;
+
+            $testTpLine = LkeTestTpLine::where('lke_bobot_id', $bobot->id)->where('instansi_id', $capaian->id)->first();
+            if (!$testTpLine) {
+                $testTpLine = new LkeTestTpLine();
+                $testTpLine->penilai_user_id = $user->id;
+            }
+
+            $testTpLine->score = $score;
+            $testTpLine->lke_bobot_id = $bobot->id;
+            $testTpLine->instansi_id = $capaian->id;
+            $testTpLine->update_user_id = $user->id;
+            $testTpLine->score_index = !empty($bobot->max_value) ? ($testTpLine->score / $bobot->max_value) * $bobot->bobot : $testTpLine->score;
+
+            if ($pengali_id = $bobot->lke_parameter->indikator_pengali_id) {
+                $bobot_pengali = LkeBobot::where('lke_parameter_id', $pengali_id)->where('group', $bobot->group)->first();
+                if ($bobot_pengali) {
+                    $testTpLine_pengali = LkeTestTpLine::where('lke_bobot_id', $bobot_pengali->id)->where('instansi_id', $testTpLine->instansi_id)->first();
+                    if ($testTpLine_pengali && $testTpLine_pengali->score_index) {
+                        $testTpLine->score_index = $testTpLine->score_index * ($testTpLine_pengali->score_index / $testTpLine_pengali->lke_bobot->bobot);
+                    }
+                }
+            }
+
+            $testTpLine->capaian_index = ($testTpLine->score_index / $bobot->bobot) * 100;
+
+            if ($testTpLine->save()) {
+                $updatedInstansiIds[$capaian->id] = $capaian->id;
+            }
+        }
+
+        foreach ($updatedInstansiIds as $instansiId) {
+            calculateTestTp($instansiId, $parameter->lke_kegiatan_id);
+        }
+
+        return response()->json(['success' => true, 'updated' => count($updatedInstansiIds)]);
+    }
+
     public function lke_utama_score_simpan($parameter_id, Request $request)
     {
         $user = Auth::User();

@@ -185,35 +185,21 @@ class ERenaksiRBGeneralController extends Controller
 
     public function kalkulasi_skor($instansi_id, $tahun)
     {
-        if ($tahun == 2024) {
-            $jawabanByLke = JawabanRenaksi::with('konversi_jawaban_renaksi')->where('instansi_id', $instansi_id)
-                ->whereIn('lke_renaksi_id', [4, 5, 6, 8, 9, 10, 11])
-                ->where('tahun', $tahun)
-                ->get()
-                ->keyBy('lke_renaksi_id');
-    
-            $penetapanKU = $jawabanByLke->get(4);
-            $penetapanTargetIndikatorKU = $jawabanByLke->get(5);
-            $keabsahanRencanaAksi = $jawabanByLke->get(6);
-            $kelogisanRencanaAksi = $jawabanByLke->get(8);
-            $relevansiKecukupanIndikatorOutput = $jawabanByLke->get(9);
-            $ketetapanPenetapanTargetIndikatorOutput = $jawabanByLke->get(10);
-            $anggaran = $jawabanByLke->get(11);
-        } else if ($tahun == 2025) {
-            $jawabanByLke = JawabanRenaksi::with('konversi_jawaban_renaksi')->where('instansi_id', $instansi_id)
-                ->whereIn('lke_renaksi_id', [15, 16, 17, 19, 20, 21, 22])
-                ->where('tahun', $tahun)
-                ->get()
-                ->keyBy('lke_renaksi_id');
-    
-            $penetapanKU = $jawabanByLke->get(15);
-            $penetapanTargetIndikatorKU = $jawabanByLke->get(16);
-            $keabsahanRencanaAksi = $jawabanByLke->get(17);
-            $kelogisanRencanaAksi = $jawabanByLke->get(19);
-            $relevansiKecukupanIndikatorOutput = $jawabanByLke->get(20);
-            $ketetapanPenetapanTargetIndikatorOutput = $jawabanByLke->get(21);
-            $anggaran = $jawabanByLke->get(22);
-        }
+        $lkeRenaksiIds = $tahun == 2024 ? [4, 5, 6, 8, 9, 10, 11] : [15, 16, 17, 19, 20, 21, 22];
+        
+        $jawabanByLke = JawabanRenaksi::with('konversi_jawaban_renaksi')->where('instansi_id', $instansi_id)
+            ->whereIn('lke_renaksi_id', $lkeRenaksiIds)
+            ->where('tahun', $tahun)
+            ->get()
+            ->keyBy('lke_renaksi_id');
+
+        $penetapanKU = $jawabanByLke->get($lkeRenaksiIds[0]);
+        $penetapanTargetIndikatorKU = $jawabanByLke->get($lkeRenaksiIds[1]);
+        $keabsahanRencanaAksi = $jawabanByLke->get($lkeRenaksiIds[2]);
+        $kelogisanRencanaAksi = $jawabanByLke->get($lkeRenaksiIds[3]);
+        $relevansiKecukupanIndikatorOutput = $jawabanByLke->get($lkeRenaksiIds[4]);
+        $ketetapanPenetapanTargetIndikatorOutput = $jawabanByLke->get($lkeRenaksiIds[5]);
+        $anggaran = $jawabanByLke->get($lkeRenaksiIds[6]);
 
         //Penilaian Kegiatan Utama Road Map Reformasi Birokrasi
         if ($tahun == 2024) {
@@ -284,12 +270,12 @@ class ERenaksiRBGeneralController extends Controller
         $user = Auth::User();
         $instansi = KlpdInstansi::where('id', $instansi_id)->first();
         if ($instansi) {
-            if ($instansi->group == "kl" or $instansi->group == "provinsi" or $instansi->group == "kabupaten") {
-                if ($tahun == 2024) {
-                    $lke_bobot = LkeBobot::where('lke_parameter_id', 2130)->where('group', $instansi->group)->first();
-                } else if ($tahun == 2025) {
-                    $lke_bobot = LkeBobot::where('lke_parameter_id', 3180)->where('group', $instansi->group)->first();
-                }
+            if (in_array($instansi->group, ['kl', 'provinsi', 'kabupaten'])) {
+                $kegiatan = LkeKegiatan::where('tahun', $tahun)->first();
+                $lke_bobot = LkeBobot::where('rencana_aksi', 1)
+                    ->where('group', $instansi->group)
+                    ->where('lke_kegiatan_id', $kegiatan->id)
+                    ->first();
                 $test_tp_line = LkeTestTpLine::where('lke_bobot_id', $lke_bobot->id)->where('instansi_id', $instansi->id)->first();
                 if (!$test_tp_line) {
                     $test_tp_line = new LkeTestTpLine();
@@ -316,8 +302,13 @@ class ERenaksiRBGeneralController extends Controller
                     data_get($ketetapanPenetapanTargetIndikatorOutput, 'rekomendasi'),
                     data_get($anggaran, 'rekomendasi'),
                 ]);
-                $test_tp_line->catatan = implode('. ', $catatanParts);
-                $test_tp_line->rekomendasi = implode('. ', $rekomendasiParts);
+                $test_tp_line->catatan = implode("\n", array_map(function ($item, $index) {
+                    return ($index + 1) . '. ' . $item;
+                }, $catatanParts, array_keys($catatanParts)));
+                
+                $test_tp_line->rekomendasi = implode("\n", array_map(function ($item, $index) {
+                    return ($index + 1) . '. ' . $item;
+                }, $rekomendasiParts, array_keys($rekomendasiParts)));
                 $test_tp_line->update_user_id = $user->id;
                 $test_tp_line->score_index = !empty($test_tp_line->lke_bobot->max_value) ? ($test_tp_line->score / $test_tp_line->lke_bobot->max_value) * $test_tp_line->lke_bobot->bobot : $test_tp_line->score;
                 if ($pengali_id = $test_tp_line->lke_bobot->lke_parameter->indikator_pengali_id) {

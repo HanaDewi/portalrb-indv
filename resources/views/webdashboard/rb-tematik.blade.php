@@ -98,7 +98,7 @@
         }
     @endphp
 
-    <div class="col-span-12 sm:col-span-6 lg:col-span-4">
+    <div class="col-span-12 sm:col-span-6 lg:col-span-4 mb-3">
         <div class="intro-y box p-5">
             <h2 class="text-lg font-medium truncate mr-5">
                 Provinsi
@@ -111,7 +111,7 @@
         </div>
     </div>
 
-    <div class="col-span-12 sm:col-span-6 lg:col-span-4">
+    <div class="col-span-12 sm:col-span-6 lg:col-span-4 mb-3">
         <div class="intro-y box p-5">
             <h2 class="text-lg font-medium truncate mr-5">
                 Kementerian Lembaga
@@ -124,7 +124,7 @@
         </div>
     </div>
 
-    <div class="col-span-12 sm:col-span-6 lg:col-span-4">
+    <div class="col-span-12 sm:col-span-6 lg:col-span-4 mb-3">
         <div class="intro-y box p-5">
             <h2 class="text-lg font-medium truncate mr-5">
                 Pemerintah Kabupaten/Kota
@@ -137,7 +137,7 @@
         </div>
     </div>
 
-    <div class="intro-y col-span-12 lg:col-span-12" class="overflow-x-auto">
+    <div class="intro-y col-span-12 lg:col-span-12 mb-3" class="overflow-x-auto">
         <table class="table table-report -mt-2">
             <tbody>
                 <tr class="intro-x">
