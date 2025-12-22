@@ -278,10 +278,20 @@ class FinalController extends Controller
 
     public function lhe_simpan(Request $request)
     {
+        $instansi_ZI = InstansiZI::find($request->get('instansi_id'));
         $validated = $request->validate([
             'berkas' => 'required|array',
             'berkas.*' => 'file|mimes:jpg,png,pdf|max:2048', // Validate each file in the array
         ]);
+
+        $tim_ids = [];
+        foreach ($instansi_ZI->unit_zi as $unit_zi) {
+            foreach ($unit_zi->unit_tim as $unitTim) {
+                if (!in_array($unitTim->tim_id, $tim_ids)) {
+                    array_push($tim_ids, $unitTim->tim_id);
+                }
+            }
+        }
 
         $success = false;
         $status = "Tidak Berhak";
@@ -335,12 +345,22 @@ class FinalController extends Controller
 
     public function undangan_simpan(Request $request)
     {
+        $instansi_ZI = InstansiZI::find($request->get('instansi_id'));
         $validated = $request->validate([
             'berkas_undangan' => 'required|array',
             'berkas_undangan.*' => 'file|mimes:jpg,png,pdf|max:2048', // Validate each file in the array
         ]);
 
         $success = false;
+
+        $tim_ids = [];
+        foreach ($instansi_ZI->unit_zi as $unit_zi) {
+            foreach ($unit_zi->unit_tim as $unitTim) {
+                if (!in_array($unitTim->tim_id, $tim_ids)) {
+                    array_push($tim_ids, $unitTim->tim_id);
+                }
+            }
+        }
 
         $status = "Tidak Berhak";
         $tahun = $instansi_ZI->tahun;
