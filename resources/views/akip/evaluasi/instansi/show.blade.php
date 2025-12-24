@@ -1063,6 +1063,7 @@
                     $.ajax({
                         url: "{{ route('akip.evaluasi.check', $instansi->id) }}",
                         type: 'POST',
+                        cache: false,
                         data: {
                             tahun: tahun,
                             periode: periode || '',
@@ -1239,6 +1240,7 @@
                     $.ajax({
                         url: '{{ route("akip.evaluasi.store", $instansi->id) }}',
                         type: 'POST',
+                        cache: false,
                         data: formData,
                         processData: false,
                         contentType: false,
@@ -1431,6 +1433,7 @@
                     $.ajax({
                         url: updateUrl,
                         type: 'POST',
+                        cache: false,
                         data: formData,
                         processData: false,
                         contentType: false,
@@ -1503,6 +1506,7 @@
                 $.ajax({
                     url: "{{ url('akip/evaluasi/sakip/' . $instansi->id . '/data') }}/" + id,
                     type: 'GET',
+                    cache: false,
                     success: function(response) {
                         // Hide loading overlay
                         $('#loading-overlay-edit').hide();
@@ -1597,6 +1601,7 @@
                         $.ajax({
                             url: "{{ url('akip/evaluasi/sakip/' . $instansi->id) }}/" + id,
                             type: 'DELETE',
+                            cache: false,
                             data: {
                                 _token: '{{ csrf_token() }}'
                             },

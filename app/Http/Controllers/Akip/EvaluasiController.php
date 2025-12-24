@@ -209,7 +209,10 @@ class EvaluasiController extends Controller
         }
         $evaluasi_sakip = EvaluasiSakip::find($id);
         if ($evaluasi_sakip) {
-            return response()->json(['evaluasi_sakip' => $evaluasi_sakip]);
+            return response()->json(['evaluasi_sakip' => $evaluasi_sakip])
+                ->header('Cache-Control', 'no-cache, no-store, must-revalidate')
+                ->header('Pragma', 'no-cache')
+                ->header('Expires', '0');
         } else {
             abort('404');
         }
@@ -277,7 +280,10 @@ class EvaluasiController extends Controller
                 return response()->json([
                     'success' => false,
                     'message' => 'Gagal simpan evaluasi: Field wajib tidak lengkap: ' . implode(', ', $missingFields)
-                ]);
+                ])
+                    ->header('Cache-Control', 'no-cache, no-store, must-revalidate')
+                    ->header('Pragma', 'no-cache')
+                    ->header('Expires', '0');
             }
 
             \Log::info('Creating new evaluasi record', [
@@ -384,7 +390,10 @@ class EvaluasiController extends Controller
                 'nilai_total' => $evaluasi_sakip->nilai_total_evaluasi_akip
             ]);
 
-            return response()->json(['success' => true]);
+            return response()->json(['success' => true])
+                ->header('Cache-Control', 'no-cache, no-store, must-revalidate')
+                ->header('Pragma', 'no-cache')
+                ->header('Expires', '0');
         } catch (\Exception $e) {
             \Log::error('Error simpan evaluasi', [
                 'user_id' => $this->currentUser->id,
@@ -396,7 +405,10 @@ class EvaluasiController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Gagal simpan evaluasi: ' . $e->getMessage()
-            ]);
+            ])
+                ->header('Cache-Control', 'no-cache, no-store, must-revalidate')
+                ->header('Pragma', 'no-cache')
+                ->header('Expires', '0');
         }
     }
 
@@ -477,7 +489,10 @@ class EvaluasiController extends Controller
                 return response()->json([
                     'success' => false,
                     'message' => 'Gagal edit evaluasi: Field wajib tidak lengkap: ' . implode(', ', $missingFields)
-                ]);
+                ])
+                    ->header('Cache-Control', 'no-cache, no-store, must-revalidate')
+                    ->header('Pragma', 'no-cache')
+                    ->header('Expires', '0');
             }
 
             \Log::info('Finding evaluasi record untuk diupdate', [
@@ -496,7 +511,10 @@ class EvaluasiController extends Controller
                 return response()->json([
                     'success' => false,
                     'message' => 'Gagal edit evaluasi: Data evaluasi tidak ditemukan'
-                ]);
+                ])
+                    ->header('Cache-Control', 'no-cache, no-store, must-revalidate')
+                    ->header('Pragma', 'no-cache')
+                    ->header('Expires', '0');
             }
 
             \Log::info('Updating evaluasi record', [
@@ -611,7 +629,10 @@ class EvaluasiController extends Controller
                 'nilai_total' => $evaluasi_sakip->nilai_total_evaluasi_akip
             ]);
 
-            return response()->json(['success' => true]);
+            return response()->json(['success' => true])
+                ->header('Cache-Control', 'no-cache, no-store, must-revalidate')
+                ->header('Pragma', 'no-cache')
+                ->header('Expires', '0');
         } catch (\Exception $e) {
             \Log::error('Error edit evaluasi', [
                 'user_id' => $this->currentUser->id,
@@ -624,7 +645,10 @@ class EvaluasiController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Gagal edit evaluasi: ' . $e->getMessage()
-            ]);
+            ])
+                ->header('Cache-Control', 'no-cache, no-store, must-revalidate')
+                ->header('Pragma', 'no-cache')
+                ->header('Expires', '0');
         }
     }
 
@@ -657,7 +681,10 @@ class EvaluasiController extends Controller
             'exists' => $exists,
             'filled_periods' => $filled_periods,
             'evaluasi_sakip' => $evaluasi_sakip
-        ]);
+        ])
+            ->header('Cache-Control', 'no-cache, no-store, must-revalidate')
+            ->header('Pragma', 'no-cache')
+            ->header('Expires', '0');
     }
 
     /**
@@ -669,29 +696,44 @@ class EvaluasiController extends Controller
             $cek = $this->currentUser->anggota ? $this->currentUser->anggota->tim->instansi_tim->where('instansi_id', $instansi_id)->first() : false;
             if (!$cek) {
                 \Log::error('Delete evaluasi: User not authorized for instansi_id: ' . $instansi_id);
-                return response()->json(['success' => false, 'message' => 'Unauthorized'], 403);
+                return response()->json(['success' => false, 'message' => 'Unauthorized'], 403)
+                    ->header('Cache-Control', 'no-cache, no-store, must-revalidate')
+                    ->header('Pragma', 'no-cache')
+                    ->header('Expires', '0');
             }
             
             $evaluasi_sakip = EvaluasiSakip::find($id);
             if (!$evaluasi_sakip) {
                 \Log::error('Delete evaluasi: Evaluasi not found with id: ' . $id);
-                return response()->json(['success' => false, 'message' => 'Evaluasi not found'], 404);
+                return response()->json(['success' => false, 'message' => 'Evaluasi not found'], 404)
+                    ->header('Cache-Control', 'no-cache, no-store, must-revalidate')
+                    ->header('Pragma', 'no-cache')
+                    ->header('Expires', '0');
             }
             
             // Verify that the evaluasi belongs to the correct instansi
             if ($evaluasi_sakip->instansi_id != $instansi_id) {
                 \Log::error('Delete evaluasi: Instansi mismatch. Evaluasi instansi_id: ' . $evaluasi_sakip->instansi_id . ', Request instansi_id: ' . $instansi_id);
-                return response()->json(['success' => false, 'message' => 'Instansi mismatch'], 400);
+                return response()->json(['success' => false, 'message' => 'Instansi mismatch'], 400)
+                    ->header('Cache-Control', 'no-cache, no-store, must-revalidate')
+                    ->header('Pragma', 'no-cache')
+                    ->header('Expires', '0');
             }
             
             $evaluasi_sakip->delete();
             \Log::info('Delete evaluasi: Successfully deleted evaluasi id: ' . $id);
-            return response()->json(['success' => true, 'message' => 'Evaluasi berhasil dihapus']);
+            return response()->json(['success' => true, 'message' => 'Evaluasi berhasil dihapus'])
+                ->header('Cache-Control', 'no-cache, no-store, must-revalidate')
+                ->header('Pragma', 'no-cache')
+                ->header('Expires', '0');
             
         } catch (\Exception $e) {
             \Log::error('Delete evaluasi error: ' . $e->getMessage());
             \Log::error('Stack trace: ' . $e->getTraceAsString());
-            return response()->json(['success' => false, 'message' => 'Terjadi kesalahan saat menghapus evaluasi'], 500);
+            return response()->json(['success' => false, 'message' => 'Terjadi kesalahan saat menghapus evaluasi'], 500)
+                ->header('Cache-Control', 'no-cache, no-store, must-revalidate')
+                ->header('Pragma', 'no-cache')
+                ->header('Expires', '0');
         }
     }
 
