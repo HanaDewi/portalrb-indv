@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Tema;
 use App\Models\KlpdInstansi;
+use App\Models\GeneralPerencanaanTarget;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -25,35 +26,71 @@ class CapaianOutputController extends Controller
 
     public function rbTematikCapaianOutput(Request $request)
     {
-        $user = Auth::User();
-        $klpdinstansis = KlpdInstansi::get();
-        $instansis = [];
-        $data_pertama = TematikRekapCapaianOutput::orderBy('instansi_id', 'desc')->first();
-        foreach($klpdinstansis as $instansi){
-            foreach(Tema::get() as $tema){
-                $rekap_capaian_output = TematikRekapCapaianOutput::where("instansi_id", $instansi->id)->where("tema_id", $tema->id)->first();
-                if($rekap_capaian_output){
-                    $instansis[$instansi->id]["nama"] = $instansi->name;
-                    $instansis[$instansi->id]["group"] = $instansi->group;
-                    $instansis[$instansi->id][$tema->id] = [
-                        "capaian_output_tw1"    => $rekap_capaian_output->capaian_output_tw1,
-                        "capaian_output_tw2"    => $rekap_capaian_output->capaian_output_tw2,
-                        "capaian_output_tw3"    => $rekap_capaian_output->capaian_output_tw3,
-                        "capaian_output_tw4"    => $rekap_capaian_output->capaian_output_tw4,
-                        "capaian_output_total"  => $rekap_capaian_output->capaian_output_total,
-                        "pengisian_tw1"         => $rekap_capaian_output->pengisian_tw1,
-                        "pengisian_tw2"         => $rekap_capaian_output->pengisian_tw2,
-                        "pengisian_tw3"         => $rekap_capaian_output->pengisian_tw3,
-                        "pengisian_tw4"         => $rekap_capaian_output->pengisian_tw4,
+        $temaIds = Tema::orderBy('id')->pluck('id');
+        $klpdinstansis = KlpdInstansi::select('id', 'name', 'group')->get();
+        $instansiIds = $klpdinstansis->pluck('id');
 
-                    ];
-                }
+        $rekaps = TematikRekapCapaianOutput::select(
+                'instansi_id',
+                'tema_id',
+                'capaian_output_tw1',
+                'capaian_output_tw2',
+                'capaian_output_tw3',
+                'capaian_output_tw4',
+                'capaian_output_total',
+                'pengisian_tw1',
+                'pengisian_tw2',
+                'pengisian_tw3',
+                'pengisian_tw4'
+            )
+            ->whereIn('instansi_id', $instansiIds)
+            ->whereIn('tema_id', $temaIds)
+            ->get()
+            ->groupBy('instansi_id');
+
+        $instansis = [];
+        foreach ($klpdinstansis as $instansi) {
+            $instansiData = [
+                'nama' => $instansi->name,
+                'group' => $instansi->group,
+            ];
+
+            foreach ($temaIds as $temaId) {
+                $instansiData[$temaId] = [
+                    'capaian_output_tw1' => 0,
+                    'capaian_output_tw2' => 0,
+                    'capaian_output_tw3' => 0,
+                    'capaian_output_tw4' => 0,
+                    'capaian_output_total' => 0,
+                    'pengisian_tw1' => 0,
+                    'pengisian_tw2' => 0,
+                    'pengisian_tw3' => 0,
+                    'pengisian_tw4' => 0,
+                ];
             }
+
+            foreach ($rekaps->get($instansi->id, []) as $rekap) {
+                $instansiData[$rekap->tema_id] = [
+                    'capaian_output_tw1' => $rekap->capaian_output_tw1,
+                    'capaian_output_tw2' => $rekap->capaian_output_tw2,
+                    'capaian_output_tw3' => $rekap->capaian_output_tw3,
+                    'capaian_output_tw4' => $rekap->capaian_output_tw4,
+                    'capaian_output_total' => $rekap->capaian_output_total,
+                    'pengisian_tw1' => $rekap->pengisian_tw1,
+                    'pengisian_tw2' => $rekap->pengisian_tw2,
+                    'pengisian_tw3' => $rekap->pengisian_tw3,
+                    'pengisian_tw4' => $rekap->pengisian_tw4,
+                ];
+            }
+
+            $instansis[$instansi->id] = $instansiData;
         }
-        
+
+        $data_pertama = TematikRekapCapaianOutput::orderBy('updated_at', 'desc')->first();
+
         return view('webdashboard.rb-tematik-capaianoutput', compact('instansis', 'data_pertama'));
-        
     }
+
     public function rbTematikCapaianOutputGenerate($pilihan, Request $request)
     {
         if($pilihan == 1){
@@ -99,7 +136,6 @@ class CapaianOutputController extends Controller
             $klpdinstansis = KlpdInstansi::where('id', $request->id )->get();
             $i = 1;
         }
-
         
         foreach($klpdinstansis as $instansi){
             foreach(Tema::get() as $tema){
@@ -216,15 +252,19 @@ class CapaianOutputController extends Controller
         
     }
 
-    
-
-    public function rbGeneralCapaianOutput()
+    public function rbGeneralCapaianOutput(Request $request)
     {
+        $years = GeneralPerencanaanTarget::select('tahun')->distinct()->orderBy('tahun', 'desc')->pluck('tahun');
+        $selectedYear = $request->get('tahun', $years->first());
+
         $capaians = DB::table('klpd_instansi as ki')
             ->leftJoin('general_perencanaan as gp', 'gp.instansi_id', '=', 'ki.id')
             ->leftJoin('general_perencanaan_target as gpt', 'gpt.general_perencanaan_id', '=', 'gp.id')
             ->leftJoin('general_rencana_aksi as gra', 'gra.general_perencanaan_target_id', '=', 'gpt.id')
             ->leftJoin('general_rencana_aksi_output as grao', 'grao.general_rencana_aksi_id', '=', 'gra.id')
+            ->when($selectedYear, function ($query) use ($selectedYear) {
+                $query->where('gpt.tahun', $selectedYear);
+            })
             ->select('ki.name', 'ki.group',
                 DB::raw('SUM(CASE WHEN grao.target_tw1 > 0 THEN 1 ELSE 0 END) as jumlah_target_tw1'),
                 DB::raw('SUM(CASE WHEN grao.target_tw2 > 0 THEN 1 ELSE 0 END) as jumlah_target_tw2'),
@@ -267,7 +307,7 @@ class CapaianOutputController extends Controller
             $capaian->output_total = $capaian->output_total != '' ? ($capaian->output_total > 100 ? 100 . '%' : $capaian->output_total . '%') : '';
         }
         
-        return view('webdashboard.rb-general-capaianoutput', compact('capaians'));
+        return view('webdashboard.rb-general-capaianoutput', compact('capaians', 'years', 'selectedYear'));
     }
 
 }

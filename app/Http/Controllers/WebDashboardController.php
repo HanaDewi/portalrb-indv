@@ -116,37 +116,53 @@ class WebDashboardController extends Controller
             return "MAX(CASE WHEN tsr.tema_id = {$theme->id} THEN 1 ELSE 0 END) AS {$alias}";
         })->implode(",\n");
 
-        $sql = "SELECT
-                tsr.instansi_id,
-                'yes' AS tematik,
-                COUNT(DISTINCT tsr.tema_id) AS tema_id_count,
-                {$temaSelects},
-                COALESCE(MAX(pc.permasalahan), '---') AS permasalahan,
-                COALESCE(MAX(rac.rencana_aksi), '---') AS rencana_aksi
-            FROM tematik_sasaran_roadmap tsr
-            JOIN tema te ON te.id = tsr.tema_id
-                AND te.tahun = ?
-            LEFT JOIN (
-                SELECT DISTINCT tsr.instansi_id, 'yes' AS permasalahan
-                FROM tematik_sasaran_roadmap tsr
-                JOIN tematik_indikator_roadmap tir ON tir.tematik_sasaran_roadmap_id = tsr.id
-                JOIN tematik_permasalahan tp ON tp.tematik_indikator_roadmap_id = tir.id
-                JOIN tema te ON te.id = tsr.tema_id
-                WHERE te.tahun = ?
-            ) pc ON pc.instansi_id = tsr.instansi_id
-            LEFT JOIN (
-                SELECT DISTINCT tsr.instansi_id, 'yes' AS rencana_aksi
-                FROM tematik_sasaran_roadmap tsr
-                JOIN tematik_indikator_roadmap tir ON tir.tematik_sasaran_roadmap_id = tsr.id
-                JOIN tematik_permasalahan tp ON tp.tematik_indikator_roadmap_id = tir.id
-                JOIN tematik_indikator_permasalahan tip ON tip.tematik_permasalahan_id = tp.id
-                JOIN tematik_rencana_aksi tra ON tra.tematik_indikator_permasalahan_id = tip.id
-                JOIN tema te ON te.id = tsr.tema_id
-                WHERE te.tahun = ?
-            ) rac ON rac.instansi_id = tsr.instansi_id
-            GROUP BY tsr.instansi_id";
-        $tematiks = DB::select($sql, [$tahun, $tahun, $tahun]);
-        $tematiks = collect($tematiks)->keyBy('instansi_id');
+        $permasalahanSub = DB::table('tematik_sasaran_roadmap as tsr')
+            ->join('tema as te', function ($join) use ($tahun) {
+                $join->on('te.id', '=', 'tsr.tema_id')
+                    ->where('te.tahun', $tahun);
+            })
+            ->join('tematik_indikator_roadmap as tir', 'tir.tematik_sasaran_roadmap_id', '=', 'tsr.id')
+            ->join('tematik_permasalahan as tp', 'tp.tematik_indikator_roadmap_id', '=', 'tir.id')
+            ->select('tsr.instansi_id', DB::raw("'yes' as permasalahan"))
+            ->distinct();
+
+        $rencanaSub = DB::table('tematik_sasaran_roadmap as tsr')
+            ->join('tema as te', function ($join) use ($tahun) {
+                $join->on('te.id', '=', 'tsr.tema_id')
+                    ->where('te.tahun', $tahun);
+            })
+            ->join('tematik_indikator_roadmap as tir', 'tir.tematik_sasaran_roadmap_id', '=', 'tsr.id')
+            ->join('tematik_permasalahan as tp', 'tp.tematik_indikator_roadmap_id', '=', 'tir.id')
+            ->join('tematik_indikator_permasalahan as tip', 'tip.tematik_permasalahan_id', '=', 'tp.id')
+            ->join('tematik_rencana_aksi as tra', 'tra.tematik_indikator_permasalahan_id', '=', 'tip.id')
+            ->select('tsr.instansi_id', DB::raw("'yes' as rencana_aksi"))
+            ->distinct();
+
+        $selectColumns = "
+            tsr.instansi_id,
+            'yes' AS tematik,
+            COUNT(DISTINCT tsr.tema_id) AS tema_id_count" .
+            ($temaSelects ? ", {$temaSelects}" : '') .
+            ",
+            COALESCE(pc.permasalahan, '---') AS permasalahan,
+            COALESCE(rac.rencana_aksi, '---') AS rencana_aksi
+        ";
+
+        $tematiks = DB::table('tematik_sasaran_roadmap as tsr')
+            ->join('tema as te', function ($join) use ($tahun) {
+                $join->on('te.id', '=', 'tsr.tema_id')
+                    ->where('te.tahun', $tahun);
+            })
+            ->leftJoinSub($permasalahanSub, 'pc', function ($join) {
+                $join->on('pc.instansi_id', '=', 'tsr.instansi_id');
+            })
+            ->leftJoinSub($rencanaSub, 'rac', function ($join) {
+                $join->on('rac.instansi_id', '=', 'tsr.instansi_id');
+            })
+            ->selectRaw($selectColumns)
+            ->groupBy('tsr.instansi_id')
+            ->get()
+            ->keyBy('instansi_id');
         $instansis = KlpdInstansi::all();
 
         return view('webdashboard.rb-tematik', compact('instansis', 'tematiks', 'tahun', 'temas'));

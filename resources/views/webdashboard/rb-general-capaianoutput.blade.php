@@ -6,6 +6,22 @@
             <h2 class="font-bold text-base mr-auto">Capaian Output - RB General</h2>
         </div>
         <div class="lg:col-span-12 p-5 border-b border-slate-200/60">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-3">
+                <form method="GET" action="{{ route('webdashboard.rb-general.capaian-output') }}" class="flex flex-col sm:flex-row sm:items-center gap-3">
+                    <label for="filter-tahun" class="font-medium mt-2">Pilih Tahun</label>
+                    <select id="filter-tahun" name="tahun" class="form-select w-32">
+                        @forelse ($years as $year)
+                            <option value="{{ $year }}" {{ (string) $selectedYear === (string) $year ? 'selected' : '' }}>{{ $year }}</option>
+                        @empty
+                            <option value="">-</option>
+                        @endforelse
+                    </select>
+                    <button type="submit" class="btn btn-primary w-28">Tampilkan</button>
+                </form>
+                @if ($selectedYear)
+                    <div class="text-slate-600 text-sm">Data capaian output tahun <span class="font-semibold">{{ $selectedYear }}</span></div>
+                @endif
+            </div>
             <table id="capaian-output" class="table table-bordered table-striped mt-5" cellspacing="0" width="100%">
                 <thead class="table-dark font-bold">
                     <tr>
