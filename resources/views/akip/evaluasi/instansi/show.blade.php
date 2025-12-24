@@ -259,7 +259,17 @@
     @if ($isTpn && hasAksesEvaluasiAkip())
         {{-- Modal Tambah --}}
         <div class="modal" id="modal-form-evaluasi">
-            <div class="modal__content modal__content--xl">
+            <div class="modal__content modal__content--xl" style="position: relative;">
+                {{-- Loading Overlay --}}
+                <div id="loading-overlay" style="display: none; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(255, 255, 255, 0.9); z-index: 1000; align-items: center; justify-content: center; border-radius: 0.375rem;" class="flex">
+                    <div class="text-center">
+                        <svg class="animate-spin h-12 w-12 text-theme-1 mx-auto mb-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        <p class="text-gray-600 font-medium">Memuat data evaluasi...</p>
+                    </div>
+                </div>
                 <div class="flex items-center px-5 py-5 sm:py-3 border-b border-gray-200">
                     <h2 class="font-medium text-base mr-auto" id="modal-title-evaluasi">
                         Tambah Penilaian
@@ -559,7 +569,15 @@
                 </div>
                 <div class="px-5 py-3 text-right border-t border-gray-200">
                     <button type="button" data-dismiss="modal" class="button w-20 border text-gray-700 mr-1">Cancel</button>
-                    <button type="submit" class="button w-20 bg-theme-1 text-white saveButton">Simpan</button>
+                    <button type="submit" class="button w-20 bg-theme-1 text-white saveButton">
+                        <span class="button-text">Simpan</span>
+                        <span class="button-spinner" style="display: none;">
+                            <svg class="animate-spin h-4 w-4 inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                        </span>
+                    </button>
                 </div>
                 {{ html()->form()->close() }}
             </div>
@@ -660,7 +678,16 @@
                 $('#note_file_evaluasi').hide();
                 $('#tahun').prop('disabled', false);
                 $('#periode').prop('disabled', false);
-                $('.saveButton').prop('disabled', false);
+                
+                // Reset button state
+                var $saveButton = $('.saveButton');
+                $saveButton.prop('disabled', false);
+                $saveButton.find('.button-text').text('Simpan');
+                $saveButton.find('.button-spinner').hide();
+                
+                // Hide loading overlay
+                $('#loading-overlay').hide();
+                
                 $('.editor').each(function() {
                     $(this).summernote('code', '');
                 });
@@ -671,6 +698,12 @@
                     $(this).prop('disabled', false);
                     $(this).removeClass('text-gray-400');
                 });
+                
+                // Set form to create mode
+                $('#form-sakip').attr('action', '{{ route("akip.evaluasi.store", $instansi->id) }}');
+                $('#form-sakip').attr('method', 'POST');
+                // Remove _method field if exists
+                $('#form-sakip').find('input[name="_method"]').remove();
                 
                 // Trigger cekPeriode to update dropdown based on current year
                 cekPeriode();
@@ -808,7 +841,15 @@
                     }
                 },
                 submitHandler: function(form) {
-                    $('.saveButton').prop('disabled', true);
+                    var $saveButton = $('.saveButton');
+                    var $buttonText = $saveButton.find('.button-text');
+                    var $buttonSpinner = $saveButton.find('.button-spinner');
+                    var id_evaluasi = $('#id_evaluasi').val();
+                    
+                    // Show loading state
+                    $saveButton.prop('disabled', true);
+                    $buttonText.text(id_evaluasi && id_evaluasi !== '' ? 'Mengupdate...' : 'Menyimpan...');
+                    $buttonSpinner.show();
                     
                     // Find the actual form element
                     var formElement = $('#form-sakip')[0];
@@ -823,9 +864,27 @@
                         }
                     }
                     
+                    // Determine if create or edit mode and set form action/method
+                    if (id_evaluasi && id_evaluasi !== '') {
+                        // Edit mode - use PUT method
+                        var updateUrl = '{{ route("akip.evaluasi.update", [$instansi->id, ":id"]) }}'.replace(':id', id_evaluasi);
+                        $('#form-sakip').attr('action', updateUrl);
+                        $('#form-sakip').attr('method', 'POST');
+                        // Add _method field for PUT request
+                        if ($('#form-sakip').find('input[name="_method"]').length === 0) {
+                            $('#form-sakip').append('<input type="hidden" name="_method" value="PUT">');
+                        }
+                    } else {
+                        // Create mode - use POST method
+                        $('#form-sakip').attr('action', '{{ route("akip.evaluasi.store", $instansi->id) }}');
+                        $('#form-sakip').attr('method', 'POST');
+                        // Remove _method field if exists
+                        $('#form-sakip').find('input[name="_method"]').remove();
+                    }
+                    
                     // Validate required fields before submission
                     var isKL = $('#periode').length === 0;
-                    var isEdit = $('#id_evaluasi').val() !== '';
+                    var isEdit = id_evaluasi !== '';
                     
                     var requiredFields = [];
                     
@@ -889,7 +948,11 @@
                             icon: 'error',
                             confirmButtonText: 'OK'
                         });
-                        $('.saveButton').prop('disabled', false);
+                        // Reset button state
+                        var $saveButton = $('.saveButton');
+                        $saveButton.prop('disabled', false);
+                        $saveButton.find('.button-text').text('Simpan');
+                        $saveButton.find('.button-spinner').hide();
                         return false;
                     }
                     
@@ -912,13 +975,18 @@
                                     location.reload();
                                 });
                             } else {
+                                var errorMessage = response.message || 'Terjadi kesalahan saat menyimpan data evaluasi SAKIP.';
                                 Swal.fire({
                                     title: 'Gagal!',
-                                    text: 'Terjadi kesalahan saat menyimpan data evaluasi SAKIP.',
+                                    text: errorMessage,
                                     icon: 'error',
                                     confirmButtonText: 'OK'
                                 });
-                                $('.saveButton').prop('disabled', false);
+                                // Reset button state
+                                var $saveButton = $('.saveButton');
+                                $saveButton.prop('disabled', false);
+                                $saveButton.find('.button-text').text('Simpan');
+                                $saveButton.find('.button-spinner').hide();
                             }
                         },
                         error: function(xhr, status, error) {
@@ -940,7 +1008,11 @@
                                 icon: 'error',
                                 confirmButtonText: 'OK'
                             });
-                            $('.saveButton').prop('disabled', false);
+                            // Reset button state
+                            var $saveButton = $('.saveButton');
+                            $saveButton.prop('disabled', false);
+                            $saveButton.find('.button-text').text('Simpan');
+                            $saveButton.find('.button-spinner').hide();
                         }
                     });
                     
@@ -954,10 +1026,25 @@
                 $('#id_evaluasi').val(id);
                 $('#note_file_evaluasi').show();
                 $('#file_evaluasi').prop('required', false);
+                
+                // Show loading overlay
+                $('#loading-overlay').show();
+                
+                // Set form to edit mode
+                var updateUrl = '{{ route("akip.evaluasi.update", [$instansi->id, ":id"]) }}'.replace(':id', id);
+                $('#form-sakip').attr('action', updateUrl);
+                $('#form-sakip').attr('method', 'POST');
+                // Add _method field for PUT request
+                if ($('#form-sakip').find('input[name="_method"]').length === 0) {
+                    $('#form-sakip').append('<input type="hidden" name="_method" value="PUT">');
+                }
+                
                 $.ajax({
                     url: "{{ url('akip/evaluasi/sakip/' . $instansi->id . '/data') }}/" + id,
                     type: 'GET',
                     success: function(response) {
+                        // Hide loading overlay
+                        $('#loading-overlay').hide();
                         $('#form-sakip').trigger('reset');
                         $('#form-sakip').find('.select2').val(null).trigger('change');
                         $('#tahun').val(response.evaluasi_sakip.tahun).trigger('change');
@@ -1007,6 +1094,29 @@
                         $('#indeks_pembangunan_manusia').val(response.evaluasi_sakip.indeks_pembangunan_manusia);
                         $('#indeks_gini_ratio').val(response.evaluasi_sakip.indeks_gini_ratio);
                         $('#pendapatan_perkapita').val(response.evaluasi_sakip.pendapatan_perkapita);
+                    },
+                    error: function(xhr, status, error) {
+                        // Hide loading overlay on error
+                        $('#loading-overlay').hide();
+                        
+                        var errorMessage = 'Gagal memuat data evaluasi. Silakan coba lagi.';
+                        if (xhr.responseText) {
+                            try {
+                                var response = JSON.parse(xhr.responseText);
+                                if (response.message) {
+                                    errorMessage = response.message;
+                                }
+                            } catch (e) {
+                                // Could not parse error response
+                            }
+                        }
+                        
+                        Swal.fire({
+                            title: 'Error!',
+                            text: errorMessage,
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
                     }
                 });
                 $('#modal-form-evaluasi').modal('show');

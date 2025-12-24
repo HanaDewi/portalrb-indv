@@ -258,7 +258,7 @@
                         Tambah Penilaian
                     </h2>
                 </div>
-                {{ html()->form('POST', '/akip/evaluasi/sakip/' . $instansi->id . '/simpan')->id('form-sakip')->class('validate-form')->acceptsFiles()->open() }}
+                {{ html()->form('POST', route('akip.evaluasi.store', $instansi->id))->id('form-sakip')->class('validate-form')->acceptsFiles()->open() }}
                 {{ html()->hidden('id_evaluasi')->id('id_evaluasi') }}
                 <div class="p-5 grid grid-cols-12 gap-4 row-gap-3">
                     <div class="col-span-12 lg:col-span-6">
@@ -551,7 +551,15 @@
                 </div>
                 <div class="px-5 py-3 text-right border-t border-gray-200">
                     <button type="button" data-dismiss="modal" class="button w-20 border text-gray-700 mr-1">Cancel</button>
-                    <button type="submit" class="button w-20 bg-theme-1 text-white saveButton">Simpan</button>
+                    <button type="submit" class="button w-20 bg-theme-1 text-white saveButton">
+                        <span class="button-text">Simpan</span>
+                        <span class="button-spinner" style="display: none;">
+                            <svg class="animate-spin h-4 w-4 inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                        </span>
+                    </button>
                 </div>
                 {{ html()->form()->close() }}
             </div>
@@ -652,11 +660,22 @@
                 $('#note_file_evaluasi').hide();
                 $('#tahun').prop('disabled', false);
                 $('#periode').prop('disabled', false);
-                $('.saveButton').prop('disabled', false);
+                
+                // Reset button state
+                var $saveButton = $('.saveButton');
+                $saveButton.prop('disabled', false);
+                $saveButton.find('.button-text').text('Simpan');
+                $saveButton.find('.button-spinner').hide();
+                
                 $('.editor').each(function() {
                     $(this).summernote('code', '');
                 });
                 validator.resetForm();
+                // Set form to create mode
+                $('#form-sakip').attr('action', '{{ route("akip.evaluasi.store", $instansi->id) }}');
+                $('#form-sakip').attr('method', 'POST');
+                // Remove _method field if exists
+                $('#form-sakip').find('input[name="_method"]').remove();
             }
 
             cekPeriode = function() {
@@ -751,7 +770,34 @@
                     }
                 },
                 submitHandler: function(form) {
-                    $('.saveButton').prop('disabled', true);
+                    var $saveButton = $('.saveButton');
+                    var $buttonText = $saveButton.find('.button-text');
+                    var $buttonSpinner = $saveButton.find('.button-spinner');
+                    var id_evaluasi = $('#id_evaluasi').val();
+                    
+                    // Show loading state
+                    $saveButton.prop('disabled', true);
+                    $buttonText.text(id_evaluasi && id_evaluasi !== '' ? 'Mengupdate...' : 'Menyimpan...');
+                    $buttonSpinner.show();
+                    
+                    // Determine if create or edit mode
+                    if (id_evaluasi && id_evaluasi !== '') {
+                        // Edit mode - use PUT method
+                        var updateUrl = '{{ route("akip.evaluasi.update", [$instansi->id, ":id"]) }}'.replace(':id', id_evaluasi);
+                        $('#form-sakip').attr('action', updateUrl);
+                        $('#form-sakip').attr('method', 'POST');
+                        // Add _method field for PUT request
+                        if ($('#form-sakip').find('input[name="_method"]').length === 0) {
+                            $('#form-sakip').append('<input type="hidden" name="_method" value="PUT">');
+                        }
+                    } else {
+                        // Create mode - use POST method
+                        $('#form-sakip').attr('action', '{{ route("akip.evaluasi.store", $instansi->id) }}');
+                        $('#form-sakip').attr('method', 'POST');
+                        // Remove _method field if exists
+                        $('#form-sakip').find('input[name="_method"]').remove();
+                    }
+                    
                     form.submit();
                 }
             });
@@ -762,6 +808,14 @@
                 $('#id_evaluasi').val(id);
                 $('#note_file_evaluasi').show();
                 $('#file_evaluasi').prop('required', false);
+                // Set form to edit mode
+                var updateUrl = '{{ route("akip.evaluasi.update", [$instansi->id, ":id"]) }}'.replace(':id', id);
+                $('#form-sakip').attr('action', updateUrl);
+                $('#form-sakip').attr('method', 'POST');
+                // Add _method field for PUT request
+                if ($('#form-sakip').find('input[name="_method"]').length === 0) {
+                    $('#form-sakip').append('<input type="hidden" name="_method" value="PUT">');
+                }
                 $.ajax({
                     url: "{{ url('akip/evaluasi/sakip/' . $instansi->id . '/getData') }}/" + id,
                     type: 'GET',
