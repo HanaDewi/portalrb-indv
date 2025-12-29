@@ -14,7 +14,7 @@
             }
         @endphp
         @if ($isTpn && $isAnggotaTim && hasAksesEvaluasiAkip())
-            <a href="javascript:;" data-toggle="modal" data-target="#modal-form-evaluasi" class="button inline-block bg-theme-1 text-white" onclick="resetForm();">Tambah Penilaian</a>
+            <a href="javascript:;" data-toggle="modal" data-target="#modal-form-evaluasi-tambah" class="button inline-block bg-theme-1 text-white" onclick="openModalTambah();">Tambah Penilaian</a>
         @endif
     </div>
     @include('common.status_midone')
@@ -258,60 +258,59 @@
 
     @if ($isTpn && hasAksesEvaluasiAkip())
         {{-- Modal Tambah --}}
-        <div class="modal" id="modal-form-evaluasi">
-            <div class="modal__content modal__content--xl">
+        <div class="modal" id="modal-form-evaluasi-tambah">
+            <div class="modal__content modal__content--xl" style="position: relative;">
                 <div class="flex items-center px-5 py-5 sm:py-3 border-b border-gray-200">
-                    <h2 class="font-medium text-base mr-auto" id="modal-title-evaluasi">
+                    <h2 class="font-medium text-base mr-auto">
                         Tambah Penilaian
                     </h2>
                 </div>
-                {{ html()->form('POST', route('akip.evaluasi.store', $instansi->id))->id('form-sakip')->class('validate-form')->acceptsFiles()->open() }}
+                {{ html()->form('POST', route('akip.evaluasi.store', $instansi->id))->id('form-sakip-tambah')->class('validate-form')->acceptsFiles()->open() }}
                 @csrf
-                {{ html()->hidden('id_evaluasi')->id('id_evaluasi') }}
                 <div class="p-5 grid grid-cols-12 gap-4 row-gap-3">
                     <div class="col-span-12 lg:col-span-6">
                         <div class="input-group">
-                            {{ html()->label('Tahun')->for('tahun') }} <span class="text-theme-6">*</span>
+                            {{ html()->label('Tahun')->for('tahun-tambah') }} <span class="text-theme-6">*</span>
                             <div class="mt-2">
-                                {{ html()->select('tahun', ['2025' => '2025'], 2025)->id('tahun')->class('select2 w-full hide-search')->placeholder('Pilih Tahun')->attributes(['onchange' => 'cekPeriode();'])->required() }}
+                                {{ html()->select('tahun', ['2025' => '2025'], 2025)->id('tahun-tambah')->class('select2 w-full hide-search')->placeholder('Pilih Tahun')->attributes(['onchange' => 'cekPeriode("tambah");'])->required() }}
                             </div>
                         </div>
                     </div>
                     @if ($instansi->group != 'kl')
                         <div class="col-span-12 lg:col-span-6">
                             <div class="input-group">
-                                {{ html()->label('Periode')->for('periode') }} <span class="text-theme-6">*</span>
+                                {{ html()->label('Periode')->for('periode-tambah') }} <span class="text-theme-6">*</span>
                                 <div class="mt-2">
-                                    {{ html()->select('periode', ['TW 1' => 'TW 1', 'TW 2' => 'TW 2', 'TW 3' => 'TW 3', 'Final' => 'Final'], null)->id('periode')->class('select2 w-full no-search')->placeholder('Pilih Periode')->required()->attributes(['onchange' => 'cekPeriode();']) }}
+                                    {{ html()->select('periode', ['TW 1' => 'TW 1', 'TW 2' => 'TW 2', 'TW 3' => 'TW 3', 'Final' => 'Final'], null)->id('periode-tambah')->class('select2 w-full no-search')->placeholder('Pilih Periode')->required()->attributes(['onchange' => 'cekPeriode("tambah");']) }}
                                 </div>
                             </div>
                         </div>
                     @endif
                     <div class="col-span-12 lg:col-span-6">
                         <div class="input-group">
-                            {{ html()->label('Penanggung Jawab')->for('penanggung_jawab') }} <span class="text-theme-6">*</span>
-                            <input type="text" name="penanggung_jawab" id="penanggung_jawab" class="input w-full border mt-2 flex-1" placeholder="Nama Penanggung Jawab" required>
+                            {{ html()->label('Penanggung Jawab')->for('penanggung_jawab-tambah') }} <span class="text-theme-6">*</span>
+                            <input type="text" name="penanggung_jawab" id="penanggung_jawab-tambah" class="input w-full border mt-2 flex-1" placeholder="Nama Penanggung Jawab" required>
                         </div>
                     </div>
                     <div class="col-span-12 lg:col-span-6">
                         <div class="input-group">
-                            {{ html()->label('PIC LKE')->for('pic_lke') }} <span class="text-theme-6">*</span>
-                            <input type="text" name="pic_lke" id="pic_lke" class="input w-full border mt-2 flex-1" placeholder="Nama PIC LKE" required>
+                            {{ html()->label('PIC LKE')->for('pic_lke-tambah') }} <span class="text-theme-6">*</span>
+                            <input type="text" name="pic_lke" id="pic_lke-tambah" class="input w-full border mt-2 flex-1" placeholder="Nama PIC LKE" required>
                         </div>
                     </div>
                     <div class="col-span-12 lg:col-span-6">
                         <div class="input-group">
-                            {{ html()->label('Link LKE')->for('link_lke') }} <span class="text-theme-6">*</span>
-                            <input type="url" name="link_lke" id="link_lke" class="input w-full border mt-2 flex-1" placeholder="Link LKE" required>
+                            {{ html()->label('Link LKE')->for('link_lke-tambah') }} <span class="text-theme-6">*</span>
+                            <input type="url" name="link_lke" id="link_lke-tambah" class="input w-full border mt-2 flex-1" placeholder="Link LKE" required>
                         </div>
                     </div>
                     <div class="col-span-12 lg:col-span-6">
                         <div class="input-group">
-                            {{ html()->label('File Surat Pengantar LHE')->for('file_evaluasi')->id('label_file_evaluasi') }}
+                            {{ html()->label('File Surat Pengantar LHE')->for('file_evaluasi-tambah')->id('label_file_evaluasi-tambah') }}
                             <span class="text-theme-6">*</span>
-                            <input type="file" name="file_evaluasi" id="file_evaluasi" class="input w-full border mt-2 flex-1" placeholder="Link LKE" accept="application/pdf" required>
+                            <input type="file" name="file_evaluasi" id="file_evaluasi-tambah" class="input w-full border mt-2 flex-1" placeholder="Link LKE" accept="application/pdf" required>
                         </div>
-                        <span class="italic text-sm" id="note_file_evaluasi">Pilih file jika ingin mengganti file
+                        <span class="italic text-sm" id="note_file_evaluasi-tambah" style="display: none;">Pilih file jika ingin mengganti file
                             tahun_lalu.</span>
                     </div>
                     <div class="col-span-12">
@@ -323,7 +322,7 @@
                             <div class="flex items-center">
                                 <div>Tahun Lalu <span class="text-theme-6">*</span></div>
                                 <div class="ml-auto">
-                                    <input type="text" name="nilai_komponen_perencanaan_kinerja_tahun_lalu" id="nilai_komponen_perencanaan_kinerja_tahun_lalu" class="input w-20 digit border flex-1 mt-2" required>
+                                    <input type="text" name="nilai_komponen_perencanaan_kinerja_tahun_lalu" id="nilai_komponen_perencanaan_kinerja_tahun_lalu-tambah" class="input w-20 digit border flex-1 mt-2" required>
                                 </div>
                             </div>
                         </div>
@@ -331,17 +330,17 @@
                             <div class="flex items-center">
                                 <div>Tahun Ini <span class="text-theme-6">*</span></div>
                                 <div class="ml-auto">
-                                    <input type="text" name="nilai_komponen_perencanaan_kinerja" id="nilai_komponen_perencanaan_kinerja" class="input w-20 digit border flex-1 mt-2" required>
+                                    <input type="text" name="nilai_komponen_perencanaan_kinerja" id="nilai_komponen_perencanaan_kinerja-tambah" class="input w-20 digit border flex-1 mt-2" required>
                                 </div>
                             </div>
                         </div>
                         <div class="input-group">
                             <label>Catatan : </label> <span class="text-theme-6">*</span>
-                            <textarea name="catatan_komponen_perencanaan_kinerja" id="catatan_komponen_perencanaan_kinerja" class="input editor w-full border mt-2 flex-1" cols="30" rows="3" placeholder="Catatan Nilai Komponen Perencanaan Kinerja" required></textarea>
+                            <textarea name="catatan_komponen_perencanaan_kinerja" id="catatan_komponen_perencanaan_kinerja-tambah" class="input editor-tambah w-full border mt-2 flex-1" cols="30" rows="3" placeholder="Catatan Nilai Komponen Perencanaan Kinerja" required></textarea>
                         </div>
                         <div class="input-group mt-2">
                             <label>Rekomendasi : </label> <span class="text-theme-6">*</span>
-                            <textarea name="rekomendasi_komponen_perencanaan_kinerja" id="rekomendasi_komponen_perencanaan_kinerja" class="input editor w-full border mt-2 flex-1" cols="30" rows="3" placeholder="Rekomendasi Nilai Komponen Perencanaan Kinerja" required></textarea>
+                            <textarea name="rekomendasi_komponen_perencanaan_kinerja" id="rekomendasi_komponen_perencanaan_kinerja-tambah" class="input editor-tambah w-full border mt-2 flex-1" cols="30" rows="3" placeholder="Rekomendasi Nilai Komponen Perencanaan Kinerja" required></textarea>
                         </div>
                     </div>
                     <div class="col-span-12 lg:col-span-6">
@@ -350,7 +349,7 @@
                             <div class="flex items-center">
                                 <div>Tahun lalu <span class="text-theme-6">*</span></div>
                                 <div class="ml-auto">
-                                    <input type="text" name="nilai_komponen_pengukuran_kinerja_tahun_lalu" id="nilai_komponen_pengukuran_kinerja_tahun_lalu" class="input w-20 digit border flex-1 mt-2" required>
+                                    <input type="text" name="nilai_komponen_pengukuran_kinerja_tahun_lalu" id="nilai_komponen_pengukuran_kinerja_tahun_lalu-tambah" class="input w-20 digit border flex-1 mt-2" required>
                                 </div>
                             </div>
                         </div>
@@ -358,17 +357,17 @@
                             <div class="flex items-center">
                                 <div>Tahun ini <span class="text-theme-6">*</span></div>
                                 <div class="ml-auto">
-                                    <input type="text" name="nilai_komponen_pengukuran_kinerja" id="nilai_komponen_pengukuran_kinerja" class="input w-20 digit border flex-1 mt-2" required>
+                                    <input type="text" name="nilai_komponen_pengukuran_kinerja" id="nilai_komponen_pengukuran_kinerja-tambah" class="input w-20 digit border flex-1 mt-2" required>
                                 </div>
                             </div>
                         </div>
                         <div class="input-group">
                             <label>Catatan : </label> <span class="text-theme-6">*</span>
-                            <textarea name="catatan_komponen_pengukuran_kinerja" id="catatan_komponen_pengukuran_kinerja" class="input editor w-full border mt-2 flex-1" cols="30" rows="3" placeholder="Catatan Nilai Komponen Pengukuran Kinerja" required></textarea>
+                            <textarea name="catatan_komponen_pengukuran_kinerja" id="catatan_komponen_pengukuran_kinerja-tambah" class="input editor-tambah w-full border mt-2 flex-1" cols="30" rows="3" placeholder="Catatan Nilai Komponen Pengukuran Kinerja" required></textarea>
                         </div>
                         <div class="input-group mt-2">
                             <label>Rekomendasi : </label> <span class="text-theme-6">*</span>
-                            <textarea name="rekomendasi_komponen_pengukuran_kinerja" id="rekomendasi_komponen_pengukuran_kinerja" class="input editor w-full border mt-2 flex-1" cols="30" rows="3" placeholder="Rekomendasi Nilai Komponen Pengukuran Kinerja" required></textarea>
+                            <textarea name="rekomendasi_komponen_pengukuran_kinerja" id="rekomendasi_komponen_pengukuran_kinerja-tambah" class="input editor-tambah w-full border mt-2 flex-1" cols="30" rows="3" placeholder="Rekomendasi Nilai Komponen Pengukuran Kinerja" required></textarea>
                         </div>
                     </div>
                     <div class="col-span-12 lg:col-span-6">
@@ -377,7 +376,7 @@
                             <div class="flex items-center">
                                 <div>Tahun lalu <span class="text-theme-6">*</span></div>
                                 <div class="ml-auto">
-                                    <input type="text" name="nilai_komponen_pelaporan_kinerja_tahun_lalu" id="nilai_komponen_pelaporan_kinerja_tahun_lalu" class="input w-20 digit border flex-1 mt-2" required>
+                                    <input type="text" name="nilai_komponen_pelaporan_kinerja_tahun_lalu" id="nilai_komponen_pelaporan_kinerja_tahun_lalu-tambah" class="input w-20 digit border flex-1 mt-2" required>
                                 </div>
                             </div>
                         </div>
@@ -385,17 +384,17 @@
                             <div class="flex items-center">
                                 <div>Tahun ini <span class="text-theme-6">*</span></div>
                                 <div class="ml-auto">
-                                    <input type="text" name="nilai_komponen_pelaporan_kinerja" id="nilai_komponen_pelaporan_kinerja" class="input w-20 digit border flex-1 mt-2" required>
+                                    <input type="text" name="nilai_komponen_pelaporan_kinerja" id="nilai_komponen_pelaporan_kinerja-tambah" class="input w-20 digit border flex-1 mt-2" required>
                                 </div>
                             </div>
                         </div>
                         <div class="input-group">
                             <label>Catatan : </label> <span class="text-theme-6">*</span>
-                            <textarea name="catatan_komponen_pelaporan_kinerja" id="catatan_komponen_pelaporan_kinerja" class="input editor w-full border mt-2 flex-1" cols="30" rows="3" placeholder="Catatan Nilai Komponen Pelaporan Kinerja" required></textarea>
+                            <textarea name="catatan_komponen_pelaporan_kinerja" id="catatan_komponen_pelaporan_kinerja-tambah" class="input editor-tambah w-full border mt-2 flex-1" cols="30" rows="3" placeholder="Catatan Nilai Komponen Pelaporan Kinerja" required></textarea>
                         </div>
                         <div class="input-group mt-2">
                             <label>Rekomendasi : </label> <span class="text-theme-6">*</span>
-                            <textarea name="rekomendasi_komponen_pelaporan_kinerja" id="rekomendasi_komponen_pelaporan_kinerja" class="input editor w-full border mt-2 flex-1" cols="30" rows="3" placeholder="Rekomendasi Nilai Komponen Pelaporan Kinerja" required></textarea>
+                            <textarea name="rekomendasi_komponen_pelaporan_kinerja" id="rekomendasi_komponen_pelaporan_kinerja-tambah" class="input editor-tambah w-full border mt-2 flex-1" cols="30" rows="3" placeholder="Rekomendasi Nilai Komponen Pelaporan Kinerja" required></textarea>
                         </div>
                     </div>
                     <div class="col-span-12 lg:col-span-6">
@@ -404,7 +403,7 @@
                             <div class="flex items-center">
                                 <div>Tahun lalu <span class="text-theme-6">*</span></div>
                                 <div class="ml-auto">
-                                    <input type="text" name="nilai_komponen_evaluasi_internal_tahun_lalu" id="nilai_komponen_evaluasi_internal_tahun_lalu" class="input w-20 digit border flex-1 mt-2" required>
+                                    <input type="text" name="nilai_komponen_evaluasi_internal_tahun_lalu" id="nilai_komponen_evaluasi_internal_tahun_lalu-tambah" class="input w-20 digit border flex-1 mt-2" required>
                                 </div>
                             </div>
                         </div>
@@ -412,17 +411,17 @@
                             <div class="flex items-center">
                                 <div>Tahun ini <span class="text-theme-6">*</span></div>
                                 <div class="ml-auto">
-                                    <input type="text" name="nilai_komponen_evaluasi_internal" id="nilai_komponen_evaluasi_internal" class="input w-20 digit border flex-1 mt-2" required>
+                                    <input type="text" name="nilai_komponen_evaluasi_internal" id="nilai_komponen_evaluasi_internal-tambah" class="input w-20 digit border flex-1 mt-2" required>
                                 </div>
                             </div>
                         </div>
                         <div class="input-group">
                             <label>Catatan : </label> <span class="text-theme-6">*</span>
-                            <textarea name="catatan_komponen_evaluasi_internal" id="catatan_komponen_evaluasi_internal" class="input editor w-full border mt-2 flex-1" cols="30" rows="3" placeholder="Catatan Nilai Komponen Evaluasi Internal" required></textarea>
+                            <textarea name="catatan_komponen_evaluasi_internal" id="catatan_komponen_evaluasi_internal-tambah" class="input editor-tambah w-full border mt-2 flex-1" cols="30" rows="3" placeholder="Catatan Nilai Komponen Evaluasi Internal" required></textarea>
                         </div>
                         <div class="input-group mt-2">
                             <label>Rekomendasi : </label> <span class="text-theme-6">*</span>
-                            <textarea name="rekomendasi_komponen_evaluasi_internal" id="rekomendasi_komponen_evaluasi_internal" class="input editor w-full border mt-2 flex-1" cols="30" rows="3" placeholder="Rekomendasi Nilai Komponen Evaluasi Internal" required></textarea>
+                            <textarea name="rekomendasi_komponen_evaluasi_internal" id="rekomendasi_komponen_evaluasi_internal-tambah" class="input editor-tambah w-full border mt-2 flex-1" cols="30" rows="3" placeholder="Rekomendasi Nilai Komponen Evaluasi Internal" required></textarea>
                         </div>
                     </div>
                     <div class="col-span-12">
@@ -433,7 +432,7 @@
                                 <div>Tahun lalu <span class="text-theme-6">*</span>
                                 </div>
                                 <div class="ml-auto">
-                                    <input type="text" name="nilai_total_evaluasi_akip_tahun_lalu" id="nilai_total_evaluasi_akip_tahun_lalu" class="input w-20 digit border flex-1 mt-2" required>
+                                    <input type="text" name="nilai_total_evaluasi_akip_tahun_lalu" id="nilai_total_evaluasi_akip_tahun_lalu-tambah" class="input w-20 digit border flex-1 mt-2" required>
                                 </div>
                             </div>
                         </div>
@@ -442,7 +441,7 @@
                                 <div>Tahun ini <span class="text-theme-6">*</span>
                                 </div>
                                 <div class="ml-auto">
-                                    <input type="text" name="nilai_total_evaluasi_akip" id="nilai_total_evaluasi_akip" class="input w-20 digit border flex-1 mt-2" required>
+                                    <input type="text" name="nilai_total_evaluasi_akip" id="nilai_total_evaluasi_akip-tambah" class="input w-20 digit border flex-1 mt-2" required>
                                 </div>
                             </div>
                         </div>
@@ -468,10 +467,10 @@
                                             </div>
                                         </td>
                                         <td>
-                                            <input type="text" name="angka_kemiskinan_tahun_lalu" id="angka_kemiskinan_tahun_lalu" class="input w-20 digit border flex-1 mt-2" required>
+                                            <input type="text" name="angka_kemiskinan_tahun_lalu" id="angka_kemiskinan_tahun_lalu-tambah" class="input w-20 digit border flex-1 mt-2" required>
                                         </td>
                                         <td>
-                                            <input type="text" name="angka_kemiskinan" id="angka_kemiskinan" class="input w-20 digit border flex-1 mt-2" required>
+                                            <input type="text" name="angka_kemiskinan" id="angka_kemiskinan-tambah" class="input w-20 digit border flex-1 mt-2" required>
                                         </td>
                                     </tr>
                                     <tr>
@@ -481,10 +480,10 @@
                                             </div>
                                         </td>
                                         <td>
-                                            <input type="text" name="laju_pertumbuhan_ekonomi_tahun_lalu" id="laju_pertumbuhan_ekonomi_tahun_lalu" class="input w-20 digit border flex-1 mt-2" required>
+                                            <input type="text" name="laju_pertumbuhan_ekonomi_tahun_lalu" id="laju_pertumbuhan_ekonomi_tahun_lalu-tambah" class="input w-20 digit border flex-1 mt-2" required>
                                         </td>
                                         <td>
-                                            <input type="text" name="laju_pertumbuhan_ekonomi" id="laju_pertumbuhan_ekonomi" class="input w-20 digit border flex-1 mt-2" required>
+                                            <input type="text" name="laju_pertumbuhan_ekonomi" id="laju_pertumbuhan_ekonomi-tambah" class="input w-20 digit border flex-1 mt-2" required>
                                         </td>
                                     </tr>
                                     <tr>
@@ -494,10 +493,10 @@
                                             </div>
                                         </td>
                                         <td>
-                                            <input type="text" name="tingkat_pengangguran_terbuka_tahun_lalu" id="tingkat_pengangguran_terbuka_tahun_lalu" class="input w-20 digit border flex-1 mt-2" required>
+                                            <input type="text" name="tingkat_pengangguran_terbuka_tahun_lalu" id="tingkat_pengangguran_terbuka_tahun_lalu-tambah" class="input w-20 digit border flex-1 mt-2" required>
                                         </td>
                                         <td>
-                                            <input type="text" name="tingkat_pengangguran_terbuka" id="tingkat_pengangguran_terbuka" class="input w-20 digit border flex-1 mt-2" required>
+                                            <input type="text" name="tingkat_pengangguran_terbuka" id="tingkat_pengangguran_terbuka-tambah" class="input w-20 digit border flex-1 mt-2" required>
                                         </td>
                                     </tr>
                                     <tr>
@@ -507,10 +506,10 @@
                                             </div>
                                         </td>
                                         <td>
-                                            <input type="text" name="penurunan_emisi_grk_tahun_lalu" id="penurunan_emisi_grk_tahun_lalu" class="input w-20 digit border flex-1 mt-2" required>
+                                            <input type="text" name="penurunan_emisi_grk_tahun_lalu" id="penurunan_emisi_grk_tahun_lalu-tambah" class="input w-20 digit border flex-1 mt-2" required>
                                         </td>
                                         <td>
-                                            <input type="text" name="penurunan_emisi_grk" id="penurunan_emisi_grk" class="input w-20 digit border flex-1 mt-2" required>
+                                            <input type="text" name="penurunan_emisi_grk" id="penurunan_emisi_grk-tambah" class="input w-20 digit border flex-1 mt-2" required>
                                         </td>
                                     </tr>
                                     <tr>
@@ -520,10 +519,10 @@
                                             </div>
                                         </td>
                                         <td>
-                                            <input type="text" name="indeks_pembangunan_manusia_tahun_lalu" id="indeks_pembangunan_manusia_tahun_lalu" class="input w-20 digit border flex-1 mt-2" required>
+                                            <input type="text" name="indeks_pembangunan_manusia_tahun_lalu" id="indeks_pembangunan_manusia_tahun_lalu-tambah" class="input w-20 digit border flex-1 mt-2" required>
                                         </td>
                                         <td>
-                                            <input type="text" name="indeks_pembangunan_manusia" id="indeks_pembangunan_manusia" class="input w-20 digit border flex-1 mt-2" required>
+                                            <input type="text" name="indeks_pembangunan_manusia" id="indeks_pembangunan_manusia-tambah" class="input w-20 digit border flex-1 mt-2" required>
                                         </td>
                                     </tr>
                                     <tr>
@@ -533,10 +532,10 @@
                                             </div>
                                         </td>
                                         <td>
-                                            <input type="text" name="indeks_gini_ratio_tahun_lalu" id="indeks_gini_ratio_tahun_lalu" class="input w-20 digit border flex-1 mt-2" required>
+                                            <input type="text" name="indeks_gini_ratio_tahun_lalu" id="indeks_gini_ratio_tahun_lalu-tambah" class="input w-20 digit border flex-1 mt-2" required>
                                         </td>
                                         <td>
-                                            <input type="text" name="indeks_gini_ratio" id="indeks_gini_ratio" class="input w-20 digit border flex-1 mt-2" required>
+                                            <input type="text" name="indeks_gini_ratio" id="indeks_gini_ratio-tambah" class="input w-20 digit border flex-1 mt-2" required>
                                         </td>
                                     </tr>
                                     <tr>
@@ -546,10 +545,10 @@
                                             </div>
                                         </td>
                                         <td>
-                                            <input type="text" name="pendapatan_perkapita_tahun_lalu" id="pendapatan_perkapita_tahun_lalu" class="input w-28 currency border flex-1 mt-2" required>
+                                            <input type="text" name="pendapatan_perkapita_tahun_lalu" id="pendapatan_perkapita_tahun_lalu-tambah" class="input w-28 currency border flex-1 mt-2" required>
                                         </td>
                                         <td>
-                                            <input type="text" name="pendapatan_perkapita" id="pendapatan_perkapita" class="input w-28 currency border flex-1 mt-2" required>
+                                            <input type="text" name="pendapatan_perkapita" id="pendapatan_perkapita-tambah" class="input w-28 currency border flex-1 mt-2" required>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -559,12 +558,347 @@
                 </div>
                 <div class="px-5 py-3 text-right border-t border-gray-200">
                     <button type="button" data-dismiss="modal" class="button w-20 border text-gray-700 mr-1">Cancel</button>
-                    <button type="submit" class="button w-20 bg-theme-1 text-white saveButton">Simpan</button>
+                    <button type="submit" class="button w-20 bg-theme-1 text-white saveButton-tambah">
+                        <span class="button-text">Simpan</span>
+                        <span class="button-spinner" style="display: none;">
+                            <svg class="animate-spin h-4 w-4 inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                        </span>
+                    </button>
                 </div>
                 {{ html()->form()->close() }}
             </div>
         </div>
         {{-- End Modal Tambah --}}
+
+        {{-- Modal Edit --}}
+        <div class="modal" id="modal-form-evaluasi-edit">
+            <div class="modal__content modal__content--xl" style="position: relative;">
+                {{-- Loading Overlay --}}
+                <div id="loading-overlay-edit" style="display: none; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(255, 255, 255, 0.9); z-index: 1000; align-items: center; justify-content: center; border-radius: 0.375rem;" class="flex">
+                    <div class="text-center">
+                        <svg class="animate-spin h-12 w-12 text-theme-1 mx-auto mb-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        <p class="text-gray-600 font-medium">Memuat data evaluasi...</p>
+                    </div>
+                </div>
+                <div class="flex items-center px-5 py-5 sm:py-3 border-b border-gray-200">
+                    <h2 class="font-medium text-base mr-auto">
+                        Edit Penilaian
+                    </h2>
+                </div>
+                {{ html()->form('POST', '#')->id('form-sakip-edit')->class('validate-form')->acceptsFiles()->open() }}
+                @csrf
+                {{ html()->hidden('id_evaluasi')->id('id_evaluasi-edit') }}
+                <div class="p-5 grid grid-cols-12 gap-4 row-gap-3">
+                    <div class="col-span-12 lg:col-span-6">
+                        <div class="input-group">
+                            {{ html()->label('Tahun')->for('tahun-edit') }} <span class="text-theme-6">*</span>
+                            <div class="mt-2">
+                                {{ html()->select('tahun', ['2025' => '2025'], 2025)->id('tahun-edit')->class('select2 w-full hide-search')->placeholder('Pilih Tahun')->attributes(['disabled' => 'disabled'])->required() }}
+                            </div>
+                        </div>
+                    </div>
+                    @if ($instansi->group != 'kl')
+                        <div class="col-span-12 lg:col-span-6">
+                            <div class="input-group">
+                                {{ html()->label('Periode')->for('periode-edit') }} <span class="text-theme-6">*</span>
+                                <div class="mt-2">
+                                    {{ html()->select('periode', ['TW 1' => 'TW 1', 'TW 2' => 'TW 2', 'TW 3' => 'TW 3', 'Final' => 'Final'], null)->id('periode-edit')->class('select2 w-full no-search')->placeholder('Pilih Periode')->attributes(['disabled' => 'disabled'])->required() }}
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+                    <div class="col-span-12 lg:col-span-6">
+                        <div class="input-group">
+                            {{ html()->label('Penanggung Jawab')->for('penanggung_jawab-edit') }} <span class="text-theme-6">*</span>
+                            <input type="text" name="penanggung_jawab" id="penanggung_jawab-edit" class="input w-full border mt-2 flex-1" placeholder="Nama Penanggung Jawab" required>
+                        </div>
+                    </div>
+                    <div class="col-span-12 lg:col-span-6">
+                        <div class="input-group">
+                            {{ html()->label('PIC LKE')->for('pic_lke-edit') }} <span class="text-theme-6">*</span>
+                            <input type="text" name="pic_lke" id="pic_lke-edit" class="input w-full border mt-2 flex-1" placeholder="Nama PIC LKE" required>
+                        </div>
+                    </div>
+                    <div class="col-span-12 lg:col-span-6">
+                        <div class="input-group">
+                            {{ html()->label('Link LKE')->for('link_lke-edit') }} <span class="text-theme-6">*</span>
+                            <input type="url" name="link_lke" id="link_lke-edit" class="input w-full border mt-2 flex-1" placeholder="Link LKE" required>
+                        </div>
+                    </div>
+                    <div class="col-span-12 lg:col-span-6">
+                        <div class="input-group">
+                            {{ html()->label('File Surat Pengantar LHE')->for('file_evaluasi-edit')->id('label_file_evaluasi-edit') }}
+                            <span class="text-theme-6"></span>
+                            <input type="file" name="file_evaluasi" id="file_evaluasi-edit" class="input w-full border mt-2 flex-1" placeholder="Link LKE" accept="application/pdf">
+                        </div>
+                        <span class="italic text-sm" id="note_file_evaluasi-edit">Pilih file jika ingin mengganti file
+                            tahun_lalu.</span>
+                    </div>
+                    <div class="col-span-12">
+                        <hr>
+                    </div>
+                    <div class="col-span-12 lg:col-span-6">
+                        <div class="font-medium">Nilai Komponen Perencanaan Kinerja</div>
+                        <div class="input-group">
+                            <div class="flex items-center">
+                                <div>Tahun Lalu <span class="text-theme-6">*</span></div>
+                                <div class="ml-auto">
+                                    <input type="text" name="nilai_komponen_perencanaan_kinerja_tahun_lalu" id="nilai_komponen_perencanaan_kinerja_tahun_lalu-edit" class="input w-20 digit border flex-1 mt-2" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <div class="flex items-center">
+                                <div>Tahun Ini <span class="text-theme-6">*</span></div>
+                                <div class="ml-auto">
+                                    <input type="text" name="nilai_komponen_perencanaan_kinerja" id="nilai_komponen_perencanaan_kinerja-edit" class="input w-20 digit border flex-1 mt-2" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label>Catatan : </label> <span class="text-theme-6">*</span>
+                            <textarea name="catatan_komponen_perencanaan_kinerja" id="catatan_komponen_perencanaan_kinerja-edit" class="input editor-edit w-full border mt-2 flex-1" cols="30" rows="3" placeholder="Catatan Nilai Komponen Perencanaan Kinerja" required></textarea>
+                        </div>
+                        <div class="input-group mt-2">
+                            <label>Rekomendasi : </label> <span class="text-theme-6">*</span>
+                            <textarea name="rekomendasi_komponen_perencanaan_kinerja" id="rekomendasi_komponen_perencanaan_kinerja-edit" class="input editor-edit w-full border mt-2 flex-1" cols="30" rows="3" placeholder="Rekomendasi Nilai Komponen Perencanaan Kinerja" required></textarea>
+                        </div>
+                    </div>
+                    <div class="col-span-12 lg:col-span-6">
+                        <div class="font-medium">Nilai Komponen Pengukuran Kinerja</div>
+                        <div class="input-group">
+                            <div class="flex items-center">
+                                <div>Tahun lalu <span class="text-theme-6">*</span></div>
+                                <div class="ml-auto">
+                                    <input type="text" name="nilai_komponen_pengukuran_kinerja_tahun_lalu" id="nilai_komponen_pengukuran_kinerja_tahun_lalu-edit" class="input w-20 digit border flex-1 mt-2" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <div class="flex items-center">
+                                <div>Tahun ini <span class="text-theme-6">*</span></div>
+                                <div class="ml-auto">
+                                    <input type="text" name="nilai_komponen_pengukuran_kinerja" id="nilai_komponen_pengukuran_kinerja-edit" class="input w-20 digit border flex-1 mt-2" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label>Catatan : </label> <span class="text-theme-6">*</span>
+                            <textarea name="catatan_komponen_pengukuran_kinerja" id="catatan_komponen_pengukuran_kinerja-edit" class="input editor-edit w-full border mt-2 flex-1" cols="30" rows="3" placeholder="Catatan Nilai Komponen Pengukuran Kinerja" required></textarea>
+                        </div>
+                        <div class="input-group mt-2">
+                            <label>Rekomendasi : </label> <span class="text-theme-6">*</span>
+                            <textarea name="rekomendasi_komponen_pengukuran_kinerja" id="rekomendasi_komponen_pengukuran_kinerja-edit" class="input editor-edit w-full border mt-2 flex-1" cols="30" rows="3" placeholder="Rekomendasi Nilai Komponen Pengukuran Kinerja" required></textarea>
+                        </div>
+                    </div>
+                    <div class="col-span-12 lg:col-span-6">
+                        <div class="font-medium">Nilai Komponen Pelaporan Kinerja</div>
+                        <div class="input-group">
+                            <div class="flex items-center">
+                                <div>Tahun lalu <span class="text-theme-6">*</span></div>
+                                <div class="ml-auto">
+                                    <input type="text" name="nilai_komponen_pelaporan_kinerja_tahun_lalu" id="nilai_komponen_pelaporan_kinerja_tahun_lalu-edit" class="input w-20 digit border flex-1 mt-2" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <div class="flex items-center">
+                                <div>Tahun ini <span class="text-theme-6">*</span></div>
+                                <div class="ml-auto">
+                                    <input type="text" name="nilai_komponen_pelaporan_kinerja" id="nilai_komponen_pelaporan_kinerja-edit" class="input w-20 digit border flex-1 mt-2" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label>Catatan : </label> <span class="text-theme-6">*</span>
+                            <textarea name="catatan_komponen_pelaporan_kinerja" id="catatan_komponen_pelaporan_kinerja-edit" class="input editor-edit w-full border mt-2 flex-1" cols="30" rows="3" placeholder="Catatan Nilai Komponen Pelaporan Kinerja" required></textarea>
+                        </div>
+                        <div class="input-group mt-2">
+                            <label>Rekomendasi : </label> <span class="text-theme-6">*</span>
+                            <textarea name="rekomendasi_komponen_pelaporan_kinerja" id="rekomendasi_komponen_pelaporan_kinerja-edit" class="input editor-edit w-full border mt-2 flex-1" cols="30" rows="3" placeholder="Rekomendasi Nilai Komponen Pelaporan Kinerja" required></textarea>
+                        </div>
+                    </div>
+                    <div class="col-span-12 lg:col-span-6">
+                        <div class="font-medium">Nilai Komponen Evaluasi Internal</div>
+                        <div class="input-group">
+                            <div class="flex items-center">
+                                <div>Tahun lalu <span class="text-theme-6">*</span></div>
+                                <div class="ml-auto">
+                                    <input type="text" name="nilai_komponen_evaluasi_internal_tahun_lalu" id="nilai_komponen_evaluasi_internal_tahun_lalu-edit" class="input w-20 digit border flex-1 mt-2" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <div class="flex items-center">
+                                <div>Tahun ini <span class="text-theme-6">*</span></div>
+                                <div class="ml-auto">
+                                    <input type="text" name="nilai_komponen_evaluasi_internal" id="nilai_komponen_evaluasi_internal-edit" class="input w-20 digit border flex-1 mt-2" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label>Catatan : </label> <span class="text-theme-6">*</span>
+                            <textarea name="catatan_komponen_evaluasi_internal" id="catatan_komponen_evaluasi_internal-edit" class="input editor-edit w-full border mt-2 flex-1" cols="30" rows="3" placeholder="Catatan Nilai Komponen Evaluasi Internal" required></textarea>
+                        </div>
+                        <div class="input-group mt-2">
+                            <label>Rekomendasi : </label> <span class="text-theme-6">*</span>
+                            <textarea name="rekomendasi_komponen_evaluasi_internal" id="rekomendasi_komponen_evaluasi_internal-edit" class="input editor-edit w-full border mt-2 flex-1" cols="30" rows="3" placeholder="Rekomendasi Nilai Komponen Evaluasi Internal" required></textarea>
+                        </div>
+                    </div>
+                    <div class="col-span-12">
+                        <div class="font-medium">Nilai Total Evaluasi AKIP <span class="text-theme-6">*</span>
+                        </div>
+                        <div class="input-group">
+                            <div class="flex items-center">
+                                <div>Tahun lalu <span class="text-theme-6">*</span>
+                                </div>
+                                <div class="ml-auto">
+                                    <input type="text" name="nilai_total_evaluasi_akip_tahun_lalu" id="nilai_total_evaluasi_akip_tahun_lalu-edit" class="input w-20 digit border flex-1 mt-2" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <div class="flex items-center">
+                                <div>Tahun ini <span class="text-theme-6">*</span>
+                                </div>
+                                <div class="ml-auto">
+                                    <input type="text" name="nilai_total_evaluasi_akip" id="nilai_total_evaluasi_akip-edit" class="input w-20 digit border flex-1 mt-2" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @if ($instansi->group != 'kl')
+                        <div class="col-span-12">
+                            <hr>
+                        </div>
+                        <div class="col-span-12">
+                            <table class="table table-report table-report--bordered display datatable w-full table-fixed table-p-0">
+                                <thead>
+                                    <tr>
+                                        <th class="border-b-2 p-5">Input Hasil Capaian Indikator Makro</th>
+                                        <th class="border-b-2 p-5 w-32">Tahun lalu</th>
+                                        <th class="border-b-2 p-5 w-32">Tahun ini</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <div class="input-group">
+                                                Angka Kemiskinan <span class="text-theme-6">*</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <input type="text" name="angka_kemiskinan_tahun_lalu" id="angka_kemiskinan_tahun_lalu-edit" class="input w-20 digit border flex-1 mt-2" required>
+                                        </td>
+                                        <td>
+                                            <input type="text" name="angka_kemiskinan" id="angka_kemiskinan-edit" class="input w-20 digit border flex-1 mt-2" required>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="input-group">
+                                                Laju Pertumbuhan Ekonomi <span class="text-theme-6">*</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <input type="text" name="laju_pertumbuhan_ekonomi_tahun_lalu" id="laju_pertumbuhan_ekonomi_tahun_lalu-edit" class="input w-20 digit border flex-1 mt-2" required>
+                                        </td>
+                                        <td>
+                                            <input type="text" name="laju_pertumbuhan_ekonomi" id="laju_pertumbuhan_ekonomi-edit" class="input w-20 digit border flex-1 mt-2" required>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="input-group">
+                                                Tingkat Pengangguran terbuka <span class="text-theme-6">*</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <input type="text" name="tingkat_pengangguran_terbuka_tahun_lalu" id="tingkat_pengangguran_terbuka_tahun_lalu-edit" class="input w-20 digit border flex-1 mt-2" required>
+                                        </td>
+                                        <td>
+                                            <input type="text" name="tingkat_pengangguran_terbuka" id="tingkat_pengangguran_terbuka-edit" class="input w-20 digit border flex-1 mt-2" required>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="input-group">
+                                                Penurunan emisi GRK <span class="text-theme-6">*</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <input type="text" name="penurunan_emisi_grk_tahun_lalu" id="penurunan_emisi_grk_tahun_lalu-edit" class="input w-20 digit border flex-1 mt-2" required>
+                                        </td>
+                                        <td>
+                                            <input type="text" name="penurunan_emisi_grk" id="penurunan_emisi_grk-edit" class="input w-20 digit border flex-1 mt-2" required>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="input-group">
+                                                Indeks Pembangunan Manusia <span class="text-theme-6">*</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <input type="text" name="indeks_pembangunan_manusia_tahun_lalu" id="indeks_pembangunan_manusia_tahun_lalu-edit" class="input w-20 digit border flex-1 mt-2" required>
+                                        </td>
+                                        <td>
+                                            <input type="text" name="indeks_pembangunan_manusia" id="indeks_pembangunan_manusia-edit" class="input w-20 digit border flex-1 mt-2" required>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="input-group">
+                                                Indeks Gini Ratio <span class="text-theme-6">*</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <input type="text" name="indeks_gini_ratio_tahun_lalu" id="indeks_gini_ratio_tahun_lalu-edit" class="input w-20 digit border flex-1 mt-2" required>
+                                        </td>
+                                        <td>
+                                            <input type="text" name="indeks_gini_ratio" id="indeks_gini_ratio-edit" class="input w-20 digit border flex-1 mt-2" required>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="input-group">
+                                                Pendapatan Perkapita <span class="text-theme-6">*</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <input type="text" name="pendapatan_perkapita_tahun_lalu" id="pendapatan_perkapita_tahun_lalu-edit" class="input w-28 currency border flex-1 mt-2" required>
+                                        </td>
+                                        <td>
+                                            <input type="text" name="pendapatan_perkapita" id="pendapatan_perkapita-edit" class="input w-28 currency border flex-1 mt-2" required>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    @endif
+                </div>
+                <div class="px-5 py-3 text-right border-t border-gray-200">
+                    <button type="button" data-dismiss="modal" class="button w-20 border text-gray-700 mr-1">Cancel</button>
+                    <button type="submit" class="button w-20 bg-theme-1 text-white saveButton-edit">
+                        <span class="button-text">Simpan</span>
+                        <span class="button-spinner" style="display: none;">
+                            <svg class="animate-spin h-4 w-4 inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                        </span>
+                    </button>
+                </div>
+                {{ html()->form()->close() }}
+            </div>
+        </div>
+        {{-- End Modal Edit --}}
     @endif
 @endsection
 
@@ -589,7 +923,32 @@
         <script src="{{ asset('ext') }}/summernote/summernote-lite.min.js"></script>
         <script>
             $(document).ready(function() {
-                $('.editor').each(function() {
+                // Initialize summernote for tambah form
+                $('.editor-tambah').each(function() {
+                    var $this = $(this);
+                    $this.summernote({
+                        placeholder: $this.attr('placeholder'),
+                        toolbar: [
+                            ['style', ['bold', 'italic', 'underline', 'clear']],
+                            ['font', ['strikethrough', 'superscript', 'subscript']]
+                        ],
+                        height: 100,
+                        callbacks: {
+                            onPaste: function(e) {
+                                e.preventDefault();
+
+                                const clipboardData = (e.originalEvent || e).clipboardData;
+                                const text = clipboardData.getData('text/plain');
+
+                                // Sisipkan sebagai teks biasa
+                                document.execCommand('insertText', false, text);
+                            }
+                        }
+                    });
+                });
+                
+                // Initialize summernote for edit form
+                $('.editor-edit').each(function() {
                     var $this = $(this);
                     $this.summernote({
                         placeholder: $this.attr('placeholder'),
@@ -613,6 +972,7 @@
                 });
             });
 
+            // Initialize input mask for both forms
             $(".digit").inputmask("decimal", {
                 radixPoint: ",", // koma sebagai pemisah desimal
                 groupSeparator: ".", // titik sebagai pemisah ribuan
@@ -652,43 +1012,58 @@
                 }
             });
 
-            resetForm = function() {
-                $('#form-sakip').trigger('reset');
-                $('#form-sakip').find('.select2').val(2025).trigger('change');
-                $('#id_evaluasi').val('');
-                $('#file_evaluasi').prop('required', true);
-                $('#note_file_evaluasi').hide();
-                $('#tahun').prop('disabled', false);
-                $('#periode').prop('disabled', false);
-                $('.saveButton').prop('disabled', false);
-                $('.editor').each(function() {
+            openModalTambah = function() {
+                resetFormTambah();
+                $('#modal-form-evaluasi-tambah').modal('show');
+            }
+
+            resetFormTambah = function() {
+                $('#form-sakip-tambah').trigger('reset');
+                $('#form-sakip-tambah').find('.select2').val(2025).trigger('change');
+                $('#file_evaluasi-tambah').prop('required', true);
+                $('#note_file_evaluasi-tambah').hide();
+                $('#tahun-tambah').prop('disabled', false);
+                $('#periode-tambah').prop('disabled', false);
+                
+                // Reset button state
+                var $saveButton = $('.saveButton-tambah');
+                $saveButton.prop('disabled', false);
+                $saveButton.find('.button-text').text('Simpan');
+                $saveButton.find('.button-spinner').hide();
+                
+                $('.editor-tambah').each(function() {
                     $(this).summernote('code', '');
                 });
-                validator.resetForm();
+                if (typeof validatorTambah !== 'undefined') {
+                    validatorTambah.resetForm();
+                }
                 
                 // Reset period dropdown to enabled state
-                $('#periode').find('option').each(function() {
+                $('#periode-tambah').find('option').each(function() {
                     $(this).prop('disabled', false);
                     $(this).removeClass('text-gray-400');
                 });
                 
                 // Trigger cekPeriode to update dropdown based on current year
-                cekPeriode();
+                cekPeriode('tambah');
             }
 
-            cekPeriode = function() {
-                var tahun = $('#tahun').val();
-                var periode = $('#periode').val();
-                var id_evaluasi = $('#id_evaluasi').val();
+            cekPeriode = function(formType) {
+                formType = formType || 'tambah';
+                var suffix = formType === 'edit' ? '-edit' : '-tambah';
+                var tahun = $('#tahun' + suffix).val();
+                var periode = $('#periode' + suffix).val();
+                var id_evaluasi = $('#id_evaluasi' + suffix).val();
                 if (periode && periode != "Final") {
-                    $("#label_file_evaluasi").text("File Catatan Evaluasi");
+                    $("#label_file_evaluasi" + suffix).text("File Catatan Evaluasi");
                 } else {
-                    $("#label_file_evaluasi").text("File Surat Pengantar LHE");
+                    $("#label_file_evaluasi" + suffix).text("File Surat Pengantar LHE");
                 }
-                if (tahun && !id_evaluasi) {
+                if (tahun && !id_evaluasi && formType === 'tambah') {
                     $.ajax({
                         url: "{{ route('akip.evaluasi.check', $instansi->id) }}",
                         type: 'POST',
+                        cache: false,
                         data: {
                             tahun: tahun,
                             periode: periode || '',
@@ -696,46 +1071,46 @@
                         },
                         success: function(response) {
                             // Update period dropdown options based on filled periods
-                            updatePeriodDropdown(response.filled_periods);
+                            updatePeriodDropdown(response.filled_periods, formType);
                             
                             if (periode && response.exists) {
                                 Swal.fire('Error!', 'Penilaian untuk tahun ' + tahun + ' dan periode ' +
                                     periode +
                                     ' sudah ada.', 'error');
-                                $('.saveButton').prop('disabled', true);
+                                $('.saveButton-' + formType).prop('disabled', true);
                             } else {
-                                $('.saveButton').prop('disabled', false);
-                                if (response.evaluasi_sakip) {
-                                    $('#penanggung_jawab').val(response.evaluasi_sakip.penanggung_jawab);
-                                    $('#pic_lke').val(response.evaluasi_sakip.pic_lke);
-                                    $('#link_lke').val(response.evaluasi_sakip.link_lke);
-                                    $('#catatan_komponen_perencanaan_kinerja').summernote('code', response.evaluasi_sakip.catatan_komponen_perencanaan_kinerja);
-                                    $('#catatan_komponen_pengukuran_kinerja').summernote('code', response.evaluasi_sakip.catatan_komponen_pengukuran_kinerja);
-                                    $('#catatan_komponen_pelaporan_kinerja').summernote('code', response.evaluasi_sakip.catatan_komponen_pelaporan_kinerja);
-                                    $('#catatan_komponen_evaluasi_internal').summernote('code', response.evaluasi_sakip.catatan_komponen_evaluasi_internal);
-                                    $('#rekomendasi_komponen_perencanaan_kinerja').summernote('code', response.evaluasi_sakip.rekomendasi_komponen_perencanaan_kinerja);
-                                    $('#rekomendasi_komponen_pengukuran_kinerja').summernote('code', response.evaluasi_sakip.rekomendasi_komponen_pengukuran_kinerja);
-                                    $('#rekomendasi_komponen_pelaporan_kinerja').summernote('code', response.evaluasi_sakip.rekomendasi_komponen_pelaporan_kinerja);
-                                    $('#rekomendasi_komponen_evaluasi_internal').summernote('code', response.evaluasi_sakip.rekomendasi_komponen_evaluasi_internal);
-                                    $('#nilai_komponen_perencanaan_kinerja_tahun_lalu').val(response.evaluasi_sakip.nilai_komponen_perencanaan_kinerja_tahun_lalu);
-                                    $('#nilai_komponen_pengukuran_kinerja_tahun_lalu').val(response.evaluasi_sakip.nilai_komponen_pengukuran_kinerja_tahun_lalu);
-                                    $('#nilai_komponen_pelaporan_kinerja_tahun_lalu').val(response.evaluasi_sakip.nilai_komponen_pelaporan_kinerja_tahun_lalu);
-                                    $('#nilai_komponen_evaluasi_internal_tahun_lalu').val(response.evaluasi_sakip.nilai_komponen_evaluasi_internal_tahun_lalu);
-                                    $('#nilai_total_evaluasi_akip_tahun_lalu').val(response.evaluasi_sakip.nilai_total_evaluasi_akip_tahun_lalu);
-                                    $('#angka_kemiskinan').val(response.evaluasi_sakip.angka_kemiskinan);
-                                    $('#laju_pertumbuhan_ekonomi').val(response.evaluasi_sakip.laju_pertumbuhan_ekonomi);
-                                    $('#tingkat_pengangguran_terbuka').val(response.evaluasi_sakip.tingkat_pengangguran_terbuka);
-                                    $('#penurunan_emisi_grk').val(response.evaluasi_sakip.penurunan_emisi_grk);
-                                    $('#indeks_pembangunan_manusia').val(response.evaluasi_sakip.indeks_pembangunan_manusia);
-                                    $('#indeks_gini_ratio').val(response.evaluasi_sakip.indeks_gini_ratio);
-                                    $('#pendapatan_perkapita').val(response.evaluasi_sakip.pendapatan_perkapita);
-                                    $('#angka_kemiskinan_tahun_lalu').val(response.evaluasi_sakip.angka_kemiskinan_tahun_lalu);
-                                    $('#laju_pertumbuhan_ekonomi_tahun_lalu').val(response.evaluasi_sakip.laju_pertumbuhan_ekonomi_tahun_lalu);
-                                    $('#tingkat_pengangguran_terbuka_tahun_lalu').val(response.evaluasi_sakip.tingkat_pengangguran_terbuka_tahun_lalu);
-                                    $('#penurunan_emisi_grk_tahun_lalu').val(response.evaluasi_sakip.penurunan_emisi_grk_tahun_lalu);
-                                    $('#indeks_pembangunan_manusia_tahun_lalu').val(response.evaluasi_sakip.indeks_pembangunan_manusia_tahun_lalu);
-                                    $('#indeks_gini_ratio_tahun_lalu').val(response.evaluasi_sakip.indeks_gini_ratio_tahun_lalu);
-                                    $('#pendapatan_perkapita_tahun_lalu').val(response.evaluasi_sakip.pendapatan_perkapita_tahun_lalu);
+                                $('.saveButton-' + formType).prop('disabled', false);
+                                if (response.evaluasi_sakip && formType === 'tambah') {
+                                    $('#penanggung_jawab' + suffix).val(response.evaluasi_sakip.penanggung_jawab);
+                                    $('#pic_lke' + suffix).val(response.evaluasi_sakip.pic_lke);
+                                    $('#link_lke' + suffix).val(response.evaluasi_sakip.link_lke);
+                                    $('#catatan_komponen_perencanaan_kinerja' + suffix).summernote('code', response.evaluasi_sakip.catatan_komponen_perencanaan_kinerja);
+                                    $('#catatan_komponen_pengukuran_kinerja' + suffix).summernote('code', response.evaluasi_sakip.catatan_komponen_pengukuran_kinerja);
+                                    $('#catatan_komponen_pelaporan_kinerja' + suffix).summernote('code', response.evaluasi_sakip.catatan_komponen_pelaporan_kinerja);
+                                    $('#catatan_komponen_evaluasi_internal' + suffix).summernote('code', response.evaluasi_sakip.catatan_komponen_evaluasi_internal);
+                                    $('#rekomendasi_komponen_perencanaan_kinerja' + suffix).summernote('code', response.evaluasi_sakip.rekomendasi_komponen_perencanaan_kinerja);
+                                    $('#rekomendasi_komponen_pengukuran_kinerja' + suffix).summernote('code', response.evaluasi_sakip.rekomendasi_komponen_pengukuran_kinerja);
+                                    $('#rekomendasi_komponen_pelaporan_kinerja' + suffix).summernote('code', response.evaluasi_sakip.rekomendasi_komponen_pelaporan_kinerja);
+                                    $('#rekomendasi_komponen_evaluasi_internal' + suffix).summernote('code', response.evaluasi_sakip.rekomendasi_komponen_evaluasi_internal);
+                                    $('#nilai_komponen_perencanaan_kinerja_tahun_lalu' + suffix).val(response.evaluasi_sakip.nilai_komponen_perencanaan_kinerja_tahun_lalu);
+                                    $('#nilai_komponen_pengukuran_kinerja_tahun_lalu' + suffix).val(response.evaluasi_sakip.nilai_komponen_pengukuran_kinerja_tahun_lalu);
+                                    $('#nilai_komponen_pelaporan_kinerja_tahun_lalu' + suffix).val(response.evaluasi_sakip.nilai_komponen_pelaporan_kinerja_tahun_lalu);
+                                    $('#nilai_komponen_evaluasi_internal_tahun_lalu' + suffix).val(response.evaluasi_sakip.nilai_komponen_evaluasi_internal_tahun_lalu);
+                                    $('#nilai_total_evaluasi_akip_tahun_lalu' + suffix).val(response.evaluasi_sakip.nilai_total_evaluasi_akip_tahun_lalu);
+                                    $('#angka_kemiskinan' + suffix).val(response.evaluasi_sakip.angka_kemiskinan);
+                                    $('#laju_pertumbuhan_ekonomi' + suffix).val(response.evaluasi_sakip.laju_pertumbuhan_ekonomi);
+                                    $('#tingkat_pengangguran_terbuka' + suffix).val(response.evaluasi_sakip.tingkat_pengangguran_terbuka);
+                                    $('#penurunan_emisi_grk' + suffix).val(response.evaluasi_sakip.penurunan_emisi_grk);
+                                    $('#indeks_pembangunan_manusia' + suffix).val(response.evaluasi_sakip.indeks_pembangunan_manusia);
+                                    $('#indeks_gini_ratio' + suffix).val(response.evaluasi_sakip.indeks_gini_ratio);
+                                    $('#pendapatan_perkapita' + suffix).val(response.evaluasi_sakip.pendapatan_perkapita);
+                                    $('#angka_kemiskinan_tahun_lalu' + suffix).val(response.evaluasi_sakip.angka_kemiskinan_tahun_lalu);
+                                    $('#laju_pertumbuhan_ekonomi_tahun_lalu' + suffix).val(response.evaluasi_sakip.laju_pertumbuhan_ekonomi_tahun_lalu);
+                                    $('#tingkat_pengangguran_terbuka_tahun_lalu' + suffix).val(response.evaluasi_sakip.tingkat_pengangguran_terbuka_tahun_lalu);
+                                    $('#penurunan_emisi_grk_tahun_lalu' + suffix).val(response.evaluasi_sakip.penurunan_emisi_grk_tahun_lalu);
+                                    $('#indeks_pembangunan_manusia_tahun_lalu' + suffix).val(response.evaluasi_sakip.indeks_pembangunan_manusia_tahun_lalu);
+                                    $('#indeks_gini_ratio_tahun_lalu' + suffix).val(response.evaluasi_sakip.indeks_gini_ratio_tahun_lalu);
+                                    $('#pendapatan_perkapita_tahun_lalu' + suffix).val(response.evaluasi_sakip.pendapatan_perkapita_tahun_lalu);
                                 }
                             }
                         }
@@ -744,8 +1119,10 @@
             }
 
             // Function to update period dropdown based on filled periods
-            updatePeriodDropdown = function(filledPeriods) {
-                var $periodeSelect = $('#periode');
+            updatePeriodDropdown = function(filledPeriods, formType) {
+                formType = formType || 'tambah';
+                var suffix = formType === 'edit' ? '-edit' : '-tambah';
+                var $periodeSelect = $('#periode' + suffix);
                 var currentValue = $periodeSelect.val();
                 
                 // Reset all options to enabled
@@ -762,12 +1139,13 @@
                 }
                 
                 // If current selection is disabled, clear it
-                if (currentValue && filledPeriods.includes(currentValue)) {
+                if (currentValue && filledPeriods && filledPeriods.includes(currentValue)) {
                     $periodeSelect.val('').trigger('change');
                 }
             }
 
-            var validator = $('#form-sakip').validate({
+            // Validator for Tambah Form
+            var validatorTambah = $('#form-sakip-tambah').validate({
                 ignore: [],
                 errorPlacement: function(error, element) {
                     try {
@@ -808,75 +1186,37 @@
                     }
                 },
                 submitHandler: function(form) {
-                    $('.saveButton').prop('disabled', true);
+                    var suffix = '-tambah';
+                    var $saveButton = $('.saveButton-tambah');
+                    var $buttonText = $saveButton.find('.button-text');
+                    var $buttonSpinner = $saveButton.find('.button-spinner');
+                    
+                    // Show loading state
+                    $saveButton.prop('disabled', true);
+                    $buttonText.text('Menyimpan...');
+                    $buttonSpinner.show();
                     
                     // Find the actual form element
-                    var formElement = $('#form-sakip')[0];
+                    var formElement = $('#form-sakip-tambah')[0];
                     
                     if (!formElement || formElement.tagName !== 'FORM') {
-                        // Try to get form from the submit button
-                        formElement = $('.saveButton').closest('form')[0];
-                        
+                        formElement = $('.saveButton-tambah').closest('form')[0];
                         if (!formElement || formElement.tagName !== 'FORM') {
-                            $('.saveButton').prop('disabled', false);
+                            $('.saveButton-tambah').prop('disabled', false);
                             return false;
                         }
                     }
                     
                     // Validate required fields before submission
-                    var isKL = $('#periode').length === 0;
-                    var isEdit = $('#id_evaluasi').val() !== '';
-                    
-                    var requiredFields = [];
-                    
-                    if (isEdit) {
-                        // For edit mode, validate all required fields
-                        requiredFields = [
-                            'penanggung_jawab', 'pic_lke', 'link_lke',
-                            'nilai_komponen_perencanaan_kinerja', 'nilai_komponen_pengukuran_kinerja',
-                            'nilai_komponen_pelaporan_kinerja', 'nilai_komponen_evaluasi_internal',
-                            'nilai_total_evaluasi_akip', 'nilai_komponen_perencanaan_kinerja_tahun_lalu',
-                            'nilai_komponen_pengukuran_kinerja_tahun_lalu', 'nilai_komponen_pelaporan_kinerja_tahun_lalu',
-                            'nilai_komponen_evaluasi_internal_tahun_lalu', 'nilai_total_evaluasi_akip_tahun_lalu',
-                            'catatan_komponen_perencanaan_kinerja', 'rekomendasi_komponen_perencanaan_kinerja',
-                            'catatan_komponen_pengukuran_kinerja', 'rekomendasi_komponen_pengukuran_kinerja',
-                            'catatan_komponen_pelaporan_kinerja', 'rekomendasi_komponen_pelaporan_kinerja',
-                            'catatan_komponen_evaluasi_internal', 'rekomendasi_komponen_evaluasi_internal'
-                        ];
-                        
-                        // Add macro indicators for Pemda only
-                        if (!isKL) {
-                            requiredFields = requiredFields.concat([
-                                'angka_kemiskinan_tahun_lalu', 'angka_kemiskinan',
-                                'laju_pertumbuhan_ekonomi_tahun_lalu', 'laju_pertumbuhan_ekonomi',
-                                'tingkat_pengangguran_terbuka_tahun_lalu', 'tingkat_pengangguran_terbuka',
-                                'penurunan_emisi_grk_tahun_lalu', 'penurunan_emisi_grk',
-                                'indeks_pembangunan_manusia_tahun_lalu', 'indeks_pembangunan_manusia',
-                                'indeks_gini_ratio_tahun_lalu', 'indeks_gini_ratio',
-                                'pendapatan_perkapita_tahun_lalu', 'pendapatan_perkapita'
-                            ]);
-                        }
-                    } else {
-                        // For create mode
-                        requiredFields = isKL 
-                            ? ['tahun', 'penanggung_jawab', 'pic_lke', 'link_lke']
-                            : ['tahun', 'periode', 'penanggung_jawab', 'pic_lke', 'link_lke'];
-                    }
+                    var isKL = $('#periode' + suffix).length === 0;
+                    var requiredFields = isKL 
+                        ? ['tahun', 'penanggung_jawab', 'pic_lke', 'link_lke']
+                        : ['tahun', 'periode', 'penanggung_jawab', 'pic_lke', 'link_lke'];
                     
                     var missingFields = [];
                     
                     requiredFields.forEach(function(field) {
-                        var value;
-                        
-                        // Handle summernote fields differently
-                        if (field.includes('catatan_') || field.includes('rekomendasi_')) {
-                            value = $('#' + field).summernote('code');
-                            // Remove HTML tags and check if content is empty
-                            value = value.replace(/<[^>]*>/g, '').trim();
-                        } else {
-                            value = $('#' + field).val();
-                        }
-                        
+                        var value = $('#' + field + suffix).val();
                         if (!value || value.trim() === '') {
                             missingFields.push(field);
                         }
@@ -889,15 +1229,18 @@
                             icon: 'error',
                             confirmButtonText: 'OK'
                         });
-                        $('.saveButton').prop('disabled', false);
+                        $saveButton.prop('disabled', false);
+                        $saveButton.find('.button-text').text('Simpan');
+                        $saveButton.find('.button-spinner').hide();
                         return false;
                     }
                     
                     var formData = new FormData(formElement);
                     
                     $.ajax({
-                        url: $(formElement).attr('action'),
+                        url: '{{ route("akip.evaluasi.store", $instansi->id) }}',
                         type: 'POST',
+                        cache: false,
                         data: formData,
                         processData: false,
                         contentType: false,
@@ -912,13 +1255,16 @@
                                     location.reload();
                                 });
                             } else {
+                                var errorMessage = response.message || 'Terjadi kesalahan saat menyimpan data evaluasi SAKIP.';
                                 Swal.fire({
                                     title: 'Gagal!',
-                                    text: 'Terjadi kesalahan saat menyimpan data evaluasi SAKIP.',
+                                    text: errorMessage,
                                     icon: 'error',
                                     confirmButtonText: 'OK'
                                 });
-                                $('.saveButton').prop('disabled', false);
+                                $saveButton.prop('disabled', false);
+                                $saveButton.find('.button-text').text('Simpan');
+                                $saveButton.find('.button-spinner').hide();
                             }
                         },
                         error: function(xhr, status, error) {
@@ -940,7 +1286,202 @@
                                 icon: 'error',
                                 confirmButtonText: 'OK'
                             });
-                            $('.saveButton').prop('disabled', false);
+                            $saveButton.prop('disabled', false);
+                            $saveButton.find('.button-text').text('Simpan');
+                            $saveButton.find('.button-spinner').hide();
+                        }
+                    });
+                    
+                    return false; // Prevent default form submission
+                }
+            });
+
+            // Validator for Edit Form
+            var validatorEdit = $('#form-sakip-edit').validate({
+                ignore: [],
+                errorPlacement: function(error, element) {
+                    try {
+                        if (element.hasClass('select2-hidden-accessible')) {
+                            error.insertAfter(element.next('.select2-container'));
+                        } else {
+                            error.insertAfter(element.closest('.input-group'));
+                        }
+                    } catch (e) {
+                        console.error('Error in errorPlacement:', e);
+                        error.insertAfter(element);
+                    }
+                },
+                highlight: function(element) {
+                    try {
+                        if ($(element).hasClass('select2-hidden-accessible')) {
+                            $(element).next('.select2-container')
+                                .find('.select2-selection')
+                                .addClass('border border-red-500');
+                        } else {
+                            $(element).addClass('border-red-500');
+                        }
+                    } catch (e) {
+                        console.error('Error in highlight:', e);
+                    }
+                },
+                unhighlight: function(element) {
+                    try {
+                        if ($(element).hasClass('select2-hidden-accessible')) {
+                            $(element).next('.select2-container')
+                                .find('.select2-selection')
+                                .removeClass('border border-red-500');
+                        } else {
+                            $(element).removeClass('border-red-500');
+                        }
+                    } catch (e) {
+                        console.error('Error in unhighlight:', e);
+                    }
+                },
+                submitHandler: function(form) {
+                    var suffix = '-edit';
+                    var $saveButton = $('.saveButton-edit');
+                    var $buttonText = $saveButton.find('.button-text');
+                    var $buttonSpinner = $saveButton.find('.button-spinner');
+                    var id_evaluasi = $('#id_evaluasi-edit').val();
+                    
+                    // Show loading state
+                    $saveButton.prop('disabled', true);
+                    $buttonText.text('Mengupdate...');
+                    $buttonSpinner.show();
+                    
+                    // Find the actual form element
+                    var formElement = $('#form-sakip-edit')[0];
+                    
+                    if (!formElement || formElement.tagName !== 'FORM') {
+                        formElement = $('.saveButton-edit').closest('form')[0];
+                        if (!formElement || formElement.tagName !== 'FORM') {
+                            $('.saveButton-edit').prop('disabled', false);
+                            return false;
+                        }
+                    }
+                    
+                    // Set form action
+                    var updateUrl = '{{ route("akip.evaluasi.update", [$instansi->id, ":id"]) }}'.replace(':id', id_evaluasi);
+                    $('#form-sakip-edit').attr('action', updateUrl);
+                    // Add _method field for PUT request
+                    if ($('#form-sakip-edit').find('input[name="_method"]').length === 0) {
+                        $('#form-sakip-edit').append('<input type="hidden" name="_method" value="PUT">');
+                    }
+                    
+                    // Validate required fields before submission
+                    var isKL = $('#periode' + suffix).length === 0;
+                    var requiredFields = [
+                        'penanggung_jawab', 'pic_lke', 'link_lke',
+                        'nilai_komponen_perencanaan_kinerja', 'nilai_komponen_pengukuran_kinerja',
+                        'nilai_komponen_pelaporan_kinerja', 'nilai_komponen_evaluasi_internal',
+                        'nilai_total_evaluasi_akip', 'nilai_komponen_perencanaan_kinerja_tahun_lalu',
+                        'nilai_komponen_pengukuran_kinerja_tahun_lalu', 'nilai_komponen_pelaporan_kinerja_tahun_lalu',
+                        'nilai_komponen_evaluasi_internal_tahun_lalu', 'nilai_total_evaluasi_akip_tahun_lalu',
+                        'catatan_komponen_perencanaan_kinerja', 'rekomendasi_komponen_perencanaan_kinerja',
+                        'catatan_komponen_pengukuran_kinerja', 'rekomendasi_komponen_pengukuran_kinerja',
+                        'catatan_komponen_pelaporan_kinerja', 'rekomendasi_komponen_pelaporan_kinerja',
+                        'catatan_komponen_evaluasi_internal', 'rekomendasi_komponen_evaluasi_internal'
+                    ];
+                    
+                    // Add macro indicators for Pemda only
+                    if (!isKL) {
+                        requiredFields = requiredFields.concat([
+                            'angka_kemiskinan_tahun_lalu', 'angka_kemiskinan',
+                            'laju_pertumbuhan_ekonomi_tahun_lalu', 'laju_pertumbuhan_ekonomi',
+                            'tingkat_pengangguran_terbuka_tahun_lalu', 'tingkat_pengangguran_terbuka',
+                            'penurunan_emisi_grk_tahun_lalu', 'penurunan_emisi_grk',
+                            'indeks_pembangunan_manusia_tahun_lalu', 'indeks_pembangunan_manusia',
+                            'indeks_gini_ratio_tahun_lalu', 'indeks_gini_ratio',
+                            'pendapatan_perkapita_tahun_lalu', 'pendapatan_perkapita'
+                        ]);
+                    }
+                    
+                    var missingFields = [];
+                    
+                    requiredFields.forEach(function(field) {
+                        var value;
+                        
+                        // Handle summernote fields differently
+                        if (field.includes('catatan_') || field.includes('rekomendasi_')) {
+                            value = $('#' + field + suffix).summernote('code');
+                            // Remove HTML tags and check if content is empty
+                            value = value.replace(/<[^>]*>/g, '').trim();
+                        } else {
+                            value = $('#' + field + suffix).val();
+                        }
+                        
+                        if (!value || value.trim() === '') {
+                            missingFields.push(field);
+                        }
+                    });
+                    
+                    if (missingFields.length > 0) {
+                        Swal.fire({
+                            title: 'Error!',
+                            text: 'Mohon lengkapi semua field yang wajib diisi.',
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                        $saveButton.prop('disabled', false);
+                        $saveButton.find('.button-text').text('Simpan');
+                        $saveButton.find('.button-spinner').hide();
+                        return false;
+                    }
+                    
+                    var formData = new FormData(formElement);
+                    
+                    $.ajax({
+                        url: updateUrl,
+                        type: 'POST',
+                        cache: false,
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function(response) {
+                            if (response.success) {
+                                Swal.fire({
+                                    title: 'Berhasil!',
+                                    text: 'Data evaluasi SAKIP berhasil diupdate.',
+                                    icon: 'success',
+                                    confirmButtonText: 'OK'
+                                }).then(() => {
+                                    location.reload();
+                                });
+                            } else {
+                                var errorMessage = response.message || 'Terjadi kesalahan saat mengupdate data evaluasi SAKIP.';
+                                Swal.fire({
+                                    title: 'Gagal!',
+                                    text: errorMessage,
+                                    icon: 'error',
+                                    confirmButtonText: 'OK'
+                                });
+                                $saveButton.prop('disabled', false);
+                                $saveButton.find('.button-text').text('Simpan');
+                                $saveButton.find('.button-spinner').hide();
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            var errorMessage = 'Terjadi kesalahan server. Silakan coba lagi.';
+                            if (xhr.responseText) {
+                                try {
+                                    var response = JSON.parse(xhr.responseText);
+                                    if (response.message) {
+                                        errorMessage = response.message;
+                                    }
+                                } catch (e) {
+                                    // Could not parse error response
+                                }
+                            }
+                            
+                            Swal.fire({
+                                title: 'Error!',
+                                text: errorMessage,
+                                icon: 'error',
+                                confirmButtonText: 'OK'
+                            });
+                            $saveButton.prop('disabled', false);
+                            $saveButton.find('.button-text').text('Simpan');
+                            $saveButton.find('.button-spinner').hide();
                         }
                     });
                     
@@ -949,67 +1490,102 @@
             });
 
             editEvaluasi = function(id) {
-                resetForm();
-                $('#modal-title-evaluasi').text('Edit Penilaian');
-                $('#id_evaluasi').val(id);
-                $('#note_file_evaluasi').show();
-                $('#file_evaluasi').prop('required', false);
+                var suffix = '-edit';
+                
+                // Show loading overlay
+                $('#loading-overlay-edit').show();
+                
+                // Set form action
+                var updateUrl = '{{ route("akip.evaluasi.update", [$instansi->id, ":id"]) }}'.replace(':id', id);
+                $('#form-sakip-edit').attr('action', updateUrl);
+                // Add _method field for PUT request
+                if ($('#form-sakip-edit').find('input[name="_method"]').length === 0) {
+                    $('#form-sakip-edit').append('<input type="hidden" name="_method" value="PUT">');
+                }
+                
                 $.ajax({
                     url: "{{ url('akip/evaluasi/sakip/' . $instansi->id . '/data') }}/" + id,
                     type: 'GET',
+                    cache: false,
                     success: function(response) {
-                        $('#form-sakip').trigger('reset');
-                        $('#form-sakip').find('.select2').val(null).trigger('change');
-                        $('#tahun').val(response.evaluasi_sakip.tahun).trigger('change');
-                        $('#tahun').prop('disabled', true);
-                        $('#periode').val(response.evaluasi_sakip.periode).trigger('change');
-                        $('#periode').prop('disabled', true);
+                        // Hide loading overlay
+                        $('#loading-overlay-edit').hide();
+                        $('#form-sakip-edit').trigger('reset');
+                        $('#form-sakip-edit').find('.select2').val(null).trigger('change');
+                        $('#id_evaluasi-edit').val(id);
+                        $('#tahun-edit').val(response.evaluasi_sakip.tahun).trigger('change');
+                        $('#tahun-edit').prop('disabled', true);
+                        $('#periode-edit').val(response.evaluasi_sakip.periode).trigger('change');
+                        $('#periode-edit').prop('disabled', true);
                         
                         // For editing, disable all periods except the current one
-                        $('#periode').find('option').each(function() {
+                        $('#periode-edit').find('option').each(function() {
                             if ($(this).val() !== response.evaluasi_sakip.periode) {
                                 $(this).prop('disabled', true).addClass('text-gray-400');
                             }
                         });
                         
-                        $('#penanggung_jawab').val(response.evaluasi_sakip.penanggung_jawab);
-                        $('#pic_lke').val(response.evaluasi_sakip.pic_lke);
-                        $('#link_lke').val(response.evaluasi_sakip.link_lke);
-                        $('#nilai_komponen_perencanaan_kinerja').val(response.evaluasi_sakip.nilai_komponen_perencanaan_kinerja);
-                        $('#nilai_komponen_perencanaan_kinerja_tahun_lalu').val(response.evaluasi_sakip.nilai_komponen_perencanaan_kinerja_tahun_lalu);
-                        $('#catatan_komponen_perencanaan_kinerja').summernote('code', response.evaluasi_sakip.catatan_komponen_perencanaan_kinerja);
-                        $('#rekomendasi_komponen_perencanaan_kinerja').summernote('code', response.evaluasi_sakip.rekomendasi_komponen_perencanaan_kinerja);
-                        $('#nilai_komponen_pengukuran_kinerja').val(response.evaluasi_sakip.nilai_komponen_pengukuran_kinerja);
-                        $('#nilai_komponen_pengukuran_kinerja_tahun_lalu').val(response.evaluasi_sakip.nilai_komponen_pengukuran_kinerja_tahun_lalu);
-                        $('#catatan_komponen_pengukuran_kinerja').summernote('code', response.evaluasi_sakip.catatan_komponen_pengukuran_kinerja);
-                        $('#rekomendasi_komponen_pengukuran_kinerja').summernote('code', response.evaluasi_sakip.rekomendasi_komponen_pengukuran_kinerja);
-                        $('#nilai_komponen_pelaporan_kinerja').val(response.evaluasi_sakip.nilai_komponen_pelaporan_kinerja);
-                        $('#nilai_komponen_pelaporan_kinerja_tahun_lalu').val(response.evaluasi_sakip.nilai_komponen_pelaporan_kinerja_tahun_lalu);
-                        $('#catatan_komponen_pelaporan_kinerja').summernote('code', response.evaluasi_sakip.catatan_komponen_pelaporan_kinerja);
-                        $('#rekomendasi_komponen_pelaporan_kinerja').summernote('code', response.evaluasi_sakip.rekomendasi_komponen_pelaporan_kinerja);
-                        $('#nilai_komponen_evaluasi_internal').val(response.evaluasi_sakip.nilai_komponen_evaluasi_internal);
-                        $('#nilai_komponen_evaluasi_internal_tahun_lalu').val(response.evaluasi_sakip.nilai_komponen_evaluasi_internal_tahun_lalu);
-                        $('#catatan_komponen_evaluasi_internal').summernote('code', response.evaluasi_sakip.catatan_komponen_evaluasi_internal);
-                        $('#rekomendasi_komponen_evaluasi_internal').summernote('code', response.evaluasi_sakip.rekomendasi_komponen_evaluasi_internal);
-                        $('#nilai_total_evaluasi_akip').val(response.evaluasi_sakip.nilai_total_evaluasi_akip);
-                        $('#nilai_total_evaluasi_akip_tahun_lalu').val(response.evaluasi_sakip.nilai_total_evaluasi_akip_tahun_lalu);
-                        $('#angka_kemiskinan_tahun_lalu').val(response.evaluasi_sakip.angka_kemiskinan_tahun_lalu);
-                        $('#laju_pertumbuhan_ekonomi_tahun_lalu').val(response.evaluasi_sakip.laju_pertumbuhan_ekonomi_tahun_lalu);
-                        $('#tingkat_pengangguran_terbuka_tahun_lalu').val(response.evaluasi_sakip.tingkat_pengangguran_terbuka_tahun_lalu);
-                        $('#penurunan_emisi_grk_tahun_lalu').val(response.evaluasi_sakip.penurunan_emisi_grk_tahun_lalu);
-                        $('#indeks_pembangunan_manusia_tahun_lalu').val(response.evaluasi_sakip.indeks_pembangunan_manusia_tahun_lalu);
-                        $('#indeks_gini_ratio_tahun_lalu').val(response.evaluasi_sakip.indeks_gini_ratio_tahun_lalu);
-                        $('#pendapatan_perkapita_tahun_lalu').val(response.evaluasi_sakip.pendapatan_perkapita_tahun_lalu);
-                        $('#angka_kemiskinan').val(response.evaluasi_sakip.angka_kemiskinan);
-                        $('#laju_pertumbuhan_ekonomi').val(response.evaluasi_sakip.laju_pertumbuhan_ekonomi);
-                        $('#tingkat_pengangguran_terbuka').val(response.evaluasi_sakip.tingkat_pengangguran_terbuka);
-                        $('#penurunan_emisi_grk').val(response.evaluasi_sakip.penurunan_emisi_grk);
-                        $('#indeks_pembangunan_manusia').val(response.evaluasi_sakip.indeks_pembangunan_manusia);
-                        $('#indeks_gini_ratio').val(response.evaluasi_sakip.indeks_gini_ratio);
-                        $('#pendapatan_perkapita').val(response.evaluasi_sakip.pendapatan_perkapita);
+                        $('#penanggung_jawab-edit').val(response.evaluasi_sakip.penanggung_jawab);
+                        $('#pic_lke-edit').val(response.evaluasi_sakip.pic_lke);
+                        $('#link_lke-edit').val(response.evaluasi_sakip.link_lke);
+                        $('#nilai_komponen_perencanaan_kinerja-edit').val(response.evaluasi_sakip.nilai_komponen_perencanaan_kinerja);
+                        $('#nilai_komponen_perencanaan_kinerja_tahun_lalu-edit').val(response.evaluasi_sakip.nilai_komponen_perencanaan_kinerja_tahun_lalu);
+                        $('#catatan_komponen_perencanaan_kinerja-edit').summernote('code', response.evaluasi_sakip.catatan_komponen_perencanaan_kinerja);
+                        $('#rekomendasi_komponen_perencanaan_kinerja-edit').summernote('code', response.evaluasi_sakip.rekomendasi_komponen_perencanaan_kinerja);
+                        $('#nilai_komponen_pengukuran_kinerja-edit').val(response.evaluasi_sakip.nilai_komponen_pengukuran_kinerja);
+                        $('#nilai_komponen_pengukuran_kinerja_tahun_lalu-edit').val(response.evaluasi_sakip.nilai_komponen_pengukuran_kinerja_tahun_lalu);
+                        $('#catatan_komponen_pengukuran_kinerja-edit').summernote('code', response.evaluasi_sakip.catatan_komponen_pengukuran_kinerja);
+                        $('#rekomendasi_komponen_pengukuran_kinerja-edit').summernote('code', response.evaluasi_sakip.rekomendasi_komponen_pengukuran_kinerja);
+                        $('#nilai_komponen_pelaporan_kinerja-edit').val(response.evaluasi_sakip.nilai_komponen_pelaporan_kinerja);
+                        $('#nilai_komponen_pelaporan_kinerja_tahun_lalu-edit').val(response.evaluasi_sakip.nilai_komponen_pelaporan_kinerja_tahun_lalu);
+                        $('#catatan_komponen_pelaporan_kinerja-edit').summernote('code', response.evaluasi_sakip.catatan_komponen_pelaporan_kinerja);
+                        $('#rekomendasi_komponen_pelaporan_kinerja-edit').summernote('code', response.evaluasi_sakip.rekomendasi_komponen_pelaporan_kinerja);
+                        $('#nilai_komponen_evaluasi_internal-edit').val(response.evaluasi_sakip.nilai_komponen_evaluasi_internal);
+                        $('#nilai_komponen_evaluasi_internal_tahun_lalu-edit').val(response.evaluasi_sakip.nilai_komponen_evaluasi_internal_tahun_lalu);
+                        $('#catatan_komponen_evaluasi_internal-edit').summernote('code', response.evaluasi_sakip.catatan_komponen_evaluasi_internal);
+                        $('#rekomendasi_komponen_evaluasi_internal-edit').summernote('code', response.evaluasi_sakip.rekomendasi_komponen_evaluasi_internal);
+                        $('#nilai_total_evaluasi_akip-edit').val(response.evaluasi_sakip.nilai_total_evaluasi_akip);
+                        $('#nilai_total_evaluasi_akip_tahun_lalu-edit').val(response.evaluasi_sakip.nilai_total_evaluasi_akip_tahun_lalu);
+                        $('#angka_kemiskinan_tahun_lalu-edit').val(response.evaluasi_sakip.angka_kemiskinan_tahun_lalu);
+                        $('#laju_pertumbuhan_ekonomi_tahun_lalu-edit').val(response.evaluasi_sakip.laju_pertumbuhan_ekonomi_tahun_lalu);
+                        $('#tingkat_pengangguran_terbuka_tahun_lalu-edit').val(response.evaluasi_sakip.tingkat_pengangguran_terbuka_tahun_lalu);
+                        $('#penurunan_emisi_grk_tahun_lalu-edit').val(response.evaluasi_sakip.penurunan_emisi_grk_tahun_lalu);
+                        $('#indeks_pembangunan_manusia_tahun_lalu-edit').val(response.evaluasi_sakip.indeks_pembangunan_manusia_tahun_lalu);
+                        $('#indeks_gini_ratio_tahun_lalu-edit').val(response.evaluasi_sakip.indeks_gini_ratio_tahun_lalu);
+                        $('#pendapatan_perkapita_tahun_lalu-edit').val(response.evaluasi_sakip.pendapatan_perkapita_tahun_lalu);
+                        $('#angka_kemiskinan-edit').val(response.evaluasi_sakip.angka_kemiskinan);
+                        $('#laju_pertumbuhan_ekonomi-edit').val(response.evaluasi_sakip.laju_pertumbuhan_ekonomi);
+                        $('#tingkat_pengangguran_terbuka-edit').val(response.evaluasi_sakip.tingkat_pengangguran_terbuka);
+                        $('#penurunan_emisi_grk-edit').val(response.evaluasi_sakip.penurunan_emisi_grk);
+                        $('#indeks_pembangunan_manusia-edit').val(response.evaluasi_sakip.indeks_pembangunan_manusia);
+                        $('#indeks_gini_ratio-edit').val(response.evaluasi_sakip.indeks_gini_ratio);
+                        $('#pendapatan_perkapita-edit').val(response.evaluasi_sakip.pendapatan_perkapita);
+                    },
+                    error: function(xhr, status, error) {
+                        // Hide loading overlay on error
+                        $('#loading-overlay-edit').hide();
+                        
+                        var errorMessage = 'Gagal memuat data evaluasi. Silakan coba lagi.';
+                        if (xhr.responseText) {
+                            try {
+                                var response = JSON.parse(xhr.responseText);
+                                if (response.message) {
+                                    errorMessage = response.message;
+                                }
+                            } catch (e) {
+                                // Could not parse error response
+                            }
+                        }
+                        
+                        Swal.fire({
+                            title: 'Error!',
+                            text: errorMessage,
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
                     }
                 });
-                $('#modal-form-evaluasi').modal('show');
+                $('#modal-form-evaluasi-edit').modal('show');
             }
 
             hapusEvaluasi = function(id) {
@@ -1025,6 +1601,7 @@
                         $.ajax({
                             url: "{{ url('akip/evaluasi/sakip/' . $instansi->id) }}/" + id,
                             type: 'DELETE',
+                            cache: false,
                             data: {
                                 _token: '{{ csrf_token() }}'
                             },

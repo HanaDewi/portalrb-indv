@@ -209,248 +209,447 @@ class EvaluasiController extends Controller
         }
         $evaluasi_sakip = EvaluasiSakip::find($id);
         if ($evaluasi_sakip) {
-            return response()->json(['evaluasi_sakip' => $evaluasi_sakip]);
+            return response()->json(['evaluasi_sakip' => $evaluasi_sakip])
+                ->header('Cache-Control', 'no-cache, no-store, must-revalidate')
+                ->header('Pragma', 'no-cache')
+                ->header('Expires', '0');
         } else {
             abort('404');
         }
     }
 
     /**
-     * Store evaluasi data
+     * Store evaluasi data (Create new)
      */
     public function store(Request $request, $instansi_id)
     {
+        \Log::info('Starting process simpan evaluasi', [
+            'user_id' => $this->currentUser->id,
+            'user_name' => $this->currentUser->name ?? 'N/A',
+            'instansi_id' => $instansi_id
+        ]);
+
         $cek = $this->currentUser->anggota ? $this->currentUser->anggota->tim->instansi_tim->where('instansi_id', $instansi_id)->first() : false;
         if (!$cek) {
+            \Log::warning('User tidak memiliki akses ke instansi', ['user_id' => $this->currentUser->id, 'instansi_id' => $instansi_id]);
             abort('404');
         }
-        $success = false;
+
         $instansi = KlpdInstansi::find($instansi_id);
         if (!$instansi) {
+            \Log::warning('Instansi tidak ditemukan', ['instansi_id' => $instansi_id]);
             abort('404');
         }
-        DB::beginTransaction();
+
         try {
-            if (!$request->id_evaluasi) {
-                // Validate required fields
-                // For K/L, periode is not required (it's set to 'Final' automatically)
-                $requiredFields = [
-                    'tahun', 'penanggung_jawab', 'pic_lke', 'link_lke',
-                    'nilai_komponen_perencanaan_kinerja', 'nilai_komponen_pengukuran_kinerja',
-                    'nilai_komponen_pelaporan_kinerja', 'nilai_komponen_evaluasi_internal',
-                    'nilai_total_evaluasi_akip', 'nilai_komponen_perencanaan_kinerja_tahun_lalu',
-                    'nilai_komponen_pengukuran_kinerja_tahun_lalu', 'nilai_komponen_pelaporan_kinerja_tahun_lalu',
-                    'nilai_komponen_evaluasi_internal_tahun_lalu', 'nilai_total_evaluasi_akip_tahun_lalu'
-                ];
-                
-                // Add periode validation only for non-K/L instances
-                if ($instansi->group != 'kl') {
-                    $requiredFields[] = 'periode';
-                }
-                
-                $missingFields = [];
-                foreach ($requiredFields as $field) {
-                    if (!$request->has($field) || $request->$field === null || $request->$field === '') {
-                        $missingFields[] = $field;
-                    }
-                }
-                
-                if (!empty($missingFields)) {
-                    \Log::error('Missing required fields: ' . implode(', ', $missingFields));
-                    throw new \Exception('Missing required fields: ' . implode(', ', $missingFields));
-                }
-                
-                $evaluasi_sakip = new EvaluasiSakip();
-                $evaluasi_sakip->instansi_id = $instansi_id;
-                $evaluasi_sakip->tahun = $request->tahun;
-                $evaluasi_sakip->periode = $instansi->group == 'kl' ? 'Final' : $request->periode;
-                $evaluasi_sakip->penanggung_jawab = $request->penanggung_jawab;
-                $evaluasi_sakip->pic_lke = $request->pic_lke;
-                $evaluasi_sakip->link_lke = $request->link_lke;
-                $evaluasi_sakip->input_user_id = $this->currentUser->id;
-                $evaluasi_sakip->last_update_user_id = $this->currentUser->id;
-                
-                // Handle file upload
-                if ($request->hasFile('file_evaluasi')) {
-                    $file = $request->file('file_evaluasi');
+            // Validate required fields
+            // For K/L, periode is not required (it's set to 'Final' automatically)
+            $requiredFields = [
+                'tahun', 'penanggung_jawab', 'pic_lke', 'link_lke',
+                'nilai_komponen_perencanaan_kinerja', 'nilai_komponen_pengukuran_kinerja',
+                'nilai_komponen_pelaporan_kinerja', 'nilai_komponen_evaluasi_internal',
+                'nilai_total_evaluasi_akip', 'nilai_komponen_perencanaan_kinerja_tahun_lalu',
+                'nilai_komponen_pengukuran_kinerja_tahun_lalu', 'nilai_komponen_pelaporan_kinerja_tahun_lalu',
+                'nilai_komponen_evaluasi_internal_tahun_lalu', 'nilai_total_evaluasi_akip_tahun_lalu'
+            ];
+            
+            // Add periode validation only for non-K/L instances
+            if ($instansi->group != 'kl') {
+                $requiredFields[] = 'periode';
+            }
+            
+            \Log::info('Validating required fields', [
+                'instansi_id' => $instansi_id,
+                'instansi_group' => $instansi->group,
+                'required_fields' => $requiredFields
+            ]);
 
-                    // Normalisasi nama file: ganti spasi dan karakter khusus jadi underscore
-                    $original = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-                    $ext = $file->getClientOriginalExtension();
-                    $safeName = Str::slug($original, '_') . '.' . $ext;
-
-                    $filename = time() . '_' . $safeName;
-                    $file->storeAs('akip', $filename, 'public');
-                    $evaluasi_sakip->file_evaluasi = $filename;
-                }
-                
-                // Set all evaluation data
-                // Convert comma to dot for decimal separator (MySQL requires dot)
-                $evaluasi_sakip->nilai_komponen_perencanaan_kinerja_tahun_lalu = str_replace(',', '.', $request->nilai_komponen_perencanaan_kinerja_tahun_lalu);
-                $evaluasi_sakip->nilai_komponen_perencanaan_kinerja = str_replace(',', '.', $request->nilai_komponen_perencanaan_kinerja);
-                $evaluasi_sakip->catatan_komponen_perencanaan_kinerja = $request->catatan_komponen_perencanaan_kinerja;
-                $evaluasi_sakip->rekomendasi_komponen_perencanaan_kinerja = $request->rekomendasi_komponen_perencanaan_kinerja;
-                
-                
-                $evaluasi_sakip->nilai_komponen_pengukuran_kinerja_tahun_lalu = str_replace(',', '.', $request->nilai_komponen_pengukuran_kinerja_tahun_lalu);
-                $evaluasi_sakip->nilai_komponen_pengukuran_kinerja = str_replace(',', '.', $request->nilai_komponen_pengukuran_kinerja);
-                $evaluasi_sakip->catatan_komponen_pengukuran_kinerja = $request->catatan_komponen_pengukuran_kinerja;
-                $evaluasi_sakip->rekomendasi_komponen_pengukuran_kinerja = $request->rekomendasi_komponen_pengukuran_kinerja;
-                
-                $evaluasi_sakip->nilai_komponen_pelaporan_kinerja_tahun_lalu = str_replace(',', '.', $request->nilai_komponen_pelaporan_kinerja_tahun_lalu);
-                $evaluasi_sakip->nilai_komponen_pelaporan_kinerja = str_replace(',', '.', $request->nilai_komponen_pelaporan_kinerja);
-                $evaluasi_sakip->catatan_komponen_pelaporan_kinerja = $request->catatan_komponen_pelaporan_kinerja;
-                $evaluasi_sakip->rekomendasi_komponen_pelaporan_kinerja = $request->rekomendasi_komponen_pelaporan_kinerja;
-                
-                $evaluasi_sakip->nilai_komponen_evaluasi_internal_tahun_lalu = str_replace(',', '.', $request->nilai_komponen_evaluasi_internal_tahun_lalu);
-                $evaluasi_sakip->nilai_komponen_evaluasi_internal = str_replace(',', '.', $request->nilai_komponen_evaluasi_internal);
-                $evaluasi_sakip->catatan_komponen_evaluasi_internal = $request->catatan_komponen_evaluasi_internal;
-                $evaluasi_sakip->rekomendasi_komponen_evaluasi_internal = $request->rekomendasi_komponen_evaluasi_internal;
-                
-                $evaluasi_sakip->nilai_total_evaluasi_akip_tahun_lalu = str_replace(',', '.', $request->nilai_total_evaluasi_akip_tahun_lalu);
-                $evaluasi_sakip->nilai_total_evaluasi_akip = str_replace(',', '.', $request->nilai_total_evaluasi_akip);
-                
-                // For Pemda only
-                if ($instansi->group != 'kl') {
-                    $evaluasi_sakip->angka_kemiskinan_tahun_lalu = str_replace(',', '.', $request->angka_kemiskinan_tahun_lalu);
-                    $evaluasi_sakip->angka_kemiskinan = str_replace(',', '.', $request->angka_kemiskinan);
-                    $evaluasi_sakip->laju_pertumbuhan_ekonomi_tahun_lalu = str_replace(',', '.', $request->laju_pertumbuhan_ekonomi_tahun_lalu);
-                    $evaluasi_sakip->laju_pertumbuhan_ekonomi = str_replace(',', '.', $request->laju_pertumbuhan_ekonomi);
-                    $evaluasi_sakip->tingkat_pengangguran_terbuka_tahun_lalu = str_replace(',', '.', $request->tingkat_pengangguran_terbuka_tahun_lalu);
-                    $evaluasi_sakip->tingkat_pengangguran_terbuka = str_replace(',', '.', $request->tingkat_pengangguran_terbuka);
-                    $evaluasi_sakip->penurunan_emisi_grk_tahun_lalu = str_replace(',', '.', $request->penurunan_emisi_grk_tahun_lalu);
-                    $evaluasi_sakip->penurunan_emisi_grk = str_replace(',', '.', $request->penurunan_emisi_grk);
-                    $evaluasi_sakip->indeks_pembangunan_manusia_tahun_lalu = str_replace(',', '.', $request->indeks_pembangunan_manusia_tahun_lalu);
-                    $evaluasi_sakip->indeks_pembangunan_manusia = str_replace(',', '.', $request->indeks_pembangunan_manusia);
-                    $evaluasi_sakip->indeks_gini_ratio_tahun_lalu = str_replace(',', '.', $request->indeks_gini_ratio_tahun_lalu);
-                    $evaluasi_sakip->indeks_gini_ratio = str_replace(',', '.', $request->indeks_gini_ratio);
-                    $evaluasi_sakip->pendapatan_perkapita_tahun_lalu = $this->formatCurrencyForDatabase($request->pendapatan_perkapita_tahun_lalu);
-                    $evaluasi_sakip->pendapatan_perkapita = $this->formatCurrencyForDatabase($request->pendapatan_perkapita);
-                }
-                
-                $evaluasi_sakip->save();
-                $success = true;
-            } else {
-                // Validate required fields for edit mode
-                $requiredFields = [
-                    'penanggung_jawab', 'pic_lke', 'link_lke',
-                    'nilai_komponen_perencanaan_kinerja', 'nilai_komponen_pengukuran_kinerja',
-                    'nilai_komponen_pelaporan_kinerja', 'nilai_komponen_evaluasi_internal',
-                    'nilai_total_evaluasi_akip', 'nilai_komponen_perencanaan_kinerja_tahun_lalu',
-                    'nilai_komponen_pengukuran_kinerja_tahun_lalu', 'nilai_komponen_pelaporan_kinerja_tahun_lalu',
-                    'nilai_komponen_evaluasi_internal_tahun_lalu', 'nilai_total_evaluasi_akip_tahun_lalu',
-                    'catatan_komponen_perencanaan_kinerja', 'rekomendasi_komponen_perencanaan_kinerja',
-                    'catatan_komponen_pengukuran_kinerja', 'rekomendasi_komponen_pengukuran_kinerja',
-                    'catatan_komponen_pelaporan_kinerja', 'rekomendasi_komponen_pelaporan_kinerja',
-                    'catatan_komponen_evaluasi_internal', 'rekomendasi_komponen_evaluasi_internal'
-                ];
-                
-                // Add macro indicators for Pemda only
-                if ($instansi->group != 'kl') {
-                    $requiredFields = array_merge($requiredFields, [
-                        'angka_kemiskinan_tahun_lalu', 'angka_kemiskinan',
-                        'laju_pertumbuhan_ekonomi_tahun_lalu', 'laju_pertumbuhan_ekonomi',
-                        'tingkat_pengangguran_terbuka_tahun_lalu', 'tingkat_pengangguran_terbuka',
-                        'penurunan_emisi_grk_tahun_lalu', 'penurunan_emisi_grk',
-                        'indeks_pembangunan_manusia_tahun_lalu', 'indeks_pembangunan_manusia',
-                        'indeks_gini_ratio_tahun_lalu', 'indeks_gini_ratio',
-                        'pendapatan_perkapita_tahun_lalu', 'pendapatan_perkapita'
-                    ]);
-                }
-                
-                $missingFields = [];
-                foreach ($requiredFields as $field) {
-                    if (!$request->has($field) || $request->$field === null || $request->$field === '') {
-                        $missingFields[] = $field;
-                    }
-                }
-                
-                if (!empty($missingFields)) {
-                    \Log::error('Missing required fields for edit: ' . implode(', ', $missingFields));
-                    throw new \Exception('Missing required fields: ' . implode(', ', $missingFields));
-                }
-                
-                $evaluasi_sakip = EvaluasiSakip::find($request->id_evaluasi);
-                if ($evaluasi_sakip) {
-                    // Update existing record with same fields as above
-                    $evaluasi_sakip->penanggung_jawab = $request->penanggung_jawab;
-                    $evaluasi_sakip->pic_lke = $request->pic_lke;
-                    $evaluasi_sakip->link_lke = $request->link_lke;
-                    $evaluasi_sakip->last_update_user_id = $this->currentUser->id;
-
-                    // Handle file upload for update
-                    if ($request->hasFile('file_evaluasi')) {
-                        // Hapus file lama jika ada
-                        if (!empty($evaluasi_sakip->file_evaluasi)) {
-                            Storage::disk('public')->delete('akip/' . $evaluasi_sakip->file_evaluasi);
-                        }
-
-                        $file = $request->file('file_evaluasi');
-                        $original = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-                        $ext = $file->getClientOriginalExtension();
-                        $safeName = Str::slug($original, '_') . '.' . $ext;
-
-                        $filename = time() . '_' . $safeName;
-                        $file->storeAs('akip', $filename, 'public');
-                        $evaluasi_sakip->file_evaluasi = $filename;
-                    }
-
-                    // Update all evaluation data (same as above)
-                    // Convert comma to dot for decimal separator (MySQL requires dot)
-                    $evaluasi_sakip->nilai_komponen_perencanaan_kinerja_tahun_lalu = str_replace(',', '.', $request->nilai_komponen_perencanaan_kinerja_tahun_lalu);
-                    $evaluasi_sakip->nilai_komponen_perencanaan_kinerja = str_replace(',', '.', $request->nilai_komponen_perencanaan_kinerja);
-                    $evaluasi_sakip->catatan_komponen_perencanaan_kinerja = $request->catatan_komponen_perencanaan_kinerja;
-                    $evaluasi_sakip->rekomendasi_komponen_perencanaan_kinerja = $request->rekomendasi_komponen_perencanaan_kinerja;
-                    
-                    $evaluasi_sakip->nilai_komponen_pengukuran_kinerja_tahun_lalu = str_replace(',', '.', $request->nilai_komponen_pengukuran_kinerja_tahun_lalu);
-                    $evaluasi_sakip->nilai_komponen_pengukuran_kinerja = str_replace(',', '.', $request->nilai_komponen_pengukuran_kinerja);
-                    $evaluasi_sakip->catatan_komponen_pengukuran_kinerja = $request->catatan_komponen_pengukuran_kinerja;
-                    $evaluasi_sakip->rekomendasi_komponen_pengukuran_kinerja = $request->rekomendasi_komponen_pengukuran_kinerja;
-                    
-                    $evaluasi_sakip->nilai_komponen_pelaporan_kinerja_tahun_lalu = str_replace(',', '.', $request->nilai_komponen_pelaporan_kinerja_tahun_lalu);
-                    $evaluasi_sakip->nilai_komponen_pelaporan_kinerja = str_replace(',', '.', $request->nilai_komponen_pelaporan_kinerja);
-                    $evaluasi_sakip->catatan_komponen_pelaporan_kinerja = $request->catatan_komponen_pelaporan_kinerja;
-                    $evaluasi_sakip->rekomendasi_komponen_pelaporan_kinerja = $request->rekomendasi_komponen_pelaporan_kinerja;
-                    
-                    $evaluasi_sakip->nilai_komponen_evaluasi_internal_tahun_lalu = str_replace(',', '.', $request->nilai_komponen_evaluasi_internal_tahun_lalu);
-                    $evaluasi_sakip->nilai_komponen_evaluasi_internal = str_replace(',', '.', $request->nilai_komponen_evaluasi_internal);
-                    $evaluasi_sakip->catatan_komponen_evaluasi_internal = $request->catatan_komponen_evaluasi_internal;
-                    $evaluasi_sakip->rekomendasi_komponen_evaluasi_internal = $request->rekomendasi_komponen_evaluasi_internal;
-                    
-                    $evaluasi_sakip->nilai_total_evaluasi_akip_tahun_lalu = str_replace(',', '.', $request->nilai_total_evaluasi_akip_tahun_lalu);
-                    $evaluasi_sakip->nilai_total_evaluasi_akip = str_replace(',', '.', $request->nilai_total_evaluasi_akip);
-                    
-                    // For Pemda only
-                    if ($instansi->group != 'kl') {
-                        $evaluasi_sakip->angka_kemiskinan_tahun_lalu = str_replace(',', '.', $request->angka_kemiskinan_tahun_lalu);
-                        $evaluasi_sakip->angka_kemiskinan = str_replace(',', '.', $request->angka_kemiskinan);
-                        $evaluasi_sakip->laju_pertumbuhan_ekonomi_tahun_lalu = str_replace(',', '.', $request->laju_pertumbuhan_ekonomi_tahun_lalu);
-                        $evaluasi_sakip->laju_pertumbuhan_ekonomi = str_replace(',', '.', $request->laju_pertumbuhan_ekonomi);
-                        $evaluasi_sakip->tingkat_pengangguran_terbuka_tahun_lalu = str_replace(',', '.', $request->tingkat_pengangguran_terbuka_tahun_lalu);
-                        $evaluasi_sakip->tingkat_pengangguran_terbuka = str_replace(',', '.', $request->tingkat_pengangguran_terbuka);
-                        $evaluasi_sakip->penurunan_emisi_grk_tahun_lalu = str_replace(',', '.', $request->penurunan_emisi_grk_tahun_lalu);
-                        $evaluasi_sakip->penurunan_emisi_grk = str_replace(',', '.', $request->penurunan_emisi_grk);
-                        $evaluasi_sakip->indeks_pembangunan_manusia_tahun_lalu = str_replace(',', '.', $request->indeks_pembangunan_manusia_tahun_lalu);
-                        $evaluasi_sakip->indeks_pembangunan_manusia = str_replace(',', '.', $request->indeks_pembangunan_manusia);
-                        $evaluasi_sakip->indeks_gini_ratio_tahun_lalu = str_replace(',', '.', $request->indeks_gini_ratio_tahun_lalu);
-                        $evaluasi_sakip->indeks_gini_ratio = str_replace(',', '.', $request->indeks_gini_ratio);
-                        $evaluasi_sakip->pendapatan_perkapita_tahun_lalu = $this->formatCurrencyForDatabase($request->pendapatan_perkapita_tahun_lalu);
-                        $evaluasi_sakip->pendapatan_perkapita = $this->formatCurrencyForDatabase($request->pendapatan_perkapita);
-                    }
-                    
-                    $evaluasi_sakip->save();
-                    $success = true;
+            $missingFields = [];
+            foreach ($requiredFields as $field) {
+                if (!$request->has($field) || $request->$field === null || $request->$field === '') {
+                    $missingFields[] = $field;
                 }
             }
-            DB::commit();
+            
+            if (!empty($missingFields)) {
+                \Log::error('Missing required fields untuk simpan evaluasi', [
+                    'user_id' => $this->currentUser->id,
+                    'instansi_id' => $instansi_id,
+                    'missing_fields' => $missingFields
+                ]);
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Gagal simpan evaluasi: Field wajib tidak lengkap: ' . implode(', ', $missingFields)
+                ])
+                    ->header('Cache-Control', 'no-cache, no-store, must-revalidate')
+                    ->header('Pragma', 'no-cache')
+                    ->header('Expires', '0');
+            }
+
+            \Log::info('Creating new evaluasi record', [
+                'user_id' => $this->currentUser->id,
+                'instansi_id' => $instansi_id,
+                'tahun' => $request->tahun,
+                'periode' => $instansi->group == 'kl' ? 'Final' : $request->periode
+            ]);
+            
+            $evaluasi_sakip = new EvaluasiSakip();
+            $evaluasi_sakip->instansi_id = $instansi_id;
+            $evaluasi_sakip->tahun = $request->tahun;
+            $evaluasi_sakip->periode = $instansi->group == 'kl' ? 'Final' : $request->periode;
+            $evaluasi_sakip->penanggung_jawab = $request->penanggung_jawab;
+            $evaluasi_sakip->pic_lke = $request->pic_lke;
+            $evaluasi_sakip->link_lke = $request->link_lke;
+            $evaluasi_sakip->input_user_id = $this->currentUser->id;
+            $evaluasi_sakip->last_update_user_id = $this->currentUser->id;
+            
+            // Handle file upload
+            if ($request->hasFile('file_evaluasi')) {
+                \Log::info('Processing file upload untuk simpan evaluasi', [
+                    'user_id' => $this->currentUser->id,
+                    'instansi_id' => $instansi_id,
+                    'original_filename' => $request->file('file_evaluasi')->getClientOriginalName()
+                ]);
+
+                $file = $request->file('file_evaluasi');
+
+                // Normalisasi nama file: ganti spasi dan karakter khusus jadi underscore
+                $original = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+                $ext = $file->getClientOriginalExtension();
+                $safeName = Str::slug($original, '_') . '.' . $ext;
+
+                $filename = time() . '_' . $safeName;
+                $file->storeAs('akip', $filename, 'public');
+                $evaluasi_sakip->file_evaluasi = $filename;
+
+                \Log::info('File uploaded successfully', [
+                    'user_id' => $this->currentUser->id,
+                    'instansi_id' => $instansi_id,
+                    'filename' => $filename
+                ]);
+            }
+            
+            // Set all evaluation data
+            // Convert comma to dot for decimal separator (MySQL requires dot)
+            $evaluasi_sakip->nilai_komponen_perencanaan_kinerja_tahun_lalu = str_replace(',', '.', $request->nilai_komponen_perencanaan_kinerja_tahun_lalu);
+            $evaluasi_sakip->nilai_komponen_perencanaan_kinerja = str_replace(',', '.', $request->nilai_komponen_perencanaan_kinerja);
+            $evaluasi_sakip->catatan_komponen_perencanaan_kinerja = $request->catatan_komponen_perencanaan_kinerja;
+            $evaluasi_sakip->rekomendasi_komponen_perencanaan_kinerja = $request->rekomendasi_komponen_perencanaan_kinerja;
+            
+            $evaluasi_sakip->nilai_komponen_pengukuran_kinerja_tahun_lalu = str_replace(',', '.', $request->nilai_komponen_pengukuran_kinerja_tahun_lalu);
+            $evaluasi_sakip->nilai_komponen_pengukuran_kinerja = str_replace(',', '.', $request->nilai_komponen_pengukuran_kinerja);
+            $evaluasi_sakip->catatan_komponen_pengukuran_kinerja = $request->catatan_komponen_pengukuran_kinerja;
+            $evaluasi_sakip->rekomendasi_komponen_pengukuran_kinerja = $request->rekomendasi_komponen_pengukuran_kinerja;
+            
+            $evaluasi_sakip->nilai_komponen_pelaporan_kinerja_tahun_lalu = str_replace(',', '.', $request->nilai_komponen_pelaporan_kinerja_tahun_lalu);
+            $evaluasi_sakip->nilai_komponen_pelaporan_kinerja = str_replace(',', '.', $request->nilai_komponen_pelaporan_kinerja);
+            $evaluasi_sakip->catatan_komponen_pelaporan_kinerja = $request->catatan_komponen_pelaporan_kinerja;
+            $evaluasi_sakip->rekomendasi_komponen_pelaporan_kinerja = $request->rekomendasi_komponen_pelaporan_kinerja;
+            
+            $evaluasi_sakip->nilai_komponen_evaluasi_internal_tahun_lalu = str_replace(',', '.', $request->nilai_komponen_evaluasi_internal_tahun_lalu);
+            $evaluasi_sakip->nilai_komponen_evaluasi_internal = str_replace(',', '.', $request->nilai_komponen_evaluasi_internal);
+            $evaluasi_sakip->catatan_komponen_evaluasi_internal = $request->catatan_komponen_evaluasi_internal;
+            $evaluasi_sakip->rekomendasi_komponen_evaluasi_internal = $request->rekomendasi_komponen_evaluasi_internal;
+            
+            $evaluasi_sakip->nilai_total_evaluasi_akip_tahun_lalu = str_replace(',', '.', $request->nilai_total_evaluasi_akip_tahun_lalu);
+            $evaluasi_sakip->nilai_total_evaluasi_akip = str_replace(',', '.', $request->nilai_total_evaluasi_akip);
+            
+            // For Pemda only
+            if ($instansi->group != 'kl') {
+                $evaluasi_sakip->angka_kemiskinan_tahun_lalu = str_replace(',', '.', $request->angka_kemiskinan_tahun_lalu);
+                $evaluasi_sakip->angka_kemiskinan = str_replace(',', '.', $request->angka_kemiskinan);
+                $evaluasi_sakip->laju_pertumbuhan_ekonomi_tahun_lalu = str_replace(',', '.', $request->laju_pertumbuhan_ekonomi_tahun_lalu);
+                $evaluasi_sakip->laju_pertumbuhan_ekonomi = str_replace(',', '.', $request->laju_pertumbuhan_ekonomi);
+                $evaluasi_sakip->tingkat_pengangguran_terbuka_tahun_lalu = str_replace(',', '.', $request->tingkat_pengangguran_terbuka_tahun_lalu);
+                $evaluasi_sakip->tingkat_pengangguran_terbuka = str_replace(',', '.', $request->tingkat_pengangguran_terbuka);
+                $evaluasi_sakip->penurunan_emisi_grk_tahun_lalu = str_replace(',', '.', $request->penurunan_emisi_grk_tahun_lalu);
+                $evaluasi_sakip->penurunan_emisi_grk = str_replace(',', '.', $request->penurunan_emisi_grk);
+                $evaluasi_sakip->indeks_pembangunan_manusia_tahun_lalu = str_replace(',', '.', $request->indeks_pembangunan_manusia_tahun_lalu);
+                $evaluasi_sakip->indeks_pembangunan_manusia = str_replace(',', '.', $request->indeks_pembangunan_manusia);
+                $evaluasi_sakip->indeks_gini_ratio_tahun_lalu = str_replace(',', '.', $request->indeks_gini_ratio_tahun_lalu);
+                $evaluasi_sakip->indeks_gini_ratio = str_replace(',', '.', $request->indeks_gini_ratio);
+                $evaluasi_sakip->pendapatan_perkapita_tahun_lalu = $this->formatCurrencyForDatabase($request->pendapatan_perkapita_tahun_lalu);
+                $evaluasi_sakip->pendapatan_perkapita = $this->formatCurrencyForDatabase($request->pendapatan_perkapita);
+            }
+            
+            \Log::info('Saving evaluasi record', [
+                'user_id' => $this->currentUser->id,
+                'instansi_id' => $instansi_id,
+                'tahun' => $evaluasi_sakip->tahun,
+                'periode' => $evaluasi_sakip->periode
+            ]);
+
+            $evaluasi_sakip->save();
+
+            \Log::info('Evaluasi berhasil disimpan', [
+                'user_id' => $this->currentUser->id,
+                'instansi_id' => $instansi_id,
+                'evaluasi_id' => $evaluasi_sakip->id,
+                'tahun' => $evaluasi_sakip->tahun,
+                'periode' => $evaluasi_sakip->periode,
+                'nilai_total' => $evaluasi_sakip->nilai_total_evaluasi_akip
+            ]);
+
+            return response()->json(['success' => true])
+                ->header('Cache-Control', 'no-cache, no-store, must-revalidate')
+                ->header('Pragma', 'no-cache')
+                ->header('Expires', '0');
         } catch (\Exception $e) {
-            DB::rollback();
-            \Log::error('Error saving evaluasi: ' . $e->getMessage());
-            \Log::error('Stack trace: ' . $e->getTraceAsString());
-            $success = false;
+            \Log::error('Error simpan evaluasi', [
+                'user_id' => $this->currentUser->id,
+                'instansi_id' => $instansi_id,
+                'error_message' => $e->getMessage(),
+                'stack_trace' => $e->getTraceAsString()
+            ]);
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal simpan evaluasi: ' . $e->getMessage()
+            ])
+                ->header('Cache-Control', 'no-cache, no-store, must-revalidate')
+                ->header('Pragma', 'no-cache')
+                ->header('Expires', '0');
         }
-        
-        return response()->json(['success' => $success]);
+    }
+
+    /**
+     * Update evaluasi data (Edit existing)
+     */
+    public function update(Request $request, $instansi_id, $id)
+    {
+        \Log::info('Starting process edit evaluasi', [
+            'user_id' => $this->currentUser->id,
+            'user_name' => $this->currentUser->name ?? 'N/A',
+            'instansi_id' => $instansi_id,
+            'evaluasi_id' => $id
+        ]);
+
+        $cek = $this->currentUser->anggota ? $this->currentUser->anggota->tim->instansi_tim->where('instansi_id', $instansi_id)->first() : false;
+        if (!$cek) {
+            \Log::warning('User tidak memiliki akses ke instansi', ['user_id' => $this->currentUser->id, 'instansi_id' => $instansi_id]);
+            abort('404');
+        }
+
+        $instansi = KlpdInstansi::find($instansi_id);
+        if (!$instansi) {
+            \Log::warning('Instansi tidak ditemukan', ['instansi_id' => $instansi_id]);
+            abort('404');
+        }
+
+        try {
+            // Validate required fields for edit mode
+            $requiredFields = [
+                'penanggung_jawab', 'pic_lke', 'link_lke',
+                'nilai_komponen_perencanaan_kinerja', 'nilai_komponen_pengukuran_kinerja',
+                'nilai_komponen_pelaporan_kinerja', 'nilai_komponen_evaluasi_internal',
+                'nilai_total_evaluasi_akip', 'nilai_komponen_perencanaan_kinerja_tahun_lalu',
+                'nilai_komponen_pengukuran_kinerja_tahun_lalu', 'nilai_komponen_pelaporan_kinerja_tahun_lalu',
+                'nilai_komponen_evaluasi_internal_tahun_lalu', 'nilai_total_evaluasi_akip_tahun_lalu',
+                'catatan_komponen_perencanaan_kinerja', 'rekomendasi_komponen_perencanaan_kinerja',
+                'catatan_komponen_pengukuran_kinerja', 'rekomendasi_komponen_pengukuran_kinerja',
+                'catatan_komponen_pelaporan_kinerja', 'rekomendasi_komponen_pelaporan_kinerja',
+                'catatan_komponen_evaluasi_internal', 'rekomendasi_komponen_evaluasi_internal'
+            ];
+            
+            // Add macro indicators for Pemda only
+            if ($instansi->group != 'kl') {
+                $requiredFields = array_merge($requiredFields, [
+                    'angka_kemiskinan_tahun_lalu', 'angka_kemiskinan',
+                    'laju_pertumbuhan_ekonomi_tahun_lalu', 'laju_pertumbuhan_ekonomi',
+                    'tingkat_pengangguran_terbuka_tahun_lalu', 'tingkat_pengangguran_terbuka',
+                    'penurunan_emisi_grk_tahun_lalu', 'penurunan_emisi_grk',
+                    'indeks_pembangunan_manusia_tahun_lalu', 'indeks_pembangunan_manusia',
+                    'indeks_gini_ratio_tahun_lalu', 'indeks_gini_ratio',
+                    'pendapatan_perkapita_tahun_lalu', 'pendapatan_perkapita'
+                ]);
+            }
+
+            \Log::info('Validating required fields untuk edit evaluasi', [
+                'user_id' => $this->currentUser->id,
+                'instansi_id' => $instansi_id,
+                'evaluasi_id' => $id,
+                'instansi_group' => $instansi->group,
+                'required_fields' => $requiredFields
+            ]);
+            
+            $missingFields = [];
+            foreach ($requiredFields as $field) {
+                if (!$request->has($field) || $request->$field === null || $request->$field === '') {
+                    $missingFields[] = $field;
+                }
+            }
+            
+            if (!empty($missingFields)) {
+                \Log::error('Missing required fields untuk edit evaluasi', [
+                    'user_id' => $this->currentUser->id,
+                    'instansi_id' => $instansi_id,
+                    'evaluasi_id' => $id,
+                    'missing_fields' => $missingFields
+                ]);
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Gagal edit evaluasi: Field wajib tidak lengkap: ' . implode(', ', $missingFields)
+                ])
+                    ->header('Cache-Control', 'no-cache, no-store, must-revalidate')
+                    ->header('Pragma', 'no-cache')
+                    ->header('Expires', '0');
+            }
+
+            \Log::info('Finding evaluasi record untuk diupdate', [
+                'user_id' => $this->currentUser->id,
+                'instansi_id' => $instansi_id,
+                'evaluasi_id' => $id
+            ]);
+
+            $evaluasi_sakip = EvaluasiSakip::find($id);
+            if (!$evaluasi_sakip) {
+                \Log::warning('Evaluasi tidak ditemukan', [
+                    'user_id' => $this->currentUser->id,
+                    'instansi_id' => $instansi_id,
+                    'evaluasi_id' => $id
+                ]);
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Gagal edit evaluasi: Data evaluasi tidak ditemukan'
+                ])
+                    ->header('Cache-Control', 'no-cache, no-store, must-revalidate')
+                    ->header('Pragma', 'no-cache')
+                    ->header('Expires', '0');
+            }
+
+            \Log::info('Updating evaluasi record', [
+                'user_id' => $this->currentUser->id,
+                'instansi_id' => $instansi_id,
+                'evaluasi_id' => $id,
+                'tahun' => $evaluasi_sakip->tahun,
+                'periode' => $evaluasi_sakip->periode
+            ]);
+
+            // Update existing record
+            $evaluasi_sakip->penanggung_jawab = $request->penanggung_jawab;
+            $evaluasi_sakip->pic_lke = $request->pic_lke;
+            $evaluasi_sakip->link_lke = $request->link_lke;
+            $evaluasi_sakip->last_update_user_id = $this->currentUser->id;
+
+            // Handle file upload for update
+            if ($request->hasFile('file_evaluasi')) {
+                \Log::info('Processing file upload untuk edit evaluasi', [
+                    'user_id' => $this->currentUser->id,
+                    'instansi_id' => $instansi_id,
+                    'evaluasi_id' => $id,
+                    'original_filename' => $request->file('file_evaluasi')->getClientOriginalName(),
+                    'old_filename' => $evaluasi_sakip->file_evaluasi
+                ]);
+
+                // Hapus file lama jika ada
+                if (!empty($evaluasi_sakip->file_evaluasi)) {
+                    Storage::disk('public')->delete('akip/' . $evaluasi_sakip->file_evaluasi);
+                    \Log::info('Old file deleted', [
+                        'user_id' => $this->currentUser->id,
+                        'instansi_id' => $instansi_id,
+                        'evaluasi_id' => $id,
+                        'deleted_filename' => $evaluasi_sakip->file_evaluasi
+                    ]);
+                }
+
+                $file = $request->file('file_evaluasi');
+                $original = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+                $ext = $file->getClientOriginalExtension();
+                $safeName = Str::slug($original, '_') . '.' . $ext;
+
+                $filename = time() . '_' . $safeName;
+                $file->storeAs('akip', $filename, 'public');
+                $evaluasi_sakip->file_evaluasi = $filename;
+
+                \Log::info('New file uploaded successfully', [
+                    'user_id' => $this->currentUser->id,
+                    'instansi_id' => $instansi_id,
+                    'evaluasi_id' => $id,
+                    'new_filename' => $filename
+                ]);
+            }
+
+            // Update all evaluation data
+            // Convert comma to dot for decimal separator (MySQL requires dot)
+            $evaluasi_sakip->nilai_komponen_perencanaan_kinerja_tahun_lalu = str_replace(',', '.', $request->nilai_komponen_perencanaan_kinerja_tahun_lalu);
+            $evaluasi_sakip->nilai_komponen_perencanaan_kinerja = str_replace(',', '.', $request->nilai_komponen_perencanaan_kinerja);
+            $evaluasi_sakip->catatan_komponen_perencanaan_kinerja = $request->catatan_komponen_perencanaan_kinerja;
+            $evaluasi_sakip->rekomendasi_komponen_perencanaan_kinerja = $request->rekomendasi_komponen_perencanaan_kinerja;
+            
+            $evaluasi_sakip->nilai_komponen_pengukuran_kinerja_tahun_lalu = str_replace(',', '.', $request->nilai_komponen_pengukuran_kinerja_tahun_lalu);
+            $evaluasi_sakip->nilai_komponen_pengukuran_kinerja = str_replace(',', '.', $request->nilai_komponen_pengukuran_kinerja);
+            $evaluasi_sakip->catatan_komponen_pengukuran_kinerja = $request->catatan_komponen_pengukuran_kinerja;
+            $evaluasi_sakip->rekomendasi_komponen_pengukuran_kinerja = $request->rekomendasi_komponen_pengukuran_kinerja;
+            
+            $evaluasi_sakip->nilai_komponen_pelaporan_kinerja_tahun_lalu = str_replace(',', '.', $request->nilai_komponen_pelaporan_kinerja_tahun_lalu);
+            $evaluasi_sakip->nilai_komponen_pelaporan_kinerja = str_replace(',', '.', $request->nilai_komponen_pelaporan_kinerja);
+            $evaluasi_sakip->catatan_komponen_pelaporan_kinerja = $request->catatan_komponen_pelaporan_kinerja;
+            $evaluasi_sakip->rekomendasi_komponen_pelaporan_kinerja = $request->rekomendasi_komponen_pelaporan_kinerja;
+            
+            $evaluasi_sakip->nilai_komponen_evaluasi_internal_tahun_lalu = str_replace(',', '.', $request->nilai_komponen_evaluasi_internal_tahun_lalu);
+            $evaluasi_sakip->nilai_komponen_evaluasi_internal = str_replace(',', '.', $request->nilai_komponen_evaluasi_internal);
+            $evaluasi_sakip->catatan_komponen_evaluasi_internal = $request->catatan_komponen_evaluasi_internal;
+            $evaluasi_sakip->rekomendasi_komponen_evaluasi_internal = $request->rekomendasi_komponen_evaluasi_internal;
+            
+            $evaluasi_sakip->nilai_total_evaluasi_akip_tahun_lalu = str_replace(',', '.', $request->nilai_total_evaluasi_akip_tahun_lalu);
+            $evaluasi_sakip->nilai_total_evaluasi_akip = str_replace(',', '.', $request->nilai_total_evaluasi_akip);
+            
+            // For Pemda only
+            if ($instansi->group != 'kl') {
+                $evaluasi_sakip->angka_kemiskinan_tahun_lalu = str_replace(',', '.', $request->angka_kemiskinan_tahun_lalu);
+                $evaluasi_sakip->angka_kemiskinan = str_replace(',', '.', $request->angka_kemiskinan);
+                $evaluasi_sakip->laju_pertumbuhan_ekonomi_tahun_lalu = str_replace(',', '.', $request->laju_pertumbuhan_ekonomi_tahun_lalu);
+                $evaluasi_sakip->laju_pertumbuhan_ekonomi = str_replace(',', '.', $request->laju_pertumbuhan_ekonomi);
+                $evaluasi_sakip->tingkat_pengangguran_terbuka_tahun_lalu = str_replace(',', '.', $request->tingkat_pengangguran_terbuka_tahun_lalu);
+                $evaluasi_sakip->tingkat_pengangguran_terbuka = str_replace(',', '.', $request->tingkat_pengangguran_terbuka);
+                $evaluasi_sakip->penurunan_emisi_grk_tahun_lalu = str_replace(',', '.', $request->penurunan_emisi_grk_tahun_lalu);
+                $evaluasi_sakip->penurunan_emisi_grk = str_replace(',', '.', $request->penurunan_emisi_grk);
+                $evaluasi_sakip->indeks_pembangunan_manusia_tahun_lalu = str_replace(',', '.', $request->indeks_pembangunan_manusia_tahun_lalu);
+                $evaluasi_sakip->indeks_pembangunan_manusia = str_replace(',', '.', $request->indeks_pembangunan_manusia);
+                $evaluasi_sakip->indeks_gini_ratio_tahun_lalu = str_replace(',', '.', $request->indeks_gini_ratio_tahun_lalu);
+                $evaluasi_sakip->indeks_gini_ratio = str_replace(',', '.', $request->indeks_gini_ratio);
+                $evaluasi_sakip->pendapatan_perkapita_tahun_lalu = $this->formatCurrencyForDatabase($request->pendapatan_perkapita_tahun_lalu);
+                $evaluasi_sakip->pendapatan_perkapita = $this->formatCurrencyForDatabase($request->pendapatan_perkapita);
+            }
+            
+            \Log::info('Saving updated evaluasi record', [
+                'user_id' => $this->currentUser->id,
+                'instansi_id' => $instansi_id,
+                'evaluasi_id' => $id
+            ]);
+
+            $evaluasi_sakip->save();
+
+            \Log::info('Evaluasi berhasil diupdate', [
+                'user_id' => $this->currentUser->id,
+                'instansi_id' => $instansi_id,
+                'evaluasi_id' => $id,
+                'tahun' => $evaluasi_sakip->tahun,
+                'periode' => $evaluasi_sakip->periode,
+                'nilai_total' => $evaluasi_sakip->nilai_total_evaluasi_akip
+            ]);
+
+            return response()->json(['success' => true])
+                ->header('Cache-Control', 'no-cache, no-store, must-revalidate')
+                ->header('Pragma', 'no-cache')
+                ->header('Expires', '0');
+        } catch (\Exception $e) {
+            \Log::error('Error edit evaluasi', [
+                'user_id' => $this->currentUser->id,
+                'instansi_id' => $instansi_id,
+                'evaluasi_id' => $id,
+                'error_message' => $e->getMessage(),
+                'stack_trace' => $e->getTraceAsString()
+            ]);
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal edit evaluasi: ' . $e->getMessage()
+            ])
+                ->header('Cache-Control', 'no-cache, no-store, must-revalidate')
+                ->header('Pragma', 'no-cache')
+                ->header('Expires', '0');
+        }
     }
 
     /**
@@ -482,7 +681,10 @@ class EvaluasiController extends Controller
             'exists' => $exists,
             'filled_periods' => $filled_periods,
             'evaluasi_sakip' => $evaluasi_sakip
-        ]);
+        ])
+            ->header('Cache-Control', 'no-cache, no-store, must-revalidate')
+            ->header('Pragma', 'no-cache')
+            ->header('Expires', '0');
     }
 
     /**
@@ -494,29 +696,44 @@ class EvaluasiController extends Controller
             $cek = $this->currentUser->anggota ? $this->currentUser->anggota->tim->instansi_tim->where('instansi_id', $instansi_id)->first() : false;
             if (!$cek) {
                 \Log::error('Delete evaluasi: User not authorized for instansi_id: ' . $instansi_id);
-                return response()->json(['success' => false, 'message' => 'Unauthorized'], 403);
+                return response()->json(['success' => false, 'message' => 'Unauthorized'], 403)
+                    ->header('Cache-Control', 'no-cache, no-store, must-revalidate')
+                    ->header('Pragma', 'no-cache')
+                    ->header('Expires', '0');
             }
             
             $evaluasi_sakip = EvaluasiSakip::find($id);
             if (!$evaluasi_sakip) {
                 \Log::error('Delete evaluasi: Evaluasi not found with id: ' . $id);
-                return response()->json(['success' => false, 'message' => 'Evaluasi not found'], 404);
+                return response()->json(['success' => false, 'message' => 'Evaluasi not found'], 404)
+                    ->header('Cache-Control', 'no-cache, no-store, must-revalidate')
+                    ->header('Pragma', 'no-cache')
+                    ->header('Expires', '0');
             }
             
             // Verify that the evaluasi belongs to the correct instansi
             if ($evaluasi_sakip->instansi_id != $instansi_id) {
                 \Log::error('Delete evaluasi: Instansi mismatch. Evaluasi instansi_id: ' . $evaluasi_sakip->instansi_id . ', Request instansi_id: ' . $instansi_id);
-                return response()->json(['success' => false, 'message' => 'Instansi mismatch'], 400);
+                return response()->json(['success' => false, 'message' => 'Instansi mismatch'], 400)
+                    ->header('Cache-Control', 'no-cache, no-store, must-revalidate')
+                    ->header('Pragma', 'no-cache')
+                    ->header('Expires', '0');
             }
             
             $evaluasi_sakip->delete();
             \Log::info('Delete evaluasi: Successfully deleted evaluasi id: ' . $id);
-            return response()->json(['success' => true, 'message' => 'Evaluasi berhasil dihapus']);
+            return response()->json(['success' => true, 'message' => 'Evaluasi berhasil dihapus'])
+                ->header('Cache-Control', 'no-cache, no-store, must-revalidate')
+                ->header('Pragma', 'no-cache')
+                ->header('Expires', '0');
             
         } catch (\Exception $e) {
             \Log::error('Delete evaluasi error: ' . $e->getMessage());
             \Log::error('Stack trace: ' . $e->getTraceAsString());
-            return response()->json(['success' => false, 'message' => 'Terjadi kesalahan saat menghapus evaluasi'], 500);
+            return response()->json(['success' => false, 'message' => 'Terjadi kesalahan saat menghapus evaluasi'], 500)
+                ->header('Cache-Control', 'no-cache, no-store, must-revalidate')
+                ->header('Pragma', 'no-cache')
+                ->header('Expires', '0');
         }
     }
 

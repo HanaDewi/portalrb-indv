@@ -20,6 +20,7 @@ Route::group(['prefix' => 'akip', 'as' => 'akip.'], function () {
             Route::get('/sakip/{instansi}/data/{id}', 'getData')->name('evaluasi.data');
             Route::post('/sakip/{instansi}/check-periode', 'checkPeriode')->name('evaluasi.check');
             Route::post('/sakip/{instansi}', 'store')->name('evaluasi.store');
+            Route::put('/sakip/{instansi}/{id}', 'update')->name('evaluasi.update');
             Route::delete('/sakip/{instansi}/{id}', 'destroy')->name('evaluasi.destroy');
             Route::post('/sakip/search', 'search')->name('evaluasi.search');
             Route::get('/sakip/{instansi}', 'show')->name('evaluasi.show');
