@@ -7,7 +7,18 @@
         <h2 class="text-lg font-medium truncate mr-5">Dashboard Hasil Evaluasi</h2>
     </div>
 
-    <div class="col-span-12 sm:col-span-6 lg:col-span-4">
+    <div class="intro-y col-span-12 lg:col-span-12 mb-3">
+        <div class="box p-5">
+            <form method="GET" action="{{ url('webdashboard/hasil-evaluasi') }}">
+                <div class="form-group mb-3">
+                    <label for="kegiatan_id" class="form-label mt-2">Kegiatan <span class="text-danger">*</span></label>
+                    {!! Form::select('kegiatan_id', kegiatan(), $selectedKegiatanId, ['class' => 'w-full', 'id' => 'kegiatan_id', 'data-placeholder' => 'Pilih Kegiatan', 'onchange' => 'this.form.submit()']) !!}
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="col-span-12 sm:col-span-6 lg:col-span-4 mb-3">
         <div class="intro-y box p-5">
             <h2 class="text-lg font-medium truncate mr-5">
                 Provinsi
@@ -21,7 +32,7 @@
         </div>
     </div>
 
-    <div class="col-span-12 sm:col-span-6 lg:col-span-4">
+    <div class="col-span-12 sm:col-span-6 lg:col-span-4 mb-3">
         <div class="intro-y box p-5">
             <h2 class="text-lg font-medium truncate mr-5">
                 Kementrian Lembaga
@@ -35,7 +46,7 @@
         </div>
     </div>
 
-    <div class="col-span-12 sm:col-span-6 lg:col-span-4">
+    <div class="col-span-12 sm:col-span-6 lg:col-span-4 mb-3">
         <div class="intro-y box p-5">
             <h2 class="text-lg font-medium truncate mr-5">
                 Pemerintah Kabupaten/Kota
@@ -67,98 +78,15 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @php
-                        $no = 0;
-                        $predikat_kl_counts = [
-                            'AA' => 0,
-                            'A' => 0,
-                            'BB' => 0,
-                            'B' => 0,
-                            'CC' => 0,
-                            'C' => 0,
-                            'D' => 0,
-                        ];
-                        $predikat_prov_counts = [
-                            'AA' => 0,
-                            'A' => 0,
-                            'BB' => 0,
-                            'B' => 0,
-                            'CC' => 0,
-                            'C' => 0,
-                            'D' => 0,
-                        ];
-                        $predikat_kab_counts = [
-                            'AA' => 0,
-                            'A' => 0,
-                            'BB' => 0,
-                            'B' => 0,
-                            'CC' => 0,
-                            'C' => 0,
-                            'D' => 0,
-                        ];
-                    @endphp
-                    @foreach ($instansis as $instansi)
-                        @php
-                            $no++;
-                            $group =
-                                $instansi->group == 'kl'
-                                    ? 'Kementerian'
-                                    : ($instansi->group == 'provinsi'
-                                        ? 'Provinsi'
-                                        : ($instansi->group == 'kabupaten'
-                                            ? 'Kabupaten'
-                                            : 'Lainnya'));
-                        @endphp
+                    @foreach ($rows as $index => $row)
                         <tr>
-                            <td>{{ $no }}</td>
-                            <td><a class="tabel" href="{{ URL::to('/hasil/' . $instansi->id) }}">{{ $instansi->name }}</a>
-                            </td>
-                            <td> {{ $group }}</td>
-                            <td>
-                                {{ isset($instansi->lke_test_tp) ? round($instansi->lke_test_tp->rb_general, 2) : '---' }}
-                            </td>
-                            <td>
-                                {{ isset($instansi->lke_test_tp) ? round($instansi->lke_test_tp->rb_tematik, 2) : '---' }}
-                            </td>
-                            <td>
-                                {{ isset($instansi->lke_test_tp) ? round($instansi->lke_test_tp->index_rb, 2) : '---' }}
-                            </td>
-                            <td>
-                                @php
-                                    $score = isset($instansi->lke_test_tp)
-                                        ? round($instansi->lke_test_tp->index_rb, 2)
-                                        : null;
-                                    $predikat = 'D';
-                                    if ($score !== null) {
-                                        if ($score >= 100) {
-                                            $predikat = 'AA';
-                                        } elseif ($score >= 80 && $score <= 99.99) {
-                                            $predikat = 'A';
-                                        } elseif ($score >= 70 && $score <= 79.99) {
-                                            $predikat = 'BB';
-                                        } elseif ($score >= 60 && $score <= 69.99) {
-                                            $predikat = 'B';
-                                        } elseif ($score >= 50 && $score <= 59.99) {
-                                            $predikat = 'CC';
-                                        } elseif ($score >= 30 && $score <= 49.99) {
-                                            $predikat = 'C';
-                                        } else {
-                                            $predikat = 'D';
-                                        }
-                                        if ($instansi->group == 'kl') {
-                                            $predikat_kl_counts[$predikat]++;
-                                        } elseif ($instansi->group == 'kabupaten') {
-                                            $predikat_kab_counts[$predikat]++;
-                                        } else {
-                                            $predikat_prov_counts[$predikat]++;
-                                        }
-                                    }
-                                    $predikat_counts_kl_json = json_encode(array_values($predikat_kl_counts));
-                                    $predikat_counts_kab_json = json_encode(array_values($predikat_kab_counts));
-                                    $predikat_counts_prov_json = json_encode(array_values($predikat_prov_counts));
-                                @endphp
-                                {{ $predikat }}
-                            </td>
+                            <td>{{ $index + 1 }}</td>
+                            <td><a class="tabel" href="{{ $row['detail_url'] }}">{{ $row['name'] }}</a></td>
+                            <td>{{ $row['group_label'] }}</td>
+                            <td>{{ $row['rb_general'] }}</td>
+                            <td>{{ $row['rb_tematik'] }}</td>
+                            <td>{{ $row['index_rb'] }}</td>
+                            <td>{{ $row['predikat'] }}</td>
                         </tr>
                     @endforeach
                 </tbody>
@@ -178,25 +106,26 @@
     <script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.html5.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        var predikat_prov_Counts = <?php echo $predikat_counts_prov_json; ?>;
+        var predikat_labels = @json($predikatCountsData['labels']);
+        var predikat_prov_Counts = @json($predikatCountsData['provinsi']);
         if ($("#pie-chart-provinsi").length) {
             var ctxProvinsi = $("#pie-chart-provinsi")[0].getContext("2d");
 
             var myPieChartProvinsi = new Chart(ctxProvinsi, {
                 type: "bar",
                 data: {
-                    labels: ["AA", "A", "BB", "B", "CC", "C", "D"],
+                    labels: predikat_labels,
                     datasets: [{
                         data: predikat_prov_Counts,
                         backgroundColor: [
-                            "#f1c40f", "#b32d29", "#b3611f", "#b39450", "#a2a2a2", "#000", "#e74a0c"
+                            "#f1c40f", "#b32d29", "#d35400", "#b3611f", "#b39450", "#a2a2a2", "#000", "#e74a0c"
                         ],
                         hoverBackgroundColor: [
-                            "#f1c40f", "#b32d29", "#b3611f", "#b39450", "#a2a2a2", "#000", "#e74a0c"
+                            "#f1c40f", "#b32d29", "#d35400", "#b3611f", "#b39450", "#a2a2a2", "#000", "#e74a0c"
                         ],
                         borderWidth: 1,
                         borderColor: [
-                            "#f1c40f", "#b32d29", "#f1bf52", "#b39450", "#a2a2a2", "#000", "#e74a0c"
+                            "#f1c40f", "#b32d29", "#d35400", "#f1bf52", "#b39450", "#a2a2a2", "#000", "#e74a0c"
                         ]
                     }]
                 },
@@ -220,7 +149,7 @@
             });
         }
 
-        var predikat_kl_Counts = <?php echo $predikat_counts_kl_json; ?>;
+        var predikat_kl_Counts = @json($predikatCountsData['kl']);
 
         if (document.getElementById("pie-chart-kementrian")) {
             var ctxProvinsi = document.getElementById("pie-chart-kementrian").getContext("2d");
@@ -228,18 +157,18 @@
             var myPieChartProvinsi = new Chart(ctxProvinsi, {
                 type: "bar",
                 data: {
-                    labels: ["AA", "A", "BB", "B", "CC", "C", "D"],
+                    labels: predikat_labels,
                     datasets: [{
                         data: predikat_kl_Counts,
                         backgroundColor: [
-                            "#f1c40f", "#b32d29", "#b3611f", "#b39450", "#a2a2a2", "#000", "#e74a0c"
+                            "#f1c40f", "#b32d29", "#d35400", "#b3611f", "#b39450", "#a2a2a2", "#000", "#e74a0c"
                         ],
                         hoverBackgroundColor: [
-                            "#f1c40f", "#b32d29", "#b3611f", "#b39450", "#a2a2a2", "#000", "#e74a0c"
+                            "#f1c40f", "#b32d29", "#d35400", "#b3611f", "#b39450", "#a2a2a2", "#000", "#e74a0c"
                         ],
                         borderWidth: 1,
                         borderColor: [
-                            "#f1c40f", "#b32d29", "#f1bf52", "#b39450", "#a2a2a2", "#000", "#e74a0c"
+                            "#f1c40f", "#b32d29", "#d35400", "#f1bf52", "#b39450", "#a2a2a2", "#000", "#e74a0c"
                         ]
                     }]
                 },
@@ -263,25 +192,25 @@
             });
         }
 
-        var predikat_kab_Counts = <?php echo $predikat_counts_kab_json; ?>;
+        var predikat_kab_Counts = @json($predikatCountsData['kabupaten']);
         if ($("#pie-chart-pemerintah").length) {
             var ctxPemerintah = $("#pie-chart-pemerintah")[0].getContext("2d");
 
             var myPieChartPemerintah = new Chart(ctxPemerintah, {
                 type: "bar",
                 data: {
-                    labels: ["AA", "A", "BB", "B", "CC", "C", "D"],
+                    labels: predikat_labels,
                     datasets: [{
                         data: predikat_kab_Counts,
                         backgroundColor: [
-                            "#f1c40f", "#b32d29", "#b3611f", "#b39450", "#a2a2a2", "#000", "#e74a0c"
+                            "#f1c40f", "#b32d29", "#d35400", "#b3611f", "#b39450", "#a2a2a2", "#000", "#e74a0c"
                         ],
                         hoverBackgroundColor: [
-                            "#f1c40f", "#b32d29", "#b3611f", "#b39450", "#a2a2a2", "#000", "#e74a0c"
+                            "#f1c40f", "#b32d29", "#d35400", "#b3611f", "#b39450", "#a2a2a2", "#000", "#e74a0c"
                         ],
                         borderWidth: 1,
                         borderColor: [
-                            "#f1c40f", "#b32d29", "#f1bf52", "#b39450", "#a2a2a2", "#000", "#e74a0c"
+                            "#f1c40f", "#b32d29", "#d35400", "#f1bf52", "#b39450", "#a2a2a2", "#000", "#e74a0c"
                         ]
                     }]
                 },

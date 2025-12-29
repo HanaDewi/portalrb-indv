@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\KlpdInstansi;
+use App\Models\LKE\LkeKegiatan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -168,10 +169,137 @@ class WebDashboardController extends Controller
         return view('webdashboard.rb-tematik', compact('instansis', 'tematiks', 'tahun', 'temas'));
     }
 
-    public function hasilEvaluasi()
+    public function hasilEvaluasi(Request $request)
     {
-        $instansis = KlpdInstansi::all();
+        $kegiatans = LkeKegiatan::orderByDesc('tahun')->orderByDesc('id')->get();
+        $selectedKegiatanId = $request->get('kegiatan_id');
+        if ($selectedKegiatanId && !$kegiatans->contains('id', (int) $selectedKegiatanId)) {
+            $selectedKegiatanId = null;
+        }
+        if (!$selectedKegiatanId) {
+            $selectedKegiatanId = $kegiatans->first()->id ?? null;
+        }
 
-        return view('webdashboard.hasil-evaluasi', compact('instansis'));
+        $predikatKeys = ['AA', 'A', 'A-', 'BB', 'B', 'CC', 'C', 'D'];
+        $predikatCounts = [
+            'kl' => array_fill_keys($predikatKeys, 0),
+            'provinsi' => array_fill_keys($predikatKeys, 0),
+            'kabupaten' => array_fill_keys($predikatKeys, 0),
+        ];
+        $rows = collect();
+
+        if ($selectedKegiatanId) {
+            $targetTotals = DB::table('lke_bobot as lb')
+                ->join('lke_parameter as lp', 'lp.id', '=', 'lb.lke_parameter_id')
+                ->where('lp.lke_kegiatan_id', $selectedKegiatanId)
+                ->whereNotNull('lb.target_baik')
+                ->groupBy('lb.group')
+                ->select('lb.group', DB::raw('COUNT(*) as target_baik_total'))
+                ->pluck('target_baik_total', 'group');
+
+            $targetMetSub = DB::table('lke_test_tp_line as lttl')
+                ->join('lke_bobot as lb', 'lb.id', '=', 'lttl.lke_bobot_id')
+                ->join('lke_parameter as lp', 'lp.id', '=', 'lb.lke_parameter_id')
+                ->where('lp.lke_kegiatan_id', $selectedKegiatanId)
+                ->whereNotNull('lb.target_baik')
+                ->whereRaw('lttl.score >= lb.target_baik')
+                ->select('lttl.instansi_id', DB::raw('COUNT(*) as target_baik_met'))
+                ->groupBy('lttl.instansi_id');
+
+            $instansiRows = DB::table('klpd_instansi_new as ki')
+                ->leftJoin('lke_test_tp as ltt', function ($join) use ($selectedKegiatanId) {
+                    $join->on('ltt.instansi_id', '=', DB::raw('COALESCE(ki.id_before, ki.id)'))
+                        ->where('ltt.lke_kegiatan_id', '=', $selectedKegiatanId);
+                })
+                ->leftJoinSub($targetMetSub, 'tbm', function ($join) {
+                    $join->on('tbm.instansi_id', '=', DB::raw('COALESCE(ki.id_before, ki.id)'));
+                })
+                ->whereIn('ki.group', ['kl', 'provinsi', 'kabupaten'])
+                ->orderByRaw("FIELD(ki.group , 'kl', 'provinsi', 'kabupaten') ASC")
+                ->orderBy('ki.name')
+                ->select(
+                    'ki.id',
+                    'ki.name',
+                    'ki.name_before',
+                    'ki.group',
+                    'ltt.rb_general',
+                    'ltt.rb_tematik',
+                    'ltt.index_rb',
+                    DB::raw('COALESCE(tbm.target_baik_met, 0) as target_baik_met')
+                )
+                ->get();
+
+            $rows = $instansiRows->map(function ($row) use ($selectedKegiatanId, $targetTotals, &$predikatCounts) {
+                $score = $row->index_rb !== null ? (float) $row->index_rb : null;
+                $targetTotal = (int) ($targetTotals[$row->group] ?? 0);
+                $targetMet = (int) $row->target_baik_met;
+                $allTargetBaik = $targetTotal === 0 ? true : $targetMet >= $targetTotal;
+
+                $predikat = $this->resolvePredikat($score, $allTargetBaik);
+
+                if ($score !== null && isset($predikatCounts[$row->group][$predikat])) {
+                    $predikatCounts[$row->group][$predikat]++;
+                }
+
+                return [
+                    'id' => $row->id,
+                    'name' => $row->name,
+                    'group' => $row->group,
+                    'group_label' => group_instansi($row->group),
+                    'rb_general' => $row->rb_general !== null ? round($row->rb_general, 2) : '---',
+                    'rb_tematik' => $row->rb_tematik !== null ? round($row->rb_tematik, 2) : '---',
+                    'index_rb' => $row->index_rb !== null ? round($row->index_rb, 2) : '---',
+                    'predikat' => $predikat,
+                    'detail_url' => url('evaluasi/hasil-evaluasi/' . $row->id . '/' . $selectedKegiatanId),
+                ];
+            });
+        }
+
+        $predikatCountsData = [
+            'kl' => array_values($predikatCounts['kl']),
+            'provinsi' => array_values($predikatCounts['provinsi']),
+            'kabupaten' => array_values($predikatCounts['kabupaten']),
+            'labels' => $predikatKeys,
+        ];
+
+        return view('webdashboard.hasil-evaluasi', compact(
+            'kegiatans',
+            'selectedKegiatanId',
+            'rows',
+            'predikatCountsData'
+        ));
+    }
+
+    private function resolvePredikat(?float $score, bool $allTargetBaik): string
+    {
+        if ($score === null) {
+            return 'D';
+        }
+
+        if ($score >= 100) {
+            return 'AA';
+        }
+
+        if ($score > 80 && $score < 100) {
+            return $allTargetBaik ? 'A' : 'A-';
+        }
+
+        if ($score > 70 && $score <= 80) {
+            return 'BB';
+        }
+
+        if ($score > 60 && $score <= 70) {
+            return 'B';
+        }
+
+        if ($score > 50 && $score <= 60) {
+            return 'CC';
+        }
+
+        if ($score > 30 && $score <= 50) {
+            return 'C';
+        }
+
+        return 'D';
     }
 }
