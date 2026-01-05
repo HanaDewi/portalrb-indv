@@ -1,28 +1,33 @@
 @extends('layout.rubick')
 @section('title', 'Capaian Output - RB Tematik')
 @section('content')
+@include('common.status')
 <div class="intro-y box col-span-12 lg:col-span-12">
     <div class="flex flex-col sm:flex-row items-center p-5 border-b border-slate-200/60">
         <h2 class="font-bold text-base mr-auto">Capaian Output - RB Tematik</h2>
     </div>
     <div class="lg:col-span-12 p-5 border-b border-slate-200/60">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-3">
+            <form method="GET" action="{{ route('webdashboard.rb-tematik.capaian-output') }}" class="flex flex-col sm:flex-row sm:items-center gap-3">
+                <label for="filter-tahun" class="font-medium mt-2">Pilih Tahun</label>
+                <select id="filter-tahun" name="tahun" class="form-select w-32">
+                    @forelse ($years as $year)
+                        <option value="{{ $year }}" {{ (string) $selectedYear === (string) $year ? 'selected' : '' }}>{{ $year }}</option>
+                    @empty
+                        <option value="">-</option>
+                    @endforelse
+                </select>
+                <button type="submit" class="btn btn-primary w-28">Tampilkan</button>
+            </form>
+            @if ($selectedYear)
+                <div class="text-slate-600 text-sm">Data capaian output tahun <span class="font-semibold">{{ $selectedYear }}</span></div>
+            @endif
+        </div>
         Data Capaian Output ini bukan data realtime. Data berikut di kalkulasi terakhir pada tanggal
-        {{$data_pertama->updated_at}}. Untuk
+        {{ optional($data_pertama)->updated_at ?? '-' }}. Untuk
         kalkulasi dengan data terbaru harap menghubungi admin. <br />
         @if($user = Auth::User()->level =='admin')
-        <a href="{{route('cogenerate',['pilihan'=>1])}}" class="btn btn-primary"> G1 </a>
-        <a href="{{route('cogenerate',['pilihan'=>2])}}" class="btn btn-primary"> G2 </a>
-        <a href="{{route('cogenerate',['pilihan'=>3])}}" class="btn btn-primary"> G3 </a>
-        <a href="{{route('cogenerate',['pilihan'=>4])}}" class="btn btn-primary"> G4 </a>
-        <a href="{{route('cogenerate',['pilihan'=>5])}}" class="btn btn-primary"> G5 </a>
-        <a href="{{route('cogenerate',['pilihan'=>6])}}" class="btn btn-primary"> G6 </a>
-        <a href="{{route('cogenerate',['pilihan'=>7])}}" class="btn btn-primary"> G7 </a>
-        <a href="{{route('cogenerate',['pilihan'=>8])}}" class="btn btn-primary"> G8 </a>
-        <a href="{{route('cogenerate',['pilihan'=>9])}}" class="btn btn-primary"> G9 </a>
-        <a href="{{route('cogenerate',['pilihan'=>10])}}" class="btn btn-primary"> G10 </a>
-        <a href="{{route('cogenerate',['pilihan'=>11])}}" class="btn btn-primary"> G11 </a>
-        <a href="{{route('cogenerate',['pilihan'=>12])}}" class="btn btn-primary"> G12 </a>
-        <a href="{{route('cogenerate',['pilihan'=>13])}}" class="btn btn-primary"> G13 </a>
+        <a href="{{route('cogenerate',['pilihan' => 'all', 'tahun' => $selectedYear])}}" class="btn btn-primary">Generate Semua Instansi</a>
         @endif
     </div>
 
