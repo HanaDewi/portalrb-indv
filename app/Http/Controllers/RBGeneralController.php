@@ -12,6 +12,7 @@ use App\Models\GeneralRencanaAksiOutput;
 use App\Models\Indikator;
 use App\Models\KlpdInstansi;
 use App\Models\OpenAccessSetting;
+use App\Models\PelaporanCoi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -388,6 +389,12 @@ class RBGeneralController extends Controller
                 }
             }
         }
+
+        $pelaporan_coi = PelaporanCoi::where('instansi_id', $user->instansi_id)->first();
+        if (!$pelaporan_coi || !$pelaporan_coi->finalized_at) {
+            return view('belumbuka-modulcoi');
+        }
+
         $target = GeneralPerencanaanTarget::where('id', $target_id)->where('general_perencanaan_id', $perencanaan_id)
             ->whereHas('perencanaan', function ($q) use ($user) {
                 $q->where('instansi_id', $user->instansi_id);
@@ -628,6 +635,12 @@ class RBGeneralController extends Controller
                 }
             }
         }
+
+        $pelaporan_coi = PelaporanCoi::where('instansi_id', $user->instansi_id)->first();
+        if (!$pelaporan_coi || !$pelaporan_coi->finalized_at) {
+            return view('belumbuka-modulcoi');
+        }
+        
         $target = GeneralPerencanaanTarget::where('id', $target_id)->where('general_perencanaan_id', $perencanaan_id)
             ->whereHas('perencanaan', function ($q) use ($user) {
                 $q->where('instansi_id', $user->instansi_id);

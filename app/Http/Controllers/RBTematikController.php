@@ -15,6 +15,7 @@ use App\Models\TematikRencanaAksiOutput;
 use App\Models\KlpdInstansi;
 use App\Models\OpenAccessSetting;
 use App\Models\TematikPermasalahan;
+use App\Models\PelaporanCoi;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
@@ -604,6 +605,12 @@ class RBTematikController extends Controller
                 }
             }
         }
+
+        $pelaporan_coi = PelaporanCoi::where('instansi_id', $user->instansi_id)->first();
+        if (!$pelaporan_coi || !$pelaporan_coi->finalized_at) {
+            return view('belumbuka-modulcoi');
+        }
+
         $indikator = TematikIndikatorPermasalahan::where('id', $indikator_id)->first();
         $fokus_intervensi = FokusIntervensi::all();
         if (!$indikator) {
@@ -787,6 +794,12 @@ class RBTematikController extends Controller
                 }
             }
         }
+
+        $pelaporan_coi = PelaporanCoi::where('instansi_id', $user->instansi_id)->first();
+        if (!$pelaporan_coi || !$pelaporan_coi->finalized_at) {
+            return view('belumbuka-modulcoi');
+        }
+        
         $indikator = TematikIndikatorPermasalahan::where('id', $indikator_id)->first();
         $fokus_intervensi = FokusIntervensi::all();
         if (!$indikator) {
