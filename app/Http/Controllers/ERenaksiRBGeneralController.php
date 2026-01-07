@@ -272,9 +272,10 @@ class ERenaksiRBGeneralController extends Controller
         if ($instansi) {
             if (in_array($instansi->group, ['kl', 'provinsi', 'kabupaten'])) {
                 $kegiatan = LkeKegiatan::where('tahun', $tahun)->first();
-                $lke_bobot = LkeBobot::where('rencana_aksi', 1)
+                $lke_bobot = LkeBobot::whereHas('lke_parameter', function($q) use ($kegiatan) {
+                        $q->where('rencana_aksi', '1')->where('lke_kegiatan_id', $kegiatan->id);
+                    })
                     ->where('group', $instansi->group)
-                    ->where('lke_kegiatan_id', $kegiatan->id)
                     ->first();
                 $test_tp_line = LkeTestTpLine::where('lke_bobot_id', $lke_bobot->id)->where('instansi_id', $instansi->id)->first();
                 if (!$test_tp_line) {
