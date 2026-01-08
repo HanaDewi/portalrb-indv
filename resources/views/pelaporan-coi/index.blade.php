@@ -421,6 +421,7 @@
             $(document).ready(function() {
                 $('.digit').inputmask("decimal", {
                     rightAlign: false,
+                    radixPoint:",",
                     groupSeparator: ".",
                     autoGroup: true,
                     digits: 0,
