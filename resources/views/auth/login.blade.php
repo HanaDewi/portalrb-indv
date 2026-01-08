@@ -2,7 +2,7 @@
 <html lang="en" class="light">
     <head>
         <meta charset="utf-8">
-        <link href="{{ asset('template_lkerb') }}/dist/images/favicon.ico" rel="shortcut icon">
+        <link href="{{ asset('assets') }}/images/garuda.png" rel="shortcut icon">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="description" content="Lembar Kerja Evaluasi">
         <meta name="keywords" content="Lembar Kerja Evaluasi">
@@ -33,7 +33,7 @@
                     <a href="" class="-intro-x flex items-center pt-5">
                     </a>
                     <div class="my-auto">
-                        <img alt="Midone - HTML Admin Template" class="-intro-x w-1/2 -mt-16" src="{{ asset('template_lkerb') }}/dist/images/logo.jpg">
+                        <img alt="Midone - HTML Admin Template" class="-intro-x w-1/2 -mt-16" src="{{ asset('assets') }}/images/logo-portalrb.png">
                         <div class="-intro-x text-white font-medium text-4xl leading-tight mt-10">
                             Kementerian Pendayagunaan
                             <br>

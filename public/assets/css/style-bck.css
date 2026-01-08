@@ -553,16 +553,16 @@ input[type="radio"] {
 }
 
 .btnpan {
-    background: #A3C2DB;
+    background: #b42b2d;
     padding: 10px 35px;
     border-radius: 10px;
-    color: #3A4551;
+    color: #fff;
     font-weight: 900;
 }
 
 .btnpan:hover {
-    background: #87A2BB;
-    color: #3A4551;
+    background: #000;
+    color: #b42b2d;
 }
 
 .ylw {
@@ -1451,7 +1451,7 @@ a.theme-btn.style-five .btn-text.normal {
 }
 
 .bgc-yellow {
-    background-color: #A3C2DB;
+    background-color: #151516;
     border-bottom: 5px solid #ffcc08;
 }
 
@@ -4855,8 +4855,7 @@ h6,
 }
 
 .header-top {
-    color: black;
-    font-weight: bold;
+    color: #fff;
     font-size: 15px;
     display: -webkit-box;
     display: -ms-flexbox;
@@ -5086,7 +5085,7 @@ h6,
 }
 
 .main-menu .navbar-collapse li a:hover {
-    color: #A3C2DB; /** Hover color, formerly yellow: #ffcc08 */
+    color: #ffcc08;
     text-decoration: none;
 }
 
@@ -5332,7 +5331,7 @@ h6,
 
 /* Header One */
 .main-header.header-one .header-inner {
-    background: #87A2BB;
+    background: #b42b2d;
     padding-left: 75px;
     padding-right: 38px;
     border-radius: 20px;
@@ -7077,19 +7076,16 @@ h6,
     border-radius: 25px;
 }
 @media only screen and (min-width: 376px) {
-    .card {
-        padding: 25px;
-        border-radius: 25px;
-    }
+    padding: 25px;
+    border-radius: 25px;
 }
-
 
 .feature-item .image img {
     width: 100%;
 }
 
 .redt a {
-    color: #3A4551;
+    color: #b42b2d;
 }
 
 .redt :hover {
@@ -7097,11 +7093,11 @@ h6,
 }
 
 .redt {
-    color: #3A4551;
+    color: #b42b2d;
 }
 
 .redq {
-    color: #A3C2DB;
+    color: #e23740;
 }
 
 .yl {
@@ -7121,7 +7117,7 @@ h6,
     transition: 0.5s;
     border-radius: 100px;
     display: inline-block;
-    background: #A3C2DB;
+    background: #b42b2d;
     margin-bottom: 35px;
 }
 
@@ -7288,7 +7284,7 @@ h6,
 
 /* Feature Two */
 .testimonials-area-two .testimonial-content .title {
-    color: #3A4551;
+    color: #d5d5d5;
 }
 
 .testimonials-area-two .testimonials-two-bg {
@@ -10936,6 +10932,7 @@ blockquote .blockquote-footer {
 
 .footer-title {
     font-family: "Jost", sans-serif;
+
     font-size: 22px;
     margin-bottom: 28px;
 }
@@ -10966,17 +10963,17 @@ blockquote .blockquote-footer {
 
 .footer-white .footer-title,
 .footer-white .footer-newsletter h5 {
-    color: #3A4551;
+    color: white;
 }
 
 .footer-white .footer-widget p,
 .footer-white .footer-widget li,
 .footer-white .footer-widget a {
-    color: #3A4551;
+    color: #d5d5d5;
 }
 
 .redw {
-    color: #A3C2DB;
+    color: #b42b2d;
     padding-right: 5px;
 }
 

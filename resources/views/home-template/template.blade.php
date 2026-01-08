@@ -68,8 +68,8 @@
                         <div class="logo-outer align-self-center">
                             <div class="logo">
                                 <a href="{{ route('home') }}">
-                                    <img src="{{ asset('/assets/images/logoportalreformasibirokrasinasional.png') }}"
-                                        alt="Logo">
+                                    <img src="{{ asset('/assets/images/logo-portalrb.png') }}"
+                                        alt="Logo" height="50">
                                 </a>
                             </div>
                         </div>

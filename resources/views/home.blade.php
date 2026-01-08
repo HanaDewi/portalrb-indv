@@ -43,7 +43,7 @@
         <!-- Slide 1: Portal RB -->
         <div class="item">
             <section class="hero-area bgs-cover pt-30 pb-15 rpt-130"
-                style="background-image: url({{ URL::to('/') }}/assets/images/bgportal.jpg)">
+                style="background-image: url({{ URL::to('/') }}/assets/images/bgportal1.png)">
                 <div class="container container-1000">
                     <div class="row gap-80 align-items-center">
                         <div class="col-lg-12">
@@ -145,7 +145,7 @@
 <!-- Features Area end -->
 <!-- Meter Area start -->
 <section class="meter-area py-80 rel z-1"
-    style="background-image: url({{ URL::to('/') }}/assets/images/bg3.jpg); background-size: cover;">
+    style="background-image: url({{ URL::to('/') }}/assets/images/bgbiru.png); background-size: cover;">
     <div class="container">
         <div class="row align-items-center">
             <div class="section-title text-center pb-35 ">
