@@ -16,7 +16,7 @@
                 <div class="row">
                     <div class="form-group mb-3">
                         <label for="kegiatan_id" class="form-label mt-2">Kegiatan <span class="text-danger">*</span></label>
-                        {!! Form::select('kegiatan_id', kegiatan(), $kegiatan_id, ['class' => 'w-full', 'id' => 'kegiatan_id', 'data-placeholder' => 'Pilih Kegiatan', 'onchange' => 'getData();']) !!}
+                        {!! Form::select('kegiatan_id', kegiatan(), $kegiatan->id, ['class' => 'w-full', 'id' => 'kegiatan_id', 'data-placeholder' => 'Pilih Kegiatan', 'onchange' => 'getData();']) !!}
                     </div>
                 </div>
                 <div class="row" hidden>
@@ -37,9 +37,9 @@
                             @foreach ($data as $cc => $jw)
                                 <tr>
                                     <td>{{ $cc + 1 }}</td>
-                                    <td><a href="?kegiatan_id={{ $kegiatan_id }}&instansi={{ $jw->instansi_id }}" style="color:blue">{{ $jw->instansi->name }}</a>
+                                    <td><a href="?kegiatan_id={{ $kegiatan->id }}&instansi={{ $jw->instansi_id }}" style="color:blue">{{ $jw->instansi->name }}</a>
                                     </td>
-                                    <td class="text-center">{{ $jw->instansi->jawaban_renaksi->where('tahun', $tahun)->where('lke_renaksi_id', 2)->first()->jawaban ?? '-' }}
+                                    <td class="text-center">{{ $jw->instansi->jawaban_renaksi->where('tahun', $kegiatan->tahun)->where('lke_renaksi_id', $skor_id)->first()->jawaban ?? '-' }}
                                     </td>
                                 </tr>
                             @endforeach
@@ -121,7 +121,7 @@
                 @endif
                 <div class="row mt-4">
                     @if ($kembali == true)
-                        <a href="/evaluasi/renaksi-rb-general?kegiatan_id={{ $kegiatan_id }}" class="btn btn-warning">&lt; Kembali</a>
+                        <a href="/evaluasi/renaksi-rb-general?kegiatan_id={{ $kegiatan->id }}" class="btn btn-warning">&lt; Kembali</a>
                     @endif
                 </div>
             </div>
@@ -138,7 +138,7 @@
                     <form action="{{ url('evaluasi/renaksi-rb-general/save') }}" id="form-konversi-jawaban" method="post">
                         @csrf
                         <input type="hidden" name="instansi_id" id="instansi_id" value="{{ $instansi->id }}">
-                        <input type="hidden" name="kegiatan_id" value="{{ $kegiatan_id }}">
+                        <input type="hidden" name="kegiatan_id" value="{{ $kegiatan->id }}">
                         <input type="hidden" name="jawaban_renaksi_id" id="jawaban_renaksi_id">
                         <div class="modal-body grid columns-12 gap-4 gap-y-3">
                             <div class="g-col-12">
