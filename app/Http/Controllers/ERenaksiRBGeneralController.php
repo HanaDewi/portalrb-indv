@@ -38,15 +38,10 @@ class ERenaksiRBGeneralController extends Controller
 
         $kegiatanId = $request->input('kegiatan_id');
         $kegiatan = LkeKegiatan::orderByDesc('tahun')->find($kegiatanId);
-        if (!$kegiatan && $request->filled('tahun')) {
-            $kegiatan = LkeKegiatan::where('tahun', $request->input('tahun'))->orderByDesc('id')->first();
-        }
         if (!$kegiatan) {
             $kegiatan = LkeKegiatan::orderByDesc('tahun')->first();
         }
 
-        $kegiatanId = $kegiatan?->id;
-        $tahun = $kegiatan?->tahun ?? $request->input('tahun', 2024);
         $ins_id = $request->input('instansi');
 
         if (empty($ins_id)) {
@@ -57,22 +52,24 @@ class ERenaksiRBGeneralController extends Controller
                 $instansis = InstansiTim::get();
             }
 
+            $skor_id = LKERenaksi::where('tahun', $kegiatan->tahun)->where('kriteria', 'Strategi Pelaksanaan RB General')->first()->id;
+
             return view('evaluasi.renaksi-rb-general', [
-                'tahun' => $tahun,
                 'isadmin' => $isadmin,
                 'data' => $instansis,
                 'kembali' => false,
                 'istpn' => $istpn,
                 'check' => false,
-                'kegiatan_id' => $kegiatanId
+                'skor_id' => $skor_id,
+                'kegiatan' => $kegiatan
             ]);
         } else {
             $jawabanSkor = KonversiJawabanRenaksi::all()->keyBy('jawaban');
-            $lkerenaksi = LKERenaksi::where('tahun', $tahun)->orderBy('id', 'ASC')->get();
-            $fjawaban = $lkerenaksi->mapWithKeys(function ($renaksi) use ($tahun) {
+            $lkerenaksi = LKERenaksi::where('tahun', $kegiatan->tahun)->orderBy('id', 'ASC')->get();
+            $fjawaban = $lkerenaksi->mapWithKeys(function ($renaksi) use ($kegiatan) {
                 return [$renaksi->id => (object) [
                     'id' => '',
-                    'tahun' => $tahun,
+                    'tahun' => $kegiatan->tahun,
                     'lke_renaksi_id' => $renaksi->id,
                     'jawaban' => '',
                     'skor' => '',
@@ -82,7 +79,7 @@ class ERenaksiRBGeneralController extends Controller
             })->all();
 
             $instansi = KlpdInstansi::where('id', $ins_id)->withTrashed()->first();
-            $jawaban = JawabanRenaksi::with('konversi_jawaban_renaksi')->where('tahun', $tahun)->where('instansi_id', $ins_id)->get();
+            $jawaban = JawabanRenaksi::with('konversi_jawaban_renaksi')->where('tahun', $kegiatan->tahun)->where('instansi_id', $ins_id)->get();
             $check = false;
             if ($istpn) {
                 $atim = AnggotaTimEvaluasi::where('user_id', $user->id)->first();
@@ -102,10 +99,10 @@ class ERenaksiRBGeneralController extends Controller
                 ];
             }
 
-            $renaksi = DB::select('SELECT id,kriteria,info,tahun FROM lke_renaksi lr WHERE (SELECT COUNT(*) FROM lke_renaksi lr_ WHERE lr_.parent_id=lr.id)=0 AND lr.tahun=?', [$tahun]);
+            $renaksi = DB::select('SELECT id,kriteria,info,tahun FROM lke_renaksi lr WHERE (SELECT COUNT(*) FROM lke_renaksi lr_ WHERE lr_.parent_id=lr.id)=0 AND lr.tahun=?', [$kegiatan->tahun]);
 
             return view('evaluasi.renaksi-rb-general', [
-                'tahun' => $tahun,
+                'tahun' => $kegiatan->tahun,
                 'isadmin' => $isadmin,
                 'data' => $jawaban,
                 'kembali' => true,
@@ -115,7 +112,7 @@ class ERenaksiRBGeneralController extends Controller
                 'list_jawaban' => $jawabanSkor->values(),
                 'lkerenaksi' => $lkerenaksi,
                 'fjawaban' => $fjawaban,
-                'kegiatan_id' => $kegiatanId
+                'kegiatan' => $kegiatan
             ]);
         }
     }

@@ -13,6 +13,7 @@ use App\Models\LKE\LkeTestTp;
 use App\Models\LKE\LkeTestTpLine;
 use App\Models\OpenAccessSetting;
 use App\Models\LkeTP;
+use App\Models\PelaporanCoi;
 use App\Models\Tahun;
 use App\Models\Tema;
 use App\Models\TimEvaluasiRB;
@@ -759,4 +760,13 @@ function hasAksesEvaluasiAkip()
         }
     }
     return true;
+}
+
+function coi_finalized($instansi_id)
+{
+    $data = PelaporanCoi::where('instansi_id', $instansi_id)->first();
+    if ($data && $data->finalized_at) {
+        return true;
+    }
+    return false;
 }
