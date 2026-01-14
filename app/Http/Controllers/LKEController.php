@@ -75,7 +75,7 @@ class LKEController extends Controller
                 $totalInstansi = $totalInstansiQuery->count();
             } else {
                 $data->terisi = LkeTestTpLine::whereIn('lke_bobot_id', $bobot_ids)
-                    ->join('klpd_instansi_new as ki', function($join) {
+                    ->join('klpd_instansi_new as ki', function ($join) {
                         $join->on('lke_test_tp_line.instansi_id', '=', 'ki.id_before')
                             ->orOn('lke_test_tp_line.instansi_id', '=', 'ki.id');
                     })
@@ -494,7 +494,7 @@ class LKEController extends Controller
                 $totalInstansi = $totalInstansiQuery->count();
             } else {
                 $data->terisi = LkeTestTpLine::whereIn('lke_bobot_id', $bobot_ids)
-                    ->join('klpd_instansi_new as ki', function($join) {
+                    ->join('klpd_instansi_new as ki', function ($join) {
                         $join->on('lke_test_tp_line.instansi_id', '=', 'ki.id_before')
                             ->orOn('lke_test_tp_line.instansi_id', '=', 'ki.id');
                     })
@@ -586,40 +586,47 @@ class LKEController extends Controller
 
     public function hasil_evaluasi_getDatas(Request $request)
     {
-        $kegiatan_id = $request->kegiatan_id;
+        $kegiatan = LkeKegiatan::find($request->kegiatan_id);
         $datas = DB::table('klpd_instansi_new as ki')
             ->selectRaw("CASE 
-                            WHEN ltt.rb_general IS NOT NULL THEN 100 
-                            ELSE NULL 
-                        END as bobot_rb_general, 
-                        CASE 
-                            WHEN ltt.koefisien IS NOT NULL THEN ltt.rb_general + ltt.koefisien 
-                            ELSE ltt.rb_general 
-                        END as rb_general_koefisien, 
-                        ki.name, 
-                        ki.name_before, 
-                        ki.id as klpd_instansi_id, 
-                        ltt.*, 
-                        CASE 
-                            WHEN ki.group = 'kl' THEN 'Kementerian/Badan' 
-                            WHEN ki.group = 'provinsi' THEN 'Provinsi' 
-                            WHEN ki.group = 'kabupaten' THEN 'Kabupaten/Kota' 
-                        END as group_instansi")
-            ->leftJoin('lke_test_tp as ltt', function ($join) use ($kegiatan_id) {
-                if (LkeKegiatan::find($kegiatan_id)->tahun == 2024) {
+                    WHEN ltt.rb_general IS NOT NULL THEN 100 
+                    ELSE NULL 
+                END as bobot_rb_general, 
+                CASE 
+                    WHEN ltt.koefisien IS NOT NULL THEN ltt.rb_general + ltt.koefisien 
+                    ELSE ltt.rb_general 
+                END as rb_general_koefisien, 
+                ki.name, 
+                ki.name_before, 
+                ki.id as klpd_instansi_id, 
+                ltt.*, 
+                CASE 
+                    WHEN ki.group = 'kl' THEN 'Kementerian/Badan' 
+                    WHEN ki.group = 'provinsi' THEN 'Provinsi' 
+                    WHEN ki.group = 'kabupaten' THEN 'Kabupaten/Kota' 
+                END as group_instansi")
+            ->leftJoin('lke_test_tp as ltt', function ($join) use ($kegiatan) {
+                if ($kegiatan->tahun == 2024) {
                     $join->on('ltt.instansi_id', '=', DB::raw('COALESCE(ki.id_before, ki.id)'));
                 } else {
                     $join->on('ltt.instansi_id', '=', 'ki.id');
                 }
             })
             ->whereIn('ki.group', ['kl', 'provinsi', 'kabupaten'])
+            ->where(function ($query) use ($kegiatan) {
+                if ($kegiatan->tahun == 2024) {
+                    $query->where('ki.keterangan', '!=', 'baru');
+                } else {
+                    $query->whereNull('ki.deleted_at');
+                }
+            })
             ->orderByRaw("FIELD(ki.group , 'kl', 'provinsi', 'kabupaten') ASC")
             ->orderBy('ki.name')
             ->get();
 
         foreach ($datas as $data) {
             $before = $data->name_before ? ' [<span class="font-italic text-danger">' . $data->name_before . '</span>]' : '';
-            $data->nama_instansi = '<a href="' . url('evaluasi/hasil-evaluasi/' . $data->klpd_instansi_id . '/' . $kegiatan_id) . '" style="color: blue;">' . $data->name . $before . '</a>';
+            $data->nama_instansi = '<a href="' . url('evaluasi/hasil-evaluasi/' . $data->klpd_instansi_id . '/' . $kegiatan->id) . '" style="color: blue;">' . $data->name . $before . '</a>';
         }
 
         return response()->json(['data' => $datas]);
