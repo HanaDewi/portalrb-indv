@@ -607,9 +607,9 @@ class LKEController extends Controller
                 END as group_instansi")
             ->leftJoin('lke_test_tp as ltt', function ($join) use ($kegiatan) {
                 if ($kegiatan->tahun == 2024) {
-                    $join->on('ltt.instansi_id', '=', DB::raw('COALESCE(ki.id_before, ki.id)'));
+                    $join->on('ltt.instansi_id', '=', DB::raw('COALESCE(ki.id_before, ki.id)'))->where('ltt.lke_kegiatan_id', '=', $kegiatan->id);
                 } else {
-                    $join->on('ltt.instansi_id', '=', 'ki.id');
+                    $join->on('ltt.instansi_id', '=', 'ki.id')->where('ltt.lke_kegiatan_id', '=', $kegiatan->id);
                 }
             })
             ->whereIn('ki.group', ['kl', 'provinsi', 'kabupaten'])
