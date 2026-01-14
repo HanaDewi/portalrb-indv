@@ -1357,6 +1357,20 @@ select {
     border-color: rgb(var(--color-danger) / var(--tw-border-opacity));
 }
 
+.btn-info {
+    --tw-border-opacity: 1;
+    border-color: rgb(var(--color-info) / var(--tw-border-opacity));
+    --tw-bg-opacity: 1;
+    background-color: rgb(var(--color-info) / var(--tw-bg-opacity));
+    --tw-text-opacity: 1;
+    color: rgb(255 255 255 / var(--tw-text-opacity));
+}
+
+.dark .btn-info {
+    --tw-border-opacity: 1;
+    border-color: rgb(var(--color-info) / var(--tw-border-opacity));
+}
+
 .btn-dark {
     --tw-border-opacity: 1;
     border-color: rgb(var(--color-dark) / var(--tw-border-opacity));
@@ -2164,6 +2178,25 @@ select {
 }
 
 .btn-danger-soft:hover:not(:disabled) {
+    --tw-border-opacity: 0.1;
+    --tw-bg-opacity: 0.1;
+}
+
+.btn-info-soft {
+    border-color: rgb(var(--color-info) / var(--tw-border-opacity));
+    --tw-border-opacity: 0.05;
+    background-color: rgb(var(--color-info) / var(--tw-bg-opacity));
+    --tw-bg-opacity: 0.2;
+    --tw-text-opacity: 1;
+    color: rgb(var(--color-info) / var(--tw-text-opacity));
+}
+
+.dark .btn-info-soft {
+    border-color: rgb(var(--color-info) / var(--tw-border-opacity));
+    --tw-border-opacity: 0.2;
+}
+
+.btn-info-soft:hover:not(:disabled) {
     --tw-border-opacity: 0.1;
     --tw-bg-opacity: 0.1;
 }
