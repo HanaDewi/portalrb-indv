@@ -209,7 +209,7 @@ class LKEController extends Controller
                         ->where('lb.lke_parameter_id', '=', $parameter_id);
                 })
                 ->leftJoin('lke_test_tp_line as lttl', function ($join) {
-                    $join->on('lttl.instansi_id', '=', DB::raw('COALESCE(ki.id_before, ki.id)'))
+                    $join->on('lttl.instansi_id', '=', 'ki.id')
                         ->on('lttl.lke_bobot_id', '=', 'lb.id');
                 })
                 ->whereIn('ki.group', $group_instansi)
