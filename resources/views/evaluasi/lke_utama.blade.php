@@ -62,7 +62,7 @@ const percentageFormatter = new Intl.NumberFormat('id-ID', {
 var lke_utama = $('#lke_utama').DataTable( {
         responsive: true,
         processing: true,
-        ordering: false,
+        // ordering: false,
         dom: 'Blfrtip',
         buttons: [
             {
