@@ -123,7 +123,8 @@
                         </td>
                         <td>
                             @if($unit_ZI->instansiZI->lhe)
-                            <a href="{{$unit_ZI->instansiZI->lhe}}" target=" _blank">{{$unit_ZI->instansiZI->lhe}}</a>
+                            <a href="/storage/uploads/LHEZI2024/{{$unit_ZI->instansiZI->lhe}}"
+                                target=" _blank">{{$unit_ZI->instansiZI->lhe}}</a>
                             @endif
                         </td>
                         <td>
