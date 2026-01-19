@@ -43,7 +43,7 @@
         <!-- Slide 1: Portal RB -->
         <div class="item">
             <section class="hero-area bgs-cover pt-30 pb-15 rpt-130"
-                style="background-image: url({{ URL::to('/') }}/assets/images/bgportal1.png)">
+                style="background-image: url({{ URL::to('/') }}/assets/images/bgportal.png)">
                 <div class="container container-1000">
                     <div class="row gap-80 align-items-center">
                         <div class="col-lg-12">

@@ -29,7 +29,7 @@
     <div class="mobile-menu md:hidden">
         <div class="mobile-menu-bar">
             <a href="{{ url('/') }}" class="flex mr-auto">
-                <img alt="LKE RB" class="w-24" src="{{ asset('template_lkerb') }}/dist/images/logo.jpg">
+                <img alt="LKE RB" class="w-24" src="{{ asset('assets') }}/images/logo-portalrb.png">
             </a>
             <a href="javascript:;" class="mobile-menu-toggler">
                 <i data-lucide="bar-chart-2" class="w-8 h-8 text-white transform -rotate-90"></i>
@@ -119,7 +119,7 @@
     <div class="flex mt-[4.7rem] md:mt-0">
         <nav class="side-nav">
             <a href="{{ url('/') }}" class="intro-x flex items-center pl-2 pt-4">
-                <img alt="LKE RB" src="{{ asset('template_lkerb') }}/dist/images/logo.jpg">
+                <img alt="LKE RB" src="{{ asset('assets') }}/images/logo-portalrb.png">
             </a>
             <div class="side-nav__devider my-6"></div>
             <ul>
@@ -212,11 +212,11 @@
                     </svg>
                     <h1 style="padding-left: 5px; padding-right: 5px;" class="mr-auto text-lg font-extrabold"
                         style="font-weight: 600">SISTEM INFORMASI LEMBAR KERJA </h1>
-                    <h1 class="text-lg text-danger font-extrabold"> EVALUASI RB</h1>
+                    <h1 class="text-lg text-primary font-extrabold"> EVALUASI RB</h1>
                 </nav>
                 <div class="intro-x dropdown mr-auto sm:mr-6">
                     <h1 style="padding-left: 5px; padding-right: 5px;" class="mr-auto text-lg font-bold"
-                        style="font-weight: 600">Selamat datang, <a class="text-lg text-danger font-bold">
+                        style="font-weight: 600">Selamat datang, <a class="text-lg text-primary font-bold">
                             {{ auth()->user()->username }}</a>
                     </h1>
                     <div class="text-slate-500 text-xs mt-0.3 float-right">{{ auth()->user()->nama }}</div>

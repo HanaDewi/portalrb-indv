@@ -75,7 +75,7 @@
                             </div>
                             <div class="intro-x mt-5 xl:mt-8 text-center xl:text-left">
                                 <a href="index.html">
-                                    <button class="btn btn-info py-3 px-4 w-full xl:w-32 xl:mr-3 align-top">Login</button>
+                                    <button class="btn btn-primary py-3 px-4 w-full xl:w-32 xl:mr-3 align-top">Login</button>
                                 </a>
                             </div>
                         </form>
@@ -97,7 +97,7 @@
                             </div>
                             <div class="intro-x mt-5 xl:mt-8 text-center xl:text-left">
                                 <a href="index.html">
-                                    <button class="btn btn-info py-3 px-4 w-full xl:w-32 xl:mr-3 align-top">Submit</button>
+                                    <button class="btn btn-primary py-3 px-4 w-full xl:w-32 xl:mr-3 align-top">Submit</button>
                                 </a>
                             </div>
                         </form>

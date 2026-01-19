@@ -200,7 +200,7 @@
             <div class="box">
                 <div class="p-5">
                     <div class="rounded-md">
-                        <img width="100%" alt="menpanrb" class="rounded-md" src="{{ URL::to('/') }}/assets/images/banner_dashboard.jpg">
+                        <img width="100%" alt="menpanrb" class="rounded-md" src="{{ URL::to('/') }}/assets/images/newportal.jpg">
                     </div>
                 </div>
             </div>
@@ -308,9 +308,9 @@
             </a>
         </div>
     </div> --}}
-        <div class="col-span-12 sm:col-span-6 2xl:col-span-3 intro-y">
+        <div class="col-span-12 sm:col-span-6 2xl:col-span-4 intro-y">
             <div class="box p-5 zoom-in">
-                <a href="{{ url('hasil') }}">
+                <a href="{{ url('evaluasi/hasil-evaluasi') }}">
                     <div class="flex items-center">
                         <div class="w-2/4 flex-none">
                             <div class="text-lg font-bold truncate">Hasil Evaluasi</div>
@@ -334,7 +334,7 @@
                 </a>
             </div>
         </div>
-        <div class="col-span-12 sm:col-span-6 2xl:col-span-3 intro-y">
+        <div class="col-span-12 sm:col-span-6 2xl:col-span-4 intro-y">
             <div class="box p-5 zoom-in">
                 <a href="{{ route('profil') }}">
                     <div class="flex items-center">
@@ -355,7 +355,7 @@
                 </a>
             </div>
         </div>
-        <div class="col-span-12 sm:col-span-6 2xl:col-span-3 intro-y">
+        <div class="col-span-12 sm:col-span-6 2xl:col-span-4 intro-y">
             <div class="box p-5 zoom-in">
                 <a href="{{ route('logout') }}" onclick="event.preventDefault(); $('#logout').submit();">
                     <div class="flex items-center">
