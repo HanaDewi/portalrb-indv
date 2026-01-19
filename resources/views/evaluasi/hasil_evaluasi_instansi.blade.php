@@ -232,7 +232,20 @@
                                                     @if ($parameter->score !== null && $parameter->score !== '')
                                                         @if (!empty($parameter->status_sanggah))
                                                             <div class="text-xs text-slate-600">
-                                                                <div><span class="font-semibold">Status Sanggah:</span> {{ $parameter->status_sanggah }}</div>
+                                                                <div>
+                                                                    <span class="font-semibold">Status Sanggah:</span>
+                                                                    @php
+                                                                        $statusClass = 'bg-secondary';
+                                                                        if ($parameter->status_sanggah === 'diajukan') {
+                                                                            $statusClass = 'bg-warning';
+                                                                        } elseif ($parameter->status_sanggah === 'diterima') {
+                                                                            $statusClass = 'bg-success';
+                                                                        } elseif ($parameter->status_sanggah === 'ditolak') {
+                                                                            $statusClass = 'bg-danger';
+                                                                        }
+                                                                    @endphp
+                                                                    <span class="badge {{ $statusClass }} text-white inline-block" style="padding: 2px 8px; position: static;">{{ $parameter->status_sanggah }}</span>
+                                                                </div>
                                                                 <div>
                                                                     <span class="font-semibold">Keterangan Sanggah:</span>
                                                                     {{ $parameter->keterangan_sanggah ?? '-' }}

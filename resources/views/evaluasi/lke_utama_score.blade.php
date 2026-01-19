@@ -413,8 +413,16 @@
                     var tanggapan = row.keterangan_tanggapan_sanggah ? row.keterangan_tanggapan_sanggah : '-';
                     var namaInstansiAttr = row.nama_instansi ? row.nama_instansi.replace(/"/g, '&quot;').replace(/'/g, '&#39;') : '';
                     var keteranganAttr = row.keterangan_tanggapan_sanggah ? row.keterangan_tanggapan_sanggah.replace(/"/g, '&quot;').replace(/'/g, '&#39;') : '';
+                    var statusClass = 'bg-secondary';
+                    if (row.status_sanggah === 'diajukan') {
+                        statusClass = 'bg-warning';
+                    } else if (row.status_sanggah === 'diterima') {
+                        statusClass = 'bg-success';
+                    } else if (row.status_sanggah === 'ditolak') {
+                        statusClass = 'bg-danger';
+                    }
                     var html = '<div class="text-xs text-slate-600">' +
-                        '<div><span class="font-semibold">Status Sanggah:</span> ' + row.status_sanggah + '</div>' +
+                        '<div><span class="font-semibold">Status Sanggah:</span> <span class="badge ' + statusClass + ' text-white inline-block" style="padding: 2px 8px; position: static;">' + row.status_sanggah + '</span></div>' +
                         '<div><span class="font-semibold">Keterangan Sanggah:</span> ' + (row.keterangan_sanggah || '-') + fileLink + '</div>' +
                         '<div><span class="font-semibold">Diajukan Oleh:</span> ' + pengaju + '</div>' +
                         '<div><span class="font-semibold">Keterangan Tanggapan Sanggah:</span> ' + tanggapan + '</div>' +
