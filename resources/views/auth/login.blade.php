@@ -9,7 +9,7 @@
         <meta name="author" content="MENPANRB">
         <title>KEMENPANRB - LKE RB</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-        <link rel="stylesheet" href="{{ asset('template_lkerb') }}/dist/css/app.css" />
+        <link rel="stylesheet" href="{{ asset('template_lkerb') }}/dist/css/app.css?{{ date('his') }}" />
         <style>
             .password-container {
                 position: relative;
