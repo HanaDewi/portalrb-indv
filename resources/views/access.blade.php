@@ -40,8 +40,9 @@
                         </div>
                     </div>
                 </div>
-                <div class="preview text-right p-5">
-                    <button class="btn btn-primary w-24 mr-1 mb-2">Simpan</button>
+                <div class="preview flex flex-wrap justify-end gap-2 p-5">
+                    <button type="button" class="btn btn-outline-secondary w-28 js-reset-form">Bersihkan</button>
+                    <button class="btn btn-primary w-28 mr-1 mb-2 js-submit-label">Simpan</button>
                 </div>
             </div>
             <!-- END: Input -->
@@ -63,6 +64,7 @@
                                     <th>Fitur</th>
                                     <th>Waktu Awal</th>
                                     <th>Waktu Akhir</th>
+                                    <th>Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -73,11 +75,23 @@
                                         <td>{{ fiturs($akses->fitur) }}</td>
                                         <td>{{ $akses->waktu_awal }}</td>
                                         <td>{{ $akses->waktu_akhir }}</td>
+                                        <td class="text-center">
+                                            <button
+                                                type="button"
+                                                class="btn btn-sm btn-outline-primary js-edit-access"
+                                                data-user-level="{{ $akses->user_level }}"
+                                                data-fitur="{{ $akses->fitur }}"
+                                                data-waktu-awal="{{ $akses->waktu_awal }}"
+                                                data-waktu-akhir="{{ $akses->waktu_akhir }}"
+                                            >
+                                                Edit
+                                            </button>
+                                        </td>
                                     </tr>
                                 @endforeach
                                 @else
                                 <tr>
-                                    <td colspan="3"><i>Belum ada data.</i></td>
+                                    <td colspan="5"><i>Belum ada data.</i></td>
                                 </tr>
                                 @endif
                             </tbody>
@@ -97,6 +111,36 @@
 <script src="{{ asset('ext') }}/jquery-inputmask/jquery.inputmask.bundle.js"></script>
 <script>
     $(document).ready(function () {
+        var $form = $('#form-access');
+        var $userLevel = $('#user_level');
+        var $fitur = $('#fitur');
+        var $waktuAwal = $('input[name="waktu_awal"]');
+        var $waktuAkhir = $('input[name="waktu_akhir"]');
+        var $submitLabel = $('.js-submit-label');
+
+        function resetForm() {
+            $form[0].reset();
+            $userLevel.val(null).trigger('change');
+            $fitur.val(null).trigger('change');
+            $submitLabel.text('Simpan');
+            $form.find('.border-danger').removeClass('border-danger');
+        }
+
+        $('.js-reset-form').on('click', function () {
+            resetForm();
+            $userLevel.focus();
+        });
+
+        $('.js-edit-access').on('click', function () {
+            var $btn = $(this);
+            $userLevel.val($btn.data('user-level')).trigger('change');
+            $fitur.val($btn.data('fitur')).trigger('change');
+            $waktuAwal.val($btn.data('waktu-awal'));
+            $waktuAkhir.val($btn.data('waktu-akhir'));
+            $submitLabel.text('Update');
+            $('html, body').animate({ scrollTop: $form.offset().top - 20 }, 200);
+        });
+
         $('#form-access').validate({
             highlight: function (input) {
                 $(input).addClass('border-danger');

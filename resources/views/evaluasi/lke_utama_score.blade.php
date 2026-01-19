@@ -70,6 +70,7 @@
                         <th class="w-5">Index</th>
                         <th>Catatan</th>
                         <th>Rekomendasi</th>
+                        <th class="w-5">Sanggahan</th>
                         <th class="w-5">Aksi</th>
                     </tr>
                 </thead>
@@ -125,6 +126,48 @@
                         class="btn btn-outline-secondary w-20 me-1">Batal</button>
                     <button type="submit" class="btn btn-success w-20 saveButton">Simpan</button>
                 </div> <!-- END: Modal Footer -->
+            </form>
+        </div>
+    </div>
+</div> <!-- END: Modal Content -->
+
+{{-- Modal Form Tanggapi Sanggah --}}
+<div id="modal-tanggapi-sanggah" class="modal fade" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="fw-medium fs-base me-auto">Tanggapi Sanggah</h2>
+            </div>
+            <form action="{{ url('evaluasi/lke-utama/'.$parameter->id.'/tanggapi-sanggah') }}" id="form-tanggapi-sanggah" method="post">
+                @csrf
+                <div class="modal-body grid columns-12 gap-4 gap-y-3">
+                    <div class="g-col-12">
+                        <input type="hidden" name="instansi_id" id="tanggapi_instansi_id">
+                        <input type="hidden" name="lke_bobot_id" id="tanggapi_lke_bobot_id">
+                        <table class="table">
+                            <tr>
+                                <td class="w-32"><strong>Instansi</strong></td>
+                                <td id="tanggapi_nama_instansi"></td>
+                            </tr>
+                        </table>
+                        <div class="form-group">
+                            <label for="status_sanggah" class="form-label mt-2">Status Sanggah</label>
+                            <select name="status_sanggah" id="status_sanggah" class="form-control" required>
+                                <option value="">Pilih status</option>
+                                <option value="diterima">Diterima</option>
+                                <option value="ditolak">Ditolak</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="keterangan_tanggapan_sanggah" class="form-label mt-2">Keterangan Tanggapan</label>
+                            <textarea id="keterangan_tanggapan_sanggah" name="keterangan_tanggapan_sanggah" class="form-control" rows="4" required></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer text-end">
+                    <button type="button" data-tw-dismiss="modal" class="btn btn-outline-secondary w-20 me-1">Batal</button>
+                    <button type="submit" class="btn btn-primary w-20">Simpan</button>
+                </div>
             </form>
         </div>
     </div>
@@ -217,6 +260,7 @@
 
         @if ((in_array($user->level, ['tpn', 'tpm']) && $parameter->penilai_id == $user->penilai_id && hasAksesHasilEvaluasi()) || ($user->level == 'admin'))
         modal_lke_score = tailwind.Modal.getInstance(document.querySelector("#modal-lke_score"));
+        modal_tanggapi_sanggah = tailwind.Modal.getInstance(document.querySelector("#modal-tanggapi-sanggah"));
         modal_import_lke = tailwind.Modal.getInstance(document.querySelector("#modal-import_lke"));
 
         $('#form-lke-score').validate({
@@ -266,7 +310,44 @@
 
         $('#file_lke').change(function() {
             cek_file(this);
-        })
+        });
+
+        $(document).on('click', '.btn-tanggapi-sanggah', function() {
+            $('#tanggapi_instansi_id').val($(this).data('instansi-id'));
+            $('#tanggapi_lke_bobot_id').val($(this).data('lke-bobot-id'));
+            $('#tanggapi_nama_instansi').text($(this).data('nama-instansi'));
+            var status = $(this).data('status-sanggah');
+            if (status === 'diterima' || status === 'ditolak') {
+                $('#status_sanggah').val(status);
+            } else {
+                $('#status_sanggah').val('');
+            }
+            $('#keterangan_tanggapan_sanggah').val($(this).data('keterangan') || '');
+            modal_tanggapi_sanggah.show();
+        });
+
+        $('#form-tanggapi-sanggah').on('submit', function(e) {
+            e.preventDefault();
+            var form = this;
+            $.ajax({
+                url: form.action,
+                type: form.method,
+                data: $(form).serialize(),
+                dataType: "json",
+                success: function(data) {
+                    if (data.success) {
+                        Swal.fire('Berhasil', 'Tanggapan sanggah berhasil disimpan.', 'success');
+                        modal_tanggapi_sanggah.hide();
+                        getData();
+                    } else {
+                        Swal.fire('Gagal', data.message || 'Tanggapan sanggah gagal disimpan.', 'error');
+                    }
+                },
+                error: function() {
+                    Swal.fire('Error', 'Terjadi kesalahan saat menyimpan tanggapan.', 'error');
+                }
+            });
+        });
         @endif
     });
 
@@ -315,6 +396,43 @@
             { data: 'score_index' },
             { data: 'catatan' },
             { data: 'rekomendasi' },
+            {
+                render: function (data, type, row, meta) {
+                    if (!row.status_sanggah) {
+                        return '-';
+                    }
+                    var fileLink = '';
+                    if (row.file_sanggah) {
+                        fileLink = ' <a href="{{ asset('storage/sanggah') }}/' + row.file_sanggah + '" target="_blank" class="ml-2 text-primary" title="Lihat File Sanggah">' +
+                            '<img src="{{ asset('images/file.png') }}" alt="File Sanggah" class="inline-block" style="width: 16px; height: 16px;">' +
+                            '</a>';
+                    }
+                    var pengaju = row.pengaju_sanggah ? row.pengaju_sanggah : '-';
+                    var tanggapan = row.keterangan_tanggapan_sanggah ? row.keterangan_tanggapan_sanggah : '-';
+                    var namaInstansiAttr = row.nama_instansi ? row.nama_instansi.replace(/"/g, '&quot;').replace(/'/g, '&#39;') : '';
+                    var keteranganAttr = row.keterangan_tanggapan_sanggah ? row.keterangan_tanggapan_sanggah.replace(/"/g, '&quot;').replace(/'/g, '&#39;') : '';
+                    var statusClass = 'bg-secondary';
+                    if (row.status_sanggah === 'diajukan') {
+                        statusClass = 'bg-warning';
+                    } else if (row.status_sanggah === 'diterima') {
+                        statusClass = 'bg-success';
+                    } else if (row.status_sanggah === 'ditolak') {
+                        statusClass = 'bg-danger';
+                    }
+                    var html = '<div class="text-xs text-slate-600">' +
+                        '<div><span class="font-semibold">Status Sanggah:</span> <span class="badge ' + statusClass + ' text-white inline-block" style="padding: 2px 8px; position: static;">' + row.status_sanggah + '</span></div>' +
+                        '<div><span class="font-semibold">Keterangan Sanggah:</span> ' + (row.keterangan_sanggah || '-') + fileLink + '</div>' +
+                        '<div><span class="font-semibold">Diajukan Oleh:</span> ' + pengaju + '</div>' +
+                        '<div><span class="font-semibold">Keterangan Tanggapan Sanggah:</span> ' + tanggapan + '</div>' +
+                        '</div>';
+                    @if (in_array($user->level, ['tpn', 'tpm', 'admin']))
+                    html += '<div class="mt-2">' +
+                        '<button type="button" class="btn btn-primary btn-sm btn-tanggapi-sanggah" data-instansi-id="' + row.instansi_id + '" data-lke-bobot-id="' + row.lke_bobot_id + '" data-status-sanggah="' + row.status_sanggah + '" data-keterangan="' + keteranganAttr + '" data-nama-instansi="' + namaInstansiAttr + '">Tanggapi</button>' +
+                        '</div>';
+                    @endif
+                    return html;
+                }
+            },
             { 
                 sortable: false, 
                 searchable: false,

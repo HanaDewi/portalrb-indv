@@ -21,6 +21,7 @@
                         <th rowspan="2">Sub Komponen</th>
                         <th rowspan="2">Indikator</th>
                         <th rowspan="2">Sudah Terisi</th>
+                        <th rowspan="2">Sanggahan</th>
                         <th rowspan="2">Belum Dilakukan Penilaian</th>
                         <th rowspan="2">Rata-rata Skor</th>
                         <th rowspan="2">Rata-rata Skor Index</th>
@@ -61,7 +62,7 @@ const percentageFormatter = new Intl.NumberFormat('id-ID', {
 var lke_utama = $('#lke_utama').DataTable( {
         responsive: true,
         processing: true,
-        ordering: false,
+        // ordering: false,
         dom: 'Blfrtip',
         buttons: [
             {
@@ -99,6 +100,7 @@ var lke_utama = $('#lke_utama').DataTable( {
             { data: 'subkomponen' },
             { data: 'indikator' },
             { data: 'terisi' },
+            { data: 'jumlah_sanggahan' },
             { data: 'belum' },
             { data: 'rata_rata_score' },
             { data: 'rata_rata_score_index' },
@@ -107,11 +109,11 @@ var lke_utama = $('#lke_utama').DataTable( {
         ],
         columnDefs: [
             {
-                targets: [6,7],
+                targets: [7,8],
                 render: $.fn.dataTable.render.number('.', ',', 2, '')
             },
             {
-                targets: [9],
+                targets: [10],
                 render: function(data, type) {
                     if (data === null || data === undefined) {
                         return type === 'display' || type === 'filter' ? '-' : null;
