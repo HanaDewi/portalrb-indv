@@ -397,8 +397,6 @@
             { data: 'catatan' },
             { data: 'rekomendasi' },
             {
-                sortable: false,
-                searchable: false,
                 render: function (data, type, row, meta) {
                     if (!row.status_sanggah) {
                         return '-';
