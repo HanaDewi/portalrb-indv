@@ -93,6 +93,9 @@ class LKEController extends Controller
             $data->belum = $totalInstansi - $data->terisi;
             $data->rata_rata_score = LkeTestTpLine::whereIn('lke_bobot_id', $bobot_ids)->avg('score');
             $data->rata_rata_score_index = LkeTestTpLine::whereIn('lke_bobot_id', $bobot_ids)->avg('score_index');
+            $data->jumlah_sanggahan = LkeTestTpLine::whereIn('lke_bobot_id', $bobot_ids)
+                ->whereNotNull('status_sanggah')
+                ->count();
             $data->mencapai_target_baik = LkeTestTpLine::whereIn('lke_bobot_id', $bobot_ids)
                 ->whereRaw('score >= (select target_baik from lke_bobot where lke_bobot.id = lke_test_tp_line.lke_bobot_id)')
                 ->count();
@@ -184,7 +187,24 @@ class LKEController extends Controller
         $parameter = LkeParameter::find($parameter_id);
         if ($parameter->kegiatan->tahun == 2024) {
             $datas = DB::table('klpd_instansi_new as ki')
-                ->select('ki.name as nama_instansi', 'ki.id as instansi_id', 'lb.id as lke_bobot_id', 'lb.bobot', 'lb.target_baik', 'lttl.score', 'lttl.score_index', 'lttl.catatan', 'lttl.rekomendasi', 'lb.min_value', 'lb.max_value')
+                ->select(
+                    'ki.name as nama_instansi',
+                    'ki.id as instansi_id',
+                    'lb.id as lke_bobot_id',
+                    'lb.bobot',
+                    'lb.target_baik',
+                    'lttl.score',
+                    'lttl.score_index',
+                    'lttl.catatan',
+                    'lttl.rekomendasi',
+                    'lttl.status_sanggah',
+                    'lttl.keterangan_sanggah',
+                    'lttl.file_sanggah',
+                    'lttl.pengaju_sanggah',
+                    'lttl.keterangan_tanggapan_sanggah',
+                    'lb.min_value',
+                    'lb.max_value'
+                )
                 ->selectRaw("case when ki.group = 'kl' then 'Kementerian/Badan' when ki.group = 'provinsi' then 'Provinsi' when ki.group = 'kabupaten' then 'Kabupaten/Kota' end as group_instansi")
                 ->leftJoin('lke_bobot as lb', function ($join) use ($parameter_id) {
                     $join->on('lb.group', '=', 'ki.group')
@@ -202,7 +222,24 @@ class LKEController extends Controller
                 ->get();
         } else {
             $datas = DB::table('klpd_instansi_new as ki')
-                ->select('ki.name as nama_instansi', 'ki.id as instansi_id', 'lb.id as lke_bobot_id', 'lb.bobot', 'lb.target_baik', 'lttl.score', 'lttl.score_index', 'lttl.catatan', 'lttl.rekomendasi', 'lb.min_value', 'lb.max_value')
+                ->select(
+                    'ki.name as nama_instansi',
+                    'ki.id as instansi_id',
+                    'lb.id as lke_bobot_id',
+                    'lb.bobot',
+                    'lb.target_baik',
+                    'lttl.score',
+                    'lttl.score_index',
+                    'lttl.catatan',
+                    'lttl.rekomendasi',
+                    'lttl.status_sanggah',
+                    'lttl.keterangan_sanggah',
+                    'lttl.file_sanggah',
+                    'lttl.pengaju_sanggah',
+                    'lttl.keterangan_tanggapan_sanggah',
+                    'lb.min_value',
+                    'lb.max_value'
+                )
                 ->selectRaw("case when ki.group = 'kl' then 'Kementerian/Badan' when ki.group = 'provinsi' then 'Provinsi' when ki.group = 'kabupaten' then 'Kabupaten/Kota' end as group_instansi")
                 ->leftJoin('lke_bobot as lb', function ($join) use ($parameter_id) {
                     $join->on('lb.group', '=', 'ki.group')
@@ -220,6 +257,35 @@ class LKEController extends Controller
         }
 
         return $export ? $datas : response()->json(['data' => $datas]);
+    }
+
+    public function lke_utama_score_tanggapiSanggah($parameter_id, Request $request)
+    {
+        $user = Auth::user();
+        if (!in_array($user->level, ['tpn', 'tpm', 'admin'])) {
+            abort(403);
+        }
+
+        $request->validate([
+            'instansi_id' => 'required|integer',
+            'lke_bobot_id' => 'required|integer',
+            'status_sanggah' => 'required|in:diterima,ditolak',
+            'keterangan_tanggapan_sanggah' => 'required|string',
+        ]);
+
+        $tp_line = LkeTestTpLine::where('lke_bobot_id', $request->lke_bobot_id)
+            ->where('instansi_id', $request->instansi_id)
+            ->first();
+
+        if (!$tp_line || empty($tp_line->status_sanggah)) {
+            return response()->json(['success' => false, 'message' => 'Data sanggah tidak ditemukan.'], 422);
+        }
+
+        $tp_line->status_sanggah = $request->status_sanggah;
+        $tp_line->keterangan_tanggapan_sanggah = $request->keterangan_tanggapan_sanggah;
+        $tp_line->save();
+
+        return response()->json(['success' => true]);
     }
 
     public function lke_utama_score_generateRbGeneral($parameter_id)
@@ -702,6 +768,11 @@ class LKEController extends Controller
             $parameter->capaian_index = $tp_line->capaian_index;
             $parameter->catatan = $tp_line->catatan;
             $parameter->rekomendasi = $tp_line->rekomendasi;
+            $parameter->status_sanggah = $tp_line->status_sanggah;
+            $parameter->keterangan_sanggah = $tp_line->keterangan_sanggah;
+            $parameter->file_sanggah = $tp_line->file_sanggah;
+            $parameter->pengaju_sanggah = $tp_line->pengaju_sanggah;
+            $parameter->keterangan_tanggapan_sanggah = $tp_line->keterangan_tanggapan_sanggah;
         }
 
         $targetSubcomponents = [
@@ -925,5 +996,56 @@ class LKEController extends Controller
             session()->flash('error', 'Data Test TP gagal disimpan! Silahkan dicoba kembali.');
         }
         return redirect('evaluasi/hasil-evaluasi/' . $instansi_id . '/' . $kegiatan_id);
+    }
+
+    public function hasil_evaluasi_instansi_sanggah($instansi_id, $kegiatan_id, Request $request)
+    {
+        $user = Auth::user();
+        if (!in_array($user->level, ['kl', 'provinsi', 'kabupaten'])) {
+            abort(403);
+        }
+        if ($user->instansi_id != $instansi_id) {
+            abort(403);
+        }
+
+        $instansi = KlpdInstansi::withTrashed()->find($instansi_id);
+        $kegiatan = LkeKegiatan::find($kegiatan_id);
+        if (!$instansi || !$kegiatan) {
+            abort(404);
+        }
+
+        $request->validate([
+            'lke_bobot_id' => 'required|integer',
+            'keterangan_sanggah' => 'required|string',
+            'file_sanggah' => 'required|file|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx',
+        ]);
+
+        $tp_line = LkeTestTpLine::where('lke_bobot_id', $request->lke_bobot_id)
+            ->where('instansi_id', $instansi_id)
+            ->first();
+
+        if (!$tp_line || $tp_line->score === null) {
+            return redirect('evaluasi/hasil-evaluasi/' . $instansi_id . '/' . $kegiatan_id)
+                ->with('error', 'Sanggah hanya dapat diajukan untuk indikator yang sudah dinilai.');
+        }
+
+        if ($tp_line->status_sanggah === 'diajukan') {
+            return redirect('evaluasi/hasil-evaluasi/' . $instansi_id . '/' . $kegiatan_id)
+                ->with('error', 'Sanggah untuk indikator ini sudah diajukan.');
+        }
+
+        $file = $request->file('file_sanggah');
+        $time = time();
+        $filename = 'sanggah_' . $instansi_id . '_' . $request->lke_bobot_id . '_' . $time . '.' . $file->getClientOriginalExtension();
+        $file->storeAs('sanggah', $filename, 'public');
+
+        $tp_line->keterangan_sanggah = $request->keterangan_sanggah;
+        $tp_line->file_sanggah = $filename;
+        $tp_line->status_sanggah = 'diajukan';
+        $tp_line->pengaju_sanggah = $user->username;
+        $tp_line->save();
+
+        return redirect('evaluasi/hasil-evaluasi/' . $instansi_id . '/' . $kegiatan_id)
+            ->with('success', 'Sanggah berhasil diajukan.');
     }
 }

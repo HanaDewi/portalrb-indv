@@ -208,6 +208,9 @@
                                         <th class="w200">Capaian Index</th>
                                         <th class="w200">Catatan </th>
                                         <th class="w200">Rekomendasi </th>
+                                        @if (in_array(auth()->user()->level, ['kl', 'provinsi', 'kabupaten']))
+                                            <th class="w200">Sanggah</th>
+                                        @endif
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -224,6 +227,33 @@
                                             <td>{{ $parameter->capaian_index }}%</td>
                                             <td>{{ $parameter->catatan }}</td>
                                             <td>{{ $parameter->rekomendasi }}</td>
+                                            @if (in_array(auth()->user()->level, ['kl', 'provinsi', 'kabupaten']))
+                                                <td>
+                                                    @if ($parameter->score !== null && $parameter->score !== '')
+                                                        @if (!empty($parameter->status_sanggah))
+                                                            <div class="text-xs text-slate-600">
+                                                                <div><span class="font-semibold">Status Sanggah:</span> {{ $parameter->status_sanggah }}</div>
+                                                                <div>
+                                                                    <span class="font-semibold">Keterangan Sanggah:</span>
+                                                                    {{ $parameter->keterangan_sanggah ?? '-' }}
+                                                                    @if (!empty($parameter->file_sanggah))
+                                                                        <a href="{{ asset('storage/sanggah/' . $parameter->file_sanggah) }}" target="_blank" class="ml-2 text-primary" title="Lihat File Sanggah">
+                                                                            <img src="{{ asset('images/file.png') }}" alt="File Sanggah" class="inline-block" style="width: 16px; height: 16px;">
+                                                                        </a>
+                                                                    @endif
+                                                                </div>
+                                                                <div><span class="font-semibold">Keterangan Tanggapan Sanggah:</span> {{ $parameter->keterangan_tanggapan_sanggah ?? '-' }}</div>
+                                                            </div>
+                                                        @else
+                                                            <button type="button" class="btn btn-primary btn-sm btn-sanggah" data-lke-bobot-id="{{ $parameter->id }}" data-indikator="{{ $parameter->indikator }}">
+                                                                Sanggah
+                                                            </button>
+                                                        @endif
+                                                    @else
+                                                        -
+                                                    @endif
+                                                </td>
+                                            @endif
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -276,6 +306,40 @@
             </div>
         </div>
     </div>
+
+    @if (in_array(auth()->user()->level, ['kl', 'provinsi', 'kabupaten']))
+        {{-- Modal Form Sanggah --}}
+        <div id="modal-sanggah" class="modal fade" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="darkbg modal-header">
+                        <h2 class="font-bold fw-medium fs-base me-auto">Ajukan Sanggah</h2>
+                    </div>
+                    <form action="{{ url('evaluasi/hasil-evaluasi/' . $instansi->id . '/' . $test_tp->lke_kegiatan_id . '/sanggah') }}" method="post" enctype="multipart/form-data">
+                        @csrf
+                        <input type="hidden" name="lke_bobot_id" id="sanggah_lke_bobot_id">
+                        <div class="modal-body grid columns-12 gap-4 gap-y-3">
+                            <div class="g-col-12">
+                                <div class="text-sm text-slate-500 mb-2">Indikator: <span id="sanggah_indikator" class="font-semibold text-slate-700"></span></div>
+                                <div class="form-group mb-4">
+                                    <label for="keterangan_sanggah" class="form-label font-bold">Keterangan Sanggah</label>
+                                    <textarea name="keterangan_sanggah" id="keterangan_sanggah" class="form-control" rows="4" required></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="file_sanggah" class="form-label font-bold">File Sanggah</label>
+                                    <input type="file" name="file_sanggah" id="file_sanggah" class="form-control" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer text-end">
+                            <button type="button" data-tw-dismiss="modal" class="btn btn-outline-secondary w-20 me-1">Batal</button>
+                            <button type="submit" class="btn btn-primary w-20">Kirim</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    @endif
 
     {{-- Modal Form RB General Penyesuaian --}}
     <div id="modal-penyesuaian" class="modal fade" tabindex="-1" aria-hidden="true">
@@ -472,6 +536,21 @@
             }
         @endif
     </script>
+    @if (in_array(auth()->user()->level, ['kl', 'provinsi', 'kabupaten']))
+        <script>
+            $(document).ready(function() {
+                var modalSanggah = tailwind.Modal.getInstance(document.querySelector("#modal-sanggah"));
+
+                $(document).on('click', '.btn-sanggah', function() {
+                    $('#sanggah_lke_bobot_id').val($(this).data('lke-bobot-id'));
+                    $('#sanggah_indikator').text($(this).data('indikator'));
+                    $('#keterangan_sanggah').val('');
+                    $('#file_sanggah').val('');
+                    modalSanggah.show();
+                });
+            });
+        </script>
+    @endif
     <script>
         var hasil_evaluasi_instansi = $('#hasil_evaluasi_instansi').DataTable({
             responsive: true,

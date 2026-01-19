@@ -207,6 +207,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/evaluasi/lke-utama/{parameter_id}/generate-rb-general', [LKEController::class, 'lke_utama_score_generateRbGeneral']);
     Route::post('/evaluasi/lke-utama/{parameter_id}/simpan', [LKEController::class, 'lke_utama_score_simpan']);
     Route::post('/evaluasi/lke-utama/{parameter_id}/import', [LKEController::class, 'lke_utama_score_import']);
+    Route::post('/evaluasi/lke-utama/{parameter_id}/tanggapi-sanggah', [LKEController::class, 'lke_utama_score_tanggapiSanggah']);
     Route::get('/evaluasi/lke-utama/{parameter_id}/getData/{instansi_id}/{lke_bobot_id}', [LKEController::class, 'lke_utama_score_getData']);
 
     // Database
@@ -219,6 +220,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/evaluasi/hasil-evaluasi/getKegiatan', [LKEController::class, 'hasil_evaluasi_getKegiatan']);
     Route::get('/evaluasi/hasil-evaluasi/{instansi_id}/{kegiatan_id}', [LKEController::class, 'hasil_evaluasi_instansi']);
     Route::post('/evaluasi/hasil-evaluasi/{instansi_id}/{kegiatan_id}/simpan', [LKEController::class, 'hasil_evaluasi_instansi_simpan']);
+    Route::post('/evaluasi/hasil-evaluasi/{instansi_id}/{kegiatan_id}/sanggah', [LKEController::class, 'hasil_evaluasi_instansi_sanggah']);
 
     // Pelaporan COI
     Route::get('/pelaporan-coi', [PelaporanCoiController::class, 'index']);
