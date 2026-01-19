@@ -46,6 +46,15 @@
                         </tbody>
                     </table>
                 @else
+                    @php
+                        $specialKriteria = [
+                            'Penilaian Kegiatan Utama Road Map Reformasi Birokrasi',
+                            'Kriteria Penilaian Penetapan Rencana Aksi',
+                            'Strategi Pelaksanaan RB General',
+                        ];
+                        $renaksiIds = collect($renaksi)->pluck('id')->all();
+                        $showAksi = $check;
+                    @endphp
                     <table id="table-instansi" class="table table-bordered table-striped" cellspacing="0" width="100%">
                         <thead class="table-dark font-bold">
                             <tr>
@@ -54,63 +63,53 @@
                                 <th>Skor</th>
                                 <th>Catatan</th>
                                 <th>Rekomendasi</th>
-                                @if ($check == true)
+                                @if ($showAksi)
                                     <th style="width:100px;">Aksi</th>
                                 @endif
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($lkerenaksi as $cc => $jw)
+                                @php
+                                    $jawaban = $fjawaban[$jw->id] ?? null;
+                                    $isSpecial = in_array($jw->kriteria, $specialKriteria, true);
+                                    $hasJawaban = $jawaban && $jawaban->jawaban !== '';
+                                    $canAnswer = in_array($jw->id, $renaksiIds, true);
+                                    $canEdit = $check && $jawaban && $jawaban->id !== '';
+                                @endphp
                                 <tr>
-                                    <td>
-                                        <strong>{{ $jw->kriteria }}</strong>
-                                    </td>
-                                    @if (isset($fjawaban[$jw->id]))
-                                        @if ($jw->kriteria == 'Penilaian Kegiatan Utama Road Map Reformasi Birokrasi' or $jw->kriteria == 'Kriteria Penilaian Penetapan Rencana Aksi' or $jw->kriteria == 'Strategi Pelaksanaan RB General')
-                                            <td class="text-center" colspan=2 style="font-weight:bold; 
-                                            @if ($jw->kriteria == 'Strategi Pelaksanaan RB General') color:#b42b2d; font-size:1.25em; @endif ">{{ $fjawaban[$jw->id]->jawaban }}
+                                    <td><strong>{{ $jw->kriteria }}</strong></td>
+                                    @if ($hasJawaban)
+                                        @if ($isSpecial)
+                                            <td class="text-center" colspan="2" style="font-weight:bold; @if ($jw->kriteria == 'Strategi Pelaksanaan RB General') color:#b42b2d; font-size:1.25em; @endif">
+                                                {{ $jawaban->jawaban }}
                                             </td>
                                         @else
-                                            <td class=" text-center">{{ $fjawaban[$jw->id]->jawaban }}</td>
-                                            <td class="text-center">{{ $fjawaban[$jw->id]->skor }}</td>
+                                            <td class="text-center">{{ $jawaban->jawaban }}</td>
+                                            <td class="text-center">{{ $jawaban->skor }}</td>
                                         @endif
-                                        <td class="text-center">{{ $fjawaban[$jw->id]->catatan }}</td>
-                                        <td class="text-center">{{ $fjawaban[$jw->id]->rekomendasi }}</td>
-                                        @if ($check == true && $fjawaban[$jw->id]->id != '')
-                                            @if ($jw->kriteria == 'Penilaian Kegiatan Utama Road Map Reformasi Birokrasi' or $jw->kriteria == 'Kriteria Penilaian Penetapan Rencana Aksi' or $jw->kriteria == 'Strategi Pelaksanaan RB General')
-                                                <td class="text-center"></td>
-                                            @else
-                                                <td class="text-center">
-                                                    <a class="btn btn-warning btn-xs" data-raw="{{ json_encode($fjawaban[$jw->id]) }}" data-id="{{ $fjawaban[$jw->id]->id }}" onclick="showform(this)" data-bs-toggle="modal" data-bs-target="#modal-form-jawaban-renaksi"><i class="nav-icon fas fa-edit"></i></a>
-                                                    &nbsp;
-                                                    <a class="btn btn-danger btn-xs" data-id="{{ $fjawaban[$jw->id]->id }}" onclick="dodelete(this)"><i class="nav-icon fas fa-remove"></i></a> &nbsp;
-                                                </td>
-                                            @endif
-                                        @else
-                                            <td class="text-center">
-                                                @php
-                                                    $checkjawab = array_filter($renaksi, function ($ren) use ($jw) {
-                                                        return $ren->id == $jw->id;
-                                                    });
-                                                @endphp
-                                                @if ($checkjawab)
-                                                    <a class="btn btn-warning btn-xs" data-raw="{{ json_encode($fjawaban[$jw->id]) }}" data-id="{{ $fjawaban[$jw->id]->id }}" onclick="showform(this)" data-bs-toggle="modal" data-bs-target="#modal-form-jawaban-renaksi"> Jawab &nbsp; <i class="nav-icon fas fa-edit"></i></a> &nbsp;
-                                                @endif
-                                            </td>
-                                        @endif
+                                        <td class="text-center">{{ $jawaban->catatan }}</td>
+                                        <td class="text-center">{{ $jawaban->rekomendasi }}</td>
                                     @else
+                                        @if ($isSpecial)
+                                            <td colspan="2"></td>
+                                        @else
+                                            <td></td>
+                                            <td></td>
+                                        @endif
                                         <td></td>
                                         <td></td>
-                                        <td></td>
-                                        <td></td>
+                                    @endif
+                                    @if ($showAksi)
                                         <td class="text-center">
-                                            @php
-                                                $checkjawab = array_filter($renaksi, function ($ren) use ($jw) {
-                                                    return $ren->id == $jw->id;
-                                                });
-                                            @endphp
-                                            @if ($checkjawab)
-                                                <a class="btn btn-warning btn-xs" data-raw="{{ json_encode($fjawaban[$jw->id]) }}" data-id="{{ $fjawaban[$jw->id]->id }}" onclick="showform(this)" data-bs-toggle="modal" data-bs-target="#modal-form-jawaban-renaksi"> Jawab &nbsp; <i class="nav-icon fas fa-edit"></i></a> &nbsp;
+                                            @if (!$isSpecial)
+                                                @if ($canEdit)
+                                                    <a class="btn btn-warning btn-xs" data-raw="{{ json_encode($jawaban) }}" data-id="{{ $jawaban->id }}" onclick="showform(this)" data-bs-toggle="modal" data-bs-target="#modal-form-jawaban-renaksi"><i class="nav-icon fas fa-edit"></i></a>
+                                                    &nbsp;
+                                                    <a class="btn btn-danger btn-xs" data-id="{{ $jawaban->id }}" onclick="dodelete(this)"><i class="nav-icon fas fa-remove"></i></a> &nbsp;
+                                                @elseif ($canAnswer)
+                                                    <a class="btn btn-warning btn-xs" data-raw="{{ json_encode($jawaban) }}" data-id="{{ $jawaban->id }}" onclick="showform(this)" data-bs-toggle="modal" data-bs-target="#modal-form-jawaban-renaksi"> Jawab &nbsp; <i class="nav-icon fas fa-edit"></i></a> &nbsp;
+                                                @endif
                                             @endif
                                         </td>
                                     @endif
@@ -209,7 +208,6 @@
     <script>
         $(document).ready(function() {
             window.rowdata = new DataTable('#table-instansi', {
-                "ordering": false,
                 "pageLength": 100,
                 "dom": 'Blfrtip',
                 "buttons": [{

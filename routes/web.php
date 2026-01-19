@@ -18,6 +18,7 @@ use App\Http\Controllers\CapaianOutputController;
 use App\Http\Controllers\DataLKERenaksiController;
 use App\Http\Controllers\RBTematikImportController;
 use App\Http\Controllers\ERenaksiRBGeneralController;
+use App\Http\Controllers\RenaksiDashboardController;
 use App\Http\Controllers\RuangBelajar\AdminController;
 use App\Http\Controllers\DataKonversiJawabanController;
 use App\Http\Controllers\RuangBelajar\DashboardController;
@@ -46,9 +47,9 @@ Route::get('/bcrypt/', [HomeController::class, 'bcrypt']);
 
 
 Route::middleware('auth')->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', [RenaksiDashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard/renaksi-progress/detail', [RenaksiDashboardController::class, 'detailInstansi'])->name('dashboard.renaksi-progress.detail');
+    Route::get('/dashboard/renaksi-doc-progress/detail', [RenaksiDashboardController::class, 'detailInstansiDokumen'])->name('dashboard.renaksi-doc-progress.detail');
     Route::get('/profil', [HomeController::class, 'profil'])->name('profil');
     Route::post('/profil_simpan', [HomeController::class, 'profil_simpan']);
     // MASTER DATA

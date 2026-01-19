@@ -212,11 +212,11 @@
                     </svg>
                     <h1 style="padding-left: 5px; padding-right: 5px;" class="mr-auto text-lg font-extrabold"
                         style="font-weight: 600">SISTEM INFORMASI LEMBAR KERJA </h1>
-                    <h1 class="text-lg text-primary font-extrabold"> EVALUASI RB</h1>
+                    <h1 class="text-lg text-info font-extrabold"> EVALUASI RB</h1>
                 </nav>
                 <div class="intro-x dropdown mr-auto sm:mr-6">
                     <h1 style="padding-left: 5px; padding-right: 5px;" class="mr-auto text-lg font-bold"
-                        style="font-weight: 600">Selamat datang, <a class="text-lg text-primary font-bold">
+                        style="font-weight: 600">Selamat datang, <a class="text-lg text-info font-bold">
                             {{ auth()->user()->username }}</a>
                     </h1>
                     <div class="text-slate-500 text-xs mt-0.3 float-right">{{ auth()->user()->nama }}</div>
@@ -228,10 +228,10 @@
                             src="{{ auth()->user()->foto ? asset('storage/user/' . auth()->user()->foto) : asset('template_lkerb/dist/images/favicon.png') }}">
                     </div>
                     <div class="dropdown-menu w-56">
-                        <ul class="dropdown-content bg-primary text-white">
+                        <ul class="dropdown-content bg-primary text-black">
                             <li class="p-2">
                                 <div class="font-medium">{{ auth()->user()->username }}</div>
-                                <div class="text-xs text-white/70 mt-0.5 dark:text-slate-200">
+                                <div class="text-xs text-black/70 mt-0.5 dark:text-slate-200">
                                     {{ auth()->user()->nama }} - {{ auth()->user()->level }}</div>
                             </li>
                             <li>
