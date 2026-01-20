@@ -34,6 +34,7 @@
                         <th rowspan=2>Unit</th>
                         <th rowspan=2>WBK/WBBM</th>
                         <th colspan=5>Status</th>
+                        <th rowspan=2>LHE</th>
                         <th rowspan=2>LKE Evaluator </th>
                         <th rowspan=2>Kondisi / Catatan</th>
                         <th rowspan=2>Rekomendasi</th>
@@ -118,6 +119,12 @@
                             @elseif(optional($unit_ZI->panel)->status === 0)
                             <div style="visibility: hidden">0</div>
                             <i class="fa  fa-circle-xmark" style="font-size: 2em; color:red"></i>
+                            @endif
+                        </td>
+                        <td>
+                            @if($unit_ZI->instansiZI->lhe)
+                            <a href="/storage/uploads/LHEZI2024/{{$unit_ZI->instansiZI->lhe}}"
+                                target=" _blank">{{$unit_ZI->instansiZI->lhe}}</a>
                             @endif
                         </td>
                         <td>
