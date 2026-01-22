@@ -274,7 +274,7 @@ class CapaianOutputController extends Controller
         $years = GeneralPerencanaanTarget::select('tahun')->distinct()->orderBy('tahun', 'desc')->pluck('tahun');
         $selectedYear = $request->get('tahun', $years->first());
 
-        $capaians = DB::table('klpd_instansi as ki')
+        $capaians = DB::table('klpd_instansi_new as ki')
             ->leftJoin('general_perencanaan as gp', 'gp.instansi_id', '=', 'ki.id')
             ->leftJoin('general_perencanaan_target as gpt', 'gpt.general_perencanaan_id', '=', 'gp.id')
             ->leftJoin('general_rencana_aksi as gra', 'gra.general_perencanaan_target_id', '=', 'gpt.id')
