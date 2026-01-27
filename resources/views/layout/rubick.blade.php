@@ -15,7 +15,7 @@
     <!-- End plugin css for this page -->
     <link href="{{ asset('ext') }}/sweetalert2/sweetalert2.css" rel="stylesheet">
     @stack('css')
-    <link rel="stylesheet" href="{{ asset('template_lkerb') }}/dist/css/app.css?{{ date('his') }}" />
+    <link rel="stylesheet" href="{{ asset('template_lkerb') }}/dist/css/app.css" />
     <link rel="stylesheet" href="{{ asset('ext') }}/datatables/datatables.css" />
     <link rel="stylesheet" href="{{ asset('ext') }}/datatables/buttons.dataTables.min.css" />
     <link href='https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css' rel='stylesheet' type='text/css'>
