@@ -279,7 +279,7 @@ Route::middleware('auth')->group(function () {
 
     #generate indeks RB simple version buat kebutuhan satu data dakip
     Route::get('/generate/hasil1data/', [GenerateController::class, 'generate_simple'])->name('generete_rb_simple_version');
-    Route::get('/generate/hasilrb2023/', [GenerateController::class, 'generateRB2023'])->name('generete_rb_simple_version');
+    Route::get('/generate/hasilrb2023/', [GenerateController::class, 'generateRB2023']);
 });
 
 
