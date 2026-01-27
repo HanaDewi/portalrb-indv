@@ -274,7 +274,7 @@ class PanelController extends Controller
                     if (!is_null($request->get('bukti-dukung-' . $unit_zi->id))) $panel->bukti_dukung = $request->get('bukti-dukung-' . $unit_zi->id);
                     if (!is_null($request->get('kondisi-' . $unit_zi->id))) $panel->kondisi = $request->get('kondisi-' . $unit_zi->id);
                     if (!is_null($request->get('rekomendasi-' . $unit_zi->id))) $panel->rekomendasi = $request->get('rekomendasi-' . $unit_zi->id);
-                    // if (!is_null($request->get('status-' . $unit_zi->id))) $panel->status = $request->get('status-' . $unit_zi->id);
+                    if (!is_null($request->get('status-' . $unit_zi->id))) $panel->status = $request->get('status-' . $unit_zi->id);
                     $panel->updated_by = Auth::User()->id;
                     $panel->save();
                 };
