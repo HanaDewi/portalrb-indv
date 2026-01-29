@@ -565,7 +565,7 @@
             },
             customize: function (doc) {
             doc.defaultStyle.fontSize = 8.5; 
-            doc.content[1].table.widths = [ '3%', '15%', '7%', '7%', '7%', '13%', '13%', '13%','13%', '13%'];
+            doc.content[1].table.widths = [ '3%', '15%', '7%', '15%', '8%', '12%', '8%', '12%','8%', '12%'];
                 doc.content[1].table.body.forEach(row => {
                     row.forEach((cell, index) => {
                         if (index === 4 || index === 5 || index === 6 || index === 7 || index === 8 || index === 9) {
