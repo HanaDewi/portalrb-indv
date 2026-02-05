@@ -96,9 +96,44 @@
             $temaCountsByGroup[$groupKey] = array_fill(0, $temaCount, 0);
             $groupTotals[$groupKey] = ['yes' => 0, 'no' => 0];
         }
+
+        $provinsiByTema = [];
+        $klByTema = [];
+        $kabupatenByTema = [];
+
+        foreach ($temaDefinitions as $position => $definition) {
+            $provinsiByTema[$position] = [];
+            $klByTema[$position] = [];
+            $kabupatenByTema[$position] = [];
+        }
+
+        // Isi data per tema untuk semua group
+        foreach ($instansis as $instansi) {
+            $temaData = $tematiks[$instansi->id] ?? null;
+            if ($temaData) {
+                foreach ($temaDefinitions as $position => $definition) {
+                    $alias = $definition['alias'];
+                    if (!empty($temaData->{$alias})) {
+                        $dataItem = [
+                            'name' => $instansi->name,
+                            'id' => $instansi->id,
+                        ];
+
+                        // Pisahkan berdasarkan group
+                        if ($instansi->group === 'provinsi') {
+                            $provinsiByTema[$position][] = $dataItem;
+                        } elseif ($instansi->group === 'kl') {
+                            $klByTema[$position][] = $dataItem;
+                        } elseif ($instansi->group === 'kabupaten') {
+                            $kabupatenByTema[$position][] = $dataItem;
+                        }
+                    }
+                }
+            }
+        }
     @endphp
 
-    <div class="col-span-12 sm:col-span-6 lg:col-span-4 mb-3">
+    <div class="col-span-12 sm:col-span-6 lg:col-span-4">
         <div class="intro-y box p-5">
             <h2 class="text-lg font-medium truncate mr-5">
                 Provinsi
@@ -111,7 +146,7 @@
         </div>
     </div>
 
-    <div class="col-span-12 sm:col-span-6 lg:col-span-4 mb-3">
+    <div class="col-span-12 sm:col-span-6 lg:col-span-4">
         <div class="intro-y box p-5">
             <h2 class="text-lg font-medium truncate mr-5">
                 Kementerian Lembaga
@@ -124,7 +159,7 @@
         </div>
     </div>
 
-    <div class="col-span-12 sm:col-span-6 lg:col-span-4 mb-3">
+    <div class="col-span-12 sm:col-span-6 lg:col-span-4">
         <div class="intro-y box p-5">
             <h2 class="text-lg font-medium truncate mr-5">
                 Pemerintah Kabupaten/Kota
@@ -137,7 +172,7 @@
         </div>
     </div>
 
-    <div class="intro-y col-span-12 lg:col-span-12 mb-3" class="overflow-x-auto">
+    <div class="intro-y col-span-12 lg:col-span-12" class="overflow-x-auto">
         <table class="table table-report -mt-2">
             <tbody>
                 <tr class="intro-x">
@@ -263,6 +298,83 @@
         $yes_kab = $groupTotals['kabupaten']['yes'] ?? 0;
         $no_kab = $groupTotals['kabupaten']['no'] ?? 0;
     @endphp
+    <!-- Modal untuk menampilkan list provinsi -->
+    <div id="provinsiModal" style="display: none; position: fixed !important; z-index: 99999 !important; left: 0 !important; top: 0 !important; width: 100% !important; height: 100% !important; overflow: auto; background-color: rgba(0,0,0,0.8) !important;">
+        <div style="background-color: #ffffff; margin: 80px auto; padding: 30px; border: 2px solid #888; width: 90%; max-width: 700px; border-radius: 10px; box-shadow: 0 8px 16px rgba(0,0,0,0.3); position: relative;">
+            <span class="close" style="position: absolute; right: 15px; top: 10px; color: #333; font-size: 32px; font-weight: bold; cursor: pointer; z-index: 100000;">&times;</span>
+            <h2 id="modalTitle" style="margin-top: 0; padding-top: 10px; font-size: 20px; font-weight: bold; color: #333; margin-bottom: 10px;"></h2>
+            <div style="margin-bottom: 15px; display: flex; gap: 10px;">
+                <button onclick="downloadProvinsiExcel()" style="background-color: #28a745; color: white; padding: 8px 16px; border: none; border-radius: 5px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 5px;">
+                    Download Excel
+                </button>
+                <button onclick="downloadProvinsiPDF()" style="background-color: #dc3545; color: white; padding: 8px 16px; border: none; border-radius: 5px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 5px;">
+                    Download PDF
+                </button>
+            </div>
+            <div id="modalContent" style="overflow-y: auto; max-height: 500px;">
+                <table class="table table-bordered" style="width: 100%; border-collapse: collapse;">
+                    <thead style="background-color: #f8f9fa;">
+                        <tr>
+                            <th style="padding: 12px; border: 1px solid #dee2e6; text-align: center; width: 60px;">No</th>
+                            <th style="padding: 12px; border: 1px solid #dee2e6;">Nama Provinsi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="provinsiList"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div id="klModal" style="display: none; position: fixed !important; z-index: 99999 !important; left: 0 !important; top: 0 !important; width: 100% !important; height: 100% !important; overflow: auto; background-color: rgba(0,0,0,0.8) !important;">
+        <div style="background-color: #ffffff; margin: 80px auto; padding: 30px; border: 2px solid #888; width: 90%; max-width: 700px; border-radius: 10px; box-shadow: 0 8px 16px rgba(0,0,0,0.3); position: relative;">
+            <span class="close-kl" style="position: absolute; right: 15px; top: 10px; color: #333; font-size: 32px; font-weight: bold; cursor: pointer; z-index: 100000;">&times;</span>
+            <h2 id="klModalTitle" style="margin-top: 0; padding-top: 10px; font-size: 20px; font-weight: bold; color: #333; margin-bottom: 10px;"></h2>
+            <div style="margin-bottom: 15px; display: flex; gap: 10px;">
+                <button onclick="downloadKLExcel()" style="background-color: #28a745; color: white; padding: 8px 16px; border: none; border-radius: 5px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 5px;">
+                    Download Excel
+                </button>
+                <button onclick="downloadKLPDF()" style="background-color: #dc3545; color: white; padding: 8px 16px; border: none; border-radius: 5px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 5px;">
+                    Download PDF
+                </button>
+            </div>
+            <div id="klModalContent" style="overflow-y: auto; max-height: 500px;">
+                <table class="table table-bordered" style="width: 100%; border-collapse: collapse;">
+                    <thead style="background-color: #f8f9fa;">
+                        <tr>
+                            <th style="padding: 12px; border: 1px solid #dee2e6; text-align: center; width: 60px;">No</th>
+                            <th style="padding: 12px; border: 1px solid #dee2e6;">Nama Kementerian/Lembaga</th>
+                        </tr>
+                    </thead>
+                    <tbody id="klList"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div id="kabupatenModal" style="display: none; position: fixed !important; z-index: 99999 !important; left: 0 !important; top: 0 !important; width: 100% !important; height: 100% !important; overflow: auto; background-color: rgba(0,0,0,0.8) !important;">
+        <div style="background-color: #ffffff; margin: 80px auto; padding: 30px; border: 2px solid #888; width: 90%; max-width: 700px; border-radius: 10px; box-shadow: 0 8px 16px rgba(0,0,0,0.3); position: relative;">
+            <span class="close-kabupaten" style="position: absolute; right: 15px; top: 10px; color: #333; font-size: 32px; font-weight: bold; cursor: pointer; z-index: 100000;">&times;</span>
+            <h2 id="kabupatenModalTitle" style="margin-top: 0; padding-top: 10px; font-size: 20px; font-weight: bold; color: #333; margin-bottom: 10px;"></h2>
+            <div style="margin-bottom: 15px; display: flex; gap: 10px;">
+                <button onclick="downloadKabupatenExcel()" style="background-color: #28a745; color: white; padding: 8px 16px; border: none; border-radius: 5px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 5px;">
+                    Download Excel
+                </button>
+                <button onclick="downloadKabupatenPDF()" style="background-color: #dc3545; color: white; padding: 8px 16px; border: none; border-radius: 5px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 5px;">
+                    Download PDF
+                </button>
+            </div>
+            <div id="kabupatenModalContent" style="overflow-y: auto; max-height: 500px;">
+                <table class="table table-bordered" style="width: 100%; border-collapse: collapse;">
+                    <thead style="background-color: #f8f9fa;">
+                        <tr>
+                            <th style="padding: 12px; border: 1px solid #dee2e6; text-align: center; width: 60px;">No</th>
+                            <th style="padding: 12px; border: 1px solid #dee2e6;">Nama Kabupaten/Kota</th>
+                        </tr>
+                    </thead>
+                    <tbody id="kabupatenList"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @push('js')
@@ -275,7 +387,54 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.html5.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Modal Provinsi
+            const modalProvinsi = document.getElementById('provinsiModal');
+            const closeBtnProvinsi = document.querySelector('.close');
+
+            if (closeBtnProvinsi) {
+                closeBtnProvinsi.onclick = function() {
+                    modalProvinsi.style.display = 'none';
+                }
+            }
+
+            // Modal KL
+            const modalKL = document.getElementById('klModal');
+            const closeBtnKL = document.querySelector('.close-kl');
+
+            if (closeBtnKL) {
+                closeBtnKL.onclick = function() {
+                    modalKL.style.display = 'none';
+                }
+            }
+
+            // Modal Kabupaten
+            const modalKabupaten = document.getElementById('kabupatenModal');
+            const closeBtnKabupaten = document.querySelector('.close-kabupaten');
+
+            if (closeBtnKabupaten) {
+                closeBtnKabupaten.onclick = function() {
+                    modalKabupaten.style.display = 'none';
+                }
+            }
+
+            // Close ketika klik di luar modal
+            window.onclick = function(event) {
+                if (event.target == modalProvinsi) {
+                    modalProvinsi.style.display = 'none';
+                }
+                if (event.target == modalKL) {
+                    modalKL.style.display = 'none';
+                }
+                if (event.target == modalKabupaten) {
+                    modalKabupaten.style.display = 'none';
+                }
+            }
+        })
         if ($("#pie-chart-provinsi").length) {
             var ctxProvinsi = $("#pie-chart-provinsi")[0].getContext("2d");
 
@@ -365,6 +524,10 @@
 
         const temaLabels = @json($temaLabels);
         const temaLegendColors = @json($temaColors);
+        const temaDefinitions = @json($temaDefinitions);
+        const provinsiByTema = @json($provinsiByTema);
+        const klByTema = @json($klByTema);
+        const kabupatenByTema = @json($kabupatenByTema);
         const temaCountsByGroup = {
             provinsi: @json($temaCountsByGroup['provinsi'] ?? []),
             kl: @json($temaCountsByGroup['kl'] ?? []),
@@ -401,11 +564,62 @@
                         y: {
                             beginAtZero: true
                         }
+                    },
+                    onClick: function(event, elements) {
+                        console.log('Chart clicked!');
+                        console.log('Elements:', elements);
+
+                        if (elements && elements.length > 0) {
+                            const clickedIndex = elements[0].index;
+                            console.log('Clicked index:', clickedIndex);
+
+                            const temaInfo = temaDefinitions[clickedIndex];
+                            const provinsiList = provinsiByTema[clickedIndex];
+
+                            console.log('Tema Info:', temaInfo);
+                            console.log('Provinsi List:', provinsiList);
+
+                            // Tampilkan modal
+                            const modal = document.getElementById('provinsiModal');
+                            const modalTitle = document.getElementById('modalTitle');
+                            const provinsiListEl = document.getElementById('provinsiList');
+
+                            if (!modal || !modalTitle || !provinsiListEl) {
+                                console.error('Modal elements not found!');
+                                return;
+                            }
+
+                            // Set judul
+                            modalTitle.textContent = 'Daftar Provinsi - ' + temaInfo.label + ': ' + temaInfo.name;
+                            currentModalData = {
+                                title: 'Daftar Provinsi - ' + temaInfo.label + ' - ' + temaInfo.name,
+                                data: provinsiList
+                            };
+                            // Buat list provinsi
+                            let html = '';
+                            if (provinsiList && provinsiList.length > 0) {
+                                for (let i = 0; i < provinsiList.length; i++) {
+                                    const provinsi = provinsiList[i];
+                                    html += '<tr>';
+                                    html += '<td>' + (i + 1) + '</td>';
+                                    html += '<td><a href="/rencana_aksi/rb-tematik/rekap_data?instansi_id=' + provinsi.id + '">' + provinsi.name + '</a></td>';
+                                    html += '</tr>';
+                                }
+                            } else {
+                                html = '<tr><td colspan="3" class="text-center">Tidak ada data</td></tr>';
+                            }
+
+                            provinsiListEl.innerHTML = html;
+                            modal.style.display = 'block';
+
+                            console.log('Modal should be visible now');
+                        } else {
+                            console.log('No elements clicked');
+                        }
                     }
                 }
             });
         }
-
 
         if (temaLabels.length && document.getElementById("pie-bar2")) {
             var ctxProvinsis2 = document.getElementById("pie-bar2").getContext("2d");
@@ -437,11 +651,48 @@
                         y: {
                             beginAtZero: true
                         }
+                    },
+                    onClick: function(event, elements) {
+                        if (elements && elements.length > 0) {
+                            const clickedIndex = elements[0].index;
+                            const temaInfo = temaDefinitions[clickedIndex];
+                            const klList = klByTema[clickedIndex];
+
+                            // Tampilkan modal KL
+                            const modal = document.getElementById('klModal');
+                            const modalTitle = document.getElementById('klModalTitle');
+                            const klListEl = document.getElementById('klList');
+
+                            if (!modal || !modalTitle || !klListEl) {
+                                console.error('Modal KL elements not found!');
+                                return;
+                            }
+
+                            modalTitle.textContent = 'Daftar Kementerian/Lembaga - ' + temaInfo.label + ': ' + temaInfo.name;
+                            currentModalData = {
+                                title: 'Daftar Kementerian Lembaga - ' + temaInfo.label + ' - ' + temaInfo.name,
+                                data: klList
+                            };
+                            let html = '';
+                            if (klList && klList.length > 0) {
+                                for (let i = 0; i < klList.length; i++) {
+                                    const kl = klList[i];
+                                    html += '<tr>';
+                                    html += '<td style="padding: 10px; border: 1px solid #dee2e6;">' + (i + 1) + '</td>';
+                                    html += '<td style="padding: 10px; border: 1px solid #dee2e6;"><a href="/rencana_aksi/rb-tematik/rekap_data?instansi_id=' + kl.id + '">' + kl.name + '</a></td>';
+                                    html += '</tr>';
+                                }
+                            } else {
+                                html = '<tr><td colspan="3" class="text-center">Tidak ada data</td></tr>';
+                            }
+
+                            klListEl.innerHTML = html;
+                            modal.style.display = 'block';
+                        }
                     }
                 }
             });
         }
-
 
         if (temaLabels.length && document.getElementById("pie-bar3")) {
             var ctxProvinsis3 = document.getElementById("pie-bar3").getContext("2d");
@@ -472,6 +723,44 @@
                     scales: {
                         y: {
                             beginAtZero: true
+                        }
+                    },
+                    onClick: function(event, elements) {
+                        if (elements && elements.length > 0) {
+                            const clickedIndex = elements[0].index;
+                            const temaInfo = temaDefinitions[clickedIndex];
+                            const kabupatenList = kabupatenByTema[clickedIndex];
+
+                            // Tampilkan modal Kabupaten
+                            const modal = document.getElementById('kabupatenModal');
+                            const modalTitle = document.getElementById('kabupatenModalTitle');
+                            const kabupatenListEl = document.getElementById('kabupatenList');
+
+                            if (!modal || !modalTitle || !kabupatenListEl) {
+                                console.error('Modal Kabupaten elements not found!');
+                                return;
+                            }
+
+                            modalTitle.textContent = 'Daftar Kabupaten/Kota - ' + temaInfo.label + ': ' + temaInfo.name;
+                            currentModalData = {
+                                title: 'Daftar Kabupaten Kota - ' + temaInfo.label + ' - ' + temaInfo.name,
+                                data: kabupatenList
+                            };
+                            let html = '';
+                            if (kabupatenList && kabupatenList.length > 0) {
+                                for (let i = 0; i < kabupatenList.length; i++) {
+                                    const kabupaten = kabupatenList[i];
+                                    html += '<tr>';
+                                    html += '<td style="padding: 10px; border: 1px solid #dee2e6;">' + (i + 1) + '</td>';
+                                    html += '<td style="padding: 10px; border: 1px solid #dee2e6;"><a href="/rencana_aksi/rb-tematik/rekap_data?instansi_id=' + kabupaten.id + '">' + kabupaten.name + '</a></td>';
+                                    html += '</tr>';
+                                }
+                            } else {
+                                html = '<tr><td colspan="3" class="text-center">Tidak ada data</td></tr>';
+                            }
+
+                            kabupatenListEl.innerHTML = html;
+                            modal.style.display = 'block';
                         }
                     }
                 }
@@ -514,5 +803,142 @@
                 ]
             });
         });
+        // Variabel global untuk menyimpan data modal yang sedang aktif
+        let currentModalData = {
+            title: '',
+            data: []
+        };
+
+        // FUNGSI DOWNLOAD EXCEL - PROVINSI
+        function downloadProvinsiExcel() {
+            const wb = XLSX.utils.book_new();
+            const wsData = [
+                ['No', 'Nama Provinsi'],
+                ...currentModalData.data.map((item, index) => [index + 1, item.name])
+            ];
+            const ws = XLSX.utils.aoa_to_sheet(wsData);
+            XLSX.utils.book_append_sheet(wb, ws, 'Provinsi');
+            XLSX.writeFile(wb, currentModalData.title + '.xlsx');
+        }
+
+        // FUNGSI DOWNLOAD PDF - PROVINSI
+        function downloadProvinsiPDF() {
+            const {
+                jsPDF
+            } = window.jspdf;
+            const doc = new jsPDF();
+
+            doc.setFontSize(16);
+            doc.text(currentModalData.title, 14, 15);
+
+            const tableData = currentModalData.data.map((item, index) => [index + 1, item.name]);
+
+            doc.autoTable({
+                head: [
+                    ['No', 'Nama Provinsi']
+                ],
+                body: tableData,
+                startY: 25,
+                theme: 'grid',
+                headStyles: {
+                    fillColor: [248, 249, 250],
+                    textColor: [0, 0, 0],
+                    fontStyle: 'bold'
+                },
+                styles: {
+                    fontSize: 10
+                }
+            });
+
+            doc.save(currentModalData.title + '.pdf');
+        }
+
+        // FUNGSI DOWNLOAD EXCEL - KL
+        function downloadKLExcel() {
+            const wb = XLSX.utils.book_new();
+            const wsData = [
+                ['No', 'Nama Kementerian/Lembaga'],
+                ...currentModalData.data.map((item, index) => [index + 1, item.name])
+            ];
+            const ws = XLSX.utils.aoa_to_sheet(wsData);
+            XLSX.utils.book_append_sheet(wb, ws, 'Kementerian Lembaga');
+            XLSX.writeFile(wb, currentModalData.title + '.xlsx');
+        }
+
+        // FUNGSI DOWNLOAD PDF - KL
+        function downloadKLPDF() {
+            const {
+                jsPDF
+            } = window.jspdf;
+            const doc = new jsPDF();
+
+            doc.setFontSize(16);
+            doc.text(currentModalData.title, 14, 15);
+
+            const tableData = currentModalData.data.map((item, index) => [index + 1, item.name]);
+
+            doc.autoTable({
+                head: [
+                    ['No', 'Nama Kementerian/Lembaga']
+                ],
+                body: tableData,
+                startY: 25,
+                theme: 'grid',
+                headStyles: {
+                    fillColor: [248, 249, 250],
+                    textColor: [0, 0, 0],
+                    fontStyle: 'bold'
+                },
+                styles: {
+                    fontSize: 10
+                }
+            });
+
+            doc.save(currentModalData.title + '.pdf');
+        }
+
+        // FUNGSI DOWNLOAD EXCEL - KABUPATEN
+        function downloadKabupatenExcel() {
+            const wb = XLSX.utils.book_new();
+            const wsData = [
+                ['No', 'Nama Kabupaten/Kota'],
+                ...currentModalData.data.map((item, index) => [index + 1, item.name])
+            ];
+            const ws = XLSX.utils.aoa_to_sheet(wsData);
+            XLSX.utils.book_append_sheet(wb, ws, 'Kabupaten Kota');
+            XLSX.writeFile(wb, currentModalData.title + '.xlsx');
+        }
+
+        // FUNGSI DOWNLOAD PDF - KABUPATEN
+        function downloadKabupatenPDF() {
+            const {
+                jsPDF
+            } = window.jspdf;
+            const doc = new jsPDF();
+
+            doc.setFontSize(16);
+            doc.text(currentModalData.title, 14, 15);
+
+            const tableData = currentModalData.data.map((item, index) => [index + 1, item.name]);
+
+            doc.autoTable({
+                head: [
+                    ['No', 'Nama Kabupaten/Kota']
+                ],
+                body: tableData,
+                startY: 25,
+                theme: 'grid',
+                headStyles: {
+                    fillColor: [248, 249, 250],
+                    textColor: [0, 0, 0],
+                    fontStyle: 'bold'
+                },
+                styles: {
+                    fontSize: 10
+                }
+            });
+
+            doc.save(currentModalData.title + '.pdf');
+        }
     </script>
 @endpush
