@@ -934,6 +934,44 @@ class RBTematikController extends Controller
         $findikatorroadmap = $request->get('findikatorroadmap');
         $fpermasalahan = $request->get('fpermasalahan');
         $fintervensi = $request->get('fintervensi');
+        $shouldLoadData = $request->has('filter')
+            || $request->hasAny([
+                'instansi_id',
+                'ftema',
+                'fsasaranroadmap',
+                'findikatorroadmap',
+                'fpermasalahan',
+                'fintervensi'
+            ]);
+
+        if (!$shouldLoadData) {
+            $datas = [];
+            $instansi_id = [];
+            $nama_instansi = '';
+            $filterSasaranRoadmap = [];
+            $filterIndikatorRoadmap = [];
+            $filterTematikPermasalahan = [];
+
+            return view(
+                'rb-tematik.rekap_data',
+                compact(
+                    'tahun',
+                    'datas',
+                    'instansi_id',
+                    'nama_instansi',
+                    'temas',
+                    'filterSasaranRoadmap',
+                    'filterIndikatorRoadmap',
+                    'filterTematikPermasalahan',
+                    'finstansi',
+                    'ftema',
+                    'fsasaranroadmap',
+                    'findikatorroadmap',
+                    'fpermasalahan',
+                    'fintervensi'
+                )
+            );
+        }
 
         if (in_array($user->level, ['admin', 'tpn', 'viewer'])) {
             $instansi_id = $finstansi;
@@ -1098,6 +1136,58 @@ class RBTematikController extends Controller
                 'fintervensi'
             )
         );
+    }
+
+    public function rekap_data_getTemas(Request $request)
+    {
+        $tahun = $request->get('tahun', date('Y'));
+        $temas = Tema::where('tahun', $tahun)->get(['id', 'nama']);
+
+        return response()->json($temas);
+    }
+
+    public function rekap_data_getIndikatorRoadmap($id)
+    {
+        $indikator = TematikIndikatorRoadmap::find($id);
+        return response()->json($indikator);
+    }
+
+    public function rekap_data_getIndikatorPermasalahan($id)
+    {
+        $indikator = TematikIndikatorPermasalahan::find($id);
+        return response()->json($indikator);
+    }
+
+    public function rekap_data_simpanCatatanEvaluatorRoadmap(Request $request)
+    {
+        $user = Auth::User();
+        if (!in_array($user->level, ['tpn'])) {
+            abort(403);
+        }
+        $roadmap = TematikIndikatorRoadmap::find($request->indikator_roadmap_id);
+        if (!$roadmap) {
+            abort(404);
+        }
+        $roadmap->catatan_evaluator = $request->catatan_evaluator;
+        if ($roadmap->save()) {
+            return redirect()->back();
+        }
+    }
+
+    public function rekap_data_simpanCatatanEvaluatorPermasalahan(Request $request)
+    {
+        $user = Auth::User();
+        if (!in_array($user->level, ['tpn'])) {
+            abort(403);
+        }
+        $permasalahan = TematikIndikatorPermasalahan::find($request->indikator_permasalahan_id);
+        if (!$permasalahan) {
+            abort(404);
+        }
+        $permasalahan->catatan_evaluator = $request->catatan_evaluator;
+        if ($permasalahan->save()) {
+            return redirect()->back();
+        }
     }
 
     public function removeDot($i)

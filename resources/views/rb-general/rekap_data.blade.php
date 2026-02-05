@@ -119,7 +119,7 @@
                                 <td>{{ number_format((float) $data['target']->capaian_indikator, 2, '.', '') }}</td>
                                 <td>{{ $data['target']->catatan }}</td>
                                 <td>
-                                    @if (auth()->user()->level == 'tpn' && hasAksesRencanaAksi())
+                                    @if (auth()->user()->level == 'tpn' && hasAksesRencanaAksi() && $data['target']->id)
                                         <button onclick="catatan_evaluator({{ $data['target']->id }});" class="mb-3 btn btn-warning btn-sm w-10"><svg xmlns="https://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" icon-name="edit" data-lucide="edit" class="lucide lucide-edit block mx-auto">
                                                 <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"></path>
                                                 <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path>
@@ -331,7 +331,7 @@
                 scrollX: true,
                 // 'orderFixed': [0, 'asc'],
                 autoWidth: false,
-                rowsGroup: [0, 1, 2, 3, 4, 5, 6, 7, 8],
+                rowsGroup: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
                 paging: true,
                 bInfo: false,
                 ordering: false,
