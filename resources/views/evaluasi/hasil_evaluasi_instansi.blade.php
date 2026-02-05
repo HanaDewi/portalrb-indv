@@ -229,7 +229,10 @@
                                             <td>{{ $parameter->rekomendasi }}</td>
                                             @if (in_array(auth()->user()->level, ['kl', 'provinsi', 'kabupaten']))
                                                 <td>
-                                                    @if ($parameter->score !== null && $parameter->score !== '')
+                                                    @php
+                                                        $hasTargetBaik = $parameter->target_baik !== null && $parameter->target_baik !== '';
+                                                    @endphp
+                                                    @if ($hasTargetBaik && $parameter->score !== null && $parameter->score !== '')
                                                         @if (!empty($parameter->status_sanggah))
                                                             <div class="text-xs text-slate-600">
                                                                 <div>
