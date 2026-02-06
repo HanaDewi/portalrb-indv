@@ -40,7 +40,7 @@
     <div class="mobile-menu md:hidden">
         <div class="mobile-menu-bar">
             <a href="{{ url('/') }}" class="flex mr-auto">
-                <img alt="LKE RB" class="w-24" src="{{ asset('midone') }}/dist/images/logo_panrb.png">
+                <img alt="LKE RB" class="w-24" src="{{ asset('assets') }}/images/logo-portalrb.png">
             </a>
             <a href="javascript:;" id="mobile-menu-toggler"> <i data-feather="bar-chart-2"
                     class="w-8 h-8 text-white transform -rotate-90"></i> </a>
@@ -142,9 +142,9 @@
         <!-- BEGIN: Side Menu -->
         <nav class="side-nav">
             <a href="{{ url('/') }}" class="intro-x flex items-center pl-2 pt-4">
-                <img alt="LKE RB" src="{{ asset('midone') }}/dist/images/logo_panrb.png">
+                <img alt="LKE RB" src="{{ asset('assets') }}/images/logo-portalrb.png">
             </a>
-            <div class="side-nav__devider my-6"></div>
+            <div class="my-6"></div>
             <ul>
                 @foreach ($menus as $menu)
                     @if (in_array('devider', $menu['levels']))
@@ -201,8 +201,7 @@
                                                     </div>
                                                     <div class="side-menu__title">{{ $item['title'] }}
                                                         {!! isset($item['items'])
-                                                            ? '<div
-                                                                                                class="side-menu__sub-icon "> <i data-feather="chevron-down"></i> </div>'
+                                                            ? '<div class="side-menu__sub-icon "> <i data-feather="chevron-down"></i> </div>'
                                                             : '' !!}</div>
                                                 </a>
                                                 @isset($item['items'])
@@ -305,7 +304,7 @@
                         </x-slot:trigger>
 
                         <!-- Header dengan info user -->
-                        {{-- <x-bladewind::dropmenu.item header="true" class="bg-gray-50">
+                        <x-bladewind::dropmenu.item header="true" class="bg-gray-50">
                             <div class="flex items-center space-x-3">
                                 <x-bladewind::avatar
                                     image="{{ auth()->user()->foto ? asset('storage/user/' . auth()->user()->foto) : asset('template_lkerb/dist/images/favicon.png') }}"

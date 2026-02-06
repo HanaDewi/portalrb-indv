@@ -342,12 +342,12 @@ if (!function_exists('menus')) {
                                     'icon' => 'user',
                                     'url' => 'akip/tim/our-team'
                                 ],
-                                // [
-                                //     'levels' => ['tpn'],
-                                //     'title' => 'Semua Tim',
-                                //     'icon' => 'users',
-                                //     'url' => 'akip/tim/all-teams'
-                                // ]
+                                [
+                                    'levels' => ['tpn'],
+                                    'title' => 'Semua Tim',
+                                    'icon' => 'users',
+                                    'url' => 'akip/tim/all-teams'
+                                ]
                             ]
                         ],
                     ],

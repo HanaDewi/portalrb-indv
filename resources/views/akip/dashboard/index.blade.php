@@ -131,7 +131,7 @@
             <div class="box">
                 <div class="p-5">
                     <div class="rounded-md">
-                        <img width="100%" alt="menpanrb" class="rounded-md" src="{{ URL::to('/') }}/assets/images/banner_dashboard.jpg">
+                        <img width="100%" alt="menpanrb" class="rounded-md" src="{{ URL::to('/') }}/assets/images/newportal.jpg">
                     </div>
                 </div>
             </div>
