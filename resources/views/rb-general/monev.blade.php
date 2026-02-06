@@ -556,7 +556,7 @@
                 columns: [0,1,2,3,4,5,6,7,8,9],
                 format: {
                     body: function ( data, row, column, node ) {
-                        if(column === 4 || column === 5 || column === 6 || column === 7) {
+                        if(column === 4 || column === 5 || column === 6 || column === 7 || column === 8 || column === 9) {
                             return data.replace(/<\/td><\/tr><tr><td>/g, "\n");
                         }
                         return data;
@@ -565,10 +565,10 @@
             },
             customize: function (doc) {
             doc.defaultStyle.fontSize = 8.5; 
-            doc.content[1].table.widths = [ '3%', '15%', '7%', '7%', '7%', '13%', '13%', '13%','13%', '13%'];
+            doc.content[1].table.widths = [ '3%', '15%', '7%', '15%', '8%', '12%', '8%', '12%','8%', '12%'];
                 doc.content[1].table.body.forEach(row => {
                     row.forEach((cell, index) => {
-                        if (index === 4 || index === 5 || index === 6 || index === 7) {
+                        if (index === 4 || index === 5 || index === 6 || index === 7 || index === 8 || index === 9) {
                             if (cell.text) {
                                 let newText = cell.text.replace(/<tr><td>/g, '').replace(/<\/td><\/tr>/g, '\n').replace(/<[^>]*>/g, '');
                                 cell.text = newText;

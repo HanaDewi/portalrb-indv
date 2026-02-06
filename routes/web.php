@@ -182,8 +182,11 @@ Route::middleware('auth')->group(function () {
 
     // RB Tematik Rekap Data
     Route::get('/rencana_aksi/rb-tematik/rekap_data', [RBTematikController::class, 'rekap_data']);
-    Route::get('/rencana_aksi/rb-tematik/rekap_data/getPerencanaan/{id}', [RBTematikController::class, 'rekap_data_getPerencanaan']);
-    Route::post('/rencana_aksi/rb-tematik/rekap_data/simpanCatatanEvaluator', [RBTematikController::class, 'rekap_data_simpanCatatanEvaluator']);
+    Route::get('/rencana_aksi/rb-tematik/rekap_data/get-temas', [RBTematikController::class, 'rekap_data_getTemas']);
+    Route::get('/rencana_aksi/rb-tematik/rekap_data/get-indikator-roadmap/{id}', [RBTematikController::class, 'rekap_data_getIndikatorRoadmap']);
+    Route::get('/rencana_aksi/rb-tematik/rekap_data/get-indikator-permasalahan/{id}', [RBTematikController::class, 'rekap_data_getIndikatorPermasalahan']);
+    Route::post('/rencana_aksi/rb-tematik/rekap_data/simpanCatatanEvaluatorRoadmap', [RBTematikController::class, 'rekap_data_simpanCatatanEvaluatorRoadmap']);
+    Route::post('/rencana_aksi/rb-tematik/rekap_data/simpanCatatanEvaluatorPermasalahan', [RBTematikController::class, 'rekap_data_simpanCatatanEvaluatorPermasalahan']);
 
     // Evaluasi
     Route::get('/evaluasi/renaksi-rb-general', [ERenaksiRBGeneralController::class, 'index']);
@@ -276,7 +279,7 @@ Route::middleware('auth')->group(function () {
 
     #generate indeks RB simple version buat kebutuhan satu data dakip
     Route::get('/generate/hasil1data/', [GenerateController::class, 'generate_simple'])->name('generete_rb_simple_version');
-    Route::get('/generate/hasilrb2023/', [GenerateController::class, 'generateRB2023'])->name('generete_rb_simple_version');
+    Route::get('/generate/hasilrb2023/', [GenerateController::class, 'generateRB2023']);
 });
 
 

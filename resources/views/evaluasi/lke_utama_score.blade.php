@@ -398,6 +398,9 @@
             { data: 'rekomendasi' },
             {
                 render: function (data, type, row, meta) {
+                    if (row.target_baik === null || row.target_baik === '') {
+                        return '-';
+                    }
                     if (!row.status_sanggah) {
                         return '-';
                     }
