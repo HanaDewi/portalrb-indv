@@ -65,25 +65,99 @@ class PenghargaanController extends Controller
         $tahun = $request->input('tahun', date('Y'));
         $tahun = is_numeric($tahun) && $tahun >= 2020 && $tahun <= date('Y') ? (int) $tahun : date('Y');
 
-        // Get all instansi with penghargaan for the selected year
-        $query = Penghargaan::with('instansi')
-            ->where('tahun', $tahun)
-            ->whereNull('deleted_at');
+        // Filter berdasarkan tim
+        $tim_id = $request->input('tim_id', null);
+
+        // Get all instansi with their penghargaan status for the selected year
+        $query = KlpdInstansi::select(
+            'klpd_instansi_new.*',
+            'penghargaan.id as penghargaan_id',
+            'penghargaan.file_sertifikat',
+            'tim_evaluasi.id as tim_id',
+            'tim_evaluasi.nama as tim_nama'
+        )
+            ->leftJoin('penghargaan', function ($join) use ($tahun) {
+                $join->on('klpd_instansi_new.id', '=', 'penghargaan.instansi_id')
+                    ->where('penghargaan.tahun', $tahun)
+                    ->whereNull('penghargaan.deleted_at');
+            })
+            ->leftJoin('instansi_tim', 'klpd_instansi_new.id', '=', 'instansi_tim.instansi_id')
+            ->leftJoin('tim_evaluasi', 'instansi_tim.tim_id', '=', 'tim_evaluasi.id')
+            ->whereNull('klpd_instansi_new.deleted_at');
+
+        // Apply tim filter if provided
+        if (!empty($tim_id)) {
+            $query->where('tim_evaluasi.id', $tim_id);
+        }
 
         // Apply search filter if provided
         $search = $request->input('search', '');
         if (!empty($search)) {
-            $query->whereHas('instansi', function ($q) use ($search) {
-                $q->where('name', 'like', '%' . $search . '%');
-            });
+            $query->where('klpd_instansi_new.name', 'like', '%' . $search . '%');
         }
 
-        $penghargaan = $query->orderBy('id', 'desc')->get();
+        // Order by: NULL first (belum upload) then yang sudah upload
+        $instansiData = $query->orderBy('penghargaan.id', 'asc')
+            ->orderBy('klpd_instansi_new.name', 'asc')
+            ->get();
+
+        // Reorder to put "Belum Upload" (penghargaan_id is null) at the top
+        $instansiData = $instansiData->sortBy(function ($item) {
+            return $item->penghargaan_id === null ? 0 : 1;
+        })->values();
+
+        // Get all tim options for filter dropdown
+        $timOptions = \App\Models\TimEvaluasiRB::orderBy('nama', 'asc')->get();
+
+        // Calculate statistics per tim
+        $timStatistics = [];
+        foreach ($timOptions as $tim) {
+            // Get total instansi for this tim
+            $totalInstansi = \App\Models\InstansiTimEvaluasi::where('tim_id', $tim->id)->count();
+
+            // Get instansi that have penghargaan for this tim
+            $instansiIds = \App\Models\InstansiTimEvaluasi::where('tim_id', $tim->id)
+                ->pluck('instansi_id');
+
+            $sudahUpload = \App\Models\Akip\Penghargaan::where('tahun', $tahun)
+                ->whereNull('deleted_at')
+                ->whereIn('instansi_id', $instansiIds)
+                ->count();
+
+            $belumUpload = $totalInstansi - $sudahUpload;
+            $persentase = $totalInstansi > 0 ? round(($sudahUpload / $totalInstansi) * 100, 2) : 0;
+
+            $timStatistics[] = [
+                'tim_id' => $tim->id,
+                'tim_nama' => $tim->nama,
+                'total_instansi' => $totalInstansi,
+                'sudah_upload' => $sudahUpload,
+                'belum_upload' => $belumUpload,
+                'persentase' => $persentase
+            ];
+        }
+
+        // Calculate overall statistics
+        $totalInstansi = KlpdInstansi::whereNull('deleted_at')->count();
+        $totalSudahUpload = Penghargaan::where('tahun', $tahun)->whereNull('deleted_at')->count();
+        $totalBelumUpload = $totalInstansi - $totalSudahUpload;
+        $overallPersentase = $totalInstansi > 0 ? round(($totalSudahUpload / $totalInstansi) * 100, 2) : 0;
+
+        $overallStatistics = [
+            'total_instansi' => $totalInstansi,
+            'sudah_upload' => $totalSudahUpload,
+            'belum_upload' => $totalBelumUpload,
+            'persentase' => $overallPersentase
+        ];
 
         return view('akip.penghargaan.index', compact(
-            'penghargaan',
+            'instansiData',
+            'timOptions',
+            'timStatistics',
+            'overallStatistics',
             'tahun',
-            'search'
+            'search',
+            'tim_id'
         ));
     }
 
@@ -105,7 +179,7 @@ class PenghargaanController extends Controller
             $request->validate([
                 'instansi_id' => 'required|exists:klpd_instansi_new,id',
                 'tahun' => 'required|integer|min:2020|max:' . date('Y'),
-                'file_sertifikat' => 'required|file|mimes:pdf,jpg,jpeg,png|max:5120', // 5MB max
+                'file_sertifikat' => 'required|file|mimes:pdf,jpg,jpeg,png|max:20480', // 5MB max
             ]);
 
             // Check unique constraint
@@ -147,9 +221,17 @@ class PenghargaanController extends Controller
             ]);
 
         } catch (\Illuminate\Validation\ValidationException $e) {
+            // Flatten error messages from associative array
+            $errorMessages = [];
+            foreach ($e->errors() as $field => $messages) {
+                foreach ($messages as $message) {
+                    $errorMessages[] = $message;
+                }
+            }
+
             return response()->json([
                 'success' => false,
-                'message' => 'Validasi gagal: ' . implode(', ', $e->errors())
+                'message' => 'Validasi gagal: ' . implode(', ', $errorMessages)
             ], 422);
         } catch (\Exception $e) {
             return response()->json([
@@ -185,7 +267,7 @@ class PenghargaanController extends Controller
             $request->validate([
                 'instansi_id' => 'required|exists:klpd_instansi_new,id',
                 'tahun' => 'required|integer|min:2020|max:' . date('Y'),
-                'file_sertifikat' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
+                'file_sertifikat' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:20480',
             ]);
 
             // Check unique constraint (excluding current record)
@@ -230,9 +312,17 @@ class PenghargaanController extends Controller
             ]);
 
         } catch (\Illuminate\Validation\ValidationException $e) {
+            // Flatten error messages from associative array
+            $errorMessages = [];
+            foreach ($e->errors() as $field => $messages) {
+                foreach ($messages as $message) {
+                    $errorMessages[] = $message;
+                }
+            }
+
             return response()->json([
                 'success' => false,
-                'message' => 'Validasi gagal: ' . implode(', ', $e->errors())
+                'message' => 'Validasi gagal: ' . implode(', ', $errorMessages)
             ], 422);
         } catch (\Exception $e) {
             return response()->json([
@@ -307,20 +397,5 @@ class PenghargaanController extends Controller
         } catch (\Exception $e) {
             abort(500, 'Gagal mengunduh file: ' . $e->getMessage());
         }
-    }
-
-    /**
-     * Check for duplicate instansi-year combination
-     */
-    public function checkTahun(Request $request)
-    {
-        $exists = Penghargaan::where('instansi_id', $request->instansi_id)
-            ->where('tahun', $request->tahun)
-            ->whereNull('deleted_at')
-            ->exists();
-
-        return response()->json([
-            'exists' => $exists
-        ]);
     }
 }

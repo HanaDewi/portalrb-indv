@@ -1,4 +1,4 @@
-<?php
+d<?php
 
 namespace App\Models\Akip;
 
