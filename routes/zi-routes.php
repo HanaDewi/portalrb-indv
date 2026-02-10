@@ -102,6 +102,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/zi/final/simpan_lhe', [FinalController::class, 'lhe_simpan'])->name('proses_upload_lhe_simpan');
     Route::post('/zi/final/simpan_undangan', [FinalController::class, 'undangan_simpan'])->name('proses_upload_surat_undangan_simpan');
     Route::post('/zi/final/simpan_penghargaan', [FinalController::class, 'penghargaan_simpan'])->name('proses_tambah_penghargaan_simpan');
+    Route::post('/zi/final/hapus_penghargaan', [FinalController::class, 'penghargaan_hapus'])->name('proses_hapus_penghargaan');
 
 
 

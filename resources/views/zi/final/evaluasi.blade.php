@@ -124,19 +124,43 @@
                     </div>
                     <div class="col-span-12 ">
                         @if(isset($penghargaans))
-                        <ol style="list-style:decimal">
-                            @foreach($penghargaans as $penghargaan)
-                            <li style="margin-left: 20px; padding-left:10px; font-size:1.2em; "> {{
-                                $penghargaan->keterangan }} :
-                                <a href="{{$penghargaan->link}}" target="_blank">{{$penghargaan->link}}</a>
-                            </li>
-                            @endforeach
-                        </ol>
+
+                        <table id="tabel-penghargaan" class="table table-bordered">
+                            <thead class="table-light font-bold">
+                                <tr>
+                                    <th>No</th>
+                                    <th>Keterangan Penghargaan</th>
+                                    <th>Link</th>
+                                    <th>Delete</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($penghargaans as $key => $penghargaan)
+                                <tr>
+                                    <td class="text-center">{{ $key + 1 }}</td>
+                                    <td><a href="{{$penghargaan->link}}" target="_blank">{{$penghargaan->keterangan
+                                            }}</a></td>
+                                    <td>
+                                        <a href="{{$penghargaan->link}}" target="_blank">{{$penghargaan->link}}</a>
+                                    </td>
+                                    <td class="text-center">
+                                        <form action="{{ route('proses_hapus_penghargaan') }}" method="POST">
+                                            @csrf
+                                            <input type="text" name="instansi_id" value="{{$instansi_ZI->id}}" hidden>
+                                            <input type="text" name="penghargaan_id" value="{{$penghargaan->id}}"
+                                                hidden>
+                                            <button class="btn btn-sm btn-danger"> X Delete </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
                         @endif
                     </div>
                 </div>
                 <br />
-                <br />
+                <br /><br /><br />
             </div>
 
 
@@ -508,6 +532,8 @@
     </div>
 </div>
 <!-- END: Modal Content -->
+
+
 @endsection
 
 @push('css')

@@ -476,4 +476,54 @@ class FinalController extends Controller
         }
         return redirect('/zi/final/' . $request->get('instansi_id'));
     }
+
+    public function penghargaan_hapus(Request $request)
+    {
+        $instansi_ZI = InstansiZI::find($request->get('instansi_id'));
+        $success = false;
+        $tim_ids = [];
+        foreach ($instansi_ZI->unit_zi as $unit_zi) {
+            foreach ($unit_zi->unit_tim as $unitTim) {
+                if (!in_array($unitTim->tim_id, $tim_ids)) {
+                    array_push($tim_ids, $unitTim->tim_id);
+                }
+            }
+        }
+
+        $status = "Tidak Berhak";
+        $tahun = $instansi_ZI->tahun;
+        $tahap_seleksi = TahapSeleksiZI::where('tahap_seleksi', 'Final')->where('tahun', $tahun)->first();
+        if (!$tahap_seleksi) {
+            dd("Tahap Seleksi untuk tahun $tahun belum ditentukan. Silakan hubungi admin.");
+        }
+        $date_now = new \DateTime();
+        $date_buka    = new \DateTime($tahap_seleksi->tanggal_mulai);
+        $date_tutup  = new \DateTime($tahap_seleksi->tanggal_selesai);
+        if ($date_now >= $date_buka && $date_now <= $date_tutup) {
+            if (Auth::User()->userTimZI) {
+                foreach (Auth::User()->userTimZI as $anggotaTim) {
+                    if (in_array($anggotaTim->tim_id, $tim_ids)) {
+                        $status = "Berhak";
+                    }
+                }
+            }
+        }
+
+        if ($status == "Tidak Berhak") {
+            abort('403');
+        }
+        try {
+            $link_penghargaan = MultipleLink::where('id', $request->get('penghargaan_id'))->first();
+            $link_penghargaan->delete();
+            $success = true;
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+        if ($success) {
+            session()->flash('success', 'Link Penghargaan berhasil dihapus.');
+        } else {
+            session()->flash('error', 'Link Penghargaan gagal dihapus! Silahkan dicoba kembali.');
+        }
+        return redirect('/zi/final/' . $request->get('instansi_id'));
+    }
 }
