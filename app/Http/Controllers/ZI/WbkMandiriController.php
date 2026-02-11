@@ -5,6 +5,7 @@ namespace App\Http\Controllers\ZI;
 
 use Illuminate\Http\Request;
 use App\Models\ZI\InstansiZI;
+use App\Models\ZI\TahunEvaluasi;
 use App\Models\ZI\TahapSeleksiZI;
 use App\Models\ZI\LaporWbkMandiri;
 use App\Http\Controllers\Controller;
@@ -20,7 +21,7 @@ class WbkMandiriController extends Controller
             if (Auth::User()->level == "tpn" || Auth::User()->level == "admin") {
                 return $next($request);
             } else {
-                $year = date('Y');
+                $year = TahunEvaluasi::orderBy('tahun', 'desc')->first()->tahun;
                 $instansi_id = Auth::User()->instansi_id;
                 $instansiZI = InstansiZI::where('tahun', $year)
                     ->where('instansi_id', $instansi_id)
@@ -37,7 +38,7 @@ class WbkMandiriController extends Controller
 
     public function index(Request $request)
     {
-        $tahun = ($request->get('tahun')) ? $request->get('tahun') : date('Y');
+        $tahun = ($request->get('tahun')) ? $request->get('tahun') : TahunEvaluasi::orderBy('tahun', 'desc')->first()->tahun;
         $title = "Laporan WBK Mandiri";
         $tahap_seleksis = TahapSeleksiZI::where('tahun', $tahun)
             ->where('laporan_wbk_mandiri', true)
@@ -54,7 +55,7 @@ class WbkMandiriController extends Controller
 
     public function lapor_wbk_mandiri_getDatas()
     {
-        $tahun = (request()->get('tahun')) ? request()->get('tahun') : date('Y');
+        $tahun = (request()->get('tahun')) ? request()->get('tahun') : TahunEvaluasi::orderBy('tahun', 'desc')->first()->tahun;
         $instansi_id = Auth::User()->instansi_id;
         $instansiZI = InstansiZI::where('tahun', $tahun)
             ->where('instansi_id', $instansi_id)
@@ -88,13 +89,13 @@ class WbkMandiriController extends Controller
 
     public function lapor_wbk_mandiri_getData($id)
     {
-        $tahun = (request()->get('tahun')) ? request()->get('tahun') : date('Y');
+        $tahun = (request()->get('tahun')) ? request()->get('tahun') : TahunEvaluasi::orderBy('tahun', 'desc')->first()->tahun;
         $data = LaporWbkMandiri::find($id);
         return $data;
     }
     public function lapor_wbk_mandiri_simpan(Request $request)
     {
-        $tahun = ($request->get('tahun')) ? $request->get('tahun') : date('Y');
+        $tahun = ($request->get('tahun')) ? $request->get('tahun') : TahunEvaluasi::orderBy('tahun', 'desc')->first()->tahun;
         $success = false;
         $instansi_id = Auth::User()->instansi_id;
         $instansiZI = InstansiZI::where('tahun', $tahun)
@@ -133,7 +134,7 @@ class WbkMandiriController extends Controller
 
     public function progres_wbk_mandiri(Request $request)
     {
-        $tahun = ($request->get('tahun')) ? $request->get('tahun') : date('Y');
+        $tahun = ($request->get('tahun')) ? $request->get('tahun') : TahunEvaluasi::orderBy('tahun', 'desc')->first()->tahun;
         $title = "Progres WBK Mandiri";
         $instansiZIs = InstansiZI::where('tahun', $tahun)
             ->where('instansi_wbk_mandiri', 1)
