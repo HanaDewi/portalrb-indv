@@ -327,19 +327,11 @@ if (!function_exists('menus')) {
                     [
                         'levels' => ['tpn', 'admin', 'kl', 'provinsi', 'kabupaten'],
                         'title' => 'Sakip',
-<<<<<<< HEAD
                         'icon' => 'file-text',
                         'url' => 'akip/evaluasi/sakip'
                     ],
                     [
                         'levels' => ['tpn', 'admin'],
-=======
-                        'icon' => 'smile',
-                        'url' => 'akip/evaluasi/sakip'
-                    ],
-                    [
-                        'levels' => ['tpn'],
->>>>>>> 49ce4ed (refactor zi)
                         'title' => 'Team Evaluasi',
                         'icon' => 'users',
                         'url' => 'akip/tim',
@@ -350,7 +342,6 @@ if (!function_exists('menus')) {
                                 'icon' => 'user',
                                 'url' => 'akip/tim/our-team'
                             ],
-<<<<<<< HEAD
                             [
                                 'levels' => ['tpn', 'admin'],
                                 'title' => 'Semua Tim',
@@ -366,17 +357,6 @@ if (!function_exists('menus')) {
                 'title' => 'Penghargaan AKIP',
                 'icon' => 'award',
                 'url' => 'akip/penghargaan',
-=======
-                            // [
-                            //     'levels' => ['tpn'],
-                            //     'title' => 'Semua Tim',
-                            //     'icon' => 'users',
-                            //     'url' => 'akip/tim/all-teams'
-                            // ]
-                        ]
-                    ],
-                ],
->>>>>>> 49ce4ed (refactor zi)
             ],
         ];
 
