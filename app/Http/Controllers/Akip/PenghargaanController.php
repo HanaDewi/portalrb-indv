@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\AKIP;
+namespace App\Http\Controllers\Akip;
 
 use App\Http\Controllers\Controller;
 use App\Models\Akip\Penghargaan;

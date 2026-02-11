@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\Akip\DashboardController;
 use App\Http\Controllers\Akip\EvaluasiController;
-use App\Http\Controllers\AKIP\PenghargaanController;
+use App\Http\Controllers\Akip\PenghargaanController;
 use App\Http\Controllers\Akip\TimEvaluasiController;
 use Illuminate\Support\Facades\Route;
 
