@@ -327,11 +327,19 @@ if (!function_exists('menus')) {
                     [
                         'levels' => ['tpn', 'admin', 'kl', 'provinsi', 'kabupaten'],
                         'title' => 'Sakip',
+<<<<<<< HEAD
                         'icon' => 'file-text',
                         'url' => 'akip/evaluasi/sakip'
                     ],
                     [
                         'levels' => ['tpn', 'admin'],
+=======
+                        'icon' => 'smile',
+                        'url' => 'akip/evaluasi/sakip'
+                    ],
+                    [
+                        'levels' => ['tpn'],
+>>>>>>> 49ce4ed (refactor zi)
                         'title' => 'Team Evaluasi',
                         'icon' => 'users',
                         'url' => 'akip/tim',
@@ -342,6 +350,7 @@ if (!function_exists('menus')) {
                                 'icon' => 'user',
                                 'url' => 'akip/tim/our-team'
                             ],
+<<<<<<< HEAD
                             [
                                 'levels' => ['tpn', 'admin'],
                                 'title' => 'Semua Tim',
@@ -357,13 +366,23 @@ if (!function_exists('menus')) {
                 'title' => 'Penghargaan AKIP',
                 'icon' => 'award',
                 'url' => 'akip/penghargaan',
+=======
+                            // [
+                            //     'levels' => ['tpn'],
+                            //     'title' => 'Semua Tim',
+                            //     'icon' => 'users',
+                            //     'url' => 'akip/tim/all-teams'
+                            // ]
+                        ]
+                    ],
+                ],
+>>>>>>> 49ce4ed (refactor zi)
             ],
         ];
 
         return $menu[$modul];
     }
-}
-;
+};
 
 if (!function_exists('allowed_url')) {
     function allowed_url($modul = 'rb')
@@ -391,8 +410,7 @@ if (!function_exists('allowed_url')) {
         }
         return $allowed_url;
     }
-}
-;
+};
 
 if (!function_exists('fdate')) {
     function fdate($date, $time = false)
@@ -457,7 +475,7 @@ if (!function_exists('fnumber')) {
         if (gettype($number) == 'integer' || gettype($number) == 'double') {
             return number_format($number, $digit, ',', '.');
         } else {
-            $number = (double) str_replace('.', '', $number);
+            $number = (float) str_replace('.', '', $number);
             return number_format($number, $digit, ',', '.');
         }
     }
@@ -466,7 +484,7 @@ if (!function_exists('fnumber')) {
 if (!function_exists('fnumber2')) {
     function fnumber2($number, $digit = 0)
     {
-        $number = (double) $number;
+        $number = (float) $number;
         return number_format($number, $digit, ',', '.');
     }
 }

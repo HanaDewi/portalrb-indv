@@ -83,17 +83,40 @@
                                         <div class="col-4">
                                             <div class="card">
                                                 <div class="card-header" style=" background: #81BFDA; color:black">
-                                                    Surat Undangan
+                                                    Penghargaan
                                                 </div>
                                                 <div class="card-body">
-                                                    @if ($instansiZI->surat_undangan)
+                                                    @if ($penghargaans)
+                                                    <table class="table ">
+                                                        <thead>
+                                                            <tr>
+                                                                <td>No</td>
+                                                                <td class="text-center">Keterangan</td>
+                                                                <td class="text-center">Link</td>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @foreach($penghargaans as $no_urut => $penghargaan)
+                                                            <tr>
+                                                                <td>{{$no_urut +1 }}</td>
+                                                                <td class="text-center">{{$penghargaan->keterangan}}
+                                                                </td>
+                                                                <td class="text-center">
+                                                                    <a href="{{$penghargaan->link}}"
+                                                                        target="_blank">Link</a>
+                                                                </td>
 
-                                                    <br />
-                                                    <a href="{{asset('storage/uploads/SuratUndangan2024/'.$instansiZI->surat_undangan)}}"
-                                                        target="_blank"><img src="{{asset('images/pdf.png')}}"
-                                                            width="30%"></a>
-                                                    <br /><br />
-                                                    <p>Surat Undangan {{$instansiZI->klpd_instansi->name}}</p>
+                                                            </tr>
+                                                            @endforeach
+
+
+                                                        </tbody>
+                                                    </table>
+
+
+
+
+
 
                                                     @endif
                                                 </div>
@@ -151,10 +174,24 @@
                                                     {{$unit->nama}}
                                                 </td>
                                                 <td>
+                                                    <!-- ⁠Untuk hasil yang tampil dievaluatan evaluator wajib isi: 
+                                                        - Kalo unit lulus/dapat predikat maka wajib isi kolom catatan (kolom rekomendasi tidak wajib); 
+                                                        - Kalo unit gagal lulus/tidak dapat predikat maka wajib isi kolom catatan dan rekomendasi.
+                                                        - Konsekuensi atas nomor 2 jika tidak dilakukan oleh evaluator, maka ditampilan evaluatan tidak akan muncul hasil dari unitnya (mungkin tampilan hasil atas unitnya jadi " - ")
+                                                    -->
                                                     @if(optional($unit->panel)->status==1)
+                                                    @if(optional($unit->final)->kondisi)
                                                     <p style="color:#066188">Lulus</p>
                                                     @else
+                                                    -
+                                                    @endif
+                                                    @else
+                                                    @if(optional($unit->final)->kondisi &&
+                                                    optional($unit->final)->rekomendasi)
                                                     <p style="color:#b42b2d">Tidak Lulus</p>
+                                                    @else
+                                                    -
+                                                    @endif
                                                     @endif
                                                 </td>
                                                 <td>{{optional($unit->final)->kondisi}}</td>
