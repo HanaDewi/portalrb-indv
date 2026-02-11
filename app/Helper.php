@@ -327,11 +327,11 @@ if (!function_exists('menus')) {
                     [
                         'levels' => ['tpn', 'admin', 'kl', 'provinsi', 'kabupaten'],
                         'title' => 'Sakip',
-                        'icon' => 'smile',
+                        'icon' => 'file-text',
                         'url' => 'akip/evaluasi/sakip'
                     ],
                     [
-                        'levels' => ['tpn'],
+                        'levels' => ['tpn', 'admin'],
                         'title' => 'Team Evaluasi',
                         'icon' => 'users',
                         'url' => 'akip/tim',
@@ -343,7 +343,7 @@ if (!function_exists('menus')) {
                                 'url' => 'akip/tim/our-team'
                             ],
                             [
-                                'levels' => ['tpn'],
+                                'levels' => ['tpn', 'admin'],
                                 'title' => 'Semua Tim',
                                 'icon' => 'users',
                                 'url' => 'akip/tim/all-teams'
@@ -373,6 +373,11 @@ if (!function_exists('allowed_url')) {
         $base_url = config('app.client_url') == 'localhost' ? url('/') . '/' : config('app.client_url');
         foreach (menus($modul) as $menu) {
             if (in_array($level, $menu['levels'])) {
+                // Always add the parent URL
+                if (isset($menu['url'])) {
+                    array_push($allowed_url, str_replace($base_url, '', $menu['url']) . '*');
+                }
+                // Also add sub-item URLs
                 if (isset($menu['items'])) {
                     foreach ($menu['items'] as $item) {
                         if (in_array($level, $item['levels'])) {
@@ -381,8 +386,6 @@ if (!function_exists('allowed_url')) {
                             }
                         }
                     }
-                } else {
-                    array_push($allowed_url, str_replace($base_url, '', $menu['url']) . '*');
                 }
             }
         }

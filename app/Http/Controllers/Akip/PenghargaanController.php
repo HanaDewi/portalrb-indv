@@ -18,21 +18,7 @@ class PenghargaanController extends Controller
     {
         $this->middleware(function ($request, $next) {
             $this->currentUser = auth()->user();
-            $allowed_urls = allowed_url('akip');
-
-            // Check if URL matches any allowed pattern
-            foreach ($allowed_urls as $allowed) {
-                if ($request->is($allowed)) {
-                    return $next($request);
-                }
-            }
-
-            // Additional check for penghargaan routes
-            if ($request->is('akip/penghargaan*')) {
-                return $next($request);
-            }
-
-            abort('403');
+            return $next($request);
         });
     }
 
@@ -65,6 +51,30 @@ class PenghargaanController extends Controller
         $tahun = $request->input('tahun', date('Y'));
         $tahun = is_numeric($tahun) && $tahun >= 2020 && $tahun <= date('Y') ? (int) $tahun : date('Y');
 
+        // Get current user info
+        $userLevel = auth()->user()->level;
+        $instansiId = auth()->user()->instansi_id;
+
+        // Determine view based on user role
+        if (in_array($userLevel, ['tpn', 'admin'])) {
+            // TPN/Admin view - show all institutions
+            return $this->indexTpn($request, $tahun);
+        } elseif ($userLevel == 'kl') {
+            // KL view - show only their own institution
+            return $this->indexKl($request, $instansiId);
+        } elseif (in_array($userLevel, ['provinsi', 'kabupaten'])) {
+            // Pemda view - show only their own institution
+            return $this->indexPemda($request, $instansiId);
+        }
+
+        abort(403);
+    }
+
+    /**
+     * Display TPN/Admin view - all institutions
+     */
+    private function indexTpn(Request $request, $tahun)
+    {
         // Filter berdasarkan tim
         $tim_id = $request->input('tim_id', null);
 
@@ -158,6 +168,84 @@ class PenghargaanController extends Controller
             'tahun',
             'search',
             'tim_id'
+        ));
+    }
+
+    /**
+     * Display KL view - their own institution only
+     */
+    private function indexKl(Request $request, $instansiId)
+    {
+        // Get the user's institution
+        $instansi = KlpdInstansi::where('id', $instansiId)
+            ->whereNull('deleted_at')
+            ->first();
+
+        if (!$instansi) {
+            \Log::error('Institusi tidak ditemukan', [
+                'user_id' => $this->currentUser->id,
+                'user_name' => $this->currentUser->name,
+                'user_email' => $this->currentUser->email,
+                'user_level' => $this->currentUser->level,
+                'instansi_id' => $instansiId,
+                'timestamp' => now()->toDateTimeString()
+            ]);
+
+            $errorMessage = 'Instansi Anda belum terdaftar di sistem. Silakan hubungi evaluator masing-masing untuk di-assign ke instansi yang aktif.';
+
+            return view('akip.penghargaan.index_kl', compact(
+                'errorMessage'
+            ));
+        }
+
+        // Get all penghargaan for this institution
+        $penghargaanList = Penghargaan::where('instansi_id', $instansiId)
+            ->whereNull('deleted_at')
+            ->orderBy('tahun', 'desc')
+            ->get();
+
+        return view('akip.penghargaan.index_kl', compact(
+            'instansi',
+            'penghargaanList'
+        ));
+    }
+
+    /**
+     * Display Pemda view - their own institution only
+     */
+    private function indexPemda(Request $request, $instansiId)
+    {
+        // Get the user's institution
+        $instansi = KlpdInstansi::where('id', $instansiId)
+            ->whereNull('deleted_at')
+            ->first();
+
+        if (!$instansi) {
+            \Log::error('Institusi tidak ditemukan', [
+                'user_id' => $this->currentUser->id,
+                'user_name' => $this->currentUser->name,
+                'user_email' => $this->currentUser->email,
+                'user_level' => $this->currentUser->level,
+                'instansi_id' => $instansiId,
+                'timestamp' => now()->toDateTimeString()
+            ]);
+
+            $errorMessage = 'Instansi Anda belum terdaftar di sistem. Silakan hubungi evaluator masing-masing untuk di-assign ke instansi yang aktif.';
+
+            return view('akip.penghargaan.index_pemda', compact(
+                'errorMessage'
+            ));
+        }
+
+        // Get all penghargaan for this institution
+        $penghargaanList = Penghargaan::where('instansi_id', $instansiId)
+            ->whereNull('deleted_at')
+            ->orderBy('tahun', 'desc')
+            ->get();
+
+        return view('akip.penghargaan.index_pemda', compact(
+            'instansi',
+            'penghargaanList'
         ));
     }
 
@@ -383,13 +471,28 @@ class PenghargaanController extends Controller
         try {
             $penghargaan = Penghargaan::find($id);
             if (!$penghargaan || empty($penghargaan->file_sertifikat)) {
-                abort(404, 'File tidak ditemukan');
+                \Log::error('File penghargaan tidak ditemukan', [
+                    'user_id' => $this->currentUser->id,
+                    'penghargaan_id' => $id
+                ]);
+                return response()->json([
+                    'success' => false,
+                    'message' => 'File tidak ditemukan'
+                ], 404);
             }
 
             $filePath = 'akip/penghargaan/' . $penghargaan->file_sertifikat;
 
             if (!Storage::disk('public')->exists($filePath)) {
-                abort(404, 'File tidak ditemukan di storage');
+                \Log::error('File tidak ditemukan di storage', [
+                    'user_id' => $this->currentUser->id,
+                    'penghargaan_id' => $id,
+                    'file_path' => $filePath
+                ]);
+                return response()->json([
+                    'success' => false,
+                    'message' => 'File tidak ditemukan di storage'
+                ], 404);
             }
 
             return Storage::disk('public')->download($filePath, $penghargaan->file_sertifikat);

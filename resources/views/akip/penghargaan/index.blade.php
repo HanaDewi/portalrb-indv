@@ -558,6 +558,7 @@
                     {
                         data: null,
                         orderable: false,
+                        width: '180px',
                         render: function (data, type, row) {
                             var actions = '';
 
@@ -574,13 +575,13 @@
                                         '<button onclick="openDeleteModal(' + row.penghargaan_id + ')" class="flex justify-center items-center px-2 py-1 border border-transparent text-xs font-medium rounded text-red-600 bg-red-100 hover:bg-red-200" title="Hapus">' +
                                         '<i data-feather="trash-2" class="w-4 h-4"></i></button>';
                                 @endif
-                                                                                        } else {
+                                                                                            } else {
                                 // Belum upload - tombol tambah
                                 @if(in_array(auth()->user()->level, ['tpn', 'admin']))
                                     actions += '<button onclick="openModal(\'create\', null, ' + row.id + ')" class="flex justify-center items-center px-3 py-1 border border-transparent text-xs font-medium rounded text-blue-600 bg-blue-100 hover:bg-blue-200" title="Upload Penghargaan">' +
                                         '<i data-feather="upload" class="w-4 h-4 mr-1"></i> Upload</button>';
                                 @endif
-                                                                                        }
+                                                                                            }
 
                             return '<div class="flex items-center">' + actions + '</div>';
                         }

@@ -25,6 +25,7 @@ Route::group(['prefix' => 'akip', 'as' => 'akip.'], function () {
             Route::delete('/sakip/{instansi}/{id}', 'destroy')->name('evaluasi.destroy');
             Route::post('/sakip/search', 'search')->name('evaluasi.search');
             Route::get('/sakip/{instansi}', 'show')->name('evaluasi.show');
+            Route::get('/sakip/final/{id}', 'showFinal')->name('evaluasi.show.final');
             Route::get('/sakip', 'index')->name('evaluasi.index');
         });
 
