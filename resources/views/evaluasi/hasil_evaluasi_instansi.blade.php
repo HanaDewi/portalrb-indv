@@ -9,7 +9,10 @@
                 <h2 class="font-medium text-base mr-auto">Hasil Evaluasi {{ $instansi->name }}</h2>
             </div>
             <div class="lg:col-span-12 p-5 border-b border-slate-200/60">
-                @if (in_array(auth()->user()->level, ['kl', 'provinsi', 'kabupaten']))
+                @php
+                    $idx = 0;
+                @endphp
+                @if (!in_array(auth()->user()->level, ['kl', 'provinsi', 'kabupaten']))
                 <table class="table table-bordered table-striped mt-5 mb-5">
                     <tr>
                         <td class="font-bold" width="220">RB General Awal</td>
@@ -43,9 +46,6 @@
                         <td class="font-bold">Index RB</td>
                         <td>{{ round($test_tp->index_rb, 2) }}</td>
                     </tr>
-                    @php
-                        $idx = 0;
-                    @endphp
                     @if (auth()->user()->level != 'tpm')
                         <tr>
                             <td class="font-bold">File Berkas</td>
