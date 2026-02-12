@@ -2,7 +2,7 @@
 @section('title', 'Dashboard')
 
 @section('content')
-    @if (in_array(auth()->user()->level, ['kl', 'provinsi', 'kabupaten']) && coi_finalized(auth()->user()->instansi_id) == false)
+    @if (in_array(auth()->user()->level, ['kl', 'provinsi', 'kabupaten']))
         <div id="popupOverlay" class="popup-overlay" style="display: none;">
             <div class="popup-container">
                 <button class="popup-close" onclick="closePopup()">
@@ -21,18 +21,33 @@
                         </svg>
                     </div>
 
-                    <h2 class="popup-title">Pengumuman Penting</h2>
-                    <div class="popup-content">
-                        <p>Merujuk <strong>Surat Edaran Menteri PANRB Nomor 6 Tahun 2025</strong> tentang Pelaksanaan Reformasi Birokrasi pada Masa Transisi, Instansi Pemerintah diharapkan dapat mengisi capaian rencana aksi Triwulan IV paling lambat <strong>30 Januari 2026</strong>.</p>
+                    <h2 class="popup-title" style="line-height: 1.4;">
+                        Pengumuman Evaluasi<br>Reformasi Birokrasi 2025
+                    </h2>
 
-                        <p style="margin-top: 15px;">Untuk melengkapi pengisian capaian tersebut, Instansi Pemerintah wajib terlebih dahulu mengisi kuesioner implementasi pengelolaan konflik kepentingan pada sub-menu <strong>Pelaporan CoI.</strong>, sebagaimana ketentuan yang tercantum dalam Surat Deputi pada tautan berikut: <a href="https://bit.ly/4swlKF6" target="_blank" style="color: #3b82f6; text-decoration: underline;">https://bit.ly/4swlKF6</a>
-                            terima kasih.
+                    <div class="popup-content">
+                        <p>
+                            Nilai indikator pada subkomponen Pelaksanaan Kebijakan dan Sasaran Strategis
+                            dalam rangka Evaluasi Reformasi Birokrasi (RB) Kementerian/Lembaga dan
+                            Pemerintah Daerah akan dirilis melalui Portal RB Nasional pada
+                            <strong>11 Februari 2026</strong> sesuai tahapan penilaian yang telah ditetapkan.
+                        </p>
+
+                        <p style="margin-top: 15px;">
+                            Pengajuan sanggah dapat dilakukan pada <strong>12–27 Februari 2026</strong>
+                            secara daring melalui Portal RB Nasional (satu pintu layanan).
+                        </p>
+
+                        <p style="margin-top: 15px;">
+                            Informasi lebih lanjut mengenai tata cara pengajuan dan penetapan hasil sanggah
+                            (diterima atau ditolak) dapat diakses melalui tautan berikut:
+                            <a href="https://bit.ly/4swlKF6" target="_blank" style="color: #3b82f6; text-decoration: underline;">
+                                https://bit.ly/4swlKF6
+                            </a>
                         </p>
                     </div>
-                    <button class="popup-button" onclick="window.open('{{ url('pelaporan-coi') }}', '_blank')">
-                        Isi Kuesioner
-                    </button>
                 </div>
+
                 <div class="popup-right">
                     <img src="{{ URL::to('/') }}/assets/images/popup.png" alt="Pengumuman" class="popup-image">
                 </div>
