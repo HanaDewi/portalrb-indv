@@ -41,8 +41,8 @@
                         <p style="margin-top: 15px;">
                             Informasi lebih lanjut mengenai tata cara pengajuan dan penetapan hasil sanggah
                             (diterima atau ditolak) dapat diakses melalui tautan berikut:
-                            <a href="https://bit.ly/4swlKF6" target="_blank" style="color: #3b82f6; text-decoration: underline;">
-                                https://bit.ly/4swlKF6
+                            <a href="https://bit.ly/SanggahRB2025" target="_blank" style="color: #3b82f6; text-decoration: underline;">
+                                https://bit.ly/SanggahRB2025
                             </a>
                         </p>
                     </div>
