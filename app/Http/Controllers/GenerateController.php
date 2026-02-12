@@ -116,7 +116,7 @@ class GenerateController extends Controller
             $parameters = LkeBobot::where('group', $instansi->group)->get();
 
             foreach ($parameters as $param) {
-                if (!$param->lke_parameter->lke_kegiatan_id == 1) {
+                if ($param->lke_parameter->lke_kegiatan_id == 1) {
                     $indikator = $param->lke_parameter->nama;
 
                     $tpLine = LkeTestTpLineNew::where('lke_bobot_id', $param->id)
@@ -165,7 +165,7 @@ class GenerateController extends Controller
             $parameters = LkeBobot::where('group', $instansi->group)->get();
 
             foreach ($parameters as $param) {
-                if (!$param->lke_parameter->lke_kegiatan_id == 2) {
+                if ($param->lke_parameter->lke_kegiatan_id == 2) {
                     $indikator = $param->lke_parameter->nama;
                     $tpLine = LkeTestTpLineNew::where('lke_bobot_id', $param->id)
                         ->where('instansi_id', $instansiId)
