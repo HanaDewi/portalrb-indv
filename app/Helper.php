@@ -36,53 +36,53 @@ if (!function_exists('menus')) {
                 'icon' => 'pie-chart',
                 'url' => 'webdashboard',
                 'items' => [
-                        [
-                            'levels' => ['tpn', 'admin', 'viewer'],
-                            'title' => 'RB General',
-                            'icon' => 'clipboard-list',
-                            'url' => 'webdashboard/rb-general',
-                            'items' => [
-                                    [
-                                        'levels' => ['tpn', 'admin', 'viewer'],
-                                        'title' => 'Rencana Aksi',
-                                        'icon' => 'inbox',
-                                        'url' => 'webdashboard/rb-general/rencana-aksi',
-                                    ],
-                                    [
-                                        'levels' => ['tpn', 'admin', 'viewer'],
-                                        'title' => 'Capaian Output',
-                                        'icon' => 'bar-chart',
-                                        'url' => 'webdashboard/rb-general/capaian-output',
-                                    ],
-                                ]
-                        ],
-                        [
-                            'levels' => ['tpn', 'admin', 'viewer'],
-                            'title' => 'RB Tematik',
-                            'icon' => 'clipboard',
-                            'url' => 'webdashboard/rb-tematik',
-                            'items' => [
-                                    [
-                                        'levels' => ['tpn', 'admin', 'viewer'],
-                                        'title' => 'Rencana Aksi',
-                                        'icon' => 'inbox',
-                                        'url' => 'webdashboard/rb-tematik/rencana-aksi',
-                                    ],
-                                    [
-                                        'levels' => ['tpn', 'admin', 'viewer'],
-                                        'title' => 'Capaian Output',
-                                        'icon' => 'bar-chart',
-                                        'url' => 'webdashboard/rb-tematik/capaian-output',
-                                    ],
-                                ]
-                        ],
-                        [
-                            'levels' => ['tpn', 'admin', 'viewer'],
-                            'title' => 'Hasil Evaluasi',
-                            'icon' => 'target',
-                            'url' => 'webdashboard/hasil-evaluasi'
-                        ],
+                    [
+                        'levels' => ['tpn', 'admin', 'viewer'],
+                        'title' => 'RB General',
+                        'icon' => 'clipboard-list',
+                        'url' => 'webdashboard/rb-general',
+                        'items' => [
+                            [
+                                'levels' => ['tpn', 'admin', 'viewer'],
+                                'title' => 'Rencana Aksi',
+                                'icon' => 'inbox',
+                                'url' => 'webdashboard/rb-general/rencana-aksi',
+                            ],
+                            [
+                                'levels' => ['tpn', 'admin', 'viewer'],
+                                'title' => 'Capaian Output',
+                                'icon' => 'bar-chart',
+                                'url' => 'webdashboard/rb-general/capaian-output',
+                            ],
+                        ]
                     ],
+                    [
+                        'levels' => ['tpn', 'admin', 'viewer'],
+                        'title' => 'RB Tematik',
+                        'icon' => 'clipboard',
+                        'url' => 'webdashboard/rb-tematik',
+                        'items' => [
+                            [
+                                'levels' => ['tpn', 'admin', 'viewer'],
+                                'title' => 'Rencana Aksi',
+                                'icon' => 'inbox',
+                                'url' => 'webdashboard/rb-tematik/rencana-aksi',
+                            ],
+                            [
+                                'levels' => ['tpn', 'admin', 'viewer'],
+                                'title' => 'Capaian Output',
+                                'icon' => 'bar-chart',
+                                'url' => 'webdashboard/rb-tematik/capaian-output',
+                            ],
+                        ]
+                    ],
+                    [
+                        'levels' => ['tpn', 'admin', 'viewer'],
+                        'title' => 'Hasil Evaluasi',
+                        'icon' => 'target',
+                        'url' => 'webdashboard/hasil-evaluasi'
+                    ],
+                ],
             ],
             [
                 'levels' => ['admin', 'provinsi', 'kabupaten', 'kl', 'tpn', 'tpm'],
@@ -96,53 +96,53 @@ if (!function_exists('menus')) {
                 'icon' => 'inbox',
                 'url' => 'rencana_aksi',
                 'items' => [
-                        [
-                            'levels' => ['admin', 'provinsi', 'kabupaten', 'kl', 'tpn', 'viewer'],
-                            'title' => 'RB General',
-                            'icon' => 'activity',
-                            'url' => 'rencana_aksi/rb-general',
-                            'items' => [
-                                    [
-                                        'levels' => ['provinsi', 'kabupaten', 'kl'],
-                                        'title' => 'Perencanaan dan Monev',
-                                        'icon' => 'clipboard-list',
-                                        'url' => 'rencana_aksi/rb-general/perencanaan',
-                                    ],
-                                    [
-                                        'levels' => ['admin', 'provinsi', 'kabupaten', 'kl', 'tpn', 'viewer'],
-                                        'title' => 'Rekap Data',
-                                        'icon' => 'clipboard',
-                                        'url' => 'rencana_aksi/rb-general/rekap_data',
-                                    ],
-                                ]
-                        ],
-                        [
-                            'levels' => ['admin', 'provinsi', 'kabupaten', 'kl', 'tpn', 'viewer'],
-                            'title' => 'RB Tematik',
-                            'icon' => 'bookmark',
-                            'url' => 'rencana_aksi/rb-tematik',
-                            'items' => [
-                                    [
-                                        'levels' => ['provinsi', 'kabupaten', 'kl'],
-                                        'title' => 'Tema dan Sasaran Tematik',
-                                        'icon' => 'clipboard-list',
-                                        'url' => 'rencana_aksi/rb-tematik/perencanaan',
-                                    ],
-                                    [
-                                        'levels' => ['provinsi', 'kabupaten', 'kl'],
-                                        'title' => 'Permasalahan dan Rencana Aksi',
-                                        'icon' => 'check-circle',
-                                        'url' => 'rencana_aksi/rb-tematik/permasalahan',
-                                    ],
-                                    [
-                                        'levels' => ['admin', 'provinsi', 'kabupaten', 'kl', 'tpn', 'viewer'],
-                                        'title' => 'Rekap Data',
-                                        'icon' => 'clipboard',
-                                        'url' => 'rencana_aksi/rb-tematik/rekap_data',
-                                    ],
-                                ]
-                        ],
+                    [
+                        'levels' => ['admin', 'provinsi', 'kabupaten', 'kl', 'tpn', 'viewer'],
+                        'title' => 'RB General',
+                        'icon' => 'activity',
+                        'url' => 'rencana_aksi/rb-general',
+                        'items' => [
+                            [
+                                'levels' => ['provinsi', 'kabupaten', 'kl'],
+                                'title' => 'Perencanaan dan Monev',
+                                'icon' => 'clipboard-list',
+                                'url' => 'rencana_aksi/rb-general/perencanaan',
+                            ],
+                            [
+                                'levels' => ['admin', 'provinsi', 'kabupaten', 'kl', 'tpn', 'viewer'],
+                                'title' => 'Rekap Data',
+                                'icon' => 'clipboard',
+                                'url' => 'rencana_aksi/rb-general/rekap_data',
+                            ],
+                        ]
                     ],
+                    [
+                        'levels' => ['admin', 'provinsi', 'kabupaten', 'kl', 'tpn', 'viewer'],
+                        'title' => 'RB Tematik',
+                        'icon' => 'bookmark',
+                        'url' => 'rencana_aksi/rb-tematik',
+                        'items' => [
+                            [
+                                'levels' => ['provinsi', 'kabupaten', 'kl'],
+                                'title' => 'Tema dan Sasaran Tematik',
+                                'icon' => 'clipboard-list',
+                                'url' => 'rencana_aksi/rb-tematik/perencanaan',
+                            ],
+                            [
+                                'levels' => ['provinsi', 'kabupaten', 'kl'],
+                                'title' => 'Permasalahan dan Rencana Aksi',
+                                'icon' => 'check-circle',
+                                'url' => 'rencana_aksi/rb-tematik/permasalahan',
+                            ],
+                            [
+                                'levels' => ['admin', 'provinsi', 'kabupaten', 'kl', 'tpn', 'viewer'],
+                                'title' => 'Rekap Data',
+                                'icon' => 'clipboard',
+                                'url' => 'rencana_aksi/rb-tematik/rekap_data',
+                            ],
+                        ]
+                    ],
+                ],
             ],
             // [
             //     'levels' => ['admin', 'provinsi', 'kabupaten', 'kl', 'tpn', 'tpm', 'viewer'],
@@ -156,37 +156,37 @@ if (!function_exists('menus')) {
                 'icon' => 'pencil',
                 'url' => 'evaluasi',
                 'items' => [
-                        [
-                            'levels' => ['admin', 'tpn'],
-                            'title' => 'Renaksi RB General',
-                            'icon' => 'activity',
-                            'url' => 'evaluasi/renaksi-rb-general'
-                        ],
-                        [
-                            'levels' => ['admin', 'tpn', 'tpm'],
-                            'title' => 'LKE Utama',
-                            'icon' => 'book-open',
-                            'url' => 'evaluasi/lke-utama'
-                        ],
-                        [
-                            'levels' => ['admin', 'tpn'],
-                            'title' => 'Database Indikator',
-                            'icon' => 'database',
-                            'url' => 'evaluasi/database'
-                        ],
-                        [
-                            'levels' => ['admin', 'tpn', 'kl', 'provinsi', 'kabupaten'],
-                            'title' => 'Hasil Evaluasi',
-                            'icon' => 'layers',
-                            'url' => 'evaluasi/hasil-evaluasi'
-                        ],
-                        [
-                            'levels' => ['admin', 'tpn', 'kl', 'provinsi', 'kabupaten'],
-                            'title' => 'Hasil Evaluasi 2023',
-                            'icon' => 'layers',
-                            'url' => 'evaluasi/hasil-2023'
-                        ],
+                    [
+                        'levels' => ['admin', 'tpn'],
+                        'title' => 'Renaksi RB General',
+                        'icon' => 'activity',
+                        'url' => 'evaluasi/renaksi-rb-general'
                     ],
+                    [
+                        'levels' => ['admin', 'tpn', 'tpm'],
+                        'title' => 'LKE Utama',
+                        'icon' => 'book-open',
+                        'url' => 'evaluasi/lke-utama'
+                    ],
+                    [
+                        'levels' => ['admin', 'tpn'],
+                        'title' => 'Database Indikator',
+                        'icon' => 'database',
+                        'url' => 'evaluasi/database'
+                    ],
+                    [
+                        'levels' => ['admin', 'tpn', 'kl', 'provinsi', 'kabupaten'],
+                        'title' => 'Hasil Evaluasi',
+                        'icon' => 'layers',
+                        'url' => 'evaluasi/hasil-evaluasi'
+                    ],
+                    [
+                        'levels' => ['admin', 'tpn', 'kl', 'provinsi', 'kabupaten'],
+                        'title' => 'Hasil Evaluasi 2023',
+                        'icon' => 'layers',
+                        'url' => 'evaluasi/hasil-2023'
+                    ],
+                ],
             ],
             [
                 'levels' => ['tpn', 'admin'],
@@ -209,55 +209,55 @@ if (!function_exists('menus')) {
                 'icon' => 'database',
                 'url' => 'master-data',
                 'items' => [
-                        [
-                            'levels' => ['admin'],
-                            'title' => 'Kegiatan Utama',
-                            'icon' => 'award',
-                            'url' => 'master-data/kegiatan_utama',
-                        ],
-                        [
-                            'levels' => ['admin'],
-                            'title' => 'Indikator',
-                            'icon' => 'command',
-                            'url' => 'master-data/indikator',
-                        ],
-                        [
-                            'levels' => ['admin'],
-                            'title' => 'Tema',
-                            'icon' => 'bookmark',
-                            'url' => 'master-data/tema',
-                        ],
-                        [
-                            'levels' => ['admin'],
-                            'title' => 'Dokumen',
-                            'icon' => 'file-text',
-                            'url' => 'master-data/dokumen',
-                        ],
-                        [
-                            'levels' => ['admin'],
-                            'title' => 'LKE Kegiatan',
-                            'icon' => 'list',
-                            'url' => 'master-data/lke_kegiatan',
-                        ],
-                        [
-                            'levels' => ['admin'],
-                            'title' => 'LKE Parameter',
-                            'icon' => 'list',
-                            'url' => 'master-data/lke_parameter',
-                        ],
-                        [
-                            'levels' => ['admin'],
-                            'title' => 'Data LKE Renaksi',
-                            'icon' => 'clipboard-list',
-                            'url' => 'master-data/data-lke-renaksi'
-                        ],
-                        [
-                            'levels' => ['admin'],
-                            'title' => 'Data Konversi Jawaban',
-                            'icon' => 'clipboard-list',
-                            'url' => 'master-data/data-konversi-jawaban'
-                        ]
+                    [
+                        'levels' => ['admin'],
+                        'title' => 'Kegiatan Utama',
+                        'icon' => 'award',
+                        'url' => 'master-data/kegiatan_utama',
+                    ],
+                    [
+                        'levels' => ['admin'],
+                        'title' => 'Indikator',
+                        'icon' => 'command',
+                        'url' => 'master-data/indikator',
+                    ],
+                    [
+                        'levels' => ['admin'],
+                        'title' => 'Tema',
+                        'icon' => 'bookmark',
+                        'url' => 'master-data/tema',
+                    ],
+                    [
+                        'levels' => ['admin'],
+                        'title' => 'Dokumen',
+                        'icon' => 'file-text',
+                        'url' => 'master-data/dokumen',
+                    ],
+                    [
+                        'levels' => ['admin'],
+                        'title' => 'LKE Kegiatan',
+                        'icon' => 'list',
+                        'url' => 'master-data/lke_kegiatan',
+                    ],
+                    [
+                        'levels' => ['admin'],
+                        'title' => 'LKE Parameter',
+                        'icon' => 'list',
+                        'url' => 'master-data/lke_parameter',
+                    ],
+                    [
+                        'levels' => ['admin'],
+                        'title' => 'Data LKE Renaksi',
+                        'icon' => 'clipboard-list',
+                        'url' => 'master-data/data-lke-renaksi'
+                    ],
+                    [
+                        'levels' => ['admin'],
+                        'title' => 'Data Konversi Jawaban',
+                        'icon' => 'clipboard-list',
+                        'url' => 'master-data/data-konversi-jawaban'
                     ]
+                ]
             ],
             [
                 'levels' => ['admin', 'provinsi', 'kabupaten', 'kl'],
@@ -289,25 +289,25 @@ if (!function_exists('menus')) {
                 'icon' => 'clipboard-list',
                 'url' => 'kelola-tim',
                 'items' => [
-                        [
-                            'levels' => ['admin'],
-                            'title' => 'Nama Tim',
-                            'icon' => 'award',
-                            'url' => 'kelola-tim',
-                        ],
-                        [
-                            'levels' => ['admin'],
-                            'title' => 'Anggota Tim',
-                            'icon' => 'command',
-                            'url' => 'kelola-anggota-tim',
-                        ],
-                        [
-                            'levels' => ['admin'],
-                            'title' => 'Instansi',
-                            'icon' => 'bookmark',
-                            'url' => 'kelola-instansi-tim',
-                        ]
+                    [
+                        'levels' => ['admin'],
+                        'title' => 'Nama Tim',
+                        'icon' => 'award',
+                        'url' => 'kelola-tim',
+                    ],
+                    [
+                        'levels' => ['admin'],
+                        'title' => 'Anggota Tim',
+                        'icon' => 'command',
+                        'url' => 'kelola-anggota-tim',
+                    ],
+                    [
+                        'levels' => ['admin'],
+                        'title' => 'Instansi',
+                        'icon' => 'bookmark',
+                        'url' => 'kelola-instansi-tim',
                     ]
+                ]
             ]
         ];
 
@@ -324,33 +324,39 @@ if (!function_exists('menus')) {
                 'icon' => 'edit-2',
                 'url' => 'akip/evaluasi',
                 'items' => [
-                        [
-                            'levels' => ['tpn', 'admin', 'kl', 'provinsi', 'kabupaten'],
-                            'title' => 'Sakip',
-                            'icon' => 'smile',
-                            'url' => 'akip/evaluasi/sakip'
-                        ],
-                        [
-                            'levels' => ['tpn'],
-                            'title' => 'Team Evaluasi',
-                            'icon' => 'users',
-                            'url' => 'akip/tim',
-                            'items' => [
-                                [
-                                    'levels' => ['tpn'],
-                                    'title' => 'Team Saya',
-                                    'icon' => 'user',
-                                    'url' => 'akip/tim/our-team'
-                                ],
-                                // [
-                                //     'levels' => ['tpn'],
-                                //     'title' => 'Semua Tim',
-                                //     'icon' => 'users',
-                                //     'url' => 'akip/tim/all-teams'
-                                // ]
-                            ]
-                        ],
+                    [
+                        'levels' => ['tpn', 'admin', 'kl', 'provinsi', 'kabupaten'],
+                        'title' => 'Sakip',
+                        'icon' => 'file-text',
+                        'url' => 'akip/evaluasi/sakip'
                     ],
+                    [
+                        'levels' => ['tpn', 'admin'],
+                        'title' => 'Team Evaluasi',
+                        'icon' => 'users',
+                        'url' => 'akip/tim',
+                        'items' => [
+                            [
+                                'levels' => ['tpn'],
+                                'title' => 'Team Saya',
+                                'icon' => 'user',
+                                'url' => 'akip/tim/our-team'
+                            ],
+                            [
+                                'levels' => ['tpn', 'admin'],
+                                'title' => 'Semua Tim',
+                                'icon' => 'users',
+                                'url' => 'akip/tim/all-teams'
+                            ]
+                        ]
+                    ],
+                ],
+            ],
+            [
+                'levels' => ['tpn', 'admin', 'kl', 'provinsi', 'kabupaten'],
+                'title' => 'Penghargaan AKIP',
+                'icon' => 'award',
+                'url' => 'akip/penghargaan',
             ],
         ];
 
@@ -367,6 +373,11 @@ if (!function_exists('allowed_url')) {
         $base_url = config('app.client_url') == 'localhost' ? url('/') . '/' : config('app.client_url');
         foreach (menus($modul) as $menu) {
             if (in_array($level, $menu['levels'])) {
+                // Always add the parent URL
+                if (isset($menu['url'])) {
+                    array_push($allowed_url, str_replace($base_url, '', $menu['url']) . '*');
+                }
+                // Also add sub-item URLs
                 if (isset($menu['items'])) {
                     foreach ($menu['items'] as $item) {
                         if (in_array($level, $item['levels'])) {
@@ -375,8 +386,6 @@ if (!function_exists('allowed_url')) {
                             }
                         }
                     }
-                } else {
-                    array_push($allowed_url, str_replace($base_url, '', $menu['url']) . '*');
                 }
             }
         }

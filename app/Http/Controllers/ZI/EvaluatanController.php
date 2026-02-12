@@ -11,6 +11,7 @@ use App\Models\ZI\SanggahUnit;
 use App\Models\ZI\TahapSeleksiZI;
 use App\Models\ZI\SanggahInstansi;
 use App\Http\Controllers\Controller;
+use App\Models\ZI\TahunEvaluasi;
 use Illuminate\Support\Facades\Auth;
 
 class EvaluatanController extends Controller
@@ -31,7 +32,7 @@ class EvaluatanController extends Controller
         if (Auth::User()->level == "admin" || Auth::User()->level == "tpn") {
             return redirect()->route('dashboard_zi');
         }
-        $tahun = date('Y');
+        $tahun = TahunEvaluasi::orderBy('tahun', 'desc')->first()->tahun;
         $tahap_seleksi = TahapSeleksiZI::where('tahun', $tahun)->where('tahap_seleksi', 'Sanggah')->first();
         $date_now = new \DateTime();
         $date_buka  = new \DateTime($tahap_seleksi->tanggal_mulai);
@@ -89,7 +90,7 @@ class EvaluatanController extends Controller
 
     public function sanggah_simpan(Request $request)
     {
-        $tahun = date('Y');
+        $tahun = TahunEvaluasi::orderBy('tahun', 'desc')->first()->tahun;
         $tahap_seleksi = TahapSeleksiZI::where('tahun', $tahun)->where('tahap_seleksi', 'Sanggah')->first();
         $date_now = new \DateTime();
         $date_buka  = new \DateTime($tahap_seleksi->tanggal_mulai);
@@ -133,7 +134,7 @@ class EvaluatanController extends Controller
         if (Auth::User()->level == "admin" || Auth::User()->level == "tpn") {
             return redirect()->route('dashboard_zi');
         }
-        $tahun = date('Y');
+        $tahun = TahunEvaluasi::orderBy('tahun', 'desc')->first()->tahun;
         $tahap_seleksi = TahapSeleksiZI::where('tahun', $tahun)->where('tahap_seleksi', 'Hasil Sanggah')->first();
         $date_now = new \DateTime();
         $date_buka  = new \DateTime($tahap_seleksi->tanggal_mulai);
@@ -201,7 +202,7 @@ class EvaluatanController extends Controller
         }
         $instansi_id = $instansi_obj->id;
         $instansi = $instansi_obj->name;
-        $tahun = date('Y');
+        $tahun = TahunEvaluasi::orderBy('tahun', 'desc')->first()->tahun;
         $instansiZI = InstansiZI::where("instansi_id", $instansi_obj->id)->where('tahun', $tahun)->first();
         $tahap_seleksi = TahapSeleksiZI::where('tahun', $tahun)->where('tahap_seleksi', 'Wawancara')->first();
         $date_now = new \DateTime();
@@ -228,7 +229,7 @@ class EvaluatanController extends Controller
 
     public function link_paparan_simpan(Request $request)
     {
-        $tahun = date('Y');
+        $tahun = TahunEvaluasi::orderBy('tahun', 'desc')->first()->tahun;
         $tahap_seleksi = TahapSeleksiZI::where('tahun', $tahun)->where('tahap_seleksi', 'Wawancara')->first();
         $date_now = new \DateTime();
         $date_buka  = new \DateTime($tahap_seleksi->tanggal_mulai);
@@ -239,7 +240,6 @@ class EvaluatanController extends Controller
             } else {
                 $instansi_obj = KlpdInstansi::find(Auth::User()->instansi_id);
             }
-            $tahun = date('Y');
             $instansi_ZI = InstansiZI::where("instansi_id", $instansi_obj->id)->where('tahun', $tahun)->first();
             foreach ($instansi_ZI->unit_zi as $unit_zi) {
                 $wawancaraUnit = Wawancara::where('unit_zi_id', $unit_zi->id)->first();

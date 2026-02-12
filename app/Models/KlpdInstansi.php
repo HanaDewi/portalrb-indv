@@ -26,20 +26,20 @@ class KlpdInstansi extends Model
     public function lke_test_tp_old(): HasOne
     {
         if ($this->id_before) {
-            return $this->hasOne(LkeTestTpOld::class,  "lke_instansi_id", "id_before");
+            return $this->hasOne(LkeTestTpOld::class, "lke_instansi_id", "id_before");
         } else {
-            return $this->hasOne(LkeTestTpOld::class,  "lke_instansi_id");
+            return $this->hasOne(LkeTestTpOld::class, "lke_instansi_id");
         }
     }
 
     public function mapping_kode_instansi(): HasOne
     {
-        return $this->hasOne(MappingKodeInstansi::class,  "rb_klpd_code");
+        return $this->hasOne(MappingKodeInstansi::class, "rb_klpd_code");
     }
 
     public function instansi_zi()
     {
-        return $this->hasMany(InstansiZI::class,  "instansi_id");
+        return $this->hasMany(InstansiZI::class, "instansi_id");
     }
 
     public function lke_test_tps()
@@ -70,5 +70,15 @@ class KlpdInstansi extends Model
     public function idBeforeUsed()
     {
         return $this->hasMany(KlpdInstansi::class, 'id_before', 'id');
+    }
+
+    public function instansi_tim()
+    {
+        return $this->hasMany(\App\Models\InstansiTimEvaluasi::class, 'instansi_id');
+    }
+
+    public function penghargaan()
+    {
+        return $this->hasMany(\App\Models\Akip\Penghargaan::class, 'instansi_id');
     }
 }

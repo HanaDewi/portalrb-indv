@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\InstansiController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -17,3 +18,6 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+// Instansi API routes (without auth for dropdown access)
+Route::get('/instansi', [InstansiController::class, 'index']);
