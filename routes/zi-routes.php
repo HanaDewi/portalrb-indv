@@ -38,8 +38,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/zi-simpan-desk', [EvaluatanController::class, 'link_paparan_simpan'])->name('evaluatan_simpan_desk');
     //Route::post('/zi-simpan-desk', [TutupController::class, 'index'])->name('evaluatan_simpan_desk');
     Route::get('/zi-verifikasi-lapangan', [EvaluatanController::class, 'seleksi_verifikasi_lapangan'])->name('evaluatan_verifikasi_lapangan');
-    //Route::get('/zi-hasil-akhir', [EvaluatanController::class, 'hasil_akhir'])->name('evaluatan_hasil_akhir');
-    Route::get('/zi-hasil-akhir', [TutupController::class, 'index'])->name('evaluatan_hasil_akhir');
+    Route::get('/zi-hasil-akhir', [EvaluatanController::class, 'hasil_akhir'])->name('evaluatan_hasil_akhir');
+    //Route::get('/zi-hasil-akhir', [TutupController::class, 'index'])->name('evaluatan_hasil_akhir');
     #WBK MANDIRI
     Route::get('/zi/lapor-wbk-mandiri', [WbkMandiriController::class, 'index'])->name('lapor_wbk_mandiri');
     Route::post('/zi/lapor-wbk-mandiri/simpan', [WbkMandiriController::class, 'lapor_wbk_mandiri_simpan'])->name('lapor_wbk_mandiri_simpan');

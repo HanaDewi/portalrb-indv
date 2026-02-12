@@ -11,6 +11,7 @@ use App\Models\ZI\SanggahUnit;
 use App\Models\ZI\TahapSeleksiZI;
 use App\Models\ZI\SanggahInstansi;
 use App\Http\Controllers\Controller;
+use App\Models\ZI\MultipleLink;
 use App\Models\ZI\TahunEvaluasi;
 use Illuminate\Support\Facades\Auth;
 
@@ -300,9 +301,13 @@ class EvaluatanController extends Controller
             } else {
                 $instansi_obj = KlpdInstansi::find(Auth::User()->instansi_id);
             }
-            $instansiZI = InstansiZI::where("instansi_id", $instansi_obj->id)->first();
-            //return redirect()->route('evaluatan_desk');
         }
+
+
+        $tahun = TahunEvaluasi::orderBy('tahun', 'desc')->first()->tahun;
+        $instansiZI = InstansiZI::where("instansi_id", $instansi_obj->id)->where('tahun', $tahun)->first();
+        $buka_formulir = false;
+        $penghargaans = MultipleLink::where('instansi_zi_id', $instansiZI->id)->get();
 
         if ($instansiZI) {
             $units = UnitZI::where("instansi_zi_id", $instansiZI->id)->get();
@@ -320,6 +325,7 @@ class EvaluatanController extends Controller
             return view('zi.evaluatan.hasil_akhir_zi', compact(
                 'title',
                 'instansiZI',
+                'penghargaans',
                 'units',
                 'unit_wbk_lulus',
                 'unit_wbbm_lulus'
