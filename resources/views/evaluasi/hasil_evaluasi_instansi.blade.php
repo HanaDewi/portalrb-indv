@@ -592,7 +592,7 @@
                     },
                 },
                 {
-                    targets: [6, 7, 8],
+                    targets: [5, 6, 7, 8],
                     render: $.fn.dataTable.render.number('.', ',', 2, '')
                 }
             ],
