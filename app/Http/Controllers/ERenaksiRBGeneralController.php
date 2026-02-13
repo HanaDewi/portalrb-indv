@@ -6,7 +6,6 @@ use App\Models\LKERenaksi;
 use App\Models\KlpdInstansi;
 use App\Models\LKE\LkeBobot;
 use Illuminate\Http\Request;
-use App\Models\TimEvaluasiRB;
 use App\Models\JawabanRenaksi;
 use App\Models\LKE\LkeTestTpLine;
 use Illuminate\Support\Facades\DB;
@@ -318,6 +317,7 @@ class ERenaksiRBGeneralController extends Controller
                         }
                     }
                 }
+                $test_tp_line->capaian_index = ($test_tp_line->score_index / $test_tp_line->lke_bobot->bobot) * 100;
 
                 if ($test_tp_line->save()) {
                     calculateTestTp($test_tp_line->instansi_id, $test_tp_line->lke_bobot->lke_parameter->lke_kegiatan_id);
