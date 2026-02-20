@@ -4,10 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class TematikSasaranRoadmap extends Model
 {
-    use HasFactory;
+    use LogsActivity, HasFactory;
     protected $table = 'tematik_sasaran_roadmap';
 
     public function tema()
@@ -15,10 +17,10 @@ class TematikSasaranRoadmap extends Model
         return $this->belongsTo(Tema::class, 'tema_id');
     }
 
-    public function indikator_roadmap($ids=[])
+    public function indikator_roadmap($ids = [])
     {
         $select = $this->hasMany(TematikIndikatorRoadmap::class, 'tematik_sasaran_roadmap_id');
-        if (count($ids)>0) {
+        if (count($ids) > 0) {
             $select->whereIn('id', $ids)->orderBy('tematik_sasaran_roadmap_id');
         }
         return $select;
@@ -45,5 +47,16 @@ class TematikSasaranRoadmap extends Model
                 ->join('tematik_indikator_roadmap', 'tematik_permasalahan.tematik_indikator_roadmap_id', '=', 'tematik_indikator_roadmap.id')
                 ->where('tematik_indikator_roadmap.tematik_sasaran_roadmap_id', $this->id);
         })->get();
+    }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly([
+                'id',
+                'tema_id',
+                'instansi_id',
+                'nama'
+            ]);
     }
 }
