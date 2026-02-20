@@ -36,35 +36,30 @@
 @push('js')
 <script>
     $(document).ready(function() {
-        getActivitylogData();
+        $('#activitylog-table').DataTable({
+            responsive: true,
+            processing: true,
+            serverSide: true,
+            scrollX: true,
+            ajax: "{{ url('activitylog/getData') }}",
+            columns: [
+                {
+                    data: null,
+                    sortable: false,
+                    searchable: false,
+                    render: function (data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1;
+                    }
+                },
+                { data: 'pelaku' },
+                { data: 'subject_type' },
+                { data: 'event' },
+                { data: 'instansi', searchable: false },
+                { data: 'pretty', searchable: false },
+                { data: 'pada', searchable: false },
+            ],
+            ordering: false,
+        });
     });
-
-    var activitylog = $('#activitylog-table').DataTable( {
-        responsive: true,
-        processing: true,
-        scrollX: true,
-        ajax: "",
-        columns: [
-            {
-                data: null,
-                sortable: false, 
-                searchable: false,
-                render: function (data, type, row, meta) {
-                    return meta.row + meta.settings._iDisplayStart + 1;
-                }
-            },
-            { data: 'pelaku' },
-            { data: 'subject_type' },
-            { data: 'event' },
-            { data: 'instansi' },
-            { data: 'pretty' },
-            { data: 'pada' },
-        ],
-        ordering: false,
-    });
-
-    function getActivitylogData() {
-        activitylog.ajax.url("{{url('activitylog/getData')}}").load(null, false);
-    }
 </script>
 @endpush
