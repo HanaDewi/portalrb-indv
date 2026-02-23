@@ -22,6 +22,7 @@ use App\Http\Controllers\RenaksiDashboardController;
 use App\Http\Controllers\RuangBelajar\AdminController;
 use App\Http\Controllers\DataKonversiJawabanController;
 use App\Http\Controllers\RuangBelajar\DashboardController;
+use App\Http\Controllers\LhkanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -280,6 +281,38 @@ Route::middleware('auth')->group(function () {
     #generate indeks RB simple version buat kebutuhan satu data dakip
     Route::get('/generate/hasil1data/', [GenerateController::class, 'generate_simple'])->name('generete_rb_simple_version');
     Route::get('/generate/hasilrb2023/', [GenerateController::class, 'generateRB2023']);
+
+    // LHKAN - Laporan Harta Kekayaan Aparatur Negara
+    // Admin & TPN Features
+    Route::get('/lhkan/dashboard', [LhkanController::class, 'dashboard'])->name('lhkan.dashboard');
+    Route::get('/lhkan/export-csv', [LhkanController::class, 'exportCsv'])->name('lhkan.export-csv');
+
+    // Periode Management (Admin Only)
+    Route::get('/lhkan/periode', [LhkanController::class, 'periodeIndex'])->name('lhkan.periode.index');
+    Route::post('/lhkan/periode/store', [LhkanController::class, 'periodeStore'])->name('lhkan.periode.store');
+    Route::post('/lhkan/periode/update/{id}', [LhkanController::class, 'periodeUpdate'])->name('lhkan.periode.update');
+    Route::post('/lhkan/periode/toggle-lock/{id}', [LhkanController::class, 'periodeToggleLock'])->name('lhkan.periode.toggle-lock');
+    Route::delete('/lhkan/periode/delete/{id}', [LhkanController::class, 'periodeDelete'])->name('lhkan.periode.delete');
+
+    // PIC Management (Admin Only)
+    Route::get('/lhkan/pic', [LhkanController::class, 'picIndex'])->name('lhkan.pic.index');
+    Route::post('/lhkan/pic/store', [LhkanController::class, 'picStore'])->name('lhkan.pic.store');
+    Route::post('/lhkan/pic/update/{id}', [LhkanController::class, 'picUpdate'])->name('lhkan.pic.update');
+    Route::delete('/lhkan/pic/delete/{id}', [LhkanController::class, 'picDelete'])->name('lhkan.pic.delete');
+    Route::post('/lhkan/pic/approve/{id}', [LhkanController::class, 'picApprove'])->name('lhkan.pic.approve');
+    Route::post('/lhkan/pic/reject/{id}', [LhkanController::class, 'picReject'])->name('lhkan.pic.reject');
+
+    // Change Requests (Admin Only)
+    Route::get('/lhkan/change-requests', [LhkanController::class, 'changeRequestIndex'])->name('lhkan.change-requests.index');
+    Route::post('/lhkan/change-requests/approve/{id}', [LhkanController::class, 'changeRequestApprove'])->name('lhkan.change-requests.approve');
+    Route::post('/lhkan/change-requests/reject/{id}', [LhkanController::class, 'changeRequestReject'])->name('lhkan.change-requests.reject');
+
+    // Instansi Features (KL, Provinsi, Kabupaten)
+    Route::get('/lhkan/form', [LhkanController::class, 'form'])->name('lhkan.form');
+    Route::post('/lhkan/store', [LhkanController::class, 'store'])->name('lhkan.store');
+    Route::post('/lhkan/submit', [LhkanController::class, 'submit'])->name('lhkan.submit');
+    Route::get('/lhkan/history', [LhkanController::class, 'history'])->name('lhkan.history');
+    Route::post('/lhkan/change-requests/store', [LhkanController::class, 'changeRequestStore'])->name('lhkan.change-requests.store');
 });
 
 
