@@ -206,7 +206,7 @@
                                         <th class="w200">Target Baik</th>
                                         <th class="w200">Skor</th>
                                         <th class="w200">Skor Index</th>
-                                        <th class="w200">Capaian Index</th>
+                                        <th class="w200">Capaian Index (%)</th>
                                         <th class="w200">Catatan </th>
                                         <th class="w200">Rekomendasi </th>
                                         @if (in_array(auth()->user()->level, ['kl', 'provinsi', 'kabupaten']))
