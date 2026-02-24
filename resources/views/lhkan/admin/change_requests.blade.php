@@ -1,4 +1,4 @@
-@extends('layout.main')
+@extends('layout.rubick')
 
 @section('title', 'Manajemen Pengajuan Perubahan LHKAN')
 
