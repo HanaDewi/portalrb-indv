@@ -66,7 +66,14 @@
                                                                 <td class="text-center">
                                                                     {{$unit_wbk_lulus}}
                                                                 </td>
+                                                                <td>
+                                                                    @if($instansiZI->instansi_wbk_mandiri)
+                                                                    WBK Mandiri
+                                                                    @else
+                                                                    {{$instansiZI->jml_wbk}}
+                                                                    @endif
                                                                 </td>
+
                                                             </tr>
                                                             <tr>
                                                                 <td>WBBM</td>
