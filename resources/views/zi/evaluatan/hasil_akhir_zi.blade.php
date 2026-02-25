@@ -64,13 +64,10 @@
                                                                     @endif
                                                                 </td>
                                                                 <td class="text-center">
-                                                                    {{$unit_wbk_lulus}}
-                                                                </td>
-                                                                <td>
                                                                     @if($instansiZI->instansi_wbk_mandiri)
                                                                     WBK Mandiri
                                                                     @else
-                                                                    {{$instansiZI->jml_wbk}}
+                                                                    {{$unit_wbk_lulus}}
                                                                     @endif
                                                                 </td>
 
