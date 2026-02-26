@@ -1,14 +1,15 @@
 @php
     $type = $type ?? 'side'; // 'mobile' or 'side'
+    $menuUrl = $menu['url'] ?? null;
 
-    $isActive = request()->is($menu['url']) || request()->is($menu['url'] . '/*');
+    $isActive = $menuUrl ? (request()->is($menuUrl) || request()->is($menuUrl . '/*')) : false;
     $menuActiveClass = $type === 'mobile' ? 'menu--active' : 'side-menu--active';
     $menuOpenClass = $type === 'mobile' ? 'menu--open' : 'side-menu--open';
     $subOpenClass = $type === 'mobile' ? 'menu__sub-open' : 'side-menu__sub-open';
 
     $active = $isActive ? $menuActiveClass : '';
     $open = $isActive ? $menuOpenClass : '';
-    $url = isset($menu['items']) ? 'javascript:;' : url($menu['url']);
+    $url = isset($menu['items']) ? 'javascript:;' : ($menuUrl ? url($menuUrl) : 'javascript:;');
     $subicon = isset($menu['items'])
         ? ($isActive
             ? '<div class="' . ($type === 'mobile' ? 'menu' : 'side-menu') . '__sub-icon transform rotate-180"><i data-lucide="chevron-down"></i></div>'
@@ -39,10 +40,11 @@
                 @foreach ($menu['items'] as $item)
                     @if (in_array(auth()->user()->level, $item['levels']))
                         @php
-                            $itemIsActive = request()->is($item['url']) || request()->is($item['url'] . '/*');
+                            $itemUrlPath = $item['url'] ?? null;
+                            $itemIsActive = $itemUrlPath ? (request()->is($itemUrlPath) || request()->is($itemUrlPath . '/*')) : false;
                             $itemActive = $itemIsActive ? $menuActiveClass : '';
                             $itemOpen = $itemIsActive ? $subOpenClass : '';
-                            $itemUrl = isset($item['items']) && count($item['items']) > 0 ? 'javascript:;' : url($item['url']);
+                            $itemUrl = isset($item['items']) && count($item['items']) > 0 ? 'javascript:;' : ($itemUrlPath ? url($itemUrlPath) : 'javascript:;');
                             $itemSubicon = isset($item['items'])
                                 ? '<div class="' . ($type === 'mobile' ? 'menu' : 'side-menu') . '__sub-icon"><i data-lucide="chevron-down"></i></div>'
                                 : '';
@@ -61,12 +63,13 @@
                                 <ul class="{{ $itemOpen }}">
                                     @foreach ($item['items'] as $subitem)
                                         @php
-                                            $subitemIsActive = request()->is($subitem['url']) || request()->is($subitem['url'] . '/*');
+                                            $subitemUrlPath = $subitem['url'] ?? null;
+                                            $subitemIsActive = $subitemUrlPath ? (request()->is($subitemUrlPath) || request()->is($subitemUrlPath . '/*')) : false;
                                             $subitemActive = $subitemIsActive ? $menuActiveClass : '';
                                         @endphp
                                         @if (in_array(auth()->user()->level, $subitem['levels']))
                                             <li>
-                                                <a href="{{ url($subitem['url']) }}" class="{{ $type === 'mobile' ? 'menu' : 'side-menu' }} {{ $subitemActive }}">
+                                                <a href="{{ $subitemUrlPath ? url($subitemUrlPath) : 'javascript:;' }}" class="{{ $type === 'mobile' ? 'menu' : 'side-menu' }} {{ $subitemActive }}">
                                                     <div class="{{ $type === 'mobile' ? 'menu' : 'side-menu' }}__icon">
                                                         <i data-lucide="{{ $subitem['icon'] }}"></i>
                                                     </div>
