@@ -211,8 +211,8 @@
                         </path>
                     </svg>
                     <h1 style="padding-left: 5px; padding-right: 5px;" class="mr-auto text-lg font-extrabold"
-                        style="font-weight: 600">Dashboard Laporan Harta Kekayaan Aparatur Negara </h1>
-                    <h1 class="text-lg text-info font-extrabold"> LHKAN</h1>
+                        style="font-weight: 600">@yield('title')</h1>
+                    
                 </nav>
                 <div class="intro-x dropdown mr-auto sm:mr-6">
                     <h1 style="padding-left: 5px; padding-right: 5px;" class="mr-auto text-lg font-bold"

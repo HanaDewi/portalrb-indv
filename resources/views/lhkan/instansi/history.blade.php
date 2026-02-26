@@ -1,14 +1,10 @@
-@extends('layout.rubick')
+@extends('lhkan.layout.lhkan_layout')
 
 @section('title', 'History Pelaporan LHKAN')
 
 @section('content')
-<div class="content">
-    <div class="block block-rounded block-bordered">
-        <div class="block-header block-header-default">
-            <h3 class="block-title">History Pelaporan Harta Kekayaan Aparatur Negara</h3>
-        </div>
-        <div class="block-content">
+<div class="block block-rounded block-bordered mt-8">
+    <div class="block-content">
             <!-- Info Card -->
             <div class="alert alert-light border">
                 <div class="row">

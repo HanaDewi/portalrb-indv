@@ -1,64 +1,77 @@
 @extends('lhkan.layout.lhkan_layout')
 
-@section('title', 'Dashboard')
+@section('title', 'Dashboard Laporan Harta Kekayaan Aparatur Negara')
 
 @section('content')
 <div class="block block-rounded block-bordered mt-8">
     @if(in_array(auth()->user()->level, ['admin', 'tpn']))
-        <form method="GET" action="{{ route('lhkan.export-csv') }}" class="inline-flex">
+        <form method="GET" action="{{ route('lhkan.export-csv') }}" style="display: inline-flex;">
             <input type="hidden" name="periode_id" value="{{ $periodeId }}">
-            <button type="submit" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors">
-                <i class="fa fa-file-excel mr-2"></i> Export CSV
+            <button type="submit" class="btn btn-success btn-sm">
+                <i class="fa fa-file-excel" style="margin-right: 0.5rem;"></i> Export CSV
             </button>
         </form>
     @endif
     
     <div class="block-content">
         <!-- Statistics Cards -->
-        <div class="grid grid-cols-4 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
-            <div class="bg-white rounded-lg shadow-sm border border-gray-200">
-                <div class="px-6 py-4 border-b border-gray-200 bg-blue-50">
-                    <h3 class="font-semibold text-blue-600">Total Instansi</h3>
+        <style>
+            @media (min-width: 640px) {
+                .stats-grid { grid-template-columns: repeat(2, 1fr) !important; }
+            }
+            @media (min-width: 1024px) {
+                .stats-grid { grid-template-columns: repeat(4, 1fr) !important; }
+            }
+        </style>
+        <div class="stats-grid" style="display: grid; grid-template-columns: repeat(1, 1fr); gap: 1rem; margin-top: 1.5rem; width: 100%;">
+            <div class="box rounded-lg" style="border: 1px solid #e5e7eb; box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);">
+                <div style="padding: 1rem 1.5rem; border-bottom: 1px solid #e5e7eb; background-color: #eff6ff;">
+                    <h3 style="font-weight: 600; color: #2563eb;">Total Instansi</h3>
                 </div>
-                <div class="px-6 py-4">
-                    <h2 class="text-3xl font-bold text-blue-600">{{ $totalInstansi }}</h2>
-                    <p class="text-sm text-gray-500 mt-1">Total instansi terdaftar</p>
-                </div>
-            </div>
-            <div class="bg-white rounded-lg shadow-sm border border-gray-200">
-                <div class="px-6 py-4 border-b border-gray-200 bg-cyan-50">
-                    <h3 class="font-semibold text-cyan-600">Sudah Submit</h3>
-                </div>
-                <div class="px-6 py-4">
-                    <h2 class="text-3xl font-bold text-cyan-600">{{ $submittedCount }}</h2>
-                    <p class="text-sm text-gray-500 mt-1">Instansi sudah melaporkan</p>
-                </div>
-            </div>
-            <div class="bg-white rounded-lg shadow-sm border border-gray-200">
-                <div class="px-6 py-4 border-b border-gray-200 bg-green-50">
-                    <h3 class="font-semibold text-green-600">Sudah Approve</h3>
-                </div>
-                <div class="px-6 py-4">
-                    <h2 class="text-3xl font-bold text-green-600">{{ $approvedCount }}</h2>
-                    <p class="text-sm text-gray-500 mt-1">Data disetujui</p>
+                <div style="padding: 1rem 1.5rem;">
+                    <h2 style="font-size: 1.875rem; font-weight: 700; color: #2563eb;">{{ $totalInstansi }}</h2>
+                    <p style="font-size: 0.875rem; color: #6b7280; margin-top: 0.25rem;">Total instansi terdaftar</p>
                 </div>
             </div>
-            <div class="bg-white rounded-lg shadow-sm border border-gray-200">
-                <div class="px-6 py-4 border-b border-gray-200 bg-amber-50">
-                    <h3 class="font-semibold text-amber-600">Tingkat Penyelesaian</h3>
+            <div class="box rounded-lg" style="border: 1px solid #e5e7eb; box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);">
+                <div style="padding: 1rem 1.5rem; border-bottom: 1px solid #e5e7eb; background-color: #ecfeff;">
+                    <h3 style="font-weight: 600; color: #0891b2;">Sudah Submit</h3>
                 </div>
-                <div class="px-6 py-4">
-                    <h2 class="text-3xl font-bold text-amber-600">{{ $completionRate }}%</h2>
-                    <p class="text-sm text-gray-500 mt-1">Tingkat kepatuhan</p>
+                <div style="padding: 1rem 1.5rem;">
+                    <h2 style="font-size: 1.875rem; font-weight: 700; color: #0891b2;">{{ $submittedCount }}</h2>
+                    <p style="font-size: 0.875rem; color: #6b7280; margin-top: 0.25rem;">Instansi sudah melaporkan</p>
+                </div>
+            </div>
+            <div class="box rounded-lg" style="border: 1px solid #e5e7eb; box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);">
+                <div style="padding: 1rem 1.5rem; border-bottom: 1px solid #e5e7eb; background-color: #f0fdf4;">
+                    <h3 style="font-weight: 600; color: #16a34a;">Sudah Approve</h3>
+                </div>
+                <div style="padding: 1rem 1.5rem;">
+                    <h2 style="font-size: 1.875rem; font-weight: 700; color: #16a34a;">{{ $approvedCount }}</h2>
+                    <p style="font-size: 0.875rem; color: #6b7280; margin-top: 0.25rem;">Data disetujui</p>
+                </div>
+            </div>
+            <div class="box rounded-lg" style="border: 1px solid #e5e7eb; box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);">
+                <div style="padding: 1rem 1.5rem; border-bottom: 1px solid #e5e7eb; background-color: #fffbeb;">
+                    <h3 style="font-weight: 600; color: #d97706;">Tingkat Penyelesaian</h3>
+                </div>
+                <div style="padding: 1rem 1.5rem;">
+                    <h2 style="font-size: 1.875rem; font-weight: 700; color: #d97706;">{{ $completionRate }}%</h2>
+                    <p style="font-size: 0.875rem; color: #6b7280; margin-top: 0.25rem;">Tingkat kepatuhan</p>
                 </div>
             </div>
         </div>
 
         <!-- Filters -->
-        <form method="GET" action="{{ route('lhkan.dashboard') }}" class="grid grid-cols-3 md:grid-cols-3 gap-4 mt-6 contents">
+        <style>
+            @media (max-width: 1024px) {
+                .filter-grid { grid-template-columns: repeat(1, 1fr) !important; }
+            }
+        </style>
+        <form method="GET" action="{{ route('lhkan.dashboard') }}" class="filter-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 1.5rem;">
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Periode</label>
-                <select name="periode_id" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white" onchange="this.form.submit()">
+                <label class="form-label" style="font-size: 0.875rem; font-weight: 500; color: #374151; margin-bottom: 0.5rem; display: inline-block;">Periode</label>
+                <select name="periode_id" class="form-select" onchange="this.form.submit()">
                     <option value="">Semua Periode</option>
                     @foreach($periodes as $periode)
                         <option value="{{ $periode->id }}" {{ $periodeId == $periode->id ? 'selected' : '' }}>
@@ -68,8 +81,8 @@
                 </select>
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Status</label>
-                <select name="status" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white" onchange="this.form.submit()">
+                <label class="form-label" style="font-size: 0.875rem; font-weight: 500; color: #374151; margin-bottom: 0.5rem; display: inline-block;">Status</label>
+                <select name="status" class="form-select" onchange="this.form.submit()">
                     <option value="">Semua Status</option>
                     <option value="draft" {{ $status == 'draft' ? 'selected' : '' }}>Draft</option>
                     <option value="submitted" {{ $status == 'submitted' ? 'selected' : '' }}>Submitted</option>
@@ -79,8 +92,8 @@
             </div>
             @if(auth()->user()->level === 'admin')
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Instansi</label>
-                    <select name="instansi_id" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white" onchange="this.form.submit()">
+                    <label class="form-label" style="font-size: 0.875rem; font-weight: 500; color: #374151; margin-bottom: 0.5rem; display: inline-block;">Instansi</label>
+                    <select name="instansi_id" class="form-select" onchange="this.form.submit()">
                         <option value="">Semua Instansi</option>
                         {{-- Add instansi options --}}
                     </select>
@@ -89,62 +102,62 @@
         </form>
 
         <!-- Data Table -->
-        <div class="overflow-x-auto mt-6 bg-white">
-            <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50">
+        <div style="overflow-x: auto; margin-top: 1.5rem; background-color: white;">
+            <table class="table">
+                <thead style="background-color: #f9fafb;">
                     <tr>
-                        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">No</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Instansi</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Periode</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Total Aparatur</th>
-                        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Wajib LHKPN</th>
-                        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Realisasi LHKPN</th>
-                        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Belum LHKAN</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">PIC</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal Submit</th>
-                        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
+                        <th style="padding: 0.75rem 1.5rem; text-align: center; font-size: 0.75rem; font-weight: 500; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em;">No</th>
+                        <th style="padding: 0.75rem 1.5rem; text-align: left; font-size: 0.75rem; font-weight: 500; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em;">Instansi</th>
+                        <th style="padding: 0.75rem 1.5rem; text-align: left; font-size: 0.75rem; font-weight: 500; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em;">Periode</th>
+                        <th style="padding: 0.75rem 1.5rem; text-align: left; font-size: 0.75rem; font-weight: 500; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em;">Status</th>
+                        <th style="padding: 0.75rem 1.5rem; text-align: center; font-size: 0.75rem; font-weight: 500; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em;">Total Aparatur</th>
+                        <th style="padding: 0.75rem 1.5rem; text-align: center; font-size: 0.75rem; font-weight: 500; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em;">Wajib LHKPN</th>
+                        <th style="padding: 0.75rem 1.5rem; text-align: center; font-size: 0.75rem; font-weight: 500; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em;">Realisasi LHKPN</th>
+                        <th style="padding: 0.75rem 1.5rem; text-align: center; font-size: 0.75rem; font-weight: 500; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em;">Belum LHKAN</th>
+                        <th style="padding: 0.75rem 1.5rem; text-align: left; font-size: 0.75rem; font-weight: 500; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em;">PIC</th>
+                        <th style="padding: 0.75rem 1.5rem; text-align: left; font-size: 0.75rem; font-weight: 500; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em;">Tanggal Submit</th>
+                        <th style="padding: 0.75rem 1.5rem; text-align: center; font-size: 0.75rem; font-weight: 500; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em;">Aksi</th>
                     </tr>
                 </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
+                <tbody style="background-color: white; border-bottom: 1px solid #e5e7eb;">
                     @if($submissions->count() > 0)
                         @foreach($submissions as $index => $submission)
-                            <tr>
-                                <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-900">{{ ($submissions->currentPage() - 1) * $submissions->perPage() + $index + 1 }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $submission->instansi->nama_instansi ?? '-' }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $submission->period->nama ?? '-' }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm">
+                            <tr style="border-bottom: 1px solid #e5e7eb;">
+                                <td style="padding: 1rem 1.5rem; white-space: nowrap; text-align: center; font-size: 0.875rem; color: #111827;">{{ ($submissions->currentPage() - 1) * $submissions->perPage() + $index + 1 }}</td>
+                                <td style="padding: 1rem 1.5rem; white-space: nowrap; font-size: 0.875rem; color: #111827;">{{ $submission->instansi->nama_instansi ?? '-' }}</td>
+                                <td style="padding: 1rem 1.5rem; white-space: nowrap; font-size: 0.875rem; color: #111827;">{{ $submission->period->nama ?? '-' }}</td>
+                                <td style="padding: 1rem 1.5rem; white-space: nowrap; font-size: 0.875rem;">
                                     @switch($submission->status)
                                         @case('draft')
-                                            <span class="px-2 py-1 text-xs font-medium bg-gray-100 text-gray-800 rounded-full">Draft</span>
+                                            <span style="padding: 0.25rem 0.5rem; font-size: 0.75rem; font-weight: 500; background-color: #f3f4f6; color: #1f2937; border-radius: 9999px;">Draft</span>
                                             @break
                                         @case('submitted')
-                                            <span class="px-2 py-1 text-xs font-medium bg-cyan-100 text-cyan-800 rounded-full">Submitted</span>
+                                            <span style="padding: 0.25rem 0.5rem; font-size: 0.75rem; font-weight: 500; background-color: #cffafe; color: #155e75; border-radius: 9999px;">Submitted</span>
                                             @break
                                         @case('approved')
-                                            <span class="px-2 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full">Approved</span>
+                                            <span style="padding: 0.25rem 0.5rem; font-size: 0.75rem; font-weight: 500; background-color: #dcfce7; color: #166534; border-radius: 9999px;">Approved</span>
                                             @break
                                         @case('rejected')
-                                            <span class="px-2 py-1 text-xs font-medium bg-red-100 text-red-800 rounded-full">Rejected</span>
+                                            <span style="padding: 0.25rem 0.5rem; font-size: 0.75rem; font-weight: 500; background-color: #fee2e2; color: #991b1b; border-radius: 9999px;">Rejected</span>
                                             @break
                                     @endswitch
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-900">{{ $submission->jml_aparatur ?? 0 }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-900">{{ $submission->jml_wajib_lhkpn ?? 0 }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-900">{{ $submission->realisasi_lhkpn ?? 0 }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-bold text-red-600">{{ $submission->total_belum_lhkan ?? 0 }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                <td style="padding: 1rem 1.5rem; white-space: nowrap; text-align: center; font-size: 0.875rem; color: #111827;">{{ $submission->jml_aparatur ?? 0 }}</td>
+                                <td style="padding: 1rem 1.5rem; white-space: nowrap; text-align: center; font-size: 0.875rem; color: #111827;">{{ $submission->jml_wajib_lhkpn ?? 0 }}</td>
+                                <td style="padding: 1rem 1.5rem; white-space: nowrap; text-align: center; font-size: 0.875rem; color: #111827;">{{ $submission->realisasi_lhkpn ?? 0 }}</td>
+                                <td style="padding: 1rem 1.5rem; white-space: nowrap; text-align: center; font-size: 0.875rem; font-weight: 700; color: #dc2626;">{{ $submission->total_belum_lhkan ?? 0 }}</td>
+                                <td style="padding: 1rem 1.5rem; white-space: nowrap; font-size: 0.875rem; color: #111827;">
                                     @foreach($submission->pics as $pic)
                                         <div>{{ $pic->nama }} ({{ $pic->nomor_hp }})</div>
                                     @endforeach
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $submission->submitted_at ? $submission->submitted_at->format('d/m/Y H:i') : '-' }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-center text-sm">
+                                <td style="padding: 1rem 1.5rem; white-space: nowrap; font-size: 0.875rem; color: #111827;">{{ $submission->submitted_at ? $submission->submitted_at->format('d/m/Y H:i') : '-' }}</td>
+                                <td style="padding: 1rem 1.5rem; white-space: nowrap; text-align: center; font-size: 0.875rem;">
                                     @if(auth()->user()->level === 'admin')
-                                        <a href="{{ route('lhkan.periode.index') }}" class="inline-flex items-center px-2.5 py-1.5 text-xs font-medium text-white bg-blue-600 rounded hover:bg-blue-700 transition-colors" title="Kelola Periode">
+                                        <a href="{{ route('lhkan.periode.index') }}" class="btn btn-primary btn-sm" style="display: inline-flex; align-items: center; padding: 0.375rem 0.5rem; font-size: 0.75rem;" title="Kelola Periode">
                                             <i class="fa fa-cog"></i>
                                         </a>
-                                        <a href="{{ route('lhkan.pic.index') }}" class="inline-flex items-center px-2.5 py-1.5 text-xs font-medium text-white bg-cyan-600 rounded hover:bg-cyan-700 transition-colors" title="Kelola PIC">
+                                        <a href="{{ route('lhkan.pic.index') }}" class="btn btn-info btn-sm" style="display: inline-flex; align-items: center; padding: 0.375rem 0.5rem; font-size: 0.75rem;" title="Kelola PIC">
                                             <i class="fa fa-users"></i>
                                         </a>
                                     @endif
@@ -153,7 +166,7 @@
                         @endforeach
                     @else
                         <tr>
-                            <td colspan="11" class="px-6 py-4 text-center text-sm text-gray-500">Tidak ada data ditemukan</td>
+                            <td colspan="11" style="padding: 1rem 1.5rem; text-align: center; font-size: 0.875rem; color: #6b7280;">Tidak ada data ditemukan</td>
                         </tr>
                     @endif
                 </tbody>
@@ -161,8 +174,8 @@
         </div>
 
         <!-- Pagination -->
-        <div class="flex justify-between items-center mt-6">
-            <div class="text-sm text-gray-600">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem;">
+            <div style="font-size: 0.875rem; color: #4b5563;">
                 Menampilkan {{ $submissions->firstItem() }} sampai {{ $submissions->lastItem() }} dari {{ $submissions->total() }} data
             </div>
             {{ $submissions->links() }}

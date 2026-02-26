@@ -1,14 +1,9 @@
-@extends('layout.rubick')
+@extends('lhkan.layout.lhkan_layout')
 
 @section('title', 'Manajemen Pengajuan Perubahan LHKAN')
-
 @section('content')
-<div class="content">
-    <div class="block block-rounded block-bordered">
-        <div class="block-header block-header-default">
-            <h3 class="block-title">Manajemen Pengajuan Perubahan Data</h3>
-        </div>
-        <div class="block-content">
+<div class="block block-rounded block-bordered mt-8">
+    <div class="block-content">
             <!-- Filters -->
             <div class="row">
                 <div class="col-md-12">

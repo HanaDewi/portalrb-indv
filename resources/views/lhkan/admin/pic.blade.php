@@ -1,4 +1,4 @@
-@extends('layout.rubick')
+@extends('lhkan.layout.lhkan_layout')
 
 @section('title', 'Manajemen PIC LHKAN')
 

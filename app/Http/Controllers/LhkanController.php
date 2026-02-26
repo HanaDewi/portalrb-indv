@@ -169,7 +169,10 @@ class LhkanController extends Controller
 
         LhkanPeriod::create($validated);
 
-        return redirect()->back()->with('success', 'Periode berhasil dibuat.');
+        return response()->json([
+            'success' => true,
+            'message' => 'Periode berhasil dibuat.'
+        ]);
     }
 
     /**
@@ -191,7 +194,10 @@ class LhkanController extends Controller
         $periode = LhkanPeriod::findOrFail($id);
         $periode->update($validated);
 
-        return redirect()->back()->with('success', 'Periode berhasil diperbarui.');
+        return response()->json([
+            'success' => true,
+            'message' => 'Periode berhasil diperbarui.'
+        ]);
     }
 
     /**
