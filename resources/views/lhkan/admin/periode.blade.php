@@ -2,105 +2,99 @@
 
 @section('title', 'Manajemen Periode Pelaporan')
 
+@push('css')
+    <link href="{{ asset('vendor/bladewind/css/animate.min.css') }}" rel="stylesheet" />
+    <link href="{{ asset('vendor/bladewind/css/bladewind-ui.min.css') }}" rel="stylesheet" />
+    <style>
+        .bw-add-periode-modal,
+        .bw-edit-periode-modal,
+        [data-modal="add-periode-modal"],
+        .bw-modal[name="add-periode-modal"],
+        [data-modal="edit-periode-modal"],
+        .bw-modal[name="edit-periode-modal"] {
+            z-index: 2147483647 !important;
+            position: fixed !important;
+        }
+
+        .bw-add-periode-modal .bw-modal-backdrop,
+        .bw-edit-periode-modal .bw-modal-backdrop,
+        [data-modal="add-periode-modal"] .bw-modal-backdrop,
+        .bw-modal[name="add-periode-modal"] .bw-modal-backdrop,
+        [data-modal="edit-periode-modal"] .bw-modal-backdrop,
+        .bw-modal[name="edit-periode-modal"] .bw-modal-backdrop,
+        .bw-modal-backdrop {
+            z-index: 2147483646 !important;
+            position: fixed !important;
+        }
+
+        .bw-add-periode-modal .bw-modal-container,
+        .bw-edit-periode-modal .bw-modal-container,
+        [data-modal="add-periode-modal"] .bw-modal-container,
+        .bw-modal[name="add-periode-modal"] .bw-modal-container,
+        [data-modal="edit-periode-modal"] .bw-modal-container,
+        .bw-modal[name="edit-periode-modal"] .bw-modal-container {
+            z-index: 2147483647 !important;
+            position: relative !important;
+        }
+
+        body.overflow-hidden .top-bar,
+        body.overflow-hidden .side-nav,
+        body.overflow-hidden .mobile-menu {
+            pointer-events: none !important;
+        }
+    </style>
+@endpush
+
 @section('content')
     <div class="block block-rounded block-bordered mt-8">
         <div class="block-content">
             <!-- Add Button -->
             <div style="display: flex; justify-content: flex-end; margin-bottom: 1rem;">
-                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addPeriodeModal">
-                    <i class="fa fa-plus"></i> Tambah Periode Baru
-                </button>
+                <x-bladewind::button color="green" has_icon="true" icon="plus" onclick="showModal('add-periode-modal')">
+                    Tambah Periode Baru
+                </x-bladewind::button>
             </div>
 
             <!-- Periodes Table -->
                     <div class="table-responsive mt-4">
-                        <table class="table table-bordered table-striped table-vcenter">
-                            <thead>
+                        <x-bladewind::table compact="true" divider="thin" celled="true">
+                            <x-slot name="header">
+                                <th>No</th>
+                                <th>Tahun</th>
+                                <th>Nama Periode</th>
+                                <th>Deskripsi</th>
+                                <th>Status</th>
+                                <th>Jumlah Submit</th>
+                                <th>Aksi</th>
+                            </x-slot>
+                            @foreach($periodes as $index => $periode)
                                 <tr>
-                                    <th class="text-center" width="50">No</th>
-                                    <th width="100">Tahun</th>
-                                    <th>Nama Periode</th>
-                                    <th>Deskripsi</th>
-                                    <th width="100">Status</th>
-                                    <th width="150">Jumlah Submit</th>
-                                    <th class="text-center" width="200">Aksi</th>
+                                    <td>{{ ($periodes->currentPage() - 1) * $periodes->perPage() + $index + 1 }}</td>
+                                    <td>{{ $periode->tahun }}</td>
+                                    <td>{{ $periode->nama }}</td>
+                                    <td>{{ $periode->deskripsi ?? '-' }}</td>
+                                    <td>
+                                        @if($periode->status === 'open')
+                                            <x-bladewind::tag label="Open" color="green" />
+                                        @else
+                                            <x-bladewind::tag label="Locked" color="red" />
+                                        @endif
+                                    </td>
+                                    <td>{{ $periode->submissions()->where('status', '!=', 'draft')->count() }}</td>
+                                    <td>
+                                        <x-bladewind::button color="yellow" has_icon="true" icon="lock" onclick="toggleLock({{ $periode->id }})">
+                                            {{ $periode->status === 'open' ? 'Kunci Periode' : 'Buka Periode' }}
+                                        </x-bladewind::button>
+                                        <x-bladewind::button color="green" has_icon="true" icon="edit" onclick="editPeriode({{ $periode->id }}, '{{ $periode->tahun }}', '{{ $periode->nama }}', '{{ $periode->status }}', '{{ $periode->deskripsi ?? '' }}')">
+                                            Edit
+                                        </x-bladewind::button>
+                                        <x-bladewind::button color="red" has_icon="true" icon="trash" onclick="deletePeriode({{ $periode->id }})">
+                                            Delete
+                                        </x-bladewind::button>
+                                    </td>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                @if($periodes->count() > 0)
-                                    @foreach($periodes as $index => $periode)
-                                        <tr>
-                                            <td class="text-center">
-                                                {{ ($periodes->currentPage() - 1) * $periodes->perPage() + $index + 1 }}</td>
-                                            <td>{{ $periode->tahun }}</td>
-                                            <td>{{ $periode->nama }}</td>
-                                            <td>{{ $periode->deskripsi ?? '-' }}</td>
-                                            <td>
-                                                @if($periode->status === 'open')
-                                                    <span class="badge badge-success">Open</span>
-                                                @else
-                                                    <span class="badge badge-danger">Locked</span>
-                                                @endif
-                                            </td>
-                                            <td>{{ $periode->submissions()->where('status', '!=', 'draft')->count() }}</td>
-                                            <td class="text-center">
-                                                <!-- Toggle Lock/Unlock -->
-                                                @if($periode->status === 'open')
-                                                    <form method="POST" action="{{ route('lhkan.periode.toggle-lock', $periode->id) }}"
-                                                        class="d-inline"
-                                                        onsubmit="return confirm('Apakah Anda yakin ingin mengunci periode ini? Instansi tidak akan dapat mengedit data.')">
-                                                        @csrf
-                                                        @method('POST')
-                                                        <button type="submit" class="btn btn-sm btn-warning" title="Kunci Periode">
-                                                            <i class="fa fa-lock"></i>
-                                                        </button>
-                                                    </form>
-                                                @else
-                                                    <form method="POST" action="{{ route('lhkan.periode.toggle-lock', $periode->id) }}"
-                                                        class="d-inline"
-                                                        onsubmit="return confirm('Apakah Anda yakin ingin membuka periode ini? Instansi akan dapat mengedit data.')">
-                                                        @csrf
-                                                        @method('POST')
-                                                        <button type="submit" class="btn btn-sm btn-success" title="Buka Periode">
-                                                            <i class="fa fa-unlock"></i>
-                                                        </button>
-                                                    </form>
-                                                @endif
-
-                                                <!-- Edit -->
-                                                <button type="button" class="btn btn-sm btn-info"
-                                                    onclick="editPeriode({{ $periode->id }}, '{{ $periode->tahun }}', '{{ $periode->nama }}', '{{ $periode->status }}', '{{ $periode->deskripsi ?? '' }}')"
-                                                    title="Edit">
-                                                    <i class="fa fa-edit"></i>
-                                                </button>
-
-                                                <!-- Delete -->
-                                                @if(!$periode->submissions()->exists())
-                                                    <form method="POST" action="{{ route('lhkan.periode.delete', $periode->id) }}"
-                                                        class="d-inline"
-                                                        onsubmit="return confirm('Apakah Anda yakin ingin menghapus periode ini?')">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit" class="btn btn-sm btn-danger" title="Hapus">
-                                                            <i class="fa fa-trash"></i>
-                                                        </button>
-                                                    </form>
-                                                @else
-                                                    <button type="button" class="btn btn-sm btn-danger" disabled
-                                                        title="Tidak dapat dihapus (ada data pelaporan)">
-                                                        <i class="fa fa-trash"></i>
-                                                    </button>
-                                                @endif
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                @else
-                                    <tr>
-                                        <td colspan="7" class="text-center">Tidak ada periode ditemukan</td>
-                                    </tr>
-                                @endif
-                            </tbody>
-                        </table>
+                            @endforeach
+                        </x-bladewind::table>
                     </div>
 
                     <!-- Pagination -->
@@ -116,95 +110,85 @@
         </div>
 
         <!-- Add Periode Modal -->
-        <div class="modal fade" id="addPeriodeModal" tabindex="-1">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Tambah Periode Baru</h5>
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    </div>
-                    <div class="modal-body">
-                        <form id="addPeriodeForm">
-                            @csrf
-                            <div class="form-group">
-                                <label for="add_tahun">Tahun *</label>
-                                <input type="number" id="add_tahun" name="tahun" class="form-control" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="add_nama">Nama Periode *</label>
-                                <input type="text" id="add_nama" name="nama" class="form-control" required
-                                    placeholder="Contoh: Pelaporan 2024">
-                            </div>
-                            <div class="form-group">
-                                <label for="add_status">Status *</label>
-                                <select id="add_status" name="status" class="form-control" required>
-                                    <option value="open">Open</option>
-                                    <option value="locked">Locked</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="add_deskripsi">Deskripsi</label>
-                                <textarea id="add_deskripsi" name="deskripsi" class="form-control" rows="3"
-                                    placeholder="Deskripsi periode pelaporan..."></textarea>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
-                        <button type="submit" class="btn btn-success" form="addPeriodeForm">Simpan</button>
-                    </div>
+        <x-bladewind::modal
+            name="add-periode-modal"
+            title="Tambah Periode Baru"
+            size="medium"
+            show_close_icon="true"
+            backdrop_can_close="true"
+            show_action_buttons="false">
+            <form id="addPeriodeForm" class="space-y-4">
+                @csrf
+                <div>
+                    <div>Tahun *</div>
+                    <x-bladewind::input type="number" id="add_tahun" name="tahun" required="true" />
                 </div>
-            </div>
-        </div>
+                <div>
+                    <div>Nama Periode *</div>
+                    <x-bladewind::input type="text" id="add_nama" name="nama" required="true"
+                        placeholder="Contoh: Pelaporan 2024" />
+                </div>
+                <div>
+                    <div>Status *</div>
+                    <select id="add_status" name="status" class="form-control" required>
+                        <option value="open">Open</option>
+                        <option value="locked">Locked</option>
+                    </select>
+                </div>
+                <div>
+                    <div>Deskripsi</div>
+                    <textarea id="add_deskripsi" name="deskripsi" class="form-control" rows="3"
+                        placeholder="Deskripsi periode pelaporan..."></textarea>
+                </div>
+                <div class="text-right pt-2">
+                    <button type="button" class="btn btn-outline-secondary mr-2" onclick="hideModal('add-periode-modal')">Batal</button>
+                    <button type="submit" class="btn btn-success">Simpan</button>
+                </div>
+            </form>
+        </x-bladewind::modal>
 
         <!-- Edit Periode Modal -->
-        <div class="modal fade" id="editModal" tabindex="-1">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Edit Periode</h5>
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    </div>
-                    <div class="modal-body">
-                        <form id="editPeriodeForm">
-                            @csrf
-                            <div class="form-group">
-                                <label for="edit_tahun">Tahun *</label>
-                                <input type="number" id="edit_tahun" name="tahun" class="form-control" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="edit_nama">Nama Periode *</label>
-                                <input type="text" id="edit_nama" name="nama" class="form-control" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="edit_status">Status *</label>
-                                <select id="edit_status" name="status" class="form-control" required>
-                                    <option value="open">Open</option>
-                                    <option value="locked">Locked</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="edit_deskripsi">Deskripsi</label>
-                                <textarea id="edit_deskripsi" name="deskripsi" class="form-control" rows="3"></textarea>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
-                        <button type="submit" class="btn btn-primary" form="editPeriodeForm">Simpan</button>
-                    </div>
+        <x-bladewind::modal
+            name="edit-periode-modal"
+            title="Edit Periode"
+            size="medium"
+            show_close_icon="true"
+            backdrop_can_close="true"
+            show_action_buttons="false">
+            <form id="editPeriodeForm" class="space-y-4">
+                @csrf
+                <div>
+                    <div class="form-label">Tahun *</div>
+                    <x-bladewind::input type="number" id="edit_tahun" name="tahun" required="true" />
                 </div>
-            </div>
-        </div>
+                <div>
+                    <div class="form-label">Nama Periode *</div>
+                    <x-bladewind::input type="text" id="edit_nama" name="nama" required="true" />
+                </div>
+                <div>
+                    <div class="form-label">Status *</div>
+                    <select id="edit_status" name="status" class="form-control" required>
+                        <option value="open">Open</option>
+                        <option value="locked">Locked</option>
+                    </select>
+                </div>
+                <div>
+                    <div class="form-label">Deskripsi</div>
+                    <textarea id="edit_deskripsi" name="deskripsi" class="form-control" rows="3"></textarea>
+                </div>
+                <div class="text-right pt-2">
+                    <button type="button" class="btn btn-outline-secondary mr-2" onclick="hideModal('edit-periode-modal')">Batal</button>
+                    <button type="submit" class="btn btn-primary">Simpan</button>
+                </div>
+            </form>
+        </x-bladewind::modal>
     </div>
 
-    @section('scripts')
+    @push('js')
+    <script src="{{ asset('vendor/bladewind/js/helpers.js') }}"></script>
         <script>
             $(document).ready(function() {
-                // // Add Periode Modal
-                // $('#btnShowAddPeriode').on('click', function() {
-                //     $('#addPeriodeModal').modal('show');
-                // });
+                let editPeriodeId = null;
 
                 $('#addPeriodeForm').on('submit', function(e) {
                     e.preventDefault();
@@ -213,7 +197,7 @@
                         method: 'POST',
                         data: $('#addPeriodeForm').serialize(),
                         success: function(response) {
-                            $('#addPeriodeModal').modal('hide');
+                            hideModal('add-periode-modal');
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Berhasil',
@@ -244,13 +228,13 @@
                     $('#edit_nama').val(nama);
                     $('#edit_status').val(status);
                     $('#edit_deskripsi').val(deskripsi);
-                    $('#editModal').data('periode-id', id);
-                    $('#editModal').modal('show');
+                    editPeriodeId = id;
+                    showModal('edit-periode-modal');
                 }
 
                 $('#editPeriodeForm').on('submit', function(e) {
                     e.preventDefault();
-                    var id = $('#editModal').data('periode-id');
+                    var id = editPeriodeId;
                     if (!id) return;
 
                     $.ajax({
@@ -265,7 +249,7 @@
                             deskripsi: $('#edit_deskripsi').val()
                         },
                         success: function(response) {
-                            $('#editModal').modal('hide');
+                            hideModal('edit-periode-modal');
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Berhasil',
@@ -291,5 +275,5 @@
                 });
             });
         </script>
-    @endsection
+    @endpush
 @endsection

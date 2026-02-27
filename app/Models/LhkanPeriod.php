@@ -30,7 +30,7 @@ class LhkanPeriod extends Model
      */
     public function submissions()
     {
-        return $this->hasMany(LhkanSubmission::class);
+        return $this->hasMany(LhkanSubmission::class, 'periode_id');
     }
 
     /**

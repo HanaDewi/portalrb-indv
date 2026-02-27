@@ -104,7 +104,7 @@
         <!-- Data Table -->
         <div style="overflow-x: auto; margin-top: 1.5rem; background-color: white;">
             <table class="table">
-                <thead style="background-color: #f9fafb;">
+                <thead>
                     <tr>
                         <th style="padding: 0.75rem 1.5rem; text-align: center; font-size: 0.75rem; font-weight: 500; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em;">No</th>
                         <th style="padding: 0.75rem 1.5rem; text-align: left; font-size: 0.75rem; font-weight: 500; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em;">Instansi</th>

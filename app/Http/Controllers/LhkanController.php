@@ -472,15 +472,18 @@ class LhkanController extends Controller
         }
 
         $instansiId = $this->user->user_rel->instansi_id;
-        $periodeId = $request->periode_id ?? LhkanPeriod::open()->latest()->first()->id ?? null;
+        $periodeId = $request->periode_id ?? LhkanPeriod::open()->latest()->first()?->id;
+        $currentPeriod = $periodeId ? LhkanPeriod::find($periodeId) : null;
 
         $periodes = LhkanPeriod::orderBy('tahun', 'desc')->get();
         $pics = LhkanPic::where('instansi_id', $instansiId)->approved()->get();
 
         // Check if submission exists for this periode
-        $submission = LhkanSubmission::where('instansi_id', $instansiId)
-            ->where('periode_id', $periodeId)
-            ->first();
+        $submission = $currentPeriod
+            ? LhkanSubmission::where('instansi_id', $instansiId)
+                ->where('periode_id', $currentPeriod->id)
+                ->first()
+            : null;
 
         // Check if period is locked
         $isLocked = $submission ? $submission->period->isLocked() : false;
@@ -489,6 +492,7 @@ class LhkanController extends Controller
             'submission',
             'periodes',
             'periodeId',
+            'currentPeriod',
             'pics',
             'isLocked',
             'instansiId'

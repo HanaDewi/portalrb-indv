@@ -49,7 +49,7 @@ class User extends Authenticatable
 
     public function instansi()
     {
-        return $this->belongsTo(Instansi::class, 'instansi_id');
+        return $this->belongsTo(KlpdInstansi::class, 'instansi_id');
     }
 
     public function user_rel()

@@ -38,7 +38,7 @@
     <!-- Mobile Navigation -->
     <div class="mobile-menu md:hidden">
         <div class="mobile-menu-bar">
-            <a href="{{ url('/') }}" class="flex mr-auto">
+            <a href="{{ url('/') }}" class="flex mr-auto relative">
                 <img alt="LKE RB" class="w-24" src="{{ asset('assets') }}/images/logo-portalrb.png">
             </a>
             <a href="javascript:;" class="mobile-menu-toggler">
@@ -90,13 +90,13 @@
         <div class="content">
             <!-- Top Bar -->
             <div class="top-bar">
-                <nav aria-label="breadcrumb" class="-intro-x mr-auto hidden sm:flex">
+                <nav aria-label="breadcrumb" class="-intro-x mr-auto sm:flex">
                     <i data-lucide="globe" class="w-6 h-6 mr-2"></i>
                     <h1 class="mr-auto text-lg font-extrabold px-[5px]" style="font-weight: 600">
                         @yield('title')
                     </h1>
                 </nav>
-                <div class="intro-x dropdown mr-auto sm:mr-6">
+                <div class="intro-x dropdown ml-auto sm:mr-6 relative">
                     <h1 class="mr-auto text-lg font-bold px-[5px]" style="font-weight: 600">
                         Selamat datang, <a class="text-lg text-info font-bold">
                             {{ auth()->user()->username }}</a>
