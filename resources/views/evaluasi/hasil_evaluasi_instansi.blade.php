@@ -262,11 +262,11 @@
                                                                 <div><span class="font-semibold">Keterangan Tanggapan Sanggah:</span> {{ $parameter->keterangan_tanggapan_sanggah ?? '-' }}</div>
                                                             </div>
                                                         @else
-                                                            @if (in_array(auth()->user()->level, ['kl', 'provinsi', 'kabupaten']))
+                                                            {{-- @if (in_array(auth()->user()->level, ['kl', 'provinsi', 'kabupaten']))
                                                             <button type="button" class="btn btn-primary btn-sm btn-sanggah" data-lke-bobot-id="{{ $parameter->id }}" data-indikator="{{ $parameter->indikator }}">
                                                                 Sanggah
                                                             </button>
-                                                            @endif
+                                                            @endif --}}
                                                         @endif
                                                     @else
                                                         -
