@@ -10,7 +10,7 @@
 @section('content')
 <div class="mt-8">
     <x-bladewind::card>
-        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 border-b border-slate-200 pb-4 mb-5">
+        <div class="flex justify-between md:flex-row md:items-center md:justify-between gap-3 border-b border-slate-200 pb-4 mb-5">
             <div>
                 <div class="text-sm text-slate-500">Instansi</div>
                 <div class="text-lg font-semibold text-slate-800">{{ auth()->user()->instansi->name ?? '-' }}</div>

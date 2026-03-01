@@ -561,6 +561,23 @@ class LhkanController extends Controller
                 'ip_address' => request()->ip(),
             ]);
 
+            if ($request->action === 'submit') {
+                if ($submission->isSubmitted() || $submission->isApproved()) {
+                    DB::rollBack();
+                    return redirect()->back()->with('error', 'Data sudah disubmit.');
+                }
+                $submission->submit();
+                LhkanLog::create([
+                    'submission_id' => $submission->id,
+                    'user_id' => $this->user->id,
+                    'action' => 'submitted',
+                    'description' => 'Data LHKAN disubmit',
+                    'ip_address' => request()->ip(),
+                ]);
+                DB::commit();
+                return redirect()->back()->with('success', 'Data LHKAN berhasil disubmit.');
+            }
+
             DB::commit();
             return redirect()->back()->with('success', 'Data LHKAN berhasil disimpan.');
         } catch (\Exception $e) {

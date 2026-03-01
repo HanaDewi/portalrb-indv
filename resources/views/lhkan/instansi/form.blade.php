@@ -8,22 +8,22 @@
 @endpush
 
 @section('content')
+@php
+    $picRows = is_array(old('pics')) && count(old('pics')) > 0
+        ? old('pics')
+        : (isset($submission) && $submission->pics->count() > 0 ? $submission->pics->values()->all() : [['nama' => '', 'nomor_hp' => '']]);
+@endphp
 <div class="mt-8 space-y-5">
     <x-bladewind::card>
-        <div class="border-b border-slate-200 pb-4 mb-5">
-            <!-- <h3 class="text-xl font-semibold text-slate-800">Form Pelaporan Harta Kekayaan Aparatur Negara</h3> -->
-            <p class="text-slate-500 text-sm mt-1">Silakan isi data pelaporan instansi sesuai periode yang sedang aktif.</p>
-        </div>
-
             @if(session('success'))
                 <div class="rounded-md border border-emerald-200 bg-emerald-50 text-emerald-700 px-4 py-3 mb-4">
-                    {{ session('success') }}
+                    <x-bladewind::alert type="success">{{ session('success') }}</x-bladewind::alert>
                 </div>
             @endif
 
             @if(session('error'))
                 <div class="rounded-md border border-rose-200 bg-rose-50 text-rose-700 px-4 py-3 mb-4">
-                    {{ session('error') }}
+                    <x-bladewind::alert type="error">{{ session('error') }}</x-bladewind::alert>
                 </div>
             @endif
 
@@ -31,7 +31,7 @@
                 <div class="rounded-md border border-rose-200 bg-rose-50 text-rose-700 px-4 py-3 mb-4">
                     <ul class="list-disc pl-5 space-y-1">
                         @foreach($errors->all() as $error)
-                            <li>{{ $error }}</li>
+                            <x-bladewind::alert type="warning">{{ $error }}</x-bladewind::alert>
                         @endforeach
                     </ul>
                 </div>
@@ -60,6 +60,7 @@
                 <form method="POST" action="{{ route('lhkan.store') }}" id="lhkanForm">
                     @csrf
                     <input type="hidden" name="periode_id" value="{{ $currentPeriod->id }}">
+                    <input type="hidden" name="action" id="formAction" value="draft">
                     <!-- Instansi Info (Read Only) -->
                     <div class="rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 mb-5">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
@@ -72,49 +73,31 @@
                     <div class="mb-5">
                         <h5 class="text-base font-semibold mb-4">Data PIC (Person In Charge)</h5>
                         <div class="row" id="picContainer">
-                            @if(isset($submission) && $submission->pics->count() > 0)
-                                @foreach($submission->pics as $index => $pic)
-                                    <div class="col-md-6 mb-3 pic-row" data-index="{{ $index }}">
-                                        <div class="rounded-lg border border-slate-200 p-3 bg-white">
-                                            <div class="form-group mb-3">
-                                                <label class="font-medium">Nama PIC {{ $index + 1 }}</label>
-                                                <input type="text" name="pics[{{ $index }}][nama]" class="form-control pic-nama"
-                                                    value="{{ $pic->nama }}" required>
-                                            </div>
-                                            <div class="form-group mb-3">
-                                                <label class="font-medium">Nomor HP PIC {{ $index + 1 }}</label>
-                                                <input type="text" name="pics[{{ $index }}][nomor_hp]" class="form-control pic-hp"
-                                                    value="{{ $pic->nomor_hp }}" required>
-                                            </div>
-                                            @if($index === 0)
-                                                <x-bladewind::button color="green" has_icon="true" icon="plus" size="small" onclick="addPicRow()">
-                                                    Tambah PIC
-                                                </x-bladewind::button>
-                                            @else
-                                                <x-bladewind::button color="red" has_icon="true" icon="trash" size="small" onclick="removePicRow({{ $index }})">
-                                                    Hapus PIC
-                                                </x-bladewind::button>
-                                            @endif
-                                        </div>
-                                    </div>
-                                @endforeach
-                            @else
-                                <div class="col-md-6 mb-3 pic-row" data-index="0">
+                            @foreach($picRows as $index => $pic)
+                                <div class="col-md-6 mb-3 pic-row" data-index="{{ $index }}">
                                     <div class="rounded-lg border border-slate-200 p-3 bg-white">
                                         <div class="form-group mb-3">
-                                            <label class="font-medium">Nama PIC 1</label>
-                                            <input type="text" name="pics[0][nama]" class="form-control pic-nama" required>
+                                            <label class="font-medium">Nama PIC {{ $index + 1 }}</label>
+                                            <x-bladewind::input type="text" name="pics[{{ $index }}][nama]" class="pic-nama"
+                                                value="{{ is_array($pic) ? ($pic['nama'] ?? '') : ($pic->nama ?? '') }}" required />
                                         </div>
                                         <div class="form-group mb-3">
-                                            <label class="font-medium">Nomor HP PIC 1</label>
-                                            <input type="text" name="pics[0][nomor_hp]" class="form-control pic-hp" required>
+                                            <label class="font-medium">Nomor HP PIC {{ $index + 1 }}</label>
+                                            <x-bladewind::input type="text" name="pics[{{ $index }}][nomor_hp]" class="pic-hp"
+                                                value="{{ is_array($pic) ? ($pic['nomor_hp'] ?? '') : ($pic->nomor_hp ?? '') }}" required />
                                         </div>
-                                        <x-bladewind::button color="green" has_icon="true" icon="plus" size="small" onclick="addPicRow()">
-                                            Tambah PIC
-                                        </x-bladewind::button>
+                                        @if($index === 0)
+                                            <x-bladewind::button color="green" has_icon="true" icon="plus" size="small" onclick="addPicRow()">
+                                                Tambah PIC
+                                            </x-bladewind::button>
+                                        @else
+                                            <x-bladewind::button color="red" has_icon="true" icon="trash" size="small" onclick="removePicRow({{ $index }})">
+                                                Hapus PIC
+                                            </x-bladewind::button>
+                                        @endif
                                     </div>
                                 </div>
-                            @endif
+                            @endforeach
                         </div>
                     </div>
 
@@ -127,17 +110,17 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="jml_aparatur" class="font-medium">Jumlah Total Aparatur Negara *</label>
-                                    <input type="number" id="jml_aparatur" name="jml_aparatur" class="form-control"
-                                        value="{{ $submission->jml_aparatur ?? '' }}" min="0" required
-                                        onchange="calculateTotalBelumLhkan()">
+                                    <x-bladewind::input numeric="true" id="jml_aparatur" name="jml_aparatur" class="form-control"
+                                        value="{{ old('jml_aparatur', $submission->jml_aparatur ?? '') }}" min="0" required
+                                        onchange="calculateTotalBelumLhkan()" />
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="jml_wajib_lhkpn" class="font-medium">Jumlah Wajib LHKPN *</label>
-                                    <input type="number" id="jml_wajib_lhkpn" name="jml_wajib_lhkpn" class="form-control"
-                                        value="{{ $submission->jml_wajib_lhkpn ?? '' }}" min="0" required
-                                        onchange="calculateTotalBelumLhkan()">
+                                    <x-bladewind::input numeric="true" id="jml_wajib_lhkpn" name="jml_wajib_lhkpn" class="form-control"
+                                        value="{{ old('jml_wajib_lhkpn', $submission->jml_wajib_lhkpn ?? '') }}" min="0" required
+                                        onchange="calculateTotalBelumLhkan()" />
                                 </div>
                             </div>
                         </div>
@@ -145,17 +128,17 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="jml_non_wajib_lhkpn" class="font-medium">Jumlah Tidak Wajib LHKPN *</label>
-                                    <input type="number" id="jml_non_wajib_lhkpn" name="jml_non_wajib_lhkpn"
-                                        class="form-control" value="{{ $submission->jml_non_wajib_lhkpn ?? '' }}" min="0"
-                                        required onchange="calculateTotalBelumLhkan()">
+                                    <x-bladewind::input numeric="true" id="jml_non_wajib_lhkpn" name="jml_non_wajib_lhkpn"
+                                        class="form-control" value="{{ old('jml_non_wajib_lhkpn', $submission->jml_non_wajib_lhkpn ?? '') }}" min="0"
+                                        required onchange="calculateTotalBelumLhkan()" />
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="realisasi_lhkpn" class="font-medium">Realisasi LHKPN (Sudah Lapor) *</label>
-                                    <input type="number" id="realisasi_lhkpn" name="realisasi_lhkpn" class="form-control"
-                                        value="{{ $submission->realisasi_lhkpn ?? '' }}" min="0" required
-                                        onchange="calculateTotalBelumLhkan()">
+                                    <x-bladewind::input numeric="true" id="realisasi_lhkpn" name="realisasi_lhkpn" class="form-control"
+                                        value="{{ old('realisasi_lhkpn', $submission->realisasi_lhkpn ?? '') }}" min="0" required
+                                        onchange="calculateTotalBelumLhkan()" />
                                 </div>
                             </div>
                         </div>
@@ -164,17 +147,17 @@
                                 <div class="form-group">
                                     <label for="realisasi_spt_non_lhkpn" class="font-medium">Realisasi SPT Tahunan - Non Wajib LHKPN (Sudah Lapor)
                                         *</label>
-                                    <input type="number" id="realisasi_spt_non_lhkpn" name="realisasi_spt_non_lhkpn"
-                                        class="form-control" value="{{ $submission->realisasi_spt_non_lhkpn ?? '' }}" min="0"
-                                        required onchange="calculateTotalBelumLhkan()">
+                                    <x-bladewind::input numeric="true" id="realisasi_spt_non_lhkpn" name="realisasi_spt_non_lhkpn"
+                                        class="form-control" value="{{ old('realisasi_spt_non_lhkpn', $submission->realisasi_spt_non_lhkpn ?? '') }}" min="0"
+                                        required onchange="calculateTotalBelumLhkan()" />
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="belum_spt_non_lhkpn" class="font-medium">Belum Lapor SPT - Non Wajib LHKPN *</label>
-                                    <input type="number" id="belum_spt_non_lhkpn" name="belum_spt_non_lhkpn"
-                                        class="form-control" value="{{ $submission->belum_spt_non_lhkpn ?? '' }}" min="0"
-                                        required onchange="calculateTotalBelumLhkan()">
+                                    <x-bladewind::input numeric="true" id="belum_spt_non_lhkpn" name="belum_spt_non_lhkpn"
+                                        class="form-control" value="{{ old('belum_spt_non_lhkpn', $submission->belum_spt_non_lhkpn ?? '') }}" min="0"
+                                        required onchange="calculateTotalBelumLhkan()" />
                                 </div>
                             </div>
                         </div>
@@ -182,9 +165,9 @@
                         <div class="rounded-md border border-slate-200 bg-slate-50 px-4 py-3">
                             <div class="form-group mb-0">
                                 <label for="total_belum_lhkan" class="font-medium">Total Belum Lapor LHKAN (Calculated)</label>
-                                <input type="number" id="total_belum_lhkan" name="total_belum_lhkan"
-                                    class="form-control bg-light" value="{{ $submission->total_belum_lhkan ?? 0 }}"
-                                    readonly>
+                                <x-bladewind::input numeric="true" id="total_belum_lhkan" name="total_belum_lhkan"
+                                    class="form-control bg-light" value="{{ old('total_belum_lhkan', $submission->total_belum_lhkan ?? 0) }}"
+                                    readonly />
                                 <small class="text-muted">
                                     Formula: (Jumlah Wajib LHKPN - Realisasi LHKPN) + Belum Lapor SPT Non Wajib LHKPN
                                 </small>
@@ -199,9 +182,9 @@
                             <div class="col-md-12">
                                 <div class="form-group mb-0">
                                     <label for="link_rekap_gdrive" class="font-medium">Link Google Drive Rekapitulasi *</label>
-                                    <input type="url" id="link_rekap_gdrive" name="link_rekap_gdrive" class="form-control"
-                                        value="{{ $submission->link_rekap_gdrive ?? '' }}" required
-                                        placeholder="https://drive.google.com/...">
+                                    <x-bladewind::input type="url" id="link_rekap_gdrive" name="link_rekap_gdrive" class="form-control"
+                                        value="{{ old('link_rekap_gdrive', $submission->link_rekap_gdrive ?? '') }}" required
+                                        placeholder="https://drive.google.com/..." />
                                     <small class="text-muted">Paste link Google Drive yang berisi file rekapitulasi LHKAN</small>
                                 </div>
                             </div>
@@ -213,7 +196,7 @@
                         <x-bladewind::button color="purple" has_icon="true" icon="save" size="small" type="submit" name="action" value="draft">
                             Simpan Draft
                         </x-bladewind::button>
-                        <x-bladewind::button color="blue" has_icon="true" icon="paper-plane" size="small" onclick="return confirm('Apakah Anda yakin ingin mensubmit data? Data tidak dapat diubah setelah submit kecuali ada persetujuan Admin.')">
+                        <x-bladewind::button color="blue" has_icon="true" icon="paper-plane" size="small" type="button" id="btnSubmitData">
                             Submit Data
                         </x-bladewind::button>
                         <x-bladewind::button color="cyan" has_icon="true" icon="history" size="small" href="{{ route('lhkan.history') }}">
@@ -228,7 +211,7 @@
 @push('js')
     <script src="{{ asset('vendor/bladewind/js/helpers.js') }}"></script>
     <script>
-        let picCount = {{ isset($submission) ? $submission->pics->count() : 1 }};
+        let picCount = {{ count($picRows) }};
 
         function addPicRow() {
             const container = document.getElementById('picContainer');
@@ -241,15 +224,19 @@
                 <div class="rounded-lg border border-slate-200 p-3 bg-white">
                     <div class="form-group mb-3">
                         <label class="font-medium">Nama PIC ${newIndex + 1}</label>
-                        <input type="text" name="pics[${newIndex}][nama]" class="form-control pic-nama" required>
+                        <div class="relative w-full mb-2">
+                            <input type="text" name="pics[${newIndex}][nama]" value="" placeholder="" class="bw-input peer pic-nama w-full rounded border border-slate-300 focus:border-primary-500 focus:outline-primary-500 px-3 py-2" required />
+                        </div>
                     </div>
                     <div class="form-group mb-3">
                         <label class="font-medium">Nomor HP PIC ${newIndex + 1}</label>
-                        <input type="text" name="pics[${newIndex}][nomor_hp]" class="form-control pic-hp" required>
+                        <div class="relative w-full mb-2">
+                            <input type="text" name="pics[${newIndex}][nomor_hp]" value="" placeholder="" class="bw-input peer pic-hp w-full rounded border border-slate-300 focus:border-primary-500 focus:outline-primary-500 px-3 py-2" required />
+                        </div>
                     </div>
-                    <x-bladewind::button color="red" has_icon="true" size="small" onclick="removePicRow(${newIndex})">
+                    <button type="button" class="bw-btn bg-red-500 hover:bg-red-600 text-white px-3 py-1.5 rounded text-sm inline-flex items-center" onclick="removePicRow(${newIndex})">
                         <i class="fa fa-trash mr-1"></i> Hapus PIC
-                    </x-bladewind::button>
+                    </button>
                 </div>
             `;
 
@@ -277,6 +264,30 @@
         // Calculate on page load
         document.addEventListener('DOMContentLoaded', function () {
             calculateTotalBelumLhkan();
+
+            // Submit Data: SweetAlert confirm then submit form with action=submit
+            const btnSubmitData = document.getElementById('btnSubmitData');
+            const form = document.getElementById('lhkanForm');
+            const formActionInput = document.getElementById('formAction');
+            if (btnSubmitData && form && formActionInput) {
+                btnSubmitData.addEventListener('click', function () {
+                    Swal.fire({
+                        title: 'Konfirmasi Submit',
+                        text: 'Apakah Anda yakin ingin mensubmit data? Data tidak dapat diubah setelah submit kecuali ada persetujuan Admin.',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Ya, Submit',
+                        cancelButtonText: 'Batal'
+                    }).then(function (result) {
+                        if (result.isConfirmed) {
+                            formActionInput.value = 'submit';
+                            form.submit();
+                        }
+                    });
+                });
+            }
         });
     </script>
 @endpush

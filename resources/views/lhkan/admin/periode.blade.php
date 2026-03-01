@@ -88,9 +88,6 @@
                                         <x-bladewind::button color="green" has_icon="true" icon="edit" onclick="editPeriode({{ $periode->id }}, '{{ $periode->tahun }}', '{{ $periode->nama }}', '{{ $periode->status }}', '{{ $periode->deskripsi ?? '' }}')">
                                             Edit
                                         </x-bladewind::button>
-                                        <x-bladewind::button color="red" has_icon="true" icon="trash" onclick="deletePeriode({{ $periode->id }})">
-                                            Delete
-                                        </x-bladewind::button>
                                     </td>
                                 </tr>
                             @endforeach

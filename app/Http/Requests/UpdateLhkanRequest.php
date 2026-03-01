@@ -4,7 +4,6 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Http\Exceptions\HttpResponseException;
 
 class UpdateLhkanRequest extends FormRequest
 {
@@ -66,8 +65,11 @@ class UpdateLhkanRequest extends FormRequest
     {
         $validator->after(function ($validator) {
             // Validasi: jml_wajib_lhkpn + jml_non_wajib_lhkpn harus sama dengan jml_aparatur
-            $totalPic = $this->jml_wajib_lhkpn + $this->jml_non_wajib_lhkpn;
-            if ($totalPic !== $this->jml_aparatur) {
+            // Cast ke int karena input form selalu string
+            $jmlAparatur = (int) $this->jml_aparatur;
+            $jmlWajib = (int) $this->jml_wajib_lhkpn;
+            $jmlNonWajib = (int) $this->jml_non_wajib_lhkpn;
+            if (($jmlWajib + $jmlNonWajib) !== $jmlAparatur) {
                 $validator->errors()->add(
                     'jml_aparatur',
                     'Jumlah (Wajib LHKPN + Tidak Wajib LHKPN) harus sama dengan Total Aparatur.'
@@ -75,33 +77,22 @@ class UpdateLhkanRequest extends FormRequest
             }
 
             // Validasi: realisasi tidak boleh lebih besar dari target
-            if ($this->realisasi_lhkpn > $this->jml_wajib_lhkpn) {
+            $realisasiLhkpn = (int) $this->realisasi_lhkpn;
+            if ($realisasiLhkpn > $jmlWajib) {
                 $validator->errors()->add(
                     'realisasi_lhkpn',
                     'Realisasi LHKPN tidak boleh lebih besar dari Jumlah Wajib LHKPN.'
                 );
             }
 
-            if ($this->realisasi_spt_non_lhkpn + $this->belum_spt_non_lhkpn > $this->jml_non_wajib_lhkpn) {
+            $realisasiSpt = (int) $this->realisasi_spt_non_lhkpn;
+            $belumSpt = (int) $this->belum_spt_non_lhkpn;
+            if (($realisasiSpt + $belumSpt) > $jmlNonWajib) {
                 $validator->errors()->add(
                     'realisasi_spt_non_lhkpn',
                     'Total (Realisasi SPT + Belum SPT) tidak boleh lebih besar dari Jumlah Non Wajib LHKPN.'
                 );
             }
         });
-    }
-
-    /**
-     * Handle a failed validation attempt.
-     */
-    protected function failedValidation(Validator $validator)
-    {
-        throw new HttpResponseException(
-            response()->json([
-                'success' => false,
-                'message' => 'Validasi gagal.',
-                'errors' => $validator->errors()
-            ], 422)
-        );
     }
 }
