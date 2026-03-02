@@ -22,8 +22,6 @@ class LhkanChangeRequest extends Model
 
     protected $casts = [
         'processed_at' => 'datetime',
-        'old_value' => 'array',
-        'new_value' => 'array',
     ];
 
     /**
@@ -117,6 +115,10 @@ class LhkanChangeRequest extends Model
      */
     public function getFieldDisplayName(): string
     {
+        if ($this->field_name === 'all') {
+            return 'Semua Field';
+        }
+
         $fieldNames = [
             'jml_aparatur' => 'Jumlah Aparatur',
             'jml_wajib_lhkpn' => 'Jumlah Wajib LHKPN',
@@ -126,6 +128,7 @@ class LhkanChangeRequest extends Model
             'belum_spt_non_lhkpn' => 'Belum SPT Non LHKPN',
             'link_rekap_gdrive' => 'Link Rekap Google Drive',
             'catatan' => 'Catatan',
+            'pics' => 'Data PIC',
         ];
 
         return $fieldNames[$this->field_name] ?? $this->field_name;

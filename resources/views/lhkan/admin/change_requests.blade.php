@@ -32,10 +32,7 @@
                             <th class="text-center" width="50">No</th>
                             <th>Instansi</th>
                             <th>Periode</th>
-                            <th>Field</th>
-                            <th>Nilai Lama</th>
-                            <th>Nilai Baru</th>
-                            <th>Alasan</th>
+                            <th>Alasan Perubahan</th>
                             <th width="100">Status</th>
                             <th width="150">Diajukan Pada</th>
                             <th class="text-center" width="150">Aksi</th>
@@ -46,47 +43,8 @@
                             @foreach($changeRequests as $index => $request)
                                 <tr>
                                     <td class="text-center">{{ ($changeRequests->currentPage() - 1) * $changeRequests->perPage() + $index + 1 }}</td>
-                                    <td>{{ $request->submission->instansi->nama ?? '-' }}</td>
-                                    <td>{{ $request->submission->period->nama ?? '-' }}</td>
-                                    <td>
-                                        <strong>{{ ucwords(str_replace('_', ' ', $request->field_name)) }}</strong>
-                                    </td>
-                                    <td>
-                                        @if(in_array($request->field_name, ['realisasi_lhkpn', 'realisasi_spt_non_lhkpn', 'belum_spt_non_lhkpn']))
-                                            {{ $request->old_value }}
-                                        @elseif($request->field_name === 'pics')
-                                            @php
-                                                $oldPics = json_decode($request->old_value, true);
-                                            @endphp
-                                            @if($oldPics)
-                                                @foreach($oldPics as $pic)
-                                                    <div>{{ $pic['nama'] ?? '' }}</div>
-                                                @endforeach
-                                            @else
-                                                {{ $request->old_value }}
-                                            @endif
-                                        @else
-                                            {{ $request->old_value }}
-                                        @endif
-                                    </td>
-                                    <td>
-                                        @if(in_array($request->field_name, ['realisasi_lhkpn', 'realisasi_spt_non_lhkpn', 'belum_spt_non_lhkpn']))
-                                            <span class="text-primary font-weight-bold">{{ $request->new_value }}</span>
-                                        @elseif($request->field_name === 'pics')
-                                            @php
-                                                $newPics = json_decode($request->new_value, true);
-                                            @endphp
-                                            @if($newPics)
-                                                @foreach($newPics as $pic)
-                                                    <div class="text-primary font-weight-bold">{{ $pic['nama'] ?? '' }}</div>
-                                                @endforeach
-                                            @else
-                                                <span class="text-primary font-weight-bold">{{ $request->new_value }}</span>
-                                            @endif
-                                        @else
-                                            <span class="text-primary font-weight-bold">{{ $request->new_value }}</span>
-                                        @endif
-                                    </td>
+                                    <td>{{ $request->submission->instansi->name ?? '-' }}</td>
+                                    <td>{{ $request->submission->period->nama ?? '-' }} ({{ $request->submission->period->tahun ?? '-' }})</td>
                                     <td>
                                         <small>{{ $request->reason }}</small>
                                     </td>
@@ -107,7 +65,7 @@
                                     <td class="text-center">
                                         @if($request->status === 'pending')
                                             <!-- Approve -->
-                                            <form method="POST" action="{{ route('lhkan.change-requests.approve', $request->id) }}" class="d-inline" onsubmit="return confirm('Apakah Anda yakin ingin menyetujui perubahan ini?')">
+                                            <form method="POST" action="{{ route('lhkan.change-requests.approve', $request->id) }}" class="d-inline" onsubmit="return confirm('Apakah Anda yakin ingin menyetujui perubahan ini? User akan dapat mengedit data setelah disetujui.')">
                                                 @csrf
                                                 @method('POST')
                                                 <button type="submit" class="btn btn-sm btn-success" title="Approve">
@@ -130,7 +88,7 @@
                             @endforeach
                         @else
                             <tr>
-                                <td colspan="10" class="text-center">Tidak ada pengajuan perubahan ditemukan</td>
+                                <td colspan="7" class="text-center">Tidak ada pengajuan perubahan ditemukan</td>
                             </tr>
                         @endif
                     </tbody>

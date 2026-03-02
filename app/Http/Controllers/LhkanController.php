@@ -401,9 +401,8 @@ class LhkanController extends Controller
             $changeRequest = LhkanChangeRequest::findOrFail($id);
             $submission = $changeRequest->submission;
 
-            // Apply change
-            $submission->{$changeRequest->field_name} = $changeRequest->new_value;
-            $submission->save();
+            // Ubah status submission ke edit_approved (user bisa edit)
+            $submission->approveEdit();
 
             // Update change request status
             $changeRequest->approve($this->user->id);
@@ -412,13 +411,13 @@ class LhkanController extends Controller
             LhkanLog::create([
                 'submission_id' => $submission->id,
                 'user_id' => $this->user->id,
-                'action' => 'updated',
-                'description' => "Perubahan di-approve: {$changeRequest->field_name}",
+                'action' => 'edit_approved',
+                'description' => 'Pengajuan edit disetujui, user dapat mengedit data',
                 'ip_address' => request()->ip(),
             ]);
 
             DB::commit();
-            return redirect()->back()->with('success', 'Perubahan berhasil di-approve.');
+            return redirect()->back()->with('success', 'Pengajuan perubahan disetujui. User sekarang dapat mengedit data.');
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Error approving change request: ' . $e->getMessage());
@@ -438,21 +437,26 @@ class LhkanController extends Controller
         DB::beginTransaction();
         try {
             $changeRequest = LhkanChangeRequest::findOrFail($id);
+            $submission = $changeRequest->submission;
+
+            // Kembalikan status submission ke submitted
+            $submission->status = 'submitted';
+            $submission->save();
 
             // Update change request status
             $changeRequest->reject($this->user->id);
 
             // Log action
             LhkanLog::create([
-                'submission_id' => $changeRequest->submission_id,
+                'submission_id' => $submission->id,
                 'user_id' => $this->user->id,
-                'action' => 'rejected',
-                'description' => "Perubahan di-reject: {$changeRequest->field_name}",
+                'action' => 'edit_rejected',
+                'description' => 'Pengajuan edit ditolak',
                 'ip_address' => request()->ip(),
             ]);
 
             DB::commit();
-            return redirect()->back()->with('success', 'Perubahan berhasil di-reject.');
+            return redirect()->back()->with('success', 'Pengajuan perubahan ditolak.');
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Error rejecting change request: ' . $e->getMessage());
@@ -485,6 +489,11 @@ class LhkanController extends Controller
                 ->first()
             : null;
 
+        // Check if user has submitted in active period
+        $hasSubmitted = $submission && in_array($submission->status, ['submitted', 'approved', 'edit_requested']);
+        $canEdit = $submission && $submission->isEditApproved();
+        $isEditRequested = $submission && $submission->isEditRequested();
+
         // Check if period is locked
         $isLocked = $submission ? $submission->period->isLocked() : false;
 
@@ -495,7 +504,10 @@ class LhkanController extends Controller
             'currentPeriod',
             'pics',
             'isLocked',
-            'instansiId'
+            'instansiId',
+            'hasSubmitted',
+            'canEdit',
+            'isEditRequested'
         ));
     }
 
@@ -518,6 +530,14 @@ class LhkanController extends Controller
 
         DB::beginTransaction();
         try {
+            // Find existing submission
+            $existingSubmission = LhkanSubmission::where('instansi_id', $instansiId)
+                ->where('periode_id', $request->periode_id)
+                ->first();
+
+            // Determine if this is an edit after approval
+            $isEditAfterApproval = $existingSubmission && $existingSubmission->isEditApproved();
+
             // Find or create submission
             $submission = LhkanSubmission::updateOrCreate(
                 [
@@ -525,7 +545,7 @@ class LhkanController extends Controller
                     'periode_id' => $request->periode_id,
                 ],
                 [
-                    'status' => 'draft',
+                    'status' => $isEditAfterApproval ? 'edit_approved' : 'draft',
                     'jml_aparatur' => $request->jml_aparatur,
                     'jml_wajib_lhkpn' => $request->jml_wajib_lhkpn,
                     'jml_non_wajib_lhkpn' => $request->jml_non_wajib_lhkpn,
@@ -562,6 +582,7 @@ class LhkanController extends Controller
             ]);
 
             if ($request->action === 'submit') {
+                // Allow submit if: draft, edit_approved, or not yet submitted
                 if ($submission->isSubmitted() || $submission->isApproved()) {
                     DB::rollBack();
                     return redirect()->back()->with('error', 'Data sudah disubmit.');
@@ -570,12 +591,12 @@ class LhkanController extends Controller
                 LhkanLog::create([
                     'submission_id' => $submission->id,
                     'user_id' => $this->user->id,
-                    'action' => 'submitted',
-                    'description' => 'Data LHKAN disubmit',
+                    'action' => $isEditAfterApproval ? 'resubmitted' : 'submitted',
+                    'description' => $isEditAfterApproval ? 'Data LHKAN disubmit ulang setelah edit' : 'Data LHKAN disubmit',
                     'ip_address' => request()->ip(),
                 ]);
                 DB::commit();
-                return redirect()->back()->with('success', 'Data LHKAN berhasil disubmit.');
+                return redirect()->route('lhkan.history')->with('success', 'Data LHKAN berhasil disubmit.');
             }
 
             DB::commit();
@@ -662,11 +683,23 @@ class LhkanController extends Controller
 
         $submissions = $query->orderBy('created_at', 'desc')->paginate(20);
 
+        // Check if user has submitted in active period
+        $currentPeriod = LhkanPeriod::open()->latest()->first();
+        $hasSubmittedInActivePeriod = false;
+        if ($currentPeriod) {
+            $hasSubmittedInActivePeriod = LhkanSubmission::where('instansi_id', $instansiId)
+                ->where('periode_id', $currentPeriod->id)
+                ->whereIn('status', ['submitted', 'approved'])
+                ->exists();
+        }
+
         return view('lhkan.instansi.history', compact(
             'submissions',
             'periodes',
             'periodeId',
-            'status'
+            'status',
+            'currentPeriod',
+            'hasSubmittedInActivePeriod'
         ));
     }
 
@@ -681,9 +714,6 @@ class LhkanController extends Controller
 
         $validated = $request->validate([
             'submission_id' => 'required|exists:lhkan_submissions,id',
-            'field_name' => 'required|string',
-            'old_value' => 'required',
-            'new_value' => 'required',
             'reason' => 'required|string|max:500',
         ]);
 
@@ -694,23 +724,39 @@ class LhkanController extends Controller
             abort(403, 'Anda tidak memiliki akses ke data ini.');
         }
 
+        // Cek apakah sudah ada pending request
+        if ($submission->isEditRequested()) {
+            return redirect()->route('lhkan.history')->with('error', 'Anda sudah memiliki pengajuan yang sedang diproses.');
+        }
+
         DB::beginTransaction();
         try {
+            // Create change request
             LhkanChangeRequest::create([
                 'submission_id' => $submission->id,
-                'field_name' => $validated['field_name'],
-                'old_value' => is_array($validated['old_value']) ? json_encode($validated['old_value']) : $validated['old_value'],
-                'new_value' => is_array($validated['new_value']) ? json_encode($validated['new_value']) : $validated['new_value'],
+                'field_name' => 'all',
                 'reason' => $validated['reason'],
                 'status' => 'pending',
             ]);
 
+            // Update status submission ke edit_requested
+            $submission->requestEdit();
+
+            // Log action
+            LhkanLog::create([
+                'submission_id' => $submission->id,
+                'user_id' => $this->user->id,
+                'action' => 'edit_requested',
+                'description' => 'Pengajuan perubahan data diajukan',
+                'ip_address' => request()->ip(),
+            ]);
+
             DB::commit();
-            return redirect()->back()->with('success', 'Pengajuan perubahan berhasil dikirim. Menunggu persetujuan admin.');
+            return redirect()->route('lhkan.history')->with('success', 'Pengajuan perubahan berhasil dikirim. Menunggu persetujuan admin/TPN.');
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Error creating change request: ' . $e->getMessage());
-            return redirect()->back()->with('error', 'Terjadi kesalahan saat mengirim pengajuan perubahan.');
+            return redirect()->route('lhkan.history')->with('error', 'Terjadi kesalahan saat mengirim pengajuan perubahan.');
         }
     }
 }

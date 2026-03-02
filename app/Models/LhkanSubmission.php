@@ -146,6 +146,22 @@ class LhkanSubmission extends Model
     }
 
     /**
+     * Check if submission is edit requested.
+     */
+    public function isEditRequested(): bool
+    {
+        return $this->status === 'edit_requested';
+    }
+
+    /**
+     * Check if submission is edit approved.
+     */
+    public function isEditApproved(): bool
+    {
+        return $this->status === 'edit_approved';
+    }
+
+    /**
      * Submit the submission.
      */
     public function submit(): void
@@ -175,11 +191,29 @@ class LhkanSubmission extends Model
     }
 
     /**
+     * Request edit for the submission.
+     */
+    public function requestEdit(): void
+    {
+        $this->status = 'edit_requested';
+        $this->save();
+    }
+
+    /**
+     * Approve edit request for the submission.
+     */
+    public function approveEdit(): void
+    {
+        $this->status = 'edit_approved';
+        $this->save();
+    }
+
+    /**
      * Check if the submission can be edited.
      */
     public function canBeEdited(): bool
     {
-        return $this->isDraft() && !$this->period->isLocked();
+        return ($this->isDraft() || $this->isEditApproved()) && !$this->period->isLocked();
     }
 
     /**

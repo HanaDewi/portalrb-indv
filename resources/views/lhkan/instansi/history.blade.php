@@ -16,9 +16,15 @@
                 <div class="text-lg font-semibold text-slate-800">{{ auth()->user()->instansi->name ?? '-' }}</div>
             </div>
             <div>
-                <x-bladewind::button color="blue" has_icon="true" icon="plus" onclick="window.location.href='{{ route('lhkan.form') }}'">
-                    Input Baru
-                </x-bladewind::button>
+                @if(isset($hasSubmittedInActivePeriod) && $hasSubmittedInActivePeriod)
+                    <x-bladewind::button color="gray" has_icon="true" icon="plus" disabled="true" title="Anda sudah melakukan input di periode aktif">
+                        Input Baru
+                    </x-bladewind::button>
+                @else
+                    <x-bladewind::button color="blue" has_icon="true" icon="plus" onclick="window.location.href='{{ route('lhkan.form') }}'">
+                        Input Baru
+                    </x-bladewind::button>
+                @endif
             </div>
         </div>
 
@@ -58,6 +64,12 @@
                                         @case('rejected')
                                             <x-bladewind::tag label="Rejected" color="red" />
                                             @break
+                                        @case('edit_requested')
+                                            <x-bladewind::tag label="Menunggu Persetujuan" color="yellow" />
+                                            @break
+                                        @case('edit_approved')
+                                            <x-bladewind::tag label="Disetujui Edit" color="cyan" />
+                                            @break
                                     @endswitch
                                 </td>
                                 <td class="text-center">{{ $submission->jml_aparatur ?? 0 }}</td>
@@ -72,9 +84,18 @@
                                                 onclick="window.location.href='{{ route('lhkan.form') }}?submission_id={{ $submission->id }}'">
                                                 <i class="fa fa-edit"></i>
                                             </button>
+                                        @elseif($submission->status === 'edit_approved' && $submission->period && $submission->period->status === 'open')
+                                            <button type="button" class="bw-button bw-green" title="Edit Disetujui"
+                                                onclick="window.location.href='{{ route('lhkan.form') }}'">
+                                                <i class="fa fa-edit"></i>
+                                            </button>
                                         @elseif(in_array($submission->status, ['submitted', 'approved']) && $submission->period && $submission->period->status === 'open')
                                             <button type="button" class="bw-button bw-yellow" onclick="showChangeRequestModal({{ $submission->id }})" title="Ajukan Perubahan">
                                                 <i class="fa fa-exchange-alt"></i>
+                                            </button>
+                                        @elseif($submission->status === 'edit_requested')
+                                            <button type="button" class="bw-button bw-gray" disabled title="Menunggu persetujuan admin">
+                                                <i class="fa fa-clock"></i>
                                             </button>
                                         @endif
 
@@ -136,40 +157,20 @@
     <form method="POST" action="{{ route('lhkan.change-requests.store') }}" id="changeRequestForm">
         @csrf
         <input type="hidden" name="submission_id" id="cr_submission_id">
+        <input type="hidden" name="field_name" value="all">
 
-        <div class="rounded-md border border-sky-200 bg-sky-50 text-sky-700 px-4 py-3 mb-4">
-            <i class="fa fa-info-circle mr-1"></i> Perubahan yang diajukan memerlukan persetujuan Admin sebelum diterapkan.
-        </div>
-
-        <div class="form-group">
-            <label for="cr_field_name">Field yang Ingin Diubah *</label>
-            <select id="cr_field_name" name="field_name" class="form-control" required onchange="showCurrentValue()">
-                <option value="">Pilih Field</option>
-                <option value="realisasi_lhkpn">Realisasi LHKPN</option>
-                <option value="realisasi_spt_non_lhkpn">Realisasi SPT Tahunan (Non Wajib LHKPN)</option>
-                <option value="belum_spt_non_lhkpn">Belum Lapor SPT (Non Wajib LHKPN)</option>
-                <option value="pics">Data PIC</option>
-            </select>
-        </div>
-
-        <div class="form-group">
-            <label>Nilai Saat Ini:</label>
-            <input type="text" id="cr_old_value" class="form-control bg-light" readonly>
-        </div>
-
-        <div class="form-group">
-            <label for="cr_new_value">Nilai Baru *</label>
-            <input type="text" id="cr_new_value" name="new_value" class="form-control" required>
+        <div class="rounded-md border border-amber-200 bg-amber-50 text-amber-700 px-4 py-3 mb-4">
+            <i class="fa fa-info-circle mr-1"></i> Pengajuan akan diteruskan ke Admin/TPN untuk disetujui. Setelah disetujui, Anda dapat mengedit semua data.
         </div>
 
         <div class="form-group">
             <label for="cr_reason">Alasan Perubahan *</label>
-            <textarea id="cr_reason" name="reason" class="form-control" rows="3" required placeholder="Jelaskan alasan perubahan..."></textarea>
+            <textarea id="cr_reason" name="reason" class="form-control" rows="4" required placeholder="Jelaskan alasan perubahan..."></textarea>
         </div>
 
         <div class="text-right pt-2">
-            <button type="button" class="bw-button bw-gray mr-1" onclick="hideModal('change-request-modal')">Batal</button>
-            <button type="button" class="bw-button bw-blue" onclick="document.getElementById('changeRequestForm').submit()">Ajukan</button>
+            <x-bladewind::button color="gray" has_icon="true" icon="times" onclick="hideModal('change-request-modal')">Batal</x-bladewind::button>
+            <x-bladewind::button color="blue" has_icon="true" icon="paper-plane" type="submit">Ajukan</x-bladewind::button>
         </div>
     </form>
 </x-bladewind::modal>
@@ -187,6 +188,10 @@ function statusLabel(status) {
             return '<span class="inline-flex rounded-full bg-sky-100 px-2 py-1 text-xs font-semibold text-sky-700">SUBMITTED</span>';
         case 'rejected':
             return '<span class="inline-flex rounded-full bg-rose-100 px-2 py-1 text-xs font-semibold text-rose-700">REJECTED</span>';
+        case 'edit_requested':
+            return '<span class="inline-flex rounded-full bg-amber-100 px-2 py-1 text-xs font-semibold text-amber-700">MENUNGGU PERSETUJUAN</span>';
+        case 'edit_approved':
+            return '<span class="inline-flex rounded-full bg-cyan-100 px-2 py-1 text-xs font-semibold text-cyan-700">DISETUJUI EDIT</span>';
         default:
             return '<span class="inline-flex rounded-full bg-slate-100 px-2 py-1 text-xs font-semibold text-slate-700">DRAFT</span>';
     }
@@ -257,33 +262,8 @@ function showDetailModal(submissionId) {
 
 function showChangeRequestModal(submissionId) {
     document.getElementById('cr_submission_id').value = submissionId;
-    document.getElementById('cr_field_name').value = '';
-    document.getElementById('cr_old_value').value = '';
-    document.getElementById('cr_new_value').value = '';
     document.getElementById('cr_reason').value = '';
     showModal('change-request-modal');
-}
-
-function showCurrentValue() {
-    const submissionId = parseInt(document.getElementById('cr_submission_id').value);
-    const fieldName = document.getElementById('cr_field_name').value;
-    const submission = submissions.find(s => s.id === submissionId);
-
-    if (!submission || !fieldName) {
-        document.getElementById('cr_old_value').value = '';
-        return;
-    }
-
-    let oldValue = '';
-    if (fieldName === 'pics') {
-        if (submission.pics && submission.pics.length > 0) {
-            oldValue = submission.pics.map(pic => pic.nama).join(', ');
-        }
-    } else {
-        oldValue = submission[fieldName] || 0;
-    }
-
-    document.getElementById('cr_old_value').value = oldValue;
 }
 </script>
 @endpush
