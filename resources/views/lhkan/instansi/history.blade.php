@@ -170,102 +170,102 @@
 
         <div class="text-right pt-2">
             <x-bladewind::button color="gray" has_icon="true" icon="times" onclick="hideModal('change-request-modal')">Batal</x-bladewind::button>
-            <x-bladewind::button color="blue" has_icon="true" icon="paper-plane" type="submit">Ajukan</x-bladewind::button>
+            <x-bladewind::button color="blue" has_icon="true" icon="paper-plane" can_submit="true">Ajukan</x-bladewind::button>
         </div>
     </form>
 </x-bladewind::modal>
 
 @push('js')
-<script src="{{ asset('vendor/bladewind/js/helpers.js') }}"></script>
-<script>
-let submissions = @json($submissions->items());
+    <script src="{{ asset('vendor/bladewind/js/helpers.js') }}"></script>
+    <script>
+    let submissions = @json($submissions->items());
 
-function statusLabel(status) {
-    switch (status) {
-        case 'approved':
-            return '<span class="inline-flex rounded-full bg-emerald-100 px-2 py-1 text-xs font-semibold text-emerald-700">APPROVED</span>';
-        case 'submitted':
-            return '<span class="inline-flex rounded-full bg-sky-100 px-2 py-1 text-xs font-semibold text-sky-700">SUBMITTED</span>';
-        case 'rejected':
-            return '<span class="inline-flex rounded-full bg-rose-100 px-2 py-1 text-xs font-semibold text-rose-700">REJECTED</span>';
-        case 'edit_requested':
-            return '<span class="inline-flex rounded-full bg-amber-100 px-2 py-1 text-xs font-semibold text-amber-700">MENUNGGU PERSETUJUAN</span>';
-        case 'edit_approved':
-            return '<span class="inline-flex rounded-full bg-cyan-100 px-2 py-1 text-xs font-semibold text-cyan-700">DISETUJUI EDIT</span>';
-        default:
-            return '<span class="inline-flex rounded-full bg-slate-100 px-2 py-1 text-xs font-semibold text-slate-700">DRAFT</span>';
+    function statusLabel(status) {
+        switch (status) {
+            case 'approved':
+                return '<span class="inline-flex rounded-full bg-emerald-100 px-2 py-1 text-xs font-semibold text-emerald-700">APPROVED</span>';
+            case 'submitted':
+                return '<span class="inline-flex rounded-full bg-sky-100 px-2 py-1 text-xs font-semibold text-sky-700">SUBMITTED</span>';
+            case 'rejected':
+                return '<span class="inline-flex rounded-full bg-rose-100 px-2 py-1 text-xs font-semibold text-rose-700">REJECTED</span>';
+            case 'edit_requested':
+                return '<span class="inline-flex rounded-full bg-amber-100 px-2 py-1 text-xs font-semibold text-amber-700">MENUNGGU PERSETUJUAN</span>';
+            case 'edit_approved':
+                return '<span class="inline-flex rounded-full bg-cyan-100 px-2 py-1 text-xs font-semibold text-cyan-700">DISETUJUI EDIT</span>';
+            default:
+                return '<span class="inline-flex rounded-full bg-slate-100 px-2 py-1 text-xs font-semibold text-slate-700">DRAFT</span>';
+        }
     }
-}
 
-function showDetailModal(submissionId) {
-    const submission = submissions.find(s => s.id === submissionId);
-    if (!submission) return;
+    function showDetailModal(submissionId) {
+        const submission = submissions.find(s => s.id === submissionId);
+        if (!submission) return;
 
-    const html = `
-        <table class="table table-bordered">
-            <tr>
-                <th width="40%">Periode</th>
-                <td>${submission.period ? submission.period.nama + ' (' + submission.period.tahun + ')' : '-'}</td>
-            </tr>
-            <tr>
-                <th>Status</th>
-                <td>${statusLabel(submission.status)}</td>
-            </tr>
-            <tr>
-                <th>Total Aparatur</th>
-                <td>${submission.jml_aparatur || 0}</td>
-            </tr>
-            <tr>
-                <th>Jumlah Wajib LHKPN</th>
-                <td>${submission.jml_wajib_lhkpn || 0}</td>
-            </tr>
-            <tr>
-                <th>Jumlah Tidak Wajib LHKPN</th>
-                <td>${submission.jml_non_wajib_lhkpn || 0}</td>
-            </tr>
-            <tr>
-                <th>Realisasi LHKPN</th>
-                <td>${submission.realisasi_lhkpn || 0}</td>
-            </tr>
-            <tr>
-                <th>Realisasi SPT Tahunan (Non Wajib LHKPN)</th>
-                <td>${submission.realisasi_spt_non_lhkpn || 0}</td>
-            </tr>
-            <tr>
-                <th>Belum Lapor SPT (Non Wajib LHKPN)</th>
-                <td>${submission.belum_spt_non_lhkpn || 0}</td>
-            </tr>
-            <tr>
-                <th>Total Belum Lapor LHKAN</th>
-                <td class="font-weight-bold text-danger">${submission.total_belum_lhkan || 0}</td>
-            </tr>
-            <tr>
-                <th>Link Google Drive</th>
-                <td><a href="${submission.link_rekap_gdrive || '#'}" target="_blank">${submission.link_rekap_gdrive || '-'}</a></td>
-            </tr>
-            <tr>
-                <th>PIC</th>
-                <td>
-                    ${submission.pics && submission.pics.length > 0 ? submission.pics.map(pic => `<div>${pic.nama} (${pic.nomor_hp})</div>`).join('') : '-'}
-                </td>
-            </tr>
-            <tr>
-                <th>Tanggal Submit</th>
-                <td>${submission.submitted_at ? new Date(submission.submitted_at).toLocaleString('id-ID') : '-'}</td>
-            </tr>
-        </table>
-    `;
+        const html = `
+            <table class="table table-bordered">
+                <tr>
+                    <th width="40%">Periode</th>
+                    <td>${submission.period ? submission.period.nama + ' (' + submission.period.tahun + ')' : '-'}</td>
+                </tr>
+                <tr>
+                    <th>Status</th>
+                    <td>${statusLabel(submission.status)}</td>
+                </tr>
+                <tr>
+                    <th>Total Aparatur</th>
+                    <td>${submission.jml_aparatur || 0}</td>
+                </tr>
+                <tr>
+                    <th>Jumlah Wajib LHKPN</th>
+                    <td>${submission.jml_wajib_lhkpn || 0}</td>
+                </tr>
+                <tr>
+                    <th>Jumlah Tidak Wajib LHKPN</th>
+                    <td>${submission.jml_non_wajib_lhkpn || 0}</td>
+                </tr>
+                <tr>
+                    <th>Realisasi LHKPN</th>
+                    <td>${submission.realisasi_lhkpn || 0}</td>
+                </tr>
+                <tr>
+                    <th>Realisasi SPT Tahunan (Non Wajib LHKPN)</th>
+                    <td>${submission.realisasi_spt_non_lhkpn || 0}</td>
+                </tr>
+                <tr>
+                    <th>Belum Lapor SPT (Non Wajib LHKPN)</th>
+                    <td>${submission.belum_spt_non_lhkpn || 0}</td>
+                </tr>
+                <tr>
+                    <th>Total Belum Lapor LHKAN</th>
+                    <td class="font-weight-bold text-danger">${submission.total_belum_lhkan || 0}</td>
+                </tr>
+                <tr>
+                    <th>Link Google Drive</th>
+                    <td><a href="${submission.link_rekap_gdrive || '#'}" target="_blank">${submission.link_rekap_gdrive || '-'}</a></td>
+                </tr>
+                <tr>
+                    <th>PIC</th>
+                    <td>
+                        ${submission.pics && submission.pics.length > 0 ? submission.pics.map(pic => `<div>${pic.nama} (${pic.nomor_hp})</div>`).join('') : '-'}
+                    </td>
+                </tr>
+                <tr>
+                    <th>Tanggal Submit</th>
+                    <td>${submission.submitted_at ? new Date(submission.submitted_at).toLocaleString('id-ID') : '-'}</td>
+                </tr>
+            </table>
+        `;
 
-    document.getElementById('detailModalBody').innerHTML = html;
-    showModal('detail-modal');
-}
+        document.getElementById('detailModalBody').innerHTML = html;
+        showModal('detail-modal');
+    }
 
-function showChangeRequestModal(submissionId) {
-    document.getElementById('cr_submission_id').value = submissionId;
-    document.getElementById('cr_reason').value = '';
-    showModal('change-request-modal');
-}
-</script>
+    function showChangeRequestModal(submissionId) {
+        document.getElementById('cr_submission_id').value = submissionId;
+        document.getElementById('cr_reason').value = '';
+        showModal('change-request-modal');
+    }
+    </script>
 @endpush
 
 @endsection

@@ -63,9 +63,7 @@
                     Silakan cek <a href="{{ route('lhkan.history') }}" class="font-semibold underline hover:text-sky-900">riwayat pelaporan</a> untuk melihat status.
                 </div>
             @elseif(isset($canEdit) && $canEdit)
-                <div class="rounded-md border border-emerald-200 bg-emerald-50 text-emerald-700 px-4 py-3 mb-4">
-                    <i class="fa fa-edit mr-1"></i> Permohonan edit Anda telah disetujui. Silakan edit data dan submit ulang.
-                </div>
+                <x-bladewind::alert type="success" class="mb-4">Permohonan edit Anda telah disetujui. Silakan edit data dan submit ulang.</x-bladewind::alert>
             @elseif(isset($hasSubmitted) && $hasSubmitted)
                 <div class="rounded-md border border-amber-200 bg-amber-50 text-amber-700 px-4 py-3 mb-4">
                     <i class="fa fa-check-circle mr-1"></i> Anda sudah melakukan submit data untuk periode ini. 

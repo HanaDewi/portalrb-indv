@@ -4,31 +4,27 @@
 
 @section('content')
 <div class="container-fluid px-0">
-    <div class="card shadow-sm border-0">
-        <div class="card-header bg-white d-flex justify-content-between align-items-center flex-wrap gap-2">
-            <h3 class="h5 mb-0">Manajemen PIC Pelaporan</h3>
-            @if($pendingCount > 0)
-                <span class="badge badge-warning bg-warning text-dark rounded-pill">{{ $pendingCount }} Pending</span>
-            @endif
-        </div>
+    <div class="card shadow-sm border-0"> 
         <div class="card-body">
             <!-- Filters -->
-            <form method="GET" action="{{ route('lhkan.pic.index') }}" class="row g-3 align-items-end mb-3">
-                <div class="col-12 col-md-5 col-lg-4">
-                    <label for="status_filter" class="form-label fw-semibold mb-1">Status</label>
-                    <select id="status_filter" name="status" class="form-control" onchange="this.form.submit()">
-                        <option value="">Semua Status</option>
-                        <option value="pending" {{ $status == 'pending' ? 'selected' : '' }}>Pending</option>
-                        <option value="approved" {{ $status == 'approved' ? 'selected' : '' }}>Approved</option>
-                        <option value="rejected" {{ $status == 'rejected' ? 'selected' : '' }}>Rejected</option>
-                    </select>
+            <div class="row mb-3">
+                <div class="col-md-12">
+                    <form method="GET" action="{{ route('lhkan.pic.index') }}" class="form-horizontal">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Status</label>
+                                    <select name="status" class="form-control" onchange="this.form.submit()">
+                                        <option value="pending" {{ $status == 'pending' ? 'selected' : '' }}>Pending</option>
+                                        <option value="approved" {{ $status == 'approved' ? 'selected' : '' }}>Approved</option>
+                                        <option value="rejected" {{ $status == 'rejected' ? 'selected' : '' }}>Rejected</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
                 </div>
-                <div class="col-12 col-md-auto">
-                    <a href="{{ route('lhkan.pic.index') }}" class="btn btn-outline-secondary">
-                        Reset
-                    </a>
-                </div>
-            </form>
+            </div>
 
             <!-- PIC Table -->
             <div class="table-responsive">

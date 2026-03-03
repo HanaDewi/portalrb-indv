@@ -203,7 +203,7 @@ class LhkanController extends Controller
     /**
      * Toggle periode lock status
      */
-    public function periodeToggleLock($id)
+    public function periodeToggleLock(Request $request, $id)
     {
         if ($this->level !== 'admin') {
             abort(403, 'Anda tidak memiliki akses ke fitur ini.');
@@ -217,6 +217,10 @@ class LhkanController extends Controller
         } else {
             $periode->unlock();
             $message = 'Periode berhasil dibuka. Instansi dapat mengedit data.';
+        }
+
+        if ($request->expectsJson() || $request->ajax()) {
+            return response()->json(['success' => true, 'message' => $message]);
         }
 
         return redirect()->back()->with('success', $message);
@@ -379,7 +383,7 @@ class LhkanController extends Controller
 
         $status = $request->status ?? 'pending';
 
-        $changeRequests = LhkanChangeRequest::with(['submission.instansi', 'processor'])
+        $changeRequests = LhkanChangeRequest::with(['submission.instansi', 'submission.period', 'processor'])
             ->where('status', $status)
             ->orderBy('created_at', 'desc')
             ->paginate(20);

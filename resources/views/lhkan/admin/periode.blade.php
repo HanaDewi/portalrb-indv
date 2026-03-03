@@ -48,6 +48,16 @@
 @section('content')
     <div class="block block-rounded block-bordered mt-8">
         <div class="block-content">
+            @if(session('success'))
+                <div class="mb-4">
+                    <x-bladewind::alert type="success">{{ session('success') }}</x-bladewind::alert>
+                </div>
+            @endif
+            @if(session('error'))
+                <div class="mb-4">
+                    <x-bladewind::alert type="error">{{ session('error') }}</x-bladewind::alert>
+                </div>
+            @endif
             <!-- Add Button -->
             <div style="display: flex; justify-content: flex-end; margin-bottom: 1rem;">
                 <x-bladewind::button color="green" has_icon="true" icon="plus" onclick="showModal('add-periode-modal')">
@@ -270,6 +280,28 @@
                         }
                     });
                 });
+
+                // Toggle lock periode (Kunci/Buka periode)
+                window.toggleLock = function(id) {
+                    $.post("{{ route('lhkan.periode.toggle-lock', ':id') }}".replace(':id', id), {
+                        _token: "{{ csrf_token() }}"
+                    })
+                    .done(function(res) {
+                        if (res.success) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Berhasil',
+                                text: res.message,
+                                timer: 2000
+                            });
+                            setTimeout(function() { location.reload(); }, 2000);
+                        }
+                    })
+                    .fail(function(xhr) {
+                        var msg = (xhr.responseJSON && xhr.responseJSON.message) ? xhr.responseJSON.message : 'Terjadi kesalahan.';
+                        Swal.fire({ icon: 'error', title: 'Gagal', text: msg });
+                    });
+                };
             });
         </script>
     @endpush
