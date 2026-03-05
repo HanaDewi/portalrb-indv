@@ -177,10 +177,10 @@
                                                                 <span class="text-slate-500">Persentase</span>
                                                                 <span class="font-semibold text-slate-800 ml-3">{{ $item['persentase'] !== null ? number_format($item['persentase'], 2, ',', '.') . '%' : '-' }}</span>
                                                             </div>
-                                                            <div class="flex justify-between">
+                                                            {{-- <div class="flex justify-between">
                                                                 <span class="text-slate-500">Rata-rata Nasional</span>
                                                                 <span class="font-semibold text-slate-800 ml-3">{{ $item['rata_rata_nasional'] !== null ? number_format($item['rata_rata_nasional'], 2, ',', '.') . '%' : '-' }}</span>
-                                                            </div>
+                                                            </div> --}}
                                                         </div>
                                                     </div>
                                                 </div>
