@@ -213,16 +213,16 @@
                                     Submit Ulang Data
                                 </x-bladewind::button>
                             @else
-                                <x-bladewind::button color="purple" has_icon="true" icon="save" size="small" type="submit" name="action" value="draft">
+                                <!-- <x-bladewind::button color="purple" has_icon="true" icon="save" size="small" type="submit" name="action" value="draft">
                                     Simpan Draft
-                                </x-bladewind::button>
+                                </x-bladewind::button> -->
                                 <x-bladewind::button color="blue" has_icon="true" icon="paper-plane" size="small" type="button" id="btnSubmitData">
                                     Submit Data
                                 </x-bladewind::button>
                             @endif
-                            <x-bladewind::button color="cyan" has_icon="true" icon="history" size="small" href="{{ route('lhkan.history') }}">
+                            <!-- <x-bladewind::button color="cyan" has_icon="true" icon="history" size="small" href="{{ route('lhkan.history') }}">
                                 Lihat History
-                            </x-bladewind::button>
+                            </x-bladewind::button> -->
                         </div>
                     </form>
             @endif

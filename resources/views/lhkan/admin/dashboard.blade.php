@@ -160,6 +160,13 @@
                                         <a href="{{ route('lhkan.pic.index') }}" class="btn btn-info btn-sm" style="display: inline-flex; align-items: center; padding: 0.375rem 0.5rem; font-size: 0.75rem;" title="Kelola PIC">
                                             <i class="fa fa-users"></i>
                                         </a>
+                                        <form method="POST" action="{{ route('lhkan.submission.delete', $submission->id) }}" class="d-inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data LHKAN instansi ini?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger btn-sm" style="display: inline-flex; align-items: center; padding: 0.375rem 0.5rem; font-size: 0.75rem;" title="Hapus data LHKAN">
+                                                <i class="fa fa-trash"></i>
+                                            </button>
+                                        </form>
                                     @endif
                                 </td>
                             </tr>

@@ -247,6 +247,21 @@ class LhkanController extends Controller
         return redirect()->back()->with('success', 'Periode berhasil dihapus.');
     }
 
+    /**
+     * Delete LHKAN submission (data LHKAN instansi) - Admin only
+     */
+    public function submissionDelete($id)
+    {
+        if ($this->level !== 'admin') {
+            abort(403, 'Anda tidak memiliki akses ke fitur ini.');
+        }
+
+        $submission = LhkanSubmission::findOrFail($id);
+        $submission->delete();
+
+        return redirect()->back()->with('success', 'Data LHKAN instansi berhasil dihapus.');
+    }
+
     // ==================== PIC MANAGEMENT ====================
 
     /**

@@ -307,6 +307,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/lhkan/change-requests/approve/{id}', [LhkanController::class, 'changeRequestApprove'])->name('lhkan.change-requests.approve');
     Route::post('/lhkan/change-requests/reject/{id}', [LhkanController::class, 'changeRequestReject'])->name('lhkan.change-requests.reject');
 
+    // Delete LHKAN submission (Admin Only)
+    Route::delete('/lhkan/submission/delete/{id}', [LhkanController::class, 'submissionDelete'])->name('lhkan.submission.delete');
+
     // Instansi Features (KL, Provinsi, Kabupaten)
     Route::get('/lhkan/form', [LhkanController::class, 'form'])->name('lhkan.form');
     Route::post('/lhkan/store', [LhkanController::class, 'store'])->name('lhkan.store');
