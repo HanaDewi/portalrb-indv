@@ -28,50 +28,50 @@
 
             <!-- PIC Table -->
             <div class="table-responsive">
-                <table class="table table-bordered table-striped table-hover align-middle mb-0">
-                    <thead class="table-light">
+                <table id="table-lhkan-pic" class="table table-bordered table-striped table-hover align-middle mb-0">
+                    <thead class="table-dark">
                         <tr>
                             <th class="text-center" style="width: 50px;">No</th>
-                            <th>Instansi</th>
-                            <th>Nama PIC</th>
-                            <th>Nomor HP</th>
-                            <th style="width: 100px;">Status</th>
-                            <th style="width: 150px;">Ditambahkan Oleh</th>
-                            <th style="width: 180px;">Tanggal Dibuat</th>
-                            <th class="text-center" style="width: 180px;">Aksi</th>
+                            <th style="padding: 0.75rem 1.5rem; text-align: left; font-size: 0.75rem; font-weight: 500; color: #ffffff; text-transform: uppercase; letter-spacing: 0.05em;">Instansi</th>
+                            <th style="padding: 0.75rem 1.5rem; text-align: left; font-size: 0.75rem; font-weight: 500; color: #ffffff; text-transform: uppercase; letter-spacing: 0.05em;">Nama PIC</th>
+                            <th style="padding: 0.75rem 1.5rem; text-align: left; font-size: 0.75rem; font-weight: 500; color: #ffffff; text-transform: uppercase; letter-spacing: 0.05em;">Nomor HP</th>
+                            <th style="width: 100px; min-width: 100px; padding: 0.75rem 1rem; text-align: left; font-size: 0.75rem; font-weight: 500; color: #ffffff; text-transform: uppercase; letter-spacing: 0.05em;">Status</th>
+                            <th style="width: 140px; min-width: 140px; padding: 0.75rem 1rem; text-align: left; font-size: 0.75rem; font-weight: 500; color: #ffffff; text-transform: uppercase; letter-spacing: 0.05em;">Ditambahkan Oleh</th>
+                            <th style="padding: 0.75rem 1.5rem; text-align: left; font-size: 0.75rem; font-weight: 500; color: #ffffff; text-transform: uppercase; letter-spacing: 0.05em;">Tanggal Dibuat</th>
+                            <th class="text-center" style="padding: 0.75rem 1.5rem; text-align: center; font-size: 0.75rem; font-weight: 500; color: #ffffff; text-transform: uppercase; letter-spacing: 0.05em;">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
                         @if($pics->count() > 0)
                             @foreach($pics as $index => $pic)
                                 <tr>
-                                    <td class="text-center">{{ ($pics->currentPage() - 1) * $pics->perPage() + $index + 1 }}</td>
-                                    <td>{{ $pic->instansi->nama ?? '-' }}</td>
+                                    <td class="text-center">{{ $index + 1 }}</td>
+                                    <td>{{ $pic->instansi->name ?? '-' }}</td>
                                     <td>{{ $pic->nama }}</td>
                                     <td>{{ $pic->nomor_hp }}</td>
-                                    <td>
+                                    <td style="padding: 0.75rem 1rem; vertical-align: middle; white-space: nowrap;">
                                         @switch($pic->status)
                                             @case('pending')
-                                                <span class="badge badge-warning bg-warning text-dark">Pending</span>
+                                                <span style="display: inline-block; padding: 0.25rem 0.5rem; font-size: 0.75rem; font-weight: 500; background-color: #ffc107; color: #000; border-radius: 0.25rem;">Pending</span>
                                                 @break
                                             @case('approved')
-                                                <span class="badge badge-success bg-success">Approved</span>
+                                                <span style="display: inline-block; padding: 0.25rem 0.5rem; font-size: 0.75rem; font-weight: 500; background-color: #198754; color: #fff; border-radius: 0.25rem;">Approved</span>
                                                 @break
                                             @case('rejected')
-                                                <span class="badge badge-danger bg-danger">Rejected</span>
+                                                <span style="display: inline-block; padding: 0.25rem 0.5rem; font-size: 0.75rem; font-weight: 500; background-color: #dc3545; color: #fff; border-radius: 0.25rem;">Rejected</span>
                                                 @break
                                         @endswitch
                                     </td>
-                                    <td>
+                                    <td style="padding: 0.75rem 1rem; vertical-align: middle; white-space: nowrap;">
                                         @if($pic->added_by === 'admin')
-                                            <span class="badge badge-info bg-info text-dark">Admin</span>
+                                            <span style="display: inline-block; padding: 0.25rem 0.5rem; font-size: 0.75rem; font-weight: 500; background-color: #0dcaf0; color: #000; border-radius: 0.25rem;">Admin</span>
                                         @else
-                                            <span class="badge badge-secondary bg-secondary">Instansi</span>
+                                            <span style="display: inline-block; padding: 0.25rem 0.5rem; font-size: 0.75rem; font-weight: 500; background-color: #6c757d; color: #fff; border-radius: 0.25rem;">Instansi</span>
                                         @endif
                                     </td>
                                     <td>{{ $pic->created_at ? $pic->created_at->format('d/m/Y H:i') : '-' }}</td>
                                     <td class="text-center">
-                                        <div class="d-flex justify-content-center flex-wrap">
+                                        <div class="flex justify-content-center flex-wrap">
                                             @if($pic->status === 'pending')
                                                 <!-- Approve -->
                                                 <form method="POST" action="{{ route('lhkan.pic.approve', $pic->id) }}" class="d-inline mr-1 mb-1" onsubmit="return confirm('Apakah Anda yakin ingin menyetujui PIC ini?')">
@@ -116,18 +116,6 @@
                     </tbody>
                 </table>
             </div>
-
-            <!-- Pagination -->
-            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mt-4">
-                <div class="text-muted">
-                    @if($pics->count() > 0)
-                        Menampilkan {{ $pics->firstItem() }} sampai {{ $pics->lastItem() }} dari {{ $pics->total() }} data
-                    @else
-                        Menampilkan 0 dari {{ $pics->total() }} data
-                    @endif
-                </div>
-                {{ $pics->links() }}
-            </div>
         </div>
     </div>
 </div>
@@ -164,6 +152,7 @@
 @endsection
 
 @push('js')
+<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
 <script>
 function editPic(id, nama, nomor_hp) {
     var form = document.getElementById('editForm');
@@ -173,5 +162,15 @@ function editPic(id, nama, nomor_hp) {
     document.getElementById('edit_nomor_hp').value = nomor_hp;
     $('#editModal').modal('show');
 }
+$(document).ready(function() {
+    if ($.fn.DataTable && $('#table-lhkan-pic').length) {
+        $('#table-lhkan-pic').DataTable({
+            language: { url: '//cdn.datatables.net/plug-ins/1.12.1/i18n/id.json' },
+            pageLength: 20,
+            order: [[6, 'desc']],
+            columnDefs: [{ orderable: false, targets: -1 }]
+        });
+    }
+});
 </script>
 @endpush

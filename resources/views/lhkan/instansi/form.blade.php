@@ -171,8 +171,8 @@
                                     <div class="form-group">
                                         <label for="belum_spt_non_lhkpn" class="font-medium">Belum Lapor SPT - Non Wajib LHKPN *</label>
                                         <x-bladewind::input numeric="true" id="belum_spt_non_lhkpn" name="belum_spt_non_lhkpn"
-                                            class="form-control" value="{{ old('belum_spt_non_lhkpn', $submission->belum_spt_non_lhkpn ?? '') }}" min="0"
-                                            required onchange="calculateTotalBelumLhkan()" />
+                                            class="form-control bg-slate-100" value="{{ old('belum_spt_non_lhkpn', $submission->belum_spt_non_lhkpn ?? '') }}" min="0"
+                                            required readonly />
                                     </div>
                                 </div>
                             </div>
@@ -213,16 +213,10 @@
                                     Submit Ulang Data
                                 </x-bladewind::button>
                             @else
-                                <!-- <x-bladewind::button color="purple" has_icon="true" icon="save" size="small" type="submit" name="action" value="draft">
-                                    Simpan Draft
-                                </x-bladewind::button> -->
                                 <x-bladewind::button color="blue" has_icon="true" icon="paper-plane" size="small" type="button" id="btnSubmitData">
                                     Submit Data
                                 </x-bladewind::button>
                             @endif
-                            <!-- <x-bladewind::button color="cyan" has_icon="true" icon="history" size="small" href="{{ route('lhkan.history') }}">
-                                Lihat History
-                            </x-bladewind::button> -->
                         </div>
                     </form>
             @endif
@@ -274,10 +268,14 @@
         }
 
         function calculateTotalBelumLhkan() {
+            const jmlNonWajibLhkpn = parseInt(document.getElementById('jml_non_wajib_lhkpn').value) || 0;
+            const realisasiSptNonLhkpn = parseInt(document.getElementById('realisasi_spt_non_lhkpn').value) || 0;
+            const belumSptNonLhkpn = Math.max(0, jmlNonWajibLhkpn - realisasiSptNonLhkpn);
+
+            document.getElementById('belum_spt_non_lhkpn').value = belumSptNonLhkpn;
+
             const jmlWajibLhkpn = parseInt(document.getElementById('jml_wajib_lhkpn').value) || 0;
             const realisasiLhkpn = parseInt(document.getElementById('realisasi_lhkpn').value) || 0;
-            const belumSptNonLhkpn = parseInt(document.getElementById('belum_spt_non_lhkpn').value) || 0;
-
             const totalBelumLhkan = (jmlWajibLhkpn - realisasiLhkpn) + belumSptNonLhkpn;
 
             document.getElementById('total_belum_lhkan').value = totalBelumLhkan;

@@ -42,6 +42,32 @@
         body.overflow-hidden .mobile-menu {
             pointer-events: none !important;
         }
+
+        /* Dark theme untuk tabel periode */
+        #table-lhkan-periode {
+            background-color: #e9ecef;
+            color: #212529;
+            border-color: #495057;
+        }
+        #table-lhkan-periode thead {
+            background-color: #212529;
+            color: #fff;
+            border-color: #495057;
+        }
+        #table-lhkan-periode thead th {
+            padding: 0.75rem 1rem;
+            border-color: #495057;
+            font-weight: 500;
+        }
+        #table-lhkan-periode tbody td {
+            background-color: #e9ecef;
+            color: #212529;
+            border-color: #495057;
+            padding: 0.75rem 1rem;
+        }
+        #table-lhkan-periode tbody tr:hover td {
+            background-color: #e9ecef;
+        }
     </style>
 @endpush
 
@@ -67,50 +93,51 @@
 
             <!-- Periodes Table -->
                     <div class="table-responsive mt-4">
-                        <x-bladewind::table compact="true" divider="thin" celled="true">
-                            <x-slot name="header">
-                                <th>No</th>
-                                <th>Tahun</th>
-                                <th>Nama Periode</th>
-                                <th>Deskripsi</th>
-                                <th>Status</th>
-                                <th>Jumlah Submit</th>
-                                <th>Aksi</th>
-                            </x-slot>
-                            @foreach($periodes as $index => $periode)
+                        <table id="table-lhkan-periode" class="table table-bordered">
+                            <thead>
                                 <tr>
-                                    <td>{{ ($periodes->currentPage() - 1) * $periodes->perPage() + $index + 1 }}</td>
-                                    <td>{{ $periode->tahun }}</td>
-                                    <td>{{ $periode->nama }}</td>
-                                    <td>{{ $periode->deskripsi ?? '-' }}</td>
-                                    <td>
-                                        @if($periode->status === 'open')
-                                            <x-bladewind::tag label="Open" color="green" />
-                                        @else
-                                            <x-bladewind::tag label="Locked" color="red" />
-                                        @endif
-                                    </td>
-                                    <td>{{ $periode->submissions()->where('status', '!=', 'draft')->count() }}</td>
-                                    <td>
-                                        <x-bladewind::button color="yellow" has_icon="true" icon="lock" onclick="toggleLock({{ $periode->id }})">
-                                            {{ $periode->status === 'open' ? 'Kunci Periode' : 'Buka Periode' }}
-                                        </x-bladewind::button>
-                                        <x-bladewind::button color="green" has_icon="true" icon="edit" onclick="editPeriode({{ $periode->id }}, '{{ $periode->tahun }}', '{{ $periode->nama }}', '{{ $periode->status }}', '{{ $periode->deskripsi ?? '' }}')">
-                                            Edit
-                                        </x-bladewind::button>
-                                    </td>
+                                    <th style="color: #fff;">No</th>
+                                    <th style="color: #fff;">Tahun</th>
+                                    <th style="color: #fff;">Nama Periode</th>
+                                    <th style="color: #fff;">Deskripsi</th>
+                                    <th style="color: #fff;">Status</th>
+                                    <th style="color: #fff;">Jumlah Submit</th>
+                                    <th style="color: #fff;">Aksi</th>
                                 </tr>
-                            @endforeach
-                        </x-bladewind::table>
-                    </div>
-
-                    <!-- Pagination -->
-                    <div class="d-flex justify-content-between align-items-center mt-4">
-                        <div class="text-muted">
-                            Menampilkan {{ $periodes->firstItem() }} sampai {{ $periodes->lastItem() }} dari
-                            {{ $periodes->total() }} data
-                        </div>
-                        {{ $periodes->links() }}
+                            </thead>
+                            <tbody>
+                                @foreach($periodes as $index => $periode)
+                                    <tr>
+                                        <td>{{ $index + 1 }}</td>
+                                        <td>{{ $periode->tahun }}</td>
+                                        <td>{{ $periode->nama }}</td>
+                                        <td>{{ $periode->deskripsi ?? '-' }}</td>
+                                        <td>
+                                            @if($periode->status === 'open')
+                                                <span style="display: inline-block; padding: 0.25rem 0.5rem; font-size: 0.75rem; font-weight: 500; background-color: #198754; color: #fff; border-radius: 0.25rem;">Open</span>
+                                            @else
+                                                <span style="display: inline-block; padding: 0.25rem 0.5rem; font-size: 0.75rem; font-weight: 500; background-color: #dc3545; color: #fff; border-radius: 0.25rem;">Locked</span>
+                                            @endif
+                                        </td>
+                                        <td>{{ $periode->submissions()->where('status', '!=', 'draft')->count() }}</td>
+                                        <td class="flex gap-2 items-center">
+                                            @if($periode->status === 'open')
+                                                <button type="button" class="flex gap-2 items-center btn btn-warning btn-sm" onclick="toggleLock({{ $periode->id }})">
+                                                    <i class="fa fa-lock"></i> Kunci Periode
+                                                </button>
+                                            @else
+                                                <button type="button" class="flex gap-2 items-center btn btn-info btn-sm" onclick="toggleLock({{ $periode->id }})">
+                                                    <i class="fa fa-unlock"></i> Buka Periode
+                                                </button>
+                                            @endif
+                                            <button type="button" class="flex gap-2 items-center btn btn-success btn-sm" onclick="editPeriode({{ $periode->id }}, '{{ addslashes($periode->tahun) }}', '{{ addslashes($periode->nama) }}', '{{ $periode->status }}', {{ json_encode($periode->deskripsi ?? '') }})">
+                                                <i class="fa fa-edit"></i> Edit
+                                            </button>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -193,9 +220,19 @@
 
     @push('js')
     <script src="{{ asset('vendor/bladewind/js/helpers.js') }}"></script>
+    <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
         <script>
             $(document).ready(function() {
                 let editPeriodeId = null;
+
+                if ($.fn.DataTable && $('#table-lhkan-periode').length) {
+                    $('#table-lhkan-periode').DataTable({
+                        language: { url: '//cdn.datatables.net/plug-ins/1.12.1/i18n/id.json' },
+                        pageLength: 10,
+                        order: [[1, 'desc']],
+                        columnDefs: [{ orderable: false, targets: -1 }]
+                    });
+                }
 
                 $('#addPeriodeForm').on('submit', function(e) {
                     e.preventDefault();

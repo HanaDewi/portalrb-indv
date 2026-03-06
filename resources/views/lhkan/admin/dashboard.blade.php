@@ -102,28 +102,28 @@
         </form>
 
         <!-- Data Table -->
-        <div style="overflow-x: auto; margin-top: 1.5rem; background-color: white;">
-            <table class="table">
-                <thead>
+        <div style="overflow-x: auto; margin-top: 1.5rem;">
+            <table id="table-lhkan-dashboard" class="table">
+                <thead class="table-dark">
                     <tr>
-                        <th style="padding: 0.75rem 1.5rem; text-align: center; font-size: 0.75rem; font-weight: 500; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em;">No</th>
-                        <th style="padding: 0.75rem 1.5rem; text-align: left; font-size: 0.75rem; font-weight: 500; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em;">Instansi</th>
-                        <th style="padding: 0.75rem 1.5rem; text-align: left; font-size: 0.75rem; font-weight: 500; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em;">Periode</th>
-                        <th style="padding: 0.75rem 1.5rem; text-align: left; font-size: 0.75rem; font-weight: 500; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em;">Status</th>
-                        <th style="padding: 0.75rem 1.5rem; text-align: center; font-size: 0.75rem; font-weight: 500; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em;">Total Aparatur</th>
-                        <th style="padding: 0.75rem 1.5rem; text-align: center; font-size: 0.75rem; font-weight: 500; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em;">Wajib LHKPN</th>
-                        <th style="padding: 0.75rem 1.5rem; text-align: center; font-size: 0.75rem; font-weight: 500; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em;">Realisasi LHKPN</th>
-                        <th style="padding: 0.75rem 1.5rem; text-align: center; font-size: 0.75rem; font-weight: 500; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em;">Belum LHKAN</th>
-                        <th style="padding: 0.75rem 1.5rem; text-align: left; font-size: 0.75rem; font-weight: 500; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em;">PIC</th>
-                        <th style="padding: 0.75rem 1.5rem; text-align: left; font-size: 0.75rem; font-weight: 500; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em;">Tanggal Submit</th>
-                        <th style="padding: 0.75rem 1.5rem; text-align: center; font-size: 0.75rem; font-weight: 500; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em;">Aksi</th>
+                        <th style="padding: 0.75rem 1.5rem; text-align: center; font-size: 0.75rem; font-weight: 500; color: #ffffff; text-transform: uppercase; letter-spacing: 0.05em;">No</th>
+                        <th style="padding: 0.75rem 1.5rem; text-align: left; font-size: 0.75rem; font-weight: 500; color: #ffffff; text-transform: uppercase; letter-spacing: 0.05em;">Instansi</th>
+                        <th style="padding: 0.75rem 1.5rem; text-align: left; font-size: 0.75rem; font-weight: 500; color: #ffffff; text-transform: uppercase; letter-spacing: 0.05em;">Periode</th>
+                        <th style="padding: 0.75rem 1.5rem; text-align: left; font-size: 0.75rem; font-weight: 500; color: #ffffff; text-transform: uppercase; letter-spacing: 0.05em;">Status</th>
+                        <th style="padding: 0.75rem 1.5rem; text-align: center; font-size: 0.75rem; font-weight: 500; color: #ffffff; text-transform: uppercase; letter-spacing: 0.05em;">Total Aparatur</th>
+                        <th style="padding: 0.75rem 1.5rem; text-align: center; font-size: 0.75rem; font-weight: 500; color: #ffffff; text-transform: uppercase; letter-spacing: 0.05em;">Wajib LHKPN</th>
+                        <th style="padding: 0.75rem 1.5rem; text-align: center; font-size: 0.75rem; font-weight: 500; color: #ffffff; text-transform: uppercase; letter-spacing: 0.05em;">Realisasi LHKPN</th>
+                        <th style="padding: 0.75rem 1.5rem; text-align: center; font-size: 0.75rem; font-weight: 500; color: #ffffff; text-transform: uppercase; letter-spacing: 0.05em;">Belum LHKAN</th>
+                        <th style="padding: 0.75rem 1.5rem; text-align: left; font-size: 0.75rem; font-weight: 500; color: #ffffff; text-transform: uppercase; letter-spacing: 0.05em;">PIC</th>
+                        <th style="padding: 0.75rem 1.5rem; text-align: left; font-size: 0.75rem; font-weight: 500; color: #ffffff; text-transform: uppercase; letter-spacing: 0.05em;">Tanggal Submit</th>
+                        <th style="padding: 0.75rem 1.5rem; text-align: center; font-size: 0.75rem; font-weight: 500; color: #ffffff; text-transform: uppercase; letter-spacing: 0.05em;">Aksi</th>
                     </tr>
                 </thead>
                 <tbody style="background-color: white; border-bottom: 1px solid #e5e7eb;">
                     @if($submissions->count() > 0)
                         @foreach($submissions as $index => $submission)
                             <tr style="border-bottom: 1px solid #e5e7eb;">
-                                <td style="padding: 1rem 1.5rem; white-space: nowrap; text-align: center; font-size: 0.875rem; color: #111827;">{{ ($submissions->currentPage() - 1) * $submissions->perPage() + $index + 1 }}</td>
+                                <td style="padding: 1rem 1.5rem; white-space: nowrap; text-align: center; font-size: 0.875rem; color: #111827;">{{ $index + 1 }}</td>
                                 <td style="padding: 1rem 1.5rem; white-space: nowrap; font-size: 0.875rem; color: #111827;">{{ $submission->instansi->nama_instansi ?? '-' }}</td>
                                 <td style="padding: 1rem 1.5rem; white-space: nowrap; font-size: 0.875rem; color: #111827;">{{ $submission->period->nama ?? '-' }}</td>
                                 <td style="padding: 1rem 1.5rem; white-space: nowrap; font-size: 0.875rem;">
@@ -179,14 +179,22 @@
                 </tbody>
             </table>
         </div>
-
-        <!-- Pagination -->
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem;">
-            <div style="font-size: 0.875rem; color: #4b5563;">
-                Menampilkan {{ $submissions->firstItem() }} sampai {{ $submissions->lastItem() }} dari {{ $submissions->total() }} data
-            </div>
-            {{ $submissions->links() }}
-        </div>
     </div>
 </div>
 @endsection
+
+@push('js')
+<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+<script>
+$(document).ready(function() {
+    if ($.fn.DataTable && $('#table-lhkan-dashboard').length) {
+        $('#table-lhkan-dashboard').DataTable({
+            language: { url: '//cdn.datatables.net/plug-ins/1.12.1/i18n/id.json' },
+            pageLength: 20,
+            order: [[0, 'asc']],
+            columnDefs: [{ orderable: false, searchable: false, targets: -1 }]
+        });
+    }
+});
+</script>
+@endpush

@@ -62,7 +62,7 @@ class LhkanController extends Controller
             $query->where('status', $status);
         }
 
-        $submissions = $query->orderBy('created_at', 'desc')->paginate(20);
+        $submissions = $query->orderBy('created_at', 'desc')->limit(1000)->get();
 
         // Statistics
         $totalInstansi = KlpdInstansi::count();
@@ -146,7 +146,7 @@ class LhkanController extends Controller
             abort(403, 'Anda tidak memiliki akses ke halaman ini.');
         }
 
-        $periodes = LhkanPeriod::orderBy('tahun', 'desc')->paginate(20);
+        $periodes = LhkanPeriod::orderBy('tahun', 'desc')->get();
 
         return view('lhkan.admin.periode', compact('periodes'));
     }
@@ -286,7 +286,7 @@ class LhkanController extends Controller
             $query->where('status', $status);
         }
 
-        $pics = $query->orderBy('created_at', 'desc')->paginate(20);
+        $pics = $query->orderBy('created_at', 'desc')->limit(1000)->get();
         $pendingCount = LhkanPic::pending()->count();
 
         return view('lhkan.admin.pic', compact('pics', 'instansiId', 'status', 'pendingCount'));
@@ -501,12 +501,20 @@ class LhkanController extends Controller
         $periodes = LhkanPeriod::orderBy('tahun', 'desc')->get();
         $pics = LhkanPic::where('instansi_id', $instansiId)->approved()->get();
 
-        // Check if submission exists for this periode
-        $submission = $currentPeriod
-            ? LhkanSubmission::where('instansi_id', $instansiId)
+        // Load submission: by submission_id (edit from history) or by current period, always with pics for form
+        if ($request->submission_id) {
+            $submission = LhkanSubmission::where('instansi_id', $instansiId)
+                ->where('id', $request->submission_id)
+                ->with(['pics', 'period'])
+                ->first();
+        }
+        if (!isset($submission) && $currentPeriod) {
+            $submission = LhkanSubmission::where('instansi_id', $instansiId)
                 ->where('periode_id', $currentPeriod->id)
-                ->first()
-            : null;
+                ->with('pics')
+                ->first();
+        }
+        $submission = $submission ?? null;
 
         // Check if user has submitted in active period
         $hasSubmitted = $submission && in_array($submission->status, ['submitted', 'approved', 'edit_requested']);
@@ -690,7 +698,7 @@ class LhkanController extends Controller
         $periodes = LhkanPeriod::orderBy('tahun', 'desc')->get();
 
         $query = LhkanSubmission::where('instansi_id', $instansiId)
-            ->with(['period', 'logs']);
+            ->with(['period', 'logs', 'pics']);
 
         if ($periodeId) {
             $query->where('periode_id', $periodeId);

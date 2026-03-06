@@ -184,8 +184,8 @@
         switch (status) {
             case 'approved':
                 return '<span class="inline-flex rounded-full bg-emerald-100 px-2 py-1 text-xs font-semibold text-emerald-700">APPROVED</span>';
-            case 'submitted':
-                return '<span class="inline-flex rounded-full bg-sky-100 px-2 py-1 text-xs font-semibold text-sky-700">SUBMITTED</span>';
+            case 'submitted':   
+                return '<span class="inline-flex rounded-full bg-blue-100 px-2 py-1 text-xs font-semibold text-blue-700">SUBMITTED</span>';
             case 'rejected':
                 return '<span class="inline-flex rounded-full bg-rose-100 px-2 py-1 text-xs font-semibold text-rose-700">REJECTED</span>';
             case 'edit_requested':

@@ -30,5 +30,8 @@ class DatabaseSeeder extends Seeder
         $this->call(BljrSocialLinksTableSeeder::class);
         $this->call(BljrSubscribersTableSeeder::class);
         $this->call(BljrArticlesTableSeeder::class);
+
+        // Data dummy LHKAN (submission & PIC >10, instansi berbeda) - jalankan saja bila perlu: php artisan db:seed --class=LhkanDummyDataSeeder
+        $this->call(LhkanDummyDataSeeder::class);
     }
 }

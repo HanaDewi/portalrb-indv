@@ -81,7 +81,19 @@
                                                 </button>
                                             </form>
                                         @else
-                                            <span class="text-muted">-</span>
+                                            @if($request->processed_at || $request->processor)
+                                                <small class="text-muted d-block">
+                                                    {{ $request->status === 'approved' ? 'Disetujui' : 'Ditolak' }}
+                                                    @if($request->processor)
+                                                        oleh {{ $request->processor->name }}
+                                                    @endif
+                                                    @if($request->processed_at)
+                                                        pada {{ $request->processed_at->format('d/m/Y H:i') }}
+                                                    @endif
+                                                </small>
+                                            @else
+                                                <span class="text-muted">-</span>
+                                            @endif
                                         @endif
                                     </td>
                                 </tr>
