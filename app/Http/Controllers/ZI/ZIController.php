@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\ZI;
 
-use App\Http\Controllers\Controller;
-use App\Models\ZI\InstansiZI;
 use App\Models\KlpdInstansi;
 use Illuminate\Http\Request;
+use App\Models\ZI\InstansiZI;
+use App\Models\ZI\TahunEvaluasi;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
 class ZIController extends Controller
@@ -22,8 +23,7 @@ class ZIController extends Controller
 
     public function index(Request $request)
     {
-
-        $tahun = 2025;
+        $tahun = TahunEvaluasi::orderBy('tahun', 'desc')->first()->tahun;
 
         if (Auth::User()->level == "tpn" || Auth::User()->level == "admin") {
             return redirect()->route('dashboard_zi');
@@ -33,8 +33,6 @@ class ZIController extends Controller
             abort('403');
         }
 
-        // echo "<body style='text-align:center; background-color:bisque'><img src='https://www.portalrb.id/assets/images/zi/zi2025.jpg'>";;
-        // die;
         if (Auth::User()->user_rel) {
             $instansi_obj = Auth::User()->user_rel->instansi;
         } else {
@@ -60,7 +58,6 @@ class ZIController extends Controller
         } elseif ($instansiZI->tahap_seleksi == 5) {
             return redirect()->route('evaluatan_hasil_akhir');
         }
-
 
         echo "waduh";
     }

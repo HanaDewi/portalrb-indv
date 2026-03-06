@@ -49,34 +49,80 @@ class HomeController extends Controller
 
     public function activitylog_getData()
     {
-        $activities = Activity::latest()->get();
-        foreach ($activities as $activity) {
-            $activity->pretty = '<pre>'.json_encode(json_decode($activity->properties), JSON_PRETTY_PRINT).'</pre>';
-            $activity->pelaku = ($activity->causer)->nama.' ('.($activity->causer)->level.')';
-            $activity->pada = Carbon::parse($activity->created_at)->diffForHumans().' pada '.Carbon::parse($activity->created_at)->isoFormat('dddd, D MMMM Y HH:mm');
-            $activitynya = json_decode($activity->properties);
-            if ($activity->subject_type == 'App\Models\LkeTestTp') {
-                $activity->instansi = $activity->subject->klpd_instansi->name;
-            } else if ($activity->subject_type == 'App\Models\LkeTestTpFile') {
-                if ($activity->event == 'deleted') {
-                    $test_tp_id = $activitynya->old->test_tp_id;
-                } else {
-                    $test_tp_id = $activitynya->attributes->test_tp_id;
-                }
-                $test_tp = LkeTestTp::find($test_tp_id);
-                $activity->instansi = $test_tp->klpd_instansi->name;
-            } else if ($activity->subject_type == 'App\Models\LkeTestTpLine') {
-                $activity->instansi = $activity->subject->lke_test_tp->klpd_instansi->name;
+        $draw = (int) request('draw', 0);
+        $start = (int) request('start', 0);
+        $length = (int) request('length', 10);
+        $search = trim((string) data_get(request()->all(), 'search.value', ''));
+        $length = $length > 0 ? $length : 10;
+
+        $query = Activity::query()->with(['causer', 'subject'])->latest();
+        $recordsTotal = Activity::count();
+
+        if ($search !== '') {
+            $query->where(function ($q) use ($search) {
+                $q->where('event', 'like', "%{$search}%")
+                    ->orWhere('subject_type', 'like', "%{$search}%")
+                    ->orWhere('description', 'like', "%{$search}%")
+                    ->orWhereHas('causer', function ($causer) use ($search) {
+                        $causer->where('nama', 'like', "%{$search}%")
+                            ->orWhere('level', 'like', "%{$search}%");
+                    });
+            });
+        }
+
+        $recordsFiltered = (clone $query)->count();
+        $activities = $query->skip($start)->take($length)->get();
+
+        $data = $activities->map(function ($activity) {
+            $rawProperties = $activity->properties;
+            if ($rawProperties instanceof \Illuminate\Support\Collection) {
+                $activityProperties = $rawProperties->toArray();
+            } else if (is_string($rawProperties)) {
+                $activityProperties = json_decode($rawProperties, true) ?? [];
             } else {
-                if (isset($activitynya->attributes->instansi_id)) {
-                    $instansi = KlpdInstansi::find($activitynya->attributes->instansi_id);
-                    $activity->instansi = $instansi->name;
+                $activityProperties = (array) $rawProperties;
+            }
+            $instansi = '';
+
+            if ($activity->subject_type == 'App\Models\LkeTestTp') {
+                $instansi = optional(optional($activity->subject)->klpd_instansi)->name ?? '';
+            } else if ($activity->subject_type == 'App\Models\LkeTestTpFile') {
+                $test_tp_id = null;
+                if ($activity->event == 'deleted') {
+                    $test_tp_id = data_get($activityProperties, 'old.test_tp_id');
                 } else {
-                    $activity->instansi = '';
+                    $test_tp_id = data_get($activityProperties, 'attributes.test_tp_id');
+                }
+                $test_tp = $test_tp_id ? LkeTestTp::find($test_tp_id) : null;
+                $instansi = optional(optional($test_tp)->klpd_instansi)->name ?? '';
+            } else if ($activity->subject_type == 'App\Models\LkeTestTpLine') {
+                $instansi = optional(optional(optional($activity->subject)->lke_test_tp)->klpd_instansi)->name ?? '';
+            } else {
+                $instansi_id = data_get($activityProperties, 'attributes.instansi_id');
+                if (!empty($instansi_id)) {
+                    $instansi = optional(KlpdInstansi::find($instansi_id))->name ?? '';
                 }
             }
-        }
-        return response()->json(['data' => $activities]);
+
+            return [
+                'pelaku' => trim(
+                    (optional($activity->causer)->nama ?? '-') .
+                    (optional($activity->causer)->level ? ' ('.$activity->causer->level.')' : '')
+                ),
+                'subject_type' => $activity->subject_type,
+                'event' => $activity->event,
+                'instansi' => $instansi,
+                'pretty' => '<pre>'.json_encode($activityProperties, JSON_PRETTY_PRINT).'</pre>',
+                'pada' => Carbon::parse($activity->created_at)->diffForHumans().' pada '.Carbon::parse($activity->created_at)->isoFormat('dddd, D MMMM Y HH:mm'),
+            ];
+        })->values();
+
+        return response()->json([
+            'draw' => $draw,
+            'recordsTotal' => $recordsTotal,
+            'recordsFiltered' => $recordsFiltered,
+            'data' => $data,
+        ]);
     }
 
     public function bcrypt()

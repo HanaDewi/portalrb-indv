@@ -9,71 +9,71 @@
                 <h2 class="font-medium text-base mr-auto">Hasil Evaluasi {{ $instansi->name }}</h2>
             </div>
             <div class="lg:col-span-12 p-5 border-b border-slate-200/60">
-                @if (in_array(auth()->user()->level, ['kl', 'provinsi', 'kabupaten']))
-                <table class="table table-bordered table-striped mt-5 mb-5">
-                    <tr>
-                        <td class="font-bold" width="220">RB General Awal</td>
-                        <td>{{ round($test_tp->rb_general, 2) }}</td>
-                    </tr>
-                    <tr>
-                        <td class="font-bold">Koefisien</td>
-                        <td>{{ round($test_tp->koefisien, 2) }}</td>
-                    </tr>
-                    <tr>
-                        <td class="font-bold">RB General</td>
-                        <td>{{ round($test_tp->rb_general + $test_tp->koefisien, 2) }}</td>
-                    </tr>
-                    <tr>
-                        <td class="font-bold">Total Bobot RB General</td>
-                        <td>100</td>
-                    </tr>
-                    <tr>
-                        <td class="font-bold">Bobot RB General Penyesuaian</td>
-                        <td>{{ $test_tp->bobot_rb_general_penyesuaian }}</td>
-                    </tr>
-                    <tr>
-                        <td class="font-bold">RB General Penyesuaian</td>
-                        <td>{{ round($test_tp->rb_general_penyesuaian, 2) }}</td>
-                    </tr>
-                    <tr>
-                        <td class="font-bold">RB Tematik</td>
-                        <td>{{ round($test_tp->rb_tematik, 2) }}</td>
-                    </tr>
-                    <tr>
-                        <td class="font-bold">Index RB</td>
-                        <td>{{ round($test_tp->index_rb, 2) }}</td>
-                    </tr>
-                    @php
-                        $idx = 0;
-                    @endphp
-                    @if (auth()->user()->level != 'tpm')
+                @php
+                    $idx = 0;
+                @endphp
+                @if (!in_array(auth()->user()->level, ['kl', 'provinsi', 'kabupaten']))
+                    <table class="table table-bordered table-striped mt-5 mb-5">
                         <tr>
-                            <td class="font-bold">File Berkas</td>
-                            <td>
-                                @php
-                                    $idx = $test_tp->files ? $test_tp->files->max('id') + 1 : 0;
-                                    $berkas_list = '';
-                                    if ($test_tp->files) {
-                                        foreach ($test_tp->files as $berkas) {
-                                            $ext = pathinfo($berkas->file, PATHINFO_EXTENSION);
-                                            $src = asset('storage/berkas/' . $berkas->file);
-                                            $berkas_list .= '<a href="' . $src . '" target="_blank" title="' . $berkas->deskripsi . '" class="inline-block"><img src="' . asset('images') . '/' . exts($ext) . '" style="width: 50px; margin-right: 5px; margin-top: 5px;"></a>';
+                            <td class="font-bold" width="220">RB General Awal</td>
+                            <td>{{ round($test_tp->rb_general, 2) }}</td>
+                        </tr>
+                        <tr>
+                            <td class="font-bold">Koefisien</td>
+                            <td>{{ round($test_tp->koefisien, 2) }}</td>
+                        </tr>
+                        <tr>
+                            <td class="font-bold">RB General</td>
+                            <td>{{ round($test_tp->rb_general + $test_tp->koefisien, 2) }}</td>
+                        </tr>
+                        <tr>
+                            <td class="font-bold">Total Bobot RB General</td>
+                            <td>100</td>
+                        </tr>
+                        <tr>
+                            <td class="font-bold">Bobot RB General Penyesuaian</td>
+                            <td>{{ $test_tp->bobot_rb_general_penyesuaian }}</td>
+                        </tr>
+                        <tr>
+                            <td class="font-bold">RB General Penyesuaian</td>
+                            <td>{{ round($test_tp->rb_general_penyesuaian, 2) }}</td>
+                        </tr>
+                        <tr>
+                            <td class="font-bold">RB Tematik</td>
+                            <td>{{ round($test_tp->rb_tematik, 2) }}</td>
+                        </tr>
+                        <tr>
+                            <td class="font-bold">Index RB</td>
+                            <td>{{ round($test_tp->index_rb, 2) }}</td>
+                        </tr>
+                        @if (auth()->user()->level != 'tpm')
+                            <tr>
+                                <td class="font-bold">File Berkas</td>
+                                <td>
+                                    @php
+                                        $idx = $test_tp->files ? $test_tp->files->max('id') + 1 : 0;
+                                        $berkas_list = '';
+                                        if ($test_tp->files) {
+                                            foreach ($test_tp->files as $berkas) {
+                                                $ext = pathinfo($berkas->file, PATHINFO_EXTENSION);
+                                                $src = asset('storage/berkas/' . $berkas->file);
+                                                $berkas_list .= '<a href="' . $src . '" target="_blank" title="' . $berkas->deskripsi . '" class="inline-block"><img src="' . asset('images') . '/' . exts($ext) . '" style="width: 50px; margin-right: 5px; margin-top: 5px;"></a>';
+                                            }
                                         }
-                                    }
-                                @endphp
-                                {!! $berkas_list !!}
-                            </td>
-                        </tr>
-                    @endif
-                    @if (in_array(auth()->user()->level, ['admin', 'tpn']) && $test_tp->rb_general && hasAksesHasilEvaluasi())
-                        <tr>
-                            <td class="font-bold">Aksi</td>
-                            <td>
-                                <button onclick="edit_test_tp();" class="btn btn-warning btn-sm"><i data-lucide="edit" class="w-4 h-4 mr-1"></i> Perbaharui Data TP</button>
-                            </td>
-                        </tr>
-                    @endif
-                </table>
+                                    @endphp
+                                    {!! $berkas_list !!}
+                                </td>
+                            </tr>
+                        @endif
+                        @if (in_array(auth()->user()->level, ['admin', 'tpn']) && $test_tp->rb_general && hasAksesHasilEvaluasi())
+                            <tr>
+                                <td class="font-bold">Aksi</td>
+                                <td>
+                                    <button onclick="edit_test_tp();" class="btn btn-warning btn-sm"><i data-lucide="edit" class="w-4 h-4 mr-1"></i> Perbaharui Data TP</button>
+                                </td>
+                            </tr>
+                        @endif
+                    </table>
                 @endif
                 <div class="preview">
                     <ul class="nav nav-tabs" role="tablist">
@@ -177,10 +177,10 @@
                                                                 <span class="text-slate-500">Persentase</span>
                                                                 <span class="font-semibold text-slate-800 ml-3">{{ $item['persentase'] !== null ? number_format($item['persentase'], 2, ',', '.') . '%' : '-' }}</span>
                                                             </div>
-                                                            <div class="flex justify-between">
+                                                            {{-- <div class="flex justify-between">
                                                                 <span class="text-slate-500">Rata-rata Nasional</span>
-                                                                <span class="font-semibold text-slate-800 ml-3">{{ $item['rata_rata_nasional'] !== null ? number_format($item['rata_rata_nasional'], 2, ',', '.').'%' : '-' }}</span>
-                                                            </div>
+                                                                <span class="font-semibold text-slate-800 ml-3">{{ $item['rata_rata_nasional'] !== null ? number_format($item['rata_rata_nasional'], 2, ',', '.') . '%' : '-' }}</span>
+                                                            </div> --}}
                                                         </div>
                                                     </div>
                                                 </div>
@@ -206,10 +206,10 @@
                                         <th class="w200">Target Baik</th>
                                         <th class="w200">Skor</th>
                                         <th class="w200">Skor Index</th>
-                                        <th class="w200">Capaian Index</th>
+                                        <th class="w200">Capaian Index (%)</th>
                                         <th class="w200">Catatan </th>
                                         <th class="w200">Rekomendasi </th>
-                                        @if (in_array(auth()->user()->level, ['kl', 'provinsi', 'kabupaten']))
+                                        @if (in_array(auth()->user()->level, ['kl', 'provinsi', 'kabupaten', 'tpn', 'admin']))
                                             <th class="w200">Sanggah</th>
                                         @endif
                                     </tr>
@@ -228,7 +228,7 @@
                                             <td>{{ $parameter->capaian_index }}%</td>
                                             <td>{{ $parameter->catatan }}</td>
                                             <td>{{ $parameter->rekomendasi }}</td>
-                                            @if (in_array(auth()->user()->level, ['kl', 'provinsi', 'kabupaten']))
+                                            @if (in_array(auth()->user()->level, ['kl', 'provinsi', 'kabupaten', 'tpn', 'admin']))
                                                 <td>
                                                     @php
                                                         $hasTargetBaik = $parameter->target_baik !== null && $parameter->target_baik !== '';
@@ -262,9 +262,11 @@
                                                                 <div><span class="font-semibold">Keterangan Tanggapan Sanggah:</span> {{ $parameter->keterangan_tanggapan_sanggah ?? '-' }}</div>
                                                             </div>
                                                         @else
+                                                            {{-- @if (in_array(auth()->user()->level, ['kl', 'provinsi', 'kabupaten']))
                                                             <button type="button" class="btn btn-primary btn-sm btn-sanggah" data-lke-bobot-id="{{ $parameter->id }}" data-indikator="{{ $parameter->indikator }}">
                                                                 Sanggah
                                                             </button>
+                                                            @endif --}}
                                                         @endif
                                                     @else
                                                         -
@@ -586,11 +588,16 @@
                 }
             ],
             columnDefs: [{
-                targets: [0],
-                render: function(data, type, row, meta) {
-                    return meta.row + meta.settings._iDisplayStart + 1;
+                    targets: [0],
+                    render: function(data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1;
+                    },
+                },
+                {
+                    targets: [5, 6, 7, 8],
+                    render: $.fn.dataTable.render.number('.', ',', 2, '')
                 }
-            }]
+            ],
         });
     </script>
 @endpush
