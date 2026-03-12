@@ -222,7 +222,7 @@ class WebDashboardController extends Controller
                     'ki.name',
                     'ki.name_before',
                     'ki.group',
-                    'ltt.rb_general',
+                    'ltt.rb_general_penyesuaian',
                     'ltt.rb_tematik',
                     'ltt.index_rb',
                     DB::raw('COALESCE(tbm.target_baik_met, 0) as target_baik_met')
