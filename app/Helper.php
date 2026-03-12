@@ -201,6 +201,58 @@ if (!function_exists('menus')) {
                 'url' => 'pelaporan-coi',
             ],
             [
+                'levels' => ['tpn', 'admin'],
+                'title' => 'Modul LHKAN',
+                'icon' => 'file-text',
+                'url' => 'lhkan',
+                'items' => [
+                    [
+                        'levels' => ['admin', 'tpn'],
+                        'title' => 'Dashboard',
+                        'icon' => 'pie-chart',
+                        'url' => 'lhkan/dashboard',
+                    ],
+                    [
+                        'levels' => ['admin'],
+                        'title' => 'Manajemen Periode',
+                        'icon' => 'calendar',
+                        'url' => 'lhkan/periode',
+                    ],
+                    [
+                        'levels' => ['admin'],
+                        'title' => 'Manajemen PIC',
+                        'icon' => 'users',
+                        'url' => 'lhkan/pic',
+                    ],
+                    [
+                        'levels' => ['admin'],
+                        'title' => 'Pengajuan Perubahan',
+                        'icon' => 'edit',
+                        'url' => 'lhkan/change-requests',
+                    ],
+                ]
+            ],
+            [
+                'levels' => ['kl', 'provinsi', 'kabupaten'],
+                'title' => 'Pelaporan LHKAN',
+                'icon' => 'file-text',
+                'url' => 'lhkan',
+                'items' => [
+                    [
+                        'levels' => ['kl', 'provinsi', 'kabupaten'],
+                        'title' => 'Form Input',
+                        'icon' => 'edit',
+                        'url' => 'lhkan/form',
+                    ],
+                    [
+                        'levels' => ['kl', 'provinsi', 'kabupaten'],
+                        'title' => 'Riwayat Pelaporan',
+                        'icon' => 'history',
+                        'url' => 'lhkan/history',
+                    ],
+                ]
+            ],
+            [
                 'levels' => ['devider'],
             ],
             [
