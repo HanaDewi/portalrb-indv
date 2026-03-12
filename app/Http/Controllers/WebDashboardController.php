@@ -246,7 +246,7 @@ class WebDashboardController extends Controller
                     'name' => $row->name,
                     'group' => $row->group,
                     'group_label' => group_instansi($row->group),
-                    'rb_general' => $row->rb_general !== null ? round($row->rb_general, 2) : '---',
+                    'rb_general_penyesuaian' => $row->rb_general_penyesuaian !== null ? round($row->rb_general_penyesuaian, 2) : '---',
                     'rb_tematik' => $row->rb_tematik !== null ? round($row->rb_tematik, 2) : '---',
                     'index_rb' => $row->index_rb !== null ? round($row->index_rb, 2) : '---',
                     'predikat' => $predikat,

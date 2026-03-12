@@ -71,7 +71,7 @@
                         <th class="w-5">No.</th>
                         <th class="w200">Instansi Pemerintah</th>
                         <th> Group Instansi</th>
-                        <th>RB General</th>
+                        <th>RB General Penyesuaian</th>
                         <th>RB Tematik</th>
                         <th>Index RB</th>
                         <th>Predikat</th>
@@ -83,7 +83,7 @@
                             <td>{{ $index + 1 }}</td>
                             <td><a class="tabel" href="{{ $row['detail_url'] }}">{{ $row['name'] }}</a></td>
                             <td>{{ $row['group_label'] }}</td>
-                            <td>{{ $row['rb_general'] }}</td>
+                            <td>{{ $row['rb_general_penyesuaian'] }}</td>
                             <td>{{ $row['rb_tematik'] }}</td>
                             <td>{{ $row['index_rb'] }}</td>
                             <td>{{ $row['predikat'] }}</td>
