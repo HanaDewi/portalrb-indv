@@ -153,7 +153,7 @@
                                 </td>
                                 <td style="padding: 1rem 1.5rem; white-space: nowrap; font-size: 0.875rem; color: #111827;">{{ $submission->submitted_at ? $submission->submitted_at->format('d/m/Y H:i') : '-' }}</td>
                                 <td style="padding: 1rem 1.5rem; white-space: nowrap; text-align: center; font-size: 0.875rem;">
-                                    @if(auth()->user()->level === 'admin')
+                                    <a href="{{ route('lhkan.detail', $submission->id) }}" class="btn btn-success btn-sm" style="display: inline-flex; align-items: center; padding: 0.375rem 0.5rem; font-size: 0.75rem; margin-right: 5px;" title="Detail"><i class="fa fa-eye"></i></a>
                                         <a href="{{ route('lhkan.periode.index') }}" class="btn btn-primary btn-sm" style="display: inline-flex; align-items: center; padding: 0.375rem 0.5rem; font-size: 0.75rem;" title="Kelola Periode">
                                             <i class="fa fa-cog"></i>
                                         </a>
@@ -167,7 +167,6 @@
                                                 <i class="fa fa-trash"></i>
                                             </button>
                                         </form>
-                                    @endif
                                 </td>
                             </tr>
                         @endforeach
@@ -198,3 +197,4 @@ $(document).ready(function() {
 });
 </script>
 @endpush
+

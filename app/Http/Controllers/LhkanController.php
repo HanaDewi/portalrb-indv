@@ -133,6 +133,23 @@ class LhkanController extends Controller
         return Excel::download(new LhkanExport($rows), $fileName);
     }
 
+    
+    /**
+     * View submission details
+     */
+    public function detail($id)
+    {
+        if (!in_array($this->level, ['admin', 'tpn'])) {
+            abort(403, 'Anda tidak memiliki akses ke halaman ini.');
+        }
+
+        $submission = LhkanSubmission::with(['instansi', 'period', 'pics', 'logs'])
+            ->findOrFail($id);
+
+        return view('lhkan.admin.detail', compact('submission'));
+    }
+
+
     // ==================== PERIODE MANAGEMENT (ADMIN) ====================
 
     /**
@@ -258,6 +275,43 @@ class LhkanController extends Controller
         $submission->delete();
 
         return redirect()->back()->with('success', 'Data LHKAN instansi berhasil dihapus.');
+    }
+
+    /**
+     * Approve LHKAN submission (Admin & TPN)
+     */
+    public function submissionApprove($id)
+    {
+        if (!in_array($this->level, ['admin', 'tpn'])) {
+            abort(403, 'Anda tidak memiliki akses ke fitur ini.');
+        }
+
+        DB::beginTransaction();
+        try {
+            $submission = LhkanSubmission::findOrFail($id);
+            
+            if ($submission->status !== 'submitted') {
+                return redirect()->back()->with('error', 'Hanya data yang berstatus submitted yang dapat disetujui.');
+            }
+
+            $submission->approve();
+
+            // Log action
+            LhkanLog::create([
+                'submission_id' => $submission->id,
+                'user_id' => $this->user->id,
+                'action' => 'approved',
+                'description' => 'Data LHKAN disetujui',
+                'ip_address' => request()->ip(),
+            ]);
+
+            DB::commit();
+            return redirect()->back()->with('success', 'Data LHKAN berhasil disetujui.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Error approving submission: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat menyetujui data.');
+        }
     }
 
     // ==================== PIC MANAGEMENT ====================

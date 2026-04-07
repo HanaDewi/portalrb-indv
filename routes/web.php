@@ -278,6 +278,7 @@ Route::middleware('auth')->group(function () {
         // Admin & TPN Features
         Route::get('/lhkan/dashboard', [LhkanController::class , 'dashboard'])->name('lhkan.dashboard');
         Route::get('/lhkan/export-csv', [LhkanController::class , 'exportCsv'])->name('lhkan.export-csv');
+        Route::get('/lhkan/detail/{id}', [LhkanController::class , 'detail'])->name('lhkan.detail');
 
         // Periode Management (Admin Only)
         Route::get('/lhkan/periode', [LhkanController::class , 'periodeIndex'])->name('lhkan.periode.index');
@@ -301,6 +302,7 @@ Route::middleware('auth')->group(function () {
 
         // Delete LHKAN submission (Admin Only)
         Route::delete('/lhkan/submission/delete/{id}', [LhkanController::class , 'submissionDelete'])->name('lhkan.submission.delete');
+        Route::post('/lhkan/submission/approve/{id}', [LhkanController::class , 'submissionApprove'])->name('lhkan.submission.approve');
 
         // Instansi Features (KL, Provinsi, Kabupaten)
         Route::get('/lhkan/form', [LhkanController::class , 'form'])->name('lhkan.form');
