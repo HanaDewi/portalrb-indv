@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\LhkanExport;
 use App\Http\Requests\StoreLhkanRequest;
 use App\Http\Requests\UpdateLhkanRequest;
 use App\Models\KlpdInstansi;
@@ -15,7 +16,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Rap2hpoutre\FastExcel\FastExcel;
+use Maatwebsite\Excel\Facades\Excel;
 
 class LhkanController extends Controller
 {
@@ -96,43 +97,40 @@ class LhkanController extends Controller
         if (!in_array($this->level, ['admin', 'tpn'])) {
             abort(403, 'Anda tidak memiliki akses ke fitur ini.');
         }
-
         $periodeId = $request->periode_id;
         if (!$periodeId) {
             return redirect()->back()->with('error', 'Periode wajib dipilih.');
         }
+        $fileName = 'lhkan_report_' . date('Y_m_d_His') . '.xlsx';
 
-        $submissions = LhkanSubmission::where('periode_id', $periodeId)
-            ->with(['instansi', 'period', 'pics'])
-            ->get();
-
-        $data = [];
-        foreach ($submissions as $submission) {
+        // Menggunakan Generator agar hemat memori saat export data besar
+        $rows = collect(
+            LhkanSubmission::where('periode_id', $periodeId)
+                ->with(['instansi', 'period', 'pics'])
+                ->cursor()
+        )->map(function ($submission) {
             $pics = $submission->pics->map(function ($pic) {
                 return $pic->nama . ' (' . $pic->nomor_hp . ')';
             })->implode(', ');
-
-            $data[] = [
-                'Nama Instansi' => $submission->instansi->name ?? '-',
-                'Periode' => $submission->period->nama ?? '-',
-                'Status' => $submission->status,
-                'Total Aparatur' => $submission->jml_aparatur,
-                'Wajib LHKPN' => $submission->jml_wajib_lhkpn,
-                'Tidak Wajib LHKPN' => $submission->jml_non_wajib_lhkpn,
-                'Realisasi LHKPN' => $submission->realisasi_lhkpn,
-                'Realisasi SPT Non LHKPN' => $submission->realisasi_spt_non_lhkpn,
-                'Belum SPT Non LHKPN' => $submission->belum_spt_non_lhkpn,
-                'Total Belum LHKAN' => $submission->total_belum_lhkan,
-                'PIC' => $pics,
-                'Link Rekap' => $submission->link_rekap_gdrive ?? '-',
-                'Catatan' => $submission->catatan ?? '-',
-                'Tanggal Submit' => $submission->submitted_at ? $submission->submitted_at->format('Y-m-d H:i:s') : '-',
+            return [
+                $submission->instansi->name ?? '-',
+                $submission->period->nama ?? '-',
+                $submission->status,
+                $submission->jml_aparatur,
+                $submission->jml_wajib_lhkpn,
+                $submission->jml_non_wajib_lhkpn,
+                $submission->realisasi_lhkpn,
+                $submission->realisasi_spt_non_lhkpn,
+                $submission->belum_spt_non_lhkpn,
+                $submission->total_belum_lhkan,
+                $pics,
+                $submission->link_rekap_gdrive ?? '-',
+                $submission->catatan ?? '-',
+                $submission->submitted_at ? $submission->submitted_at->format('Y-m-d H:i:s') : '-',
             ];
-        }
+        })->toArray();
 
-        $fileName = 'lhkan_report_' . date('Y_m_d_His') . '.csv';
-
-        return (new FastExcel(collect($data)))->download($fileName);
+        return Excel::download(new LhkanExport($rows), $fileName);
     }
 
     // ==================== PERIODE MANAGEMENT (ADMIN) ====================
