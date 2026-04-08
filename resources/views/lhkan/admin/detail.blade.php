@@ -218,10 +218,9 @@
                 </div>
 
                 @if($submission->logs && $submission->logs->count() > 0)
-                    <div class="relative border-l border-slate-200 ml-3 space-y-6 pb-2 mt-2">
+                    <div class="space-y-6 pb-2 mt-2">
                         @foreach($submission->logs->sortByDesc('created_at') as $log)
-                            <div class="relative pl-6">
-                                <div class="absolute -left-1.5 mt-1.5 h-3 w-3 rounded-full bg-slate-400 border-2 border-white ring-2 ring-slate-100"></div>
+                            <div class="my-4 border border-gray-400 rounded-lg p-4">
                                 <div class="flex justify-between items-start mb-1">
                                     <div class="font-semibold text-xs text-slate-800 tracking-wide uppercase">{{ $log->action }}</div>
                                     <div class="text-[10px] text-slate-500" title="{{ $log->created_at->format('d M Y H:i:s') }}">
@@ -229,9 +228,9 @@
                                     </div>
                                 </div>
                                 <p class="text-sm text-slate-600 mb-1 leading-snug">{{ $log->description }}</p>
-                                <div class="text-[10px] text-slate-400 flex flex-wrap gap-x-3 gap-y-1 mt-1.5">
-                                    <span class="flex items-center gap-1"><i class="fa fa-user"></i> {{ $log->user->name ?? 'Sistem' }}</span>
-                                    <span class="flex items-center gap-1"><i class="fa fa-globe"></i> {{ $log->ip_address ?? '::1' }}</span>
+                                <div class="text-[10px] text-slate-400 flex items-center gap-2 gap-y-1 mt-1.5">
+                                    <span class="flex items-center gap-1"><i class="fa fa-user"></i></span>
+                                    {{ $log->user->name ?? 'Sistem' }}
                                 </div>
                             </div>
                         @endforeach
