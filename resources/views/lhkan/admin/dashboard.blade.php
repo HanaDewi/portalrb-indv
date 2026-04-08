@@ -154,19 +154,19 @@
                                 <td style="padding: 1rem 1.5rem; white-space: nowrap; font-size: 0.875rem; color: #111827;">{{ $submission->submitted_at ? $submission->submitted_at->format('d/m/Y H:i') : '-' }}</td>
                                 <td style="padding: 1rem 1.5rem; white-space: nowrap; text-align: center; font-size: 0.875rem;">
                                     <a href="{{ route('lhkan.detail', $submission->id) }}" class="btn btn-success btn-sm" style="display: inline-flex; align-items: center; padding: 0.375rem 0.5rem; font-size: 0.75rem; margin-right: 5px;" title="Detail"><i class="fa fa-eye"></i></a>
-                                        <a href="{{ route('lhkan.periode.index') }}" class="btn btn-primary btn-sm" style="display: inline-flex; align-items: center; padding: 0.375rem 0.5rem; font-size: 0.75rem;" title="Kelola Periode">
-                                            <i class="fa fa-cog"></i>
-                                        </a>
-                                        <a href="{{ route('lhkan.pic.index') }}" class="btn btn-info btn-sm" style="display: inline-flex; align-items: center; padding: 0.375rem 0.5rem; font-size: 0.75rem;" title="Kelola PIC">
-                                            <i class="fa fa-users"></i>
-                                        </a>
-                                        <form method="POST" action="{{ route('lhkan.submission.delete', $submission->id) }}" class="d-inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data LHKAN instansi ini?')">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-danger btn-sm" style="display: inline-flex; align-items: center; padding: 0.375rem 0.5rem; font-size: 0.75rem;" title="Hapus data LHKAN">
-                                                <i class="fa fa-trash"></i>
-                                            </button>
-                                        </form>
+                                    <a href="{{ route('lhkan.periode.index') }}" class="btn btn-primary btn-sm" style="display: inline-flex; align-items: center; padding: 0.375rem 0.5rem; font-size: 0.75rem;" title="Kelola Periode">
+                                        <i class="fa fa-cog"></i>
+                                    </a>
+                                    <a href="{{ route('lhkan.pic.index') }}" class="btn btn-info btn-sm" style="display: inline-flex; align-items: center; padding: 0.375rem 0.5rem; font-size: 0.75rem;" title="Kelola PIC">
+                                        <i class="fa fa-users"></i>
+                                    </a>
+                                    <form method="POST" action="{{ route('lhkan.submission.delete', $submission->id) }}" class="d-inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data LHKAN instansi ini?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger btn-sm" style="display: inline-flex; align-items: center; padding: 0.375rem 0.5rem; font-size: 0.75rem;" title="Hapus data LHKAN">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                    </form>
                                 </td>
                             </tr>
                         @endforeach

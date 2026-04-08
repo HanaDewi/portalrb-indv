@@ -118,13 +118,15 @@
                 @if($submission->link_rekap_gdrive)
                     <div class="mt-6 p-4 bg-sky-50 rounded-lg border border-sky-100 flex items-start gap-3">
                         <div class="bg-sky-100 text-sky-600 p-2 rounded pt-1 pb-1">
-                            <i class="fa fa-link text-xl"></i>
+                            <i data-lucide="file-text"></i>
                         </div>
-                        <div>
+                        <div class="flex flex-col gap-2">
                             <div class="font-semibold text-sky-800 text-sm mb-1 mt-1">Dokumen Rekapitulasi (Google Drive)</div>
-                            <a href="{{ $submission->link_rekap_gdrive }}" target="_blank" class="text-sky-600 hover:text-sky-800 hover:underline text-sm break-all font-medium">
-                                <i class="fab fa-google-drive mr-1"></i> Buka Link
-                            </a>
+                            <div>
+                                <a href="{{ $submission->link_rekap_gdrive }}" target="_blank" class="text-sky-600 hover:text-sky-800 hover:underline text-sm break-all font-medium bg-gray-100 p-2 rounded-lg">
+                                    <i class="fab fa-google-drive mr-1"></i> Buka Link
+                                </a>
+                            </div>
                         </div>
                     </div>
                 @endif
@@ -132,7 +134,7 @@
                 @if($submission->catatan)
                     <div class="mt-4 p-4 bg-amber-50 rounded-lg border border-amber-100 flex items-start gap-3">
                         <div class="bg-amber-100 text-amber-600 p-2 rounded pt-1 pb-1">
-                            <i class="fa fa-sticky-note text-xl"></i>
+                            <i data-lucide="file-text"></i>
                         </div>
                         <div>
                             <div class="font-semibold text-amber-800 text-sm mb-1 mt-1">Catatan Tambahan</div>
@@ -150,12 +152,12 @@
                         @if($submission->status == 'submitted')
                             <form action="{{ route('lhkan.submission.approve', $submission->id) }}" method="POST" class="inline">
                                 @csrf
-                                <button type="submit" class="bw-button bw-green inline-flex items-center" onclick="return confirm('Apakah Anda yakin ingin menyetujui laporan LHKAN ini?')">
+                                <button type="submit" class="bw-button bg-green-500 hover:bg-green-600 text-white inline-flex items-center rounded-lg" onclick="return confirm('Apakah Anda yakin ingin menyetujui laporan LHKAN ini?')">
                                     <i class="fas fa-check mr-2"></i> Setujui Laporan
                                 </button>
                             </form>
                         @elseif($submission->status == 'approved')
-                            <a href="{{ route('lhkan.change-requests.approve', $submission->id) }}" class="bw-button bw-yellow inline-flex items-center" onclick="return confirm('Apakah Anda yakin ingin mengizinkan instansi untuk mengedit data?')">
+                            <a href="{{ route('lhkan.change-requests.approve', $submission->id) }}" class="bw-button bg-yellow-500 hover:bg-yellow-600 text-white inline-flex items-center rounded-lg" onclick="return confirm('Apakah Anda yakin ingin mengizinkan instansi untuk mengedit data?')">
                                 <i class="fas fa-edit mr-2"></i> Izinkan Edit Data
                             </a>
                         @endif
@@ -163,7 +165,7 @@
                         <form action="{{ route('lhkan.submission.delete', $submission->id) }}" method="POST" class="inline">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="bw-button bw-red inline-flex items-center" onclick="return confirm('Apakah Anda yakin ingin menghapus laporan LHKAN ini secara permanen?')">
+                            <button type="submit" class="bw-button bg-red-500 hover:bg-red-600 text-white inline-flex items-center rounded-lg" onclick="return confirm('Apakah Anda yakin ingin menghapus laporan LHKAN ini secara permanen?')">
                                 <i class="fas fa-trash mr-2"></i> Hapus Laporan
                             </button>
                         </form>
@@ -183,13 +185,13 @@
                 @if($submission->pics && $submission->pics->count() > 0)
                     <div class="space-y-3">
                         @foreach($submission->pics as $index => $pic)
-                            <div class="flex items-start gap-3 p-3 bg-slate-50 rounded-lg border border-slate-100">
+                            <div class="flex items-start gap-3 p-3 bg-slate-50 rounded-lg border border-slate-100 my-4">
                                 <div class="bg-blue-100 text-blue-600 h-8 w-8 rounded-full flex items-center justify-center font-bold text-sm shrink-0">
                                     {{ $index + 1 }}
                                 </div>
                                 <div class="overflow-hidden">
                                     <div class="font-semibold text-slate-800 text-sm truncate" title="{{ $pic->nama }}">{{ $pic->nama }}</div>
-                                    <div class="text-slate-500 text-xs flex items-center gap-1 mt-1">
+                                    <div class="text-slate-500 text-xs flex items-center gap-2 mt-1">
                                         <i class="fa fa-phone"></i>
                                         <a href="https://wa.me/{{ preg_replace('/^08/', '628', $pic->nomor_hp) }}" target="_blank" class="hover:text-emerald-600 hover:underline">
                                             {{ $pic->nomor_hp }}
@@ -211,7 +213,7 @@
 
             <x-bladewind::card>
                 <div class="flex items-center gap-2 border-b border-slate-200 pb-4 mb-4">
-                    <i class="fa fa-history text-slate-400"></i>
+                    <i class=" text-slate-400"></i>
                     <h5 class="text-base font-semibold text-slate-800 m-0">Log Aktivitas</h5>
                 </div>
 
@@ -235,8 +237,8 @@
                         @endforeach
                     </div>
                 @else
-                    <div class="text-center py-6 text-slate-500 border border-dashed border-slate-200 rounded-lg">
-                        <i class="fa fa-list-alt text-3xl mb-2 text-slate-300"></i>
+                    <div class="text-center flex flex-col items-center justify-center py-6 text-slate-500 border border-dashed border-slate-200 rounded-lg">
+                        <i data-lucide="rotate-ccw" class="text-3xl mb-2 text-slate-300"></i>   
                         <p class="text-sm m-0">Belum ada log aktivitas</p>
                     </div>
                 @endif
