@@ -5,12 +5,17 @@
 @section('content')
 <div class="block block-rounded block-bordered mt-8">
     @if(in_array(auth()->user()->level, ['admin', 'tpn']))
-        <form method="GET" action="{{ route('lhkan.export-csv') }}" style="display: inline-flex;">
-            <input type="hidden" name="periode_id" value="{{ $periodeId }}">
-            <button type="submit" class="btn btn-success btn-sm">
-                <i class="fa fa-file-excel" style="margin-right: 0.5rem;"></i> Export CSV
-            </button>
-        </form>
+        <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+            <a href="{{ route('lhkan.form', array_filter(['periode_id' => $periodeId])) }}" class="btn btn-primary btn-sm" style="display: inline-flex; align-items: center;">
+                <i class="fa fa-plus" style="margin-right: 0.5rem;"></i> Input LHKAN Instansi
+            </a>
+            <form method="GET" action="{{ route('lhkan.export-csv') }}" style="display: inline-flex;">
+                <input type="hidden" name="periode_id" value="{{ $periodeId }}">
+                <button type="submit" class="btn btn-success btn-sm">
+                    <i class="fa fa-file-excel" style="margin-right: 0.5rem;"></i> Export CSV
+                </button>
+            </form>
+        </div>
     @endif
     
     <div class="block-content">
@@ -95,7 +100,11 @@
                     <label class="form-label" style="font-size: 0.875rem; font-weight: 500; color: #374151; margin-bottom: 0.5rem; display: inline-block;">Instansi</label>
                     <select name="instansi_id" class="form-select" onchange="this.form.submit()">
                         <option value="">Semua Instansi</option>
-                        {{-- Add instansi options --}}
+                        @foreach($instansis as $instansi)
+                            <option value="{{ $instansi->id }}" {{ (string) $instansiId === (string) $instansi->id ? 'selected' : '' }}>
+                                {{ $instansi->name }}
+                            </option>
+                        @endforeach
                     </select>
                 </div>
             @endif
@@ -153,21 +162,23 @@
                                 </td>
                                 <td style="padding: 1rem 1.5rem; white-space: nowrap; font-size: 0.875rem; color: #111827;">{{ $submission->submitted_at ? $submission->submitted_at->format('d/m/Y H:i') : '-' }}</td>
                                 <td style="padding: 1rem 1.5rem; white-space: nowrap; text-align: center; font-size: 0.875rem;">
-                                    @if(auth()->user()->level === 'admin')
-                                        <a href="{{ route('lhkan.periode.index') }}" class="btn btn-primary btn-sm" style="display: inline-flex; align-items: center; padding: 0.375rem 0.5rem; font-size: 0.75rem;" title="Kelola Periode">
-                                            <i class="fa fa-cog"></i>
-                                        </a>
-                                        <a href="{{ route('lhkan.pic.index') }}" class="btn btn-info btn-sm" style="display: inline-flex; align-items: center; padding: 0.375rem 0.5rem; font-size: 0.75rem;" title="Kelola PIC">
-                                            <i class="fa fa-users"></i>
-                                        </a>
-                                        <form method="POST" action="{{ route('lhkan.submission.delete', $submission->id) }}" class="d-inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data LHKAN instansi ini?')">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-danger btn-sm" style="display: inline-flex; align-items: center; padding: 0.375rem 0.5rem; font-size: 0.75rem;" title="Hapus data LHKAN">
-                                                <i class="fa fa-trash"></i>
-                                            </button>
-                                        </form>
-                                    @endif
+                                    <a href="{{ route('lhkan.detail', $submission->id) }}" class="btn btn-success btn-sm" style="display: inline-flex; align-items: center; padding: 0.375rem 0.5rem; font-size: 0.75rem; margin-right: 5px;" title="Detail"><i class="fa fa-eye"></i></a>
+                                    <a href="{{ route('lhkan.form', ['instansi_id' => $submission->instansi_id, 'periode_id' => $submission->periode_id]) }}" class="btn btn-warning btn-sm" style="display: inline-flex; align-items: center; padding: 0.375rem 0.5rem; font-size: 0.75rem; margin-right: 5px;" title="Input/Edit LHKAN">
+                                        <i class="fa fa-pen"></i>
+                                    </a>
+                                    <a href="{{ route('lhkan.periode.index') }}" class="btn btn-primary btn-sm" style="display: inline-flex; align-items: center; padding: 0.375rem 0.5rem; font-size: 0.75rem;" title="Kelola Periode">
+                                        <i class="fa fa-cog"></i>
+                                    </a>
+                                    <a href="{{ route('lhkan.pic.index') }}" class="btn btn-info btn-sm" style="display: inline-flex; align-items: center; padding: 0.375rem 0.5rem; font-size: 0.75rem;" title="Kelola PIC">
+                                        <i class="fa fa-users"></i>
+                                    </a>
+                                    <form method="POST" action="{{ route('lhkan.submission.delete', $submission->id) }}" class="d-inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data LHKAN instansi ini?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger btn-sm" style="display: inline-flex; align-items: center; padding: 0.375rem 0.5rem; font-size: 0.75rem;" title="Hapus data LHKAN">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                    </form>
                                 </td>
                             </tr>
                         @endforeach
@@ -187,6 +198,15 @@
 <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
 <script>
 $(document).ready(function() {
+    @if(session('success'))
+        Swal.fire({
+            title: 'Berhasil',
+            text: @json(session('success')),
+            icon: 'success',
+            confirmButtonText: 'OK'
+        });
+    @endif
+
     if ($.fn.DataTable && $('#table-lhkan-dashboard').length) {
         $('#table-lhkan-dashboard').DataTable({
             language: { url: '//cdn.datatables.net/plug-ins/1.12.1/i18n/id.json' },

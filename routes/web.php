@@ -24,16 +24,7 @@ use App\Http\Controllers\DataKonversiJawabanController;
 use App\Http\Controllers\RuangBelajar\DashboardController;
 use App\Http\Controllers\LhkanController;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
+/* |-------------------------------------------------------------------------- | Web Routes |-------------------------------------------------------------------------- | | Here is where you can register web routes for your application. These | routes are loaded by the RouteServiceProvider and all of them will | be assigned to the "web" middleware group. Make something great! | */
 
 Route::get('/', function () {
     return view('home');
@@ -64,30 +55,35 @@ Route::middleware('auth')->group(function () {
         Route::get('webdashboard/rb-tematik/capaian-output/generate/{pilihan}', [CapaianOutputController::class, 'rbTematikCapaianOutputGenerate'])->name('cogenerate');
         Route::get('webdashboard/hasil-evaluasi', [WebDashboardController::class, 'hasilEvaluasi'])->name('webdashboard.hasil-evaluasi');
     });
+
     // Kegiatan Utama
     Route::get('/master-data/kegiatan_utama', [MasterDataController::class, 'kegiatan_utama'])->name('kegiatan_utama');
     Route::get('/master-data/kegiatan_utama/getDatas', [MasterDataController::class, 'kegiatan_utama_getDatas']);
     Route::get('/master-data/kegiatan_utama/getData/{id}', [MasterDataController::class, 'kegiatan_utama_getData']);
     Route::post('/master-data/kegiatan_utama/simpan', [MasterDataController::class, 'kegiatan_utama_simpan']);
     Route::post('/master-data/kegiatan_utama/hapus', [MasterDataController::class, 'kegiatan_utama_hapus']);
+
     // Indikator
     Route::get('/master-data/indikator', [MasterDataController::class, 'indikator'])->name('indikator');
     Route::get('/master-data/indikator/getDatas', [MasterDataController::class, 'indikator_getDatas']);
     Route::get('/master-data/indikator/getData/{id}', [MasterDataController::class, 'indikator_getData']);
     Route::post('/master-data/indikator/simpan', [MasterDataController::class, 'indikator_simpan']);
     Route::post('/master-data/indikator/hapus', [MasterDataController::class, 'indikator_hapus']);
+
     // LKE Kegiatan
     Route::get('/master-data/lke_kegiatan', [MasterDataController::class, 'lke_kegiatan'])->name('lke_kegiatan');
     Route::get('/master-data/lke_kegiatan/getDatas', [MasterDataController::class, 'lke_kegiatan_getDatas']);
     Route::get('/master-data/lke_kegiatan/getData/{id}', [MasterDataController::class, 'lke_kegiatan_getData']);
     Route::post('/master-data/lke_kegiatan/simpan', [MasterDataController::class, 'lke_kegiatan_simpan']);
     Route::post('/master-data/lke_kegiatan/hapus', [MasterDataController::class, 'lke_kegiatan_hapus']);
+
     // Tema
     Route::get('/master-data/tema', [MasterDataController::class, 'tema'])->name('tema');
     Route::get('/master-data/tema/getDatas', [MasterDataController::class, 'tema_getDatas']);
     Route::get('/master-data/tema/getData/{id}', [MasterDataController::class, 'tema_getData']);
     Route::post('/master-data/tema/simpan', [MasterDataController::class, 'tema_simpan']);
     Route::post('/master-data/tema/hapus', [MasterDataController::class, 'tema_hapus']);
+
     // Dokumen
     Route::get('/master-data/dokumen', [MasterDataController::class, 'dokumen'])->name('master-data_dokumen');
     Route::get('/master-data/dokumen/getDataTahun', [MasterDataController::class, 'dokumen_getDataTahun']);
@@ -97,6 +93,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/master-data/dokumen/getDataKategori/{id}', [MasterDataController::class, 'dokumen_getDataKategori']);
     Route::post('/master-data/dokumen/simpanKategori', [MasterDataController::class, 'dokumen_simpanKategori']);
     Route::post('/master-data/dokumen/hapusKategori', [MasterDataController::class, 'dokumen_hapusKategori']);
+
     // LKE Parameter
     Route::get('/master-data/lke_parameter', [MasterDataController::class, 'lke_parameter'])->name('lke_parameter');
     Route::get('/master-data/lke_parameter/getDatas', [MasterDataController::class, 'lke_parameter_getDatas']);
@@ -105,7 +102,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/master-data/lke_parameter/getIndikatorPengali/{komponen_id}', [MasterDataController::class, 'lke_parameter_getIndikatorPengali']);
     Route::post('/master-data/lke_parameter/simpan', [MasterDataController::class, 'lke_parameter_simpan']);
     Route::post('/master-data/lke_parameter/hapus', [MasterDataController::class, 'lke_parameter_hapus']);
-
 
     // Dokumen Upload
     Route::get('/dokumen', [DokumenController::class, 'index'])->name('dokumen');
@@ -126,6 +122,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/rencana_aksi/rb-general/perencanaan/simpanMonev', [RBGeneralController::class, 'perencanaan_simpanMonev']);
     Route::get('/rencana_aksi/rb-general/perencanaan/getDokumen/{id}', [RBGeneralController::class, 'perencanaan_getDokumen']);
     Route::post('/rencana_aksi/rb-general/perencanaan/simpanDokumen', [RBGeneralController::class, 'perencanaan_simpanDokumen']);
+
     // RB General Rencana Aksi
     Route::get('/rencana_aksi/rb-general/perencanaan/{perencanaan_id}/{target_id}/rencana_aksi', [RBGeneralController::class, 'rencana_aksi'])->name('rencana_aksi');
     Route::get('/rencana_aksi/rb-general/perencanaan/{perencanaan_id}/{target_id}/rencana_aksi/downloadTemplate', [RBGeneralController::class, 'rencana_aksi_downloadTemplate']);
@@ -134,6 +131,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/rencana_aksi/rb-general/perencanaan/{perencanaan_id}/{target_id}/rencana_aksi/getData/{id}', [RBGeneralController::class, 'rencana_aksi_getData']);
     Route::post('/rencana_aksi/rb-general/perencanaan/{perencanaan_id}/{target_id}/rencana_aksi/simpan', [RBGeneralController::class, 'rencana_aksi_simpan']);
     Route::post('/rencana_aksi/rb-general/perencanaan/{perencanaan_id}/{target_id}/rencana_aksi/hapus', [RBGeneralController::class, 'rencana_aksi_hapus']);
+
     // RB General Evaluasi
     Route::get('/rencana_aksi/rb-general/perencanaan/{perencanaan_id}/{target_id}/monev', [RBGeneralController::class, 'monev'])->name('monev');
     Route::get('/rencana_aksi/rb-general/perencanaan/{perencanaan_id}/{target_id}/monev/getDatas', [RBGeneralController::class, 'rencana_aksi_getDatas']);
@@ -141,10 +139,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/rencana_aksi/rb-general/perencanaan/{perencanaan_id}/{target_id}/monev/getTarget', [RBGeneralController::class, 'monev_getTarget']);
     Route::post('/rencana_aksi/rb-general/perencanaan/{perencanaan_id}/{target_id}/monev/simpan', [RBGeneralController::class, 'monev_simpan']);
     Route::post('/rencana_aksi/rb-general/perencanaan/{perencanaan_id}/{target_id}/monev/simpanTarget', [RBGeneralController::class, 'monev_simpanTarget']);
+
     // RB General Rekap Data
     Route::get('/rencana_aksi/rb-general/rekap_data', [RBGeneralController::class, 'rekap_data']);
     Route::get('/rencana_aksi/rb-general/rekap_data/getTarget/{id}', [RBGeneralController::class, 'rekap_data_getTarget']);
     Route::post('/rencana_aksi/rb-general/rekap_data/simpanCatatanEvaluator', [RBGeneralController::class, 'rekap_data_simpanCatatanEvaluator']);
+
     // RB Tematik Sasaran Road Map
     Route::get('/rencana_aksi/rb-tematik/perencanaan', [RBTematikController::class, 'tema_sasaran'])->name('tema_sasaran');
     Route::get('/rencana_aksi/rb-tematik/perencanaan/getSasaran/{sasaran_id}', [RBTematikController::class, 'sasaran_getData']);
@@ -155,6 +155,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/rencana_aksi/rb-tematik/perencanaan/indikator_roadmap/hapus/{indikator_id}', [RBTematikController::class, 'indikatorRoadmapHapus']);
     Route::get('/rencana_aksi/rb-tematik/perencanaan/downloadTemplate', [RBTematikImportController::class, 'rbTematik_downloadTemplate']);
     Route::post('/rencana_aksi/rb-tematik/perencanaan/import', [RBTematikImportController::class, 'rbTematik_import']);
+
     // RB Tematik Permasalahan
     Route::get('/rencana_aksi/rb-tematik/permasalahan', [RBTematikController::class, 'permasalahan'])->name('permasalahan');
     Route::get('/rencana_aksi/rb-tematik/permasalahan/get-indikators-roadmap', [RBTematikController::class, 'getIndikatorsRoadmap'])->name('get_indikators_roadmap');
@@ -165,12 +166,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/rencana_aksi/rb-tematik/permasalahan/get-indikator-permasalahan/{indikator_permasalahan_id}', [RBTematikController::class, 'get_indikator_permasalahan'])->name('get_indikator_permasalahan');
     Route::post('/rencana_aksi/rb-tematik/permasalahan/simpan-indikator-permasalahan', [RBTematikController::class, 'simpanIndikatorPermasalahan']);
     Route::post('/rencana_aksi/rb-tematik/permasalahan/indikator_permasalahan/hapus/{indikator_id}', [RBTematikController::class, 'indikatorPermasalahanHapus']);
+
     // RB Tematik Renaksi
     Route::get('/rencana_aksi/rb-tematik/permasalahan/renaksi/{indikator_id}', [RBTematikController::class, 'rencana_aksi'])->name('rencana_aksi_tematik');
     Route::get('/rencana_aksi/rb-tematik/permasalahan/renaksi/{indikator_id}/getDatas', [RBTematikController::class, 'rencana_aksi_getDatas']);
     Route::get('/rencana_aksi/rb-tematik/permasalahan/renaksi/getData/{renaksi_output_id}', [RBTematikController::class, 'rencana_aksi_getData']);
     Route::post('/rencana_aksi/rb-tematik/permasalahan/renaksi/{indikator_id}/simpan', [RBTematikController::class, 'rencana_aksi_simpan']);
     Route::post('/rencana_aksi/rb-tematik/permasalahan/renaksi/{renaksi_output_id}/hapus', [RBTematikController::class, 'rencana_aksi_hapus']);
+
     // RB Tematik MONEV
     Route::post('/rencana_aksi/rb-tematik/perencanaan/monev/simpan-indikator-roadmap', [RBTematikController::class, 'simpanMonevIndikatorRoadmap']);
     Route::get('/rencana_aksi/rb-tematik/permasalahan/monev/{indikator_id}', [RBTematikController::class, 'monev'])->name('monev_tematik');
@@ -244,6 +247,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/evaluasi/hasil-2023/get_test_tp/{id}', [HasilController::class, 'get_test_tp']);
     Route::post('/evaluasi/hasil-2023/simpan_test_tp_line', [HasilController::class, 'simpan_test_tp_line']);
     Route::post('/evaluasi/hasil-2023/simpan_test_tp', [HasilController::class, 'simpan_test_tp']);
+
     // Access
     Route::get('/access', [HasilController::class, 'access'])->name('access');
     Route::post('/access/simpan', [HasilController::class, 'access_simpan']);
@@ -251,34 +255,36 @@ Route::middleware('auth')->group(function () {
     // Activity Log
     Route::get('/activitylog', [HomeController::class, 'activitylog'])->name('activitylog');
     Route::get('/activitylog/getData', [HomeController::class, 'activitylog_getData']);
+
     // Kelola user
     Route::get('/manage-user', [ManageUserController::class, 'index'])->name('index');
     Route::get('/manage-user/getDatas', [ManageUserController::class, 'manage_user_getDatas']);
     Route::get('/manage-user/getData/{id}', [ManageUserController::class, 'manage_user_getData']);
     Route::post('/manage-user/simpan', [ManageUserController::class, 'manage_user_simpan']);
     Route::post('/manage-user/hapus', [ManageUserController::class, 'manage_user_hapus']);
+
     // Kelola Tim
     Route::get('/kelola-tim', [ManageTimController::class, 'kelola_tim'])->name('kelola_tim');
     Route::post('/kelola-tim/simpan', [ManageTimController::class, 'kelola_tim_simpan'])->name('kelola_tim_simpan');
     Route::get('/kelola-tim/getDatas', [ManageTimController::class, 'tim_evaluasi_getDatas'])->name('getData_tim');
     Route::get('/kelola-tim/getData/{id}', [ManageTimController::class, 'tim_getData']);
     Route::post('/kelola-tim/hapus', [ManageTimController::class, 'kelola_tim_hapus'])->name('kelola_tim_hapus');
-    #Kelola Anggota Tim
+
+    # Kelola Anggota Tim
     Route::get('/kelola-anggota-tim', [ManageTimController::class, 'kelola_anggota_tim'])->name('kelola_anggota_tim');
     Route::post('/kelola-anggota-tim/simpan', [ManageTimController::class, 'kelola_anggota_tim_simpan'])->name('kelola_anggota_tim_simpan');
     Route::get('/kelola-anggota-tim/getDatas', [ManageTimController::class, 'anggota_tim_evaluasi_getDatas'])->name('getData_anggotaTim');
     Route::get('/kelola-anggota-tim/getData/{id}', [ManageTimController::class, 'anggota_tim_getData']);
     Route::post('/kelola-anggota-tim/hapus', [ManageTimController::class, 'kelola_anggota_tim_hapus'])->name('kelola_anggota_tim_hapus');
-    #Kelola Unit Tim
+
+    # Kelola Unit Tim
     Route::get('/kelola-instansi-tim', [ManageTimController::class, 'kelola_instansi_tim'])->name('kelola_instansi_tim');
     Route::post('/kelola-instansi-tim/simpan', [ManageTimController::class, 'kelola_instansi_tim_simpan'])->name('kelola_instansi_tim_simpan');
     Route::get('/kelola-instansi-tim/getDatas', [ManageTimController::class, 'instansi_tim_evaluasi_getDatas'])->name('getData_instansiTim');
     Route::get('/kelola-instansi-tim/getData/{id}', [ManageTimController::class, 'instansi_tim_getData']);
     Route::post('/kelola-instansi-tim/hapus', [ManageTimController::class, 'kelola_instansi_tim_hapus'])->name('kelola_instansi_tim_hapus');
 
-
-
-    #generate indeks RB simple version buat kebutuhan satu data dakip
+    # generate indeks RB simple version buat kebutuhan satu data dakip
     Route::get('/generate/hasil1data/', [GenerateController::class, 'generate_simple'])->name('generete_rb_simple_version');
     Route::get('/generate/hasilrb2023/', [GenerateController::class, 'generateRB2023']);
 
@@ -286,6 +292,7 @@ Route::middleware('auth')->group(function () {
     // Admin & TPN Features
     Route::get('/lhkan/dashboard', [LhkanController::class, 'dashboard'])->name('lhkan.dashboard');
     Route::get('/lhkan/export-csv', [LhkanController::class, 'exportCsv'])->name('lhkan.export-csv');
+    Route::get('/lhkan/detail/{id}', [LhkanController::class, 'detail'])->name('lhkan.detail');
 
     // Periode Management (Admin Only)
     Route::get('/lhkan/periode', [LhkanController::class, 'periodeIndex'])->name('lhkan.periode.index');
@@ -309,6 +316,7 @@ Route::middleware('auth')->group(function () {
 
     // Delete LHKAN submission (Admin Only)
     Route::delete('/lhkan/submission/delete/{id}', [LhkanController::class, 'submissionDelete'])->name('lhkan.submission.delete');
+    Route::post('/lhkan/submission/approve/{id}', [LhkanController::class, 'submissionApprove'])->name('lhkan.submission.approve');
 
     // Instansi Features (KL, Provinsi, Kabupaten)
     Route::get('/lhkan/form', [LhkanController::class, 'form'])->name('lhkan.form');
@@ -317,6 +325,5 @@ Route::middleware('auth')->group(function () {
     Route::get('/lhkan/history', [LhkanController::class, 'history'])->name('lhkan.history');
     Route::post('/lhkan/change-requests/store', [LhkanController::class, 'changeRequestStore'])->name('lhkan.change-requests.store');
 });
-
 
 require __DIR__ . '/auth.php';
