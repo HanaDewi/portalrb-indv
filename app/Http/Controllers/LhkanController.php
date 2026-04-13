@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\LhkanExport;
 use App\Http\Requests\StoreLhkanRequest;
 use App\Http\Requests\UpdateLhkanRequest;
 use App\Models\KlpdInstansi;
@@ -15,7 +16,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Rap2hpoutre\FastExcel\FastExcel;
+use Maatwebsite\Excel\Facades\Excel;
 
 class LhkanController extends Controller
 {
@@ -47,6 +48,7 @@ class LhkanController extends Controller
         $status = $request->status ?? null;
 
         $periodes = LhkanPeriod::orderBy('tahun', 'desc')->get();
+        $instansis = KlpdInstansi::orderBy('name')->get(['id', 'name']);
 
         $query = LhkanSubmission::with(['instansi', 'period', 'pics']);
 
@@ -78,6 +80,7 @@ class LhkanController extends Controller
         return view('lhkan.admin.dashboard', compact(
             'submissions',
             'periodes',
+            'instansis',
             'periodeId',
             'instansiId',
             'status',
@@ -96,44 +99,58 @@ class LhkanController extends Controller
         if (!in_array($this->level, ['admin', 'tpn'])) {
             abort(403, 'Anda tidak memiliki akses ke fitur ini.');
         }
-
         $periodeId = $request->periode_id;
         if (!$periodeId) {
             return redirect()->back()->with('error', 'Periode wajib dipilih.');
         }
+        $fileName = 'lhkan_report_' . date('Y_m_d_His') . '.xlsx';
 
-        $submissions = LhkanSubmission::where('periode_id', $periodeId)
-            ->with(['instansi', 'period', 'pics'])
-            ->get();
-
-        $data = [];
-        foreach ($submissions as $submission) {
+        // Menggunakan Generator agar hemat memori saat export data besar
+        $rows = collect(
+            LhkanSubmission::where('periode_id', $periodeId)
+                ->with(['instansi', 'period', 'pics'])
+                ->cursor()
+        )->map(function ($submission) {
             $pics = $submission->pics->map(function ($pic) {
                 return $pic->nama . ' (' . $pic->nomor_hp . ')';
             })->implode(', ');
-
-            $data[] = [
-                'Nama Instansi' => $submission->instansi->name ?? '-',
-                'Periode' => $submission->period->nama ?? '-',
-                'Status' => $submission->status,
-                'Total Aparatur' => $submission->jml_aparatur,
-                'Wajib LHKPN' => $submission->jml_wajib_lhkpn,
-                'Tidak Wajib LHKPN' => $submission->jml_non_wajib_lhkpn,
-                'Realisasi LHKPN' => $submission->realisasi_lhkpn,
-                'Realisasi SPT Non LHKPN' => $submission->realisasi_spt_non_lhkpn,
-                'Belum SPT Non LHKPN' => $submission->belum_spt_non_lhkpn,
-                'Total Belum LHKAN' => $submission->total_belum_lhkan,
-                'PIC' => $pics,
-                'Link Rekap' => $submission->link_rekap_gdrive ?? '-',
-                'Catatan' => $submission->catatan ?? '-',
-                'Tanggal Submit' => $submission->submitted_at ? $submission->submitted_at->format('Y-m-d H:i:s') : '-',
+            return [
+                $submission->instansi->name ?? '-',
+                $submission->period->nama ?? '-',
+                $submission->status,
+                $submission->jml_aparatur,
+                $submission->jml_wajib_lhkpn,
+                $submission->jml_non_wajib_lhkpn,
+                $submission->realisasi_lhkpn,
+                $submission->realisasi_spt_non_lhkpn,
+                $submission->belum_spt_non_lhkpn,
+                $submission->total_belum_lhkan,
+                $pics,
+                $submission->link_rekap_gdrive ?? '-',
+                $submission->catatan ?? '-',
+                $submission->submitted_at ? $submission->submitted_at->format('Y-m-d H:i:s') : '-',
             ];
+        })->toArray();
+
+        return Excel::download(new LhkanExport($rows), $fileName);
+    }
+
+    
+    /**
+     * View submission details
+     */
+    public function detail($id)
+    {
+        if (!in_array($this->level, ['admin', 'tpn'])) {
+            abort(403, 'Anda tidak memiliki akses ke halaman ini.');
         }
 
-        $fileName = 'lhkan_report_' . date('Y_m_d_His') . '.csv';
+        $submission = LhkanSubmission::with(['instansi', 'period', 'pics', 'logs'])
+            ->findOrFail($id);
 
-        return (new FastExcel(collect($data)))->download($fileName);
+        return view('lhkan.admin.detail', compact('submission'));
     }
+
 
     // ==================== PERIODE MANAGEMENT (ADMIN) ====================
 
@@ -259,7 +276,44 @@ class LhkanController extends Controller
         $submission = LhkanSubmission::findOrFail($id);
         $submission->delete();
 
-        return redirect()->back()->with('success', 'Data LHKAN instansi berhasil dihapus.');
+        return redirect()->route('lhkan.dashboard')->with('success', 'Data LHKAN instansi berhasil dihapus.');
+    }
+
+    /**
+     * Approve LHKAN submission (Admin & TPN)
+     */
+    public function submissionApprove($id)
+    {
+        if (!in_array($this->level, ['admin', 'tpn'])) {
+            abort(403, 'Anda tidak memiliki akses ke fitur ini.');
+        }
+
+        DB::beginTransaction();
+        try {
+            $submission = LhkanSubmission::findOrFail($id);
+            
+            if ($submission->status !== 'submitted') {
+                return redirect()->back()->with('error', 'Hanya data yang berstatus submitted yang dapat disetujui.');
+            }
+
+            $submission->approve();
+
+            // Log action
+            LhkanLog::create([
+                'submission_id' => $submission->id,
+                'user_id' => $this->user->id,
+                'action' => 'approved',
+                'description' => 'Data LHKAN disetujui',
+                'ip_address' => request()->ip(),
+            ]);
+
+            DB::commit();
+            return redirect()->back()->with('success', 'Data LHKAN berhasil disetujui.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Error approving submission: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat menyetujui data.');
+        }
     }
 
     // ==================== PIC MANAGEMENT ====================
@@ -490,25 +544,33 @@ class LhkanController extends Controller
      */
     public function form(Request $request)
     {
-        if (!in_array($this->level, ['kl', 'provinsi', 'kabupaten'])) {
+        $isPrivilegedInput = in_array($this->level, ['admin', 'tpn']);
+
+        if (!$isPrivilegedInput && !in_array($this->level, ['kl', 'provinsi', 'kabupaten'])) {
             abort(403, 'Anda tidak memiliki akses ke halaman ini.');
         }
 
-        $instansiId = $this->user->user_rel->instansi_id;
+        $instansiId = $isPrivilegedInput
+            ? $request->instansi_id
+            : $this->user->user_rel->instansi_id;
         $periodeId = $request->periode_id ?? LhkanPeriod::open()->latest()->first()?->id;
         $currentPeriod = $periodeId ? LhkanPeriod::find($periodeId) : null;
 
         $periodes = LhkanPeriod::orderBy('tahun', 'desc')->get();
-        $pics = LhkanPic::where('instansi_id', $instansiId)->approved()->get();
+        $instansis = KlpdInstansi::orderBy('name')->get(['id', 'name']);
+        $selectedInstansi = $instansiId ? KlpdInstansi::find($instansiId) : null;
+        $pics = $instansiId
+            ? LhkanPic::where('instansi_id', $instansiId)->approved()->get()
+            : collect();
 
         // Load submission: by submission_id (edit from history) or by current period, always with pics for form
-        if ($request->submission_id) {
+        if ($request->submission_id && $instansiId) {
             $submission = LhkanSubmission::where('instansi_id', $instansiId)
                 ->where('id', $request->submission_id)
                 ->with(['pics', 'period'])
                 ->first();
         }
-        if (!isset($submission) && $currentPeriod) {
+        if (!isset($submission) && $currentPeriod && $instansiId) {
             $submission = LhkanSubmission::where('instansi_id', $instansiId)
                 ->where('periode_id', $currentPeriod->id)
                 ->with('pics')
@@ -517,12 +579,14 @@ class LhkanController extends Controller
         $submission = $submission ?? null;
 
         // Check if user has submitted in active period
-        $hasSubmitted = $submission && in_array($submission->status, ['submitted', 'approved', 'edit_requested']);
-        $canEdit = $submission && $submission->isEditApproved();
-        $isEditRequested = $submission && $submission->isEditRequested();
+        $hasSubmitted = !$isPrivilegedInput && $submission && in_array($submission->status, ['submitted', 'approved', 'edit_requested']);
+        $canEdit = $isPrivilegedInput
+            ? !empty($instansiId)
+            : ($submission && $submission->isEditApproved());
+        $isEditRequested = !$isPrivilegedInput && $submission && $submission->isEditRequested();
 
         // Check if period is locked
-        $isLocked = $submission ? $submission->period->isLocked() : false;
+        $isLocked = $currentPeriod ? $currentPeriod->isLocked() : false;
 
         return view('lhkan.instansi.form', compact(
             'submission',
@@ -532,9 +596,12 @@ class LhkanController extends Controller
             'pics',
             'isLocked',
             'instansiId',
+            'instansis',
+            'selectedInstansi',
             'hasSubmitted',
             'canEdit',
-            'isEditRequested'
+            'isEditRequested',
+            'isPrivilegedInput'
         ));
     }
 
@@ -543,11 +610,16 @@ class LhkanController extends Controller
      */
     public function store(StoreLhkanRequest $request)
     {
-        if (!in_array($this->level, ['kl', 'provinsi', 'kabupaten'])) {
+        $isPrivilegedInput = in_array($this->level, ['admin', 'tpn']);
+
+        if (!$isPrivilegedInput && !in_array($this->level, ['kl', 'provinsi', 'kabupaten'])) {
             abort(403, 'Anda tidak memiliki akses ke fitur ini.');
         }
 
-        $instansiId = $this->user->user_rel->instansi_id;
+        $instansiId = $isPrivilegedInput
+            ? $request->instansi_id
+            : $this->user->user_rel->instansi_id;
+        KlpdInstansi::findOrFail($instansiId);
         $periode = LhkanPeriod::findOrFail($request->periode_id);
 
         // Check if period is locked
@@ -563,7 +635,7 @@ class LhkanController extends Controller
                 ->first();
 
             // Determine if this is an edit after approval
-            $isEditAfterApproval = $existingSubmission && $existingSubmission->isEditApproved();
+            $isEditAfterApproval = !$isPrivilegedInput && $existingSubmission && $existingSubmission->isEditApproved();
 
             // Find or create submission
             $submission = LhkanSubmission::updateOrCreate(
@@ -595,7 +667,7 @@ class LhkanController extends Controller
                     'nama' => $picData['nama'],
                     'nomor_hp' => $picData['nomor_hp'],
                     'status' => 'approved',
-                    'added_by' => 'instansi',
+                    'added_by' => $isPrivilegedInput ? 'admin' : 'instansi',
                 ]);
             }
 
@@ -610,7 +682,7 @@ class LhkanController extends Controller
 
             if ($request->action === 'submit') {
                 // Allow submit if: draft, edit_approved, or not yet submitted
-                if ($submission->isSubmitted() || $submission->isApproved()) {
+                if (!$isPrivilegedInput && ($submission->isSubmitted() || $submission->isApproved())) {
                     DB::rollBack();
                     return redirect()->back()->with('error', 'Data sudah disubmit.');
                 }
@@ -623,10 +695,24 @@ class LhkanController extends Controller
                     'ip_address' => request()->ip(),
                 ]);
                 DB::commit();
+                if ($isPrivilegedInput) {
+                    return redirect()->route('lhkan.form', [
+                        'instansi_id' => $instansiId,
+                        'periode_id' => $request->periode_id,
+                    ])->with('success', 'Data LHKAN berhasil disubmit.');
+                }
+
                 return redirect()->route('lhkan.history')->with('success', 'Data LHKAN berhasil disubmit.');
             }
 
             DB::commit();
+            if ($isPrivilegedInput) {
+                return redirect()->route('lhkan.form', [
+                    'instansi_id' => $instansiId,
+                    'periode_id' => $request->periode_id,
+                ])->with('success', 'Data LHKAN berhasil disimpan.');
+            }
+
             return redirect()->back()->with('success', 'Data LHKAN berhasil disimpan.');
         } catch (\Exception $e) {
             DB::rollBack();

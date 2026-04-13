@@ -9,12 +9,48 @@
 
 @section('content')
 @php
+    $isPrivilegedInput = $isPrivilegedInput ?? false;
     $picRows = is_array(old('pics')) && count(old('pics')) > 0
         ? old('pics')
         : (isset($submission) && $submission->pics->count() > 0 ? $submission->pics->values()->all() : [['nama' => '', 'nomor_hp' => '']]);
 @endphp
 <div class="mt-8 space-y-5">
     <x-bladewind::card>
+            @if($isPrivilegedInput)
+                <div class="rounded-md border border-slate-200 bg-slate-50 px-4 py-4 mb-5">
+                    <form method="GET" action="{{ route('lhkan.form') }}">
+                        <div class="row">
+                            <div class="col-md-5 mb-3">
+                                <label class="font-medium">Instansi</label>
+                                <select name="instansi_id" class="form-select" required>
+                                    <option value="">Pilih Instansi</option>
+                                    @foreach($instansis as $instansi)
+                                        <option value="{{ $instansi->id }}" {{ (string) old('instansi_id', $instansiId) === (string) $instansi->id ? 'selected' : '' }}>
+                                            {{ $instansi->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-5 mb-3">
+                                <label class="font-medium">Periode</label>
+                                <select name="periode_id" class="form-select">
+                                    @foreach($periodes as $periode)
+                                        <option value="{{ $periode->id }}" {{ (string) $periodeId === (string) $periode->id ? 'selected' : '' }}>
+                                            {{ $periode->nama }} ({{ $periode->tahun }})
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-2 mb-3 d-flex align-items-end">
+                                <button type="submit" class="btn btn-primary w-100">
+                                    Tampilkan
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            @endif
+
             @if(session('success'))
                 <div class="rounded-md border border-emerald-200 bg-emerald-50 text-emerald-700 px-4 py-3 mb-4">
                     <x-bladewind::alert type="success">{{ session('success') }}</x-bladewind::alert>
@@ -57,29 +93,40 @@
             @endif
 
             <!-- Already Submitted Alert -->
-            @if(isset($isEditRequested) && $isEditRequested)
+            @if($isPrivilegedInput && empty($instansiId))
+                <div class="rounded-md border border-amber-200 bg-amber-50 text-amber-700 px-4 py-3 mb-4">
+                    <i class="fa fa-info-circle mr-1"></i> Pilih instansi terlebih dahulu untuk menampilkan form input LHKAN.
+                </div>
+            @elseif($isPrivilegedInput && isset($submission) && $submission)
+                <div class="rounded-md border border-sky-200 bg-sky-50 text-sky-700 px-4 py-3 mb-4">
+                    <i class="fa fa-info-circle mr-1"></i> Data LHKAN untuk instansi ini sudah tersedia. Perubahan yang Anda submit akan memperbarui data yang ada.
+                </div>
+            @elseif(isset($isEditRequested) && $isEditRequested)
                 <div class="rounded-md border border-sky-200 bg-sky-50 text-sky-700 px-4 py-3 mb-4">
                     <i class="fa fa-clock mr-1"></i> Pengajuan edit data Anda sedang menunggu persetujuan Admin/TPN.
                     Silakan cek <a href="{{ route('lhkan.history') }}" class="font-semibold underline hover:text-sky-900">riwayat pelaporan</a> untuk melihat status.
                 </div>
-            @elseif(isset($canEdit) && $canEdit)
+            @elseif(!$isPrivilegedInput && isset($canEdit) && $canEdit)
                 <x-bladewind::alert type="success" class="mb-4">Permohonan edit Anda telah disetujui. Silakan edit data dan submit ulang.</x-bladewind::alert>
-            @elseif(isset($hasSubmitted) && $hasSubmitted)
+            @elseif(!$isPrivilegedInput && isset($hasSubmitted) && $hasSubmitted)
                 <div class="rounded-md border border-amber-200 bg-amber-50 text-amber-700 px-4 py-3 mb-4">
                     <i class="fa fa-check-circle mr-1"></i> Anda sudah melakukan submit data untuk periode ini. 
                     Jika ingin melakukan edit data, silakan masuk ke <a href="{{ route('lhkan.history') }}" class="font-semibold underline hover:text-amber-900">riwayat pelaporan</a>.
                 </div>
             @endif
 
-            @if(isset($currentPeriod) && $currentPeriod->status === 'open' && (!isset($hasSubmitted) || !$hasSubmitted || (isset($canEdit) && $canEdit)))
+            @if(isset($currentPeriod) && $currentPeriod->status === 'open' && (!$isPrivilegedInput || !empty($instansiId)) && ($isPrivilegedInput || !isset($hasSubmitted) || !$hasSubmitted || (isset($canEdit) && $canEdit)))
                     <form method="POST" action="{{ route('lhkan.store') }}" id="lhkanForm">
                         @csrf
                         <input type="hidden" name="periode_id" value="{{ $currentPeriod->id }}">
                         <input type="hidden" name="action" id="formAction" value="draft">
+                        @if($isPrivilegedInput)
+                            <input type="hidden" name="instansi_id" value="{{ $instansiId }}">
+                        @endif
                         <!-- Instansi Info (Read Only) -->
                         <div class="rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 mb-5">
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
-                                <div><span class="font-semibold">Instansi:</span> {{ auth()->user()->instansi->name ?? '-' }}</div>
+                                <div><span class="font-semibold">Instansi:</span> {{ $isPrivilegedInput ? ($selectedInstansi->name ?? '-') : (auth()->user()->instansi->name ?? '-') }}</div>
                                 <div><span class="font-semibold">Periode:</span> {{ $currentPeriod->nama }} ({{ $currentPeriod->tahun }})</div>
                             </div>
                         </div>
@@ -208,7 +255,11 @@
 
                         <!-- Action Buttons -->
                         <div class="flex flex-wrap gap-2">
-                            @if(isset($canEdit) && $canEdit)
+                            @if($isPrivilegedInput)
+                                <x-bladewind::button color="blue" has_icon="true" icon="paper-plane" size="small" type="button" id="btnSubmitData">
+                                    Submit Data Instansi
+                                </x-bladewind::button>
+                            @elseif(isset($canEdit) && $canEdit)
                                 <x-bladewind::button color="blue" has_icon="true" icon="paper-plane" size="small" type="button" id="btnSubmitData">
                                     Submit Ulang Data
                                 </x-bladewind::button>

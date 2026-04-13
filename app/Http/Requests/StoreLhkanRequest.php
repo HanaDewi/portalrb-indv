@@ -20,7 +20,7 @@ class StoreLhkanRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
+        $rules = [
             'periode_id' => 'required|exists:lhkan_periodes,id',
             'jml_aparatur' => 'required|integer|min:0',
             'jml_wajib_lhkpn' => 'required|integer|min:0',
@@ -34,6 +34,12 @@ class StoreLhkanRequest extends FormRequest
             'pics.*.nama' => 'required|string|max:255',
             'pics.*.nomor_hp' => 'required|string|max:20',
         ];
+
+        if (in_array(optional($this->user())->level, ['admin', 'tpn'])) {
+            $rules['instansi_id'] = 'required|exists:klpd_instansi_new,id';
+        }
+
+        return $rules;
     }
 
     /**
@@ -44,6 +50,8 @@ class StoreLhkanRequest extends FormRequest
         return [
             'periode_id.required' => 'Periode wajib dipilih.',
             'periode_id.exists' => 'Periode tidak valid.',
+            'instansi_id.required' => 'Instansi wajib dipilih.',
+            'instansi_id.exists' => 'Instansi tidak valid.',
             'jml_aparatur.required' => 'Jumlah aparatur wajib diisi.',
             'jml_aparatur.integer' => 'Jumlah aparatur harus berupa angka.',
             'jml_aparatur.min' => 'Jumlah aparatur tidak boleh negatif.',
