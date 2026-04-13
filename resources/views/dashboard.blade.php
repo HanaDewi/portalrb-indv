@@ -778,7 +778,7 @@
         }
 
         function showRenaksiDocDetail(timId) {
-            const kegiatanId = document.getElementById('lke_kegiatan_id_doc')?.value;
+            const kegiatanId = document.getElementById('lke_kegiatan_id')?.value;
             if (!kegiatanId) {
                 alert('Silakan pilih LKE Kegiatan terlebih dahulu.');
                 return;
