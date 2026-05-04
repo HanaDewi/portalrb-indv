@@ -94,12 +94,6 @@ config/
 
 ---
 
-## Author
-
-Hana Dewi Shoviyah
-
----
-
 ## Disclaimer
 
 Some parts of this project may be adapted or simplified for public sharing. Internal or sensitive data has been removed.
