@@ -15992,7 +15992,7 @@ html body {
 .side-nav>ul ul {
     display: none;
     border-radius: 0.5rem;
-    background-color: rgb(0 0 0 / 0.1);
+    background-color: #acd2f5 !important;
 }
 
 .dark .side-nav>ul ul {
@@ -16134,6 +16134,14 @@ html body {
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
     transition-duration: 100ms;
     transition-timing-function: cubic-bezier(0.4, 0, 1, 1);
+}
+
+.side-nav > ul ul .side-menu .side-menu__title {
+    color: #000000 !important;
+}
+
+.side-nav > ul li > a.side-menu--active .side-menu__icon svg {
+    color: #1e293b !important; 
 }
 
 @media (max-width: calc(1280px - 1px)) {

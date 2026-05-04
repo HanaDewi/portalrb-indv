@@ -23,6 +23,28 @@ class KlpdInstansi extends Model
         'id'
     ];
 
+    /**
+     * ACCESSOR: Mengubah tampilan 'group' secara dinamis tanpa ubah database.
+     * Ini akan memecah:
+     * - 'kabupaten' menjadi 'kota' atau 'kabupaten'
+     * - 'kl' menjadi 'kementerian' atau 'lembaga'
+     */
+    public function getGroupAttribute($value)
+    {
+        // Jika aslinya 'kabupaten', cek apakah ada kata 'Kota' di namanya
+        if ($value == 'kabupaten') {
+            return str_contains($this->name, 'Kota') ? 'kota' : 'kabupaten';
+        }
+        
+        // Jika aslinya 'kl', cek apakah ada kata 'Kementerian' di namanya
+        if ($value == 'kl') {
+            return str_contains($this->name, 'Kementerian') ? 'kementerian' : 'lembaga';
+        }
+
+        // Untuk group 'provinsi', 'lain', dll biarkan apa adanya
+        return $value;
+    }
+
     public function lke_test_tp_old(): HasOne
     {
         if ($this->id_before) {

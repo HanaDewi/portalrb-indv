@@ -35,55 +35,57 @@ if (!function_exists('menus')) {
                 'title' => 'Dashboard',
                 'icon' => 'pie-chart',
                 'url' => 'webdashboard',
-                'items' => [
-                    [
-                        'levels' => ['tpn', 'admin', 'viewer'],
-                        'title' => 'RB General',
-                        'icon' => 'clipboard-list',
-                        'url' => 'webdashboard/rb-general',
-                        'items' => [
-                            [
-                                'levels' => ['tpn', 'admin', 'viewer'],
-                                'title' => 'Rencana Aksi',
-                                'icon' => 'inbox',
-                                'url' => 'webdashboard/rb-general/rencana-aksi',
-                            ],
-                            [
-                                'levels' => ['tpn', 'admin', 'viewer'],
-                                'title' => 'Capaian Output',
-                                'icon' => 'bar-chart',
-                                'url' => 'webdashboard/rb-general/capaian-output',
-                            ],
-                        ]
-                    ],
-                    [
-                        'levels' => ['tpn', 'admin', 'viewer'],
-                        'title' => 'RB Tematik',
-                        'icon' => 'clipboard',
-                        'url' => 'webdashboard/rb-tematik',
-                        'items' => [
-                            [
-                                'levels' => ['tpn', 'admin', 'viewer'],
-                                'title' => 'Rencana Aksi',
-                                'icon' => 'inbox',
-                                'url' => 'webdashboard/rb-tematik/rencana-aksi',
-                            ],
-                            [
-                                'levels' => ['tpn', 'admin', 'viewer'],
-                                'title' => 'Capaian Output',
-                                'icon' => 'bar-chart',
-                                'url' => 'webdashboard/rb-tematik/capaian-output',
-                            ],
-                        ]
-                    ],
-                    [
-                        'levels' => ['tpn', 'admin', 'viewer'],
-                        'title' => 'Hasil Evaluasi',
-                        'icon' => 'target',
-                        'url' => 'webdashboard/hasil-evaluasi'
-                    ],
-                ],
             ],
+            // [
+            //     'items' => [
+            //         [
+            //             'levels' => ['tpn', 'admin', 'viewer'],
+            //             'title' => 'RB General',
+            //             'icon' => 'clipboard-list',
+            //             'url' => 'webdashboard/rb-general',
+            //             'items' => [
+            //                 [
+            //                     'levels' => ['tpn', 'admin', 'viewer'],
+            //                     'title' => 'Rencana Aksi',
+            //                     'icon' => 'inbox',
+            //                     'url' => 'webdashboard/rb-general/rencana-aksi',
+            //                 ],
+            //                 [
+            //                     'levels' => ['tpn', 'admin', 'viewer'],
+            //                     'title' => 'Capaian Output',
+            //                     'icon' => 'bar-chart',
+            //                     'url' => 'webdashboard/rb-general/capaian-output',
+            //                 ],
+            //             ]
+            //         ],
+            //         [
+            //             'levels' => ['tpn', 'admin', 'viewer'],
+            //             'title' => 'RB Tematik',
+            //             'icon' => 'clipboard',
+            //             'url' => 'webdashboard/rb-tematik',
+            //             'items' => [
+            //                 [
+            //                     'levels' => ['tpn', 'admin', 'viewer'],
+            //                     'title' => 'Rencana Aksi',
+            //                     'icon' => 'inbox',
+            //                     'url' => 'webdashboard/rb-tematik/rencana-aksi',
+            //                 ],
+            //                 [
+            //                     'levels' => ['tpn', 'admin', 'viewer'],
+            //                     'title' => 'Capaian Output',
+            //                     'icon' => 'bar-chart',
+            //                     'url' => 'webdashboard/rb-tematik/capaian-output',
+            //                 ],
+            //             ]
+            //         ],
+            //         [
+            //             'levels' => ['tpn', 'admin', 'viewer'],
+            //             'title' => 'Hasil Evaluasi',
+            //             'icon' => 'target',
+            //             'url' => 'webdashboard/hasil-evaluasi'
+            //         ],
+            //     ],
+            
             [
                 'levels' => ['admin', 'provinsi', 'kabupaten', 'kl', 'tpn', 'tpm'],
                 'title' => 'Dokumen',
@@ -658,16 +660,23 @@ if (!function_exists('group_instansi')) {
     function group_instansi($group = null)
     {
         $groups = [
-            'kl' => 'Kementerian',
-            'provinsi' => 'Provinsi',
-            'kabupaten' => 'Kabupaten/Kota',
-            'lain' => 'Lainnya',
-            'kab' => 'Kabupaten/Kota',
-            'prov' => 'Provinsi',
-            'pemda' => 'Kabupaten/Kota',
+            'kl'          => 'Kementerian/Lembaga', 
+            'kementerian' => 'Kementerian',
+            'lembaga'     => 'Lembaga',
+            'provinsi'    => 'Provinsi',
+            'kabupaten'   => 'Kabupaten',
+            'kota'        => 'Kota',
+            'lain'        => 'Lainnya',
+            'kab'         => 'Kabupaten',
+            'prov'        => 'Provinsi',
+            'pemda'       => 'Pemerintah Daerah',
         ];
 
-        return $group ? $groups[$group] : $groups;
+        if ($group !== null) {
+            return $groups[$group] ?? ucfirst($group);
+        }
+
+        return $groups;
     }
 }
 

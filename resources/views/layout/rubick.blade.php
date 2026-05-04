@@ -202,7 +202,7 @@
         <div class="content">
             <div class="top-bar">
                 <nav aria-label="breadcrumb" class="-intro-x mr-auto hidden sm:flex">
-                    <svg xmlns="https://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    {{-- <svg xmlns="https://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                         icon-name="globe" data-lucide="globe" class="lucide lucide-globe block mx-auto">
                         <circle cx="12" cy="12" r="10"></circle>
@@ -212,12 +212,11 @@
                     </svg>
                     <h1 style="padding-left: 5px; padding-right: 5px;" class="mr-auto text-lg font-extrabold"
                         style="font-weight: 600">SISTEM INFORMASI LEMBAR KERJA </h1>
-                    <h1 class="text-lg text-info font-extrabold"> EVALUASI RB</h1>
+                    <h1 class="text-lg font-extrabold" style="color: #2563eb;">EVALUASI RB</h1> --}}
                 </nav>
                 <div class="intro-x dropdown mr-auto sm:mr-6">
                     <h1 style="padding-left: 5px; padding-right: 5px;" class="mr-auto text-lg font-bold"
-                        style="font-weight: 600">Selamat datang, <a class="text-lg text-info font-bold">
-                            {{ auth()->user()->username }}</a>
+                        style="font-weight: 600">Selamat datang, <a class="text-lg font-bold">{{ auth()->user()->username }}</a>
                     </h1>
                     <div class="text-slate-500 text-xs mt-0.3 float-right">{{ auth()->user()->nama }}</div>
                 </div>
