@@ -22,8 +22,9 @@
                 </div>
             </form>
             <div class="flex flex-wrap gap-2 mt-2 md:mt-0 justify-start md:justify-end">
-                <a href="{{ url('webdashboard') }}" class="px-4 py-2 rounded-md font-medium text-sm text-center bg-gray-100 text-gray-600">Hasil Evaluasi</a>
+                <a href="{{ url('webdashboard') }}" class="px-4 py-2 rounded-md font-medium text-sm text-center bg-gray-100 text-gray-600 hover:bg-gray-200">Hasil Evaluasi</a>
                 <a href="{{ route('webdashboard.rb-general.rencana-aksi') }}" class="px-4 py-2 rounded-md font-medium text-sm text-center" style="background-color: #dbeafe; color: #2563eb;">RB General</a>
+                <a href="{{ route('webdashboard.rb-tematik.rencana-aksi') }}" class="px-4 py-2 rounded-md font-medium text-sm text-center bg-gray-100 text-gray-600 hover:bg-gray-200">RB Tematik</a>
             </div>
         </div>
 
@@ -435,6 +436,7 @@
         });
 
         // FILTER GROUP DI TABEL
+        // FUNGSI FILTER GRUP CUSTOM
         function applyGroupFilter() {
             var valGroup = document.getElementById('filterGroup').value.toLowerCase();
             
@@ -445,15 +447,17 @@
             $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
                 if (settings.nTable.id !== 'perencanaan') return true;
                 
-                var rowGroup = data[2].toLowerCase(); 
+                var rowGroup = data[2].toLowerCase(); // Kolom ke-3 (index 2) adalah Grup Instansi
                 
-                // Karena HTML tabel juga sudah memunculkan Kementerian, Lembaga, dsb.
-                if (valGroup !== '' && rowGroup !== valGroup) return false;
+                // PENGGANTI LOGIKANYA DI SINI: Gunakan includes() bukan !==
+                if (valGroup !== '' && !rowGroup.includes(valGroup)) {
+                    return false;
+                }
 
                 return true;
             });
 
-            dtTable.draw();
+            $('#perencanaan').DataTable().draw();
         }
 
         // =============================================

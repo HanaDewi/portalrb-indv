@@ -36,7 +36,7 @@ class PelaporanCoiReportController extends Controller
     public function __construct()
     {
         $this->middleware(function ($request, $next) {
-            if (Auth::user()->level !== 'tpn') {
+            if (!in_array(Auth::user()->level, ['tpn', 'admin'])) {
                 abort(403);
             }
             return $next($request);
@@ -72,6 +72,12 @@ class PelaporanCoiReportController extends Controller
             ];
         }
 
+        //admin
+        // return view('pelaporan-coi.admin-coi.editor', [
+        //     'questions' => $grouped,
+        // ]);
+
+        //user
         return view('pelaporan-coi.report.index', [
             'questions' => $grouped,
         ]);

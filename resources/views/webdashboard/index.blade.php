@@ -29,8 +29,8 @@
             </form>
             <div class="flex flex-wrap gap-2 mt-2 md:mt-0 justify-start md:justify-end">
                 <a href="{{ url('webdashboard') }}" class="px-4 py-2 rounded-md font-medium text-sm text-center" style="background-color: #dbeafe; color: #2563eb;">Hasil Evaluasi</a>
-                
                 <a href="{{ route('webdashboard.rb-general.rencana-aksi') }}" class="px-4 py-2 rounded-md font-medium text-sm text-center bg-gray-100 text-gray-600 hover:bg-gray-200">RB General</a>
+                <a href="{{ route('webdashboard.rb-tematik.rencana-aksi') }}" class="px-4 py-2 rounded-md font-medium text-sm text-center bg-gray-100 text-gray-600 hover:bg-gray-200">RB Tematik</a>
             </div>
         </div>
     </div>
