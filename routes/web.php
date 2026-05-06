@@ -241,6 +241,7 @@ Route::middleware('auth')->group(function () {
     Route::get('modul-coi', [PelaporanCoiReportController::class, 'index']);
     Route::get('modul-coi/{question}/lanjutan', [PelaporanCoiReportController::class, 'detailChild']);
     Route::get('modul-coi/{question}/{answer}', [PelaporanCoiReportController::class, 'detail']);
+    Route::post('/modul-coi/save', [PelaporanCoiReportController::class, 'store'])->name('coi.admin.save');
 
     // Hasil
     Route::get('/evaluasi/hasil-2023', [HasilController::class, 'hasil_seluruh'])->name('hasil_seluruh');
