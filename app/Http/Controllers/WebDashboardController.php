@@ -31,8 +31,6 @@ class WebDashboardController extends Controller
         if (!$selectedKegiatanId) {
             $selectedKegiatanId = $kegiatans->first()->id ?? null;
         }
-
-        // CARI ID KEGIATAN TAHUN LALU UNTUK BASELINE
         $kegiatanNow = $kegiatans->firstWhere('id', (int)$selectedKegiatanId);
         $tahunNow = $kegiatanNow ? $kegiatanNow->tahun : 2025;
         $kegiatanPrev = $kegiatans->firstWhere('tahun', $tahunNow - 1);
@@ -72,7 +70,7 @@ class WebDashboardController extends Controller
                     $join->on('ltt.instansi_id', '=', DB::raw('COALESCE(ki.id_before, ki.id)'))
                         ->where('ltt.lke_kegiatan_id', '=', $selectedKegiatanId);
                 })
-                ->leftJoin('lke_test_tp as ltt_prev', function ($join) use ($kegiatanPrevId) { // JOIN UNTUK BASELINE
+                ->leftJoin('lke_test_tp as ltt_prev', function ($join) use ($kegiatanPrevId) { 
                     $join->on('ltt_prev.instansi_id', '=', DB::raw('COALESCE(ki.id_before, ki.id)'))
                         ->where('ltt_prev.lke_kegiatan_id', '=', $kegiatanPrevId);
                 })
@@ -84,7 +82,7 @@ class WebDashboardController extends Controller
                 ->select(
                     'ki.id', 'ki.name', 'ki.group', 'ki.prov_id',
                     'ltt.rb_general_penyesuaian', 'ltt.rb_tematik', 'ltt.index_rb',
-                    'ltt_prev.index_rb as index_rb_prev', // AMBIL NILAI TAHUN LALU
+                    'ltt_prev.index_rb as index_rb_prev', 
                     DB::raw('COALESCE(tbm.target_baik_met, 0) as target_baik_met')
                 )->get();
 
@@ -115,7 +113,7 @@ class WebDashboardController extends Controller
                     'rb_general_penyesuaian' => $row->rb_general_penyesuaian !== null ? round($row->rb_general_penyesuaian, 2) : '---',
                     'rb_tematik' => $row->rb_tematik !== null ? round($row->rb_tematik, 2) : '---',
                     'index_rb' => $row->index_rb !== null ? round($row->index_rb, 2) : '---',
-                    'index_rb_prev' => $row->index_rb_prev !== null ? round($row->index_rb_prev, 2) : '---', // KIRIM KE BLADE
+                    'index_rb_prev' => $row->index_rb_prev !== null ? round($row->index_rb_prev, 2) : '---', 
                     'predikat' => $predikat,
                     'detail_url' => route('webdashboard.detail', ['id' => $row->id, 'tahun' => $selectedKegiatanId]),
                 ];
@@ -198,12 +196,10 @@ class WebDashboardController extends Controller
 
             $rows = $instansiRows->map(function ($row) use ($selectedKegiatanId, $targetTotals, &$predikatCounts) {
                 
-                // LOGIKA PEMISAH KATEGORI (Sudah Diperbaiki)
                 $spesifikGroup = $row->group;
                 if ($row->group === 'kl') {
                     $spesifikGroup = str_contains($row->name, 'Kementerian') ? 'kementerian' : 'lembaga';
                 } elseif ($row->group === 'kabupaten') {
-                    // Jika ada kata 'Kabupaten' = kabupaten. Sisanya = kota.
                     $spesifikGroup = str_contains($row->name, 'Kabupaten') ? 'kabupaten' : 'kota';
                 }
 
@@ -249,8 +245,6 @@ class WebDashboardController extends Controller
     public function rbGeneral(Request $request)
     {
         $tahun = $request->get('tahun', 2025);
-
-        // Ambil data instansi dari database (pastikan 'lain' tidak ikut)
         $instansis = KlpdInstansi::whereIn('group', ['kl', 'provinsi', 'kabupaten'])->get();
         $instansiIds = $instansis->pluck('id');
 
@@ -282,8 +276,6 @@ class WebDashboardController extends Controller
             ->keyBy('instansi_id');
 
         $rekap = [];
-        
-        // Siapkan wadah hitungan untuk 5 kategori
         $yes_kementerian = $no_kementerian = 0;
         $yes_lembaga = $no_lembaga = 0;
         $yes_prov = $no_prov = 0;
@@ -299,16 +291,12 @@ class WebDashboardController extends Controller
             $target_ok   = ($target->target_count ?? 0) >= 5;
             $rencana_ok  = ($rencana->rencana_aksi_count ?? 0) >= 5;
             $semua       = $baseline && $target_ok && $rencana_ok;
-
-            // Logika pemisah kategori spesifik
             $spesifikGroup = $instansi->group;
             if ($instansi->group === 'kl') {
                 $spesifikGroup = str_contains($instansi->name, 'Kementerian') ? 'kementerian' : 'lembaga';
             } elseif ($instansi->group === 'kabupaten') {
                 $spesifikGroup = str_contains($instansi->name, 'Kabupaten') ? 'kabupaten' : 'kota';
             }
-
-            // Masukkan ke hitungan masing-masing
             switch ($spesifikGroup) {
                 case 'kementerian': $semua ? $yes_kementerian++ : $no_kementerian++; break;
                 case 'lembaga':     $semua ? $yes_lembaga++ : $no_lembaga++; break;
@@ -327,13 +315,11 @@ class WebDashboardController extends Controller
                 'semua'        => $semua,
             ];
         }
-
-        // Siapkan data JSON untuk modal popup di blade
         $rekapJson = collect($rekap)->map(function ($d) {
             return [
                 'name'         => $d['instansi']->name,
                 'group'        => $d['group'],
-                'group_key'    => strtolower($d['group']), // ini akan mengembalikan kementerian/lembaga/provinsi/kabupaten/kota
+                'group_key'    => strtolower($d['group']), 
                 'baseline'     => (bool) $d['baseline'],
                 'target'       => (bool) $d['target'],
                 'rencana_aksi' => (bool) $d['rencana_aksi'],
@@ -501,7 +487,7 @@ class WebDashboardController extends Controller
         $predikatPrev = $this->resolvePredikat($scorePrev, true);
 
         // ── Rincian per indikator ──────────────────────────────────
-        // Helper closure untuk ambil rincian per kegiatan
+
         $getRincianData = function($kegId) use ($instansiId) {
             if (!$kegId) return collect();
             return DB::table('lke_test_tp_line as lttl')
@@ -540,8 +526,6 @@ class WebDashboardController extends Controller
             }
             return [$skorIndex, $capaianPct];
         };
-
-        // Gabungkan rincian now + prev
         $rincian = $rincianNow->map(function($row) use ($rincianPrev, $hitungIndex) {
             [$skorIdx, $capaian] = $hitungIndex($row->score, $row->bobot, $row->max_value);
 

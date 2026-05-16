@@ -238,10 +238,13 @@ Route::middleware('auth')->group(function () {
     Route::post('/pelaporan-coi/final', [PelaporanCoiController::class, 'finalize']);
 
     // Pelaporan COI - Modul COI (TPN)
-    Route::get('modul-coi', [PelaporanCoiReportController::class, 'index']);
+    Route::get('/modul-coi', [PelaporanCoiReportController::class, 'index'])->name('coi.admin.index');
     Route::get('modul-coi/{question}/lanjutan', [PelaporanCoiReportController::class, 'detailChild']);
     Route::get('modul-coi/{question}/{answer}', [PelaporanCoiReportController::class, 'detail']);
     Route::post('/modul-coi/save', [PelaporanCoiReportController::class, 'store'])->name('coi.admin.save');
+    Route::post('/pelaporan-coi/submit', [PelaporanCoiController::class, 'store'])->name('coi.user.submit');
+    Route::get('/modul-coi/responses', [PelaporanCoiReportController::class, 'responses'])->name('coi.admin.responses');
+    Route::delete('/modul-coi/question/{id}', [PelaporanCoiReportController::class, 'destroyQuestion'])->name('coi.admin.question.destroy');
 
     // Hasil
     Route::get('/evaluasi/hasil-2023', [HasilController::class, 'hasil_seluruh'])->name('hasil_seluruh');

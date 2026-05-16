@@ -156,7 +156,6 @@ class RBGeneralController extends Controller
         $target->tahun = $request->tahun;
         $target->target = $request->target;
         if ($perencanaan->indikator->tipe == 'Kuantitatif') {
-            // Cek Baseline Realisasi
             if ($perencanaan->indikator->min != null && $request->baseline_realisasi < $perencanaan->indikator->min) {
                 $success = false;
                 $pesan .= 'Baseline tidak boleh kurang dari ' . $perencanaan->indikator->min . '!!';
@@ -739,8 +738,6 @@ class RBGeneralController extends Controller
         } else {
             $instansi_ids = [KlpdInstansi::orderBy('id')->first()->id];
         }
-
-        // Mapping instansi_id ke id_before (jika tahun < 2025 dan id_before tersedia)
         $mapped_instansi = [];
         foreach ($instansi_ids as $instansi_id) {
             $instansi = KlpdInstansi::find($instansi_id);
@@ -748,8 +745,6 @@ class RBGeneralController extends Controller
                 $mapped_instansi[$instansi_id] = ($tahun < 2025 && $instansi->id_before) ? $instansi->id_before : $instansi->id;
             }
         }
-
-        // Ambil data perencanaan berdasarkan mapped id_before
         $used_ids = array_values($mapped_instansi);
         $model = GeneralPerencanaan::whereIn('instansi_id', $used_ids)
             ->orderBy('kegiatan_utama_id')

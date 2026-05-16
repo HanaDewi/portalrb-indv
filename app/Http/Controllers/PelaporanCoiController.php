@@ -34,35 +34,57 @@ class PelaporanCoiController extends Controller
 
         $data = PelaporanCoi::where('instansi_id', $instansiId)->first();
         $instansi = KlpdInstansi::find($instansiId);
-
-        return view('pelaporan-coi.index', compact('data', 'instansi'));
+        $semuaData = \App\Models\MasterPertanyaanCoi::orderBy('urutan', 'asc')->get();
+        $formHeader = $semuaData->where('tipe_jawaban', 'form_header')->first();
+        $questions = $semuaData->where('tipe_jawaban', '!=', 'form_header')->values();
+        $savedAnswers = \App\Models\JawabanCoi::where('instansi_id', $instansiId)
+                    ->pluck('nilai_jawaban', 'master_pertanyaan_id')
+                    ->all(); 
+        return view('pelaporan-coi.report.index', compact(
+            'data', 
+            'instansi', 
+            'questions', 
+            'savedAnswers', 
+            'formHeader'
+        ));
     }
 
     public function store(Request $request)
     {
         $user = $this->guardEligibleUser();
         $instansiId = $this->resolveInstansiId($user);
+        
         if (!$instansiId) {
-            return redirect()->back()->with('error', 'Instansi tidak ditemukan untuk pengguna ini.');
+            return redirect()->back()->with('error', 'Instansi tidak ditemukan.');
         }
+        $request->validate([
+            'jawaban' => 'required|array'
+        ]);
 
-        $existing = PelaporanCoi::firstOrNew(['instansi_id' => $instansiId]);
-        if ($existing->finalized_at) {
-            return redirect()->back()->with('error', 'Data sudah disimpan final dan tidak dapat diperbarui.');
-        }
+        \Illuminate\Support\Facades\DB::beginTransaction();
 
         try {
-            $validated = $this->validatedData($request, false);
-        } catch (ValidationException $e) {
-            return back()->withErrors($e->errors())->with('error', 'Simpan gagal. Periksa kembali isian wajib.');
+            \App\Models\JawabanCoi::where('instansi_id', $instansiId)->delete();
+            foreach ($request->jawaban as $pertanyaan_id => $nilai) {
+                if (is_array($nilai)) {
+                    $nilai = json_encode($nilai);
+                }
+
+                \App\Models\JawabanCoi::create([
+                    'instansi_id'          => $instansiId,
+                    'user_id'              => $user->id,
+                    'master_pertanyaan_id' => $pertanyaan_id,
+                    'nilai_jawaban'        => $nilai,
+                ]);
+            }
+
+            \Illuminate\Support\Facades\DB::commit();
+            return redirect()->back()->with('success', 'Jawaban kuesioner berhasil disimpan!');
+
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\DB::rollBack();
+            return redirect()->back()->with('error', 'Gagal menyimpan jawaban: ' . $e->getMessage());
         }
-        $payload = $this->normalizeData($validated);
-
-        $existing->fill($payload);
-        $existing->instansi_id = $instansiId;
-        $existing->save();
-
-        return redirect()->back()->with('success', 'Jawaban Pelaporan COI berhasil disimpan.');
     }
 
     public function finalize(Request $request)

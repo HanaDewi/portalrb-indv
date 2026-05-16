@@ -2,133 +2,115 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\PelaporanCoi;
+use App\Models\MasterPertanyaanCoi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
 class PelaporanCoiReportController extends Controller
 {
-    private $questions = [
-        'q1_peraturan_internal' => 'Apakah Instansi Bapak/Ibu sudah memiliki aturan internal mengenai pengelolaan konflik kepentingan?',
-        'q2_selaras_permepan' => 'Apakah peraturan mengenai konflik kepentingan yang berlaku sudah diselaraskan dengan Peraturan Menteri PANRB Nomor 17 Tahun 2024?',
-        'q3_pedoman_teknis' => 'Apakah peraturan internal di instansi Bapak/Ibu diturunkan lagi dalam bentuk pedoman teknis?',
-        'q4_penunjukan_pejabat' => 'Apakah di instansi Bapak/Ibu sudah ditunjuk Pejabat Pengelola Konflik Kepentingan?',
-        'q5_sistem_aplikasi' => 'Apakah di instansi Bapak/Ibu terdapat sistem atau aplikasi yang digunakan untuk mengelola konflik kepentingan?',
-        'q6_pencatatan_register' => 'Apakah di instansi Bapak/Ibu sudah dilakukan pencatatan daftar kepentingan pribadi/register?',
-        'q7_deklarasi_aktual' => 'Apakah di instansi Bapak/Ibu sudah dilakukan deklarasi untuk konflik kepentingan aktual?',
-        'q8_lini_aduan' => 'Apakah di instansi Bapak/Ibu sudah memiliki lini aduan yang dapat dimanfaatkan untuk menyampaikan pengaduan jika terjadi konflik kepentingan?',
-        'q9_monev' => 'Apakah di instansi Bapak/Ibu terdapat mekanisme monitoring dan evaluasi atas pengelolaan konflik kepentingan?',
-        'q10_laporan' => 'Apakah instansi Bapak/Ibu telah menyusun laporan atas implementasi pengelolaan konflik kepentingan?',
-    ];
-
-    private $children = [
-        'q1_peraturan_internal' => ['field' => 'q11_nomor_peraturan', 'label' => 'Nomor Permen/Kepmen/Pergub/Perbub/Perwali?', 'when' => 1],
-        'q2_selaras_permepan' => ['field' => 'q21_susun_revisi', 'label' => 'Apakah instansi sudah mulai menyusun revisi?', 'when' => 0],
-        'q21_susun_revisi' => ['field' => 'q211_rencana_penyesuaian', 'label' => 'Kapan aturan akan disesuaikan?', 'when' => 0],
-        'q3_pedoman_teknis' => ['field' => 'q31_nomor_pedoman', 'label' => 'Nomor pedoman?', 'when' => 1],
-        'q5_sistem_aplikasi' => ['field' => 'q51_url_sistem', 'label' => 'Url Sistem atau Aplikasi yang digunakan?', 'when' => 1],
-        'q6_pencatatan_register' => ['field' => 'q61_total_wajib', 'label' => 'Total ASN Wajib Melaporkan', 'when' => 1],
-        'q7_deklarasi_aktual' => ['field' => 'q71_jumlah_deklarasi', 'label' => 'jumlah deklarasi yang disampaikan?', 'when' => 1],
-        'q8_lini_aduan' => ['field' => 'q81_nama_lini', 'label' => 'nama lini pengaduan?', 'when' => 1],
-    ];
-
+    /**
+     * Konstruktor untuk membatasi akses hanya untuk admin/tpn
+     */
     public function __construct()
     {
         $this->middleware(function ($request, $next) {
-            if (!in_array(Auth::user()->level, ['tpn', 'admin'])) {
-                abort(403);
+            if (!Auth::check() || !in_array(Auth::user()->level, ['tpn', 'admin'])) {
+                abort(403, 'Akses Ditolak.');
             }
             return $next($request);
         });
     }
-
     public function index()
     {
-        $query = PelaporanCoi::query()
-            ->select('pelaporan_coi.*', 'klpd_instansi_new.group')
-            ->leftJoin('klpd_instansi_new', 'klpd_instansi_new.id', '=', 'pelaporan_coi.instansi_id');
+        $existingQuestions = MasterPertanyaanCoi::orderBy('urutan', 'asc')->get();
+        $totalResponses = \App\Models\JawabanCoi::distinct('instansi_id')->count();
 
-        $data = $query->get();
-
-        $grouped = [];
-        foreach ($this->questions as $field => $label) {
-            $grouped[$field] = [
-                'label' => $label,
-                'counts' => [
-                    'kl' => [
-                        'yes' => $data->where('group', 'kl')->where($field, true)->count(),
-                        'no' => $data->where('group', 'kl')->where($field, false)->count(),
-                    ],
-                    'provinsi' => [
-                        'yes' => $data->where('group', 'provinsi')->where($field, true)->count(),
-                        'no' => $data->where('group', 'provinsi')->where($field, false)->count(),
-                    ],
-                    'kabupaten' => [
-                        'yes' => $data->where('group', 'kabupaten')->where($field, true)->count(),
-                        'no' => $data->where('group', 'kabupaten')->where($field, false)->count(),
-                    ],
-                ],
-            ];
-        }
-
-        //admin
-        // return view('pelaporan-coi.admin-coi.editor', [
-        //     'questions' => $grouped,
-        // ]);
-
-        //user
-        return view('pelaporan-coi.report.index', [
-            'questions' => $grouped,
+        return view('pelaporan-coi.admin-coi.editor', [
+            'existingQuestions' => $existingQuestions,
+            'totalResponses' => $totalResponses, 
         ]);
     }
-
-    public function detail($question, $answer, Request $request)
+    public function store(Request $request)
     {
-        abort_unless(isset($this->questions[$question]), 404);
+        try {
+            if (!$request->has('questions') || !is_array($request->questions)) {
+                return response()->json(['message' => 'Data kuesioner tidak valid atau kosong.'], 400);
+            }
+            DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+            MasterPertanyaanCoi::truncate();
+            DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+            DB::beginTransaction();
+            foreach ($request->questions as $index => $q) {
+                MasterPertanyaanCoi::create([
+                    'teks_pertanyaan' => $q['title'] ?? 'Pertanyaan Tanpa Judul',
+                    'tipe_jawaban'    => $q['type'] ?? 'pilihan_ganda',
+                    'opsi'            => isset($q['options']) && !empty($q['options']) ? $q['options'] : null, 
+                    'is_wajib'        => filter_var($q['required'] ?? false, FILTER_VALIDATE_BOOLEAN),
+                    'urutan'          => $index + 1,
+                ]);
+            }
+            DB::commit();
+            return response()->json(['message' => 'Konfigurasi formulir berhasil disimpan!'], 200);
 
-        $group = $request->get('group');
-
-        $records = PelaporanCoi::with('instansi')
-            ->when($group, function ($q) use ($group) {
-                $q->whereHas('instansi', fn($iq) => $iq->where('group', $group));
-            })
-            ->where($question, (int) $answer)
-            ->get();
-
-        $child = null;
-        if (isset($this->children[$question]) && (int) $answer === (int) $this->children[$question]['when']) {
-            $child = $this->children[$question];
+        } catch (\Exception $e) {
+            if (DB::transactionLevel() > 0) {
+                DB::rollBack();
+            }
+            DB::statement('SET FOREIGN_KEY_CHECKS=1;'); 
+            return response()->json([
+                'message' => 'Gagal: ' . $e->getMessage()
+            ], 500);
         }
-
-        return view('pelaporan-coi.report.detail', [
-            'questionKey' => $question,
-            'questionLabel' => $this->questions[$question],
-            'answer' => (int) $answer,
-            'records' => $records,
-            'child' => $child,
-        ]);
     }
+    public function responses()
+{
+    
+    $totalResponses = \App\Models\JawabanCoi::distinct('instansi_id')->count();
+    $todayResponses = \App\Models\JawabanCoi::whereDate('created_at', now())->distinct('instansi_id')->count();
+    $completionRate = ($totalResponses / 100) * 100;
+    $tableData = \App\Models\JawabanCoi::with('instansi')
+        ->select('instansi_id', 'created_at')
+        ->groupBy('instansi_id', 'created_at')
+        ->orderBy('created_at', 'desc')
+        ->get();
+    $questions = \App\Models\MasterPertanyaanCoi::where('tipe_jawaban', '!=', 'form_header')->get();
+    $summary = [];
 
-    public function detailChild($question, Request $request)
-    {
-        // khusus q2 level kedua
-        if ($question !== 'q2_selaras_permepan') {
-            abort(404);
+    foreach ($questions as $q) {
+    $answers = \App\Models\JawabanCoi::where('master_pertanyaan_id', $q->id)->get();
+    
+    $counts = [];
+    if ($q->opsi) {
+        foreach ($q->opsi as $opt) {
+            $counts[$opt] = $answers->filter(function($a) use ($opt, $q) {
+                if ($q->tipe_jawaban == 'kotak_centang') {
+                    $decoded = json_decode($a->nilai_jawaban, true);
+                    return is_array($decoded) && in_array($opt, $decoded);
+                }
+                return $a->nilai_jawaban == $opt;
+            })->count();
         }
-
-        $group = $request->get('group');
-
-        $records = PelaporanCoi::with('instansi')
-            ->when($group, function ($q) use ($group) {
-                $q->whereHas('instansi', fn($iq) => $iq->where('group', $group));
-            })
-            ->where('q2_selaras_permepan', 0)
-            ->get();
-
-        return view('pelaporan-coi.report.detail-q2', [
-            'records' => $records,
-            'questionLabel' => $this->questions['q2_selaras_permepan'],
-        ]);
     }
+    
+    $summary[] = [
+        'id' => $q->id,
+        'question' => $q->teks_pertanyaan,
+        'type' => $q->tipe_jawaban,
+        'total' => $answers->count(),
+        'counts' => $counts
+    ];
+}
+
+    return view('pelaporan-coi.admin-coi.responses', compact('totalResponses', 'todayResponses', 'completionRate', 'tableData', 'summary'));
+    }
+    public function destroyQuestion($id)
+        {
+            $q = \App\Models\MasterPertanyaanCoi::findOrFail($id);
+            \App\Models\JawabanCoi::where('master_pertanyaan_id', $id)->delete();
+            
+            $q->delete();
+
+            return redirect()->back()->with('success', 'Pertanyaan dan jawaban terkait berhasil dihapus.');
+        }
 }
